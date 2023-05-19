@@ -35,14 +35,14 @@ import bp.difference.SystemConfig;
 @Configuration
 @ComponentScan(basePackages = {"bp.difference", "Controller", "cn.jflow.boot"})
 public class JFlowConfig {
-
+	
 	private static final Logger logger = LoggerFactory.getLogger(JFlowConfig.class);
-
+	
 	private static ApplicationContext applicationContext;
-
+	
 	@Autowired
 	Environment env;
-
+	
 	/**
 	 * 属性文件jflow.properties配置
 	 * @return
@@ -55,22 +55,26 @@ public class JFlowConfig {
 		propertyConfigurer.setLocation(resource);
 		return propertyConfigurer;
 	}
-
+	
 	/**
 	 * 配置JFlow数据库属性
 	 */
 	public void loadJFlowDatabaseConfig() {
 		//配置jflow属性
 		Hashtable<String, Object> props = SystemConfig.getCS_AppSettings();
-
+		
 		String url = env.getProperty("spring.datasource.url");
-		Hashtable<String, Object> dbProps = configDatabaseParams(url);
-		props.putAll(dbProps);
+		/*Hashtable<String, Object> dbProps = configDatabaseParams(url);
+		props.putAll(dbProps);*/
 
-
+		String platform = env.getProperty("spring.datasource.platform");
+		String schema = env.getProperty("spring.datasource.name");
 		String username = env.getProperty("spring.datasource.username");
 		String password = env.getProperty("spring.datasource.password");
 		String testQuery = env.getProperty("spring.datasource.hikari.connection-test-query");
+		props.put("AppCenterDSN", url);
+		props.put("AppCenterDBType", platform);
+		props.put("AppCenterDBDatabase", schema);
 		props.put("JflowUser", username);
 		props.put("JflowPassword", password);
 		props.put("JflowTestSql", testQuery);
@@ -98,7 +102,7 @@ public class JFlowConfig {
 				}else {
 					logger.error("mysql url配置错误，请检查配置。url: {}", JFlowConfig.class.getName(), url);
 				}
-
+				
 			}else if(url.startsWith("jdbc:jtds:sqlserver") || url.startsWith("jdbc:microsoft:sqlserver")) {
 				//sqlserver
 				dbType = "mssql";
@@ -132,7 +136,7 @@ public class JFlowConfig {
 				//oracle
 				dbType = env.getProperty("KingBaseVer");
 				if(DataType.IsNullOrEmpty(dbType))
-					dbType="KingBaseR3";
+				   dbType="KingBaseR3";
 				//dbType = "kingbase";
 				Pattern pattern = Pattern.compile("jdbc:kingbase8://.+:\\d+/(.+)");
 				Matcher matcher = pattern.matcher(url);
@@ -146,12 +150,12 @@ public class JFlowConfig {
 			}else {
 				logger.error("从url解析数据库类型和数据库名出错. url: {}, dbType: {}, dbDatabase: {}", url, dbType, dbDatabase);
 			}
-
+			
 			props.put("AppCenterDSN", url);
 		}
 		return props;
 	}
-
+	
 	/**
 	 * JFlow集成上下文工具类
 	 * @param dataSource 数据源
@@ -166,7 +170,7 @@ public class JFlowConfig {
 		if(applicationContext != null) {
 			contextHolderUtils.setApplicationContext(applicationContext);
 		}
-
+		
 		return contextHolderUtils;
 	}
 	/**
@@ -184,6 +188,8 @@ public class JFlowConfig {
 		}
 		return contextHolderUtils;
 	}
+
+
 	public static ApplicationContext getApplicationContext() {
 		return applicationContext;
 	}

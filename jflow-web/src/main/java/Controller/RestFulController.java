@@ -4,6 +4,7 @@ import WebServiceImp.LocalWS;
 import bp.da.*;
 import bp.difference.SystemConfig;
 import bp.difference.handler.CommonFileUtils;
+import bp.en.QueryObject;
 import bp.port.Emp;
 import bp.sys.MapData;
 import bp.tools.HttpClientUtil;
@@ -17,7 +18,9 @@ import bp.wf.template.Directions;
 import bp.wf.template.FlowExt;
 import bp.wf.template.Selector;
 import net.sf.json.JSONObject;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,9 +30,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Hashtable;
 
-
 @RestController
 @RequestMapping(value = "/restful")
+@CrossOrigin(origins = "*")
 public class RestFulController {
     //ip:port/project
 	/**
@@ -180,81 +183,117 @@ public class RestFulController {
 
 	/**
 	 * 待办
-	 * @param userNo 用户编号
-	 * @param sysNo 系统编号,为空时返回平台所有数据
+	 * @param domain 系统编号,为空时返回平台所有数据
 	 * @param token
 	 * @return
      * @throws Exception 
 	 */
 
     @RequestMapping(value = "/DB_Todolist")
-	public String DB_Todolist(String userNo, String sysNo,String token) throws Exception {
-		try {
-			bp.wf.Dev2Interface.Port_LoginByToken(token);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		 String sql = "";
-         if (DataType.IsNullOrEmpty(sysNo) == true)
-             sql = "SELECT * FROM WF_EmpWorks WHERE FK_Emp='" + userNo + "'";
-         else
-             sql = "SELECT * FROM WF_EmpWorks WHERE Domain='" + sysNo + "' AND FK_Emp='" + userNo + "'";
-
-         DataTable dt = bp.da.DBAccess.RunSQLReturnTable(sql);
-
+	public String DB_Todolist(String domain,String token) throws Exception {
+		bp.wf.Dev2Interface.Port_LoginByToken(token);
+		DataTable dt = bp.wf.Dev2Interface.DB_GenerEmpWorksOfDataTable(WebUser.getNo(), 0, null, domain, null);
          return bp.tools.Json.ToJson(dt);
 	}
 	
 	/**
 	 * 获得在途
-	 * @param userNo 用户编号
 	 * @param token
 	 * @return
 	 * @throws Exception 
 	 */
     @RequestMapping(value = "/DB_Runing")
-	public String DB_Runing(String userNo,String token) throws Exception {
+	public String DB_Runing(String token,String domain) throws Exception {
 		bp.wf.Dev2Interface.Port_LoginByToken(token);
-		 DataTable dt = bp.wf.Dev2Interface.DB_GenerRuning(userNo, null, false);
+		 DataTable dt = bp.wf.Dev2Interface.DB_GenerRuning(WebUser.getNo(), false, domain);
          return bp.tools.Json.ToJson(dt);
 	}
-	
+
+	/**
+	 * 草稿
+	 * @param token
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/DB_Draft")
+	public String DB_Draft(String token,String domain) throws Exception {
+		bp.wf.Dev2Interface.Port_LoginByToken(token);
+		DataTable dt = bp.wf.Dev2Interface.DB_GenerDraftDataTable(null, domain);
+		return bp.tools.Json.ToJson(dt);
+	}
 	/**
 	 * 我可以发起的流程
-	 * @param userNo 用户编号
 	 * @param domain  系统编号,为空时返回平台所有数据
 	 * @return 返回我可以发起的流程列表.
 	 * @throws Exception 
 	 */
 
     @RequestMapping(value = "/DB_StarFlows")
-	public String DB_StarFlows(String userNo, String domain,String token) throws Exception {
+	public String DB_StarFlows(String domain,String token) throws Exception {
 		bp.wf.Dev2Interface.Port_LoginByToken(token);
-		DataTable dt= bp.wf.Dev2Interface.DB_StarFlows(userNo,domain);
+		DataTable dt= bp.wf.Dev2Interface.DB_StarFlows(WebUser.getNo(),domain);
         return bp.tools.Json.ToJson(dt);
 	}
-	
+
+	/**
+	 * 打开的表单
+	 * @param token
+	 * @param workid
+	 * @param flowNo
+	 * @param nodeID
+	 * @param fid
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/GenerFrmUrl")
+	public String GenerFrmUrl(String token, long workid,String flowNo,int nodeID,long fid) throws Exception {
+		bp.wf.Dev2Interface.Port_LoginByToken(token);
+		/*
+		 * 发起的url需要在该流程的开始节点的表单方案中，使用SDK表单，并把表单的url设置到里面去.
+		 * 设置步骤:
+		 * 1. 打开流程设计器.
+		 * 2. 在开始节点上右键，选择表单方案.
+		 * 3. 选择SDK表单，把url配置到文本框里去.
+		 * 比如: /App/F027QingJia.htm
+		 */
+		if (nodeID == 0)
+			nodeID = Integer.parseInt(flowNo + "01");
+
+		if (workid == 0)
+			workid = Dev2Interface.Node_CreateBlankWork(flowNo, WebUser.getNo());
+
+		String url = "";
+		Node nd = new Node(nodeID);
+		if (nd.getFormType() == NodeFormType.SDKForm || nd.getFormType() == NodeFormType.SelfForm)
+		{
+			//.
+			url = nd.getFormUrl();
+			if (url.contains("?") == true)
+				url += "&FK_Flow=" + flowNo + "&FK_Node=" + nodeID + "&WorkID=" + workid + "&Token=" + token + "&UserNo=" +WebUser.getNo();
+			else
+				url += "?FK_Flow=" + flowNo + "&FK_Node=" + nodeID + "&WorkID=" + workid + "&Token=" + token + "&UserNo=" + WebUser.getNo();
+		}
+		else
+		{
+			url = "/WF/MyFlow.htm?FK_Flow=" + flowNo + "&FK_Node=" + nodeID + "&WorkID=" + workid+ "&Token=" + token;
+		}
+		return url;
+	}
+
 	/**
 	 * 我发起的流程实例
-	 * @param userNo 用户编号
 	 * @param domain 统编号,为空时返回平台所有数据
 	 * @return
 	 * @throws Exception 
 	 */
 		@RequestMapping(value = "/DB_MyStartFlowInstance")
-	public String DB_MyStartFlowInstance(String userNo, String domain,String token) throws Exception {
-		try {
-			bp.wf.Dev2Interface.Port_LoginByToken(token);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public String DB_MyStartFlowInstance(String domain,String token) throws Exception {
+		bp.wf.Dev2Interface.Port_LoginByToken(token);
 		String sql = "";
         if (StringUtils.isEmpty(domain))
-            sql = "SELECT * FROM WF_GenerWorkFlow WHERE Starter='" + userNo + "'";
+            sql = "SELECT * FROM WF_GenerWorkFlow WHERE Starter='" + WebUser.getNo() + "'";
         else
-            sql = "SELECT * FROM WF_GenerWorkFlow WHERE Domain='" + domain + "' AND Starter='" + userNo + "'";
+            sql = "SELECT * FROM WF_GenerWorkFlow WHERE Domain='" + domain + "' AND Starter='" +  WebUser.getNo() + "'";
 
         DataTable dt = bp.da.DBAccess.RunSQLReturnTable(sql);
         return bp.tools.Json.ToJson(dt);
@@ -263,15 +302,14 @@ public class RestFulController {
 /**
 	 * 创建WorkID
 	 * @param flowNo 流程编号
-	 * @param userNo 工作人员编号
 	 * @return 一个长整型的工作流程实例
 	 * @throws Exception 
 	 */
 
-    @RequestMapping(value = "/CreateWorkID")
-	public long CreateWorkID(String flowNo, String userNo,String token) throws Exception {
+    @RequestMapping(value = {"/CreateWorkID","/Node_CreateBlankWorkID"})
+	public long CreateWorkID(String flowNo,String token) throws Exception {
 		bp.wf.Dev2Interface.Port_LoginByToken(token);
-		return bp.wf.Dev2Interface.Node_CreateBlankWork(flowNo, userNo);
+		return bp.wf.Dev2Interface.Node_CreateBlankWork(flowNo, WebUser.getNo());
 	}
 
 	/**
@@ -308,6 +346,35 @@ public class RestFulController {
 	        myht.put("VarToNodeName", objs.getVarToNodeName()==null?"":objs.getVarToNodeName());
         }
         return bp.tools.Json.ToJson(myht);
+	}
+
+	/**
+	 * 节点发送数据
+	 * @param token
+	 * @param flowNo 流程编号
+	 * @param nodeID 当前节点ID
+	 * @param workid 工作实例WorkID
+	 * @param toNodeID 下一个节点
+	 * @param toEmps 下个节点的接收人
+	 * @param paras 表单的参数保存到WF_GenerWorkFlow,作为方向条件等使用
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/Node_SendWork")
+	public String Node_SendWork(String token, String flowNo, int nodeID,long workid,int toNodeID,String toEmps,String paras) throws Exception {
+		bp.wf.Dev2Interface.Port_LoginByToken(token);
+		if(DataType.IsNullOrEmpty(paras)==false)
+			Dev2Interface.Flow_SaveParas(workid, paras);
+		//执行发送.
+		Hashtable ht = new Hashtable();
+		ht.put("FK_Flow", flowNo);
+		ht.put("FK_NodeID", nodeID);
+		ht.put("WorkID", workid);
+		//执行发送.
+		SendReturnObjs objs = Dev2Interface.Node_SendWork(flowNo, workid, ht, null, toNodeID, toEmps);
+		String msg = objs.ToMsgOfText();
+		return msg;
+
 	}
     @RequestMapping(value = "/SendWorkZHZG")
 	public String SendWorkZHZG(long workid, int toNodeID, String toEmps,String token) throws Exception {
@@ -403,17 +470,17 @@ public class RestFulController {
 	 * @throws Exception 
 	 */
 
-    @RequestMapping(value = "/WillReturnToNodes")
-	public String WillReturnToNodes(int workID,String token) throws Exception {
+    @RequestMapping(value = {"/WillReturnToNodes","/DB_GenerWillReturnNodes"})
+	public String WillReturnToNodes(long workid,String token) throws Exception {
 		
 		try
 		{
 			
 		bp.wf.Dev2Interface.Port_LoginByToken(token);
 		
-		GenerWorkFlow gwf=new GenerWorkFlow(workID);
+		GenerWorkFlow gwf=new GenerWorkFlow(workid);
 		
-		DataTable dt=bp.wf.Dev2Interface.DB_GenerWillReturnNodes(gwf.getFK_Node(), workID, gwf.getFID());
+		DataTable dt=bp.wf.Dev2Interface.DB_GenerWillReturnNodes(gwf.getFK_Node(), workid, gwf.getFID());
         return bp.tools.Json.ToJson(dt);
 		}catch(Exception ex)
 		{
@@ -451,7 +518,6 @@ public class RestFulController {
 	 * @return
 	 * @throws Exception 
 	 */
-
     @RequestMapping(value = "/CurrNodeInfo")
 	public String CurrNodeInfo(int currNodeID,String token) throws Exception {
 		bp.wf.Dev2Interface.Port_LoginByToken(token);
@@ -465,7 +531,6 @@ public class RestFulController {
 	 * @return 当前节点信息
 	 * @throws Exception 
 	 */
-
     @RequestMapping(value = "/CurrFlowInfo")
 	public String CurrFlowInfo(String flowNo,String token) throws Exception {
 		bp.wf.Dev2Interface.Port_LoginByToken(token);
@@ -486,46 +551,39 @@ public class RestFulController {
          return gwf.ToJson();
 	}
 
-	
 	/**
 	 * 退回.
-	 * @param workID 流程ID
+	 * @param workid 流程ID
 	 * @param returnToNodeID 流程退回的节点ID
 	 * @param returnMsg 退回原因
 	 * @return 退回结果信息
 	 * @throws Exception 
 	 */
     @RequestMapping(value = "/Node_ReturnWork")
-	   public String Node_ReturnWork(long workID, int returnToNodeID, String returnMsg, String token) throws Exception {
+	   public String Node_ReturnWork(long workid, int returnToNodeID, String returnMsg, String token) throws Exception {
 	  bp.wf.Dev2Interface.Port_LoginByToken(token);
-	  GenerWorkFlow gwf=new GenerWorkFlow(workID);
-      return bp.wf.Dev2Interface.Node_ReturnWork(gwf.getFK_Flow(), workID, gwf.getFID(), gwf.getFK_Node(), returnToNodeID, returnMsg,false);
-	  
-	
+	  GenerWorkFlow gwf=new GenerWorkFlow(workid);
+	  try{
+		  return bp.wf.Dev2Interface.Node_ReturnWork(gwf.getFK_Flow(), workid, gwf.getFID(), gwf.getFK_Node(), returnToNodeID, returnMsg,false);
+	  }catch(Exception ex){
+		  return "err@"+ex.getMessage();
+	  }
    }
   
-/**
+	/**
 	 * 执行流程结束 说明:强制流程结束.
-	 * @param workID
-	 *            工作ID
-	 * @param msg
-	 *            流程结束原因
-	 
+	 * @param workID 工作ID
+	 * @param msg 流程结束原因
 	 * @return 返回成功执行信息
 	 * @throws Exception
 	 */
-
     @RequestMapping(value = "/Flow_DoFlowOverQiangZhi")
 	public  String Flow_DoFlowOverQiangZhi(long workID, String msg, String token) throws Exception {
 	  bp.wf.Dev2Interface.Port_LoginByToken(token);
 
 	  return Dev2Interface.Flow_DoFlowOver( workID, msg,1);
   }
-/*	@RequestMapping(value = "/Port_Login")
-	public void Port_Login(String userNo) throws Exception {
 
-		bp.wf.Dev2Interface.Port_Login(userNo);
-	}*/
 
 	/**
 	 * 登录接口，返回默认页面，单组织返回default页面，集团模式返回default或者selectOrg页面
@@ -945,4 +1003,332 @@ public class RestFulController {
 		return bp.port.OrganizationAPI.Port_Station_Delete(no);
 	}
 	///关于组织的接口.
+	@RequestMapping(value="/Flow_DoPress")
+	public String Flow_DoPress(String token, String workids,String msg) throws Exception {
+		bp.wf.Dev2Interface.Port_LoginByToken(token);
+		if (DataType.IsNullOrEmpty(workids))
+			return "err@执行批量催办的WorkIDs不能为空";
+		String[] strs = workids.split(",");
+
+		if (msg == null)
+			msg = "需要您处理待办工作.";
+		try
+		{
+			String info = "";
+			for(String workidStr : strs)
+			{
+				if (bp.da.DataType.IsNullOrEmpty(workidStr) == true)
+					continue;
+
+				info += "@" + Dev2Interface.Flow_DoPress(Integer.parseInt(workidStr), msg, true);
+			}
+			return info;
+		}
+		catch (Exception ex)
+		{
+			return "err@"+ex.getMessage();
+		}
+
+	}
+	/// <summary>
+	/// 批量审核
+	/// </summary>
+	/// <param name="token"></param>
+	/// <param name="workids"></param>
+	/// <returns></returns>
+	@RequestMapping(value="/CC_BatchCheckOver")
+	public String CC_BatchCheckOver(String token, String workids) throws Exception {
+		bp.wf.Dev2Interface.Port_LoginByToken(token);
+		if (DataType.IsNullOrEmpty(workids))
+			return "err@执行批量审批的WorkIDs不能为空";
+
+		try
+		{
+			return Dev2Interface.Node_CC_SetCheckOverBatch(workids);
+		}
+		catch (Exception ex)
+		{
+			return "err@"+ex.getMessage();
+		}
+
+	}
+	/// <summary>
+	/// 批量删除流程
+	/// </summary>
+	/// <param name="token"></param>
+	/// <param name="workids"></param>
+	/// <returns></returns>
+	@RequestMapping(value="/Flow_BatchDeleteByFlag")
+	public String Flow_BatchDeleteByFlag(String token, String workids) throws Exception {
+		//根据token登录
+		bp.wf.Dev2Interface.Port_LoginByToken(token);
+		if (DataType.IsNullOrEmpty(workids))
+			return "err@批量删除的WorkIDs不能为空";
+		try
+		{
+			String[] strs = workids.split(",");
+			for(String workidStr : strs)
+			{
+				if (bp.da.DataType.IsNullOrEmpty(workidStr) == true)
+					continue;
+
+				String st1r = Dev2Interface.Flow_DoDeleteFlowByFlag(Long.parseLong(workidStr), "删除", true);
+			}
+			return "删除成功";
+		}
+		catch (Exception ex)
+		{
+			return "err@"+ex.getMessage();
+		}
+
+	}
+	/// <summary>
+	/// 批量删除
+	/// </summary>
+	/// <param name="token"></param>
+	/// <param name="workids">工作实例WorkIDs</param>
+	/// <param name="isDeleteSubFlows">是否删除子流程</param>
+	/// <returns></returns>
+	@RequestMapping(value="/Flow_BatchDeleteByReal")
+	public String Flow_BatchDeleteByReal(String token, String workids,int isDeleteSubFlows) throws Exception {
+		bp.wf.Dev2Interface.Port_LoginByToken(token);
+		if (DataType.IsNullOrEmpty(workids))
+			return "err@批量删除的WorkIDs不能为空";
+		try
+		{
+			String[] strs = workids.split(",");
+
+			for(String workidStr : strs)
+			{
+				if (bp.da.DataType.IsNullOrEmpty(workidStr) == true)
+					continue;
+
+				String st1r = Dev2Interface.Flow_DoDeleteFlowByReal(Long.parseLong(workidStr), isDeleteSubFlows == 1 ? true : false);
+			}
+			return  "删除成功";
+		}
+		catch (Exception ex)
+		{
+			return "err@"+ex.getMessage();
+		}
+
+	}
+	/// <summary>
+	/// 批量恢复逻辑删除的流程
+	/// </summary>
+	/// <param name="token"></param>
+	/// <param name="workids"></param>
+	/// <returns></returns>
+	@RequestMapping(value="/Flow_BatchDeleteByFlagAndUnDone")
+	public String Flow_BatchDeleteByFlagAndUnDone(String token, String workids) throws Exception {
+		bp.wf.Dev2Interface.Port_LoginByToken(token);
+		if (DataType.IsNullOrEmpty(workids))
+			return "err@批量撤销删除的WorkIDs不能为空";
+		try
+		{
+			String[] strs = workids.split(",");
+
+			for(String workidStr : strs)
+			{
+				if (bp.da.DataType.IsNullOrEmpty(workidStr) == true)
+					continue;
+
+				Dev2Interface.Flow_DoUnDeleteFlowByFlag(null, Long.parseLong(workidStr), "删除");
+			}
+			return "撤销删除成功";
+		}
+		catch (Exception ex)
+		{
+			return "err@"+ex.getMessage();
+		}
+
+	}
+	/// <summary>
+	/// 批量撤回
+	/// </summary>
+	/// <param name="token"></param>
+	/// <param name="workids"></param>
+	/// <returns></returns>
+	@RequestMapping(value="/Flow_DoUnSend")
+	public String Flow_DoUnSend(String token, String workids) throws Exception {
+		//根据token登录
+		bp.wf.Dev2Interface.Port_LoginByToken(token);
+		if (DataType.IsNullOrEmpty(workids))
+			return "err@批量撤销的WorkIDs不能为空";
+		try
+		{
+			String info = "";
+			String[] strs = workids.split(",");
+			for(String workidStr : strs)
+			{
+				if (bp.da.DataType.IsNullOrEmpty(workidStr) == true)
+					continue;
+
+				info += Dev2Interface.Flow_DoUnSend(null, Long.parseLong(workidStr), 0, 0);
+			}
+			return info;
+		}
+		catch (Exception ex)
+		{
+			return "err@"+ex.getMessage();
+		}
+
+	}
+	/// <summary>
+	/// 批量删除草稿
+	/// </summary>
+	/// <param name="token"></param>
+	/// <param name="workids"></param>
+	/// <returns></returns>
+	@RequestMapping(value="/Flow_DeleteDraft")
+	public String Flow_DeleteDraft(String token, String workids) throws Exception {
+		//根据token登录
+		bp.wf.Dev2Interface.Port_LoginByToken(token);
+		if (DataType.IsNullOrEmpty(workids))
+			return "err@批量删除草稿的WorkIDs不能为空";
+		try
+		{
+			String[] strs = workids.split(",");
+			for(String workidStr : strs)
+			{
+				if (bp.da.DataType.IsNullOrEmpty(workidStr) == true)
+					continue;
+
+				Dev2Interface.Node_DeleteDraft(Long.parseLong(workidStr));
+			}
+			return "删除成功";
+		}
+		catch (Exception ex)
+		{
+			return "err@"+ex.getMessage();
+		}
+
+	}
+	/// <summary>
+	/// 批量结束流程
+	/// </summary>
+	/// <param name="token"></param>
+	/// <param name="workids"></param>
+	/// <returns></returns>
+	@RequestMapping(value="/Flow_DoFlowOver")
+	public String Flow_DoFlowOver(String token, String workids) throws Exception {
+		bp.wf.Dev2Interface.Port_LoginByToken(token);
+		if (DataType.IsNullOrEmpty(workids))
+			return "err@批量结束流程的WorkIDs不能为空";
+
+		String[] strs = workids.split(",");
+		try
+		{
+			for(String workidStr : strs)
+			{
+				if (bp.da.DataType.IsNullOrEmpty(workidStr) == true)
+					continue;
+
+				Dev2Interface.Flow_DoFlowOver(Long.parseLong(workidStr), "批量结束", 1);
+			}
+
+			return "执行成功";
+		}
+		catch (Exception ex)
+		{
+			return "err@"+ex.getMessage();
+		}
+
+	}
+	/// <summary>
+	/// 查询
+	/// </summary>
+	/// <param name="key">关键字</param>
+	/// <param name="dtFrom">日期从</param>
+	/// <param name="dtTo">日期到</param>
+	/// <param name="scop">范围</param>
+	/// <param name="pageIdx">分页</param>
+	/// <returns></returns>
+     @RequestMapping(value="/Search_Init")
+	public String Search_Init(String token,String key,String dtFrom,String dtTo,String scop,int pageIdx) throws Exception {
+		bp.wf.Dev2Interface.Port_LoginByToken(token);
+		try
+		{
+			GenerWorkFlows gwfs = new GenerWorkFlows();
+			//创建查询对象.
+			QueryObject qo = new QueryObject(gwfs);
+			if (DataType.IsNullOrEmpty(key) == false)
+			{
+				qo.AddWhere(GenerWorkFlowAttr.Title, " LIKE ", "%" + key + "%");
+				qo.addAnd();
+			}
+
+			//我参与的.
+			if (scop.equals("0") == true)
+				qo.AddWhere(GenerWorkFlowAttr.Emps, "LIKE", "%@" + WebUser.getNo() + ",%");
+
+			//我发起的.
+			if (scop.equals("1") == true)
+				qo.AddWhere(GenerWorkFlowAttr.Starter, "=",  WebUser.getNo());
+
+			//我部门发起的.
+			if (scop.equals("2") == true)
+				qo.AddWhere(GenerWorkFlowAttr.FK_Dept, "=", WebUser.getFK_Dept());
+
+
+			//任何一个为空.
+			if (DataType.IsNullOrEmpty(dtFrom) == true || DataType.IsNullOrEmpty(dtTo) == true)
+			{
+
+			}
+			else
+			{
+				qo.addAnd();
+				qo.AddWhere(GenerWorkFlowAttr.RDT, ">=", dtFrom);
+				qo.addAnd();
+				qo.AddWhere(GenerWorkFlowAttr.RDT, "<=", dtTo);
+			}
+
+			int count = qo.GetCount(); //获得总数.
+
+			qo.DoQuery("WorkID", 20, pageIdx);
+
+
+			DataTable dt = gwfs.ToDataTableField("gwls");
+
+			//创建容器.
+			DataSet ds = new DataSet();
+			ds.Tables.add(dt); //增加查询对象.
+
+			//增加数量.
+			DataTable mydt = new DataTable();
+			mydt.TableName = "count";
+			mydt.Columns.Add("CC");
+			DataRow dr = mydt.NewRow();
+			dr.setValue(0,String.valueOf(count)); //把数量加进去.
+			mydt.Rows.add(dr);
+			ds.Tables.add(mydt);
+
+			return bp.tools.Json.ToJson(ds);
+
+		}
+		catch (Exception ex)
+		{
+			return "err@"+ex.getMessage();
+		}
+
+	}
+
+	@RequestMapping(value = "/Portal_Login",method={RequestMethod.GET,RequestMethod.POST})
+	public String Portal_Login(String privateKey,String userNo) throws Exception {
+		if (DataType.IsNullOrEmpty(userNo) == true)
+			return "err@账号不能为空";
+		String localKey = bp.difference.SystemConfig.GetValByKey("PrivateKey", "");
+		if (DataType.IsNullOrEmpty(localKey) == true)
+			localKey = "DiGuaDiGua,IamCCBPM";
+		if (localKey.equals(privateKey) == false)
+		{
+			return  "err@私约错误，请检查全局文件中配置 PrivateKey";
+		}
+
+		//执行本地登录.
+		bp.wf.Dev2Interface.Port_Login(userNo);
+		String token = bp.wf.Dev2Interface.Port_GenerToken(userNo);
+		return token;
+	}
 }

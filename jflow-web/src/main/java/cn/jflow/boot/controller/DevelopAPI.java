@@ -1,18 +1,18 @@
 package cn.jflow.boot.controller;
 
-import bp.da.DataTable;
-import bp.da.DataType;
+import bp.da.*;
 import bp.difference.ContextHolderUtils;
 import bp.difference.handler.HttpHandlerBase;
+import bp.en.QueryObject;
 import bp.web.WebUser;
-import bp.wf.NodeFormType;
-import bp.wf.SendReturnObjs;
+import bp.wf.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
+import java.util.Hashtable;
 
 @RestController
 @RequestMapping(value = "/DataUser/DevelopAPI")
@@ -22,8 +22,10 @@ public class DevelopAPI extends HttpHandlerBase {
     public final String ProcessRequest(HttpServletRequest request) throws Exception
     {
         String doType = null;
+        String domain = "";
         try
         {
+            domain =  request.getParameter("DoMain");
             //设置通用的变量.
             doType = request.getParameter("DoType");
             if (bp.da.DataType.IsNullOrEmpty(doType) == true)
@@ -37,37 +39,30 @@ public class DevelopAPI extends HttpHandlerBase {
                 String key = request.getParameter("PrivateKey");
                 String userNo = request.getParameter("UserNo");
 
-                String localKey = bp.difference.SystemConfig.GetValByKey("PrivateKey", "di gua di gua,i am ccbpm");
+                String localKey = bp.difference.SystemConfig.GetValByKey("PrivateKey", "DiGuaDiGua,IamCCBPM");
                 if (localKey.equals(key) == false)
-                {
-                    return "err@@私约错误";
-                }
+                    return "err@私约错误，请检查全局文件中配置 PrivateKey ";
 
-                bp.wf.port.WFEmp wfemp = new bp.wf.port.WFEmp(userNo);
-                wfemp.setToken(bp.da.DBAccess.GenerGUID());
-                wfemp.Update();
+                bp.wf.Dev2Interface.Port_Login(userNo);
+                String toke = bp.wf.Dev2Interface.Port_GenerToken(userNo);
 
-                //执行本地登录.
-               bp.wf.Dev2Interface.Port_Login(userNo);
-
-                return  wfemp.getToken();
+                Hashtable ht = new Hashtable();
+                ht.put("No", WebUser.getNo());
+                ht.put("Name", WebUser.getName());
+                ht.put("FK_Dept", WebUser.getFK_Dept());
+                ht.put("FK_DeptName", WebUser.getFK_DeptName());
+                ht.put("OrgNo", WebUser.getOrgNo());
+                ht.put("OrgName", WebUser.getOrgName());
+                ht.put("Token", toke);
+                return bp.tools.Json.ToJson(ht);
             }
-
-            String sidStr = request.getParameter("SID");
-            if(bp.da.DataType.IsNullOrEmpty(sidStr)==true)
-                sidStr =  request.getParameter("Token");
-            if (bp.da.DataType.IsNullOrEmpty(doType) == true || bp.da.DataType.IsNullOrEmpty(sidStr) == true)
-            {
-               return "err@参数SID,DoWhat不能为空.";
-            }
-            if(DataType.IsNullOrEmpty(WebUser.getNo())){
-                String userNo = request.getParameter("userNo");
-                if(!DataType.IsNullOrEmpty(userNo))
-                    bp.wf.Dev2Interface.Port_Login(userNo);
-            }
+            String  token =  request.getParameter("Token");
+            if (bp.da.DataType.IsNullOrEmpty(doType) == true || bp.da.DataType.IsNullOrEmpty(token) == true)
+               return "err@参数Token,DoWhat不能为空.";
             //执行登录.
-            bp.wf.Dev2Interface.Port_LoginByToken(sidStr);
-            this.SID = sidStr; //记录下来他的sid.
+            if(DataType.IsNullOrEmpty(token))
+                bp.wf.Dev2Interface.Port_LoginByToken(token);
+            this.SID = token; //记录下来他的sid.
         }
         catch (RuntimeException ex)
         {
@@ -83,6 +78,48 @@ public class DevelopAPI extends HttpHandlerBase {
             return String.valueOf(workid);
         }
 
+        if (doType.equals("Node_SetDraft") == true)
+        {
+            bp.wf.Dev2Interface.Node_SetDraft(this.getFK_Flow(), this.getWorkID());
+            return "设置成功";
+        }
+
+        if (doType.equals("Node_Shift") == true)
+        {
+            String toEmpNo = request.getParameter("ToEmpNo");
+            String msg = request.getParameter("Msg");
+            return bp.wf.Dev2Interface.Node_Shift(this.getWorkID(), toEmpNo, msg);
+        }
+
+        // 给人员增加待办.
+        if (doType.equals("Node_AddTodolist") == true)
+        {
+            String EmpNo = request.getParameter("EmpNo");
+            bp.wf.Dev2Interface.Node_AddTodolist(this.getWorkID(), EmpNo);
+            return "增加人员成功.";
+        }
+
+        //获得流程信息.
+        if (doType.equals("Flow_GenerWorkFlow") == true)
+        {
+            GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
+            return gwf.ToJson();
+        }
+
+
+        //保存参数字段.
+        if (doType.equals("Node_SaveParas") == true)
+        {
+            bp.wf.Dev2Interface.Flow_SaveParas(this.getWorkID(), request.getParameter("Paras"));
+            return "参数保存成功";
+        }
+        //保存参数字段.
+        if (doType.equals("Flow_SetTitle") == true)
+        {
+            bp.wf.Dev2Interface.Flow_SetFlowTitle(this.getFK_Flow(), this.getWorkID(), request.getParameter("Title"));
+            return "标题设置成功.";
+        }
+
         if (doType.equals("Node_SendWork") == true)
         {
             //执行发送.
@@ -93,20 +130,21 @@ public class DevelopAPI extends HttpHandlerBase {
                 if (DataType.IsNullOrEmpty(str) == true) {
                     continue;
                 }
-
                 String val = this.GetValByKey(str);
                 if (val != null)
                     ht.put(str, val);
-
             }
-
 
             int toNodeID = this.GetValIntByKey("ToNodeID");
             String toEmps = this.GetValByKey("ToEmps");
             try
             {
+                String flowNo = this.getFK_Flow();
+                if (DataType.IsNullOrEmpty(flowNo) == true)
+                    flowNo = DBAccess.RunSQLReturnString("SELECT FK_Flow FROM WF_GenerWorkFlow WHERE WorkID=" + this.getWorkID());
+
                 //执行发送.
-                SendReturnObjs objs = bp.wf.Dev2Interface.Node_SendWork(this.getFK_Flow(), this.getWorkID(), ht, null, toNodeID, toEmps);
+                SendReturnObjs objs = bp.wf.Dev2Interface.Node_SendWork(flowNo, this.getWorkID(), ht, null, toNodeID, toEmps);
                 return objs.ToMsgOfText();
             }
             catch (RuntimeException ex)
@@ -124,8 +162,19 @@ public class DevelopAPI extends HttpHandlerBase {
         if (doType.equals("Node_ReturnWork") == true)
         {
             //执行退回.
-            String strs = bp.wf.Dev2Interface.Node_ReturnWork(this.getWorkID(), this.GetValIntByKey("ReturnToNodeID"), this.GetValByKey("Msg"), this.GetValBoolenByKey("IsBackToThisNode"));
-            return strs;
+            int toNodeID = this.GetValIntByKey("ReturnToNodeID");
+            String returnToEmp = this.GetValByKey("ReturnToEmp");
+            if (toNodeID == 0)
+            {
+                DataTable dt = bp.wf.Dev2Interface.DB_GenerWillReturnNodes(this.getFK_Node(), this.getWorkID(), this.getFID());
+                if (dt.Rows.size() == 1)
+                {
+                    toNodeID = Integer.parseInt(dt.Rows.get(0).getValue("No").toString());
+                    returnToEmp = dt.Rows.get(0).getValue("Rec").toString();
+
+                }
+            }
+            return  bp.wf.Dev2Interface.Node_ReturnWork(this.getWorkID(),  toNodeID, returnToEmp, this.GetValByKey("Msg"), this.GetValBoolenByKey("IsBackToThisNode"));
         }
         ///#endregion 与流程处理相关的接口API.
 
@@ -133,14 +182,17 @@ public class DevelopAPI extends HttpHandlerBase {
         ///#region 处理相关功能.
         try
         {
+            if (doType.equals("Search_Init")){
+                return Search_Init();
+            }
             if (doType.equals("DB_Start")) //获得发起列表.
             {
-                DataTable dtStrat = bp.wf.Dev2Interface.DB_StarFlows(bp.web.WebUser.getNo());
+                DataTable dtStrat = bp.wf.Dev2Interface.DB_StarFlows(bp.web.WebUser.getNo(),domain);
                 return bp.tools.Json.ToJson(dtStrat);
             }
             else if (doType.equals("DB_Draft")) //草稿.
             {
-                DataTable dtDraft = bp.wf.Dev2Interface.DB_GenerDraftDataTable();
+                DataTable dtDraft = bp.wf.Dev2Interface.DB_GenerDraftDataTable(null,domain);
                 return bp.tools.Json.ToJson(dtDraft);
             }
             else if (doType.equals("GenerFrmUrl")) //获得发起的URL.
@@ -149,12 +201,12 @@ public class DevelopAPI extends HttpHandlerBase {
             }
             else if (doType.equals("DB_Todolist")) //获得待办.
             {
-                DataTable dtTodolist = bp.wf.Dev2Interface.DB_Todolist(bp.web.WebUser.getNo());
+                DataTable dtTodolist = bp.wf.Dev2Interface.DB_Todolist(bp.web.WebUser.getNo(), 0, null, domain);
                 return bp.tools.Json.ToJson(dtTodolist);
             }
             else if (doType.equals("DB_Runing")) //获得未完成(在途).
             {
-                DataTable dtRuing = bp.wf.Dev2Interface.DB_GenerRuning(bp.web.WebUser.getNo());
+                DataTable dtRuing = bp.wf.Dev2Interface.DB_GenerRuning(bp.web.WebUser.getNo(), false, domain);
                 return bp.tools.Json.ToJson(dtRuing);
             }
             else if(doType.equals("DB_CCList"))//获取抄送数据
@@ -213,10 +265,32 @@ public class DevelopAPI extends HttpHandlerBase {
             {
                 return this.Flow_DoFlowOver();
             }
-            else
+            else if(doType.equals("Portal_LoginOut"))
             {
-            }
+                bp.wf.Dev2Interface.Port_SigOut();
+            }else if(doType.equals("InfoSorts")){
+                String sql = "SELECT * FROM OA_InfoType ";
+                DataTable dt = DBAccess.RunSQLReturnTable(sql);
+                return bp.tools.Json.ToJson(dt);
 
+            }else if(doType.equals("InfoDtls")){
+                String sortNo = this.GetValByKey("SortNo");
+                String sql="";
+                if (DataType.IsNullOrEmpty(sortNo) == true)
+                    sql = "SELECT * FROM OA_Info WHERE InfoPRI=1 ";
+                else
+                    sql = "SELECT * FROM OA_Info WHERE InfoType='" + sortNo + "' ";
+
+                DataTable dt = DBAccess.RunSQLReturnTable(sql);
+                return bp.tools.Json.ToJson(dt);
+
+            }else if(doType.equals("Dtl")){
+                String dtlNo = this.GetValByKey("No");
+                String sql = "SELECT * FROM OA_Info WHERE No='" + dtlNo + "' ";
+                DataTable dt = DBAccess.RunSQLReturnTable(sql);
+                dt.TableName = "OA_InfoDtl";
+                return bp.tools.Json.ToJson(dt);
+            }
             return "err@没有判断的执行类型:" + doType;
         }
         catch (RuntimeException ex)
@@ -225,7 +299,71 @@ public class DevelopAPI extends HttpHandlerBase {
         }
         ///#endregion 处理相关功能.
     }
+    public String Search_Init() throws Exception {
+        GenerWorkFlows gwfs = new GenerWorkFlows();
 
+        String scop = this.GetValByKey("Scop");//范围.
+        String key = this.GetValByKey("Key");//关键字.
+        String dtFrom = this.GetValByKey("DTFrom");//日期从.
+        String dtTo = this.GetValByKey("DTTo");//日期到.
+        int pageIdx = Integer.parseInt(this.GetValByKey("PageIdx"));//分页.
+
+        //创建查询对象.
+        QueryObject qo = new QueryObject(gwfs);
+        if (DataType.IsNullOrEmpty(key) == false)
+        {
+            qo.AddWhere(GenerWorkFlowAttr.Title, " LIKE ", "%" + key + "%");
+            qo.addAnd();
+        }
+
+        //我参与的.
+        if (scop.equals("0") == true)
+            qo.AddWhere(GenerWorkFlowAttr.Emps, "LIKE", "%@" + WebUser.getNo() + ",%");
+
+        //我发起的.
+        if (scop.equals("1") == true)
+            qo.AddWhere(GenerWorkFlowAttr.Starter, "=", WebUser.getNo());
+
+        //我部门发起的.
+        if (scop.equals("2") == true)
+            qo.AddWhere(GenerWorkFlowAttr.FK_Dept, "=", WebUser.getFK_Dept());
+
+
+        //任何一个为空.
+        if (DataType.IsNullOrEmpty(dtFrom) == true || DataType.IsNullOrEmpty(dtTo) == true)
+        {
+
+        }
+        else
+        {
+            qo.addAnd();
+            qo.AddWhere(GenerWorkFlowAttr.RDT, ">=", dtFrom);
+            qo.addAnd();
+            qo.AddWhere(GenerWorkFlowAttr.RDT, "<=", dtTo);
+        }
+
+        int count = qo.GetCount(); //获得总数.
+
+        qo.DoQuery("WorkID", 20, pageIdx);
+        //   qo.DoQuery(); // "WorkID", 20, pageIdx);
+
+
+        DataTable dt = gwfs.ToDataTableField("gwls");
+
+        //创建容器.
+        DataSet ds = new DataSet();
+        ds.Tables.add(dt); //增加查询对象.
+
+        //增加数量.
+        DataTable mydt = new DataTable();
+        mydt.TableName = "count";
+        mydt.Columns.Add("CC");
+        DataRow dr = mydt.NewRow();
+        dr.setValue(0,String.valueOf(count)); //把数量加进去.
+        mydt.Rows.add(dr);
+        ds.Tables.add(mydt);
+        return bp.tools.Json.ToJson(ds);
+    }
     ///#region 通用方法.
     public final String GetValByKey(String key)
     {

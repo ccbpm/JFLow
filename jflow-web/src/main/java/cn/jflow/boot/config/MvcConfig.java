@@ -54,6 +54,8 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/DataUser/FlowDesc/**").addResourceLocations("file:" + webPath + "/DataUser/FlowDesc/");
         registry.addResourceHandler("/DataUser/InstancePacketOfData/**").addResourceLocations("file:" + webPath + "/DataUser/InstancePacketOfData/");
         registry.addResourceHandler("/DataUser/Temp/**").addResourceLocations("file:" + webPath + "/DataUser/Temp/");
+        registry.addResourceHandler("/DataUser/JSLibData/**").addResourceLocations("file:" + webPath + "/DataUser/JSLibData/");
+
     }
 }
 

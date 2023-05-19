@@ -1,12 +1,5 @@
 package WebServiceImp;
 
-import java.util.Hashtable;
- 
-import org.apache.axis.client.Call;
-import org.apache.axis.client.Service;
-import javax.xml.namespace.QName;  
-
-
 public class Test {
 	
 	public static void main(String[] args) throws Exception {
@@ -17,7 +10,7 @@ public class Test {
 		 try {  
 		
 		// 以下都是套路  
-	        Service service = new Service();  
+	        /*Service service = new Service();
 	        Call call = (Call) service.createCall();  
 	        call.setTargetEndpointAddress(webPath);  
 	        call.setOperationName(new QName("http://WebServiceImp","SendWork"));// WSDL里面描述的接口名称  
@@ -25,7 +18,7 @@ public class Test {
 	                org.apache.axis.encoding.XMLType.XSD_DATE,  
 	                javax.xml.rpc.ParameterMode.IN);// 接口的参数  
 	        call.addParameter("workid",  
-	                org.apache.axis.encoding.XMLType.XSD_DATE,  
+	                org.apache.axis.encoding.XMLType.XSD_DATE,
 	                javax.xml.rpc.ParameterMode.IN);// 接口的参数  
 	        call.addParameter("ht",  
 	                org.apache.axis.encoding.XMLType.XSD_DATE,  
@@ -43,7 +36,7 @@ public class Test {
 	        ht.put("ZiDuan2", "222");
 	        String result = (String) call.invoke(new Object[] { "226",(long)798,ht,22602,"zhangyifan" });  
 	        // 给方法传递参数，并且调用方法  
-	        System.out.println("result is " + result);  
+	        System.out.println("result is " + result);  */
 	    } catch (Exception e) {  
 	        System.err.println(e.toString());  
 	    }  

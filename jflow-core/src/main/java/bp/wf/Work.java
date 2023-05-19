@@ -45,7 +45,7 @@ public abstract class Work extends Entity
 	 流程ID
 	*/
 	public long getFID() throws Exception {
-		if (this.getHisNode().getHisRunModel() != RunModel.SubThread)
+		if (this.getHisNode().getIsSubThread()== false)
 		{
 			return 0;
 		}
@@ -54,7 +54,7 @@ public abstract class Work extends Entity
 
 	}
 	public void setFID(long value)throws Exception
-	{if (this.getHisNode().getHisRunModel() != RunModel.SubThread)
+	{if (this.getHisNode().getIsSubThread()== false)
 		{
 			this.SetValByKey(WorkAttr.FID, 0);
 		}

@@ -342,12 +342,12 @@ public class NodeExt extends Entity
 			///#region 运行模式
 		map.AddGroupAttr("运行模式");
 		map.AddGroupAttr("运行模式");
-		map.AddDDLSysEnum(NodeAttr.RunModel, 0, "节点类型", true, false, NodeAttr.RunModel, "@0=普通@1=合流@2=分流@3=分合流@4=子线程");
+		map.AddDDLSysEnum(NodeAttr.RunModel, 0, "节点类型", true, false, NodeAttr.RunModel, "@0=普通@1=合流@2=分流@3=分合流@4=同表单子线程@5=异表单子线程");
 		map.SetHelperUrl(NodeAttr.RunModel, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3661853&doc_id=31094"); //增加帮助.
 
 			//子线程类型.
-		map.AddDDLSysEnum(NodeAttr.SubThreadType, 0, "子线程类型", true, false, NodeAttr.SubThreadType, "@0=同表单@1=异表单");
-		map.SetHelperUrl(NodeAttr.SubThreadType, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3661855&doc_id=31094"); //增加帮助
+		//map.AddDDLSysEnum(NodeAttr.SubThreadType, 0, "子线程类型", true, false, NodeAttr.SubThreadType, "@0=同表单@1=异表单");
+		//map.SetHelperUrl(NodeAttr.SubThreadType, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3661855&doc_id=31094"); //增加帮助
 
 		map.AddTBDecimal(NodeAttr.PassRate, BigDecimal.valueOf(100), "完成通过率", true, false);
 		map.SetHelperUrl(NodeAttr.PassRate, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3661856&doc_id=31094"); //增加帮助.
@@ -1103,6 +1103,9 @@ public class NodeExt extends Entity
 		}
 
 		DBAccess.RunSQL("UPDATE   Sys_GroupField SET Lab='" + name + "' WHERE OID=" + oid);
+		Node nd = new Node();
+		nd.setNodeID(nd.getNodeID());
+		nd.RetrieveFromDBSources();
 		return "执行成功";
 	}
 	/** 
@@ -1114,16 +1117,9 @@ public class NodeExt extends Entity
 	public final String Do_SaveNodeName(String name) throws Exception {
 		//更新节点名称.
 		DBAccess.RunSQL("UPDATE WF_Node SET Name='" + name + "' WHERE NodeID=" + this.getNodeID());
-
-		// //修改表单名称.
-		//     DBAccess.RunSQL("UPDATE SET Sys_MapDate SET Name='" + name + "' WHERE No='ND" + this.NodeID + "'");
-
-		//修改分组名称.
-		//  string oid = DBAccess.RunSQLReturnString("SELECT OID FROM Sys_GroupField WHERE FrmID='ND" + this.NodeID + "' ORDER BY Idx  ", null);
-		//  if (oid == null)
-		//     return "更新成功.";
-
-		//  DBAccess.RunSQL("UPDATE SET Sys_GroupField SET Lab='" + name + "' WHERE OID=" + oid);
+		Node nd = new Node();
+		nd.setNodeID(nd.getNodeID());
+		nd.RetrieveFromDBSources();
 		return "执行成功";
 	}
 
@@ -1467,7 +1463,7 @@ public class NodeExt extends Entity
 		{
 			this.SetValByKey(BtnAttr.ThreadEnable, true);
 		}
-		if(nd.getHisRunModel() == RunModel.SubThread && this.GetValBooleanByKey("ThreadEnable")==true){
+		if(nd.getIsSubThread() == true && this.GetValBooleanByKey("ThreadEnable")==true){
 			this.SetValByKey(BtnAttr.ThreadEnable, false);
 			//throw new Exception("err@子线程不能启用子线程按钮，子线程操作只针对分流,合流,分合流节点有效") ;
 		}

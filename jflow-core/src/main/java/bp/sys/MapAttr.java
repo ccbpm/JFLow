@@ -1358,6 +1358,50 @@ public class MapAttr extends EntityMyPK
 			this.setUIWidth(145);
 		}
 
+		if(this.getMyDataType() == DataType.AppString){
+			MapAttr attr = new MapAttr();
+			attr.setMyPK(this.getMyPK());
+			attr.RetrieveFromDBSources();
+			if (this.getTextModel() == 2 || this.getTextModel() == 3)
+				this.SetValByKey(MapAttrAttr.MaxLen, 4000);
+			if (attr.getMaxLen() < this.getMaxLen() && DataType.IsNullOrEmpty(this.getField())==false)
+			{
+				String sql = "";
+				MapData md = new MapData();
+				md.setNo(this.getFK_MapData());
+				if (md.RetrieveFromDBSources() == 1)
+				{
+					if (DBAccess.IsExitsTableCol(md.getPTable(), this.getKeyOfEn()) == true)
+					{
+						switch (bp.difference.SystemConfig.getAppCenterDBType())
+						{
+							case MSSQL:
+								sql = "ALTER TABLE " + md.getPTable() + " ALTER column " + this.getField() + " NVARCHAR(" + this.getMaxLen() + ")";
+								break;
+							case MySQL:
+								sql = "ALTER table " + md.getPTable() + " modify " + this.getField() + " NVARCHAR(" + this.getMaxLen() + ")";
+								break;
+							case Oracle:
+							case DM:
+								sql = "ALTER table " + md.getPTable() + " modify " + this.getField() + " NVARCHAR2(" + this.getMaxLen() + ")";
+								break;
+							case KingBaseR3:
+							case KingBaseR6:
+								sql = "ALTER table " + md.getPTable() + " ALTER COLUMN " + this.getField() + " TYPE NVARCHAR2(" + this.getMaxLen() + ")";
+								break;
+							case PostgreSQL:
+							case UX:
+							case HGDB:
+								sql = "ALTER table " + md.getPTable() + " alter " + this.getField() + " type character varying(" + this.getMaxLen() + ")";
+								break;
+							default:
+								throw new RuntimeException("err@没有判断的数据库类型.");
+						}
+						DBAccess.RunSQL(sql); //如果是oracle如果有nvarchar与varchar类型，就会出错.
+					}
+				}
+			}
+		}
 		return super.beforeUpdateInsertAction();
 	}
 	@Override

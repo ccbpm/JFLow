@@ -760,6 +760,7 @@ public abstract class EnObj implements Serializable
 	private Row _row = null;
 	public final Row getRow()
 	{
+
 		Row tmpRow = local.get();
 		if(SystemConfig.getRedisIsEnable()){
 			if(tmpRow == null) {
@@ -788,14 +789,6 @@ public abstract class EnObj implements Serializable
 			this._row.LoadAttrs(this.getEnMap().getAttrs());
 		}
 		return this._row;
-
-//		if (this._row == null)
-//		{
-//			this._row = new Row();
-//			this._row.LoadAttrs(this.getEnMap().getAttrs());
-//		}
-//
-//		return this._row;
 	}
 
 
@@ -807,7 +800,9 @@ public abstract class EnObj implements Serializable
 			if(value==null){
 				return;
 			}
-			bp.da.Cash2019.PutRow(this.toString(),this._row.GetValStrByKey(this.getPK()),value);
+			Object val = this._row.GetValByKey(this.getPK());
+			String pkVal = val==null?"":val.toString();
+			bp.da.Cash2019.PutRow(this.toString(),pkVal,value);
 		}
 	}
 

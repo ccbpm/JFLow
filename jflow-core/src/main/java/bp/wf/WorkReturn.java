@@ -655,7 +655,8 @@ public class WorkReturn
 						return ExeReturn1_1();
 					case FHL: //1-4 普通节点to分合流点
 						return ExeReturn1_1();
-					case SubThread: //1-5 普通节to子线程点
+					case SubThreadSameWorkID:
+					case SubThreadUnSameWorkID: //1-5 普通节to子线程点
 					default:
 						throw new RuntimeException("@退回错误:非法的设计模式或退回模式.普通节to子线程点");
 				}
@@ -668,7 +669,8 @@ public class WorkReturn
 					case HL: //2.3 分流点to合流点,分合流点
 					case FHL:
 						return ExeReturn1_1();
-					case SubThread: // 2.4 分流点to子线程点
+					case SubThreadSameWorkID:
+					case SubThreadUnSameWorkID: // 2.4 分流点to子线程点
 						return ExeReturn2_4();
 					// throw new Exception("@退回错误:非法的设计模式或退回模式.分流点to子线程点,请反馈给管理员.");
 					default:
@@ -684,7 +686,8 @@ public class WorkReturn
 					case HL: //3.3 合流点
 					case FHL:
 						throw new RuntimeException("@尚未完成.");
-					case SubThread: //3.4 合流点向子线程退回
+					case SubThreadSameWorkID:
+					case SubThreadUnSameWorkID: //3.4 合流点向子线程退回
 						return ExeReturn3_4();
 					default:
 						throw new RuntimeException("@退回错误:非法的设计模式或退回模式.普通节to子线程点");
@@ -698,12 +701,14 @@ public class WorkReturn
 					case HL: //4.3 合流点
 					case FHL:
 						throw new RuntimeException("@尚未完成.");
-					case SubThread: //4.5 子线程
+					case SubThreadSameWorkID:
+					case SubThreadUnSameWorkID: //4.5 子线程
 						return ExeReturn3_4();
 					default:
 						throw new RuntimeException("@没有判断的节点类型(" + this.ReturnToNode.getName() + ")");
 				}
-			case SubThread: // 5: 子线程节点向下发送的
+			case SubThreadSameWorkID:
+			case SubThreadUnSameWorkID: // 5: 子线程节点向下发送的
 				switch (this.ReturnToNode.getHisRunModel())
 				{
 					case Ordinary: //5.1 普通工作节点
@@ -716,7 +721,8 @@ public class WorkReturn
 					case FHL: //5.4 分合流点
 						return ExeReturn5_2();
 					//throw new Exception("@目前不支持此场景下的退回,请反馈给管理员.");
-					case SubThread: //5.5 子线程
+					case SubThreadSameWorkID:
+					case SubThreadUnSameWorkID: //5.5 子线程
 						return ExeReturn1_1();
 					default:
 						throw new RuntimeException("@没有判断的节点类型(" + ReturnToNode.getName() + ")");

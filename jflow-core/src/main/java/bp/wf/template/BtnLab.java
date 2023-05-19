@@ -790,6 +790,9 @@ public class BtnLab extends Entity
 		//map.SetHelperBaidu(BtnAttr.SendJS, "ccflow 发送前数据完整性判断"); //增加帮助.
 		map.SetHelperUrl(BtnAttr.SendJS, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3577079&doc_id=31094");
 
+		map.AddTBString(BtnAttr.DelayedSendLab, "延期发送", "延期发送按钮标签", true, false, 0, 50, 10);
+		map.AddBoolean(BtnAttr.DelayedSendEnable, false, "是否启用", true, true);
+
 		map.AddTBString(BtnAttr.SaveLab, "保存", "保存按钮标签", true, false, 0, 50, 10);
 		map.AddBoolean(BtnAttr.SaveEnable, true, "是否启用", true, true);
 		map.SetHelperUrl(BtnAttr.SaveLab, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3577137&doc_id=31094"); //增加帮助
@@ -1088,6 +1091,8 @@ public class BtnLab extends Entity
 		map.AddTBString(BtnAttr.PrintDocLab, "打印单据", "打印rtf按钮标签", true, false, 0, 50, 10);
 		map.SetHelperAlert(BtnAttr.PrintDocLab, "请在节点表单里面配置要打印的模板，设置表单=》表单属性=》打印模板。"); //增加帮助
 		map.AddBoolean(BtnAttr.PrintDocEnable, false, "是否启用", true, true);
+		map.AddBoolean(BtnAttr.PrintDocMyView, false, "(打印单据)显示在查看器工具栏?", true, true);
+		map.AddBoolean(BtnAttr.PrintDocMyCC, false, "(打印单据)显示在抄送工具栏?", true, true);
 		//map.SetHelperUrl(BtnAttr.PrintDocEnable, "http://ccbpm.mydoc.io/?v=5404&t=17979"); //增加帮助
 		//map.SetHelperUrl(BtnAttr.BatchLab, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3979986&doc_id=31094");
         //#endregion

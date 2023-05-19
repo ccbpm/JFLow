@@ -177,11 +177,17 @@ public class SqlBuilder
 	{
 		Paras paras = new Paras();
 		String pk = en.getPK();
-
+		Attrs attrs = en.getEnMap().getAttrs();
+		Attr attr1 = null;
 		switch (pk)
 		{
 			case "OID":
-				paras.Add("OID", en.GetValIntByKey("OID"));
+				//判断是不是字符类型
+				attr1 =attrs.GetAttrByKey("OID");
+				if(attr1.getIsNum())
+					paras.Add("OID", en.GetValIntByKey("OID"));
+				else
+					paras.Add("OID", en.GetValStrByKey("OID"));
 				return paras;
 			case "No":
 				paras.Add("No", en.GetValStrByKey("No"));
@@ -193,14 +199,19 @@ public class SqlBuilder
 				paras.Add("NodeID", en.GetValIntByKey("NodeID"));
 				return paras;
 			case "WorkID":
-				paras.Add("WorkID", en.GetValIntByKey("WorkID"));
+				//判断是不是字符类型
+				attr1 = attrs.GetAttrByKey("WorkID");
+				if(attr1.getIsNum())
+					paras.Add("WorkID", en.GetValIntByKey("WorkID"));
+				else
+					paras.Add("WorkID", en.GetValStrByKey("WorkID"));
 				return paras;
 			default:
 				break;
 		}
 
 
-		for (Attr attr : en.getEnMap().getAttrs())
+		for (Attr attr : attrs)
 		{
 			if (attr.getMyFieldType() == FieldType.PK || attr.getMyFieldType() == FieldType.PKFK || attr.getMyFieldType() == FieldType.PKEnum)
 			{
@@ -404,6 +415,10 @@ public class SqlBuilder
 			case KingBaseR3:
 			case KingBaseR6:
 				sql = SqlBuilder.SelectSQLOfOra(en, 1) + "AND (" + SqlBuilder.GenerWhereByPK(en, ":") + " )";
+				break;
+			case PostgreSQL:
+			case HGDB:
+				sql = SqlBuilder.SelectSQLOfPostgreSQL(en, 1) + " AND " + SqlBuilder.GenerWhereByPK(en, ":");
 				break;
 			case Informix:
 				sql = SqlBuilder.SelectSQLOfInformix(en, 1) + " WHERE (" + SqlBuilder.GenerWhereByPK(en, "?") + " )";
@@ -836,26 +851,7 @@ public class SqlBuilder
 		sql += ")";
 		return sql;
 	}
-	public static String GenerCreateTableSQL(Entity en)throws Exception
-	{
-		switch (DBAccess.getAppCenterDBType())
-		{
-			case Oracle:
-			case KingBaseR3:
-			case KingBaseR6:
-				return GenerCreateTableSQLOfOra(en);
-			case PostgreSQL:
-				return GenerCreateTableSQLOfPostgreSQL(en);
-			case Informix:
-				return GenerCreateTableSQLOfInfoMix(en);
-			case MSSQL:
-			case Access:
-				return GenerCreateTableSQLOfMS(en);
-			default:
-				break;
-		}
-		return null;
-	}
+
 	/** 
 	 生成sql.
 	 
@@ -1503,6 +1499,7 @@ public class SqlBuilder
 			case MySQL:
 				return SqlBuilder.SelectSQLOfMySQL(en, topNum);
 			case PostgreSQL:
+			case HGDB:
 				return SqlBuilder.SelectSQLOfPostgreSQL(en, topNum);
 			case Access:
 				return SqlBuilder.SelectSQLOfOLE(en, topNum);
@@ -1773,7 +1770,7 @@ public class SqlBuilder
 	*/
 	public static String SelectSQLOfPostgreSQL(Entity en, int topNum)throws Exception
 	{
-		String val = ""; // key = null;
+		String val = "";
 		String mainTable = "";
 
 		if (en.getEnMap().getHisFKAttrs().size() != 0)
@@ -1804,7 +1801,6 @@ public class SqlBuilder
 					}
 					else
 					{
-					 //   val = val + ",COALESCE(" + mainTable + attr.getField() + ", '" + attr.getDefaultVal() + "') AS " + attr.getKey();
 						val = val + ",COALESCE(" + mainTable + attr.getField() + ", '" + attr.getDefaultVal() + "') AS " + attr.getKey();
 
 					}
@@ -3021,6 +3017,7 @@ public class SqlBuilder
 			case Access:
 			case MySQL:
 			case PostgreSQL:
+			case HGDB:
 				sql = "UPDATE " + en.getEnMap().getPhysicsTable() + " SET " + val + " WHERE " + SqlBuilder.GenerWhereByPK(en, ":");
 				break;
 			case Informix:
@@ -3292,6 +3289,7 @@ public class SqlBuilder
 			case MySQL:
 				return " IFNULL(" + expression + "," + isNullBack + ")";
 			case PostgreSQL:
+			case HGDB:
 				return " COALESCE(" + expression + "," + isNullBack + ")";
 			default:
 				throw new RuntimeException("GetIsNullInSQL未涉及的数据库类型");

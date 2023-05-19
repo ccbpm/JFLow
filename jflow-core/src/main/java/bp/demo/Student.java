@@ -301,14 +301,14 @@ public class Student extends EntityNoName
 		map.SearchFieldsOfNum = "@年龄=Age";
 		//日期查询.
 		map.DTSearchKey = "RegDate";
-		map.DTSearchLable = "注册日期";
+		map.DTSearchLabel = "注册日期";
 		map.DTSearchWay = DTSearchWay.ByYearMonth;
 
 		//设置Search.htm页面查询条件换行的规则是增加的查询字段的宽度超过4000，则换行
 		map.AddSearchAttr(StudentAttr.XB);
 		map.AddSearchAttr(StudentAttr.ZZMM);
 		map.AddSearchAttr(StudentAttr.FK_BanJi);
-		
+		map.AddSearchAttr(StudentAttr.IsDuShengZi);
 		// 多对多的映射.
 		map.getAttrsOfOneVSM().Add(new StudentKeMus(), new KeMus(),
 				StudentKeMuAttr.FK_Student, StudentKeMuAttr.FK_KeMu,

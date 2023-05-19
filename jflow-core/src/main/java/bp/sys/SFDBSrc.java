@@ -22,6 +22,7 @@ public class SFDBSrc extends EntityNoName
 				return FieldCaseModel.UpperCase;
 			case PostgreSQL:
 			case UX:
+			case HGDB:
 				return FieldCaseModel.Lowercase;
 			default:
 				return FieldCaseModel.None;
@@ -182,15 +183,15 @@ public class SFDBSrc extends EntityNoName
 					mysql = "SELECT * FROM (" + sql + " AND ROWNUM<=" + max + ") temp WHERE temp.rn>=" + top;
 					break;
 				case MySQL:
+				case PostgreSQL:
+				case HGDB:
 					mysql = sql + " LIMIT " + pageSize * (pageIdx - 1) + "," + pageSize;
 					break;
-				case PostgreSQL:
 				case UX:
 				case SQLServer:
 				default:
 					//获取主键的类型
 					Attr attr = attrs.GetAttrByKeyOfEn(pk);
-
 					//mysql = countSql;
 					//mysql = mysql.Substring(mysql.ToUpper().IndexOf("FROM "));
 					// mysql = "SELECT  "+ mainTable+pk + " "  + mysql;
@@ -202,12 +203,17 @@ public class SFDBSrc extends EntityNoName
 					}
 					else
 					{
-						mysql = sql + " AND OID in(" + pks + ")";
+						if((SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) && sql.contains("\""))
+							mysql = sql + " AND \""+pk+"\" in(" + pks + ")";
+						else
+							mysql = sql + " AND "+pk+" in(" + pks + ")";
 					}
 					break;
 			}
 			dt = this.RunSQLReturnTable(mysql);
-			return InitEntitiesByDataTable(ens, dt, null);
+			if((SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) && mysql.contains("\""))
+				return InitEntitiesByDataTable(ens, dt, null,false);
+			return InitEntitiesByDataTable(ens, dt, null,true);
 
 		}
 		catch (RuntimeException ex)
@@ -216,7 +222,7 @@ public class SFDBSrc extends EntityNoName
 		}
 	}
 
-	public final Entities InitEntitiesByDataTable(Entities ens, DataTable dt, String[] fullAttrs) throws Exception {
+	public final Entities InitEntitiesByDataTable(Entities ens, DataTable dt, String[] fullAttrs,boolean isUpperOrLower) throws Exception {
 		if (fullAttrs == null)
 		{
 			Map enMap = ens.getGetNewEntity().getEnMap();
@@ -233,7 +239,7 @@ public class SFDBSrc extends EntityNoName
 						{
 							continue;
 						}
-						if (bp.difference.SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
+						if (bp.difference.SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase && isUpperOrLower)
 						{
 							if (attr.getMyFieldType() == FieldType.RefText)
 							{
@@ -244,7 +250,7 @@ public class SFDBSrc extends EntityNoName
 								en.SetValByKey(attr.getKey(), dr.getValue(attr.getKey().toUpperCase()));
 							}
 						}
-						else if (bp.difference.SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+						else if (bp.difference.SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase && isUpperOrLower)
 						{
 							if (attr.getMyFieldType() == FieldType.RefText)
 							{
@@ -286,7 +292,7 @@ public class SFDBSrc extends EntityNoName
 				{
 					continue;
 				}
-				if (bp.difference.SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
+				if (bp.difference.SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase && isUpperOrLower)
 				{
 					if (dt.Columns.contains(str) == true)
 					{
@@ -297,7 +303,7 @@ public class SFDBSrc extends EntityNoName
 						en.SetValByKey(str, dr.getValue(str.toUpperCase()));
 					}
 				}
-				else if (bp.difference.SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+				else if (bp.difference.SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase && isUpperOrLower)
 				{
 					if (dt.Columns.contains(str) == true)
 					{
@@ -816,6 +822,7 @@ public class SFDBSrc extends EntityNoName
 			case MSSQL:
 			case PostgreSQL:
 			case UX:
+			case HGDB:
 				return String.format("SELECT (CASE s.xtype WHEN 'U' THEN 'TABLE' WHEN 'V' THEN 'VIEW' WHEN 'P' THEN 'PROCEDURE' ELSE 'OTHER' END) OTYPE FROM sysobjects s WHERE s.name = '%1$s'", objName);
 			case Oracle:
 				return String.format("SELECT uo.OBJECT_TYPE OTYPE FROM user_objects uo WHERE uo.OBJECT_NAME = '%1$s'", objName.toUpperCase());
@@ -1081,6 +1088,9 @@ public class SFDBSrc extends EntityNoName
 				case UX:
 					dbType = bp.sys.DBSrcType.UX;
 					break;
+				case HGDB:
+					dbType = bp.sys.DBSrcType.HGDB;
+					break;
 				default:
 					throw new RuntimeException("没有涉及到的连接测试类型...");
 			}
@@ -1119,6 +1129,7 @@ public class SFDBSrc extends EntityNoName
 				break;
 			case PostgreSQL:
 			case UX:
+			case HGDB:
 				sql.append("SELECT " + "\r\n");
 				sql.append("    table_name No," + "\r\n");
 				sql.append("    table_name Name" + "\r\n");
@@ -1162,7 +1173,6 @@ public class SFDBSrc extends EntityNoName
 		return GetTables(false);
 	}
 
-//ORIGINAL LINE: public DataTable GetTables(bool isCutFlowTables = false)
 	public final DataTable GetTables(boolean isCutFlowTables)
 	{
 		StringBuilder sql = new StringBuilder();
@@ -1197,6 +1207,9 @@ public class SFDBSrc extends EntityNoName
 					break;
 				case KingBaseR6:
 					dbType = DBSrcType.KingBaseR6;
+					break;
+				case HGDB:
+					dbType = DBSrcType.HGDB;
 					break;
 				default:
 					throw new RuntimeException("没有涉及到的连接测试类型...");
@@ -1243,6 +1256,8 @@ public class SFDBSrc extends EntityNoName
 				sql.append(" ORDER BY uo.OBJECT_TYPE, uo.OBJECT_NAME" + "\r\n");
 				break;
 			case MySQL:
+			case PostgreSQL:
+			case HGDB:
 				sql.append("SELECT " + "\r\n");
 				sql.append("    table_name AS No," + "\r\n");
 				sql.append("    CONCAT('['," + "\r\n");
@@ -1271,33 +1286,6 @@ public class SFDBSrc extends EntityNoName
 				break;
 			case Informix:
 				sql.append("" + "\r\n");
-				break;
-			case PostgreSQL:
-				sql.append("SELECT " + "\r\n");
-				sql.append("    table_name AS No," + "\r\n");
-				sql.append("    CONCAT('['," + "\r\n");
-				sql.append("            CASE table_type" + "\r\n");
-				sql.append("                WHEN 'BASE TABLE' THEN '表'" + "\r\n");
-				sql.append("                ELSE '视图'" + "\r\n");
-				sql.append("            END," + "\r\n");
-				sql.append("            '] '," + "\r\n");
-				sql.append("            table_name) AS Name," + "\r\n");
-				sql.append("    CASE table_type" + "\r\n");
-				sql.append("        WHEN 'BASE TABLE' THEN 'U'" + "\r\n");
-				sql.append("        ELSE 'V'" + "\r\n");
-				sql.append("    END AS xtype" + "\r\n");
-				sql.append("FROM" + "\r\n");
-				sql.append("    information_schema.tables" + "\r\n");
-				sql.append("WHERE" + "\r\n");
-				sql.append(String.format("    table_schema = '%1$s'", this.getDBSrcType() == DBSrcType.Localhost ? SystemConfig.getAppCenterDBDatabase() :this.getDBName()) + "\r\n");
-				sql.append("        AND (table_type = 'BASE TABLE'" + "\r\n");
-				sql.append("        OR table_type = 'VIEW')" + "\r\n");
-				//   sql.AppendLine("       AND (table_name NOT LIKE 'ND%'");
-				sql.append("        AND table_name NOT LIKE 'Demo_%'" + "\r\n");
-				sql.append("        AND table_name NOT LIKE 'Sys_%'" + "\r\n");
-				sql.append("        AND table_name NOT LIKE 'WF_%'" + "\r\n");
-				sql.append("        AND table_name NOT LIKE 'GPM_%'" + "\r\n");
-				sql.append("ORDER BY table_type , table_name;" + "\r\n");
 				break;
 			default:
 				break;
@@ -1643,6 +1631,12 @@ public class SFDBSrc extends EntityNoName
 				case KingBaseR6:
 					dbType = DBSrcType.KingBaseR6;
 					break;
+				case PostgreSQL:
+					dbType = DBSrcType.PostgreSQL;
+					break;
+				case HGDB:
+					dbType = DBSrcType.HGDB;
+					break;
 				default:
 					throw new RuntimeException("没有涉及到的连接测试类型...");
 			}
@@ -1699,6 +1693,12 @@ public class SFDBSrc extends EntityNoName
 				case KingBaseR6:
 					dbType = DBSrcType.KingBaseR6;
 					break;
+				case PostgreSQL:
+					dbType = DBSrcType.PostgreSQL;
+					break;
+				case HGDB:
+					dbType = DBSrcType.HGDB;
+					break;
 				default:
 					throw new RuntimeException("没有涉及到的连接测试类型...");
 			}
@@ -1743,6 +1743,8 @@ public class SFDBSrc extends EntityNoName
 
 				break;
 			case MySQL:
+			case HGDB:
+			case PostgreSQL:
 				sql.append("SELECT " + "\r\n");
 				sql.append("    column_name AS 'No'," + "\r\n");
 				sql.append("    data_type AS 'DBType'," + "\r\n");
@@ -1755,6 +1757,7 @@ public class SFDBSrc extends EntityNoName
 				sql.append(String.format("    table_schema = '%1$s'", this.getDBSrcType() == DBSrcType.Localhost ?  SystemConfig.getAppCenterDBDatabase() :this.getDBName()) + "\r\n");
 				sql.append(String.format("        AND table_name = '%1$s';", tableName) + "\r\n");
 				break;
+
 			case Informix:
 				break;
 			default:

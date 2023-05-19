@@ -944,7 +944,7 @@ public class WorkNodePlus
 			String ptable = "ND" + Integer.parseInt(wn.getHisFlow().getNo()) + "Track";
 
 			String mysql = "";
-			if (wn.getHisNode().getHisRunModel() == RunModel.SubThread)
+			if (wn.getHisNode().getIsSubThread() == true)
 			{
 				mysql = "SELECT NDFrom,EmpFrom FROM " + ptable + " WHERE (WorkID =" + wn.getWorkID() + " AND FID=" + wn.getHisGenerWorkFlow().getFID() + ") AND ActionType!= " + ActionType.UnSend.getValue() + " AND NDTo = " + wn.getHisNode().getNodeID() + " AND(NDTo != NDFrom) AND NDFrom In(Select Node From WF_Direction Where ToNode=" + wn.getHisNode().getNodeID() + " AND FK_Flow='" + wn.getHisFlow().getNo() + "') ORDER BY RDT DESC";
 			}

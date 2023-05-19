@@ -319,9 +319,28 @@ public class WF_CCBill extends WebContralBase
 			return "err@" + func.getMsgErr() + " @ " + ex.getMessage();
 		}
 	}
+	public String DoMethod_ExecFunc() throws Exception {
+		MethodFunc func = new MethodFunc(this.getMyPK());
+		String doc = func.getDocs();
+		BuessUnitBase en = bp.sys.base.Glo.GetBuessUnitEntityByEnName(doc);
+		try
+		{
+			String workID = this.getWorkIDStr();
+			en.WorkID = Long.parseLong(workID);
+			en.DoIt();
+
+			bp.ccbill.Dev2Interface.Dict_AddTrack(this.getFrmID(), workID, "执行方法", func.getName());
+			return func.getMsgSuccess();
+		}
+		catch (Exception ex)
+		{
+			if (func.getMsgErr().equals(""))
+				func.setMsgErr("执行失败(DoMethod_ExecFunc).");
+			return "err@" + func.getMsgErr() + " @ " + ex.getMessage();
+		}
+	}
 	/** 
 	 执行SQL
-	 
 	 @return 
 	*/
 	public final String DoMethodPara_ExeSQL() throws Exception {
@@ -1513,7 +1532,7 @@ public class WF_CCBill extends WebContralBase
 			///#region 关键字字段.
 		String keyWord = ur.getSearchKey();
 
-		if (md.GetParaBoolen("IsSearchKey") && DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1)
+		if (md.GetParaBoolen("IsSearchKey",true) && DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1)
 		{
 			Attr attrPK = new Attr();
 			for (Attr attr : attrs.ToJavaList())
@@ -1819,9 +1838,7 @@ public class WF_CCBill extends WebContralBase
 				qo.AddWhere((String) key, this.GetRequestVal(key.toString()));
 				continue;
 			}
-
 		}
-
 		//获得行数.
 		ur.SetPara("RecCount", qo.GetCount());
 		ur.Save();
@@ -2195,11 +2212,17 @@ public class WF_CCBill extends WebContralBase
 					if (isFirstSearchKey)
 					{
 						isFirstSearchKey = false;
-						whereSQL += " AND (" + mainTable + key + " like '%" + dataRow.get("Value").toString() + "%' ";
+						if((SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) && expList.contains("\""))
+							whereSQL += " AND (\"" + key + "\" like '%" + dataRow.get("Value").toString() + "%' ";
+						else
+							whereSQL += " AND (" + mainTable + key + " like '%" + dataRow.get("Value").toString() + "%' ";
 					}
 					else
 					{
-						whereSQL += " OR " + mainTable + key + " like '%" + dataRow.get("Value").toString() + "%' ";
+						if((SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) && expList.contains("\""))
+							whereSQL += " OR \""+ key + "\" like '%" + dataRow.get("Value").toString() + "%' ";
+						else
+							whereSQL += " OR " + mainTable + key + " like '%" + dataRow.get("Value").toString() + "%' ";
 					}
 				}
 				if (isFirstSearchKey == false && type.equals("SearchKey") == false)
@@ -2210,7 +2233,10 @@ public class WF_CCBill extends WebContralBase
 
 				if (type.equals("StringKey") == true)
 				{
-					whereSQL += " AND " + mainTable + key + " like '%" + dataRow.get("Value").toString() + "%' ";
+					if((SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) && expList.contains("\""))
+						whereSQL += " AND \"" +  key + "\" like '%" + dataRow.get("Value").toString() + "%' ";
+					else
+						whereSQL += " AND " + mainTable + key + " like '%" + dataRow.get("Value").toString() + "%' ";
 				}
 				//时间解析
 				if (type.equals("Date") == true)
@@ -2219,17 +2245,26 @@ public class WF_CCBill extends WebContralBase
 					if (isFirstDateKey == true)
 					{
 						isFirstDateKey = false;
-						whereSQL += " AND (" + mainTable + key + " " + dataRow.get("Oper").toString() + " '" + dataRow.get("Value").toString() + "' ";
+						if((SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) && expList.contains("\""))
+							whereSQL += " AND (\"" + key + "\" " + dataRow.get("Oper").toString() + " '" + dataRow.get("Value").toString() + "' ";
+						else
+							whereSQL += " AND (" + mainTable + key + " " + dataRow.get("Oper").toString() + " '" + dataRow.get("Value").toString() + "' ";
 						continue;
 					}
 					if (isFirstDateKey == false)
 					{
-						whereSQL += " AND " + mainTable + key + " " + dataRow.get("Oper").toString() + " '" + dataRow.get("Value").toString() + "')";
+						if((SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) && expList.contains("\""))
+							whereSQL += " AND \""  + key + "\" " + dataRow.get("Oper").toString() + " '" + dataRow.get("Value").toString() + "')";
+						else
+							whereSQL += " AND " + mainTable + key + " " + dataRow.get("Oper").toString() + " '" + dataRow.get("Value").toString() + "')";
 					}
 				}
 				if (type.equals("Select") == true || type.equals("Normal") == true)
 				{
-					whereSQL += " AND " + mainTable + key + " " + dataRow.get("Oper").toString() + " '" + dataRow.get("Value").toString() + "'";
+					if((SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) && expList.contains("\""))
+						whereSQL += " AND \"" +  key + "\" " + dataRow.get("Oper").toString() + " '" + dataRow.get("Value").toString() + "'";
+					else
+						whereSQL += " AND " + mainTable + key + " " + dataRow.get("Oper").toString() + " '" + dataRow.get("Value").toString() + "'";
 
 				}
 			}
@@ -2244,7 +2279,11 @@ public class WF_CCBill extends WebContralBase
 
 			expList = "SELECT * From(" + expList + ") AS A WHERE 1=1 " + whereSQL; //查询列数的
 			String expCount = "SELECT Count(*) From(" + expList + ") AS A WHERE 1=1 " + whereSQL; //查询总条数的
-			String expPageSize = "SELECT A.OID  From(" + expList + ") AS A WHERE 1=1 " + whereSQL; //查询分页使用的SQL语句
+			String expPageSize="";
+			if((SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) && expList.contains("\""))
+				expPageSize = "SELECT \"OID\"  From(" + expList + ") AS A WHERE 1=1 " + whereSQL; //查询分页使用的SQL语句
+			else
+				expPageSize = "SELECT A.OID  From(" + expList + ") AS A WHERE 1=1 " + whereSQL; //查询分页使用的SQL语句
 
 			if (DataType.IsNullOrEmpty(md.getDBSrc()) == true)
 			{
@@ -2430,7 +2469,8 @@ public class WF_CCBill extends WebContralBase
 		{
 			sql = "SELECT  TOP 50 " + fields + " FROM Frm_GenerBill WHERE " + sqlWhere;
 		}
-		else if (SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX)
+		else if (SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL
+				|| SystemConfig.getAppCenterDBType( ) == DBType.UX || SystemConfig.getAppCenterDBType( ) == DBType.HGDB)
 		{
 			sql = "SELECT  " + fields + " FROM Frm_GenerBill WHERE " + sqlWhere + " LIMIT 50";
 		}
@@ -2831,8 +2871,8 @@ public class WF_CCBill extends WebContralBase
 			//默认查询本部门的单据
 			if (SearchDataRole.forValue(md.GetParaInt("SearchDataRole", 0)) == SearchDataRole.ByOnlySelf && DataType.IsNullOrEmpty(hidenField) == true || (md.GetParaInt("SearchDataRoleByDeptStation", 0) == 0 && DataType.IsNullOrEmpty(ap.GetValStrByKey("FK_Dept")) == true))
 			{
-				qo.addAnd();
-				qo.AddWhere("Starter", "=", WebUser.getNo());
+				//qo.addAnd();
+				//qo.AddWhere("Starter", "=", WebUser.getNo());
 			}
 
 		}

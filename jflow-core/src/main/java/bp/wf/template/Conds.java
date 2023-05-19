@@ -100,6 +100,7 @@ public class Conds extends Entities
 				case MySQL:
 				case PostgreSQL:
 				case UX:
+				case HGDB:
 					sql = " SELECT No FROM WF_Emp WHERE " + exp + "    limit 1 ";
 					break;
 				case Oracle:

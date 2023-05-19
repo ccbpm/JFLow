@@ -1,6 +1,7 @@
 package bp.wf.data;
 
 import bp.da.*;
+import bp.difference.SystemConfig;
 import bp.wf.*;
 import bp.sys.*;
 import bp.en.*;
@@ -491,8 +492,8 @@ public class MyJoinFlow extends Entity
 		map.AddTBInt(MyFlowAttr.FK_Node, 0, "FK_Node", false, false);
 
 
-		map.DTSearchKey= GenerWorkFlowAttr.SDTOfNode;
-		map.DTSearchLable = "节点应完成时间";
+		map.DTSearchKey= GenerWorkFlowAttr.RDT;
+		map.DTSearchLabel = "发起时间";
 		map.DTSearchWay=DTSearchWay.ByDate;
 
 			//   map.AddSearchAttr(MyFlowAttr.FK_Flow);
@@ -532,7 +533,7 @@ public class MyJoinFlow extends Entity
 	public final String DoTrack()throws Exception
 	{
 		//PubClass.WinOpen(Glo.CCFlowAppPath + "WF/WFRpt.htm?WorkID=" + this.WorkID + "&FID=" + this.FID + "&FK_Flow=" + this.FK_Flow, 900, 800);
-		return "/WF/WFRpt.htm?CurrTab=Truck&WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
+		return SystemConfig.getHostURLOfBS() +"/WF/WFRpt.htm?CurrTab=Truck&WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
 	}
 	/** 
 	 打开最后一个节点表单
@@ -550,12 +551,12 @@ public class MyJoinFlow extends Entity
 		if (dt != null && dt.Rows.size() > 0)
 		{
 			String myPk = dt.Rows.get(0).getValue(0).toString();
-			return "/WF/MyView.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node() + "&DoType=View&MyPK=" + myPk + "&PWorkID=" + this.getPWorkID();
+			return SystemConfig.getHostURLOfBS() +"/WF/MyView.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node() + "&DoType=View&MyPK=" + myPk + "&PWorkID=" + this.getPWorkID();
 		}
 
 		Node nd = new Node(this.getFK_Node());
 
-		return "/WF/CCForm/FrmGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_MapData=" + nd.getNodeFrmID() + "&ReadOnly=1&IsEdit=0";
+		return SystemConfig.getHostURLOfBS() +"/WF/CCForm/FrmGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_MapData=" + nd.getNodeFrmID() + "&ReadOnly=1&IsEdit=0";
 	}
 
 		///#endregion

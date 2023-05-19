@@ -7,6 +7,8 @@ import bp.en.*;
 import bp.ccbill.template.*;
 import bp.sys.CCFormAPI;
 import bp.wf.*;
+import bp.wf.template.FlowTabAttr;
+
 import java.io.*;
 
 /** 
@@ -208,6 +210,8 @@ public class MySystem extends EntityNoName
 					break;
 				case "DictTable": //如果是字典.
 					DictTable(en, path);
+				case "StandAloneFlow":
+					StandAloneFlow(en,path);
 					break;
 				default:
 					//    throw new Exception("err@没有判断的应用类型:" + en.Mark);
@@ -318,6 +322,25 @@ public class MySystem extends EntityNoName
 			///#endregion 导出实体的方法 .
 
 		return "实体导出成功";
+	}
+	public final String StandAloneFlow(Menu en, String path) throws Exception {
+		String file;
+		String newMark = en.getTag1()+"_"+en.getMark();
+		Flow f1 = new Flow(en.getTag1());
+
+		f1.DoExpFlowXmlTemplete(path +newMark + "_Flow");
+
+		//获得功能页
+		bp.wf.template.FlowTabs flowTabs = new bp.wf.template.FlowTabs();
+		flowTabs.Retrieve(FlowTabAttr.FK_Flow,en.getTag1());
+		DataSet ds=new DataSet();
+		ds.Tables.add(flowTabs.ToDataTableField("FlowTab"));
+
+		file = path + "/" +newMark + "_FlowTab.xml"; //实体方法.
+		ds.WriteXml(file,XmlWriteMode.WriteSchema, ds);
+
+
+		return "独立运行流程导出成功";
 	}
 	/** 
 	 导出应用模板

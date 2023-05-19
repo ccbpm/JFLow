@@ -48,9 +48,9 @@ public class OAFlowSort extends EntityMyPK
 		}
 		Map map = new Map("Port_OrgAdminerFlowSort", "组织管理员流程目录权限");
 		map.AddMyPK(true);
-		map.AddTBString(OAFlowSortAttr.OrgNo, null, "组织", true, false, 0, 50, 20);
-		map.AddTBString(OAFlowSortAttr.FK_Emp, null, "管理员", true, false, 0, 50, 20);
-		map.AddTBString(OAFlowSortAttr.RefOrgAdminer, null, "组织管理员", true, false, 0, 50, 20);
+		map.AddTBString(OAFlowSortAttr.OrgNo, null, "组织", true, false, 0, 100, 20);
+		map.AddTBString(OAFlowSortAttr.FK_Emp, null, "管理员", true, false, 0, 100, 20);
+		map.AddTBString(OAFlowSortAttr.RefOrgAdminer, null, "组织管理员", true, false, 0, 100, 20);
 
 			//map.AddDDLEntities(OAFlowSortAttr.FK_Emp, null, "管理员", new Emps(), false);
 			//map.AddDDLEntities(OAFlowSortAttr.RefOrgAdminer, null, "管理员", new Emps(), false);

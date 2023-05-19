@@ -62,24 +62,24 @@ public class GenerSiganture extends Method
 		{
 			bp.port.Emps emps = new Emps();
 			emps.RetrieveAllFromDBSource();
-			String path = SystemConfig.getPathOfDataUser() + "/Siganture/T.JPG";
+			String path = SystemConfig.getPathOfDataUser() + "/Siganture/T.jpg";
 			String fontName = "宋体";
 			String empOKs = "";
 			String empErrs = "";
 			for (Emp emp : emps.ToJavaList())
 			{
-				String pathMe = SystemConfig.getPathOfDataUser() + "/Siganture/" + emp.getNo() + ".JPG";
+				String pathMe = SystemConfig.getPathOfDataUser() + "/Siganture/" + emp.getNo() + ".jpg";
 				if ((new File(pathMe)).isFile())
 				{
 					continue;
 				}
 
-				Files.copy(Paths.get(SystemConfig.getPathOfDataUser() + "/Siganture/Templete.JPG"), Paths.get(path), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
+				Files.copy(Paths.get(SystemConfig.getPathOfDataUser() + "/Siganture/Templete.jpg"), Paths.get(path), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
 
 				paintWaterMarkPhoto(pathMe,emp.getName(),path);
 
 
-				Files.copy(Paths.get(pathMe), Paths.get(SystemConfig.getPathOfDataUser() + "/Siganture/" + emp.getName() + ".JPG"), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
+				Files.copy(Paths.get(pathMe), Paths.get(SystemConfig.getPathOfDataUser() + "/Siganture/" + emp.getName() + ".jpg"), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
 			}
 			return "执行成功...";
 		}

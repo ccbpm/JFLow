@@ -437,6 +437,7 @@ public class Track extends bp.en.Entity
 			case UX:
 			case KingBaseR3:
 			case KingBaseR6:
+			case HGDB:
 				sqlRename = "ALTER TABLE WF_Track RENAME to " + ptable;
 				break;
 			case MySQL:

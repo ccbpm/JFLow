@@ -2746,7 +2746,7 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 			md.Delete();
 		}
 		//把表单属性的FK_FormTree清空
-		CCFormAPI.CopyFrm(mainData.getNo(), currVer, mainData.getEnsName() + "(Ver" + currVer + ".0)", mainData.getFK_FormTree());
+		CCFormAPI.CopyFrm(mainData.getNo(), currVer, mainData.getName() + "(Ver" + currVer + ".0)", mainData.getFK_FormTree());
 		md.setFK_FormTree("");
 		md.setPTable ( mainData.getPTable());
 		md.Update();
@@ -2818,6 +2818,25 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
 			///#endregion 3.把设置的表单数据拷贝到FrmID所在的表单上去
 		return "设置成功.";
+	}
+
+	public final String SysEnumList_SelectEnum() throws Exception {
+		String sql = "";
+		String EnumName = this.GetRequestVal("EnumName");
+		if (EnumName == "")
+			sql = "SELECT * FROM Sys_EnumMain";
+		else
+			sql = "SELECT * FROM Sys_EnumMain WHERE (No like '%" + EnumName + "%') OR (Name like '%" + EnumName + "%')";
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		return bp.tools.Json.ToJson(dt);
+	}
+
+	public final String SysEnumList_MapAttrs() throws Exception {
+		String  sql = "SELECT A.FK_MapData,A.KeyOfEn,A.Name From Sys_MapAttr A,Sys_MapData B Where A.FK_MapData=B.No " +
+				"AND A.UIBindKey='" + this.GetRequestVal("UIBindKey") + "' AND B.OrgNo='" + this.GetRequestVal("OrgNo") + "'";
+
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		return bp.tools.Json.ToJson(dt);
 	}
 
 }

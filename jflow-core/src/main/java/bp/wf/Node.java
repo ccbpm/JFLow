@@ -1,6 +1,8 @@
 package bp.wf;
 
 import bp.da.*;
+import bp.difference.ContextHolderUtils;
+import bp.difference.SystemConfig;
 import bp.sys.*;
 import bp.en.*;
 import bp.wf.template.*;
@@ -82,13 +84,13 @@ public class Node extends Entity
 	/** 
 	 子线程类型
 	*/
-	public final SubThreadType getHisSubThreadType()  {
+	/*public final SubThreadType getHisSubThreadType()  {
 		return SubThreadType.forValue(this.GetValIntByKey(NodeAttr.SubThreadType));
 	}
 	public final void setHisSubThreadType(SubThreadType value)  
 	 {
 		this.SetValByKey(NodeAttr.SubThreadType, value.getValue());
-	}
+	}*/
 	/** 
 	 手工启动的子流程个数
 	*/
@@ -672,7 +674,7 @@ public class Node extends Entity
 							sql = "ALTER TABLE WF_Emp ADD StartFlows blob";
 						}
 
-						if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.UX)
+						if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.HGDB)
 						{
 							sql = "ALTER TABLE  WF_Emp ADD StartFlows bytea NULL ";
 						}
@@ -695,13 +697,16 @@ public class Node extends Entity
 
 
 			///#region 如果是数据合并模式，就要检查节点中是否有子线程，如果有子线程就需要单独的表.
-		if (this.getHisRunModel() == RunModel.SubThread)
+		if (this.getIsSubThread()== true)
 		{
-			MapData md = new MapData("ND" + this.getNodeID());
-			if (!md.getPTable().equals("ND" + this.getNodeID()))
-			{
-				md.setPTable ( "ND" + this.getNodeID());
-				md.Update();
+			MapData md = new MapData();
+			md.setNo("ND" + this.getNodeID());
+			if(md.RetrieveFromDBSources()!=0){
+				if (!md.getPTable().equals("ND" + this.getNodeID()))
+				{
+					md.setPTable ( "ND" + this.getNodeID());
+					md.Update();
+				}
 			}
 		}
 
@@ -750,7 +755,8 @@ public class Node extends Entity
 				//else
 				//    this.HisNodeWorkType = NodeWorkType.WorkFHL;
 				break;
-			case SubThread:
+			case SubThreadSameWorkID:
+			case SubThreadUnSameWorkID:
 				this.setHisNodeWorkType(NodeWorkType.SubThreadWork);
 				break;
 			default:
@@ -806,7 +812,7 @@ public class Node extends Entity
 		mapData.setNo("ND" + this.getNodeID());
 		if (mapData.RetrieveFromDBSources() != 0)
 		{
-			if (this.getHisRunModel() == RunModel.SubThread)
+			if (this.getIsSubThread()== true)
 			{
 				mapData.setPTable(mapData.getNo());
 			}
@@ -821,7 +827,7 @@ public class Node extends Entity
 		if (this.getFormType() == NodeFormType.RefOneFrmTree)
 		{
 			GEEntity en = new GEEntity(this.getNodeFrmID());
-			if (this.getHisRunModel() == RunModel.SubThread && en.getEnMap().getAttrs().contains("FID") == false)
+			if (this.getIsSubThread()== true && en.getEnMap().getAttrs().contains("FID") == false)
 			{
 				MapAttr attr = new MapAttr();
 				attr.setFK_MapData(this.getNodeFrmID());
@@ -848,6 +854,7 @@ public class Node extends Entity
 				attr.setUIVisible(false);
 				attr.setUIIsEnable(false);
 				attr.setDefVal( "0");
+				attr.setMaxLen(100);
 				attr.setHisEditType( EditType.Readonly);
 				attr.Insert();
 			}
@@ -1840,7 +1847,8 @@ public class Node extends Entity
 				return NodeWorkType.WorkHL;
 			case FHL:
 				return NodeWorkType.WorkFHL;
-			case SubThread:
+			case SubThreadSameWorkID:
+			case SubThreadUnSameWorkID:
 				return NodeWorkType.SubThreadWork;
 			default:
 				throw new RuntimeException("@没有判断类型NodeWorkType.");
@@ -2384,7 +2392,14 @@ public class Node extends Entity
 	{
 		return this.GetValBooleanByKey(NodeAttr.IsResetAccepter);
 	}
+	public final boolean getIsSubThread()
+	{
+		if (this.getHisRunModel() == RunModel.SubThreadSameWorkID
+				|| this.getHisRunModel() == RunModel.SubThreadUnSameWorkID)
+			return true;
+		return false;
 
+	}
 	/** 
 	 重写基类方法
 	*/
@@ -2412,7 +2427,7 @@ public class Node extends Entity
 		map.AddTBString(NodeAttr.ICON, null, "节点ICON图片路径", true, false, 0, 70, 10);
 
 		map.AddTBInt(NodeAttr.NodeWorkType, 0, "节点类型", false, false);
-		map.AddTBInt(NodeAttr.SubThreadType, 0, "子线程ID", false, false);
+		//map.AddTBInt(NodeAttr.SubThreadType, 0, "子线程ID", false, false);
 
 		map.AddTBString(NodeAttr.FK_Flow, null, "FK_Flow", false, false, 0, 3, 10);
 		map.AddTBInt(NodeAttr.IsGuestNode, 0, "是否是客户执行节点", false, false);
@@ -2656,7 +2671,7 @@ public class Node extends Entity
 
 		int num = 0;
 		//如果是结束节点，则自动结束流程
-		if (this.getNodePosType() == NodePosType.End)
+		/*if (this.getNodePosType() == NodePosType.End)
 		{
 			GenerWorkFlows gwfs = new GenerWorkFlows();
 			gwfs.Retrieve("FK_Flow", this.getFK_Flow(), null);
@@ -2672,7 +2687,7 @@ public class Node extends Entity
 					continue;
 				}
 			}
-		}
+		}*/
 		//判断是否可以被删除. 
 		num = DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM WF_GenerWorkerlist WHERE FK_Node=" + this.getNodeID() + " AND IsPass=0 ");
 		if (num != 0)
@@ -2719,7 +2734,9 @@ public class Node extends Entity
 		//写入日志.
 		bp.sys.base.Glo.WriteUserLog("删除节点：" + this.getName() + " - " + this.getNodeID(), "通用操作");
 
-
+		//清除缓存
+		if(SystemConfig.getRedisIsEnable())
+			ContextHolderUtils.getRedisUtils().removeByKey(false,String.valueOf(this.getNodeID()));
 		return super.beforeDelete();
 	}
 
@@ -2756,7 +2773,7 @@ public class Node extends Entity
 			attr.Insert();
 		}
 
-		if (this.getHisRunModel() != RunModel.SubThread)
+		if (this.getIsSubThread()== false)
 		{
 			return "修复成功.";
 		}
@@ -2839,7 +2856,7 @@ public class Node extends Entity
 			attr.setLGType(FieldTypeS.Normal);
 			attr.setUIVisible(false);
 			attr.setUIIsEnable(false);
-			attr.setMaxLen(32);
+			attr.setMaxLen(100);
 			attr.setMinLen(0);
 			attr.setDefVal( "@WebUser.No");
 			attr.Insert();
@@ -2876,7 +2893,7 @@ public class Node extends Entity
 			attr.setUIVisible(false);
 			attr.setUIIsEnable(false);
 			attr.setMinLen(0);
-			attr.setMaxLen(50);
+			attr.setMaxLen(100);
 			attr.Insert();
 		}
 

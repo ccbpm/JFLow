@@ -10,7 +10,6 @@ import bp.port.*;
 import bp.wf.rpt.*;
 import bp.wf.template.*;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
-import org.apache.tomcat.jni.FileInfo;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -21,7 +20,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -254,7 +252,7 @@ public class MakeForm2Html
 								{
 									String SigantureNO = en.GetValStrByKey(attr.getKeyOfEn());
 									String src = SystemConfig.getHostURL() + "/DataUser/Siganture/";
-									text = "<img src='" + src + SigantureNO + ".JPG' title='" + SigantureNO + "' onerror='this.src=\"" + src + "Siganture.JPG\"' style='height:50px;'  alt='图片丢失' /> ";
+									text = "<img src='" + src + SigantureNO + ".jpg' title='" + SigantureNO + "' onerror='this.src=\"" + src + "Siganture.jpg\"' style='height:50px;'  alt='图片丢失' /> ";
 								} else if (attr.getUIContralType() == UIContralType.SignCheck)//是不是签批字段
 							{
 								//获取当前节点的审核意见
@@ -273,8 +271,24 @@ public class MakeForm2Html
 									text = en.GetValStrByKey(attr.getKeyOfEn());
 								if (attr.getTextModel() == 3)
 									text = text.replace("white-space: nowrap;", "");
+
+								if (attr.getUIContralType() == UIContralType.AthShow)
+								{
+									FrmAttachmentDBs athDBsFrom = new FrmAttachmentDBs();
+									int i=athDBsFrom.Retrieve(FrmAttachmentDBAttr.NoOfObj, attr.getKeyOfEn(), FrmAttachmentDBAttr.RefPKVal, workid);
+									text = "附件("+i+"个)";
+								}
 							}
 
+							if(attr.getMyDataType() == DataType.AppDouble || attr.getMyDataType() == DataType.AppFloat ||
+									attr.getMyDataType() == DataType.AppMoney){
+									String defval = attr.getDefVal();
+									if(defval ==""||defval==null||defval =="0")
+										defval="0.00";
+									String[] res = defval.split("[.]", -1);
+									Integer leg = res[1].split("").length;
+									text = en.GetValDecimalByKey(attr.getKeyOfEn(), leg).toString();
+							}
 							break;
 						case Enum:
 							if (attr.getUIContralType() == UIContralType.CheckBok)
@@ -803,7 +817,7 @@ public class MakeForm2Html
 						if (singType.equals("1"))
 						{
 							String src = SystemConfig.getHostURL() + "/DataUser/Siganture/";
-							empStrs = "<img src='" + src + dr.getValue("EmpFrom") + ".JPG' title='" + dr.getValue("EmpFromT")+ "' style='height:60px;'  alt='图片丢失' /> ";
+							empStrs = "<img src='" + src + dr.getValue("EmpFrom") + ".jpg' title='" + dr.getValue("EmpFromT")+ "' style='height:60px;'  alt='图片丢失' /> ";
 						}
 
 					}
@@ -1049,8 +1063,12 @@ public class MakeForm2Html
 			Element tb = doc.getElementById("TB_" + attr.getKeyOfEn());
 			if (tb != null)
 			{
-				tb.attr("value", text);
-				tb.attr("disabled", "disabled");
+				Element element = new Element("span");
+				element.text(text);
+				tb.after(element);
+				tb.remove();
+				//tb.attr("value", text);
+				//tb.attr("disabled", "disabled");
 			}
 		}
 		//获取从表
@@ -1227,7 +1245,7 @@ public class MakeForm2Html
 							{
 								String SigantureNO = gedtl.GetValStrByKey(attr.getKeyOfEn());
 								String src = SystemConfig.getHostURL() + "/DataUser/Siganture/";
-								text = "<img src='" + src + SigantureNO + ".JPG' title='" + SigantureNO + "' onerror='this.src=\"" + src + "Siganture.JPG\"' style='height:50px;'  alt='图片丢失' /> ";
+								text = "<img src='" + src + SigantureNO + ".jpg' title='" + SigantureNO + "' onerror='this.src=\"" + src + "Siganture.jpg\"' style='height:50px;'  alt='图片丢失' /> ";
 							}
 							else
 							{
@@ -1509,7 +1527,7 @@ public class MakeForm2Html
 			}
 
 			//生成压缩文件
-			String zipFile = path + "/../" + pdfName + ".zip";
+			String zipFile = path + "/" + pdfName + ".zip";
 
 			File finfo = new File(zipFile);
 			ZipFilePath = finfo.getPath(); //文件路径.

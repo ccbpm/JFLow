@@ -132,7 +132,7 @@ public class Info extends EntityNoName
 			///#region 设置查询条件.
 		map.DTSearchKey = InfoAttr.RDT;
 		map.DTSearchWay = DTSearchWay.ByDate;
-		map.DTSearchLable = "发布日期";
+		map.DTSearchLabel = "发布日期";
 
 		if (bp.difference.SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
 		{

@@ -1028,7 +1028,7 @@ public class WorkUnSend
 				continue;
 			}
 
-			if (ndNext.getHisRunModel() == RunModel.SubThread)
+			if (ndNext.getIsSubThread() == true)
 			{
 				/*如果到达的节点是子线程,就查询出来发起的子线程。*/
 				GenerWorkFlows gwfs = new GenerWorkFlows();
@@ -1114,7 +1114,7 @@ public class WorkUnSend
 				continue;
 			}
 
-			if (ndNext.getHisRunModel() == RunModel.SubThread)
+			if (ndNext.getIsSubThread() == true)
 			{
 				/*如果到达的节点是子线程,就查询出来发起的子线程。*/
 				GenerWorkFlows gwfs = new GenerWorkFlows();
@@ -1204,7 +1204,7 @@ public class WorkUnSend
 				continue;
 			}
 
-			if (ndNext.getHisRunModel() == RunModel.SubThread)
+			if (ndNext.getIsSubThread() == true)
 			{
 				/*如果到达的节点是子线程,就查询出来发起的子线程。*/
 				GenerWorkFlows gwfs = new GenerWorkFlows();

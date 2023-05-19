@@ -66,7 +66,7 @@ public class SFTableDict extends EntityNoName
 	 @return 
 	*/
 	public final String DoEdit() throws Exception {
-		return bp.difference.SystemConfig.getCCFlowWebPath() + "WF/Admin/FoolFormDesigner/SFTableEditData.htm?FK_SFTable=" + this.getNo() + "&&QueryType=Dict";
+		return bp.difference.SystemConfig.getHostURLOfBS() + "WF/Admin/FoolFormDesigner/SFTableEditData.htm?FK_SFTable=" + this.getNo() + "&&QueryType=Dict";
 	}
 	/** 
 	 删除之前要做的工作

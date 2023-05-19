@@ -47,44 +47,30 @@ public class SFTable extends EntityNoName
 		}
 
 		///动态SQL，edited by liuxc,2016-12-29
-		if (this.getSrcType() == SrcType.SQL)
+		if (this.getSrcType() == SrcType.SQL || this.getSrcType() == SrcType.WebApi)
 		{
 			String runObj = this.getSelectStatement();
 
-			if (DataType.IsNullOrEmpty(runObj))
-			{
+			if (DataType.IsNullOrEmpty(runObj) && this.getSrcType() == SrcType.SQL)
 				throw new RuntimeException("@外键类型SQL配置错误," + this.getNo() + " " + this.getName() + " 是一个(SQL)类型(" + this.GetValStrByKey("SrcType") + ")，但是没有配置sql.");
-			}
 
-			if (runObj == null)
-			{
-				runObj = "";
-			}
-
+			if (DataType.IsNullOrEmpty(runObj) && this.getSrcType() == SrcType.WebApi)
+				throw new RuntimeException("@外键类型WebAPI配置错误," + this.getNo() + " " + this.getName() + " 是一个(WebAPI)类型(" + this.GetValStrByKey("SrcType") + ")，但是没有配置WebAPI.");
+			//替换字段值
 			runObj = runObj.replace("~", "'");
 			runObj = runObj.replace("/#", "+"); //为什么？
 			runObj = runObj.replace("/$", "-"); //为什么？
 			if (runObj.contains("@WebUser.No"))
-			{
 				runObj = runObj.replace("@WebUser.No", WebUser.getNo());
-			}
 
 			if (runObj.contains("@WebUser.Name"))
-			{
 				runObj = runObj.replace("@WebUser.Name", WebUser.getName());
-			}
 
 			if (runObj.contains("@WebUser.FK_DeptName"))
-			{
 				runObj = runObj.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
-			}
 
 			if (runObj.contains("@WebUser.FK_Dept"))
-			{
 				runObj = runObj.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
-			}
-
-
 
 			if (runObj.contains("@") == true && ht != null)
 			{
@@ -126,13 +112,43 @@ public class SFTable extends EntityNoName
 				}
 			}
 
-			if (runObj.contains("@") == true)
-			{
-				throw new RuntimeException("@外键类型SQL错误," + runObj + "部分查询条件没有被替换.");
-			}
+			if (runObj.contains("@WebApiHost"))//可以替换配置文件中配置的webapi地址
+				runObj = runObj.replace("@WebApiHost", SystemConfig.GetValByKey("WebApiHost",""));
 
-			DataTable dt = src.RunSQLReturnTable(runObj);
-			return dt;
+			if (runObj.contains("@") == true)
+				throw new RuntimeException("@外键类型错误," + runObj + "部分查询条件没有被替换.");
+
+			if(this.getSrcType() == SrcType.SQL){
+				DataTable dt = src.RunSQLReturnTable(runObj);
+				return dt;
+			}
+			if(this.getSrcType() == SrcType.WebApi){
+
+				String[] strs = runObj.split("[?]", -1);
+				//api接口地址
+				String apiHost = strs[0];
+				//api参数
+				String apiParams = "";
+				if(strs.length==2) {
+					apiParams = strs[1];
+					apiParams = apiParams.replaceAll("=","\":\"");
+					apiParams = apiParams.replaceAll("&","\",\"");
+					apiParams= "{" + apiParams +"}";
+				}
+				//执行POST
+				String postData = bp.tools.HttpClientUtil.doPostJson(apiHost, apiParams);
+
+				DataTable dt = null;
+				try
+				{
+					dt = bp.tools.Json.ToDataTable(postData);
+					return dt;
+				}
+				catch (Exception ex)
+				{
+					throw new Exception("设置的WebAPI接口返回的数据出错，请检查接口返回值。");
+				}
+			}
 		}
 
 
@@ -239,6 +255,7 @@ public class SFTable extends EntityNoName
 							break;
 						case PostgreSQL:
 						case UX:
+						case HGDB:
 							sql = "SELECT to_number( MAX(" + field + ") ,'99999999')+1   FROM Sys_SFTableDtl where FK_SFTable='" + table + "'";
 							break;
 						case Oracle:
@@ -282,6 +299,7 @@ public class SFTable extends EntityNoName
 						break;
 					case PostgreSQL:
 					case UX:
+					case HGDB:
 						sql = "SELECT to_number( MAX(" + field + ") ,'99999999')+1   FROM " + table;
 						break;
 					case Oracle:
@@ -546,7 +564,7 @@ public class SFTable extends EntityNoName
 	 数据源类型
 	*/
 	public final SrcType getSrcType()  {
-		if (this.getNo().contains("BP.") == true)
+		if (this.getNo().toUpperCase().contains("BP.") == true)
 		{
 			return SrcType.BPClass;
 		}
@@ -887,21 +905,21 @@ public class SFTable extends EntityNoName
 		{
 			if (this.getCodeStruct() == CodeStruct.NoName)
 			{
-				DictDtl dtl = new DictDtl();
+				SFTableDtl dtl = new SFTableDtl();
 				dtl.setMyPK(this.getNo() + "_001");
 				dtl.setBH("001");
 				dtl.setName("Item1");
 				dtl.setFK_SFTable(this.getNo());
 				dtl.Insert();
 
-				dtl = new DictDtl();
+				dtl = new SFTableDtl();
 				dtl.setMyPK(this.getNo() + "_002");
 				dtl.setBH("002");
 				dtl.setName("Item2");
 				dtl.setFK_SFTable(this.getNo());
 				dtl.Insert();
 
-				dtl = new DictDtl();
+				dtl = new SFTableDtl();
 				dtl.setMyPK(this.getNo() + "_003");
 				dtl.setBH("003");
 				dtl.setName("Item3");
@@ -911,7 +929,7 @@ public class SFTable extends EntityNoName
 
 			if (this.getCodeStruct() == CodeStruct.Tree)
 			{
-				DictDtl dtl = new DictDtl();
+				SFTableDtl dtl = new SFTableDtl();
 				dtl.setMyPK(this.getNo() + "_001");
 				dtl.setBH("001");
 				dtl.setName("Item1");
@@ -919,7 +937,7 @@ public class SFTable extends EntityNoName
 				dtl.setParentNo("0");
 				dtl.Insert();
 
-				dtl = new DictDtl();
+				dtl = new SFTableDtl();
 				dtl.setMyPK(this.getNo() + "_002");
 				dtl.setBH("002");
 				dtl.setName("Item2");
@@ -927,7 +945,7 @@ public class SFTable extends EntityNoName
 				dtl.setParentNo("001");
 				dtl.Insert();
 
-				dtl = new DictDtl();
+				dtl = new SFTableDtl();
 				dtl.setMyPK(this.getNo() + "_003");
 				dtl.setBH("003");
 				dtl.setName("Item3");

@@ -204,7 +204,7 @@ public class RptTemplate extends Entity
 
 		map.AddMyPK();
 		map.AddTBString(RptTemplateAttr.EnsName, null, "类名", false, false, 0, 500, 20);
-		map.AddTBString(RptTemplateAttr.FK_Emp, null, "操作员", true, false, 0, 20, 20);
+		map.AddTBString(RptTemplateAttr.FK_Emp, null, "操作员", true, false, 0, 100, 20);
 
 		map.AddTBString(RptTemplateAttr.D1, null, "D1", false, true, 0, 90, 10);
 		map.AddTBString(RptTemplateAttr.D2, null, "D2", false, true, 0, 90, 10);

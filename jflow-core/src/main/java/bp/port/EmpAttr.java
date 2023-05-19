@@ -52,6 +52,7 @@ public class EmpAttr extends EntityNoNameAttr
 	*/
 	public static final String Idx = "Idx";
 	public static final String PinYin = "PinYin";
+	//public static final String IsOfficer="IsOfficer";
 
 		///#endregion
 }

@@ -136,7 +136,7 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String Node_ChangeRunModel() throws Exception {
+	/*public final String Node_ChangeRunModel() throws Exception {
 		String runModel = GetValFromFrmByKey("RunModel");
 		Node node = new Node(this.getFK_Node());
 		//节点运行模式
@@ -161,7 +161,7 @@ public class WF_Admin_CCBPMDesigner2018 extends WebContralBase
 		node.Update();
 
 		return "设置成功.";
-	}
+	}*/
 
 		///#endregion end Node
 

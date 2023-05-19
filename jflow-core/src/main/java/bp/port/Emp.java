@@ -310,6 +310,8 @@ public class Emp extends EntityNoName
 
 		map.AddTBInt(EmpAttr.EmpSta, 0, "EmpSta", false, false);
 		map.AddTBInt(EmpAttr.Idx, 0, "Idx", false, false);
+		//if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
+		//	map.AddBoolean(EmpAttr.IsOfficer, false, "是否是联络员", true, true);
 			///#endregion 字段
 
 		if (bp.difference.SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single && WebUser.getNo().equals("admin")==false)

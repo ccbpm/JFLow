@@ -443,4 +443,10 @@ public class BtnAttr
 	public static final String RollbackLab = "RollbackLab";
 	public static final String RollbackEnable = "RollbackEnable";
 
+	/**
+	 * 延期发送
+	 */
+	public static final String DelayedSendLab = "DelayedSendLab";
+	public static final String DelayedSendEnable = "DelayedSendEnable";
+
 }

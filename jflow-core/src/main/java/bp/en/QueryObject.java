@@ -1055,9 +1055,43 @@ public class QueryObject
 		}
 		return strs.substring(1);
 	}
+
+	public final String GenerPKsByTableWithParaMySQL(String pk, String sql, int from, int to)throws Exception
+	{
+		DataTable dt = DBAccess.RunSQLReturnTable(sql, this.getMyParas());
+		String pks = "";
+		int paraI = 0;
+
+		String dbStr = SystemConfig.getAppCenterDBVarStr();
+		for (DataRow dr : dt.Rows)
+		{
+			paraI++;
+			if (dbStr.equals("?"))
+			{
+				pks += "?,";
+			}
+			else
+			{
+				pks += SystemConfig.getAppCenterDBVarStr() + "R" + paraI + ",";
+			}
+
+			if (pk.equals("OID") || pk.equals("WorkID") || pk.equals("NodeID"))
+			{
+				this.getMyParasR().Add("R" + paraI, Integer.parseInt(dr.getValue(0).toString()));
+			}
+			else
+			{
+				this.getMyParasR().Add("R" + paraI, dr.getValue(0).toString());
+			}
+		}
+
+		if (pks.equals(""))
+			return null;
+		return pks.substring(0, pks.length() - 1);
+
+	}
 	public final String GenerPKsByTableWithPara(String pk, String sql, int from, int to)throws Exception
 	{
-		//Log.DefaultLogWriteLineWarning(" ***************************** From= " + from + "  T0" + to);
 		DataTable dt = DBAccess.RunSQLReturnTable(sql, this.getMyParas());
 		String pks = "";
 		int i = 0;
@@ -1355,51 +1389,8 @@ public class QueryObject
 						this.Top= pageSize;
 						return this.doEntitiesQuery();
 					case MySQL:
-						toIdx = top + pageSize;
-						if (DataType.IsNullOrEmpty(this._sql)==true)
-						{
-							if (top == 0)
-							{
-								sql = " SELECT  " + this.getEn().getPK_Field() + " FROM " + map.getPhysicsTable() + " " + this._orderBy + " LIMIT " + pageSize;
-							}
-							else
-							{
-								sql = " SELECT  " + this.getEn().getPK_Field() + " FROM " + map.getPhysicsTable() + " " + this._orderBy;
-							}
-						}
-						else
-						{
-							String mysql = this.getSQL();
-							mysql = mysql.substring(mysql.indexOf("FROM "));
-
-							if (top == 0)
-							{
-								sql = "SELECT " + map.getPhysicsTable() + "." + this.getEn().getPK_Field() + " " + mysql + " LIMIT " + pageSize;
-							}
-							else
-							{
-								sql = "SELECT " + map.getPhysicsTable() + "." + this.getEn().getPK_Field() + " " + mysql;
-							}
-						}
-
-						sql = sql.replace("AND ( ( 1=1 ) )", " ");
-
-						pks = this.GenerPKsByTableWithPara(pk, sql, top, toIdx);
-						this.clear();
-						this.setMyParas(this.getMyParasR());
-
-						if (pks == null)
-						{
-							this.AddHD_Not();
-						}
-						else
-						{
-							this.AddWhereIn(pk, "(" + pks + ")");
-						}
-
-						this.Top=pageSize;
-						return this.doEntitiesQuery();
 					case PostgreSQL:
+					case HGDB:
 						toIdx = top + pageSize;
 						if (DataType.IsNullOrEmpty(this._sql)==true)
 						{
@@ -1409,7 +1400,7 @@ public class QueryObject
 							}
 							else
 							{
-								sql = " SELECT  " + this.getEn().getPK_Field() + " FROM " + map.getPhysicsTable() + " " + this._orderBy;
+								sql = " SELECT  " + this.getEn().getPK_Field() + " FROM " + map.getPhysicsTable() + " " + this._orderBy +" LIMIT "+top+", "+pageSize;
 							}
 						}
 						else
@@ -1423,13 +1414,13 @@ public class QueryObject
 							}
 							else
 							{
-								sql = "SELECT " + map.getPhysicsTable() + "." + this.getEn().getPK_Field() + " " + mysql;
+								sql = "SELECT " + map.getPhysicsTable() + "." + this.getEn().getPK_Field() + " " + mysql +" LIMIT "+top+", "+pageSize;
 							}
 						}
 
 						sql = sql.replace("AND ( ( 1=1 ) )", " ");
 
-						pks = this.GenerPKsByTableWithPara(pk, sql, top, toIdx);
+						pks = this.GenerPKsByTableWithParaMySQL(pk, sql, top, toIdx);
 						this.clear();
 						this.setMyParas(this.getMyParasR());
 
@@ -1441,7 +1432,6 @@ public class QueryObject
 						{
 							this.AddWhereIn(pk, "(" + pks + ")");
 						}
-
 						this.Top=pageSize;
 						return this.doEntitiesQuery();
 					case MSSQL:
@@ -1748,9 +1738,10 @@ public class QueryObject
 			Map enMap = ens.getGetNewEntity().getEnMap();
 			Attrs attrs = enMap.getAttrs();
 			try {
-
+				Row row = null;
 				for (DataRow dr : dt.Rows) {
 					Entity en = ens.getGetNewEntity();
+					row = new Row();
 					for (Attr attr : attrs.ToJavaList()) {
 						if (caseModel == FieldCaseModel.UpperCase){
 							if(SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
@@ -1759,11 +1750,12 @@ public class QueryObject
 								else
 									en.SetValByKey(attr.getKey(), dr.getValue(attr.getKey().toUpperCase()));
 						}else if(caseModel == FieldCaseModel.Lowercase) {
-							en.SetValByKey(attr.getKey(), dr.getValue(attr.getKey().toLowerCase()));
+							row.SetValByKey(attr.getKey(), dr.getValue(attr.getKey().toLowerCase()));
 						}
 						else
-							en.SetValByKey(attr.getKey(), dr.getValue(attr.getKey()));
+							row.SetValByKey(attr.getKey(), dr.getValue(attr.getKey()));
 					}
+					en.setRow(row);
 					ens.AddEntity(en);
 				}
 			} catch (RuntimeException ex) {
@@ -1777,23 +1769,25 @@ public class QueryObject
 
 			return ens;
 		}
-
+		Row row = null;
 		for (DataRow dr : dt.Rows) {
 			Entity en = ens.getGetNewEntity();
+			row = new Row();
 			for (String str : fullAttrs) {
 				if (caseModel== FieldCaseModel.UpperCase){
 					if(SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
 						&& dt.Columns.contains(str)==true)
-						en.SetValByKey(str, dr.getValue(str));
+						row.SetValByKey(str, dr.getValue(str));
 					else
-						en.SetValByKey(str, dr.getValue(str.toUpperCase()));
+						row.SetValByKey(str, dr.getValue(str.toUpperCase()));
 				}else if(caseModel == FieldCaseModel.Lowercase) {
-					en.SetValByKey(str, dr.getValue(str.toLowerCase()));
+					row.SetValByKey(str, dr.getValue(str.toLowerCase()));
 				}
 				else
-					en.SetValByKey(str, dr.getValue(str));
+					row.SetValByKey(str, dr.getValue(str));
 
 			}
+			en.setRow(row);
 			ens.AddEntity(en);
 		}
 

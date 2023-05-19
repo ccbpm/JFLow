@@ -101,6 +101,7 @@ public class Glo {
 				break;
 			case PostgreSQL:
 			case UX:
+			case HGDB:
 			default:
 				sql = "SELECT '' AS No, '-请选择-' as Name FROM Port_Emp WHERE 1=2 ";
 				break;
@@ -127,6 +128,7 @@ public class Glo {
 				break;
 			case PostgreSQL:
 			case UX:
+			case HGDB:
 			default:
 				sql = "SELECT '' AS No, '-请选择-' as Name FROM Port_Emp WHERE 1=2 ";
 				break;
@@ -1185,7 +1187,7 @@ public class Glo {
 			|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 || SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
 			sqlscript = SystemConfig.getPathOfWebApp() + "GPM/SQLScript/Oracle_GPM_VIEW.sql";
 		}
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.UX) {
+		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.HGDB) {
 			sqlscript = SystemConfig.getPathOfWebApp() + "GPM/SQLScript/PostgreSQL_GPM_VIEW.sql";
 		}
 
@@ -1548,7 +1550,7 @@ public class Glo {
 		cfg.CheckPhysicsTable();
 
 		//检查表.
-		FrmTree frmTree = new FrmTree();
+		SysFormTree frmTree = new SysFormTree();
 		frmTree.CheckPhysicsTable();
 
 		SFTable sf = new SFTable();
@@ -1778,7 +1780,7 @@ public class Glo {
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle ||SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 ||SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
 			sql = "UPDATE WF_FrmNode F  SET (IsEnableFWC)=(SELECT FWCSta FROM WF_Node N WHERE F.FK_Node = N.NodeID AND F.IsEnableFWC =1)";
 		}
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.UX) {
+		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.HGDB) {
 			sql = "UPDATE WF_FrmNode SET IsEnableFWC=(SELECT FWCSta FROM WF_Node N Where N.NodeID=WF_FrmNode.FK_Node AND WF_FrmNode.IsEnableFWC=1)";
 		}
 
@@ -2140,6 +2142,7 @@ public class Glo {
 						case UX:
 						case KingBaseR3:
 						case KingBaseR6:
+						case HGDB:
 							DBAccess.RunSQL("ALTER TABLE WF_Node ADD FWCIsShowReturnMsg INTEGER NULL");
 							break;
 						case MySQL:
@@ -2176,6 +2179,7 @@ public class Glo {
 							break;
 						case PostgreSQL:
 						case UX:
+						case HGDB:
 							DBAccess.RunSQL("ALTER TABLE Sys_FrmRB ADD AtPara VARCHAR2(1000) NULL");
 							break;
 						case MySQL:
@@ -2223,7 +2227,9 @@ public class Glo {
 			try {
 				String sqls = "";
 
-				if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 ||SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
+				if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.UX
+						|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 ||SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
+						|| SystemConfig.getAppCenterDBType() == DBType.HGDB) {
 					sqls += "UPDATE Sys_MapExt SET MyPK= ExtType||'_'||FK_Mapdata||'_'||AttrOfOper WHERE ExtType='" + MapExtXmlList.TBFullCtrl + "'";
 					sqls += "@UPDATE Sys_MapExt SET MyPK= ExtType||'_'||FK_Mapdata||'_'||AttrOfOper WHERE ExtType='" + MapExtXmlList.PopVal + "'";
 					sqls += "@UPDATE Sys_MapExt SET MyPK= ExtType||'_'||FK_Mapdata||'_'||AttrOfOper WHERE ExtType='" + MapExtXmlList.DDLFullCtrl + "'";
@@ -2343,7 +2349,9 @@ public class Glo {
 				DBAccess.RunSQL("UPDATE WF_FrmNode SET MyPK=FK_Frm+'_'+convert(varchar,FK_Node )+'_'+FK_Flow");
 			}
 
-			if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 ||SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
+			if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.UX
+					|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 ||SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
+					|| SystemConfig.getAppCenterDBType() == DBType.HGDB) {
 				DBAccess.RunSQL("UPDATE WF_FrmNode SET MyPK=FK_Frm||'_'||FK_Node||'_'||FK_Flow");
 			}
 
@@ -2418,6 +2426,7 @@ public class Glo {
 						break;
 					case PostgreSQL:
 					case UX:
+					case HGDB:
 						sqlscript = SystemConfig.getPathOfData() + "Install/SQLScript/InitView_PostgreSQL.sql";
 						break;
 					default:
@@ -2890,6 +2899,7 @@ public class Glo {
 					break;
 				case PostgreSQL:
 				case UX:
+				case HGDB:
 					sql = "ALTER TABLE WF_Emp ADD StartFlows Text DEFAULT  NULL";
 					break;
 				default:
@@ -3114,6 +3124,7 @@ public class Glo {
 				break;
 			case PostgreSQL:
 			case UX:
+			case HGDB:
 				sqlscript = SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/InitView_PostgreSQL.sql";
 				break;
 			default:
@@ -3244,30 +3255,30 @@ public class Glo {
 
 
 			//创建一个空白的流程，不然，整个结构就出问题。
-			//BP.Sys.FrmTrees frmTrees = new FrmTrees();
+			//bp.wf.template.SysFormTrees frmTrees = new FrmTrees();
 			//frmTrees.RetrieveAll();
 			//frmTrees.Delete();
 
 			DBAccess.RunSQL("DELETE FROM Sys_FormTree ");
-			FrmTree ftree = new FrmTree();
+			SysFormTree ftree = new SysFormTree();
 			ftree.setName("表单树");
 			ftree.setNo("1");
 			ftree.setParentNo("0");
 			ftree.Insert();
 
-			FrmTree subFrmTree = (FrmTree) ftree.DoCreateSubNode();
+			SysFormTree subFrmTree = (SysFormTree) ftree.DoCreateSubNode();
 			subFrmTree.setName("流程独立表单");
 			subFrmTree.setNo("101");
 			subFrmTree.setParentNo("1");
 			subFrmTree.Update();
 
-			subFrmTree = (FrmTree) ftree.DoCreateSubNode();
+			subFrmTree = (SysFormTree) ftree.DoCreateSubNode();
 			subFrmTree.setName("常用信息管理");
 			subFrmTree.setNo("102");
 			subFrmTree.setParentNo("1");
 			subFrmTree.Update();
 
-			subFrmTree = (FrmTree) ftree.DoCreateSubNode();
+			subFrmTree = (SysFormTree) ftree.DoCreateSubNode();
 			subFrmTree.setName("常用单据");
 			subFrmTree.setNo("103");
 			subFrmTree.setParentNo("1");
@@ -5788,7 +5799,7 @@ public class Glo {
 			_AttrsOfRpt.AddTBInt(GERptAttr.FID, 0, "FlowID", false, false);
 
 			_AttrsOfRpt.AddTBString(GERptAttr.Title, null, "标题", true, false, 0, 10, 10);
-			_AttrsOfRpt.AddTBString(GERptAttr.FlowStarter, null, "发起人", true, false, 0, 10, 10);
+			_AttrsOfRpt.AddTBString(GERptAttr.FlowStarter, null, "发起人", true, false, 0, 100, 10);
 			_AttrsOfRpt.AddTBString(GERptAttr.FlowStartRDT, null, "发起时间", true, false, 0, 10, 10);
 			_AttrsOfRpt.AddTBString(GERptAttr.WFState, null, "状态", true, false, 0, 10, 10);
 
@@ -5801,7 +5812,7 @@ public class Glo {
 
 			_AttrsOfRpt.AddDDLSysEnum(GERptAttr.WFState, 0, "流程状态", true, true, GERptAttr.WFState);
 			_AttrsOfRpt.AddTBString(GERptAttr.FlowEmps, null, "参与人", true, false, 0, 10, 10);
-			_AttrsOfRpt.AddTBString(GERptAttr.FlowEnder, null, "结束人", true, false, 0, 10, 10);
+			_AttrsOfRpt.AddTBString(GERptAttr.FlowEnder, null, "结束人", true, false, 0, 100, 10);
 			_AttrsOfRpt.AddTBString(GERptAttr.FlowEnderRDT, null, "最后处理时间", true, false, 0, 10, 10);
 			_AttrsOfRpt.AddTBInt(GERptAttr.FlowEndNode, 0, "停留节点", true, false);
 			_AttrsOfRpt.AddTBDecimal(GERptAttr.FlowDaySpan, BigDecimal.valueOf(0), "流程时长(天)", true, false);
@@ -6498,6 +6509,7 @@ public class Glo {
 					break;
 				case PostgreSQL:
 				case UX:
+				case HGDB:
 					ps.SQL = "SELECT SDTOfNode, TodoEmps FROM WF_GenerWorkFlow  WHERE WorkID=" + dbstr + "WorkID  ";
 					break;
 				default:
@@ -6661,7 +6673,8 @@ public class Glo {
 
 
 			///#endregion 求计算属性.
-
+		if(SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
+			ch.SetValByKey(CHAttr.OrgNo, WebUser.getOrgNo());
 		//执行保存.
 		try
 		{
@@ -6812,7 +6825,7 @@ public class Glo {
 		FrmAttachmentDBs dbs = new FrmAttachmentDBs();
 		//查询使用的workId
 		String ctrlWayId = "";
-		if (FK_FrmAttachment.contains("AthMDtl") == true)
+		if (FK_FrmAttachment.contains("AthMDtl") == true || athDesc.GetParaBoolen("IsDtlAth")== true)
 		{
 			ctrlWayId = pkval;
 		}
@@ -6837,31 +6850,28 @@ public class Glo {
 		}
 
 		QueryObject qo = new QueryObject(dbs);
+		if (FK_FrmAttachment.contains("AthMDtl") || athDesc.GetParaBoolen("IsDtlAth") == true)
+		{
+			/*如果是一个明细表的多附件，就直接按照传递过来的PK来查询.*/
+			qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, pkval);
+			qo.addAnd();
+			qo.AddWhere(FrmAttachmentDBAttr.NoOfObj, athDesc.getNoOfObj());
+
+			qo.DoQuery();
+			return dbs;
+		}
 		if (athDesc.getHisCtrlWay() == AthCtrlWay.MySelfOnly || athDesc.getHisCtrlWay() == AthCtrlWay.PK)
 		{
-			if (FK_FrmAttachment.contains("AthMDtl"))
+			qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, pkval);
+			qo.addAnd();
+			qo.AddWhere(FrmAttachmentDBAttr.FK_FrmAttachment, FK_FrmAttachment);
+			if (isContantSelf == false)
 			{
-				/*如果是一个明细表的多附件，就直接按照传递过来的PK来查询.*/
-				qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, pkval);
 				qo.addAnd();
-				qo.AddWhere(FrmAttachmentDBAttr.FK_FrmAttachment, FK_FrmAttachment);
-
-				qo.DoQuery();
+				qo.AddWhere(FrmAttachmentDBAttr.Rec, "!=", WebUser.getNo());
 			}
-			else
-			{
-				qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, pkval);
-				qo.addAnd();
-				qo.AddWhere(FrmAttachmentDBAttr.FK_FrmAttachment, FK_FrmAttachment);
-				if (isContantSelf == false)
-				{
-					qo.addAnd();
-					qo.AddWhere(FrmAttachmentDBAttr.Rec, "!=", WebUser.getNo());
-				}
-				qo.addOrderBy("Idx,RDT");
-				qo.DoQuery();
-
-			}
+			qo.addOrderBy("Idx,RDT");
+			qo.DoQuery();
 			return dbs;
 		}
 

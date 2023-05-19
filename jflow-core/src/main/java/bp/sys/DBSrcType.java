@@ -47,7 +47,8 @@ public enum DBSrcType
 	/// <summary>
 	/// 优炫
 	/// </summary>
-	UX(9);
+	UX(9),
+	HGDB(11);
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 

@@ -258,7 +258,9 @@ public class FrmEvents extends EntitiesOID
 
 		if (EventListFrm.FrmLoadBefore.equals(dotype))
 		{
-			en.Retrieve(); //如果不执行，就会造成实体的数据与查询的数据不一致.
+			String frmType = en.GetParaString("FrmType");
+			if(DataType.IsNullOrEmpty(frmType)==true || frmType.equals("DBList")==false)
+				en.Retrieve(); //如果不执行，就会造成实体的数据与查询的数据不一致.
 		}
 
 		switch (nev.getHisDoType())

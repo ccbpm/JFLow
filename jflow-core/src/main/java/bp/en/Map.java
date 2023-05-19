@@ -22,6 +22,8 @@ public class Map  implements Serializable
 	 param url
 	 */
 	public final void SetHelperUrl(String key, String url)  {
+		if (SystemConfig.getIsDisHelp())
+			return;
 		Attr attr = this.GetAttrByKey(key);
 		attr.HelperUrl = url;
 	}
@@ -31,6 +33,8 @@ public class Map  implements Serializable
 	 param key 字段
 	 */
 	public final void SetHelperBaidu(String key)  {
+		if (SystemConfig.getIsDisHelp())
+			return;
 		Attr attr = this.GetAttrByKey(key);
 		attr.HelperUrl = "http://www.baidu.com/s?word=ccflow " + attr.getDesc();
 	}
@@ -41,6 +45,8 @@ public class Map  implements Serializable
 	 param keyword 关键字
 	 */
 	public final void SetHelperBaidu(String key, String keyword)  {
+		if (SystemConfig.getIsDisHelp())
+			return;
 		Attr attr = this.GetAttrByKey(key);
 		attr.HelperUrl = "http://www.baidu.com/s?word=" + keyword;
 	}
@@ -51,6 +57,8 @@ public class Map  implements Serializable
 	 param context 连接
 	 */
 	public final void SetHelperAlert(String key, String context)  {
+		if (SystemConfig.getIsDisHelp())
+			return;
 		context = context.replace("@", "＠");
 		Attr attr = this.GetAttrByKey(key);
 		attr.HelperUrl = "javascript:alert('" + context + "')";
@@ -804,7 +812,7 @@ public class Map  implements Serializable
 	 数值查询范围.
 	 */
 	public bp.sys.DTSearchWay DTSearchWay = bp.sys.DTSearchWay.None;
-	public String DTSearchLable = "日期从";
+	public String DTSearchLabel = "日期从";
 	public String DTSearchKey = "";
 	/**
 	 图片DefaultImageUrl

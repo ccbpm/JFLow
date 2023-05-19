@@ -484,13 +484,13 @@ public class MyDeptFlow extends Entity
 
 			//隐藏字段.
 		map.AddTBInt(MyDeptFlowAttr.FID, 0, "FID", false, false);
-		map.AddTBString(MyDeptFlowAttr.FK_Dept, null, "部门", false, false, 0, 30, 10);
+		map.AddTBString(MyDeptFlowAttr.FK_Dept, null, "部门", false, false, 0, 50, 10);
 
 
 
 			///#region 查询条件.
 		map.DTSearchKey= MyFlowAttr.RDT;
-		map.DTSearchLable = "发起日期";
+		map.DTSearchLabel = "发起日期";
 		map.DTSearchWay=DTSearchWay.ByDate;
 
 		map.AddSearchAttr(MyDeptFlowAttr.FK_Flow, 130);

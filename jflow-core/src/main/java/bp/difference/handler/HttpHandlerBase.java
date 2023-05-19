@@ -55,14 +55,10 @@ public abstract class HttpHandlerBase
 			this.getResponse().setHeader("content-type", "text/html;charset=UTF-8");
 			this.getResponse().setCharacterEncoding("UTF-8");
 			out = this.getResponse().getWriter();
-           /* if(SystemConfig.getIsDebug()==false && data.toUpperCase().indexOf("@SQL:")!=-1 && data.toUpperCase().indexOf("@SQL_")==-1){
+            /*if(SystemConfig.getIsDebug()==false && data.toUpperCase().indexOf("@SQL:")!=-1 && data.toUpperCase().indexOf("@SQL_")==-1){
                 data = data.substring(0,data.toUpperCase().indexOf("@SQL"));
-            }
-            */
+            }*/
 			out.write(data);
-			
-		
-		      
 		}
 		catch (Exception ex)
 		{

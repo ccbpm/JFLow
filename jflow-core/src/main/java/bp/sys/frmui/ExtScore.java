@@ -95,7 +95,7 @@ public class ExtScore extends EntityMyPK
 		map.AddMyPK();
 		map.AddTBString(MapAttrAttr.FK_MapData, null, "表单ID", true, true, 1, 100, 20);
 		map.AddTBString(MapAttrAttr.KeyOfEn, null, "字段", true, true, 1, 100, 20);
-		map.AddDDLSQL(MapAttrAttr.GroupID, 0, "显示的分组", MapAttrString.getSQLOfGroupAttr(), true);
+		map.AddDDLSQL(MapAttrAttr.GroupID, "0", "显示的分组", MapAttrString.getSQLOfGroupAttr(), true);
 		map.AddBoolean(MapAttrAttr.UIIsEnable, true, "是否可编辑？", true, true);
 		map.AddBoolean(MapAttrAttr.UIIsInput, false, "是否必填项？", true, true);
 
@@ -126,7 +126,7 @@ public class ExtScore extends EntityMyPK
 			//map.AddDDLSysEnum(FrmBtnAttr.EventType, 0, "事件类型", true, true, FrmBtnAttr.EventType,
 			//"@0=禁用@1=执行URL@2=执行CCFromRef.js");
 			//显示的分组.
-		map.AddDDLSQL(MapAttrAttr.GroupID, 0, "所在分组", "SELECT OID as No, Lab as Name FROM Sys_GroupField WHERE FrmID='@FK_MapData'", true);
+		map.AddDDLSQL(MapAttrAttr.GroupID, "0", "所在分组", "SELECT OID as No, Lab as Name FROM Sys_GroupField WHERE FrmID='@FK_MapData'", true);
 
 			///#endregion 傻瓜表单的属性.
 

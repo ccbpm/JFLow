@@ -355,56 +355,56 @@ public class DBLoad
 			Tb.Columns = collection;
 		} catch (IOException e)
 		{*/
-		HSSFWorkbook xssfWorkbook = new HSSFWorkbook(is);
-		// 循环工作表Sheet , 目前支持一个
-		// for (int i = 0; i < hssfWorkbook.getNumberOfSheets(); i++) {
-		HSSFSheet hssfSheet = xssfWorkbook.getSheetAt(0);
-		if (hssfSheet == null)
-		{
-			return null;
-		}
-		// 循环行Row
-		int row_size = hssfSheet.getPhysicalNumberOfRows();
-		for (int j = 0; j < row_size; j++)
-		{
-			HSSFRow xssfRow = hssfSheet.getRow(j);
-			if (xssfRow == null)
+			HSSFWorkbook xssfWorkbook = new HSSFWorkbook(is);
+			// 循环工作表Sheet , 目前支持一个
+			// for (int i = 0; i < hssfWorkbook.getNumberOfSheets(); i++) {
+			HSSFSheet hssfSheet = xssfWorkbook.getSheetAt(0);
+			if (hssfSheet == null)
 			{
-				continue;
+				return null;
 			}
-
-			// 循环列Cell
-			int call_num = xssfRow.getPhysicalNumberOfCells();
-			// title
-			if (0 == j)
+			// 循环行Row
+			int row_size = hssfSheet.getPhysicalNumberOfRows();
+			for (int j = 0; j < row_size; j++)
 			{
-				for (int k = 0; k < call_num; k++)
+				HSSFRow xssfRow = hssfSheet.getRow(j);
+				if (xssfRow == null)
 				{
-					HSSFCell xssfCell = xssfRow.getCell(k);
-					if (null == xssfCell)
-					{
-						continue;
-					}
-					DataColumn column = new DataColumn(getValue(xssfCell));
-					collection.Add(column);
+					continue;
 				}
-			} else
-			{ // 内容
-				DataRow dataRow = new DataRow(Tb);
-				for (int k = 0; k < call_num; k++)
-				{
-					HSSFCell xssfCell = xssfRow.getCell(k);
-					if (null == xssfCell)
-					{
-						continue;
-					}
-					dataRow.setValue(collection.get(k), getValue(xssfCell));
-				}
-				Tb.Rows.add(dataRow);
-			}
 
-		}
-		Tb.Columns = collection;
+				// 循环列Cell
+				int call_num = xssfRow.getPhysicalNumberOfCells();
+				// title
+				if (0 == j)
+				{
+					for (int k = 0; k < call_num; k++)
+					{
+						HSSFCell xssfCell = xssfRow.getCell(k);
+						if (null == xssfCell)
+						{
+							continue;
+						}
+						DataColumn column = new DataColumn(getValue(xssfCell));
+						collection.Add(column);
+					}
+				} else
+				{ // 内容
+					DataRow dataRow = new DataRow(Tb);
+					for (int k = 0; k < call_num; k++)
+					{
+						HSSFCell xssfCell = xssfRow.getCell(k);
+						if (null == xssfCell)
+						{
+							continue;
+						}
+						dataRow.setValue(collection.get(k), getValue(xssfCell));
+					}
+					Tb.Rows.add(dataRow);
+				}
+
+			}
+			Tb.Columns = collection;
 		//}
 
 

@@ -1,6 +1,7 @@
 package bp.wf.data;
 
 import bp.da.*;
+import bp.difference.SystemConfig;
 import bp.wf.*;
 import bp.sys.*;
 import bp.en.*;
@@ -485,7 +486,7 @@ public class MyStartFlow extends Entity
 		map.AddHidden(MyStartFlowAttr.FID, "=", "0");
 
 		map.DTSearchWay=DTSearchWay.ByDate;
-		map.DTSearchLable = "发起日期";
+		map.DTSearchLabel = "发起日期";
 		map.DTSearchKey=MyStartFlowAttr.RDT;
 
 			//我发起的流程.
@@ -551,13 +552,13 @@ public class MyStartFlow extends Entity
 		if (dt != null && dt.Rows.size() > 0)
 		{
 			String myPk = dt.Rows.get(0).getValue(0).toString();
-			return "/WF/MyView.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node() + "&DoType=View&MyPK=" + myPk + "&PWorkID=" + this.getPWorkID();
+			return SystemConfig.getHostURLOfBS() +"/WF/MyView.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node() + "&DoType=View&MyPK=" + myPk + "&PWorkID=" + this.getPWorkID();
 		}
 
 		Node nd = new Node(this.getFK_Node());
 		nd.WorkID = this.getWorkID(); //为获取表单ID ( NodeFrmID )提供参数.
 
-		return "/WF/CCForm/FrmGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_MapData=" + nd.getNodeFrmID() + "&ReadOnly=1&IsEdit=0";
+		return SystemConfig.getHostURLOfBS() +"/WF/CCForm/FrmGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_MapData=" + nd.getNodeFrmID() + "&ReadOnly=1&IsEdit=0";
 	}
 
 		///#endregion

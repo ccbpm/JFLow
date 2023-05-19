@@ -791,7 +791,7 @@ public class CCFormAPI
 		attrN.setName("审核人"); // "审核人";
 		attrN.setMyDataType(DataType.AppString);
 		attrN.setUIContralType(UIContralType.TB);
-		attrN.setMaxLen(50);
+		attrN.setMaxLen(100);
 		attrN.setMinLen(0);
 		attrN.setUIIsEnable(true);
 		attrN.setUIIsLine(false);
@@ -888,7 +888,7 @@ public class CCFormAPI
 		attr.setName("审核人"); // "审核人";
 		attr.setMyDataType(DataType.AppString);
 		attr.setUIContralType(UIContralType.TB);
-		attr.setMaxLen(50);
+		attr.setMaxLen(100);
 		attr.setMinLen(0);
 		attr.setUIIsEnable(true);
 		attr.setUIIsLine(false);
@@ -992,6 +992,23 @@ public class CCFormAPI
 			attr.setHisEditType(EditType.Readonly);
 			attr.Insert();
 		}
+		if (attr.IsExit(MapAttrAttr.KeyOfEn, "AtPara", MapAttrAttr.FK_MapData, frmID) == false)
+		{
+			attr.setFK_MapData(frmID);
+			attr.setHisEditType(EditType.UnDel);
+			attr.setKeyOfEn("AtPara");
+			attr.setName("参数"); // 单据编号
+			attr.setMyDataType(DataType.AppString);
+			attr.setUIContralType(UIContralType.TB);
+			attr.setLGType(FieldTypeS.Normal);
+			attr.setUIVisible(false);
+			attr.setUIIsEnable(false);
+			attr.setUIIsLine(false);
+			attr.setMinLen(0);
+			attr.setMaxLen(4000);
+			attr.setIdx(-100);
+			attr.Insert();
+		}
 
 	}
 
@@ -1012,7 +1029,7 @@ public class CCFormAPI
 		}
 
 		//获得源文件信息.
-		DataSet ds = GenerHisDataSet(srcFrmID);
+		DataSet ds = GenerHisDataSet_AllEleInfo(srcFrmID);
 
 		//导入表单文件.
 		ImpFrmTemplate(copyToFrmID, ds, false);

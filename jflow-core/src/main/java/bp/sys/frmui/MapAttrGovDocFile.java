@@ -114,7 +114,7 @@ public class MapAttrGovDocFile extends EntityMyPK
 			// map.SetHelperAlert(MapAttrAttr.RowSpan, "对于傻瓜表单有效: 占的单元格row的数量.");
 
 			//显示的分组.
-		map.AddDDLSQL(MapAttrAttr.GroupID, 0, "显示的分组", MapAttrString.getSQLOfGroupAttr(), true);
+		map.AddDDLSQL(MapAttrAttr.GroupID, "0", "显示的分组", MapAttrString.getSQLOfGroupAttr(), true);
 
 			///#endregion 傻瓜表单
 

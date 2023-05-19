@@ -158,6 +158,14 @@ public class SystemConfig {
 	{
 		return SystemConfig.GetValByKeyInt("TokenModel",1);
 	}
+
+	// rtf打印单条审核信息
+	// 0相关审核信息展示到同一个地方，
+	// 1按配置的审核标签展示(默认为1).
+	public static int getWorkCheckShow()
+	{
+		return SystemConfig.GetValByKeyInt("WorkCheckShow",1);
+	}
 	/**
 	 传入的参数，是否需要类型
 	 */
@@ -167,6 +175,7 @@ public class SystemConfig {
 		{
 			case UX:
 			case PostgreSQL:
+			case HGDB:
 				return true;
 			default:
 				return false;
@@ -377,6 +386,7 @@ public class SystemConfig {
 	public static String getPhysicalPath(){
 		ApplicationHome home = new ApplicationHome(SystemConfig.class);
 		File jarFile = home.getSource();
+		bp.da.Log.DefaultLogWriteLine(LogType.Info, "打包后的物理地址-getPhysicalPath-380:" + jarFile);
 		//项目部署的目录
 		if(jarFile != null){
 			String path = jarFile.getParentFile().getPath()+"/";
@@ -626,6 +636,19 @@ public class SystemConfig {
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * 是否禁用帮助信息
+	 * 0 表示不禁用, 1 表示禁用，默认为0不禁用
+	 * @return
+	 */
+	public static boolean getIsDisHelp() {
+		String isDisHelp = SystemConfig.getAppSettings().get("IsDisHelp") == null ? "0" : SystemConfig.getAppSettings().get("IsDisHelp").toString();
+		if (isDisHelp.equals("1")) {
+			return true;
+		}
+		return false;
 	}
 	/**
 	 * 是不是多系统工作
@@ -951,6 +974,8 @@ public class SystemConfig {
 				return DBType.KingBaseR3;
 			} else if(dbType.equalsIgnoreCase("KingBaseR6")){
 				return DBType.KingBaseR6;
+			} else if(dbType.equalsIgnoreCase("HGDB")){
+				return DBType.HGDB;
 			}
 		}
 		throw new RuntimeException("位置的数据库类型，请配置AppCenterDBType属性。");
@@ -964,16 +989,15 @@ public class SystemConfig {
 	public static String getAppCenterDBVarStr() {
 		switch (SystemConfig.getAppCenterDBType()) {
 		case MSSQL:
-			return ":";
 		case Oracle:
 		case KingBaseR3:
 		case KingBaseR6:
 		case DM:
+		case HGDB:
+		case MySQL:
 			return ":";
 		case Informix:
 			return "?";
-		case MySQL:
-			return ":";
 		default:
 			return "";
 		}
@@ -985,6 +1009,7 @@ public class SystemConfig {
 		case KingBaseR3:
 		case KingBaseR6:
 		case DM:
+		case HGDB:
 			return "Length";
 		case MSSQL:
 			return "LEN";
@@ -1116,7 +1141,7 @@ public class SystemConfig {
 	public static String getHostURLOfBS() {
 
 		String url = "http://" + CommonUtils.getRequest().getServerName() + ":"
-				+ CommonUtils.getRequest().getServerPort() + "/" + CommonUtils.getRequest().getContextPath();
+				+ CommonUtils.getRequest().getServerPort() + CommonUtils.getRequest().getContextPath();
 		return url;
 
 	}
@@ -1260,12 +1285,9 @@ public class SystemConfig {
 					return FieldCaseModel.UpperCase;
 				else
 					return FieldCaseModel.None;
-
-
-
 			case KingBaseR6:
-				return FieldCaseModel.Lowercase;
 			case PostgreSQL:
+			case HGDB:
 				return FieldCaseModel.Lowercase;
 			default:
 				return FieldCaseModel.None;

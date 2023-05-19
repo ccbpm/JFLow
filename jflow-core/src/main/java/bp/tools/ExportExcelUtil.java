@@ -185,7 +185,7 @@ public class ExportExcelUtil{
 
 			row = sheet.createRow((int) creatorRowIndex);
 
-			sheet.addMergedRegion(new CellRangeAddress(creatorRowIndex, (short) 0, creatorRowIndex, (short) (countCell - 1)));
+			sheet.addMergedRegionUnsafe(new CellRangeAddress(creatorRowIndex,creatorRowIndex, (short) 0,(short) (countCell - 1)));
 			cell = row.createCell(0);
 			cell.setCellValue("制表人：" + WebUser.getName() + "日期：" + bp.da.DataType.getCurrentDateTimeCNOfShort());
 			cell.setCellStyle(userStyle);
@@ -304,9 +304,9 @@ public class ExportExcelUtil{
 					String str = "";
 					if (attr.getMyDataType() == DataType.AppBoolean) {
 						if (SystemConfig.getAppCenterDBType() == DBType.Oracle)
-							str = dr.getValue(attr.getKey().toUpperCase()).equals(1) ? "是" : "否";
+							str = dr.getValue(attr.getKey().toUpperCase()).toString().equals("1") ? "是" : "否";
 						else
-							str = dr.getValue(attr.getKey()).equals(1) ? "是" : "否";
+							str = dr.getValue(attr.getKey()).toString().equals("1") ? "是" : "否";
 					} else {
 						String text ="";
 						if (SystemConfig.getAppCenterDBType() == DBType.Oracle){
@@ -355,7 +355,7 @@ public class ExportExcelUtil{
 			font.setBold(true);
 			titleStyle.setFont(font);
 			row = sheet.createRow((int) 0);
-			sheet.addMergedRegion(new CellRangeAddress(headerRowIndex, (short) headerRowIndex, 0, (short) (countCell - 1)));
+			sheet.addMergedRegionUnsafe(new CellRangeAddress(headerRowIndex, (short) headerRowIndex, 0, (short) (countCell - 1)));
 			cell = row.createCell(headerRowIndex);
 			cell.setCellValue(fileName);
 			cell.setCellStyle(titleStyle);
@@ -368,8 +368,8 @@ public class ExportExcelUtil{
 			int creatorRowIndex = titleRowIndex + dt.Rows.size() + 1;
 
 			row = sheet.createRow((int) creatorRowIndex);
-
-			sheet.addMergedRegion(new CellRangeAddress(creatorRowIndex, (short) 0, creatorRowIndex, (short) (countCell - 1)));
+			CellRangeAddress cellRangeAddress = new CellRangeAddress(creatorRowIndex, creatorRowIndex,(short) 0,(short) (countCell - 1));
+			sheet.addMergedRegionUnsafe(cellRangeAddress);
 			cell = row.createCell(0);
 			cell.setCellValue("制表人：" + WebUser.getName() + "日期：" + bp.da.DataType.getCurrentDateTimeCNOfShort());
 			cell.setCellStyle(userStyle);

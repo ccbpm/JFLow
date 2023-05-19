@@ -272,8 +272,6 @@ public class WF_AppClassic extends WebContralBase
 			if (bp.difference.SystemConfig.getIsEnablePasswordEncryption() == true) {
 				pass = Encodes.decodeBase64String(pass);
 			}
-
-
 			Emp emp = new Emp();
 			emp.setUserID (userNo);
 			if (emp.RetrieveFromDBSources() == 0)

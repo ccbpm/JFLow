@@ -27,7 +27,6 @@ public class ExecEvent
 		return DoFrm(md, eventType, en, null);
 	}
 
-//ORIGINAL LINE: public static string DoFrm(MapData md, string eventType, Entity en,string atParas = null)
 	public static String DoFrm(MapData md, String eventType, Entity en, String atParas) throws Exception {
 
 			///#region 首先执行通用的事件重载方法.

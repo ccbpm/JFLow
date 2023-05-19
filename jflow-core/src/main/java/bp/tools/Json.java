@@ -302,7 +302,7 @@ public class Json
 	 */
 	public static String ToJson(DataTable table)
 	{
-		String jsonString = "[";
+		StringBuilder jsonString = new StringBuilder("[");
 
 		//先给 oldName 给值.
 		for (DataColumn column : table.Columns)
@@ -315,10 +315,10 @@ public class Json
 		DataRowCollection drc = table.Rows;
 		for (int i = 0; i < drc.size(); i++)
 		{
-			jsonString += "{";
+			jsonString.append("{");
 			for (DataColumn column : table.Columns)
 			{
-				jsonString += "\"" +  column.ColumnName + "\":";
+				jsonString.append("\"" +  column.ColumnName + "\":");
 
 				Object obj = drc.get(i).getValue(column.oldColumnName);
 
@@ -327,7 +327,7 @@ public class Json
 					obj = drc.get(i).getValue(column.ColumnName);	//解决构造tabele的问题.
 					if (obj==null)
 					{
-						jsonString += "\"\",";
+						jsonString.append("\"\",");
 						continue;
 					}
 				}
@@ -344,15 +344,15 @@ public class Json
 				)
 				{
 					if(obj.equals(""))
-						jsonString += "\"\",";
+						jsonString.append("\"\",");
 					else
 
 						//Long型测试 问题待定
 						if( column.DataType == Long.class
 								|| column.DataType == long.class)
-							jsonString += "\"" + obj.toString() + "\",";
+							jsonString.append("\"" + obj.toString() + "\",");
 						else
-							jsonString += "" + obj.toString() + ",";
+							jsonString.append("" + obj.toString() + ",");
 					continue;
 				}
 
@@ -360,20 +360,20 @@ public class Json
 				String str=obj.toString();
 				if (str.equals("true") || str.equals("false"))
 				{
-					jsonString +=  str + ",";
+					jsonString.append(str + ",");
 					continue;
 				}else{
 
-					jsonString += "\"" + ToJsonStr(str) + "\",";
+					jsonString.append("\"" + ToJsonStr(str) + "\",");
 					continue;
 				}
 
 
 			}
-			jsonString = DeleteLast(jsonString) + "},";
+			jsonString = new StringBuilder(DeleteLast(jsonString.toString()) + "},");
 		}
 
-		return DeleteLast(jsonString) + "]";
+		return DeleteLast(jsonString.toString()) + "]";
 	}
 
 
@@ -384,39 +384,39 @@ public class Json
 	 */
 	public static String ToJsonUpper(DataTable table)
 	{
-		String jsonString = "[";
+		StringBuilder jsonString = new StringBuilder("[");
 		DataRowCollection drc = table.Rows;
 		for (int i = 0; i < drc.size(); i++)
 		{
-			jsonString += "{";
+			jsonString.append("{");
 			for (DataColumn column : table.Columns)
 			{
-				jsonString +=  ToJson(column.ColumnName.toUpperCase()) + ":";
+				jsonString.append(ToJson(column.ColumnName.toUpperCase()) + ":");
 				Object obj = drc.get(i).getValue(column.ColumnName);
 				if (column.DataType == java.util.Date.class
 						|| column.DataType == String.class)
 				{
 					if (null != obj)
 					{
-						jsonString += "\"" + ToJson(obj.toString()) + "\",";
+						jsonString.append("\"" + ToJson(obj.toString()) + "\",");
 					} else
 					{
-						jsonString += "\"\",";
+						jsonString.append("\"\",");
 					}
 				} else
 				{
 					if (null != obj)
 					{
-						jsonString += ToJson(obj.toString()) + ",";
+						jsonString.append(ToJson(obj.toString()) + ",");
 					} else
 					{
-						jsonString += ",";
+						jsonString.append(",");
 					}
 				}
 			}
-			jsonString = DeleteLast(jsonString) + "},";
+			jsonString = new StringBuilder(DeleteLast(jsonString.toString()) + "},");
 		}
-		return DeleteLast(jsonString) + "]";
+		return DeleteLast(jsonString.toString()) + "]";
 	}
 
 	/**
@@ -426,16 +426,16 @@ public class Json
 	 */
 	public static String ToJson(DataSet dataSet)throws Exception
 	{
-		String jsonString = "{";
+		StringBuilder jsonString = new StringBuilder("{");
 		for (DataTable table : dataSet.Tables)
 		{
 			if(null==table)
 				continue;
-			jsonString += "\"" + table.TableName + "\":"
-					+ ToJson(table) + ",";
+			jsonString.append("\"" + table.TableName + "\":"
+					+ ToJson(table) + ",");
 		}
 
-		return DeleteLast(jsonString) + "}";
+		return DeleteLast(jsonString.toString()) + "}";
 	}
 
 	/**

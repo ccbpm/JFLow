@@ -1420,7 +1420,7 @@ public class FlowCheckError
 		GERpt gerpt = this.getHisGERpt();
 		gerpt.CheckPhysicsTable(); //让报表重新生成.
 
-		if (DBAccess.getAppCenterDBType() == DBType.PostgreSQL || DBAccess.getAppCenterDBType() == DBType.UX)
+		if (DBAccess.getAppCenterDBType() == DBType.PostgreSQL || DBAccess.getAppCenterDBType() == DBType.UX || DBAccess.getAppCenterDBType() == DBType.HGDB)
 		{
 			DBAccess.RunSQL("DELETE FROM Sys_GroupField WHERE FrmID='" + fk_mapData + "' AND ''||OID NOT IN (SELECT GroupID FROM Sys_MapAttr WHERE FK_MapData = '" + fk_mapData + "')");
 		}

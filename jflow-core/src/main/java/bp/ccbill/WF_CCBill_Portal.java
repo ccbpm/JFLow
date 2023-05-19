@@ -115,6 +115,7 @@ public class WF_CCBill_Portal extends WebContralBase
 			case MySQL:
 			case PostgreSQL:
 			case UX:
+			case HGDB:
 				sql = " SELECT DISTINCT FK_Flow,FlowName,F.Icon FROM WF_GenerWorkFlow G ,WF_Flow F WHERE  F.IsCanStart=1 AND F.No=G.FK_Flow AND Starter='" + WebUser.getNo() + "'  Order By SendDT  limit  " + top;
 				break;
 			case Oracle:
@@ -152,6 +153,7 @@ public class WF_CCBill_Portal extends WebContralBase
 			case MySQL:
 			case PostgreSQL:
 			case UX:
+			case HGDB:
 				sql = " SELECT   No,Name,Icon FROM GPM_Menu WHERE  LEN(MenuModel )  >1 limit " + top;
 				break;
 			case Oracle:

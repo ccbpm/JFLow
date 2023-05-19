@@ -1,6 +1,7 @@
 package bp.sys;
 
 import bp.da.*;
+import bp.difference.SystemConfig;
 import bp.en.*;
 import bp.*;
 import bp.en.Map;
@@ -76,7 +77,7 @@ public class SFTableSQL extends EntityNoName
 	 @return 
 	*/
 	public final String DoEdit() throws Exception {
-		return bp.difference.SystemConfig.getCCFlowWebPath() + "WF/Admin/FoolFormDesigner/SFTableEditData.htm?FK_SFTable=" + this.getNo() + "&&QueryType=Sql";
+		return SystemConfig.getHostURLOfBS()  + "/WF/Admin/FoolFormDesigner/SFTableEditData.htm?FK_SFTable=" + this.getNo() + "&&QueryType=Sql";
 	}
 	/** 
 	 删除之前要做的工作

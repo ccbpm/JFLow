@@ -125,7 +125,7 @@ public class MapAttrDocWordReceive extends EntityMyPK
 		map.SetHelperAlert(MapAttrAttr.RowSpan, "对于傻瓜表单有效: 占的单元格row的数量.");
 
 			//显示的分组.
-		map.AddDDLSQL(MapAttrAttr.GroupID, 0, "显示的分组", MapAttrString.getSQLOfGroupAttr(), true);
+		map.AddDDLSQL(MapAttrAttr.GroupID, "0", "显示的分组", MapAttrString.getSQLOfGroupAttr(), true);
 
 		map.AddTBInt(MapAttrAttr.Idx, 0, "顺序号", true, false);
 		map.SetHelperAlert(MapAttrAttr.Idx, "对傻瓜表单有效:用于调整字段在同一个分组中的顺序.");

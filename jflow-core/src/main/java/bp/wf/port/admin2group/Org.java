@@ -2,8 +2,8 @@ package bp.wf.port.admin2group;
 
 import bp.da.*;
 import bp.en.*;
-import bp.sys.FrmTree;
-import bp.sys.FrmTrees;
+import bp.wf.template.SysFormTree;
+import bp.wf.template.SysFormTrees;
 import bp.web.*;
 
 /** 
@@ -83,7 +83,7 @@ public class Org extends EntityNoName
 		Map map = new Map("Port_Org", "独立组织");
 			// map.EnType = EnType.View; //独立组织是一个视图.
 
-		map.AddTBStringPK(OrgAttr.No, null, "编号(与部门编号相同)", true, false, 1, 30, 40);
+		map.AddTBStringPK(OrgAttr.No, null, "编号(与部门编号相同)", true, false, 1, 50, 40);
 		map.AddTBString(OrgAttr.Name, null, "组织名称", true, false, 0, 60, 200, true);
 
 		map.AddTBString(OrgAttr.Adminer, null, "主要管理员(创始人)", true, true,
@@ -317,7 +317,7 @@ public class Org extends EntityNoName
 		///#endregion 检查流程树.
 		//  #region 检查表单树.
 		//表单根目录.
-		bp.sys.FrmTree ftRoot = new FrmTree();
+		bp.wf.template.SysFormTree ftRoot = new SysFormTree();
 		int val = ftRoot.Retrieve(bp.wf.template.FlowSortAttr.ParentNo, "0");
 		if (val == 0)
 		{
@@ -339,7 +339,7 @@ public class Org extends EntityNoName
 		}
 
 		//设置表单树权限.
-		bp.sys.FrmTree ft = new bp.sys.FrmTree();
+		bp.wf.template.SysFormTree ft = new bp.wf.template.SysFormTree();
 		ft.setNo(this.getNo());
 		if (ft.RetrieveFromDBSources() == 0)
 		{
@@ -351,12 +351,12 @@ public class Org extends EntityNoName
 			ft.DirectInsert();
 
 			//创建两个目录.
-			bp.sys.FrmTree mySubFT = ft.DoCreateSubNode();
+			bp.wf.template.SysFormTree mySubFT = (SysFormTree)ft.DoCreateSubNode();
 			mySubFT.setName( "表单目录1");
 			mySubFT.setOrgNo(this.getNo());
 			mySubFT.DirectUpdate();
 
-			mySubFT = ft.DoCreateSubNode();
+			mySubFT = (SysFormTree)ft.DoCreateSubNode();
 			mySubFT.setName("表单目录2");
 			mySubFT.setOrgNo(this.getNo());
 			mySubFT.DirectUpdate();
@@ -371,17 +371,17 @@ public class Org extends EntityNoName
 			ft.DirectUpdate();
 
 			//检查数量.
-			bp.sys.FrmTrees frmSorts = new FrmTrees();
+			bp.wf.template.SysFormTrees frmSorts = new SysFormTrees();
 			frmSorts.Retrieve("OrgNo", this.getNo());
 			if (frmSorts.size() <= 1)
 			{
 				//创建两个目录.
-				bp.sys.FrmTree mySubFT = ft.DoCreateSubNode();
+				bp.wf.template.SysFormTree mySubFT = (SysFormTree)ft.DoCreateSubNode();
 				mySubFT.setName("表单目录1");
 				mySubFT.setOrgNo( this.getNo());
 				mySubFT.DirectUpdate();
 
-				mySubFT = ft.DoCreateSubNode();
+				mySubFT = (SysFormTree)ft.DoCreateSubNode();
 				mySubFT.setName ("表单目录2");
 				mySubFT.setOrgNo(this.getNo());
 				mySubFT.DirectUpdate();

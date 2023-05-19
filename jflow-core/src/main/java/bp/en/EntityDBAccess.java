@@ -66,6 +66,7 @@ public class EntityDBAccess
 						case KingBaseR6:
 						case MySQL:
 						case PostgreSQL:
+						case HGDB:
 							return DBAccess.RunSQL(sql, paras);
 						case Informix:
 							return DBAccess.RunSQL(en.getSQLCash().GetUpdateSQL(en, keys), SqlBuilder.GenerParas_Update_Informix(en, keys));

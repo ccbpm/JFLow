@@ -202,26 +202,27 @@ public class EnCfg extends EntityNo
 		map.SetHelperAlert("IsCond", "在查询组件中，是不是每次进入前都要清空以前的查询条件？默认不清空。");
 		///#endregion 基本信息设置.
 
-		///#region 分组标签.
-		//字段分组标签设置.
-		map.AddTBString(EnCfgAttr.GroupTitle, null, "分组标签", true, false, 0, 2000, 60, true);
-		String msg = "字段显示分组标签:";
-		msg += "\t\n格式为: @字段名1=标签1,标签描述1";
-		msg += "\t\n@No=基础信息,单据基础配置信息.@BtnNewLable=单据按钮权限,用于控制每个功能按钮启用规则.@BtnImpExcel=列表按钮,列表按钮控制@Designer=设计者,流程开发设计者信息";
-		map.SetHelperAlert(EnCfgAttr.GroupTitle, msg);
-		///#endregion 分组标签.
-
 		///#region 查询排序.
+		map.AddGroupAttr("查询排序");
 		map.AddTBString("OrderBy", null, "查询排序字段", true, false, 0, 100, 60);
 		map.AddBoolean("IsDeSc", true, "是否降序排序?", true, true);
 		///#endregion 查询排序.
 
 		///#region 附件保存路径.
-		map.AddGroupAttr("查询排序");
 		map.AddTBString(EnCfgAttr.FJSavePath, null, "附加保存路径", true, false, 0, 100, 60);
 		map.AddTBString(EnCfgAttr.FJWebPath, null, "附件Web路径", true, false, 0, 100, 60);
 		///#endregion 附件保存路径.
 
+		///#region 分组标签.
+		//字段分组标签设置.
+		/*map.AddTBString(EnCfgAttr.GroupTitle, null, "分组标签", true, false, 0, 2000, 60, true);
+		String msg = "字段显示分组标签:";
+		msg += "\t\n格式为: @字段名1=标签1,标签描述1";
+		msg += "\t\n@No=基础信息,单据基础配置信息.@BtnNewLable=单据按钮权限,用于控制每个功能按钮启用规则.@BtnImpExcel=列表按钮,列表按钮控制@Designer=设计者,流程开发设计者信息";
+		map.SetHelperAlert(EnCfgAttr.GroupTitle, msg);*/
+		///#endregion 分组标签.
+
+		String msg="";
 		///#region 其他高级设置.
 		map.AddTBString(EnCfgAttr.Datan, null, "字段数据分析方式", true, false, 0, 200, 60);
 		map.AddTBString(EnCfgAttr.UI, null, "UI设置", true, false, 0, 2000, 60);
@@ -250,6 +251,15 @@ public class EnCfg extends EntityNo
 		msg += "\t\n 格式: @Age@JinE@ShouYi";
 		msg += "\t\n 显示在Search, En组件里面.";
 		map.SetHelperAlert(EnCfgAttr.Drill, msg);
+
+		map.AddDDLSysEnum(EnCfgAttr.MobileFieldShowModel, 0, "移动端列表字段显示方式", true, true, EnCfgAttr.MobileFieldShowModel, "@0=默认设置@1=设置显示字段@2=设置模板");
+
+
+		map.AddTBStringDoc(EnCfgAttr.MobileShowContent, EnCfgAttr.MobileShowContent, null, "移动端列表字段设置", true,
+				false, 0, 500, 10, true);
+
+		String help = "格式1: Key1,Key2, 格式2: @Key1@Key2@Key3@";
+		map.SetHelperAlert(EnCfgAttr.MobileShowContent, help);
 		///#endregion 其他高级设置.
 
 
@@ -276,6 +286,8 @@ public class EnCfg extends EntityNo
 
 		map.AddTBString("BtnLab2", null, "集合:自定义按钮标签2", true, false, 0, 70, 60, false);
 		map.AddTBString("BtnJS2", null, "集合:Url/Javasccript", true, false, 0, 300, 60, false);
+		map.AddTBString("BtnLab3", null, "集合:自定义按钮标签3", true, false, 0, 70, 60, false);
+		map.AddTBString("BtnJS3", null, "集合:Url/Javasccript", true, false, 0, 300, 60, false);
 		///#endregion 按钮配置信息 - 自定义按钮.
 
 		///#region  EnOnly.按钮配置信息.

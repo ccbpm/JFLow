@@ -61,7 +61,7 @@ public class WF_Comm_Controller extends HttpHandlerBase {
 		String token = this.GetRequestVal("Token");
 		if(DataType.IsNullOrEmpty(token)==false &&(token.equals("undefined")==true ||  token.equals("null")==true))
 			token="";
-		if(DataType.IsNullOrEmpty(token)==false && DataType.IsNullOrEmpty(WebUser.getToken())==true){
+		if(DataType.IsNullOrEmpty(token)==false ){
 			bp.wf.Dev2Interface.Port_LoginByToken(token);
 			return;
 		}

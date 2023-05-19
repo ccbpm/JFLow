@@ -188,7 +188,7 @@ public class FrmImgAth extends EntityMyPK
 		//在属性实体集合插入前，clear父实体的缓存.
 		bp.sys.base.Glo.ClearMapDataAutoNum(this.getFKMapData());
 
-		FrmImgAth imgAth = new FrmImgAth();
+		bp.sys.FrmImgAth imgAth = new bp.sys.FrmImgAth();
 		imgAth.setMyPK(this.getMyPK());
 		imgAth.RetrieveFromDBSources();
 		imgAth.Update();

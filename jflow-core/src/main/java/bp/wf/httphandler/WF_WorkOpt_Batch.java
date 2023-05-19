@@ -33,7 +33,7 @@ public class WF_WorkOpt_Batch extends bp.difference.handler.WebContralBase
 
 		String sql = "";
 
-		if (nd.getHisRunModel() == RunModel.SubThread)
+		if (nd.getIsSubThread() == true)
 		{
 			sql = "SELECT a.*, b.Starter,b.StarterName,b.ADT,b.WorkID FROM " + fl.getPTable() + " a , WF_EmpWorks b WHERE a.OID=B.FID AND b.WFState Not IN (7) AND b.FK_Node=" + nd.getNodeID() + " AND b.FK_Emp='" + WebUser.getNo() + "'";
 		}
@@ -254,7 +254,7 @@ public class WF_WorkOpt_Batch extends bp.difference.handler.WebContralBase
 
 		String sql = "";
 
-		if (nd.getHisRunModel() == RunModel.SubThread)
+		if (nd.getIsSubThread() == true)
 		{
 			sql = "SELECT a.*, b.Starter,b.StarterName,b.ADT,b.WorkID FROM " + fl.getPTable() + " a , WF_EmpWorks b WHERE a.OID=B.FID AND b.WFState Not IN (7) AND b.FK_Node=" + nd.getNodeID() + " AND b.FK_Emp='" + WebUser.getNo() + "'";
 		}

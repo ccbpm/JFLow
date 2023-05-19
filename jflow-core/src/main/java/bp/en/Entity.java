@@ -53,7 +53,7 @@ public abstract class Entity extends EnObj implements Serializable
 		}
 
 		int count = this.GetParaInt(clsName + "_AutoNum", -1);
-		if (count == -1)
+		/*if (count == -1)
 		{
 			if (refKey2 == null)
 			{
@@ -81,7 +81,7 @@ public abstract class Entity extends EnObj implements Serializable
 			ens.clear();
 			this.SetRefObject(clsName, ens);
 			return ens;
-		}
+		}*/
 
 		if (refKey2 == null)
 		{
@@ -801,6 +801,7 @@ public abstract class Entity extends EnObj implements Serializable
 					sql = "SELECT CONVERT(INT, MAX(CAST(" + field + " as int)) )+1 AS No FROM " + this.getEnMap().getPhysicsTable();
 					break;
 				case PostgreSQL:
+				case HGDB:
 					sql = "SELECT to_number( MAX(" + field + ") ,'99999999')+1   FROM " + this.getEnMap().getPhysicsTable();
 					break;
 				case Oracle:
@@ -1594,7 +1595,12 @@ public abstract class Entity extends EnObj implements Serializable
 	{
 		try
 		{
-			return EntityDBAccess.Retrieve(this, this.getSQLCash().Select, SqlBuilder.GenerParasPK(this));
+			int i =  EntityDBAccess.Retrieve(this, this.getSQLCash().Select, SqlBuilder.GenerParasPK(this));
+			if (this.getEnMap().getDepositaryOfEntity() == Depositary.Application)
+			{
+				Cash2019.UpdateRow(this.toString(), this.getPKVal().toString(), this.getRow());
+			}
+			return i;
 		}
 		catch (java.lang.Exception e)
 		{
@@ -1804,6 +1810,7 @@ public abstract class Entity extends EnObj implements Serializable
 				case KingBaseR6:
 				case DM:
 				case PostgreSQL:
+				case HGDB:
 					selectSQL += SqlBuilder.GetKeyConditionOfOraForPara(this);
 					break;
 				case Informix:
@@ -2180,18 +2187,8 @@ public abstract class Entity extends EnObj implements Serializable
 		try
 		{
 			String atParaStr = this.GetValStringByKey("AtPara");
-			if (DataType.IsNullOrEmpty(atParaStr))
+			if (DataType.IsNullOrEmpty(atParaStr) == false)
 			{
-					/*没有发现数据，就执行初始化.*/
-				this.InitParaFields();
-
-					// 重新获取一次。
-				atParaStr = this.GetValStringByKey("AtPara");
-				if (DataType.IsNullOrEmpty(atParaStr))
-				{
-					atParaStr = "";
-				}
-
 				at = new AtPara(atParaStr);
 				this.SetValByKey("_ATObj_", at);
 				return at;
@@ -2205,14 +2202,7 @@ public abstract class Entity extends EnObj implements Serializable
 			throw new RuntimeException("@获取参数AtPara时出现异常" + ex.getMessage() + "，可能是您没有加入约定的参数字段AtPara. " + ex.getMessage());
 		}
 	}
-	/** 
-	 初始化参数字段(需要子类重写)
-	 
-	 @return 
-	*/
-	protected void InitParaFields()
-	{
-	}
+
 	/** 
 	 获取参数
 	 
@@ -2220,7 +2210,9 @@ public abstract class Entity extends EnObj implements Serializable
 	 @return 
 	 * @
 	*/
-	public final String GetParaString(String key)  {
+	public final String GetParaString(String key)
+	{
+		removeATObj(key);
 		return getatPara().GetValStrByKey(key);
 	}
 	/** 
@@ -2232,6 +2224,7 @@ public abstract class Entity extends EnObj implements Serializable
 	 * @
 	*/
 	public final String GetParaString(String key, String isNullAsVal)  {
+		removeATObj(key);
 		String str = getatPara().GetValStrByKey(key);
 		if (DataType.IsNullOrEmpty(str))
 		{
@@ -2255,6 +2248,7 @@ public abstract class Entity extends EnObj implements Serializable
 
 	public final int GetParaInt(String key, int isNullAsVal)
 	{
+		removeATObj(key);
 		return getatPara().GetValIntByKey(key, isNullAsVal);
 	}
 
@@ -2266,6 +2260,7 @@ public abstract class Entity extends EnObj implements Serializable
 
 	public final float GetParaFloat(String key, float isNullAsVal)
 	{
+		removeATObj(key);
 		return getatPara().GetValFloatByKey(key, isNullAsVal);
 	}
 	/** 
@@ -2277,6 +2272,7 @@ public abstract class Entity extends EnObj implements Serializable
 	*/
 	public final boolean GetParaBoolen(String key)
 	{
+		removeATObj(key);
 		return getatPara().GetValBoolenByKey(key);
 	}
 	/** 
@@ -2288,7 +2284,13 @@ public abstract class Entity extends EnObj implements Serializable
 	 * @
 	*/
 	public final boolean GetParaBoolen(String key, boolean IsNullAsVal)  {
+		removeATObj(key);
 		return getatPara().GetValBoolenByKey(key, IsNullAsVal);
+	}
+	private  void removeATObj(String key){
+		AtPara para = getatPara();
+		if(para.getHisHT().contains(key)==false)
+			this.getRow().remove("_ATObj_");
 	}
 	/** 
 	 设置参数
@@ -3132,6 +3134,7 @@ public abstract class Entity extends EnObj implements Serializable
 					sql = SqlBuilder.GenerCreateTableSQLOfInfoMix(this);
 					break;
 				case PostgreSQL:
+				case HGDB:
 					sql = SqlBuilder.GenerCreateTableSQLOfPostgreSQL(this);
 					break;
 				case MSSQL:
@@ -3856,6 +3859,7 @@ public abstract class Entity extends EnObj implements Serializable
 			case Informix:
 				break;
 			case PostgreSQL:
+			case HGDB:
 				break;
 			default:
 				throw new RuntimeException("@没有涉及到的数据库类型");
@@ -3992,6 +3996,7 @@ public abstract class Entity extends EnObj implements Serializable
 				this.CheckPhysicsTable_Informix();
 				break;
 			case PostgreSQL:
+			case HGDB:
 				this.CheckPhysicsTable_PostgreSQL();
 				break;
 			case KingBaseR3:

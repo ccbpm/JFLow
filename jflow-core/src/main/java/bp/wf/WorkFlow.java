@@ -1364,7 +1364,7 @@ public class WorkFlow
 		// 设置流程完成状态.
 		ps = new Paras();
 		if (SystemConfig.getAppCenterDBType( ) == DBType.Oracle || SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX
-			|| SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR3 || SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR6)
+			|| SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR3 || SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR6 || SystemConfig.getAppCenterDBType() == DBType.HGDB)
 		{
 			ps.SQL = "UPDATE " + this.getHisFlow().getPTable() + " SET  FlowEmps= FlowEmps ||'" + emps + "', WFState=:WFState,WFSta=:WFSta WHERE OID=" + dbstr + "OID";
 		}

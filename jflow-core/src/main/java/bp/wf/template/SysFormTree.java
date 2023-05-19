@@ -102,7 +102,7 @@ public class SysFormTree extends EntityTree
 		map.AddTBString(SysFormTreeAttr.Name, null, "名称", true, false, 0, 100, 30);
 		map.AddTBString(SysFormTreeAttr.ParentNo, null, "父节点No", false, false, 0, 100, 40);
 		map.AddTBInt(SysFormTreeAttr.Idx, 0, "Idx", false, false);
-		map.AddTBString(SysFormTreeAttr.OrgNo, null, "OrgNo", false, false, 0, 50, 30);
+		map.AddTBString(SysFormTreeAttr.OrgNo, null, "组织编号", false, false, 0, 50, 30);
 
 		this.set_enMap(map);
 		return this.get_enMap();
@@ -180,7 +180,7 @@ public class SysFormTree extends EntityTree
 	public final String DoCreateSameLevelNodeIt(String name) throws Exception {
 		SysFormTree en = new SysFormTree();
 		en.Copy(this);
-		en.setNo(String.valueOf(DBAccess.GenerOID()));
+		en.setNo(DBAccess.GenerGUID(10));
 		en.setName(name);
 		en.Insert();
 		return en.getNo();
@@ -188,7 +188,7 @@ public class SysFormTree extends EntityTree
 	public final String DoCreateSubNodeIt(String name) throws Exception {
 		SysFormTree en = new SysFormTree();
 		en.Copy(this);
-		en.setNo(String.valueOf(DBAccess.GenerOID()));
+		en.setNo(DBAccess.GenerGUID(10));
 		en.setParentNo(this.getNo());
 		en.setName(name);
 		en.Insert();

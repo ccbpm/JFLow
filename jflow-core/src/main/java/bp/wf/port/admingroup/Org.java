@@ -4,14 +4,8 @@ import bp.da.*;
 import bp.en.*;
 import bp.en.Map;
 import bp.web.*;
-import bp.wf.port.Dept;
-import bp.wf.port.DeptAttr;
-import bp.wf.port.Depts;
 import bp.wf.port.admin2group.*;
-import bp.*;
 import bp.wf.*;
-import bp.wf.port.*;
-import java.util.*;
 
 /** 
  独立组织
@@ -119,7 +113,7 @@ public class Org extends EntityNoName
 		map.setAdjunctType(AdjunctType.None);
 			// map.EnType = EnType.View; //独立组织是一个视图.
 
-		map.AddTBStringPK(OrgAttr.No, null, "编号(与部门编号相同)", true, false, 1, 30, 40);
+		map.AddTBStringPK(OrgAttr.No, null, "编号(与部门编号相同)", true, false, 1, 50, 40);
 		map.AddTBString(OrgAttr.Name, null, "组织名称", true, false, 0, 60, 200, true);
 
 		map.AddTBString(OrgAttr.ParentNo, null, "父级组织编号", false, false, 0, 60, 200, true);
@@ -217,8 +211,8 @@ public class Org extends EntityNoName
 		}
 
 		//表单类别.
-		bp.sys.FrmTrees ftTrees = new bp.sys.FrmTrees();
-		ftTrees.Retrieve(bp.sys.FrmTreeAttr.OrgNo, this.getNo(), null);
+		bp.wf.template.SysFormTrees ftTrees = new bp.wf.template.SysFormTrees();
+		ftTrees.Retrieve(bp.wf.template.SysFormTreeAttr.OrgNo, this.getNo(), null);
 		for (bp.wf.template.FlowSort en : fss.ToJavaList())
 		{
 			bp.sys.MapDatas mds = new bp.sys.MapDatas();
@@ -234,7 +228,7 @@ public class Org extends EntityNoName
 		fs.Delete(OrgAdminerAttr.OrgNo, this.getNo());
 
 		fss.Delete(OrgAdminerAttr.OrgNo, this.getNo()); //删除流程目录.
-		ftTrees.Delete(bp.sys.FrmTreeAttr.OrgNo, this.getNo()); //删除表单目录。
+		ftTrees.Delete(bp.wf.template.SysFormTreeAttr.OrgNo, this.getNo()); //删除表单目录。
 		//更新到admin的组织下.
 		String sqls = "UPDATE Port_Emp SET OrgNo='" + bp.web.WebUser.getOrgNo() + "' WHERE  OrgNo='" + this.getNo() + "'";
 		sqls += "@UPDATE Port_Dept SET OrgNo='" + bp.web.WebUser.getOrgNo() + "' WHERE  OrgNo='" + this.getNo() + "'";

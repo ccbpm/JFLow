@@ -214,8 +214,8 @@ public class SelectAccper extends EntityMyPK
 		map.AddTBInt(SelectAccperAttr.FK_Node, 0, "接受人节点", true, false);
 
 		map.AddTBInt(SelectAccperAttr.WorkID, 0, "WorkID", true, false);
-		map.AddTBString(SelectAccperAttr.FK_Emp, null, "FK_Emp", true, false, 0, 20, 10);
-		map.AddTBString(SelectAccperAttr.EmpName, null, "EmpName", true, false, 0, 20, 10);
+		map.AddTBString(SelectAccperAttr.FK_Emp, null, "FK_Emp", true, false, 0, 100, 10);
+		map.AddTBString(SelectAccperAttr.EmpName, null, "EmpName", true, false, 0, 50, 10);
 		map.AddTBString(SelectAccperAttr.DeptName, null, "部门名称", true, false, 0, 400, 10);
 		map.AddTBInt(SelectAccperAttr.AccType, 0, "类型(@0=接受人@1=抄送人)", true, false);
 		map.AddTBString(SelectAccperAttr.Rec, null, "记录人", true, false, 0, 20, 10);

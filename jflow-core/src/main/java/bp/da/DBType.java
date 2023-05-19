@@ -50,7 +50,11 @@ public enum DBType
 	/**
 	 * 优炫
 	 */
-	UX(10);
+	UX(10),
+	/**
+	 * 瀚高
+	 */
+	HGDB(11);
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 

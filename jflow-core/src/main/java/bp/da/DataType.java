@@ -370,6 +370,22 @@ public class DataType {
     }
 
     /**
+     * 转换成KB
+     * <p>
+     * param val
+     *
+     * @return
+     */
+    public static float PraseToKB(long val) {
+        try {
+            DecimalFormat df = new DecimalFormat("0.00");
+            return Float.parseFloat(df.format(val / 1024f));
+        } catch (java.lang.Exception e) {
+            return 0;
+        }
+    }
+
+    /**
      * 处理文件名称
      * <p>
      * param fileNameFormat

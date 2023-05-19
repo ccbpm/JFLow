@@ -375,7 +375,7 @@ public class CCFlowAPI
 				{
 					sqlOrder += " ORDER BY INSTR('" + orderMyFrmIDs + "', FrmID ), Idx";
 				}
-				if (SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX)
+				if (SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX || SystemConfig.getAppCenterDBType( ) == DBType.HGDB)
 				{
 					sqlOrder += " ORDER BY POSITION(FrmID  IN '" + orderMyFrmIDs + "'), Idx";
 				}

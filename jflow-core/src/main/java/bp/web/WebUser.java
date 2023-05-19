@@ -525,10 +525,18 @@ public class WebUser {
         if (WebUser.getNo() != null && WebUser.getNo().equals("admin")) {
             return true;
         }
-
-        if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single) {
-            return false; // 单机版.
+        try{
+            if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single) {
+                GloVar gloVar = new GloVar();
+                gloVar.setNo(WebUser.getFK_Dept() + "_" + WebUser.getNo() + "_Adminer");
+                if(gloVar.RetrieveFromDBSources()==0)
+                    return false; //单机版.
+                return true;
+            }
+        }catch(Exception e){
+            throw new RuntimeException(e.getMessage());
         }
+
 
         // SAAS版本. 集团版
         if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single) {

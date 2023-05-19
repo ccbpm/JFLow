@@ -177,6 +177,13 @@ public class MethodFunc extends EntityNoName
 		this.SetValByKey(MethodAttr.RefMethodType, value.getValue());
 	}
 
+	public final String getDocs(){
+		return this.GetValStringByKey(MethodAttr.Docs);
+	}
+
+	public final void setDocs(String value){
+		this.SetValByKey(MethodAttr.Docs,value);
+	}
 		///#endregion
 
 
@@ -248,7 +255,7 @@ public class MethodFunc extends EntityNoName
 			//  "@0=按钮@1=超链接");
 
 		map.AddDDLSysEnum(MethodAttr.MethodDocTypeOfFunc, 0, "内容类型", true, false, "MethodDocTypeOfFunc", "@0=SQL@1=URL@2=JavaScript@3=业务单元");
-
+		map.AddTBString(MethodAttr.Docs, null, "执行内容", true, false, 0, 300, 10, true);
 		map.AddTBString(MethodAttr.MsgSuccess, null, "成功提示信息", true, false, 0, 300, 10, true);
 		map.AddTBString(MethodAttr.MsgErr, null, "失败提示信息", true, false, 0, 300, 10, true);
 

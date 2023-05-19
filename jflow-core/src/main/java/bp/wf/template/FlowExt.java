@@ -348,8 +348,9 @@ public class FlowExt extends EntityNoName
 		}
 		else
 		{
-			sql = "SELECT No,Name FROM WF_FlowSort WHERE OrgNo='@WebUser.OrgNo' ORDER BY NO, IDX";
-			map.AddDDLSQL(FlowAttr.FK_FlowSort, null, "类别", sql, true);
+//			sql = "SELECT No,Name FROM WF_FlowSort WHERE OrgNo='@WebUser.OrgNo' ORDER BY NO, IDX";
+//			map.AddDDLSQL(FlowAttr.FK_FlowSort, null, "类别", sql, true);
+			map.AddDDLEntities(FlowAttr.FK_FlowSort, null, "类别", new bp.wf.admin.FlowSorts(), true);
 		}
 
 			//map.AddDDLEntities(FlowAttr.FK_FlowSort, "01", "流程类别", new FlowSorts(), false);
@@ -430,7 +431,8 @@ public class FlowExt extends EntityNoName
 		map.SetHelperUrl(FlowAttr.ChartType, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3661883&doc_id=31094");
 
 		map.AddTBString(FlowAttr.HostRun, null, "运行主机(IP+端口)", true, false, 0, 40, 10, true);
-
+		map.AddTBDateTime(FlowAttr.CreateDate, null, "创建日期", true, true);
+		map.AddTBString(FlowAttr.Creater, null, "创建人", true, true, 0, 100, 10, true);
 			///#endregion 基本属性。
 
 
@@ -648,13 +650,13 @@ public class FlowExt extends EntityNoName
 		rm.Icon = "icon-clock";
 		map.AddRefMethod(rm);
 
-		rm = new RefMethod();
-		rm.Icon = "../../WF/Admin/CCFormDesigner/Img/CH.png";
-		rm.ClassMethodName = this.toString() + ".DoDeadLineRole()";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		// rm.GroupName = "实验中的功能";
-		rm.Icon = "icon-clock";
-		map.AddRefMethod(rm);
+//		rm = new RefMethod();
+//		rm.Icon = "../../WF/Admin/CCFormDesigner/Img/CH.png";
+//		rm.ClassMethodName = this.toString() + ".DoDeadLineRole()";
+//		rm.refMethodType = RefMethodType.RightFrameOpen;
+//		// rm.GroupName = "实验中的功能";
+//		rm.Icon = "icon-clock";
+//		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "预警、超期消息事件";
@@ -1002,7 +1004,7 @@ public class FlowExt extends EntityNoName
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
 		String msg = "如下流程ID被删除:";
-		//线程执行删除流程
+	/*	//线程执行删除流程
 		ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 		RequestContextHolder.setRequestAttributes(servletRequestAttributes,true);
 		final int POOL_SIZE = dt.Rows.size();
@@ -1012,24 +1014,25 @@ public class FlowExt extends EntityNoName
 				POOL_SIZE, TimeUnit.SECONDS,
 				new ArrayBlockingQueue<>(POOL_SIZE),
 				new ThreadPoolExecutor.CallerRunsPolicy());
-		List<CompletableFuture<Void>> futures =new ArrayList<CompletableFuture<Void>>();
+		List<CompletableFuture<Void>> futures =new ArrayList<CompletableFuture<Void>>();*/
 		try{
 			for (DataRow dr : dt.Rows)
 			{
 				long workid = Long.parseLong(dr.getValue("WorkID").toString());
 				String fk_flow = dr.getValue("FK_Flow").toString();
 				msg += " " + workid;
-				CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+				DoDelFlowByWorkID(workid, fk_flow);
+				/*CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
 					try {
 						DoDelFlowByWorkID(workid, fk_flow);
 					} catch (Exception e) {
 						throw new RuntimeException(e);
 					}
 				}, executor);
-				futures.add(future);
+				futures.add(future);*/
 			}
-			CompletableFuture.allOf(futures.toArray(new CompletableFuture[futures.size()])).join();
-			executor.shutdown();
+			//CompletableFuture.allOf(futures.toArray(new CompletableFuture[futures.size()])).join();
+			//executor.shutdown();
 		}catch(Exception e){
 			throw new RuntimeException("部分流程数据删除成功:"+msg);
 		}
@@ -2054,7 +2057,7 @@ public class FlowExt extends EntityNoName
 			for (Node nd : nds.ToJavaList())
 			{
 				String sql = "";
-				if (nd.getHisRunModel() == RunModel.SubThread)
+				if (nd.getIsSubThread() == true)
 				{
 					sql = "UPDATE Sys_MapData SET PTable=No WHERE No='ND" + nd.getNodeID() + "'";
 				}

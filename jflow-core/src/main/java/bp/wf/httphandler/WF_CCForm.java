@@ -21,6 +21,7 @@ import bp.wf.*;
 
 import java.awt.image.BufferedImage;
 import java.net.URLDecoder;
+import java.nio.channels.FileChannel;
 import java.util.*;
 import java.io.*;
 
@@ -49,10 +50,11 @@ public class WF_CCForm extends  WebContralBase
 			FrmAttachment athDesc = this.GenerAthDesc();
 
 			// 查询出来数据实体.
-			String pkVal = String.valueOf(this.getOID());
-			if (pkVal.equals("0") == true) {
+			String pkVal = this.GetRequestVal("RefOID");
+			if (DataType.IsNullOrEmpty(pkVal) == true)
+				pkVal = this.GetRequestVal("OID");
+			if (DataType.IsNullOrEmpty(pkVal) == true)
 				pkVal = String.valueOf(this.getWorkID());
-			}
 
 			bp.sys.FrmAttachmentDBs dbs = bp.wf.Glo.GenerFrmAttachmentDBs(athDesc, pkVal, this.getFK_FrmAttachment(),
 					this.getWorkID(), this.getFID(), this.getPWorkID());
@@ -117,7 +119,7 @@ public class WF_CCForm extends  WebContralBase
 		DataTable dt = null;
 		String sql = "";
 		String key = this.GetRequestVal("Key");
-		key = URLDecoder.decode(key, "GB2312");
+		key = URLDecoder.decode(key, "UTF-8");
 		key = key.trim();
 		key = key.replace("'", ""); // 去掉单引号.
 		String dbsrc = me.getFK_DBSrc();
@@ -460,7 +462,7 @@ public class WF_CCForm extends  WebContralBase
 		if (md.getHisFrmType() == FrmType.Url) {
 			String no = this.GetRequestVal("NO");
 			String urlParas = "OID=" + this.getRefOID()+"&FK_MapData="+md.getNo() + "&NO=" + no + "&WorkID=" + this.getWorkID() + "&FK_Node="
-					+ this.getFK_Node() + "&UserNo=" + WebUser.getNo() + "&SID=" + this.getSID();
+					+ this.getFK_Node() + "&UserNo=" + WebUser.getNo() + "&SID=" + this.getSID()+"&FID="+this.getFID()+"&PWorkID="+this.getPWorkID();
 
 			String url = "";
 			/* 如果是URL. */
@@ -695,93 +697,79 @@ public class WF_CCForm extends  WebContralBase
 	 
 	 @return 
 	*/
-//	public final String FrmImgAthDB_Upload() throws Exception {
-//		String CtrlID = this.GetRequestVal("CtrlID");
-//		int zoomW = this.GetRequestValInt("zoomW");
-//		int zoomH = this.GetRequestValInt("zoomH");
-//
-//		//HttpFileCollection files = this.context.Request.Files;
-//		if (HttpContextHelper.RequestFilesCount > 0)
-//		{
-//			String myName = "";
-//			String fk_mapData = this.getFK_MapData();
-//			if (fk_mapData.contains("ND") == true)
-//			{
-//				myName = CtrlID + "_" + this.getRefPKVal();
-//			}
-//			else
-//			{
-//				myName = fk_mapData + "_" + CtrlID + "_" + this.getRefPKVal();
-//			}
-//
-//			//生成新路径，解决返回相同src后图片不切换问题
-//			//string newName = ImgAthPK + "_" + this.MyPK + "_" + DateTime.Now.ToString("yyyyMMddHHmmss");
-//			String webPath = Glo.getCCFlowAppPath() + "DataUser/ImgAth/Data/" + myName + ".png";
-//			//string saveToPath = this.context.Server.MapPath(BP.WF.Glo.CCFlowAppPath + "DataUser/ImgAth/Data");
-//			String saveToPath = SystemConfig.getPathOfWebApp() + (Glo.getCCFlowAppPath() + "DataUser/ImgAth/Data");
-//			String fileUPloadPath = SystemConfig.getPathOfWebApp() + (Glo.getCCFlowAppPath() + "DataUser/ImgAth/Upload");
-//			//创建路径
-//			if (!(new File(saveToPath)).isDirectory())
-//			{
-//				(new File(saveToPath)).mkdirs();
-//			}
-//			if (!(new File(fileUPloadPath)).isDirectory())
-//			{
-//				(new File(fileUPloadPath)).mkdirs();
-//			}
-//
-//			saveToPath = saveToPath + "/" + myName + ".png";
-//			fileUPloadPath = fileUPloadPath + "/" + myName + ".png";
-//			//files[0].SaveAs(saveToPath);
-//			HttpContextHelper.UploadFile(HttpContextHelper.RequestFiles(0), saveToPath);
-//
-//			//源图像
-//			System.Drawing.Bitmap oldBmp = new System.Drawing.Bitmap(saveToPath);
-//
-//			if (zoomW == 0 && zoomH == 0)
-//			{
-//				zoomW = oldBmp.Width;
-//				zoomH = oldBmp.Height;
-//			}
-//
-//			//新图像,并设置新图像的宽高
-//			System.Drawing.Bitmap newBmp = new System.Drawing.Bitmap(zoomW, zoomH);
-//			System.Drawing.Graphics draw = System.Drawing.Graphics.FromImage(newBmp); //从新图像获取对应的Graphics
-//			System.Drawing.Rectangle rect = new System.Drawing.Rectangle(0, 0, zoomW, zoomH); //指定绘制新图像的位置和大小
-//			draw.DrawImage(oldBmp, rect); //把源图像的全部完整的内容，绘制到新图像rect这个区域内，
-//
-//			draw.Dispose();
-//			oldBmp.Dispose(); //一定要把源图Dispose调，因为保存的是相同路径，需要把之前的图顶替调，如果不释放的话会报错：（GDI+ 中发生一般性错误。）
-//			newBmp.Save(saveToPath); //保存替换到同一个路径
-//
-//			//复制一份
-//			Files.copy(Paths.get(saveToPath), Paths.get(fileUPloadPath), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
-//			//获取文件大小
-//			File fileInfo = new File(saveToPath);
-//			float fileSize = 0;
-//			if (fileInfo.exists())
-//			{
-//				fileSize = Float.parseFloat(String.valueOf(fileInfo.length()));
-//			}
-//
-//			////更新数据表
-//			FrmImgAthDB imgAthDB = new FrmImgAthDB();
-//			imgAthDB.setMyPK(myName);
-//			imgAthDB.setFK_MapData(this.getFK_MapData());
-//			imgAthDB.FK_FrmImgAth = CtrlID;
-//			imgAthDB.RefPKVal = this.getRefPKVal();
-//			imgAthDB.FileFullName = webPath;
-//			imgAthDB.FileName = fileInfo.getName();
-//			imgAthDB.FileExts = "png";
-//			imgAthDB.FileSize = fileSize;
-//			imgAthDB.RDT = Date.now().toString("yyyy-MM-dd mm:HH");
-//			imgAthDB.Rec = WebUser.getNo();
-//			imgAthDB.RecName = WebUser.getName();
-//			imgAthDB.Save();
-//			return "{\"SourceImage\":\"" + webPath + "\"}";
-//		}
-//		return "{\"err\":\"没有选择文件\"}";
-//	}
+	public final String FrmImgAthDB_Upload() throws Exception {
+		String CtrlID = this.GetRequestVal("CtrlID");
+		int zoomW = this.GetRequestValInt("zoomW");
+		int zoomH = this.GetRequestValInt("zoomH");
+		String myName = "";
+		String fk_mapData = this.getFK_MapData();
+		if (fk_mapData.contains("ND") == true)
+			myName = CtrlID + "_" + this.getRefPKVal();
+		else
+			myName = fk_mapData + "_" + CtrlID + "_" + this.getRefPKVal();
+
+		// 生成新路径，解决返回相同src后图片不切换问题
+		String webPath = "/DataUser/ImgAth/Data/" + myName + ".png";
+		String saveToPath = SystemConfig.getPathOfDataUser() + "ImgAth/Data/";
+		saveToPath = saveToPath.replace("\\", "/");
+		String fileUPloadPath = SystemConfig.getPathOfDataUser() + "ImgAth/Upload/";
+		fileUPloadPath = fileUPloadPath.replace("\\", "/");
+
+		// 如果路径不存在就创建,否则拷贝文件报异常
+		File sPath = new File(saveToPath);
+		File uPath = new File(fileUPloadPath);
+		if (!sPath.isDirectory()) {
+			sPath.mkdirs();
+		}
+		if (!uPath.isDirectory()) {
+			uPath.mkdirs();
+		}
+
+		saveToPath = saveToPath + myName + ".png";
+		fileUPloadPath = fileUPloadPath + myName + ".png";
+		File sFile = new File(saveToPath);
+		File uFile = new File(fileUPloadPath);
+
+		HttpServletRequest request = getRequest();
+		String contentType = request.getContentType();
+		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
+
+			String fileName = CommonFileUtils.getOriginalFilename(request, "file");
+			String prefix = fileName.substring(fileName.lastIndexOf(".") + 1);
+			try {
+				CommonFileUtils.upload(request, "file", sFile);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "err@上传图片保存失败";
+			}
+		}
+		// 复制一份到uFile
+		try {
+			copyFileUsingFileChannels(sFile, uFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// 获取文件大小;
+		long fileSize = uFile.length();
+		if (fileSize > 0) {
+			return "{\"SourceImage\":\"" + webPath + "\"}";
+		}
+		return "{\"err\":\"没有选择文件\"}";
+	}
+	public static void copyFileUsingFileChannels(File source, File dest) throws IOException {
+		FileChannel inputChannel = null;
+		FileChannel outputChannel = null;
+		try {
+			inputChannel = new FileInputStream(source).getChannel();
+			outputChannel = new FileOutputStream(dest).getChannel();
+			outputChannel.transferFrom(inputChannel, 0, inputChannel.size());
+
+		} finally {
+			inputChannel.close();
+			outputChannel.close();
+		}
+	}
 	public final String ImgUpload_Del() throws Exception {
 		//执行删除.
 		String delPK = this.GetRequestVal("DelPKVal");
@@ -1179,6 +1167,10 @@ public class WF_CCForm extends  WebContralBase
 			{
 				pk = this.GetRequestVal("WorkID");
 			}
+
+			en.SetValByKey("OID",pk);
+
+
 			String expEn = dblist.getExpEn();
 			expEn = expEn.replace("@Key", pk);
 			if (expEn.contains("@") == true)
@@ -1289,6 +1281,13 @@ public class WF_CCForm extends  WebContralBase
 					en.SetValByKey(k, bp.sys.Glo.getRequest().getParameter(k));
 				}
 			}
+
+			// 执行表单事件. FrmLoadBefore .
+			en.SetPara("FrmType","DBList");
+			String msg = ExecEvent.DoFrm(md, EventListFrm.FrmLoadBefore, en);
+			if (DataType.IsNullOrEmpty(msg) == false)
+				return "err@错误:" + msg;
+
 
 			//增加主表数据.
 			DataTable mainTable = en.ToDataTableField(md.getNo());
@@ -2371,6 +2370,136 @@ public class WF_CCForm extends  WebContralBase
 
 		return "保存成功";
 	}
+
+	public String Dtl_ChangePopAndAthIdx()
+	{
+		int oldRowIdx = GetRequestValInt("oldRowIdx");
+		int newRowIdx = GetRequestValInt("newRowIdx");
+		//dtl生成oid后，将pop弹出的FrmEleDB表中的数据用oid替换掉
+		String refval = this.getWorkID() + "_" + oldRowIdx;
+		String newRefVal = this.getWorkID() + "_" + newRowIdx;
+		//处理从表行数据插入成功后，更新FrmEleDB中数据
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
+		Paras paras = new Paras();
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 || SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
+			paras.SQL = "UPDATE Sys_FrmEleDB SET RefPKVal=" + dbstr + "RefPKVal,MyPK=EleID||'_'||'" + newRefVal + "'||'_'||Tag1  WHERE RefPKVal=" + dbstr + "OldRefPKVal";
+		else if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
+			paras.SQL = "UPDATE Sys_FrmEleDB SET RefPKVal=" + dbstr + "RefPKVal,MyPK=CONCAT(EleID,'_','" + newRefVal + "','_',Tag1)  WHERE RefPKVal=" + dbstr + "OldRefPKVal";
+		else
+			paras.SQL = "UPDATE Sys_FrmEleDB SET RefPKVal=" + dbstr + "RefPKVal,MyPK= EleID+'_'+'" + newRefVal + "'+'_'+Tag1  WHERE RefPKVal=" + dbstr + "OldRefPKVal";
+		paras.Add("RefPKVal", newRefVal);
+		paras.Add("OldRefPKVal", refval);
+		DBAccess.RunSQL(paras);
+		//处理从表行数据插入成功后，更新FrmAttachmentDB中数据
+		paras.SQL = "UPDATE Sys_FrmAttachmentDB SET RefPKVal=" + dbstr + "RefPKVal  WHERE RefPKVal=" + dbstr + "OldRefPKVal AND FK_MapData="+dbstr+"FK_MapData";
+		paras.Add("FK_MapData", this.getFK_MapData());
+		DBAccess.RunSQL(paras);
+		return "执行成功";
+	}
+
+	/// <summary>
+	/// 从表移动
+	/// </summary>
+	/// <returns></returns>
+	public String DtlList_Move()
+	{
+		int newIdx= this.GetRequestValInt("newIdx");
+		int oldIdx = this.GetRequestValInt("oldIdx");
+		long newOID = this.GetRequestValInt("newOID");
+		long oldOID = this.GetRequestValInt("oldOID");
+		//处理从表行数据插入成功后，更新FrmAttachmentDB中数据
+		Paras paras = new Paras();
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
+		paras.Add("FK_MapData", this.getFK_MapData());
+		String athSQL ="UPDATE Sys_FrmAttachmentDB SET RefPKVal=" + dbstr + "RefPKVal  WHERE RefPKVal=" + dbstr + "OldRefPKVal AND FK_MapData=" + dbstr + "FK_MapData";
+		String eleSQL = "UPDATE Sys_FrmEleDB SET RefPKVal=" + dbstr + "RefPKVal  WHERE RefPKVal=" + dbstr + "OldRefPKVal AND FK_MapData=" + dbstr + "FK_MapData";
+
+		if (newOID == 0 && oldOID == 0)
+		{
+			//先改变oldID的附件信息
+                /*paras.Add("RefPKVal", this.RefPKVal + "_" + oldIdx + "_"+ oldIdx);
+                paras.Add("OldRefPKVal", this.RefPKVal + "_" + oldIdx);
+                paras.SQL = athSQL;
+                DBAccess.RunSQL(paras);
+                paras.SQL = eleSQL;
+                DBAccess.RunSQL(paras);*/
+
+			paras.Add("RefPKVal", this.getRefPKVal() + "_" + newIdx+"_"+newIdx);
+			paras.Add("OldRefPKVal", this.getRefPKVal() + "_" + oldIdx);
+			paras.SQL = athSQL;
+			DBAccess.RunSQL(paras);
+			paras.SQL = eleSQL;
+			DBAccess.RunSQL(paras);
+			paras.Add("RefPKVal", this.getRefPKVal() + "_" + oldIdx+"_"+oldIdx);
+			paras.Add("OldRefPKVal", this.getRefPKVal() + "_" + newIdx);
+			paras.SQL = athSQL;
+			DBAccess.RunSQL(paras);
+			paras.SQL = eleSQL;
+			DBAccess.RunSQL(paras);
+			return "从表拖拽完成";
+		}
+		if(newOID == 0)
+		{
+			paras.Add("RefPKVal", this.getRefPKVal() + "_" + newIdx+"_"+newIdx);
+			paras.Add("OldRefPKVal", this.getRefPKVal() + "_" + oldIdx);
+			paras.SQL = athSQL;
+			DBAccess.RunSQL(paras);
+			paras.SQL = eleSQL;
+			DBAccess.RunSQL(paras);
+
+		}
+		if (oldOID == 0)
+		{
+			paras.Add("RefPKVal", this.getRefPKVal() + "_" + oldIdx+"_"+oldIdx);
+			paras.Add("OldRefPKVal", this.getRefPKVal() + "_" + newIdx);
+		}
+		paras.SQL = athSQL;
+		DBAccess.RunSQL(paras);
+		paras.SQL = eleSQL;
+		DBAccess.RunSQL(paras);
+		return "从表拖拽完成";
+	}
+
+	public String DtlList_MoveAfter()
+	{
+		Paras paras = new Paras();
+		paras.Add("FK_MapData", this.getFK_MapData());
+		int newIdx = this.GetRequestValInt("newIdx");
+		String dbstr = SystemConfig.getAppCenterDBVarStr();
+		String athSQL = "";
+		String eleSQL = "";
+		switch (SystemConfig.getAppCenterDBType())
+		{
+			case MSSQL:
+				athSQL = "UPDATE Sys_FrmAttachmentDB SET RefPKVal=SUBSTRING(RefPKVal,0,CHARINDEX('_', RefPKVal, CHARINDEX('_', RefPKVal) + 1))  WHERE RefPKVal LIKE " + dbstr + "RefPKVal+'[_]%[_]%' AND FK_MapData=" + dbstr + "FK_MapData";
+				eleSQL = "UPDATE Sys_FrmEleDB SET RefPKVal=SUBSTRING(RefPKVal,0,CHARINDEX('_', RefPKVal, CHARINDEX('_', RefPKVal) + 1))  WHERE RefPKVal LIKE "+dbstr+ "RefPKVal+'[_]%[_]%' AND FK_MapData=" + dbstr + "FK_MapData";
+				break;
+			case Oracle:
+			case KingBaseR3:
+			case KingBaseR6:
+				athSQL = "UPDATE Sys_FrmAttachmentDB SET RefPKVal=SUBSTRING(RefPKVal,0,INSERT(RefPKVal,'_',1,2))  WHERE RefPKVal LIKE " + dbstr + "RefPKVal||'\\_%\\_%'  ESCAPE '\\' AND FK_MapData=" + dbstr + "FK_MapData";
+				eleSQL = "UPDATE Sys_FrmEleDB SET RefPKVal=SUBSTRING(RefPKVal,0,INSERT(RefPKVal,'_',1,2))  WHERE RefPKVal LIKE " + dbstr + "RefPKVal||'\\_%\\_%'  ESCAPE '\\' AND FK_MapData=" + dbstr + "FK_MapData";
+				break;
+			case MySQL:
+				athSQL = "UPDATE Sys_FrmAttachmentDB SET RefPKVal=SUBSTRING(RefPKVal,1,LOCATE('_', RefPKVal, LOCATE('_', RefPKVal)+1)-1)  WHERE RefPKVal LIKE CONCAT(" + dbstr + "RefPKVal,'\\\\_%\\\\_%') AND FK_MapData=" + dbstr + "FK_MapData";
+				eleSQL = "UPDATE Sys_FrmEleDB SET RefPKVal=SUBSTRING(RefPKVal,1,LOCATE('_', RefPKVal, LOCATE('_', RefPKVal)+1)-1)  WHERE RefPKVal LIKE CONCAT(" + dbstr + "RefPKVal,'\\\\_%\\\\_%') AND FK_MapData=" + dbstr + "FK_MapData";
+				break;
+			case PostgreSQL:
+			case HGDB:
+				athSQL = "UPDATE Sys_FrmAttachmentDB SET RefPKVal=SUBSTRING(RefPKVal,1,CHAR_LENGTH(RefPKVal)-POSITION('_' in REVERSE(RefPKVal)))  WHERE RefPKVal LIKE CONCAT(" + dbstr + "RefPKVal,'!_%!_%')  ESCAPE '!' AND FK_MapData=" + dbstr + "FK_MapData";
+				eleSQL = "UPDATE Sys_FrmEleDB SET RefPKVal=SUBSTRING(RefPKVal,1,CHAR_LENGTH(RefPKVal)-POSITION('_' in REVERSE(RefPKVal)))  WHERE RefPKVal LIKE CONCAT(" + dbstr + "RefPKVal,'!_%!_%')  ESCAPE '!' AND FK_MapData=" + dbstr + "FK_MapData";
+				break;
+			default:
+				return "err@" + SystemConfig.getAppCenterDBType() + "还未解析";
+		}
+		paras.Add("RefPKVal", this.getRefPKVal());
+		paras.SQL = athSQL;
+		DBAccess.RunSQL(paras);
+		paras.SQL = eleSQL;
+		DBAccess.RunSQL(paras);
+		return "";
+	}
+
 	/** 
 	 导出excel与附件信息,并且压缩一个压缩包.
 	 
@@ -2394,13 +2523,10 @@ public class WF_CCForm extends  WebContralBase
 		String dtlRefPKVal = this.getRefPKVal();
 
 		String isRead = mdtl.getRow().GetValByKey(MapDtlAttr.IsReadonly).toString();
-		//string isRead = this.GetRequestVal("IsReadonly");
 		if (DataType.IsNullOrEmpty(isRead) == false && "1".equals(isRead) == true)
 		{
 			return "";
 		}
-
-
 			///#region 处理权限方案。
 		if (this.getFK_Node() != 0 && this.getFK_Node() != 999999 && mdtl.getNo().contains("ND") == false)
 		{
@@ -2478,12 +2604,15 @@ public class WF_CCForm extends  WebContralBase
 			{
 				continue;
 			}
-
-			dtl.SetValByKey(attr.getKey(), this.GetRequestVal(attr.getKey()));
+			String val = this.GetRequestVal(attr.getKey());
+			if(DataType.IsNullOrEmpty(val)==true)
+				dtl.SetValByKey(attr.getKey(),"");
+			else
+				dtl.SetValByKey(attr.getKey(),URLDecoder.decode(val,"UTF-8"));
 		}
 
-
-			///#region 从表保存前处理事件.
+		dtl.SetValByKey("Idx", RowIndex);
+		///#region 从表保存前处理事件.
 		//获得主表事件.
 		FrmEvents fes = new FrmEvents(fk_mapDtl); //获得事件.
 		GEEntity mainEn = null;
@@ -2528,36 +2657,24 @@ public class WF_CCForm extends  WebContralBase
 			}
 
 			//dtl生成oid后，将pop弹出的FrmEleDB表中的数据用oid替换掉
-			for (Attr attr : attrs.ToJavaList())
-			{
-				String Refval = this.getRefPKVal() + "_" + RowIndex;
-				FrmEleDBs FrmEleDBs = new FrmEleDBs();
-				QueryObject qo = new QueryObject(FrmEleDBs);
-				qo.AddWhere(FrmEleDBAttr.EleID, attr.getKey());
-				qo.addAnd();
-				qo.AddWhere(FrmEleDBAttr.RefPKVal, Refval);
-				qo.DoQuery();
-				if (FrmEleDBs != null && FrmEleDBs.isEmpty())
-				{
-					continue;
-				}
-				for (FrmEleDB FrmEleDB : FrmEleDBs.ToJavaList())
-				{
-					FrmEleDB athDB_N = new FrmEleDB();
-					athDB_N.setMyPK(attr.getKey() + "_" + dtl.getOID() + "_" + FrmEleDB.getTag1());
-					athDB_N.setFK_MapData(FrmEleDB.getFK_MapData());
-					athDB_N.setEleID(FrmEleDB.getEleID());
-					athDB_N.setRefPKVal(String.valueOf(dtl.getOID()));
-					athDB_N.setFID(FrmEleDB.getFID());
-					athDB_N.setTag1(FrmEleDB.getTag1());
-					athDB_N.setTag2(FrmEleDB.getTag2());
-					athDB_N.setTag3(FrmEleDB.getTag3());
-					athDB_N.setTag4(FrmEleDB.getTag4());
-					athDB_N.setTag5(FrmEleDB.getTag5());
-					athDB_N.DirectInsert();
-					FrmEleDB.Delete();
-				}
-			}
+			String refval = this.getRefPKVal() + "_" + RowIndex;
+			//处理从表行数据插入成功后，更新FrmEleDB中数据
+			String dbstr = SystemConfig.getAppCenterDBVarStr();
+			Paras paras = new Paras();
+			DBType dbType = SystemConfig.getAppCenterDBType();
+			if ( dbType== DBType.Oracle || dbType == DBType.PostgreSQL || dbType == DBType.HGDB || dbType == DBType.UX ||dbType== DBType.KingBaseR3 || dbType == DBType.KingBaseR6)
+				paras.SQL = "UPDATE Sys_FrmEleDB SET RefPKVal=" + dbstr + "RefPKVal,MyPK=EleID||'_'||"+ dtl.getOID()+ "||'_'||Tag1  WHERE RefPKVal=" + dbstr + "OldRefPKVal AND FK_MapData=" + dbstr + "FK_MapData";
+			else if (dbType == DBType.MySQL)
+				paras.SQL = "UPDATE Sys_FrmEleDB SET RefPKVal=" + dbstr + "RefPKVal,MyPK=CONCAT(EleID,'_'," + dtl.getOID() + ",'_',Tag1)  WHERE RefPKVal=" + dbstr + "OldRefPKVal AND FK_MapData=" + dbstr + "FK_MapData";
+			else
+				paras.SQL = "UPDATE Sys_FrmEleDB SET RefPKVal=" + dbstr + "RefPKVal,MyPK= EleID+'_'+'" + dtl.getOID() + "'+'_'+Tag1  WHERE RefPKVal=" + dbstr + "OldRefPKVal AND FK_MapData=" + dbstr + "FK_MapData";
+			paras.Add("RefPKVal", String.valueOf(dtl.getOID()));
+			paras.Add("OldRefPKVal", refval);
+			paras.Add("FK_MapData", fk_mapDtl);
+			DBAccess.RunSQL(paras);
+			//处理从表行数据插入成功后，更新FrmAttachmentDB中数据
+			paras.SQL = "UPDATE Sys_FrmAttachmentDB SET RefPKVal=" + dbstr + "RefPKVal  WHERE RefPKVal=" + dbstr + "OldRefPKVal AND FK_MapData=" + dbstr + "FK_MapData";
+			DBAccess.RunSQL(paras);
 		}
 		else
 		{
@@ -2678,7 +2795,7 @@ public class WF_CCForm extends  WebContralBase
 		}
 		//如果可以上传附件这删除相应的附件信息
 		FrmAttachmentDBs dbs = new FrmAttachmentDBs();
-		dbs.Delete(FrmAttachmentDBAttr.FK_MapData, this.getFK_MapDtl(), FrmAttachmentDBAttr.RefPKVal, this.getRefOID(), FrmAttachmentDBAttr.NodeID, this.getFK_Node());
+		dbs.Delete(FrmAttachmentDBAttr.FK_MapData, this.getFK_MapDtl(), FrmAttachmentDBAttr.RefPKVal, this.getRefOID());
 		return "删除成功";
 	}
 	/** 

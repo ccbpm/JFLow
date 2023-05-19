@@ -330,11 +330,11 @@ public class Delay extends EntityMyPK
 		map.AddMyPK(true);
 
 		map.AddTBInt(DelayAttr.WorkID, 0, "工作ID", true, true);
-		map.AddTBString(DelayAttr.FK_Emp, null, "待办人", true, true, 0, 50, 40);
+		map.AddTBString(DelayAttr.FK_Emp, null, "待办人", true, true, 0, 100, 40);
 		map.AddTBInt(DelayAttr.FK_Node, 0, "节点", false, true);
 
 		map.AddTBString(DelayAttr.Title, null, "标题", true, true, 0, 50, 100);
-		map.AddTBString(DelayAttr.Starter, null, "Starter", false, false, 0, 50, 5);
+		map.AddTBString(DelayAttr.Starter, null, "Starter", false, false, 0, 100, 5);
 		map.AddTBString(DelayAttr.StarterName, null, "发起人", true, true, 0, 50, 30);
 
 		map.AddDDLSysEnum(DelayAttr.WFState, 0, "状态", true, true, DelayAttr.WFState);

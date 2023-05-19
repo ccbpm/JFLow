@@ -165,7 +165,7 @@ public class Task extends EntityMyPK
 		map.AddTBDateTime(TaskAttr.DTFrom, null, "日期从", false, false);
 		map.AddTBDateTime(TaskAttr.DTTo, null, "到", false, false);
 
-		map.AddTBString(TaskAttr.ManagerEmpNo, null, "负责人", false, false, 0, 30, 10);
+		map.AddTBString(TaskAttr.ManagerEmpNo, null, "负责人", false, false, 0, 50, 10);
 		map.AddTBString(TaskAttr.ManagerEmpName, null, "负责人名称", false, false, 0, 40, 10);
 
 		map.AddTBString(TaskAttr.RefEmpsNo, null, "参与人编号", false, false, 0, 3000, 10);

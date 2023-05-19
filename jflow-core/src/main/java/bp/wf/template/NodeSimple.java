@@ -120,6 +120,7 @@ public class NodeSimple extends Entity
 		map.AddTBString(NodeAttr.DeliveryParas, null, "参数", true, false, 0, 300, 10);
 
 		map.AddTBInt(NodeAttr.Step, 0, "步骤", true, true);
+		map.AddBoolean(NodeAttr.IsResetAccepter, false, "可逆节点时重新计算接收人?", true, true, true);
 
 			///#endregion 基本属性.
 

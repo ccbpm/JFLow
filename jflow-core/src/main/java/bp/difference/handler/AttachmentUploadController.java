@@ -113,7 +113,15 @@ public class AttachmentUploadController extends BaseController {
 		FrmAttachment athDesc = new FrmAttachment(this.getFK_FrmAttachment());
 		GEEntity en = new GEEntity(athDesc.getFK_MapData());
 		en.setPKVal(this.getPKVal());
-		en.Retrieve();
+		if (en.RetrieveFromDBSources() == 0)
+		{
+			en.setPKVal(this.getFID());
+			if (en.RetrieveFromDBSources() == 0)
+			{
+				en.setPKVal(this.getPWorkID());
+				en.RetrieveFromDBSources();
+			}
+		}
 		MapData mapData = new MapData(athDesc.getFK_MapData());
 		String msg = null;
 		for(MultipartFile item : items)
@@ -382,7 +390,7 @@ public class AttachmentUploadController extends BaseController {
 		}
 
 		//求主键. 如果该表单挂接到流程上.
-		if (this.getFK_Node() != 0 && this.getFK_Node()!=999999)
+		if (this.getFK_Node() != 0 && this.getFK_Node()!=999999 && !(athDesc.getNoOfObj().contains("AthMDtl") == true || athDesc.GetParaBoolen("IsDtlAth")== true))
 		{
 			//判断表单方案。
 			FrmNode fn = new FrmNode(this.getFK_Node(), athDesc.getFK_MapData());

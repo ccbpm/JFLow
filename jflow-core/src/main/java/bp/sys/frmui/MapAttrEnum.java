@@ -130,6 +130,7 @@ public class MapAttrEnum extends EntityMyPK
 
 			case PostgreSQL:
 			case UX:
+			case HGDB:
 			default:
 				sql = "SELECT -1 AS No, '-无(不选择)-' as Name FROM Port_Emp WHERE 1=2 ";
 				break;
@@ -183,7 +184,7 @@ public class MapAttrEnum extends EntityMyPK
 			//文本跨行
 		map.AddTBInt(MapAttrAttr.RowSpan, 1, "行数", true, false);
 			//显示的分组.
-		map.AddDDLSQL(MapAttrAttr.GroupID, 0, "显示的分组", MapAttrString.getSQLOfGroupAttr(), true);
+		map.AddDDLSQL(MapAttrAttr.GroupID, "0", "显示的分组", MapAttrString.getSQLOfGroupAttr(), true);
 		map.AddTBInt(MapAttrAttr.Idx, 0, "顺序号", true, false); //@李国文
 
 		map.AddTBFloat(MapAttrAttr.UIWidth, 100, "宽度", true, false);
@@ -370,6 +371,7 @@ public class MapAttrEnum extends EntityMyPK
 						break;
 					case PostgreSQL:
 					case UX:
+					case HGDB:
 						this.RunSQL("ALTER TABLE " + en.getEnMap().getPhysicsTable() + " ALTER column " + this.getKeyOfEn() + " type character varying(20)");
 						break;
 					default:

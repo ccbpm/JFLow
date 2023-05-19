@@ -269,6 +269,8 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 				case MSSQL:
 				case KingBaseR3:
 				case KingBaseR6:
+				case PostgreSQL:
+				case HGDB:
 					sql = " UPDATE WF_Direction SET ToNodeName = WF_Node.Name FROM WF_Node  ";
 					sql += " WHERE WF_Direction.ToNode = WF_Node.NodeID AND WF_Direction.FK_Flow='" + this.getFK_Flow() + "'";
 					break;
@@ -653,7 +655,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 	 param figureName
 	 @return 
 	*/
-	public final RunModel Node_GetRunModelByFigureName(String figureName)
+	/*public final RunModel Node_GetRunModelByFigureName(String figureName)
 	{
 		RunModel runModel = RunModel.Ordinary;
 		switch (figureName)
@@ -678,7 +680,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 				break;
 		}
 		return runModel;
-	}
+	}*/
 	/** 
 	 根据节点编号删除流程节点
 	 
@@ -735,7 +737,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String Node_ChangeRunModel() throws Exception {
+	/*public final String Node_ChangeRunModel() throws Exception {
 		String runModel = GetValFromFrmByKey("RunModel");
 		Node node = new Node(this.getFK_Node());
 		//节点运行模式
@@ -760,7 +762,7 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 		node.Update();
 
 		return "设置成功.";
-	}
+	}*/
 
 		///#endregion end Node
 

@@ -68,16 +68,16 @@ public class DBUrl
 	{
 		switch (this.getDBType()) {
 			case MSSQL:
-				return ":";
 			case Oracle:
 			case KingBaseR3:
 			case KingBaseR6:
 			case DM:
+			case PostgreSQL:
+			case HGDB:
+			case MySQL:
 				return ":";
 			case Informix:
 				return "?";
-			case MySQL:
-				return ":";
 			default:
 				return "@";
 		}

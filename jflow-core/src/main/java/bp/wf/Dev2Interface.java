@@ -1597,7 +1597,6 @@ public class Dev2Interface
 		return DB_GenerDraftDataTable(null, null);
 	}
 
-//ORIGINAL LINE: public static DataTable DB_GenerDraftDataTable(string flowNo = null, string domain = null)
 	public static DataTable DB_GenerDraftDataTable(String flowNo, String domain)
 	{
 		/*获取数据.*/
@@ -2041,7 +2040,6 @@ public class Dev2Interface
 		return DB_GenerEmpWorksOfDataTable(userNo, 0, null, null, null);
 	}
 
-//ORIGINAL LINE: public static DataTable DB_GenerEmpWorksOfDataTable(string userNo, int nodeID = 0, string wfstate = null, string domain = null, string flowNo = null)
 	public static DataTable DB_GenerEmpWorksOfDataTable(String userNo, int nodeID, String wfstate, String domain, String flowNo) throws Exception {
 		if (DataType.IsNullOrEmpty(userNo) == true)
 		{
@@ -2173,7 +2171,6 @@ public class Dev2Interface
 			dt.Columns.get("GUESTNO").ColumnName = "GuestNo";
 			dt.Columns.get("GUESTNAME").ColumnName = "GuestName";
 			dt.Columns.get("BILLNO").ColumnName = "BillNo";
-			dt.Columns.get("FLOWNOTE").ColumnName = "FlowNote";
 			dt.Columns.get("TODOEMPS").ColumnName = "TodoEmps";
 			dt.Columns.get("TODOEMPSNUM").ColumnName = "TodoEmpsNum";
 			dt.Columns.get("TODOSTA").ColumnName = "TodoSta";
@@ -2181,6 +2178,7 @@ public class Dev2Interface
 			dt.Columns.get("LISTTYPE").ColumnName = "ListType";
 			dt.Columns.get("SENDER").ColumnName = "Sender";
 			dt.Columns.get("ATPARA").ColumnName = "AtPara";
+
 		}
 
 		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
@@ -2213,7 +2211,6 @@ public class Dev2Interface
 			dt.Columns.get("guestno").ColumnName = "GuestNo";
 			dt.Columns.get("guestname").ColumnName = "GuestName";
 			dt.Columns.get("billno").ColumnName = "BillNo";
-			dt.Columns.get("flownote").ColumnName = "FlowNote";
 			dt.Columns.get("todoemps").ColumnName = "TodoEmps";
 			dt.Columns.get("todoempsnum").ColumnName = "TodoEmpsNum";
 			dt.Columns.get("todosta").ColumnName = "TodoSta";
@@ -2221,6 +2218,7 @@ public class Dev2Interface
 			dt.Columns.get("listtype").ColumnName = "ListType";
 			dt.Columns.get("sender").ColumnName = "Sender";
 			dt.Columns.get("atpara").ColumnName = "AtPara";
+
 		}
 		return dt;
 	}
@@ -3128,7 +3126,7 @@ public class Dev2Interface
 			return dt;
 		}
 
-		if (nd.getHisRunModel() == RunModel.SubThread)
+		if (nd.getIsSubThread() == true)
 		{
 			/*如果是子线程，它只能退回它的上一个节点，现在写死了，其它的设置不起作用了。*/
 			Nodes nds = nd.getFromNodes();
@@ -3146,7 +3144,8 @@ public class Dev2Interface
 							continue;
 						}
 						break;
-					case SubThread:
+					case SubThreadSameWorkID:
+					case SubThreadUnSameWorkID:
 						wk = ndFrom.getHisWork();
 						wk.setOID(workid);
 						if (wk.RetrieveFromDBSources() == 0)
@@ -3293,7 +3292,7 @@ public class Dev2Interface
 				if (nd.isHL() || nd.isFLHL())
 				{
 					/*如果当前点是分流，或者是分合流，就不按退回规则计算了。*/
-					//  if (nd.HisRunModel == RunModel.SubThread)
+					//  if (nd.getIsSubThread() == true)
 					sql = "SELECT A.FK_Node AS No,a.FK_NodeText as Name, a.FK_Emp as Rec, a.FK_EmpText as RecName, b.IsBackTracking, a.AtPara FROM WF_GenerWorkerlist a," + " WF_Node b WHERE a.FK_Node=b.NodeID AND a.FID=0 AND a.WorkID=" + workid + " AND a.IsPass=1 AND A.FK_Node!=" + gwf.getFK_Node() + " ORDER BY A.RDT,B.Step DESC ";
 
 					dt = DBAccess.RunSQLReturnTable(sql);
@@ -3356,7 +3355,7 @@ public class Dev2Interface
 					{
 						sql = "SELECT a.FK_Node as No,a.FK_NodeText as Name, a.FK_Emp as Rec, a.FK_EmpText as RecName, b.IsBackTracking,a.AtPara FROM WF_GenerWorkerlist a,WF_Node b WHERE a.FK_Node=b.NodeID AND a.WorkID=" + workid + " AND a.IsEnable=1 AND a.IsPass=1 ORDER BY a.CDT DESC LIMIT 1";
 					}
-					else if (SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX)
+					else if (SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX || SystemConfig.getAppCenterDBType( ) == DBType.HGDB)
 					{
 						sql = "SELECT a.FK_Node as No,a.FK_NodeText as Name, a.FK_Emp as Rec, a.FK_EmpText as RecName, b.IsBackTracking,a.AtPara FROM WF_GenerWorkerlist a,WF_Node b WHERE a.FK_Node=b.NodeID AND a.WorkID=" + workid + " AND a.IsEnable=1 AND a.IsPass=1 ORDER BY a.CDT DESC LIMIT 1";
 					}
@@ -3531,6 +3530,7 @@ public class Dev2Interface
 			case MySQL:
 			case PostgreSQL:
 			case UX:
+			case HGDB:
 				currNode = "(SELECT  FK_Node FROM WF_GenerWorkerlist G WHERE   G.WorkID = A.WorkID AND FK_Emp='" + WebUser.getNo() + "' Order by RDT DESC LIMIT 1)";
 				break;
 			case MSSQL:
@@ -3549,10 +3549,10 @@ public class Dev2Interface
 			switch (DBAccess.getAppCenterDBType())
 			{
 				case MySQL:
-					futureSQL = " UNION SELECT A.WorkID,A.StarterName,A.Title,A.DeptName,D.Name AS NodeName,A.RDT,B.FK_Node,A.FK_Flow,A.FID,A.FlowName,C.EmpName AS TodoEmps," + currNode + " AS CurrNode ,1 AS RunType,A.WFState FROM WF_GenerWorkFlow A, WF_SelectAccper B," + "(SELECT GROUP_CONCAT(B.EmpName SEPARATOR ';') AS EmpName, B.WorkID,B.FK_Node FROM WF_GenerWorkFlow A, WF_SelectAccper B WHERE A.WorkID = B.WorkID  group By B.FK_Node,B.WorkID) C,WF_Node D" + " WHERE A.WorkID = B.WorkID AND B.WorkID = C.WorkID AND B.FK_Node = C.FK_Node AND A.FK_Node = D.NodeID AND B.FK_Emp = '" + WebUser.getNo() + "'" + " AND B.FK_Node Not in(Select DISTINCT FK_Node From WF_GenerWorkerlist G where G.WorkID = B.WorkID)AND A.WFState NOT IN(0,1,3)";
+					futureSQL = " UNION SELECT A.WorkID,A.StarterName,A.Title,A.DeptName,D.Name AS NodeName,A.RDT,B.FK_Node,A.FK_Flow,A.FID,A.FlowName,C.EmpName AS TodoEmps," + currNode + " AS CurrNode ,1 AS RunType,A.WFState,0 AS WhoExeIt FROM WF_GenerWorkFlow A, WF_SelectAccper B," + "(SELECT GROUP_CONCAT(B.EmpName SEPARATOR ';') AS EmpName, B.WorkID,B.FK_Node FROM WF_GenerWorkFlow A, WF_SelectAccper B WHERE A.WorkID = B.WorkID  group By B.FK_Node,B.WorkID) C,WF_Node D" + " WHERE A.WorkID = B.WorkID AND B.WorkID = C.WorkID AND B.FK_Node = C.FK_Node AND A.FK_Node = D.NodeID AND B.FK_Emp = '" + WebUser.getNo() + "'" + " AND B.FK_Node Not in(Select DISTINCT FK_Node From WF_GenerWorkerlist G where G.WorkID = B.WorkID)AND A.WFState NOT IN(0,1,3)";
 					break;
 				case MSSQL:
-					futureSQL = " UNION SELECT A.WorkID,A.StarterName,A.Title,A.DeptName,D.Name AS NodeName,A.RDT,B.FK_Node,A.FK_Flow,A.FID,A.FlowName,C.EmpName AS TodoEmps ," + currNode + " AS CurrNode ,1 AS RunType,A.WFState FROM WF_GenerWorkFlow A, WF_SelectAccper B," + "(SELECT EmpName=STUFF((Select ';'+FK_Emp+','+EmpName From WF_SelectAccper t Where t.FK_Node=B.FK_Node FOR xml path('')) , 1 , 1 , '') , B.WorkID,B.FK_Node FROM WF_GenerWorkFlow A, WF_SelectAccper B WHERE A.WorkID = B.WorkID  group By B.FK_Node,B.WorkID) C,WF_Node D" + " WHERE A.WorkID = B.WorkID AND B.WorkID = C.WorkID AND B.FK_Node = C.FK_Node AND A.FK_Node = D.NodeID AND B.FK_Emp = '" + WebUser.getNo() + "'" + " AND B.FK_Node Not in(Select DISTINCT FK_Node From WF_GenerWorkerlist G where G.WorkID = B.WorkID)AND A.WFState NOT IN(0,1,3)";
+					futureSQL = " UNION SELECT A.WorkID,A.StarterName,A.Title,A.DeptName,D.Name AS NodeName,A.RDT,B.FK_Node,A.FK_Flow,A.FID,A.FlowName,C.EmpName AS TodoEmps ," + currNode + " AS CurrNode ,1 AS RunType,A.WFState,0 AS WhoExeIt FROM WF_GenerWorkFlow A, WF_SelectAccper B," + "(SELECT EmpName=STUFF((Select ';'+FK_Emp+','+EmpName From WF_SelectAccper t Where t.FK_Node=B.FK_Node FOR xml path('')) , 1 , 1 , '') , B.WorkID,B.FK_Node FROM WF_GenerWorkFlow A, WF_SelectAccper B WHERE A.WorkID = B.WorkID  group By B.FK_Node,B.WorkID) C,WF_Node D" + " WHERE A.WorkID = B.WorkID AND B.WorkID = C.WorkID AND B.FK_Node = C.FK_Node AND A.FK_Node = D.NodeID AND B.FK_Emp = '" + WebUser.getNo() + "'" + " AND B.FK_Node Not in(Select DISTINCT FK_Node From WF_GenerWorkerlist G where G.WorkID = B.WorkID)AND A.WFState NOT IN(0,1,3)";
 					break;
 				default:
 					break;
@@ -3564,22 +3564,25 @@ public class Dev2Interface
 		{
 			if (isMyStarter == true)
 			{
-				sql = "SELECT DISTINCT a.WorkID,a.StarterName,a.Title,a.DeptName,a.NodeName,a.RDT,a.FK_Node,a.FK_Flow,a.FID ,a.FlowName,a.TodoEmps," + currNode + " AS CurrNode,0 AS RunType,a.WFState FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.TodoEmps  not like '%" + WebUser.getNo() + ",%' AND  A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr + "FK_Emp AND B.IsEnable=1 AND B.IsPass != -2 AND   (B.IsPass=1 or B.IsPass < -1) AND  A.Starter=" + dbStr + "Starter AND A.WFState NOT IN ( 0, 1, 3 )";
+				sql = "SELECT DISTINCT a.WorkID,a.StarterName,a.Title,a.DeptName,a.NodeName,a.RDT,a.FK_Node,a.FK_Flow,a.FID ,a.FlowName,a.TodoEmps," + currNode + " AS CurrNode,0 AS RunType,a.WFState,0 AS WhoExeIt FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.TodoEmps  not like '%" + WebUser.getNo() + ",%' AND  A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr + "FK_Emp AND B.IsEnable=1 AND B.IsPass != -2 AND   (B.IsPass=1 or B.IsPass < -1) AND  A.Starter=" + dbStr + "Starter AND A.WFState NOT IN ( 0, 1, 3 )";
 				if (isContainFuture == true)
 				{
 					sql += futureSQL;
 				}
+				sql += " UNION SELECT DISTINCT a.WorkID,a.StarterName,a.Title,a.DeptName,a.NodeName,a.RDT,a.FK_Node,a.FK_Flow,a.FID ,a.FlowName,a.TodoEmps,A.FK_Node AS CurrNode,0 AS RunType,a.WFState, 1 AS WhoExeIt FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B,WF_Node C WHERE   A.WorkID=B.WorkID AND A.FK_Node=C.NodeID AND B.FK_Node=C.NodeID AND C.WhoExeIt=0 AND B.FK_Emp=" + dbStr + "FK_Emp AND B.IsEnable=1 AND B.IsPass = 0 AND B.WhoExeIt=1 AND  A.Starter=" + dbStr + "Starter AND A.WFState NOT IN ( 0, 1, 3 )";
 				ps.SQL = sql;
 				ps.Add("FK_Emp", userNo, false);
 				ps.Add("Starter", userNo, false);
 			}
 			else
 			{
-				sql = "SELECT DISTINCT a.WorkID,a.StarterName,a.Title,a.DeptName,a.NodeName,a.RDT,a.FK_Node,a.FK_Flow,a.FID ,a.FlowName,a.TodoEmps ," + currNode + " AS CurrNode,0 AS RunType,a.WFState FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.TodoEmps  not like '%" + WebUser.getNo() + ",%' AND  A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr + "FK_Emp AND B.IsEnable=1 AND B.IsPass != -2 AND  (B.IsPass=1 or B.IsPass < -1) AND A.WFState NOT IN ( 0, 1, 3 )";
+				sql = "SELECT DISTINCT a.WorkID,a.StarterName,a.Title,a.DeptName,a.NodeName,a.RDT,a.FK_Node,a.FK_Flow,a.FID ,a.FlowName,a.TodoEmps ," + currNode + " AS CurrNode,0 AS RunType,a.WFState,0 AS WhoExeIt FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.TodoEmps  not like '%" + WebUser.getNo() + ",%' AND  A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr + "FK_Emp AND B.IsEnable=1 AND B.IsPass != -2 AND  (B.IsPass=1 or B.IsPass < -1) AND A.WFState NOT IN ( 0, 1, 3 )";
 				if (isContainFuture == true)
 				{
 					sql += futureSQL;
 				}
+				sql += " UNION SELECT DISTINCT a.WorkID,a.StarterName,a.Title,a.DeptName,a.NodeName,a.RDT,a.FK_Node,a.FK_Flow,a.FID ,a.FlowName,a.TodoEmps,A.FK_Node AS CurrNode,0 AS RunType,a.WFState, 1 AS WhoExeIt FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B,WF_Node C WHERE   A.WorkID=B.WorkID AND A.FK_Node=C.NodeID AND B.FK_Node=C.NodeID AND C.WhoExeIt=0 AND B.FK_Emp=" + dbStr + "FK_Emp AND B.IsEnable=1 AND B.IsPass = 0 AND B.WhoExeIt=1  AND A.WFState NOT IN ( 0, 1, 3 )";
+
 				ps.SQL = sql;
 				ps.Add("FK_Emp", userNo, false);
 			}
@@ -3588,11 +3591,13 @@ public class Dev2Interface
 		{
 			if (isMyStarter == true)
 			{
-				sql = "SELECT DISTINCT a.WorkID,a.StarterName,a.Title,a.DeptName,a.NodeName,a.RDT,a.FK_Node,a.FK_Flow,a.FID ,a.FlowName,a.TodoEmps ," + currNode + " AS CurrNode,0 AS RunType,a.WFState FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.TodoEmps  not like '%" + WebUser.getNo() + ",%' AND  A.FK_Flow=" + dbStr + "FK_Flow  AND A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr + "FK_Emp AND B.IsEnable=1 AND B.IsPass != -2 AND  (B.IsPass=1 or B.IsPass < -1 ) AND  A.Starter=" + dbStr + "Starter AND A.WFState NOT IN ( 0, 1, 3 )";
+				sql = "SELECT DISTINCT a.WorkID,a.StarterName,a.Title,a.DeptName,a.NodeName,a.RDT,a.FK_Node,a.FK_Flow,a.FID ,a.FlowName,a.TodoEmps ," + currNode + " AS CurrNode,0 AS RunType,a.WFState,0 AS WhoExeIt FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.TodoEmps  not like '%" + WebUser.getNo() + ",%' AND  A.FK_Flow=" + dbStr + "FK_Flow  AND A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr + "FK_Emp AND B.IsEnable=1 AND B.IsPass != -2 AND  (B.IsPass=1 or B.IsPass < -1 ) AND  A.Starter=" + dbStr + "Starter AND A.WFState NOT IN ( 0, 1, 3 )";
 				if (isContainFuture == true)
 				{
 					sql += futureSQL;
 				}
+				sql += " UNION SELECT DISTINCT a.WorkID,a.StarterName,a.Title,a.DeptName,a.NodeName,a.RDT,a.FK_Node,a.FK_Flow,a.FID ,a.FlowName,a.TodoEmps,A.FK_Node AS CurrNode,0 AS RunType,a.WFState, 1 AS WhoExeIt FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B,WF_Node C WHERE   A.FK_Flow=" + dbStr + "FK_Flow AND A.WorkID=B.WorkID AND A.FK_Node=C.NodeID AND B.FK_Node=C.NodeID AND C.WhoExeIt=0 AND B.FK_Emp=" + dbStr + "FK_Emp AND B.IsEnable=1 AND B.IsPass = 0 AND B.WhoExeIt=1 AND  A.Starter=" + dbStr + "Starter AND A.WFState NOT IN ( 0, 1, 3 )";
+
 				ps.SQL = sql;
 				ps.Add("FK_Flow", fk_flow, false);
 				ps.Add("FK_Emp", userNo, false);
@@ -3600,11 +3605,13 @@ public class Dev2Interface
 			}
 			else
 			{
-				sql = "SELECT DISTINCT a.WorkID,a.StarterName,a.Title,a.DeptName,a.NodeName,a.RDT,a.FK_Node,a.FK_Flow,a.FID ,a.FlowName,a.TodoEmps ," + currNode + " AS CurrNode,0 AS RunType,a.WFState  FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.TodoEmps  not like '%" + WebUser.getNo() + ",%' AND  A.FK_Flow=" + dbStr + "FK_Flow  AND A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr + "FK_Emp AND B.IsEnable=1 AND B.IsPass != -2 AND (B.IsPass=1 or B.IsPass < -1 ) AND A.WFState NOT IN ( 0, 1, 3 )";
+				sql = "SELECT DISTINCT a.WorkID,a.StarterName,a.Title,a.DeptName,a.NodeName,a.RDT,a.FK_Node,a.FK_Flow,a.FID ,a.FlowName,a.TodoEmps ," + currNode + " AS CurrNode,0 AS RunType,a.WFState,0 AS WhoExeIt  FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B WHERE A.TodoEmps  not like '%" + WebUser.getNo() + ",%' AND  A.FK_Flow=" + dbStr + "FK_Flow  AND A.WorkID=B.WorkID AND B.FK_Emp=" + dbStr + "FK_Emp AND B.IsEnable=1 AND B.IsPass != -2 AND (B.IsPass=1 or B.IsPass < -1 ) AND A.WFState NOT IN ( 0, 1, 3 )";
 				if (isContainFuture == true)
 				{
 					sql += futureSQL;
 				}
+				sql += " UNION SELECT DISTINCT a.WorkID,a.StarterName,a.Title,a.DeptName,a.NodeName,a.RDT,a.FK_Node,a.FK_Flow,a.FID ,a.FlowName,a.TodoEmps,A.FK_Node AS CurrNode,0 AS RunType,a.WFState, 1 AS WhoExeIt FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B,WF_Node C WHERE   A.FK_Flow=" + dbStr + "FK_Flow AND A.WorkID=B.WorkID AND A.FK_Node=C.NodeID AND B.FK_Node=C.NodeID AND C.WhoExeIt=0 AND B.FK_Emp=" + dbStr + "FK_Emp AND B.IsEnable=1 AND B.IsPass = 0 AND B.WhoExeIt=1  AND A.WFState NOT IN ( 0, 1, 3 )";
+
 				ps.SQL = sql;
 				ps.Add("FK_Flow", fk_flow, false);
 				ps.Add("FK_Emp", userNo, false);
@@ -3763,7 +3770,7 @@ public class Dev2Interface
 			userNo = WebUser.getNo();
 		}
 
-		DataTable dt = DB_GenerRuning(userNo, null, false, null, isContainFuture);
+		DataTable dt = DB_GenerRuning(userNo, null, false, domain, isContainFuture);
 
 		/*暂时屏蔽type的拼接，拼接后转json会报错 于庆海修改*/
 		/*dt.Columns.Add("Type");
@@ -3948,7 +3955,7 @@ public class Dev2Interface
 				Token tk = new Token();
 				tk.setMyPK(token);
 				if (tk.RetrieveFromDBSources()==0)
-					throw new Exception("err@ token 过期或失效.");
+					throw new Exception("err@ token过期或失效.");
 
  				bp.web.WebUser.setNo(tk.getEmpNo());
 				bp.web.WebUser.setName(tk.getEmpName());
@@ -3956,13 +3963,22 @@ public class Dev2Interface
 				bp.web.WebUser.setFK_DeptName(tk.getDeptName());
 				bp.web.WebUser.setOrgNo(tk.getOrgNo());
 				bp.web.WebUser.setOrgName(tk.getOrgName());
-
-
 				return tk.ToJson();
 
 			}
-			String sql = "SELECT No FROM WF_Emp WHERE AtPara LIKE '%" + token + "%'";
-			DataTable dt = DBAccess.RunSQLReturnTable(sql);
+			Paras paras = new Paras();
+			if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
+			{
+				if(SystemConfig.getAppCenterDBType( ) == DBType.MySQL)
+					paras.SQL="SELECT No FROM WF_Emp WHERE AtPara LIKE  CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() +  "token,'%')";
+				else
+					paras.SQL="SELECT No FROM WF_Emp WHERE AtPara LIKE  '%'+" + SystemConfig.getAppCenterDBVarStr() + "token+'%'";
+			}
+			else
+				paras.SQL="SELECT No FROM WF_Emp WHERE AtPara LIKE  '%'||" + SystemConfig.getAppCenterDBVarStr() + "token||'%'";
+			paras.Add("token",token);
+			//String sql = "SELECT No FROM WF_Emp WHERE AtPara LIKE '%" + token + "%'";
+			DataTable dt = DBAccess.RunSQLReturnTable(paras);
 			if (dt.Rows.size() != 1)
 			{
 				throw new RuntimeException("err@token失效." + token);
@@ -4001,6 +4017,9 @@ public class Dev2Interface
 	public static void Port_Login(String userID) throws Exception {
 		Port_Login(userID, null);
 	}
+	public static void Port_Login(String userID,String orgNo) throws Exception{
+		Port_Login(userID,orgNo,null);
+	}
 	/**
 	 登录接口,跳转到页面
 	 param userID 人员编号
@@ -4011,17 +4030,15 @@ public class Dev2Interface
 		Port_Login(userID, null);
 
 	}
-	public static void Port_Login(String userID, String orgNo) throws Exception {
+	public static void Port_Login(String userID, String orgNo,String deptNo) throws Exception {
 		/* 仅仅传递了人员编号，就按照人员来取.*/
-		Emp emp = new Emp();
+		bp.port.Emp emp = new bp.port.Emp();
 		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 		{
 			if (orgNo == null)
-			{
-				throw new RuntimeException("err@缺少OrgNo参数.");
-			}
+				throw new Exception("err@缺少OrgNo参数.");
 			emp.setNo(orgNo + "_" + userID);
-			emp.setOrgNo( orgNo);
+			emp.setOrgNo(orgNo);
 		}
 		else
 		{
@@ -4030,17 +4047,77 @@ public class Dev2Interface
 
 		int i = emp.RetrieveFromDBSources();
 		if (i == 0)
+			throw new Exception("err@用户名:" + emp.GetValByKey("No") + "不存在.");
+
+		String sql = "";
+		// 两个同是是Null.
+		if (DataType.IsNullOrEmpty(deptNo)==true && DataType.IsNullOrEmpty(orgNo)==true)
 		{
-			throw new RuntimeException("err@用户名:" + emp.GetValByKey("No") + "不存在.");
+			if (DataType.IsNullOrEmpty(emp.getFK_Dept()) == true)
+			{
+				//如果选择的组织不存在，就从他的隶属部门里去找一个部门。
+				if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
+					sql = "SELECT A.FK_Dept,B.OrgNo FROM Port_DeptEmp A, Port_Dept B WHERE A.FK_Dept=B.No AND A.FK_Emp='" + emp.getNo() + "'";
+				else
+					sql = "SELECT A.FK_Dept,B.OrgNo FROM Port_DeptEmp A, Port_Dept B WHERE A.FK_Dept=B.No AND A.FK_Emp='" + emp.getNo() + "' AND  B.OrgNo!='' AND B.OrgNo IS NOT NULL ";
+
+				deptNo = DBAccess.RunSQLReturnStringIsNull(sql, "");
+				if (DataType.IsNullOrEmpty(deptNo) == true)
+					throw new Exception("err@用户[" + emp.getNo() + "]没有部门，无法登陆.");
+				emp.setFK_Dept(deptNo);
+				WebUser.SignInOfGener(emp);
+				return;
+			}
+			WebUser.SignInOfGener(emp);
+			return;
+		}
+		//如果部门编号不为空.
+		if (DataType.IsNullOrEmpty(deptNo) == false)
+		{
+			if(emp.getFK_Dept().equals(deptNo)==false){
+				//判断当前人员是否在该部门下
+				sql="SELECT COUNT(*) From Port_DeptEmp WHERE FK_Emp='"+emp.getNo()+"' AND FK_Dept='"+deptNo+"'";
+				if(DBAccess.RunSQLReturnValInt(sql)==0)
+					throw new RuntimeException("err@用户[" + emp.getNo() + "]不在部门["+deptNo+"]，无法登陆.");
+			}
+			emp.setFK_Dept(deptNo);
+			WebUser.SignInOfGener(emp);
+			return;
 		}
 
-		WebUser.SignInOfGener(emp, "CH", false, false, null, null);
-		if (orgNo != null)
-		{
-			WebUser.setOrgNo(orgNo);
-			bp.web.WebUser.setOrgName(DBAccess.RunSQLReturnStringIsNull("SELECT Name FROM Port_Org WHERE No='" + orgNo + "'", " "));
+		if (DataType.IsNullOrEmpty(orgNo) == true)
+			return;
 
+		//当前人员的 orgNo 是组织编号.
+		if (emp.getOrgNo().equals(orgNo) == true){
+			if (DataType.IsNullOrEmpty(emp.getFK_Dept()) == true)
+			{
+				//当前人员部门不存在。
+				if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
+					sql = "SELECT A.FK_Dept,B.OrgNo FROM Port_DeptEmp A, Port_Dept B WHERE A.FK_Dept=B.No AND A.FK_Emp='" + emp.getNo() + "'";
+				else
+					sql = "SELECT A.FK_Dept,B.OrgNo FROM Port_DeptEmp A, Port_Dept B WHERE A.FK_Dept=B.No AND A.FK_Emp='" + emp.getNo() + "' AND  B.OrgNo='"+orgNo+"'";
+
+				deptNo = DBAccess.RunSQLReturnStringIsNull(sql, "");
+				if (DataType.IsNullOrEmpty(deptNo) == true)
+					throw new Exception("err@用户[" + emp.getNo() + "]没有部门，无法登陆.");
+				emp.setFK_Dept(deptNo);
+				WebUser.SignInOfGener(emp);
+				return;
+			}
+			WebUser.SignInOfGener(emp);
+			return;
 		}
+		//如果传递的OrgNo与Emp中OrgNo不相同
+		//如果选择的组织不存在，就从他的隶属部门里去找一个部门。
+		sql = "SELECT A.FK_Dept FROM Port_DeptEmp A, Port_Dept B WHERE A.FK_Dept=B.No AND A.FK_Emp='" + emp.getNo() + "' AND B.OrgNo='" + orgNo + "' ";
+		deptNo = DBAccess.RunSQLReturnString(sql);
+		if (DataType.IsNullOrEmpty(deptNo) == true)
+			throw new Exception("err@用户[" + emp.getNo() + "]在OrgNo[" + orgNo + "]下没有部门.");
+
+		emp.setFK_Dept(deptNo);
+		WebUser.SignInOfGener(emp);
+		return;
 	}
 	/** 
 	 注销当前登录
@@ -4130,6 +4207,7 @@ public class Dev2Interface
 			tk.setSheBei("0");
 		else
 			tk.setSheBei("1");
+		tk.Insert();
 		WebUser.setToken(tk.getMyPK());
 
 		return tk.getMyPK();
@@ -4180,10 +4258,80 @@ public class Dev2Interface
 			emp.SetPara(key, myGuid);
 			emp.Update();
 			WebUser.setToken(myGuid);
+		}else
+		{
+			//重新登录，需要重新计算超时时间
+			Date dtUpdate = new Date();
+			dtUpdate = DateUtils.addMinutes(dtUpdate,activeMinutes);
+			emp.SetPara(key + "_DT",DateUtils.format(dtUpdate, "yyyy-MM-dd HH:mm:ss"));
+			emp.Update();
 		}
 		WebUser.setToken(myGuid);
 		return myGuid;
 
+	}
+	public static String Port_WriteToken(String token) throws Exception {
+		return Port_WriteToken(token,null);
+	}
+
+	/**
+	 * 外部写入token
+	 * @param token
+	 * @param logDev
+	 * @return
+	 * @throws Exception
+	 */
+	public static String Port_WriteToken(String token, String logDev) throws Exception {
+		if (DataType.IsNullOrEmpty(token) == true)
+			throw new RuntimeException("err@传入的Token值为空,请使用Port_GenerToken方法");
+		if(SystemConfig.getTokenModel() == 1)
+		{
+			if (logDev == null)
+				logDev = "PC";
+
+			String key = "Token_" + logDev; //para的参数.
+
+			bp.wf.port.WFEmp emp = new bp.wf.port.WFEmp(WebUser.getNo());
+			emp.SetPara("Online", "1");
+			emp.SetPara(key, token);
+			emp.Update();
+			WebUser.setToken(token);
+			return token;
+		}
+		//记录token.
+		bp.port.Token tk = new Token();
+		tk.setMyPK(token);
+		int i = tk.RetrieveFromDBSources();
+		if(i==1){
+			if(tk.getEmpNo().equals(WebUser.getNo())==false)
+				throw new RuntimeException("err@传入的Token值在Port_Token中已经存在但是与登录账号不匹配");
+			WebUser.setToken(tk.getMyPK());
+			tk.setDeptNo(bp.web.WebUser.getFK_Dept());
+			tk.setDeptName(bp.web.WebUser.getFK_DeptName());
+
+			tk.setOrgNo(bp.web.WebUser.getOrgNo());
+			tk.setOrgName(bp.web.WebUser.getOrgName());
+			tk.Update();
+			return token;
+		}
+
+		tk.setEmpName(bp.web.WebUser.getNo());
+		tk.setEmpName(bp.web.WebUser.getName());
+
+		tk.setDeptNo(bp.web.WebUser.getFK_Dept());
+		tk.setDeptName(bp.web.WebUser.getFK_DeptName());
+
+		tk.setOrgNo(bp.web.WebUser.getOrgNo());
+		tk.setOrgName(bp.web.WebUser.getOrgName());
+		tk.setRDT(DataType.getCurrentDateTime()); //记录日期.
+
+		if (logDev.equals("PC"))
+			tk.setSheBei("0");
+		else
+			tk.setSheBei("1");
+		tk.Insert();
+		WebUser.setToken(tk.getMyPK());
+		return tk.getMyPK();
 	}
 	/** 
 	 验证用户的合法性
@@ -5617,6 +5765,7 @@ public class Dev2Interface
 				case MySQL:
 				case PostgreSQL:
 				case UX:
+				case HGDB:
 					currNode = "SELECT  FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + WebUser.getNo() + "' Order by RDT DESC LIMIT 1";
 					break;
 				case MSSQL:
@@ -5666,6 +5815,7 @@ public class Dev2Interface
 				break;
 			case PostgreSQL:
 			case UX:
+			case HGDB:
 				pas.SQL = "SELECT MyPK,ActionType,ActionTypeText,FID,WorkID,NDFrom,NDFromT,NDTo,NDToT,EmpFrom,EmpFromT,EmpTo,EmpToT,RDT,WorkTimeSpan,Msg,NodeData,Tag,Exer FROM ND" + Integer.parseInt(gwf.getFK_Flow()) + "Track  WHERE WorkID=" + dbstr + "WorkID AND NDTo=" + dbstr + "NDTo AND (ActionType=1 OR ActionType=" + ActionType.Skip.getValue() + ") ORDER BY RDT DESC limit 1 ";
 				break;
 			default:
@@ -6374,7 +6524,8 @@ public class Dev2Interface
 				return true;
 			case FHL:
 				return true;
-			case SubThread:
+			case SubThreadSameWorkID:
+			case SubThreadUnSameWorkID:
 				return true;
 			default:
 				break;
@@ -6491,6 +6642,9 @@ public class Dev2Interface
 		{
 			return "err@流程已完成，您不能催办。";
 		}
+
+		if (String.valueOf(gwf.getFK_Node()).endsWith("01")==true)
+			return "info@当前节点是开始节点，您不能执行催办.";
 
 		/*找到当前待办的工作人员*/
 		GenerWorkerLists wls = new GenerWorkerLists();
@@ -6628,6 +6782,9 @@ public class Dev2Interface
 		ps.Add(GenerWorkFlowAttr.Title, title, false);
 		ps.Add(GenerWorkFlowAttr.WorkID, workid);
 		DBAccess.RunSQL(ps);
+
+		if (DataType.IsNullOrEmpty(flowNo) == true)
+			flowNo = DBAccess.RunSQLReturnString("SELECT FK_Flow FROM WF_GenerWorkFlow WHERE WorkID=" + workid);
 
 		Flow fl = new Flow(flowNo);
 		ps = new Paras();
@@ -7098,7 +7255,7 @@ public class Dev2Interface
 		}
 
 		bp.wf.Node nd = new Node(toNodeID);
-		if (nd.getHisRunModel() == RunModel.SubThread)
+		if (nd.getIsSubThread() == true)
 		{
 			return "err@不能跳转到子线程节点上.";
 		}
@@ -7943,7 +8100,32 @@ public class Dev2Interface
 		}
 
 		Work wk = fl.NewWork(empStarter, ht,nd);
-		///#region 给各个属性-赋值
+		long workID = wk.getOID();
+		 //#region 给各个属性-赋值
+		if (ht != null)
+		{
+			for(Object str : ht.keySet())
+			{
+				if(str == null)
+					continue;
+				switch (str.toString())
+				{
+					case GERptAttr.OID:
+					case WorkAttr.MD5:
+					case WorkAttr.Emps:
+					case GERptAttr.FID:
+					case GERptAttr.FK_Dept:
+					case GERptAttr.Rec:
+					case GERptAttr.Title:
+						continue;
+					default:
+						break;
+				}
+				wk.SetValByKey(str.toString(), ht.get(str));
+			}
+			wk.Update();
+		}
+
 		if (workDtls != null)
 		{
 			//保存从表
@@ -8492,7 +8674,7 @@ public class Dev2Interface
 		}
 
 		//补偿性修复.
-		if (nd.getHisRunModel() != RunModel.SubThread)
+		if (nd.getIsSubThread()==false)
 		{
 			if (sw.getFID() != 0)
 			{
@@ -11333,7 +11515,7 @@ public class Dev2Interface
 			Nodes nds = nd.getHisToNodes();
 
 			for (Node item : nds.ToJavaList()) {
-				if (item.getHisRunModel() == RunModel.SubThread) {
+				if (item.getIsSubThread()==true) {
 					ndSubThread = item;
 				}
 			}
@@ -12271,7 +12453,7 @@ public class Dev2Interface
 		for (Direction dir : dirs.ToJavaList())
 		{
 			Node mynd = new Node(dir.getToNode());
-			if (mynd.getHisRunModel() == RunModel.SubThread)
+			if (mynd.getIsSubThread()==true)
 			{
 				sameSheetNodes.AddEntity(mynd);
 				continue; //如果是子线程节点.
@@ -12304,12 +12486,12 @@ public class Dev2Interface
 		//同表单子线程.
 		for (Node mynd : sameSheetNodes.ToJavaList())
 		{
-			if (mynd.getHisRunModel() != RunModel.SubThread)
+			if (mynd.getIsSubThread()==false)
 			{
 				continue; //如果是子线程节点.
 			}
 
-			if (mynd.getHisSubThreadType() == SubThreadType.UnSameSheet)
+			if (mynd.getHisRunModel() == RunModel.SubThreadUnSameWorkID)
 			{
 				continue; //如果是异表单的分合流.
 			}
@@ -12349,7 +12531,7 @@ public class Dev2Interface
 		boolean isHave = false;
 		for (Node mynd : toNDs.ToJavaList())
 		{
-			if (mynd.getHisSubThreadType() == SubThreadType.UnSameSheet)
+			if (mynd.getHisRunModel() == RunModel.SubThreadUnSameWorkID)
 			{
 				isHave = true;
 			}
@@ -12365,7 +12547,7 @@ public class Dev2Interface
 			/*增加异表单的子线程*/
 			for (Node mynd : toNDs.ToJavaList())
 			{
-				if (mynd.getHisSubThreadType() != SubThreadType.UnSameSheet)
+				if (mynd.getHisRunModel() != RunModel.SubThreadUnSameWorkID)
 				{
 					continue;
 				}
@@ -13099,7 +13281,7 @@ public class Dev2Interface
 		}
 		if (dtlOpenType == DtlOpenType.ForFID)
 		{
-			if (nd.getHisRunModel() == RunModel.SubThread)
+			if (nd.getIsSubThread()== true)
 			{
 				pkval = fid;
 			}
@@ -13180,79 +13362,7 @@ public class Dev2Interface
 		en.CheckPhysicsTable();
 		return "保存成功";
 	}
-	/*用户登陆,此方法是在开发者校验好用户名与密码后执行
 
-	param sid 安全ID,请参考流程设计器操作手册
-	*/
-	public static void Port_LoginBySID(String sid) throws Exception {
-		if (DataType.IsNullOrEmpty(sid))
-		{
-			throw new RuntimeException("err@SID不能为空.");
-		}
-
-		sid = sid.trim();
-
-		if (DataType.IsNullOrEmpty(sid) == true)
-		{
-			throw new RuntimeException("err@非法的SID.");
-		}
-
-		Emp myEmp = new Emp();
-		int i = myEmp.Retrieve("SID", sid);
-		if (i == 0)
-		{
-			throw new RuntimeException("err@非法的SID:" + sid);
-		}
-
-		if (SystemConfig.getCCBPMRunModel() ==  CCBPMRunModel.Single)
-		{
-			WebUser.SignInOfGener(myEmp, "CH", false, false, null, null);
-		}
-		else
-		{
-			bp.wf.Dev2Interface.Port_Login(myEmp.getUserID(), sid, myEmp.getOrgNo());
-		}
-		return;
-	}
-	public static void Port_Login(String userID, String sid, String orgNo) throws Exception {
-		/* 仅仅传递了人员编号，就按照人员来取.*/
-		Emp emp = new Emp();
-		if (SystemConfig.getCCBPMRunModel() ==  CCBPMRunModel.SAAS)
-		{
-			if (orgNo == null)
-			{
-				throw new RuntimeException("err@缺少OrgNo参数.");
-			}
-			emp.setNo(orgNo + "_" + userID);
-			emp.setOrgNo(orgNo);
-		}
-		else
-		{
-			emp.setNo(userID);
-		}
-
-		int i = emp.RetrieveFromDBSources();
-		if (i == 0)
-		{
-			throw new RuntimeException("err@用户名:" + emp.GetValByKey("No") + "不存在.");
-		}
-
-		if (sid != null && !sid.equals(""))
-		{
-			if (emp.getSID().equals(sid) == false)
-			{
-				throw new RuntimeException("err@SID错误.");
-			}
-		}
-
-		WebUser.SignInOfGener(emp, "CH", false, false, null, null);
-		if (orgNo != null)
-		{
-			WebUser.setOrgNo( orgNo);
-			WebUser.setOrgName(DBAccess.RunSQLReturnStringIsNull("SELECT Name FROM Port_Org WHERE No='" + orgNo + "'", " "));
-		}
-
-	}
 	public static String GetDeptNoSQLByParentNo(String paretNo, String ptable) throws Exception {
 		switch (SystemConfig.getAppCenterDBType())
 		{
@@ -13284,5 +13394,51 @@ public class Dev2Interface
 				throw new Exception(SystemConfig.getAppCenterDBType() + "的数据库还没有解析根据父节点获取子级的SQL");
 
 		}
+	}
+	public static String GetParentNameByCurrNo(String no, String ptable,String orgNo)
+	{
+		String sql = "";
+
+		switch (SystemConfig.getAppCenterDBType())
+		{
+			case MySQL:
+				sql = "SELECT GROUP_CONCAT(t.Name separator'/') FROM ("
+						+ " SELECT @No idlist,"
+						+ " (SELECT @No:= GROUP_CONCAT(ParentNo separator ',') FROM " + ptable + " WHERE FIND_IN_SET(No, @No)) sub"
+						+ " FROM " + ptable + ",(SELECT @No:='" + no + "') vars"
+						+ " WHERE @No is not null ) tl," + ptable + " t";
+				if(SystemConfig.getCCBPMRunModel() ==CCBPMRunModel.Single)
+					sql += " WHERE FIND_IN_SET(t.No, tl.idlist)";
+				else
+					sql += " WHERE FIND_IN_SET(t.No, tl.idlist) AND t.OrgNo ='"+ orgNo + "'";
+				break;
+			case MSSQL:
+				if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
+					sql = "WITH allsub(No,Name,ParentNo) as ("
+							+ " SELECT No, Name, ParentNo FROM " + ptable + " WHERE No='" + no + "'"
+							+ "  UNION ALL SELECT a.No,a.Name,a.ParentNo FROM " + ptable + " a, allsub b WHERE a.No = b.ParentNo)"
+							+ " SELECT name +'/' FROM allsub FOR XML PATH(''); ";
+				else
+					sql = "WITH allsub(No,Name,ParentNo,OrgNo) as ("
+							+ " SELECT No, Name, ParentNo,OrgNo FROM " + ptable + " WHERE No='" + no + "'"
+							+ "  UNION ALL SELECT a.No,a.Name,a.ParentNo,a.OrgNo FROM " + ptable + " a, allsub b WHERE a.No = b.ParentNo)"
+							+ " SELECT name +'/' FROM allsub WHERE OrgNo!='"+ orgNo + "'  FOR XML PATH(''); ";
+				break;
+			case Oracle:
+			case KingBaseR3:
+			case KingBaseR6:
+				if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
+					sql = "SELECT  replace(wm_concat(D.Name),',','/') FROM " +ptable+" D START WITH D.No='"+no+"' connect by prior D.ParentNo = D.No;";
+				else
+					sql = "SELECT  replace(wm_concat(D.Name),',','/') FROM " + ptable + " D START WITH D.No='" + no + "' connect by prior D.ParentNo = D.No AND D.OrgNo='"+ orgNo + "';";
+				break;
+			case UX:
+			case DM:
+			case PostgreSQL:
+			default:
+				throw new RuntimeException(SystemConfig.getAppCenterDBType() + "的数据库还没有解析根据父节点获取子级的SQL");
+		}
+
+		return DBAccess.RunSQLReturnStringIsNull(sql, "");
 	}
 }

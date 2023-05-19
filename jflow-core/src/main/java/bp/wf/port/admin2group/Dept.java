@@ -75,7 +75,7 @@ public class Dept extends EntityTree
 
 		map.setAdjunctType(AdjunctType.None);
 
-		map.AddTBStringPK(DeptAttr.No, null, "编号", true, false, 1, 30, 40);
+		map.AddTBStringPK(DeptAttr.No, null, "编号", true, false, 1, 50, 40);
 		map.AddTBString(DeptAttr.Name, null, "名称", true, false, 0, 60, 200);
 		map.AddTBString(DeptAttr.ParentNo, null, "父节点编号", true, true, 0, 30, 40);
 		map.AddTBString(DeptAttr.OrgNo, null, "隶属组织", true, true, 0, 50, 40);
@@ -127,8 +127,19 @@ public class Dept extends EntityTree
 
 		//检查该部门是否是独立组织.
 		//如果指定的人员.
-		if (emp.getFK_Dept().equals(this.getNo()) == false)
-			return "err@管理员不在本部门下，您不能设置他为管理员.";
+		if (emp.getFK_Dept().equals(this.getNo()) == false){
+			Depts depts = new Depts();
+			depts.Retrieve(DeptAttr.ParentNo,this.getNo());
+			boolean isHave = false;
+			for(Dept dept : depts.ToJavaList()){
+				if(emp.getFK_Dept().equals(dept.getNo())){
+					isHave = true;
+					break;
+				}
+			}
+			if(isHave==false)
+				return "err@管理员不在本部门及本部门下级部门下，您不能设置他为管理员.";
+		}
 
 		//检查该部门是否是独立组织.
 		bp.wf.port.admin2group.Org org = new bp.wf.port.admin2group.Org();

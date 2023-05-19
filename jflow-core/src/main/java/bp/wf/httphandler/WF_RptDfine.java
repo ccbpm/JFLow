@@ -288,7 +288,7 @@ public class WF_RptDfine extends WebContralBase
 		if (md.getDTSearchWay ()!= DTSearchWay.None)
 		{
 			MapAttr mapAttr = new MapAttr(rptNo, md.getDTSearchKey());
-			md.SetPara("DTSearchLable", mapAttr.getName() );
+			md.SetPara("DTSearchLabel", mapAttr.getName() );
 
 			if (md.getDTSearchWay ()== DTSearchWay.ByDate)
 			{
@@ -1543,7 +1543,7 @@ public class WF_RptDfine extends WebContralBase
 
 		DataTable dt2 = qo.DoGroupQueryToTable(selectSQL + groupKey, groupBy, orderby);
 
-		DataTable dt1 = dt2;
+		DataTable dt1 = dt2.clone();
 
 		dt1.Columns.Add("IDX", Integer.class);
 
@@ -1567,7 +1567,7 @@ public class WF_RptDfine extends WebContralBase
 
 
 			///#region 处理 Int 类型的分组列。
-		DataTable dt = dt1;
+		DataTable dt = dt1.clone();
 		dt.TableName = "GroupSearch";
 		dt.Rows.clear();
 		for (Attr attr : AttrsOfGroup)

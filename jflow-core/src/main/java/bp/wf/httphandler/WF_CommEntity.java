@@ -491,18 +491,6 @@ public class WF_CommEntity extends WebContralBase
 			DataTable dtMain = en.ToDataTableField("MainTable");
 			ds.Tables.add(dtMain);
 
-			/// 增加上分组信息.
-			EnCfg cfg = new EnCfg();
-			cfg.setPKVal(this.getEnName());
-
-			String groupTitle = "";
-			if (cfg.RetrieveFromDBSources() == 1)
-				groupTitle = cfg.getGroupTitle();
-
-			if (DataType.IsNullOrEmpty(groupTitle) == true) {
-				groupTitle = "@" + en.getPK() + ",基本信息," + map.getEnDesc() + "";
-			}
-
 			/// 字段属性.
 			Attrs attrs = en.getEnMap().getAttrs();
 			MapAttrs mapAttrs = new MapAttrs();

@@ -81,7 +81,7 @@ public class FrmBtn extends EntityMyPK
 			//map.AddDDLSysEnum(FrmBtnAttr.EventType, 0, "事件类型", true, true, FrmBtnAttr.EventType,
 			//"@0=禁用@1=执行URL@2=执行CCFromRef.js");
 			//显示的分组.
-		map.AddDDLSQL(MapAttrAttr.GroupID, 0, "所在分组", "SELECT OID as No, Lab as Name FROM Sys_GroupField WHERE FrmID='@FK_MapData'", true);
+		map.AddDDLSQL(MapAttrAttr.GroupID, "0", "所在分组", "SELECT OID as No, Lab as Name FROM Sys_GroupField WHERE FrmID='@FK_MapData'", true);
 
 			///#endregion 傻瓜表单的属性.
 

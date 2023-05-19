@@ -401,6 +401,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 			case MySQL:
 			case PostgreSQL:
 			case UX:
+			case HGDB:
 				currNode = "SELECT  FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + WebUser.getNo() + "' AND WorkID=" + this.getWorkID() + "  Order by RDT DESC LIMIT 1";
 				break;
 			case MSSQL:
@@ -863,7 +864,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 			dt = DBAccess.RunSQLReturnTable(sql);
 
 			DataTable newdt = new DataTable();
-			newdt = dt;
+			newdt = dt.clone();
 
 
 				///#region 判断轨迹数据中，最后一步是否是撤销或退回状态的，如果是，则删除最后2条数据
@@ -913,9 +914,9 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 							int at = Integer.parseInt(dr.getValue("ACTIONTYPE").toString());
 							if (at == ActionType.Skip.getValue() && dr.getValue("NDFrom").toString().equals(fk_node))
 								continue;
-							DataRow newdr = newdt.NewRow();
-							newdr.ItemArray = dr.ItemArray;
-							newdt.Rows.add(newdr);
+							//DataRow newdr = newdt.NewRow();
+							//newdr.ItemArray = dr.ItemArray;
+							newdt.Rows.add(dr);
 						}
 					}
 					else
@@ -1052,7 +1053,7 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 
 				dt = DBAccess.RunSQLReturnTable(sql);
 				DataTable newdt = new DataTable();
-				newdt = dt;
+				newdt = dt.clone();
 
 				//判断轨迹数据中，最后一步是否是撤销或退回状态的，如果是，则删除最后2条数据
 				if (dt.Rows.size() > 0)
@@ -1102,9 +1103,9 @@ public class WF_WorkOpt_OneWork extends WebContralBase
 								{
 									continue;
 								}
-								DataRow newdr = newdt.NewRow();
-								newdr.ItemArray = dr.ItemArray;
-								newdt.Rows.add(newdr);
+								//DataRow newdr = newdt.NewRow();
+								//newdr.ItemArray = dr.ItemArray;
+								newdt.Rows.add(dr);
 							}
 						}
 						else

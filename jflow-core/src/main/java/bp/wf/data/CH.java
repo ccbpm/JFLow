@@ -399,7 +399,7 @@ public class CH extends EntityMyPK
 		map.AddTBString(CHAttr.SenderT, null, "发送人名称", true, true, 0, 200, 5);
 
 
-		map.AddTBString(CHAttr.FK_Emp, null, "当事人", true, true, 0, 30, 3);
+		map.AddTBString(CHAttr.FK_Emp, null, "当事人", true, true, 0, 100, 3);
 		map.AddTBString(CHAttr.FK_EmpT, null, "当事人名称", true, true, 0, 200, 5);
 
 			//为邓州增加的属性. 解决多人处理一个节点的工作的问题.

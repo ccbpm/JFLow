@@ -47,7 +47,15 @@ public class Depts extends EntitiesTree
 			qo.addOrderBy(DeptAttr.Idx);
 			return qo.DoQuery();
 		}
-
+		if (WebUser.getIsAdmin() == false)
+		{
+			QueryObject qo = new QueryObject(this);
+			qo.AddWhere(DeptAttr.No, " = ", WebUser.getFK_Dept());
+			qo.addOr();
+			qo.AddWhereInSQL(DeptAttr.No,"SELECT FK_Dept From Port_DeptEmp WHERE FK_Emp='" + WebUser.getNo() + "'");
+			qo.addOrderBy(DeptAttr.Idx);
+			return qo.DoQuery();
+		}
 		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
 		{
 			QueryObject qo = new QueryObject(this);

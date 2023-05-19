@@ -71,6 +71,8 @@ public class WF_Admin_CCBPMDesigner_FlowDevModel extends WebContralBase
 			fl.setFrmUrl(FrmID);
 		}
 		fl.Update();
+		//发起测试人为当前登录人No
+		DBAccess.RunSQL("UPDATE WF_Flow SET Tester = '" + WebUser.getNo() + "' WHERE No='" + flowNo + "'");
 
 		//设置极简类型的表单信息.
 		if (this.getFlowDevModel() == FlowDevModel.JiJian)

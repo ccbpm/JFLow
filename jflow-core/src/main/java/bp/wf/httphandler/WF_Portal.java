@@ -1,5 +1,6 @@
 package bp.wf.httphandler;
 
+import bp.ccfast.ccmenu.Module;
 import bp.da.*;
 import bp.difference.handler.WebContralBase;
 import bp.en.EntityTree;
@@ -14,6 +15,7 @@ import bp.tools.*;
 import bp.ccfast.portal.*;
 import bp.difference.*;
 import bp.wf.template.FlowSort;
+import bp.wf.template.SysFormTree;
 import bp.wf.xml.*;
 import bp.wf.*;
 import org.apache.tomcat.jni.Directory;
@@ -180,6 +182,15 @@ public class WF_Portal extends WebContralBase
 	public final String Login_Submit() throws Exception {
 		try
 		{
+			String gotoSystem = this.GetRequestVal("DDL_System");
+
+			String val = this.GetRequestVal("IsZZJ");
+			if (DataType.IsNullOrEmpty(val) == true)
+				val = "0";
+			if (val.equals("1") == true)
+				gotoSystem = "CCFlow";
+			if(DataType.IsNullOrEmpty(gotoSystem))
+				gotoSystem ="";
 
 			String verifyCode = this.GetRequestVal("VerifyCode");
 			Cookie verifyCookie = ContextHolderUtils.getCookie(this.getClass().getName() + "_VerifyCode");
@@ -313,6 +324,8 @@ public class WF_Portal extends WebContralBase
 						return "err@该用户已经被禁用.";
 					}
 				}
+				if (gotoSystem.equals("CCFlow") == true)
+					return "url@/WF/AppClassic/Home.htm?Token=" +token+ "&UserNo=" + emp.getUserID();
 				return "url@Default.htm?Token=" + token + "&UserNo=" + emp.getUserID();
 			}
 
@@ -341,7 +354,7 @@ public class WF_Portal extends WebContralBase
 			WebUser.setFK_DeptName(emp.getFK_DeptText());
 
 			//执行登录.
-			bp.wf.Dev2Interface.Port_Login(emp.getUserID(), null, emp.getOrgNo());
+			bp.wf.Dev2Interface.Port_Login(emp.getUserID(),  emp.getOrgNo(),null);
 
 
 			//判断是否是多个组织的情况.
@@ -398,6 +411,16 @@ public class WF_Portal extends WebContralBase
 
 		//求内容.
 		sql = "SELECT No as \"No\",Name as \"Name\" FROM Sys_FormTree WHERE  " + sqlWhere + " ORDER BY Idx ";
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
+		{
+			GloVar gloVar = new GloVar();
+			gloVar.setNo(WebUser.getFK_Dept() + "_" + WebUser.getNo() + "_Adminer");
+			if (gloVar.RetrieveFromDBSources() != 0)
+			{
+				sql = "SELECT No as \"No\",Name as \"Name\" FROM Sys_FormTree WHERE  No='" + WebUser.getFK_Dept() + "' OR ParentNo='" + WebUser.getFK_Dept() + "' ORDER BY Idx ";
+
+			}
+		}
 		DataTable dtSort = DBAccess.RunSQLReturnTable(sql);
 		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
 		{
@@ -425,7 +448,7 @@ public class WF_Portal extends WebContralBase
 
 
 		//求流程内容.
-		sql = "SELECT No as \"No\",Name as \"Name\",FrmType,FK_FormTree,PTable,DBSrc,Icon,EntityType FROM Sys_MapData WHERE 1=1 " + sqlWhere + " ORDER BY Idx ";
+		sql = "SELECT No as \"No\",Name as \"Name\",FrmType,FK_FormTree,PTable,DBSrc,Icon,EntityType,Ver FROM Sys_MapData WHERE 1=1 " + sqlWhere + " ORDER BY Idx ";
 		DataTable dtFlow = null;
 		try
 		{
@@ -448,7 +471,7 @@ public class WF_Portal extends WebContralBase
 			dtFlow.Columns.get(5).setColumnName("DBSrc");
 			dtFlow.Columns.get(6).setColumnName("Icon");
 			dtFlow.Columns.get(7).setColumnName("EntityType");
-
+			dtFlow.Columns.get(8).setColumnName("Ver");
 			//dtFlow.Columns.get(2).setColumnName("WorkModel";
 			//dtFlow.Columns.get(3).setColumnName("AtPara";
 			//dtFlow.Columns.get(4).setColumnName("FK_FlowSort";
@@ -478,7 +501,7 @@ public class WF_Portal extends WebContralBase
 	public final String Frms_MoveSort() throws Exception {
 		String[] ens = this.GetRequestVal("SortNos").split("[,]", -1);
 
-		FrmTree ft = new FrmTree();
+		SysFormTree ft = new SysFormTree();
 
 		String table = ft.getEnMap().getPhysicsTable();
 
@@ -595,6 +618,16 @@ public class WF_Portal extends WebContralBase
 			sqlWhere = "   ParentNo!='0' ";
 		}
 		sql = "SELECT No as \"No\",Name as \"Name\", 0 as WFSta2, 0 as WFSta3, 0 as WFSta5 FROM WF_FlowSort WHERE  " + sqlWhere + " ORDER BY Idx ";
+		if(SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
+		{
+			GloVar gloVar = new GloVar();
+			gloVar.setNo(WebUser.getFK_Dept() + "_" + WebUser.getNo() + "_Adminer");
+			if (gloVar.RetrieveFromDBSources() != 0)
+			{
+				sql = "SELECT No as \"No\",Name as \"Name\", 0 as WFSta2, 0 as WFSta3, 0 as WFSta5 FROM WF_FlowSort WHERE  No='"+WebUser.getFK_Dept()+"' OR ParentNo='"+ WebUser.getFK_Dept()+"' ORDER BY Idx ";
+
+			}
+		}
 		DataTable dtSort = DBAccess.RunSQLReturnTable(sql);
 		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
 		{
@@ -650,7 +683,7 @@ public class WF_Portal extends WebContralBase
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
 		//求流程内容.
-		sql = "SELECT No as \"No\",Name as \"Name\",WorkModel, FK_FlowSort, 0 as WFSta2, 0 as WFSta3, 0 as WFSta5 FROM WF_Flow WHERE 1=1 " + sqlWhere + " ORDER BY Idx ";
+		sql = "SELECT No as \"No\",Name as \"Name\",WorkModel, FK_FlowSort, 0 as WFSta2, 0 as WFSta3, 0 as WFSta5, Ver FROM WF_Flow WHERE 1=1 " + sqlWhere + " ORDER BY Idx ";
 		DataTable dtFlow = DBAccess.RunSQLReturnTable(sql);
 		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
 		{
@@ -662,6 +695,7 @@ public class WF_Portal extends WebContralBase
 			dtFlow.Columns.get(4).setColumnName("WFSta2");
 			dtFlow.Columns.get(5).setColumnName("WFSta3");
 			dtFlow.Columns.get(6).setColumnName("WFSta5");
+			dtFlow.Columns.get(7).setColumnName("Ver");
 		}
 
 		// 给状态赋值.

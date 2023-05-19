@@ -4,6 +4,9 @@ import bp.da.*;
 import bp.en.*;
 import bp.wf.*;
 
+import java.util.Calendar;
+import java.util.Date;
+
 /** 
  Method 的摘要说明
 */
@@ -28,7 +31,7 @@ public class AutoRun_WhoExeIt extends Method
 	public Object Do()throws Exception
 	{
 		String info = "";
-		String sql = "SELECT WorkID,FID,FK_Emp,FK_Node,FK_Flow FROM WF_GenerWorkerList WHERE WhoExeIt!=0 AND IsPass=0 AND IsEnable=1 ORDER BY FK_Emp";
+		String sql = "SELECT WorkID,FID,FK_Emp,FK_Node,FK_Flow,AtPara FROM WF_GenerWorkerList WHERE WhoExeIt!=0 AND IsPass=0 AND IsEnable=1 ORDER BY FK_Emp";
 		DataTable dt = null;
 
 		dt = DBAccess.RunSQLReturnTable(sql);
@@ -41,11 +44,38 @@ public class AutoRun_WhoExeIt extends Method
 			///#region 自动启动流程 whoExIt.
 		for (DataRow dr : dt.Rows)
 		{
-			long workid = Long.parseLong(dr.getValue("WorkID").toString());
-			long fid = Long.parseLong(dr.getValue("FID").toString());
-			String empNo = dr.getValue("FK_Emp").toString();
-			int paras = Integer.parseInt(dr.getValue("FK_Node").toString());
-			String fk_flow = dr.getValue("FK_Flow").toString();
+			long workid = Long.parseLong(dr.getValue(0).toString());
+			long fid = Long.parseLong(dr.getValue(1).toString());
+			String empNo = dr.getValue(2).toString();
+			int nodeID = Integer.parseInt(dr.getValue(3).toString());
+			String fk_flow = dr.getValue(4).toString();
+			String paras = dr.getValue(5).toString();
+			int toNodeID = 0;
+			String toEmps = null;
+			//判断AtPara中是否存在设置的时间
+			if (DataType.IsNullOrEmpty(paras) == false && paras.contains("DelayedData") == true)
+			{
+				AtPara atPara = new AtPara(paras);
+				String delayedData = atPara.GetValStrByKey("DelayedData");
+				int day = atPara.GetValIntByKey("Day");
+				int hour = atPara.GetValIntByKey("Hour");
+				int minute = atPara.GetValIntByKey("Minute");
+				toNodeID = atPara.GetValIntByKey("ToNodeID");
+				toEmps = atPara.GetValStrByKey("ToEmps");
+				Date dtime = DataType.ParseSysDate2DateTime(delayedData);
+				Calendar c = Calendar.getInstance();
+				c.setTime(dtime);
+				c.add(Calendar.DATE, day);
+				c.add(Calendar.HOUR, hour);
+				c.add(Calendar.MINUTE, minute);
+				dtime = c.getTime();
+				String newTime = DataType.getDateByFormart(dtime,"yyyy-MM-dd HH:mm");
+				String currTime = DataType.getCurrentDateTime();
+
+				if (DataType.GetSpanMinute(currTime,newTime) > 0)
+					continue;
+
+			}
 
 			if (bp.web.WebUser.getNo().equals(empNo) == false)
 			{
@@ -54,7 +84,7 @@ public class AutoRun_WhoExeIt extends Method
 
 			try
 			{
-				info += "发送成功:" + bp.web.WebUser.getNo() + Dev2Interface.Node_SendWork(fk_flow, workid).ToMsgOfText();
+				info += "发送成功:" + bp.web.WebUser.getNo() + Dev2Interface.Node_SendWork(fk_flow, workid,toNodeID,toEmps).ToMsgOfText();
 			}
 			catch (RuntimeException ex)
 			{

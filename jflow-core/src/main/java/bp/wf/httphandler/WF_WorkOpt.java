@@ -66,7 +66,11 @@ public class WF_WorkOpt extends WebContralBase
 		AutoRunStratFlows en = new AutoRunStratFlows();
 		Object tempVar = en.Do();
 		String msg = tempVar instanceof String ? (String)tempVar : null;
-		return "执行完成。 <br>" + msg;
+		//执行自动任务.
+		AutoRun_WhoExeIt myen = new AutoRun_WhoExeIt();
+		tempVar = myen.Do();
+		String msg3 = tempVar instanceof String ? (String)tempVar : null;
+		return "执行完成。 <br>" + msg+"<br>"+msg3;
 	}
 
 	/** 
@@ -121,6 +125,15 @@ public class WF_WorkOpt extends WebContralBase
 				return "info@" + bp.tools.Json.ToJson(mds.ToDataTableField("dt"));
 			}
 			frmID = "ND" + this.getFK_Node();
+			if (nd.getHisFormType() == NodeFormType.FoolForm  && DataType.IsNullOrEmpty(frmID)==false){
+				FrmPrintTemplates templetes = new FrmPrintTemplates();
+				templetes.Retrieve(FrmPrintTemplateAttr.FrmID, frmID);
+				if(templetes.size()==0)
+					return "err@当前节点上没有绑定单据模板。";
+				if(templetes.size()>1)
+					return templetes.ToJson("dt");
+				templete = (FrmPrintTemplate)templetes.get(0);
+			}
 			if (nd.getHisFormType() == NodeFormType.RefOneFrmTree  || nd.getHisFlow().getFlowDevModel() == FlowDevModel.JiJian)
 			{
 				frmID = nd.getNodeFrmID();
@@ -180,7 +193,6 @@ public class WF_WorkOpt extends WebContralBase
 		return PrintDoc_DoneIt(null);
 	}
 
-//ORIGINAL LINE: public string PrintDoc_DoneIt(string FrmPrintTemplateNo = null)
 	public final String PrintDoc_DoneIt(String FrmPrintTemplateNo) throws Exception {
 		Node nd = new Node(this.getFK_Node());
 
@@ -211,10 +223,6 @@ public class WF_WorkOpt extends WebContralBase
 		String billInfo = "";
 
 		String ccformId = this.GetRequestVal("CCFormID");
-
-		if(ccformId.equals("undefined") ||ccformId.equals("") || ccformId.equals(null)){
-			ccformId = func.getFrmID();
-		}
 		if (DataType.IsNullOrEmpty(ccformId) == false)
 		{
 			return PrintDoc_FormDoneIt(nd, this.getWorkID(), this.getFID(), ccformId, func);
@@ -315,6 +323,11 @@ public class WF_WorkOpt extends WebContralBase
 				ps.Add(TrackAttr.WorkID, newWorkID);
 
 				rtf.dtTrack = DBAccess.RunSQLReturnTable(ps);
+				//获取启用审核组件的节点
+				ps = new Paras();
+				ps.SQL = "SELECT NodeID FROM WF_Node WHERE FWCSta=1 AND FK_Flow=" + SystemConfig.getAppCenterDBVarStr() + "FK_Flow";
+				ps.Add(NodeAttr.FK_Flow, nd.getFK_Flow());
+				rtf.wks = DBAccess.RunSQLReturnTable(ps);
 			}
 
 			paths = file.split("[_]", -1);
@@ -510,6 +523,12 @@ public class WF_WorkOpt extends WebContralBase
 					ps.Add(TrackAttr.WorkID, newWorkID);
 
 					rtf.dtTrack = DBAccess.RunSQLReturnTable(ps);
+
+					//获取启用审核组件的节点
+					ps = new Paras();
+					ps.SQL = "SELECT NodeID FROM WF_Node WHERE FWCSta=1 AND FK_Flow=" + SystemConfig.getAppCenterDBVarStr() + "FK_Flow";
+					ps.Add(NodeAttr.FK_Flow, nd.getFK_Flow());
+					rtf.wks = DBAccess.RunSQLReturnTable(ps);
 				}
 			}
 
@@ -1024,7 +1043,7 @@ public class WF_WorkOpt extends WebContralBase
 				ps.Add("NDTo", toNodeID);
 				ps.Add("EmpFrom", WebUser.getNo(), false);
 			}
-			else if (SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX)
+			else if (SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.HGDB)
 			{
 				ps.SQL = "SELECT Tag,EmpTo FROM " + trackTable + " A WHERE A.NDFrom=:NDFrom AND A.NDTo=:NDTo AND (ActionType=0 OR ActionType=1) AND EmpFrom=:EmpFrom ORDER BY WorkID  DESC limit 1 ";
 				ps.Add("NDFrom", this.getFK_Node());
@@ -1128,7 +1147,7 @@ public class WF_WorkOpt extends WebContralBase
 		{
 			if (ex.getMessage().contains("INSERT") == true)
 			{
-				return "err@人员名称重复,导致部分人员插入失败.";
+				return "err@人员名称重复,导致部分人员插入失败."+ex.getMessage();
 			}
 
 			return "err@" + ex.getMessage();
@@ -1299,7 +1318,7 @@ public class WF_WorkOpt extends WebContralBase
 					{
 						sql = "SELECT a.No,a.Name || '/' || b.name as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and (a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%'  OR a.PinYin LIKE '%," + emp.toLowerCase() + "%') AND rownum<=12 ";
 					}
-					if (SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX)
+					if (SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.HGDB)
 					{
 						sql = "SELECT a.No,CONCAT(a.Name,'/',b.name) as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and (a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%'  OR a.PinYin LIKE '%," + emp.toLowerCase() + "%') LIMIT 12";
 					}
@@ -1355,7 +1374,7 @@ public class WF_WorkOpt extends WebContralBase
 					{
 						sql = "SELECT a.No,a.Name || '/' || b.name as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and ( a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%'  OR  a.PinYin LIKE '%," + emp.toLowerCase() + "%') AND rownum<=12 ";
 					}
-					if (SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX)
+					if (SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.HGDB)
 					{
 						sql = "SELECT a.No,CONCAT(a.Name,'/',b.name) as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and ( a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%'  OR  a.PinYin LIKE '%," + emp.toLowerCase() + "%' ) LIMIT 12";
 					}
@@ -1379,7 +1398,7 @@ public class WF_WorkOpt extends WebContralBase
 			{
 				sql = "SELECT a.No,a.Name || '/' || b.name as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and (a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%') and rownum<=12 ";
 			}
-			if (SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX)
+			if (SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.HGDB)
 			{
 				sql = "SELECT a.No,CONCAT(a.Name,'/',b.name) as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and (a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%') LIMIT 12";
 			}
@@ -1410,7 +1429,35 @@ public class WF_WorkOpt extends WebContralBase
 		return bp.tools.Json.ToJson(dt);
 	}
 
+	/// <summary>
+	/// 获取本组织之外的联络人员
+	/// </summary>
+	/// <returns></returns>
+	public String AccepterOfOfficer_Init()
+	{
+		Paras paras = new Paras();
+		paras.SQL = "SELECT A.No,A.Name,FK_Dept, B.NameOfPath As DeptName,A.OrgNo From Port_Emp A,Port_Dept B WHERE A.FK_Dept = B.No AND IsOfficer=1 AND A.OrgNo!=" + SystemConfig.getAppCenterDBVarStr() + "OrgNo";
+		paras.Add("OrgNo", WebUser.getOrgNo());
+		DataTable dt = DBAccess.RunSQLReturnTable(paras);
+		for(DataRow dr : dt.Rows)
+		{
+			String deptNo = dr.getValue(2)!=null?dr.getValue(2).toString():"";
+			String deptName = dr.getValue(3)!=null?dr.getValue(3).toString():"";
+			String orgNo = dr.getValue(4)!=null?dr.getValue(4).toString():"";
+			if(DataType.IsNullOrEmpty(deptNo) == false && deptName.contains("/") == false)
+			{
+				String name = bp.wf.Dev2Interface.GetParentNameByCurrNo(deptNo, "Port_Dept", orgNo );
+				if (deptName.equals(name) == false)
+				{
+					DBAccess.RunSQL("UPDATE Port_Dept SET NameOfPath='" + name + "' WHERE No='" + deptNo + "'");
+					dr.setValue(3,name);
+				}
 
+			}
+		}
+
+		return bp.tools.Json.ToJson(dt);
+	}
 		///#region 会签.
 	/** 
 	 会签
@@ -3761,17 +3808,17 @@ public class WF_WorkOpt extends WebContralBase
 				}
 
 			}
-			else
-			{
-				sql = "SELECT distinct CONCAT('Emp_', A.No) AS No,A.Name, '" + fk_dept + "' as FK_Dept, a.Idx FROM Port_Emp A LEFT JOIN Port_DeptEmp B  ON A.No=B.FK_Emp WHERE A.FK_Dept='" + fk_dept + "' OR B.FK_Dept='" + fk_dept + "' ";
-				if (SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
-				{
-					sql = "SELECT distinct 'Emp_'+ A.No AS No,A.Name, '" + fk_dept + "' as FK_Dept, a.Idx FROM Port_Emp A LEFT JOIN Port_DeptEmp B  ON A.No=B.FK_Emp WHERE A.FK_Dept='" + fk_dept + "' OR B.FK_Dept='" + fk_dept + "' ";
+			else {
+				sql = "SELECT CONCAT('Emp_',No) AS No, Name, FK_Dept,Idx FROM Port_Emp WHERE FK_Dept='" + fk_dept + "'";
+				sql += " UNION ";
+				sql += "SELECT CONCAT('Emp_',A.No) AS No,A.Name, A.FK_Dept ,A.Idx FROM Port_Emp A, Port_DeptEmp B WHERE A.No=B.FK_Emp AND B.FK_Dept='" + fk_dept + "'";
+				if (SystemConfig.getAppCenterDBType() == DBType.MSSQL) {
+					sql = "SELECT  'Emp_'+ No AS No, Name, FK_Dept,Idx FROM Port_Emp WHERE FK_Dept='" + fk_dept + "'";
+					sql += " UNION ";
+					sql += "SELECT  'Emp_'+ A.No AS No,A.Name, '" + fk_dept + "' as FK_Dept, A.Idx FROM Port_Emp A ,Port_DeptEmp B  WHERE A.No=B.FK_Emp AND B.FK_Dept='" + fk_dept + "' ";
 				}
-
+				sql = "SELECT Distinct * FROM (" + sql + ")A Order By Idx";
 			}
-
-			sql += " ORDER BY A.Idx ";
 		}
 
 		DataTable dtEmps = DBAccess.RunSQLReturnTable(sql);
@@ -3921,7 +3968,7 @@ public class WF_WorkOpt extends WebContralBase
 				{
 					sql = "SELECT  Tag,EmpTo FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + this.getFK_Node() + " AND A.NDTo=" + toNodeID + " AND ActionType=1 ORDER BY WorkID  DESC limit 1,1 ";
 				}
-				else if (SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX)
+				else if (SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.HGDB)
 				{
 					sql = "SELECT  Tag,EmpTo FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + this.getFK_Node() + " AND A.NDTo=" + toNodeID + " AND ActionType=1 ORDER BY WorkID  DESC limit 1 ";
 				}
@@ -4342,7 +4389,7 @@ public class WF_WorkOpt extends WebContralBase
 			ps.Add("FK_Flow", this.getFK_Flow(), false);
 			ps.Add("Starter", WebUser.getNo(), false);
 		}
-		if (SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX)
+		if (SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.HGDB)
 		{
 			ps.SQL = "SELECT WorkID,Title FROM WF_GenerWorkFlow WHERE FK_Flow=" + SystemConfig.getAppCenterDBVarStr() + "FK_Flow AND WFState=3 AND Starter=" + SystemConfig.getAppCenterDBVarStr() + "Starter AND ATPARA NOT LIKE '%@DBTemplate=1%' ORDER BY RDT LIMIT 30";
 			ps.Add("FK_Flow", this.getFK_Flow(), false);

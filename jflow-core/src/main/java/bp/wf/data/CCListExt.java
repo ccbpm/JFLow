@@ -318,7 +318,7 @@ public class CCListExt extends EntityMyPK
 
 			///#region 查询条件.
 
-		map.DTSearchLable = "抄送日期";
+		map.DTSearchLabel = "抄送日期";
 		map.DTSearchKey=CCListAttr.RDT;
 		map.DTSearchWay= DTSearchWay.ByDate;
 

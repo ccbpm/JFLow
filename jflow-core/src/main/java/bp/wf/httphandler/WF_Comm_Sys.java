@@ -641,6 +641,7 @@ public class WF_Comm_Sys extends WebContralBase
 			Entity en = null;
 			try
 			{
+
 				en = obj instanceof Entity ? (Entity)obj : null;
 				if(en==null)
 					continue;

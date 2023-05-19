@@ -29,65 +29,65 @@ public class WF_Admin_FoolFormDesigner_SFTable extends WebContralBase
 	 
 	 @return 
 	*/
-//	public final String SF0_Init() throws Exception {
-//		String cl = "bp.en.Entities";
-//		ArrayList al = ClassFactory.GetObjects(cl);
-//
-//		//定义容器.
-//		DataTable dt = new DataTable();
-//		dt.Columns.Add("No");
-//		dt.Columns.Add("Name");
-//
-//		SFTables sfs = new SFTables();
-//		sfs.RetrieveAll();
-//
-//		for (Object obj : al)
-//		{
-//			Entities ens = obj instanceof Entities ? (Entities)obj : null;
-//			if (ens == null)
-//			{
-//				continue;
-//			}
-//
-//			try
-//			{
-//				Entity en = ens.getGetNewEntity();
-//				if (en == null)
-//				{
-//					continue;
-//				}
-//
-//				if (en.getEnMap().getAttrs().contains("No") == false)
-//				{
-//					continue;
-//				}
-//
-//				if (sfs.contains(ens.toString()) == true)
-//				{
-//					continue;
-//				}
-//
-//				DataRow dr = dt.NewRow();
-//				dr.setValue("No", ens.toString());
-//
-//				if (en.IsTreeEntity)
-//				{
-//					dr.setValue("Name", en.getEnMap().getEnDesc() + "(树结构) " + ens.toString());
-//				}
-//				else
-//				{
-//					dr.setValue("Name", en.getEnMap().getEnDesc() + " " + ens.toString());
-//				}
-//
-//				dt.Rows.add(dr);
-//			}
-//			catch (java.lang.Exception e)
-//			{
-//
-//			}
-//		}
-//		return bp.tools.Json.ToJson(dt);
-//	}
+	public final String SF0_Init() throws Exception {
+		String cl = "bp.en.Entities";
+		ArrayList al = ClassFactory.GetObjects(cl);
+
+		//定义容器.
+		DataTable dt = new DataTable();
+		dt.Columns.Add("No");
+		dt.Columns.Add("Name");
+
+		SFTables sfs = new SFTables();
+		sfs.RetrieveAll();
+
+		for (Object obj : al)
+		{
+			Entities ens = obj instanceof Entities ? (Entities)obj : null;
+			if (ens == null)
+			{
+				continue;
+			}
+
+			try
+			{
+				Entity en = ens.getGetNewEntity();
+				if (en == null)
+				{
+					continue;
+				}
+
+				if (en.getEnMap().getAttrs().contains("No") == false)
+				{
+					continue;
+				}
+
+				if (sfs.contains(ens.toString()) == true)
+				{
+					continue;
+				}
+
+				DataRow dr = dt.NewRow();
+				dr.setValue("No", ens.toString());
+
+				if (en.getIsTreeEntity())
+				{
+					dr.setValue("Name", en.getEnMap().getEnDesc() + "(树结构) " + ens.toString());
+				}
+				else
+				{
+					dr.setValue("Name", en.getEnMap().getEnDesc() + " " + ens.toString());
+				}
+
+				dt.Rows.add(dr);
+			}
+			catch (java.lang.Exception e)
+			{
+
+			}
+		}
+		return bp.tools.Json.ToJson(dt);
+	}
 	public final String SF0_Save() throws Exception {
 		return "保存成功.";
 	}

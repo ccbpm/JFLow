@@ -8,6 +8,8 @@ import bp.da.*;
 import bp.web.*;
 import bp.sys.*;
 import bp.*;
+import bp.wf.template.SysFormTrees;
+
 import java.util.*;
 import java.time.*;
 import java.util.Map;
@@ -717,7 +719,7 @@ public class Dev2Interface
 		DataSet ds = new DataSet();
 
 		//单据类别.
-		FrmTrees ens = new FrmTrees();
+		SysFormTrees ens = new SysFormTrees();
 		ens.RetrieveAll();
 
 		DataTable dtSort = ens.ToDataTableField("Sort");

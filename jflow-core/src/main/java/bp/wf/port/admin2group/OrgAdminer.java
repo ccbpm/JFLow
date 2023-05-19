@@ -74,14 +74,14 @@ public class OrgAdminer extends EntityMyPK
 		}
 		Map map = new Map("Port_OrgAdminer", "组织管理员");
 		map.AddMyPK(true);
-		map.AddTBString(OrgAdminerAttr.OrgNo, null, "组织", true, false, 0, 50, 20);
-		map.AddTBString(OrgAdminerAttr.FK_Emp, null, "管理员名称", true, true, 0, 50, 20);
+		map.AddTBString(OrgAdminerAttr.OrgNo, null, "组织", true, false, 0, 100, 20);
+		map.AddTBString(OrgAdminerAttr.FK_Emp, null, "管理员名称", true, true, 0, 100, 20);
 		map.AddTBString(OrgAdminerAttr.EmpName, null, "管理员名称", true, true, 0, 50, 20);
 		map.AddTBStringDoc("FlowSorts", null, "管理的流程目录", true, true, true, 10);
 		map.AddTBStringDoc("FrmTrees", null, "管理的表单目录", true, true, true, 10);
 
 		map.getAttrsOfOneVSM().AddGroupPanelModel(new OAFlowSorts(), new bp.wf.template.FlowSorts(), OAFlowSortAttr.RefOrgAdminer, OAFlowSortAttr.FlowSortNo, "流程目录权限", null, "Name", "No");
-		map.getAttrsOfOneVSM().AddGroupPanelModel(new OAFrmTrees(), new bp.sys.FrmTrees(), OAFrmTreeAttr.RefOrgAdminer, OAFrmTreeAttr.FrmTreeNo, "表单目录权限", null, "Name", "No");
+		map.getAttrsOfOneVSM().AddGroupPanelModel(new OAFrmTrees(), new bp.wf.template.SysFormTrees(), OAFrmTreeAttr.RefOrgAdminer, OAFrmTreeAttr.FrmTreeNo, "表单目录权限", null, "Name", "No");
 
 		map.AddHidden("OrgNo", " = ", "@WebUser.OrgNo");
 
@@ -103,9 +103,9 @@ public class OrgAdminer extends EntityMyPK
 		this.SetValByKey("FlowSorts", str);
 
 		str = "";
-		bp.sys.FrmTrees enTrees = new bp.sys.FrmTrees();
+		bp.wf.template.SysFormTrees enTrees = new bp.wf.template.SysFormTrees();
 		enTrees.RetrieveInSQL("SELECT FrmTreeNo FROM Port_OrgAdminerFrmTree WHERE  FK_Emp='" + this.getFK_Emp() + "' AND OrgNo='" + this.getOrgNo() + "'");
-		for (FrmTree item : enTrees.ToJavaList())
+		for (SysFormTree item : enTrees.ToJavaList())
 		{
 			str += "(" + item.getNo() + ")" + item.getName() + ";";
 		}

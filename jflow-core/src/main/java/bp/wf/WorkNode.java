@@ -996,7 +996,7 @@ public class WorkNode
 
 		// 是否是分流到子线程。
 		boolean isFenLiuToSubThread = false;
-		if (this.getHisNode().isFLHL() == true && town.getHisNode().getHisRunModel() == RunModel.SubThread)
+		if (this.getHisNode().isFLHL() == true && town.getHisNode().getIsSubThread()== true)
 		{
 			isFenLiuToSubThread = true;
 			nextUsersWorkID = 0;
@@ -1006,7 +1006,7 @@ public class WorkNode
 
 		// 子线程 到 合流点or 分合流点.
 		boolean isSubThreadToFenLiu = false;
-		if (this.getHisNode().getHisRunModel() == RunModel.SubThread && town.getHisNode().isFLHL() == true)
+		if (this.getHisNode().getIsSubThread()==true && town.getHisNode().isFLHL() == true)
 		{
 			nextUsersWorkID = this.getHisWork().getFID();
 			nextUsersFID = 0;
@@ -1015,7 +1015,7 @@ public class WorkNode
 
 		// 子线程到子线程.
 		boolean isSubthread2Subthread = false;
-		if (this.getHisNode().getHisRunModel() == RunModel.SubThread && town.getHisNode().getHisRunModel() == RunModel.SubThread)
+		if (this.getHisNode().getIsSubThread()== true && town.getHisNode().getIsSubThread() == true)
 		{
 			nextUsersWorkID = this.getHisWork().getOID();
 			nextUsersFID = this.getHisWork().getFID();
@@ -1894,7 +1894,7 @@ public class WorkNode
 					skipWork.Copy(mywork);
 
 					skipWork.setOID(this.getWorkID());
-					if (nd.getHisRunModel() == RunModel.SubThread)
+					if (nd.getIsSubThread()== true)
 					{
 						skipWork.setFID(mywork.getFID());
 					}
@@ -2667,7 +2667,7 @@ public class WorkNode
 	 @return 
 	*/
 	private void Func_CheckCompleteCondition() throws Exception {
-		if (this.getHisNode().getHisRunModel() == RunModel.SubThread)
+		if (this.getHisNode().getIsSubThread()== true)
 		{
 			throw new RuntimeException(bp.wf.Glo.multilingual("@流程设计错误：不允许在子线程上设置流程完成条件。", "WorkNode", "error_sub_thread", new String[0]));
 		}
@@ -4243,7 +4243,7 @@ public class WorkNode
 		long fid = this.getHisGenerWorkFlow().getFID();
 		if (fid == 0)
 		{
-			if (this.getHisNode().getHisRunModel() != RunModel.SubThread)
+			if (this.getHisNode().getIsSubThread()== false)
 			{
 				throw new RuntimeException(bp.wf.Glo.multilingual("@当前节点非子线程节点.", "WorkNode", "not_sub_thread"));
 			}
@@ -4355,13 +4355,13 @@ public class WorkNode
 		int count = gwf.GetParaInt("ThreadCount", 0);
 		count = count+1;
 		gwf.SetPara("ThreadCount", count);
-
+		gwf.setTodoEmps(toEmpsStr);
 		gwf.Update();
 
 
 		BigDecimal numPassed = new BigDecimal(gwf.GetParaInt("ThreadCount", 0));
 
-		BigDecimal passRate = numPassed.divide(numAll,BigDecimal.ROUND_CEILING).multiply(BigDecimal.valueOf(100));
+		BigDecimal passRate = numPassed.divide(numAll,4,BigDecimal.ROUND_CEILING).multiply(BigDecimal.valueOf(100));
 		if (toNode.getPassRate().compareTo(passRate) <= 0)
 		{
 			/* 这时已经通过,可以让主线程看到待办. */
@@ -4476,7 +4476,8 @@ public class WorkNode
 						this.NodeSend_11(toND);
 						break;
 					// throw new Exception("@流程设计错误:请检查流程获取详细信息, 普通节点下面不能连接分合流节点(" + toND.Name + ").");
-					case SubThread: //1-5 普通节to子线程点
+					case SubThreadSameWorkID:
+					case SubThreadUnSameWorkID: //1-5 普通节to子线程点
 						throw new RuntimeException(bp.wf.Glo.multilingual("@流程设计错误: 普通节点下面[" + this.getHisNode().getName() + "]不能连接子线程节点{0}", "WorkNode", "workflow_error_3", toND.getName()));
 					default:
 						throw new RuntimeException(bp.wf.Glo.multilingual("@没有判断的节点类型({0}).", "WorkNode", "node_type_does_not_exist", toND.getName()));
@@ -4503,8 +4504,9 @@ public class WorkNode
 							this.NodeSend_11(toND2); // 按普通节点到普通节点处理.
 							break;
 						// throw new Exception("@流程设计错误:请检查流程获取详细信息, 分流点(" + this.HisNode.Name + ")下面不能连接合流节点(" + toND2.Name + ").");
-						case SubThread: // 2.4 分流点to子线程点
-							if (toND2.getHisSubThreadType() == SubThreadType.SameSheet)
+						case SubThreadSameWorkID:
+						case SubThreadUnSameWorkID: // 2.4 分流点to子线程点
+							if (toND2.getHisRunModel() == RunModel.SubThreadSameWorkID)
 							{
 								// 为广西计算中心.
 								this.getHisGenerWorkFlow().setNodeName(this.getHisGenerWorkFlow().getNodeName() + "," + toND2.getName());
@@ -4555,12 +4557,12 @@ public class WorkNode
 							default:
 								break;
 						}
-						if (nd.getHisSubThreadType() == SubThreadType.SameSheet)
+						if (nd.getHisRunModel() == RunModel.SubThreadSameWorkID)
 						{
 							isHaveSameSheet = true;
 						}
 
-						if (nd.getHisSubThreadType() == SubThreadType.UnSameSheet)
+						if (nd.getHisRunModel() == RunModel.SubThreadUnSameWorkID)
 						{
 							isHaveUnSameSheet = true;
 						}
@@ -4575,7 +4577,8 @@ public class WorkNode
 					{
 						throw new RuntimeException(bp.wf.Glo.multilingual("@不支持流程模式: 分流节点同时启动了多个同表单的子线程.", "WorkNode", "workflow_error_5"));
 					}
-
+					this.getHisGenerWorkFlow().SetPara("ThreadCount", 0);
+					this.getHisGenerWorkFlow().Update();
 					//启动多个异表单子线程节点.
 					this.NodeSend_24_UnSameSheet(toNDs);
 
@@ -4587,7 +4590,7 @@ public class WorkNode
 					}
 
 					this.getHisGenerWorkFlow().setNodeName(this.getHisGenerWorkFlow().getNodeName() + names);
-					this.getHisGenerWorkFlow().SetPara("ThreadCount", 0);
+
 					this.getHisGenerWorkFlow().DirectUpdate();
 
 				}
@@ -4616,68 +4619,122 @@ public class WorkNode
 						this.NodeSend_31(toND3); // 让它与普通点点普通点一样的逻辑.
 						break;
 					//throw new Exception("@流程设计错误:请检查流程获取详细信息, 合流点(" + this.HisNode.Name + ")下面不能连接合流节点(" + toND3.Name + ").");
-					case SubThread: //3.4 子线程
+					case SubThreadSameWorkID:
+					case SubThreadUnSameWorkID: //3.4 子线程
 						throw new RuntimeException(bp.wf.Glo.multilingual("@流程设计错误: 合流节点({0})下面不能连接子线程节点({1})", "WorkNode", "workflow_error_6", this.getHisNode().getName(), toND3.getName()));
 					default:
 						throw new RuntimeException(bp.wf.Glo.multilingual("@没有判断的节点类型({0}).", "WorkNode", "node_type_does_not_exist", toND3.getName()));
 				}
 				break;
 			case FHL: // 4: 分流节点向下发送的
-				Node toND4 = this.NodeSend_GenerNextStepNode();
 				if (this.isStopFlow())
-				{
 					return;
-				}
+				Nodes toND4s = this.Func_GenerNextStepNodes();
+				if(toND4s.size()==1){
+					Node toND4 = (Node)toND4s.get(0);
+					//加入系统变量.
+					this.addMsg(SendReturnMsgFlag.VarToNodeID, String.valueOf(toND4.getNodeID()), String.valueOf(toND4.getNodeID()), SendReturnMsgType.SystemMsg);
+					this.addMsg(SendReturnMsgFlag.VarToNodeName, toND4.getName(), toND4.getName(), SendReturnMsgType.SystemMsg);
 
-				//加入系统变量.
-				this.addMsg(SendReturnMsgFlag.VarToNodeID, String.valueOf(toND4.getNodeID()), String.valueOf(toND4.getNodeID()), SendReturnMsgType.SystemMsg);
-				this.addMsg(SendReturnMsgFlag.VarToNodeName, toND4.getName(), toND4.getName(), SendReturnMsgType.SystemMsg);
+					switch (toND4.getHisRunModel()) {
+						case Ordinary: //4.1 普通工作节点
+							this.NodeSend_11(toND4); // 让它与普通点点普通点一样的逻辑.
+							break;
+						case FL: //4.2 分流点
+							throw new RuntimeException(bp.wf.Glo.multilingual("@流程设计错误: 合流节点({0})下面不能连接分流节点({1})", "WorkNode", "workflow_error_7", this.getHisNode().getName(), toND4.getName()));
+						case HL: //4.3 合流点
+						case FHL:
+							this.NodeSend_11(toND4); // 让它与普通点点普通点一样的逻辑.
+							break;
+						case SubThreadSameWorkID:
+						case SubThreadUnSameWorkID: //4.5 子线程
+							if (toND4.getHisRunModel() == RunModel.SubThreadSameWorkID) {
 
-				switch (toND4.getHisRunModel())
-				{
-					case Ordinary: //4.1 普通工作节点
-						this.NodeSend_11(toND4); // 让它与普通点点普通点一样的逻辑.
-						break;
-					case FL: //4.2 分流点
-						throw new RuntimeException(bp.wf.Glo.multilingual("@流程设计错误: 合流节点({0})下面不能连接分流节点({1})", "WorkNode", "workflow_error_7", this.getHisNode().getName(), toND4.getName()));
-					case HL: //4.3 合流点
-					case FHL:
-						this.NodeSend_11(toND4); // 让它与普通点点普通点一样的逻辑.
-						break;
-					case SubThread: //4.5 子线程
-						if (toND4.getHisSubThreadType() == SubThreadType.SameSheet)
-						{
+								NodeSend_24_SameSheet(toND4);
 
-							NodeSend_24_SameSheet(toND4);
+								// 为广西计算中心.
+								this.getHisGenerWorkFlow().setNodeName(this.getHisGenerWorkFlow().getNodeName() + "," + toND4.getName());
+								this.getHisGenerWorkFlow().SetPara("ThreadCount", 0);
+								this.getHisGenerWorkFlow().DirectUpdate();
+							} else {
+								Nodes toNDs4 = this.Func_GenerNextStepNodes();
+								this.getHisGenerWorkFlow().SetPara("ThreadCount", 0);
+								this.getHisGenerWorkFlow().DirectUpdate();
+								NodeSend_24_UnSameSheet(toNDs4); //可能是只发送1个异表单
 
-							// 为广西计算中心.
-							this.getHisGenerWorkFlow().setNodeName(this.getHisGenerWorkFlow().getNodeName() + "," + toND4.getName());
-							this.getHisGenerWorkFlow().SetPara("ThreadCount", 0);
-							this.getHisGenerWorkFlow().DirectUpdate();
-						}
-						else
-						{
-							Nodes toNDs4 = this.Func_GenerNextStepNodes();
-							this.getHisGenerWorkFlow().SetPara("ThreadCount", 0);
-							this.getHisGenerWorkFlow().DirectUpdate();
-							NodeSend_24_UnSameSheet(toNDs4); //可能是只发送1个异表单
-
-							//为计算中心：执行更新.
-							String names = "";
-							for (Node mynd : toNDs4.ToJavaList())
-							{
-								names += "," + mynd.getName();
+								//为计算中心：执行更新.
+								String names = "";
+								for (Node mynd : toNDs4.ToJavaList()) {
+									names += "," + mynd.getName();
+								}
+								this.getHisGenerWorkFlow().setNodeName(this.getHisGenerWorkFlow().getNodeName() + names);
+								this.getHisGenerWorkFlow().SetPara("ThreadCount", 0);
+								this.getHisGenerWorkFlow().DirectUpdate();
 							}
-							this.getHisGenerWorkFlow().setNodeName(this.getHisGenerWorkFlow().getNodeName() + names);
-							this.getHisGenerWorkFlow().SetPara("ThreadCount", 0);
-							this.getHisGenerWorkFlow().DirectUpdate();
+							break;
+						default:
+							throw new RuntimeException(bp.wf.Glo.multilingual("@没有判断的节点类型({0}).", "WorkNode", "node_type_does_not_exist", toND4.getName()));
+					}
+				}else
+				{
+					/* 如果有多个节点，检查一下它们必定是子线程节点否则，就是设计错误。*/
+					boolean isHaveSameSheet = false;
+					boolean isHaveUnSameSheet = false;
+					for (Node nd : toND4s.ToJavaList())
+					{
+						switch (nd.getHisRunModel())
+						{
+							case Ordinary:
+								NodeSend_11(nd); //按普通节点到普通节点处理.
+								break;
+							case FL:
+							case FHL:
+							case HL:
+								NodeSend_11(nd); //按普通节点到普通节点处理.
+								break;
+							default:
+								break;
 						}
-						break;
-					default:
-						throw new RuntimeException(bp.wf.Glo.multilingual("@没有判断的节点类型({0}).", "WorkNode", "node_type_does_not_exist", toND4.getName()));
+						if (nd.getHisRunModel() == RunModel.SubThreadSameWorkID)
+						{
+							isHaveSameSheet = true;
+						}
+
+						if (nd.getHisRunModel() == RunModel.SubThreadUnSameWorkID)
+						{
+							isHaveUnSameSheet = true;
+						}
+					}
+
+					if (isHaveUnSameSheet && isHaveSameSheet)
+					{
+						throw new RuntimeException(bp.wf.Glo.multilingual("@不支持流程模式: 分流节点同时启动了同表单的子线程与异表单的子线程.", "WorkNode", "workflow_error_4"));
+					}
+
+					if (isHaveSameSheet == true)
+					{
+						throw new RuntimeException(bp.wf.Glo.multilingual("@不支持流程模式: 分流节点同时启动了多个同表单的子线程.", "WorkNode", "workflow_error_5"));
+					}
+					this.getHisGenerWorkFlow().SetPara("ThreadCount", 0);
+					this.getHisGenerWorkFlow().DirectUpdate();
+					//启动多个异表单子线程节点.
+					this.NodeSend_24_UnSameSheet(toND4s);
+
+					//为计算中心：执行更新.
+					String names = "";
+					for (Node mynd : toND4s.ToJavaList())
+					{
+						names += "," + mynd.getName();
+					}
+
+					this.getHisGenerWorkFlow().setNodeName(this.getHisGenerWorkFlow().getNodeName() + names);
+					this.getHisGenerWorkFlow().SetPara("ThreadCount", 0);
+					this.getHisGenerWorkFlow().DirectUpdate();
+
 				}
 				break;
-			case SubThread: // 5: 子线程节点向下发送的
+			case SubThreadSameWorkID:
+			case SubThreadUnSameWorkID: // 5: 子线程节点向下发送的
 				Node toND5 = this.NodeSend_GenerNextStepNode();
 				if (this.isStopFlow())
 				{
@@ -4696,7 +4753,7 @@ public class WorkNode
 						throw new RuntimeException(bp.wf.Glo.multilingual("@流程设计错误: 子线程节点({0})下面不能连接分流节点({1})", "WorkNode", "workflow_error_9", this.getHisNode().getName(), toND5.getName()));
 					case HL: //5.3 合流点
 					case FHL: //5.4 分合流点
-						if (this.getHisNode().getHisSubThreadType() == SubThreadType.SameSheet)
+						if (this.getHisNode().getHisRunModel() == RunModel.SubThreadSameWorkID)
 						{
 							this.NodeSend_53_SameSheet_To_HeLiu(toND5);
 						}
@@ -4712,7 +4769,8 @@ public class WorkNode
 						ps.Add("FK_Node", toND5.getNodeID());
 						DBAccess.RunSQL(ps);
 						break;
-					case SubThread: //5.5 子线程
+					case SubThreadSameWorkID:
+					case SubThreadUnSameWorkID: //5.5 子线程
 
 						//为计算中心增加,子线程停留节点.
 						GenerWorkFlow gwfZhuGan = new GenerWorkFlow(this.getHisGenerWorkFlow().getFID());
@@ -4727,7 +4785,7 @@ public class WorkNode
 						}
 
 
-						if (toND5.getHisSubThreadType() == this.getHisNode().getHisSubThreadType())
+						if (toND5.getHisRunModel() == this.getHisNode().getHisRunModel())
 						{
 
 								///#region 删除到达节点的子线程如果有，防止退回信息垃圾数据问题,如果退回处理了这个部分就不需要处理了.
@@ -4758,7 +4816,7 @@ public class WorkNode
 		///#region 执行数据copy.
 	public final void CopyData(Work toWK, Node toND, boolean isSamePTable) throws Exception {
 		//如果存储模式为, 合并模式.
-		if (this.getHisFlow().getHisDataStoreModel() == DataStoreModel.SpecTable && toND.getHisRunModel() != RunModel.SubThread)
+		if (this.getHisFlow().getHisDataStoreModel() == DataStoreModel.SpecTable && toND.getIsSubThread()== false )
 		{
 			return;
 		}
@@ -4783,7 +4841,7 @@ public class WorkNode
 			toWK.setRec(this.getExecer());
 
 			//要考虑FID的问题.
-			if (this.getHisNode().getHisRunModel() == RunModel.SubThread && toND.getHisRunModel() == RunModel.SubThread)
+			if (this.getHisNode().getIsSubThread()== true && toND.getIsSubThread()== true)
 			{
 				toWK.setFID(this.getHisWork().getFID());
 			}
@@ -5104,7 +5162,7 @@ public class WorkNode
 	*/
 	public final void CheckFrm1ToN() throws Exception {
 		//只有分流，合流才能执行1ToN.
-		if (this.getHisNode().getHisRunModel() == RunModel.Ordinary || this.getHisNode().getHisRunModel() == RunModel.HL || this.getHisNode().getHisRunModel() == RunModel.SubThread)
+		if (this.getHisNode().getHisRunModel() == RunModel.Ordinary || this.getHisNode().getHisRunModel() == RunModel.HL || this.getHisNode().getIsSubThread()== true)
 		{
 			return;
 		}
@@ -5218,7 +5276,7 @@ public class WorkNode
 	*/
 	public final void CheckFrmHuiZongToDtl() throws Exception {
 		//只有分流，合流才能执行1ToN.
-		if (this.getHisNode().getHisRunModel() != RunModel.SubThread)
+		if (this.getHisNode().getIsSubThread()== false)
 		{
 			return;
 		}
@@ -6564,7 +6622,7 @@ public class WorkNode
 			{
 				/*如果设置检查是否子流程结束.*/
 				GenerWorkFlows gwls = new GenerWorkFlows();
-				if (this.getHisNode().getHisRunModel() == RunModel.SubThread)
+				if (this.getHisNode().getIsSubThread()== true)
 				{
 					/*如果是子流程,仅仅检查自己子流程上发起的workid.*/
 					QueryObject qo = new QueryObject(gwls);
@@ -6653,7 +6711,7 @@ public class WorkNode
 
 					GenerWorkFlows gwls = new GenerWorkFlows();
 
-					if (this.getHisNode().getHisRunModel() == RunModel.SubThread)
+					if (this.getHisNode().getIsSubThread()== true)
 					{
 						/* 如果是子线程，就不需要管，主干节点的问题。*/
 						QueryObject qo = new QueryObject(gwls);
@@ -6904,7 +6962,7 @@ public class WorkNode
 					GenerWorkFlows gwfs = new GenerWorkFlows();
 					GenerWorkerLists gwls = new GenerWorkerLists();
 
-					if (this.getHisNode().getHisRunModel() == RunModel.SubThread)
+					if (this.getHisNode().getIsSubThread()== true)
 					{
 						/* 如果是子线程，就不需要管，主干节点的问题。*/
 						QueryObject qo = new QueryObject(gwfs);
@@ -7596,7 +7654,7 @@ public class WorkNode
 		if (this.rptGe == null || this.rptGe.getOID() == 0)
 		{
 			this.rptGe = this.getHisFlow().getHisGERpt();
-			if (this.getHisNode().getHisRunModel() == RunModel.SubThread)
+			if (this.getHisNode().getIsSubThread()== true)
 			{
 				this.rptGe.SetValByKey("OID", this.getHisGenerWorkFlow().getFID());
 			}
@@ -8452,7 +8510,7 @@ public class WorkNode
 				///#region 如果需要跳转.
 			if (town != null)
 			{
-				if (this.town.getHisNode().getHisRunModel() == RunModel.SubThread && this.town.getHisNode().getHisRunModel() == RunModel.SubThread)
+				if (this.town.getHisNode().getIsSubThread()== true && this.town.getHisNode().getIsSubThread()== true)
 				{
 					this.addMsg(SendReturnMsgFlag.VarToNodeID, String.valueOf(town.getHisNode().getNodeID()), String.valueOf(town.getHisNode().getNodeID()), SendReturnMsgType.SystemMsg);
 					this.addMsg(SendReturnMsgFlag.VarToNodeName, town.getHisNode().getName(), town.getHisNode().getName(), SendReturnMsgType.SystemMsg);
@@ -8539,7 +8597,7 @@ public class WorkNode
 						//让这个人登录.
 						Emp empEn = new Emp(emp);
 						bp.wf.Dev2Interface.Port_Login(emp);
-						if (this.getHisNode().getHisRunModel() == RunModel.SubThread && this.town.getHisNode().getHisRunModel() != RunModel.SubThread)
+						if (this.getHisNode().getIsSubThread()== true && this.town.getHisNode().getIsSubThread()==false)
 						{
 							/*如果当前的节点是子线程，并且发送到的节点非子线程。
 							 * 就是子线程发送到非子线程的情况。
@@ -8900,7 +8958,7 @@ public class WorkNode
 							//判断该节点是不是子线程
 							Node subNode = new Node(Integer.parseInt(flowNode[1]));
 							String sql = "";
-							if (subNode.getHisRunModel() == RunModel.SubThread)
+							if (subNode.getIsSubThread() == true)
 							{
 								sql = "SELECT COUNT(*) as Num FROM WF_GenerWorkerList WHERE FID=" + gwfSub.getWorkID() + " AND FK_Flow='" + flowNode[0] + "' AND FK_Node=" + Integer.parseInt(flowNode[1]) + " AND IsEnable=1 AND IsPass=1";
 							}
@@ -9041,7 +9099,7 @@ public class WorkNode
 
 
 			///#region 如果是分流点下同表单发送失败再次发送就出现错误.
-		if (this.town != null && this.town.getHisNode().getHisNodeWorkType() == NodeWorkType.SubThreadWork && this.town.getHisNode().getHisSubThreadType() == SubThreadType.SameSheet)
+		if (this.town != null && this.town.getHisNode().getHisNodeWorkType() == NodeWorkType.SubThreadWork && this.town.getHisNode().getHisRunModel() == RunModel.SubThreadSameWorkID)
 		{
 			/*如果是子线程*/
 			DBAccess.RunSQL("DELETE FROM WF_GenerWorkerList WHERE FID=" + this.getWorkID() + " AND FK_Node=" + this.town.getHisNode().getNodeID());
@@ -10718,7 +10776,7 @@ public class WorkNode
 		Nodes nds = this.getHisNode().getFromNodes();
 		for (Node nd : nds.ToJavaList())
 		{
-			if (nd.getHisRunModel() == RunModel.SubThread)
+			if (nd.getIsSubThread() == true)
 			{
 				Work wk = nd.getHisWork();
 				wk.setOID(workid);
@@ -10827,7 +10885,8 @@ public class WorkNode
 				case FHL:
 					sql = "SELECT NDFrom FROM " + truckTable + " WHERE WorkID=" + this.getWorkID() + " ORDER BY RDT DESC";
 					break;
-				case SubThread:
+				case SubThreadSameWorkID:
+				case SubThreadUnSameWorkID:
 					sql = "SELECT NDFrom FROM " + truckTable + " WHERE WorkID=" + this.getWorkID() + " AND NDTo=" + this.getHisNode().getNodeID() + " " + " AND ( ActionType=" + ActionType.SubThreadForward.getValue() + " OR  ActionType=" + ActionType.ForwardFL.getValue() + ")  ORDER BY RDT DESC";
 					if (DBAccess.RunSQLReturnCOUNT(sql) == 0)
 					{

@@ -154,8 +154,8 @@ public class MapData extends EntityNoName
 	 逻辑扩展
 	*/
 	public final MapExts getMapExts() throws Exception {
-		Entities ens =this.GetEntitiesAttrFromAutoNumCash(new MapExts(), MapExtAttr.FK_MapData, this.getNo());
-		return ens instanceof MapExts ? (MapExts)ens : null;
+//		Entities ens =this.GetEntitiesAttrFromAutoNumCash(new MapExts(), MapExtAttr.FK_MapData, this.getNo());
+//		return ens instanceof MapExts ? (MapExts)ens : null;
 
 			//MapExts obj = this.GetRefObject("MapExts") as MapExts;
 			//if (obj == null)
@@ -164,6 +164,14 @@ public class MapData extends EntityNoName
 			//    this.SetRefObject("MapExts", obj);
 			//}
 			//return obj;
+		Object tempVar = this.GetRefObject("MapExts");
+		MapExts obj = tempVar instanceof MapExts ? (MapExts)tempVar : null;
+		if (obj == null)
+		{
+			obj = new MapExts(this.getNo());
+			this.SetRefObject("MapExts", obj);
+		}
+		return obj;
 	}
 	/** 
 	 事件:

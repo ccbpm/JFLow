@@ -4,6 +4,7 @@ import bp.da.*;
 import bp.difference.handler.CommonUtils;
 import bp.difference.handler.WebContralBase;
 import bp.sys.*;
+import bp.tools.AesEncodeUtil;
 import bp.web.*;
 import bp.en.*;
 import bp.wf.Glo;
@@ -12,10 +13,18 @@ import bp.difference.*;
 import bp.wf.template.sflow.*;
 import bp.*;
 import bp.wf.*;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.math.*;
 
@@ -102,7 +111,8 @@ public class WF_MyFlow extends WebContralBase
 		return _FK_Node;
 	}
 	public final void setFK_Node(int value)throws Exception
-	{_FK_Node = value;
+	{
+		_FK_Node = value;
 	}
 
 	private String _width = "";
@@ -505,8 +515,14 @@ public class WF_MyFlow extends WebContralBase
 		else
 		{
 			isCanDo = todEmps.contains(";" + WebUser.getNo() + ",");
-			if (isCanDo == false)
+			if (isCanDo == false){
 				isCanDo = Dev2Interface.Flow_IsCanDoCurrentWork(this.getWorkID(), WebUser.getNo());
+				if (this.getCurrND().isStartNode()==false && isCanDo==true)
+				{
+					gwf.setTodoEmps(gwf.getTodoEmps() + WebUser.getNo() + "," + WebUser.getName() + ";");
+					gwf.Update();
+				}
+			}
 		}
 
 		if (isCanDo == false)
@@ -1134,7 +1150,14 @@ public class WF_MyFlow extends WebContralBase
 						dt.Rows.add(dr);
 					}
 				}
-
+				if (btnLab.GetValBooleanByKey(BtnAttr.DelayedSendEnable)==true)
+				{
+					dr = dt.NewRow();
+					dr.setValue("No","DelayedSend");
+					dr.setValue("Name",btnLab.GetValStringByKey(BtnAttr.DelayedSendLab));
+					dr.setValue("Oper","");
+					dt.Rows.add(dr);
+				}
 				/*处理保存按钮.*/
 				if (btnLab.getSaveEnable())
 				{
@@ -1176,7 +1199,14 @@ public class WF_MyFlow extends WebContralBase
 						dt.Rows.add(dr);
 					}
 				}
-
+				if (btnLab.GetValBooleanByKey(BtnAttr.DelayedSendEnable)==true)
+				{
+					dr = dt.NewRow();
+					dr.setValue("No","DelayedSend");
+					dr.setValue("Name",btnLab.GetValStringByKey(BtnAttr.DelayedSendLab));
+					dr.setValue("Oper","");
+					dt.Rows.add(dr);
+				}
 				/* 处理保存按钮.*/
 				if (btnLab.getSaveEnable())
 				{
@@ -1845,7 +1875,7 @@ public class WF_MyFlow extends WebContralBase
 				{
 					mysql = "SELECT  NDTo FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + this.getFK_Node() + " AND ActionType=1 ORDER BY WorkID  DESC limit 1,1";
 				}
-				else if (SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX)
+				else if (SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.HGDB)
 				{
 					mysql = "SELECT  NDTo FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + this.getFK_Node() + " AND ActionType=1 ORDER BY WorkID  DESC limit 1";
 				}
@@ -1951,6 +1981,8 @@ public class WF_MyFlow extends WebContralBase
 				{
 					dr.setValue("IsSelectEmps", "3");
 				}
+				else if(item.getHisDeliveryWay() == DeliveryWay.BySelectEmpByOfficer)
+					dr.setValue("IsSelectEmps","5");
 				else
 				{
 					dr.setValue("IsSelectEmps", "0"); //是不是，可以选择接受人.
@@ -2278,6 +2310,62 @@ public class WF_MyFlow extends WebContralBase
 			}
 			return msg;
 		}
+	}
+
+	/**
+	 * 延期发送
+	 * @return
+	 */
+	public String DelayedSend() throws Exception {
+		GenerWorkerList gwl = new GenerWorkerList();
+		int i = gwl.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, this.getFK_Node(), GenerWorkerListAttr.FK_Emp, WebUser.getNo());
+		//判断当前节点是不是开始节点
+		if (this.getCurrND().isStartNode() == true)
+		{
+			if(i==0){
+				//增加GenerList数据
+				gwl = new GenerWorkerList();
+				gwl.setWorkID(this.getWorkID());
+				gwl.setFK_Emp(WebUser.getNo());
+				gwl.setFK_EmpText(WebUser.getName());
+				gwl.setFK_Node(this.getFK_Node());
+				gwl.setFK_NodeText(this.getCurrND().getName());
+				gwl.setFID(0);
+				gwl.setFK_Flow(this.getCurrND().getFK_Flow());
+				gwl.setFK_Dept(WebUser.getFK_Dept());
+				gwl.setFK_DeptT(WebUser.getFK_DeptName());
+				gwl.setSDT("无");
+				gwl.setDTOfWarning(DataType.getCurrentDateTime());
+				gwl.setIsEnable(true);
+				gwl.setIsPass(false);
+				gwl.setWhoExeIt(1);
+				gwl.Insert();
+				i = 1;
+			}
+			//设置流程到待办中
+			GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
+			gwf.setWFState(WFState.Runing);
+			gwf.setTodoEmps( "; " + WebUser.getNo() + ","+WebUser.getName());
+			gwf.Update();
+
+		}
+
+		if (i == 0)
+			return "err@" + WebUser.getName() + "不具备处理当前业务的权限";
+		//修改当前处理人的状态
+		gwl.setWhoExeIt(1);//改成机器执行
+		gwl.SetPara("Day", this.GetRequestValInt("TB_Day"));
+		gwl.SetPara("Hour", this.GetRequestValInt("TB_Hour"));
+		gwl.SetPara("Minute", this.GetRequestValInt("DDL_Minute"));
+		gwl.SetPara("DelayedData", DataType.getCurrentDateTime());
+		gwl.SetPara("ToNodeID", this.GetRequestValInt("ToNodeID"));
+		String toEmps = this.GetRequestVal("ToEmps");
+		if(DataType.IsNullOrEmpty(toEmps)==true)
+			toEmps="";
+		gwl.SetPara("ToEmps", toEmps);
+		gwl.Update();
+		return "延期发送设置成功";
+
 	}
 	/** 
 	 批量发送
@@ -3832,7 +3920,7 @@ public class WF_MyFlow extends WebContralBase
 				continue;
 			}
 
-			if (ndNext.getHisRunModel() == RunModel.SubThread)
+			if (ndNext.getIsSubThread() == true)
 			{
 				/*如果到达的节点是子线程,就查询出来发起的子线程。*/
 				GenerWorkFlows gwfs = new GenerWorkFlows();
@@ -3896,5 +3984,323 @@ public class WF_MyFlow extends WebContralBase
 			msgHtml += returnObjs.ToMsgOfHtml() + "</br>";
 		}
 		return "启动的子流程信息如下:</br>" + msgHtml;
+	}
+
+	public  String CreateHtmlFile() throws Exception {
+		boolean isFool = GetRequestValBoolen("IsFool");
+		if(isFool){
+			Node nd = new Node(this.getFK_Node());
+			String path = SystemConfig.getPathOfInstancePacketOfData() + "ND" + nd.getNodeID() + "/" + this.getWorkID();
+			String billUrl = SystemConfig.getPathOfInstancePacketOfData() +"ND" + nd.getNodeID() + "/" +  this.getWorkID() + "/index.htm";
+			return MakeForm2Html.MakeHtmlDocument(nd.getNodeFrmID(),this.getWorkID(),nd.getFK_Flow(),path,billUrl,"ND"+nd.getNodeID());
+		}
+
+		String html= this.GetRequestVal("html");
+		html = URLDecoder.decode(html,"UTF-8");
+		String fileName = this.getWorkID()+"_"+WebUser.getNo()+"_"+ DataType.getDateByFormart(new Date(),"yyyyMMddHHmmss");
+		String path = SystemConfig.getPathOfTemp() + WebUser.getNo() + "/" + this.getWorkID()+"/";
+		File file = new File(path);
+		if (file.exists() == true)
+			file.delete();
+		file.mkdirs();
+
+		//处理从表和复选框，单选按钮
+		Document doc = Jsoup.parse(html);
+
+		Node nd = new Node(this.getFK_Node());
+		MapDtls dtls = new MapDtls(nd.getNodeFrmID());
+		Element el = null;
+		for (MapDtl dtl : dtls.ToJavaList())
+		{
+			if (dtl.GetValBooleanByKey("IsView") == false)
+			{
+				continue;
+			}
+			String _html = GetDtlHtmlByID(dtl, this.getWorkID(), dtl.getFrmW());
+			Element ele =doc.getElementById("Dtl_" + dtl.getNo());
+			if (ele == null)
+			{
+				continue;
+			}
+			ele.after(_html);
+			ele.remove();
+
+		}
+
+		String inputPath = path + fileName + ".html";
+		DataType.WriteFile(inputPath,doc.html());
+		return "/DataUser/Temp/"+WebUser.getNo()+"/"+this.getWorkID()+"/" + fileName + ".html";
+	}
+	private static String GetDtlHtmlByID(MapDtl dtl, long workid, float width)throws Exception
+	{
+		StringBuilder sb = new StringBuilder();
+		MapAttrs attrsOfDtls = new MapAttrs(dtl.getNo());
+		int columNum = 0;
+		for (MapAttr item : attrsOfDtls.ToJavaList())
+		{
+			if (item.getKeyOfEn().equals("OID"))
+			{
+				continue;
+			}
+			if (item.getUIVisible() == false)
+			{
+				continue;
+			}
+			columNum++;
+		}
+		if (columNum == 0)
+		{
+			return "";
+		}
+		int columWidth = (int)100 / columNum;
+
+		sb.append("<table style='width:100%' >");
+		sb.append("<tr>");
+
+		for (MapAttr item : attrsOfDtls.ToJavaList())
+		{
+			if (item.getKeyOfEn().equals("OID"))
+			{
+				continue;
+			}
+			if (item.getUIVisible() == false)
+			{
+				continue;
+			}
+			sb.append("<th class='DtlTh' style='width:" + columWidth + "%'>" + item.getName() + "</th>");
+		}
+		sb.append("</tr>");
+		///#endregion 输出标题.
+
+
+		///#region 输出数据.
+		GEDtls gedtls = new GEDtls(dtl.getNo());
+		gedtls.Retrieve(GEDtlAttr.RefPK, workid, "OID");
+		for (GEDtl gedtl : gedtls.ToJavaList())
+		{
+			sb.append("<tr>");
+
+			for (MapAttr attr : attrsOfDtls.ToJavaList())
+			{
+				//处理隐藏字段，如果是不可见并且是启用的就隐藏.
+				if (attr.getKeyOfEn().equals("OID") || attr.getUIVisible() == false)
+					continue;
+
+				String text = "";
+
+				switch (attr.getLGType())
+				{
+					case Normal: // 输出普通类型字段.
+						if (attr.getMyDataType() == 1 && attr.getUIContralType() ==UIContralType.DDL)
+						{
+
+							if (attrsOfDtls.contains(attr.getKeyOfEn() + "Text") == true)
+							{
+								text = gedtl.GetValRefTextByKey(attr.getKeyOfEn());
+							}
+							if (DataType.IsNullOrEmpty(text))
+							{
+								if (attrsOfDtls.contains(attr.getKeyOfEn() + "T") == true)
+								{
+									text = gedtl.GetValStrByKey(attr.getKeyOfEn() + "T");
+								}
+							}
+						}
+						else
+						{
+							//判断是不是图片签名
+							if (attr.getIsSigan() == true)
+							{
+								String SigantureNO = gedtl.GetValStrByKey(attr.getKeyOfEn());
+								String src = SystemConfig.getHostURL() + "/DataUser/Siganture/";
+								text = "<img src='" + src + SigantureNO + ".jpg' title='" + SigantureNO + "' onerror='this.src=\"" + src + "Siganture.jpg\"' style='height:50px;'  alt='图片丢失' /> ";
+							}
+							else
+							{
+								text = gedtl.GetValStrByKey(attr.getKeyOfEn());
+							}
+							if (attr.getTextModel() == 3)
+							{
+								text = text.replace("white-space: nowrap;", "");
+							}
+						}
+
+						break;
+					case Enum:
+						if (attr.getUIContralType() == UIContralType.CheckBok)
+						{
+							String s = gedtl.GetValStrByKey(attr.getKeyOfEn()) + ",";
+							SysEnums enums = new SysEnums(attr.getUIBindKey());
+							for (SysEnum se : enums.ToJavaList())
+							{
+								if (s.indexOf(se.getIntKey() + ",") != -1)
+								{
+									text += se.getLab() + " ";
+								}
+							}
+
+						}
+						else
+						{
+							text = gedtl.GetValRefTextByKey(attr.getKeyOfEn());
+						}
+						break;
+					case FK:
+						text = gedtl.GetValRefTextByKey(attr.getKeyOfEn());
+						break;
+					default:
+						break;
+				}
+
+				if (attr.getIsBigDoc())
+				{
+					//这几种字体生成 pdf都乱码
+					text = text.replace("仿宋,", "宋体,");
+					text = text.replace("仿宋;", "宋体;");
+					text = text.replace("仿宋\"", "宋体\"");
+					text = text.replace("黑体,", "宋体,");
+					text = text.replace("黑体;", "宋体;");
+					text = text.replace("黑体\"", "宋体\"");
+					text = text.replace("楷体,", "宋体,");
+					text = text.replace("楷体;", "宋体;");
+					text = text.replace("楷体\"", "宋体\"");
+					text = text.replace("隶书,", "宋体,");
+					text = text.replace("隶书;", "宋体;");
+					text = text.replace("隶书\"", "宋体\"");
+				}
+
+				if (attr.getMyDataType() == DataType.AppBoolean)
+				{
+					if (DataType.IsNullOrEmpty(text) || text.equals("0"))
+					{
+						text = "否";
+					}
+					else
+					{
+						text = "是";
+					}
+				}
+				if (attr.getIsNum())
+				{
+					sb.append("<td class='DtlTd' style='text-align:right;' >" + text + "</td>");
+				}
+				else
+				{
+					sb.append("<td class='DtlTd' >" + text + "</td>");
+				}
+			}
+
+			sb.append("</tr>");
+		}
+		///#endregion 输出数据.
+
+
+		sb.append("</table>");
+
+
+		sb.append("</span>");
+		return sb.toString();
+	}
+
+	private static String GetAthHtmlByID(FrmAttachment ath, long workid, String path) throws Exception {
+		StringBuilder sb = new StringBuilder();
+
+		if (ath.getUploadType() == AttachmentUploadType.Multi)
+		{
+
+
+			//判断是否有这个目录.
+			if (new File(path + "/pdf/").exists() == false)
+			{
+				new File(path + "/pdf/").mkdir();
+			}
+
+			//文件加密
+			boolean fileEncrypt = SystemConfig.getIsEnableAthEncrypt();
+			FrmAttachmentDBs athDBs = bp.wf.Glo.GenerFrmAttachmentDBs(ath, (new Long(workid)).toString(), ath.getMyPK(), workid);
+			sb.append("<table id = 'ShowTable' class='table' style='width:100%'>");
+			sb.append("<thead><tr style = 'border:0px;'>");
+			sb.append("<th style='width:50px; border: 1px solid #ddd;padding:8px;background-color:white' nowrap='true'>序</th>");
+			sb.append("<th style = 'min -width:200px; border: 1px solid #ddd;padding:8px;background-color:white' nowrap='true'>文件名</th>");
+			sb.append("<th style = 'width:50px; border: 1px solid #ddd;padding:8px;background-color:white' nowrap='true'>大小KB</th>");
+			sb.append("<th style = 'width:120px; border: 1px solid #ddd;padding:8px;background-color:white' nowrap='true'>上传时间</th>");
+			sb.append("<th style = 'width:80px; border: 1px solid #ddd;padding:8px;background-color:white' nowrap='true'>上传人</th>");
+			sb.append("</thead>");
+			sb.append("<tbody>");
+			int idx = 0;
+			for (FrmAttachmentDB item : athDBs.ToJavaList())
+			{
+				idx++;
+				sb.append("<tr>");
+				sb.append("<td class='Idx'>" + idx + "</td>");
+				//获取文件是否加密
+				boolean isEncrypt = item.GetParaBoolen("IsEncrypt");
+				if (ath.getAthSaveWay() == AthSaveWay.FTPServer)
+				{
+					try
+					{
+						String toFile = path + "/pdf/" + item.getFileName();
+						if (new File(toFile).exists()== false)
+						{
+							//获取文件是否加密
+							String file = item.GenerTempFile(ath.getAthSaveWay());
+							String fileTempDecryPath = file;
+							if (fileEncrypt == true && isEncrypt == true)
+							{
+								fileTempDecryPath = file + ".tmp";
+								AesEncodeUtil.decryptFile(file, fileTempDecryPath);
+
+							}
+							Files.copy(Paths.get(fileTempDecryPath), Paths.get(toFile), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
+
+						}
+
+						sb.append("<td  title='" + item.getFileName() + "'>" + item.getFileName() + "</td>");
+					}
+					catch (Exception ex)
+					{
+						sb.append("<td>" + item.getFileName() + "(<font color=red>文件未从ftp下载成功{" + ex.getMessage() + "}</font>)</td>");
+					}
+				}
+
+				if (ath.getAthSaveWay() == AthSaveWay.IISServer)
+				{
+					try
+					{
+						String toFile = path + "/pdf/" + item.getFileName();
+						if (new File(toFile).exists() == false)
+						{
+							//把文件copy到,
+							String fileTempDecryPath = item.getFileFullName();
+							if (fileEncrypt == true && isEncrypt == true)
+							{
+								fileTempDecryPath = item.getFileFullName() + ".tmp";
+								AesEncodeUtil.decryptFile(item.getFileFullName(), fileTempDecryPath);
+
+							}
+
+							//把文件copy到,
+							Files.copy(Paths.get(fileTempDecryPath), Paths.get(path + "/pdf/" + item.getFileName()), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
+
+						}
+						sb.append("<td>" + item.getFileName() + "</td>");
+					}
+					catch (Exception ex)
+					{
+						sb.append("<td>" + item.getFileName() + "(<font color=red>文件未从ftp下载成功{" + ex.getMessage() + "}</font>)</td>");
+					}
+				}
+				sb.append("<td>" + item.getFileSize() + "KB</td>");
+				sb.append("<td>" + item.getRDT() + "</td>");
+				sb.append("<td>" + item.getRecName() + "</td>");
+				sb.append("</tr>");
+
+
+			}
+			sb.append("</tbody>");
+
+			sb.append("</table>");
+		}
+		return sb.toString();
 	}
 }

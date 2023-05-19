@@ -51,7 +51,7 @@ public class WorkNodes extends ArrayList<WorkNode>
 		Nodes nds = flow.getHisNodes();
 		for (Node nd : nds.ToJavaList())
 		{
-			if (nd.getHisRunModel() == RunModel.SubThread)
+			if (nd.getIsSubThread() == true)
 			{
 				continue;
 			}

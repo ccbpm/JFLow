@@ -192,10 +192,7 @@ public abstract class WebContralBase {
 			// 如果有url返回.
 			if (msg != null && (msg.indexOf("url@") == 0 || msg.indexOf("info@") == 0 ||(msg.indexOf("err@")==0)))
 				return msg;
-//			String str = "";
-//			if (e.getCause() != null && e.getCause().getMessage().contains("wait")) {
-//				str += "@错误原因可能是数据库连接异常";
-//			}
+
 			String myParas = getRequest().getQueryString();
 			String errInfo = "err@页面类[" + myEn.toString() + ",方法[" + methodName + "]执行错误.";
 			errInfo += "\t\n@参数:" + myParas;
@@ -236,6 +233,7 @@ public abstract class WebContralBase {
 
 		if (DataType.IsNullOrEmpty(val)) {
 			val = getRequest().getParameter(param);
+
 		}
 
 		return val;
@@ -577,7 +575,16 @@ public abstract class WebContralBase {
 		}
 		return Integer.parseInt(str);
 	}
+	public String getWorkIDStr()
+	{
+		String val = this.GetRequestVal("WorkID");
+		if (DataType.IsNullOrEmpty(val) == true)
+			val = this.GetRequestVal("OID");
+		if (DataType.IsNullOrEmpty(val) == true)
+			val = this.GetRequestVal("PKVal");
+		return val;
 
+	}
 	public long getWorkID() {
 		if(_workID!=0)
 			return _workID;

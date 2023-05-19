@@ -504,6 +504,8 @@ public class GenerWorkFlowView extends Entity
 			//把不等于 0 的去掉.
 		map.AddHidden(GenerWorkFlowViewAttr.WFState, "!=", "0");
 
+
+
 		RefMethod rm = new RefMethod();
 
 		rm = new RefMethod();

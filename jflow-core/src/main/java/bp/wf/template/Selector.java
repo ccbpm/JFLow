@@ -1,6 +1,7 @@
 package bp.wf.template;
 
 import bp.da.*;
+import bp.difference.SystemConfig;
 import bp.en.Map;
 import bp.sys.*;
 import bp.en.*;
@@ -718,7 +719,7 @@ public class Selector extends Entity
 		ds.Tables.add(dt);
 
 		//人员.
-		if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.Oracle || bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || DBAccess.getAppCenterDBType() == DBType.UX || DBAccess.getAppCenterDBType() == DBType.KingBaseR3 ||DBAccess.getAppCenterDBType() == DBType.KingBaseR6	)
+		if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.Oracle || bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || DBAccess.getAppCenterDBType() == DBType.UX || DBAccess.getAppCenterDBType() == DBType.KingBaseR3 ||DBAccess.getAppCenterDBType() == DBType.KingBaseR6	|| SystemConfig.getAppCenterDBType() == DBType.HGDB)
 		{
 			if (sm == SelectorModel.TeamDeptOnly)
 			{
@@ -770,7 +771,7 @@ public class Selector extends Entity
 		ds.Tables.add(dt);
 
 		//人员.
-		if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.Oracle || bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || DBAccess.getAppCenterDBType() == DBType.UX || DBAccess.getAppCenterDBType() == DBType.KingBaseR3 || DBAccess.getAppCenterDBType() == DBType.KingBaseR6)
+		if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.Oracle || bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || DBAccess.getAppCenterDBType() == DBType.UX || DBAccess.getAppCenterDBType() == DBType.KingBaseR3 || DBAccess.getAppCenterDBType() == DBType.KingBaseR6 || SystemConfig.getAppCenterDBType() == DBType.HGDB)
 		{
 			if (DBAccess.IsExitsTableCol("Port_Emp", "Idx") == true)
 			{
@@ -962,7 +963,7 @@ public class Selector extends Entity
 			ds.Tables.add(dt);
 
 			//人员.
-			if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.Oracle || bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || DBAccess.getAppCenterDBType() == DBType.UX)
+			if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.Oracle || bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || DBAccess.getAppCenterDBType() == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.HGDB)
 			{
 				if (DBAccess.IsExitsTableCol("Port_Emp", "Idx") == true)
 				{
@@ -992,7 +993,7 @@ public class Selector extends Entity
 		ds.Tables.add(dt);
 
 		//人员.
-		if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.Oracle || bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || DBAccess.getAppCenterDBType() == DBType.UX)
+		if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.Oracle || bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || DBAccess.getAppCenterDBType() == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.HGDB)
 		{
 			if (DBAccess.IsExitsTableCol("Port_Emp", "Idx") == true)
 			{

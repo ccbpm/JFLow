@@ -164,6 +164,10 @@ public enum DeliveryWay
 	/// 智能计算
 	/// </summary>
 	ByPreviousNodeFormStationsOnly (54),
+	/// <summary>
+	/// 选择其他组织的联络员
+	/// </summary>
+	BySelectEmpByOfficer(55),
 	/** 
 	 按照ccflow的BPM模式处理
 	*/

@@ -907,6 +907,7 @@ public class GenerWorkFlow extends Entity
 				break;
 			case PostgreSQL:
 			case UX:
+			case HGDB:
 				DBAccess.RunSQL("DELETE FROM WF_GenerWorkerlist A USING WF_GenerWorkerlist B WHERE A.WorkID = B.WorkID And B.WorkID Not IN(select WorkID from WF_GenerWorkFlow)");
 				break;
 			default:

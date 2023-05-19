@@ -1,5 +1,6 @@
 package bp.wf.httphandler;
 
+import bp.ccfast.ccmenu.Module;
 import bp.da.*;
 import bp.difference.handler.WebContralBase;
 import bp.sys.*;
@@ -110,25 +111,25 @@ public class WF_GPM extends WebContralBase
 		}
 
 		//创建根目录。
-		FrmTree frmTree = new FrmTree();
+		SysFormTree frmTree = new SysFormTree();
 		if (rootNo.equals("0") == true)
 		{
-			int i = frmTree.Retrieve(FrmTreeAttr.ParentNo, rootNo);
+			int i = frmTree.Retrieve(SysFormTreeAttr.ParentNo, rootNo);
 		}
 		else
 		{
-			frmTree.Retrieve(FrmTreeAttr.No, rootNo);
+			frmTree.Retrieve(SysFormTreeAttr.No, rootNo);
 		}
 
 		//类别.
 		FlowSort fs = new FlowSort();
 		if (rootNo.equals("0") == true)
 		{
-			fs.Retrieve(FrmTreeAttr.ParentNo, rootNo);
+			fs.Retrieve(SysFormTreeAttr.ParentNo, rootNo);
 		}
 		else
 		{
-			fs.Retrieve(FrmTreeAttr.No, rootNo);
+			fs.Retrieve(SysFormTreeAttr.No, rootNo);
 		}
 
 		//系统名称
@@ -141,7 +142,7 @@ public class WF_GPM extends WebContralBase
 		system.setOrgNo(WebUser.getOrgNo());
 		system.Insert();
 
-		FrmTree frmTee = (FrmTree) frmTree.DoCreateSubNode();
+		SysFormTree frmTee = (SysFormTree) frmTree.DoCreateSubNode();
 		frmTee.setName ( name);
 		// en.ICON = system.Icon;
 		frmTee.setOrgNo(WebUser.getOrgNo());

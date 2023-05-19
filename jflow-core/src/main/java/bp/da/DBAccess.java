@@ -1026,6 +1026,10 @@ public class DBAccess {
 
 		return ContextHolderUtils.getInstance().getDataSource().getConnection();
 	}
+	public static Connection getGetAppCenterDBConn_PSQL() throws Exception {
+
+		return ContextHolderUtils.getInstance().getDataSource().getConnection();
+	}
 
 	// 取得连接对象 ，CS、BS共用属性
 
@@ -1335,6 +1339,10 @@ public class DBAccess {
 			case MySQL:
 				result = RunSQL_200705_MySQL(sql, paras);
 				break;
+			case PostgreSQL:
+			case HGDB:
+				result = RunSQL_201902_PSQL(sql, paras);
+				break;
 			case DM:
 				result = RunSQL_20191230_DM(sql.replace("]", "").replace("[", ""), paras);
 				break;
@@ -1516,6 +1524,47 @@ public class DBAccess {
 			}
 		}
 	}
+	private static int RunSQL_201902_PSQL(String sql, Paras paras){
+		ResultSet rs = null;
+		Connection conn = null;
+		Statement stmt = null;
+		NamedParameterStatement pstmt = null;
+		try {
+			conn = DBAccess.getGetAppCenterDBConn_PSQL();
+			int i = 0;
+			if (null != paras && paras.size() > 0) {
+				pstmt = new NamedParameterStatement(conn, sql);
+				PrepareCommand(pstmt, paras);
+				i = pstmt.executeUpdate();
+			} else {
+				stmt = conn.createStatement();// 创建用于执行静态sql语句的Statement对象，st属局部变量
+				i = stmt.executeUpdate(sql);
+			}
+			if (Log.isLoggerDebugEnabled()) {
+				Log.DefaultLogWriteLineDebug("SQL: " + sql);
+				Log.DefaultLogWriteLineDebug("Param: " + paras.getDebugInfo() + ", Result: Rows=" + i);
+			}
+			return i;
+		} catch (Exception ex) {
+			String msg = "@运行更新在(RunSQL_201902_PSQL)出错。\n  @SQL: " + sql + "\n  @Param: " + paras.getDebugInfo()
+					+ "\n  @异常信息: " + StringUtils.replace(ex.getMessage(), "\n", " ");
+			Log.DefaultLogWriteLineError(msg);
+			throw new RuntimeException(msg, ex);
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
 
 	/**
 	 * 适配达梦
@@ -1584,7 +1633,9 @@ public class DBAccess {
 				return RunSQLReturnResultSet_201809_MySQL(sql, paras, en, attrs);
 			case DM:
 				return RunSQLReturnResultSet_201809_DM(sql, paras, en, attrs);
-			
+			case PostgreSQL:
+			case HGDB:
+				 return RunSQLReturnTable_201902_PSQL(sql, paras, en, attrs);
 			default:
 				throw new RuntimeException("@发现未知的数据库连接类型！");
 			}
@@ -1611,6 +1662,7 @@ public class DBAccess {
 			case MySQL:
 				return RunSQLReturnResultSet_201809_MySQL(sql, paras, ens, attrs);
 			case DM:
+			case HGDB:
 				return RunSQLReturnResultSet_201809_DM(sql, paras, ens, attrs);
 			default:
 				throw new RuntimeException("@发现未知的数据库连接类型！");
@@ -1641,6 +1693,10 @@ public class DBAccess {
 				break;
 			case DM:
 				dt = RunSQLReturnTable_200705_DM(sql, paras);
+				break;
+			case PostgreSQL:
+			case HGDB:
+				dt = RunSQLReturnTable_201902_PSQL(sql, paras);
 				break;
 			default:
 				throw new RuntimeException("@发现未知的数据库连接类型！");
@@ -2117,6 +2173,69 @@ public class DBAccess {
 		}
 	}
 
+	private static int RunSQLReturnTable_201902_PSQL(String sql, Paras paras, Entity en, Attrs attrs) {
+		ResultSet rs = null;
+		Connection conn = null;
+		Statement stmt = null;
+		NamedParameterStatement pstmt = null;
+		if (sql.trim().endsWith("WHERE")) {
+			sql = sql.replace("WHERE", "");
+		}
+		try {
+			conn = DBAccess.getGetAppCenterDBConn_Oracle();
+			if (null != paras && paras.size() > 0) {
+				pstmt = new NamedParameterStatement(conn, sql);
+				PrepareCommand(pstmt, paras);
+				rs = pstmt.executeQuery();
+			} else {
+				stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+				rs = stmt.executeQuery(sql);
+			}
+			if (rs.next() == false)
+				return 0;
+
+			Hashtable ht = en.getRow();
+
+			for (int idx = 0; idx < attrs.size(); idx++) {
+				Attr attr = attrs.get(idx);
+
+				Object val = rs.getObject(idx + 1);
+
+				if (val == null) {
+					if (attr.getIsNum() == true)
+						val = 0;
+					else
+						val = "";
+				}
+
+				ht.put(attr.getKey(), val);
+
+			}
+			if (Log.isLoggerDebugEnabled()) {
+				Log.DefaultLogWriteLineDebug("SQL: " + sql);
+				Log.DefaultLogWriteLineDebug("Param: " + paras.getDebugInfo() + ", Result: Rows=" + rs.getRow());
+			}
+			return 1;
+		} catch (Exception ex) {
+			String msg = "@运行查询在(RunSQLReturnTable_200705_Ora)出错。\n  @SQL: " + sql + "\n  @Param: "
+					+ paras.getDebugInfo() + "\n  @异常信息: " + StringUtils.replace(ex.getMessage(), "\n", " ");
+			Log.DefaultLogWriteLineError(msg);
+			throw new RuntimeException(msg, ex);
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
 	private static int RunSQLReturnResultSet_201809_Ora(String sql, Paras paras, Entities ens, Attrs attrs) {
 		ResultSet rs = null;
 		Connection conn = null;
@@ -2489,8 +2608,104 @@ public class DBAccess {
 			}
 		}
 	}
-	
-	
+
+	private static DataTable RunSQLReturnTable_201902_PSQL(String sql, Paras paras) {
+		ResultSet rs = null;
+		Connection conn = null;
+		Statement stmt = null;
+		NamedParameterStatement pstmt = null;
+		if (sql.trim().endsWith("WHERE")) {
+			sql = sql.replace("WHERE", "");
+		}
+		try {
+			conn = DBAccess.getGetAppCenterDBConn_PSQL();
+
+			DataTable oratb = new DataTable("otb");
+			if (null != paras && paras.size() > 0) {
+				pstmt = new NamedParameterStatement(conn, sql);
+				PrepareCommand(pstmt, paras);
+				rs = pstmt.executeQuery();
+				ResultSetMetaData rsmd = rs.getMetaData();
+				int size = rsmd.getColumnCount();
+				for (int i = 0; i < size; i++) {
+					oratb.Columns.Add(rsmd.getColumnName(i + 1), Para.getDAType(rsmd.getColumnType(i + 1)));
+				}
+				while (rs.next()) {
+					DataRow dr = oratb.NewRow();// 產生一列DataRow
+					for (int i = 0; i < size; i++) {
+						Object val = rs.getObject(i + 1);
+						if(dr.columns.get(i).DataType.toString().contains("String")){
+							val = rs.getString(i + 1);
+						}
+						if (dr.columns.get(i).DataType.toString().contains("BigDecimal")) {
+							if (val == null) {
+								dr.setValue(i, 0);
+							} else {
+								dr.setValue(i, val);
+							}
+
+						} else {
+							dr.setValue(i, val);
+						}
+					}
+					oratb.Rows.add(dr);// DataTable加入此DataRow
+				}
+			} else {
+				stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+				rs = stmt.executeQuery(sql);
+				ResultSetMetaData rsmd = rs.getMetaData();
+				int size = rsmd.getColumnCount();
+				for (int i = 0; i < size; i++) {
+					oratb.Columns.Add(rsmd.getColumnName(i + 1), Para.getDAType(rsmd.getColumnType(i + 1)));
+				}
+				while (rs.next()) {
+					DataRow dr = oratb.NewRow();// 產生一列DataRow
+
+					for (int i = 0; i < size; i++) {
+
+						Object val = rs.getObject(i + 1);
+						if(dr.columns.get(i).DataType.toString().contains("String")){
+							val = rs.getString(i + 1);
+						}
+						if (dr.columns.get(i).DataType.toString().contains("BigDecimal")) {
+							if (val == null) {
+								dr.setValue(i, 0);
+							} else {
+								dr.setValue(i, val);
+							}
+
+						} else {
+							dr.setValue(i, val);
+						}
+					}
+					oratb.Rows.add(dr);// DataTable加入此DataRow
+				}
+			}
+			if (Log.isLoggerDebugEnabled()) {
+				Log.DefaultLogWriteLineDebug("SQL: " + sql);
+				Log.DefaultLogWriteLineDebug("Param: " + paras.getDebugInfo() + ", Result: Rows=" + oratb.Rows.size());
+			}
+			return oratb;
+		} catch (Exception ex) {
+			String msg = "@运行查询在(RunSQLReturnTable_201902_PSQL)出错。\n  @SQL: " + sql + "\n  @Param: "
+					+ paras.getDebugInfo() + "\n  @异常信息: " + StringUtils.replace(ex.getMessage(), "\n", " ");
+			Log.DefaultLogWriteLineError(msg);
+			throw new RuntimeException(msg, ex);
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
 	private static int RunSQLReturnResultSet_201809_MySQL(String sql, Paras paras, Entities ens, Attrs attrs) {
 		ResultSet rs = null;
 		Connection conn = null;
@@ -3012,6 +3227,10 @@ public class DBAccess {
 			case DM:
 				dt = DBAccess.RunSQLReturnTable_200705_DM(sql, paras);
 				break;
+			case PostgreSQL:
+			case HGDB:
+				dt = DBAccess.RunSQLReturnTable_201902_PSQL(sql, paras);
+				break;
 			default:
 				throw new RuntimeException("@没有判断的数据库类型");
 			}
@@ -3046,6 +3265,10 @@ public class DBAccess {
 			break;
 		case DM:
 			dt = DBAccess.RunSQLReturnTable_200705_DM(sql, new Paras());
+			break;
+		case PostgreSQL:
+		case HGDB:
+			dt = DBAccess.RunSQLReturnTable_201902_PSQL(sql, new Paras());
 			break;
 		default:
 			throw new RuntimeException("@没有判断的数据库类型");
@@ -3088,7 +3311,12 @@ public class DBAccess {
 	 * @throws Exception
 	 */
 	public static boolean IsExitsTabPK(String tab) {
-		Paras ps = new Paras();
+		if (DBAccess.GetTablePKName(tab) == null)
+			return false;
+		else
+			return true;
+
+		/*Paras ps = new Paras();
 		ps.Add("Tab", tab);
 		String sql = "";
 		switch (getAppCenterDBType()) {
@@ -3109,6 +3337,18 @@ public class DBAccess {
 		case KingBaseR6:
 			sql = "SELECT column_name, table_name, CONSTRAINT_NAME from INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE upper(table_name) =upper(:Tab) ";
 			break;
+		case PostgreSQL:
+		case HGDB:
+			sql = " SELECT ";
+			sql += " pg_constraint.conname AS pk_name ";
+			sql += " FROM ";
+			sql += " pg_constraint ";
+			sql += " INNER JOIN pg_class ON pg_constraint.conrelid = pg_class.oid ";
+			sql += " WHERE ";
+			sql += " pg_class.relname =:Tab ";
+			sql += " AND pg_constraint.contype = 'p' ";
+			ps.Add("Tab", tab.toLowerCase());
+			break;
 		default:
 			throw new RuntimeException("数据库连接配置失败！ ");
 		}
@@ -3117,7 +3357,7 @@ public class DBAccess {
 			return true;
 		} else {
 			return false;
-		}
+		}*/
 	}
 
 	/**
@@ -3160,6 +3400,7 @@ public class DBAccess {
 			case MSSQL:
 				return IsExits("SELECT name FROM sysobjects WHERE name = '" + obj + "'");
 			case PostgreSQL:
+			case HGDB:
 				return IsExits("SELECT relname FROM pg_class WHERE relname = '" + obj.toLowerCase() + "'");
 			case Informix:
 				return IsExits("select tabname from systables where tabname = '" + obj.toLowerCase() + "'");
@@ -3238,6 +3479,11 @@ public class DBAccess {
 			i = DBAccess.RunSQLReturnValInt(
 					"SELECT COUNT(*) from user_tab_columns  WHERE table_name= upper(:tab) AND column_name= upper(:col) ",
 					ps);
+			break;
+		case PostgreSQL:
+		case HGDB:
+			String sql1 = "select count(*) from information_schema.columns where   table_name ='" + table.toLowerCase() + "' and  column_name='" + col.toLowerCase() + "'";
+			i = DBAccess.RunSQLReturnValInt(sql1);
 			break;
 		default:
 			throw new RuntimeException("error");
@@ -3334,6 +3580,10 @@ public class DBAccess {
 		case KingBaseR6:
 			sql = "ALTER TABLE " + table + " DROP CONSTRAINT " + pkName;
 			break;
+		case PostgreSQL:
+		case HGDB:
+				sql = "ALTER TABLE " + table.toLowerCase() + " DROP CONSTRAINT " + pkName.toLowerCase();
+				break;
 		case MySQL:
 			sql = "ALTER TABLE " + table + " DROP primary key";
 			break;
@@ -3353,8 +3603,6 @@ public class DBAccess {
 	 * @return 主键名称、没有返回为空.
 	 */
 	public static String GetTablePKName(String table) {
-		Paras ps = new Paras();
-		ps.Add("Tab", table);
 		String sql = "";
 		switch (getAppCenterDBType()) {
 		case Access:
@@ -3378,12 +3626,21 @@ public class DBAccess {
 			sql = "SELECT * FROM sysconstraints c inner j = lower('"
 					+ table.toLowerCase() + "') and constrtype = 'P'";
 			break;
-
+		case PostgreSQL:
+		case HGDB:
+			sql = " SELECT ";
+			sql += " pg_constraint.conname AS pk_name ";
+			sql += " FROM ";
+			sql += " pg_constraint ";
+			sql += " INNER JOIN pg_class ON pg_constraint.conrelid = pg_class.oid ";
+			sql += " WHERE ";
+			sql += " pg_class.relname ='"+table.toLowerCase()+"'";
+			sql += " AND pg_constraint.contype = 'p' ";
+			break;
 		default:
 			Log.DebugWriteError("DBAccess GetTablePKName " + "@没有判断的数据库类型.");
 			throw new RuntimeException("@没有判断的数据库类型.");
 		}
-
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		if (dt.Rows.size() == 0) {
 			return null;
@@ -3602,6 +3859,8 @@ public class DBAccess {
 		try {
 			switch (SystemConfig.getAppCenterDBType()) {
 			case MSSQL:
+			case HGDB:
+			case PostgreSQL:
 				DBAccess.RunSQLReturnString("SELECT 1+2 ");
 				break;
 			case Oracle:
@@ -3653,6 +3912,9 @@ public class DBAccess {
 			return RunSQLReturnTable_201612_MySql(sql, pageSize, pageIdx, key, orderKey, orderType);
 		case DM:
 			return RunSQLReturnTable_201612_DM(sql, pageSize, pageIdx, orderKey, orderType);
+		case PostgreSQL:
+		case HGDB:
+			return RunSQLReturnTable_201612_PostgreSQL(sql, pageSize, pageIdx, key, orderKey, orderType);
 		default:
 			throw new RuntimeException("@未涉及的数据库类型！");
 		}
@@ -3764,6 +4026,40 @@ public class DBAccess {
 		String sqlstr = "SELECT * FROM ( SELECT T1.*, ROWNUM RN " + "FROM (SELECT * FROM  (" + sql + ") T2 "
 				+ (DataType.IsNullOrEmpty(orderType) ? "" : String.format("ORDER BY T2.%1$s %2$s", orderKey, orderType))
 				+ ") T1 WHERE ROWNUM <= " + end + " ) WHERE RN >=" + start;
+
+		return RunSQLReturnTable(sqlstr);
+	}
+
+
+	/**
+	 * 通用PostgreSQL/HGDB查询分页返回DataTable
+	 *
+	 * param sql
+	 *            SQL语句，不带排序（Order By）语句
+	 * param pageSize
+	 *            每页记录数量
+	 * param pageIdx
+	 *            请求页码
+	 * param orderKey
+	 *            排序字段（此字段必须包含在返回字段中）
+	 * param orderType
+	 *            排序方式，ASC/DESC
+	 * @return
+	 */
+	private static DataTable RunSQLReturnTable_201612_PostgreSQL(String sql, int pageSize, int pageIdx, String key, String orderKey,
+														 String orderType) {
+		if (pageIdx < 1) {
+			pageIdx = 1;
+		}
+
+
+		orderType = DataType.IsNullOrEmpty(orderType) ? "ASC" : orderType.toUpperCase();
+
+		String sqlstr = "SELECT * FROM (" + sql + ") T1 WHERE T1." + key + (orderType.equals("ASC") ? " >= " : " <= ")
+				+ "(SELECT T2." + key + " FROM (" + sql + ") T2"
+				+ (DataType.IsNullOrEmpty(orderKey) ? "" : String.format(" ORDER BY T2.%1$s %2$s", orderKey, orderType))
+				+ " LIMIT " + ((pageIdx - 1) * pageSize) + ",1) LIMIT " + pageSize;
+
 
 		return RunSQLReturnTable(sqlstr);
 	}
@@ -3902,6 +4198,18 @@ public class DBAccess {
 			} else {
 				return false;
 			}
+		case HGDB:
+			sql="SELECT relkind FROM pg_class WHERE relname='"+tabelOrViewName.toLowerCase()+"'";
+			DataTable dt4 = DBAccess.RunSQLReturnTable(sql);
+			if (dt4.Rows.size() == 0) {
+				throw new RuntimeException("@表不存在[" + tabelOrViewName + "]");
+			}
+
+			if (dt4.Rows.get(0).getValue(0).toString().toUpperCase().trim().equals("V")) {
+				return true;
+			} else {
+				return false;
+			}
 		default:
 			throw new RuntimeException("@没有做的判断。");
 		}
@@ -3954,6 +4262,7 @@ public class DBAccess {
 				case UX:
 				case KingBaseR3:
 				case KingBaseR6:
+				case HGDB:
 					throw new RuntimeException("err@RunProcReturnTable数据库类型还未处理！");
 
 				default:

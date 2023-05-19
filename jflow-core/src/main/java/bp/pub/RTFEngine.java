@@ -7,8 +7,7 @@ import bp.en.Entities;
 import bp.en.Entity;
 import bp.en.Map;
 import bp.port.Emps;
-import bp.sys.FrmAttachmentDB;
-import bp.sys.FrmAttachmentDBs;
+import bp.sys.*;
 import bp.tools.ConvertTools;
 import bp.tools.StringHelper;
 import bp.wf.ActionType;
@@ -632,7 +631,7 @@ public class RTFEngine {
 					mypict.append("\n");
 					return mypict.toString();
 				} else if (strs[1].trim().equals("Siganture")) {
-					String path = SystemConfig.getPathOfDataUser() + "\\Siganture\\" + val + ".jpg";
+					String path = SystemConfig.getPathOfDataUser() + "/Siganture/" + val + ".jpg";
 					// 定义rtf中图片字符串.
 					StringBuilder pict = new StringBuilder();
 					// 获取要插入的图片
@@ -692,7 +691,26 @@ public class RTFEngine {
 		// 如果不包含 . 就说明他是从Rpt中取数据。
 		if (this.HisGEEntity != null && key.toString().contains("ND") == false) {
 			if (strs.length == 1) {
-				return this.HisGEEntity.GetValStringByKey(key);
+				String fk_mapdata = this.HisGEEntity.toString();
+				MapAttrs mapAttrs = new MapAttrs(fk_mapdata);
+				//判断数字类型保留小数点
+				for(MapAttr attr : mapAttrs.ToJavaList()){
+					if(key.equals(attr.getKeyOfEn())) {
+						switch (attr.getMyDataType()) {
+							case DataType.AppDouble:
+							case DataType.AppFloat:
+							case DataType.AppMoney:
+								String defval = attr.getDefVal();
+								if(defval ==""||defval==null)
+									defval="0.00";
+								String[] res = defval.split("[.]", -1);
+								Integer leg = res[1].split("").length;
+								return this.HisGEEntity.GetValDecimalByKey(key, leg).toString();
+							default:
+								return this.HisGEEntity.GetValStringByKey(key);
+						}
+					}
+				}
 			}
 
 			if (strs[1].trim().equals("ImgAth")) {
@@ -787,7 +805,7 @@ public class RTFEngine {
 				} else if (strs[1].trim().equals("RMBDX")) {
 					return DataType.ParseFloatToCash(Float.parseFloat(val));
 				} else if (strs[1].trim().equals("Siganture")) {
-					String path = SystemConfig.getPathOfDataUser() + "\\Siganture\\" + val + ".jpg";
+					String path = SystemConfig.getPathOfDataUser() + "/Siganture/" + val + ".jpg";
 					// 定义rtf中图片字符串
 					StringBuilder pict = new StringBuilder();
 					// 获取要插入的图片
@@ -1039,7 +1057,7 @@ public class RTFEngine {
 						int rowIdx = i + 1;
 						rowData = rowData.replace("<IDX>", String.valueOf(rowIdx));
 						for (Attr attr : map.getAttrs()) {
-							if (!attr.getUIVisible()) {
+							if (!attr.getUIVisible() && attr.getUIIsReadonly()) {
 								continue;
 							}
 							switch (attr.getMyDataType()) {
@@ -1137,19 +1155,19 @@ public class RTFEngine {
 			// 审核组件组合信息
 
 			// 根据track表获取审核的节点
-			// 节点单个审核人
+			// 节点单个审核人——相关信息整合一起输出打印
 			if (dtTrack != null && str.toString().contains("<WorkCheckBegin>") == false
-					&& str.toString().contains("<WorkCheckEnd>") == false) {
+					&& str.toString().contains("<WorkCheckEnd>") == false && SystemConfig.getWorkCheckShow() == 0) {
 				if(this.wks !=null && this.wks.Rows.size() !=0) {
 					for (DataRow nd : wks.Rows) // 此处的22是ActionType.WorkCheck的值，此枚举位于BP.WF项目中，此处暂写死此值
 					{
 						int nodeID = nd.getValue(0) != null ? Integer.parseInt(nd.getValue(0).toString()) : 0;
 						//判断是否存在一个节点多个签批意见，需要循环显示，第一个意见替换，其余的节点追加在后面
-						boolean isHaveNote = str.equals("WorkCheck.Note." + nodeID);
-						boolean isHaveRec = str.equals("WorkCheck.Rec." + nodeID);
-						boolean isHaveRecName = str.equals("WorkCheck.RecName." + nodeID);
-						boolean isHaveRDT = str.equals("WorkCheck.RDT." + nodeID);
-						boolean isHaveWriteDB = str.equals("WorkCheck.WriteDB." + nodeID);
+						boolean isHaveNote = str.toString().contains("WorkCheck.Note." + nodeID);
+						boolean isHaveRec = str.toString().contains("WorkCheck.Rec." + nodeID);
+						boolean isHaveRecName = str.toString().contains("WorkCheck.RecName." + nodeID);
+						boolean isHaveRDT = str.toString().contains("WorkCheck.RDT." + nodeID);
+						boolean isHaveWriteDB = str.toString().contains("WorkCheck.WriteDB." + nodeID);
 						if (isHaveNote == false && isHaveRec == false && isHaveRecName == false && isHaveRDT == false && isHaveWriteDB == false)
 							continue;
 						//把track信息分组
@@ -1219,7 +1237,7 @@ public class RTFEngine {
 							}
 							idx++;
 						}
-						if (workCheckStr.contains(""))
+						if (workCheckStr.contains(" "))
 						{
 							String wkKey = "<WorkCheck.Note." + nodeID + ">";
 							str = new StringBuilder(str.toString().replace(wkKey, ""));
@@ -1272,7 +1290,7 @@ public class RTFEngine {
 
 							String wkKey = "<WorkCheck.Note." + nodeID + ">";
 							str = new StringBuilder(str.toString().replace(wkKey, ""));
-							wkKey = "<WorkCheck.Rec." + nodeID + ">";
+ 							wkKey = "<WorkCheck.Rec." + nodeID + ">";
 							str = new StringBuilder(str.toString().replace(wkKey, ""));
 							wkKey = "<WorkCheck.RecName." + nodeID + ">";
 							str = new StringBuilder(str.toString().replace(wkKey, ""));
@@ -1301,6 +1319,98 @@ public class RTFEngine {
 					}
 				}
 			}
+
+			//节点单个审核人——相关信息按配置标签输出
+			if (dtTrack != null && str.toString().contains("<WorkCheckBegin>") == false && str.toString().contains("<WorkCheckEnd>") == false)
+			{
+				for (DataRow row : dtTrack.Rows) //此处的22是ActionType.WorkCheck的值，此枚举位于BP.WF项目中，此处暂写死此值
+				{
+					int acType = Integer.parseInt(row.getValue("ActionType").toString());
+					if (acType != 22)
+						continue;
+					//节点从.
+					String empNo = row.getValue("EmpFrom") == null ? "" : row.getValue("EmpFrom").toString();
+					String nodeID = row.getValue("NDFrom").toString();
+					String wkKey = "<WorkCheck.Note." + nodeID + ">";
+					String wkVal = this.GetValueCheckWorkByKey(row, "Msg");
+					str = new StringBuilder(str.toString().replace(wkKey, wkVal));
+
+					wkKey = "<WorkCheck.Rec." + nodeID + ">";
+					wkVal = this.GetValueCheckWorkByKey(row, "EmpFrom");
+					str = new StringBuilder(str.toString().replace(wkKey, wkVal));
+
+					wkKey = "<WorkCheck.RecName." + nodeID + ">";
+					wkVal = this.GetValueCheckWorkByKey(row, "EmpFromT");
+					str = new StringBuilder(str.toString().replace(wkKey, wkVal));
+
+
+					wkKey = "<WorkCheck.RDT." + nodeID + ">";
+					wkVal = this.GetValueCheckWorkByKey(row, "RDT");
+					str = new StringBuilder(str.toString().replace(wkKey, wkVal));
+
+					wkKey = "<WorkCheck.RDT-NYR." + nodeID + ">";
+					wkVal = this.GetValueCheckWorkByKey(row, "RDT-NYR");
+					str = new StringBuilder(str.toString().replace(wkKey, wkVal));
+
+					//审核人的签名. 2020.11.28 by zhoupeng
+					wkKey = "<WorkCheck.Siganture." + nodeID + ">";
+					if (str.toString().contains(wkKey) == true)
+					{
+						wkVal = this.GetValueCheckWorkByKey(row, "EmpFrom");
+						String filePath =  bp.difference.SystemConfig.getPathOfDataUser() + "/Siganture/" + wkVal + ".jpg";
+						//定义rtf中图片字符串.
+						StringBuilder mypict = new StringBuilder();
+						//获取要插入的图片
+						BufferedImage image = null;
+						try {
+							image = ImageIO.read(new File(path));
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+
+						//将要插入的图片转换为16进制字符串
+						String imgHexString = ImageTo16String(path);
+						//生成rtf中图片字符串
+						mypict.append("\n");
+						mypict.append("{\\pict");
+						mypict.append("\\jpegblip");
+						mypict.append("\\picscalex100");
+						mypict.append("\\picscaley100");
+						mypict.append("\\picwgoal" + image.getWidth() * 15);
+						mypict.append("\\pichgoal" + image.getHeight() * 15);
+						mypict.append(imgHexString + "}");
+						mypict.append("\n");
+						str = new StringBuilder(str.toString().replace(wkKey,  mypict.toString()));
+					}
+
+					//审核人的手写签名. 2020.11.28 by zhoupeng
+					wkKey = "<WorkCheck.WriteDB." + nodeID + ">";
+					if (str.toString().contains(wkKey) == true)
+					{
+						wkVal = this.GetValueCheckWorkByKey(row, "WriteDB");
+						BufferedImage image = null;
+						//定义rtf中图片字符串.
+						StringBuilder mypict = new StringBuilder();
+						//将要插入的图片转换为16进制字符串
+						String imgHexString;
+						imgHexString = ImageTo16String(path);
+						mypict.append("\n");
+						mypict.append("{\\pict");
+						mypict.append("\\jpegblip");
+						mypict.append("\\picscalex100");
+						mypict.append("\\picscaley100");
+						mypict.append("\\picwgoal" + image.getWidth() * 3);
+						mypict.append("\\pichgoal" + image.getHeight() * 3);
+						mypict.append(imgHexString + "}");
+						mypict.append("\n");
+						str = new StringBuilder(str.toString().replace(wkKey,  mypict.toString()));
+					}
+
+
+				}
+			}
+
+
 
 			// 轨迹信息
 			str = GetFlowTrackTable(str);

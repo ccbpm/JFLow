@@ -126,9 +126,7 @@ public class WF_Admin_TestingContainer extends bp.difference.handler.WebContralB
 		{
 			String token = this.GetRequestVal("Token");
 			String userNo = Dev2Interface.Port_LoginByToken(token);
-			//Dev2Interface.Port_GenerToken(userNo);
-			WF_Comm comm = new WF_Comm();
-			return comm.WebUser_Init();
+			return userNo;
 		}
 		catch (RuntimeException ex)
 		{
@@ -137,8 +135,7 @@ public class WF_Admin_TestingContainer extends bp.difference.handler.WebContralB
 			{
 				Dev2Interface.Port_GenerToken(this.getUserNo());
 				Dev2Interface.Port_Login(this.getUserNo());
-				WF_Comm comm = new WF_Comm();
-				return comm.WebUser_Init();
+				return this.getUserNo();
 			}
 			return ex.getMessage();
 		}
@@ -217,133 +214,95 @@ public class WF_Admin_TestingContainer extends bp.difference.handler.WebContralB
 		bp.difference.SystemConfig.DoClearCash();
 
 		if (WebUser.getIsAdmin() == false)
-		{
 			return "err@您不是管理员，无法执行该操作.";
-		}
 
 		FlowExt fl = new FlowExt(this.getFK_Flow());
-
-
-			///#region 检查.
+		///#region 检查.
 		int nodeid = Integer.parseInt(this.getFK_Flow() + "01");
 		DataTable dt = null;
-		String sql = "";
 		Node nd = new Node(nodeid);
-		/* if (nd.IsGuestNode)
-		 {
-		     *//*如果是 guest 节点，就让其跳转到 guest登录界面，让其发起流程。*//*
-			 //这个地址需要配置.
-			 return "url@/SDKFlowDemo/GuestApp/Login.htm?FK_Flow=" + this.getFK_Flow();
-	}
-
-			///#endregion 测试人员.
-
-			///#region 从配置里获取-测试人员.
-//C# TO JAVA CONVERTER TODO TASK: The following line could not be converted:
-		 */ if (fl.getTester().length() > 2)
-		 {
+		String tester = fl.getTester();
+		if (tester!=null && tester.length() > 2)
+		{
 			// 构造人员表.
 			DataTable dtEmps = new DataTable();
 			dtEmps.Columns.Add("No");
 			dtEmps.Columns.Add("Name");
 			dtEmps.Columns.Add("FK_DeptText");
-			dtEmps.Columns.Add("DeptFullName");
-
-
-			String[] strs = fl.getTester().split("[,]", -1);
-			for (String str : strs)
-			{
-				if (DataType.IsNullOrEmpty(str) == true)
+			tester = tester.replace("，",",");
+			Emps emps = new Emps();
+			if(SystemConfig.getCCBPMRunModel()==CCBPMRunModel.SAAS)
+				emps.RetrieveIn(EmpAttr.UserID,"'"+tester.replace(",","','")+"'");
+			else
+				emps.RetrieveIn(EmpAttr.No,"'"+tester.replace(",","','")+"'");
+			if(emps.size()>0){
+				for (Emp emp : emps.ToJavaList())
 				{
-					continue;
+					if(SystemConfig.getCCBPMRunModel()==CCBPMRunModel.SAAS && emp.getOrgNo().equals(WebUser.getOrgNo())==false)
+						continue;
+					DataRow dr = dtEmps.NewRow();
+					dr.setValue("No", emp.getUserID());
+					dr.setValue("Name", emp.getName());
+					dr.setValue("FK_DeptText", emp.getFK_DeptText());
+					dtEmps.Rows.add(dr);
 				}
-
-				Emp emp = new Emp();
-				emp.SetValByKey("No", str);
-				int i = emp.RetrieveFromDBSources();
-				if (i == 0)
-				{
-					continue;
-				}
-
-				DataRow dr = dtEmps.NewRow();
-				dr.setValue("No", emp.getUserID());
-				dr.setValue("Name", emp.getName());
-				dr.setValue("FK_DeptText", emp.getFK_DeptText());
-
-				//dr["DeptFullName"] = ;
-
-				dtEmps.Rows.add(dr);
-			}
-
-			if (dtEmps.Rows.size() >= 1)
-			{
 				return bp.tools.Json.ToJson(dtEmps);
 			}
-		 }
-
-			///#endregion 测试人员.
-
-		//fl.DoCheck();
+		}
+		///#endregion 测试人员.
 		try
 		{
-
-				///#region 从设置里获取-测试人员.
+			String sql = "SELECT";
+			if(SystemConfig.getAppCenterDBType() == DBType.MSSQL)
+				sql = "SELECT Top 500 ";
+			///#region 从设置里获取-测试人员.
 			switch (nd.getHisDeliveryWay())
 			{
 				case ByStation:
 				case ByStationOnly:
 					if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
 					{
-						sql = "SELECT Port_Emp.No  FROM Port_Emp LEFT JOIN Port_Dept ON  Port_Emp.FK_Dept=Port_Dept.No  join Port_DeptEmpStation ON (fk_emp=Port_Emp.No) join WF_NodeStation on (WF_NodeStation.fk_station=Port_DeptEmpStation.fk_station) WHERE (1=1) AND  FK_Node=" + nd.getNodeID();
+						sql += " Port_Emp.No AS No,Port_Emp.Name AS Name,Port_Dept.Name AS FK_DeptText  FROM Port_Emp LEFT JOIN Port_Dept ON  Port_Emp.FK_Dept=Port_Dept.No  join Port_DeptEmpStation ON (fk_emp=Port_Emp.No) join WF_NodeStation on (WF_NodeStation.fk_station=Port_DeptEmpStation.fk_station) WHERE (1=1) AND  FK_Node=" + nd.getNodeID();
 					}
 					else
 					{
-						// 查询当前组织下所有的该岗位的人员. 
-						sql = "SELECT a." + bp.sys.base.Glo.getUserNo() + " as No FROM Port_Emp A, Port_DeptEmpStation B, WF_NodeStation C ";
+						// 查询当前组织下所有的该岗位的人员.
+						sql += " A." + bp.sys.base.Glo.getUserNo() + " as No,A.Name AS Name,D.Name AS FK_DeptText FROM Port_Emp A, Port_DeptEmpStation B, WF_NodeStation C,Port_Dept D ";
 						sql += " WHERE A.OrgNo='" + WebUser.getOrgNo() + "' AND C.FK_Node=" + nd.getNodeID();
-						sql += " AND A.No=B.FK_Emp AND B.FK_Station=C.FK_Station ";
+						sql += " AND A.No=B.FK_Emp AND B.FK_Station=C.FK_Station AND A.FK_Dept=D.No AND B.FK_Dept=D.No";
 					}
 					break;
 				case ByTeamOrgOnly: //按照组织智能计算。
 				case ByTeamDeptOnly: //按照组织智能计算。
-					sql = "SELECT A." + bp.sys.base.Glo.getUserNo() + ",A.Name FROM Port_Emp A, WF_NodeTeam B, Port_TeamEmp C ";
-					sql += " WHERE A." + bp.sys.base.Glo.getUserNo() + "=C.FK_Emp AND B.FK_Team=C.FK_Team AND B.FK_Node=" + nd.getNodeID() + " AND A.OrgNo='" + WebUser.getOrgNo() + "'";
+					sql += "  A." + bp.sys.base.Glo.getUserNo() + ",A.Name,D.Name AS FK_DeptText FROM Port_Emp A, WF_NodeTeam B, Port_TeamEmp C,Port_Dept D ";
+					sql += " WHERE A." + bp.sys.base.Glo.getUserNo() + "=C.FK_Emp AND B.FK_Team=C.FK_Team AND B.FK_Node=" + nd.getNodeID() + " AND A.OrgNo='" + WebUser.getOrgNo() + "' AND A.FK_Dept=D.No";
 					break;
 				case ByTeamOnly: //仅按用户组计算.
 
-					sql = "SELECT A." + bp.sys.base.Glo.getUserNo() + ",A.Name FROM Port_Emp A, WF_NodeTeam B, Port_TeamEmp C ";
-					sql += " WHERE A.No=C.FK_Emp AND B.FK_Team=C.FK_Team AND B.FK_Node=" + nd.getNodeID();
+					sql += "  A." + bp.sys.base.Glo.getUserNo() + ",A.Name,D.Name AS FK_DeptText FROM Port_Emp A, WF_NodeTeam B, Port_TeamEmp C ,Port_Dept D";
+					sql += " WHERE A.No=C.FK_Emp AND B.FK_Team=C.FK_Team AND B.FK_Node=" + nd.getNodeID()+" AND A.FK_Dept=D.No";
 					break;
 				case ByDept:
-					sql = "SELECT " + bp.sys.base.Glo.getUserNo() + ",Name FROM Port_Emp A, WF_NodeDept B WHERE A.FK_Dept=B.FK_Dept AND B.FK_Node=" + nodeid;
+					sql += "  A." + bp.sys.base.Glo.getUserNo() + ",A.Name,C.Name AS FK_DeptText FROM Port_Emp A, WF_NodeDept B,Port_Dept C WHERE A.FK_Dept=B.FK_Dept AND B.FK_Node=" + nodeid+" AND A.FK_Dept=C.No AND B.FK_Dept=C.No";
 					break;
 				case ByBindEmp:
 					if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
-					{
-						sql = "SELECT " + bp.sys.base.Glo.getUserNo() + ",Name FROM Port_Emp WHERE " + bp.sys.base.Glo.getUserNo() + " IN (SELECT FK_Emp from WF_NodeEmp where FK_Node='" + nodeid + "') AND OrgNo='" + WebUser.getOrgNo() + "'";
-					}
+						sql += "  A." + bp.sys.base.Glo.getUserNo() + ",A.Name,B.Name AS FK_DeptText FROM Port_Emp A,Port_Dept B WHERE A.FK_Dept=B.No AND A." + bp.sys.base.Glo.getUserNo() + " IN (SELECT FK_Emp from WF_NodeEmp where FK_Node='" + nodeid + "') AND OrgNo='" + WebUser.getOrgNo() + "'";
 					else
-					{
-						sql = "SELECT " + bp.sys.base.Glo.getUserNo() + ",Name FROM Port_Emp WHERE " + bp.sys.base.Glo.getUserNo() + " in (SELECT FK_Emp from WF_NodeEmp where FK_Node='" + nodeid + "') ";
-					}
-
+						sql += "  A." + bp.sys.base.Glo.getUserNo() + ",A.Name,B.Name AS FK_DeptText FROM Port_Emp A,Port_Dept B  WHERE A.FK_Dept=B.No AND A." + bp.sys.base.Glo.getUserNo() + " in (SELECT FK_Emp from WF_NodeEmp where FK_Node='" + nodeid + "') ";
 					break;
 				case ByDeptAndStation:
-
-					sql = "SELECT pdes.FK_Emp AS No" + " FROM   Port_DeptEmpStation pdes" + "        INNER JOIN WF_NodeDept wnd" + "             ON  wnd.FK_Dept = pdes.FK_Dept" + "             AND wnd.FK_Node = " + nodeid + "        INNER JOIN WF_NodeStation wns" + "             ON  wns.FK_Station = pdes.FK_Station" + "             AND wnd.FK_Node =" + nodeid + " ORDER BY" + "        pdes.FK_Emp";
-
+					sql += "  pdes.FK_Emp AS No,A.Name AS Name,B.Name AS FK_DeptText  FROM  Port_DeptEmpStation pdes, WF_NodeDept wnd,WF_NodeStation wns,Port_Emp A,Port_Dept B WHERE pdes.FK_Emp=A.No AND pdes.FK_Dept=B.No AND A.FK_Dept=B.NO AND  wnd.FK_Dept = pdes.FK_Dept  AND wnd.FK_Node = " + nodeid + " AND  wns.FK_Station = pdes.FK_Station  AND wnd.FK_Node =" + nodeid + " ORDER BY" + "  pdes.FK_Emp";
 					break;
 				case BySelected: //所有的人员多可以启动, 2016年11月开始约定此规则.
 
 					if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
 					{
-						sql = "SELECT A.No, A.Name, B.Name as FK_DeptText FROM  Port_Emp A, Port_Dept B WHERE A.FK_Dept=B.No";
-						//sql = "SELECT c.No, c.Name, B.Name as FK_DeptText FROM Port_DeptEmp A, Port_Dept B, Port_Emp C WHERE A.FK_Dept=B.No AND A.FK_Emp=C.No";
+						sql += "  A.No, A.Name, B.Name as FK_DeptText FROM  Port_Emp A, Port_Dept B WHERE A.FK_Dept=B.No";
 					}
 					else
 					{
-						sql = "SELECT c." + bp.sys.base.Glo.getUserNo() + ", c.Name, B.Name as FK_DeptText FROM Port_DeptEmp A, Port_Dept B, Port_Emp C WHERE A.FK_Dept=B.No  AND A.FK_Emp=C." + bp.sys.base.Glo.getUserNoWhitOutAS() + " ";
+						sql += "  c." + bp.sys.base.Glo.getUserNo() + ", c.Name, B.Name as FK_DeptText FROM Port_DeptEmp A, Port_Dept B, Port_Emp C WHERE A.FK_Dept=B.No  AND A.FK_Emp=C." + bp.sys.base.Glo.getUserNoWhitOutAS() + " ";
 						sql += " AND A.OrgNo='" + WebUser.getOrgNo() + "' ";
 						sql += " AND B.OrgNo='" + WebUser.getOrgNo() + "' ";
 						sql += " AND C.OrgNo='" + WebUser.getOrgNo() + "' ";
@@ -351,36 +310,28 @@ public class WF_Admin_TestingContainer extends bp.difference.handler.WebContralB
 
 					break;
 				case BySelectedOrgs: //按照设置的组织计算: 20202年3月开始约定此规则.
-
 					if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
-					{
-						throw new RuntimeException("err@非集团版本，不能设置启用此模式.");
-					}
+						return "err@非集团版本，不能设置启用此模式.";
 
-					sql = " SELECT A." + bp.sys.base.Glo.getUserNo() + ",A.Name,C.Name as FK_DeptText FROM Port_Emp A, WF_FlowOrg B, port_dept C ";
+					sql += "  A." + bp.sys.base.Glo.getUserNo() + ",A.Name,C.Name as FK_DeptText FROM Port_Emp A, WF_FlowOrg B, port_dept C ";
 					sql += " WHERE A.OrgNo = B.OrgNo AND B.FlowNo = '" + this.getFK_Flow() + "' AND A.FK_Dept = c.No ";
 
 					break;
 				case BySQL:
 					if (DataType.IsNullOrEmpty(nd.getDeliveryParas()))
-					{
 						return "err@您设置的按SQL访问开始节点，但是您没有设置sql.";
-					}
 					break;
 				default:
 					break;
 			}
-
+			if(SystemConfig.getAppCenterDBType() == DBType.MySQL || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB)
+				sql+=" Limit 500";
 			dt = DBAccess.RunSQLReturnTable(sql);
 			if (dt.Rows.size() == 0)
-			{
 				return "err@您按照:[" + nd.getHisDeliveryWay() + "]的方式设置的开始节点的访问规则，但是开始节点没有人员.";
-			}
 
 			if (dt.Rows.size() > 500)
-			{
 				return "err@可以发起开始节点的人员太多，会导致系统崩溃变慢，请<a href='javascript:SetTester()' >设置测试发起人</a>。";
-			}
 
 			// 构造人员表.
 			DataTable dtMyEmps = new DataTable();
@@ -390,70 +341,28 @@ public class WF_Admin_TestingContainer extends bp.difference.handler.WebContralB
 
 			//处理发起人数据.
 			String emps = "";
+			DataRow drNew =null;
 			for (DataRow dr : dt.Rows)
 			{
 				String myemp = dr.getValue(0).toString();
 				if (emps.contains("," + myemp + ",") == true)
-				{
 					continue;
-				}
 
 				emps += "," + myemp + ",";
-
-				//查询数据。
-				Emp emp = new Emp();
-
-				if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
-				{
-					emp.setNo(this.getOrgNo() + "_" + myemp);
-					emp.RetrieveFromDBSources();
-				}
-				else
-				{
-					emp.setNo(myemp);
-					emp.RetrieveFromDBSources();
-				}
-
-				//if (emp.RetrieveFromDBSources())
-
-				DataRow drNew = dtMyEmps.NewRow();
-
-				drNew.setValue("No", emp.getUserID());
-				drNew.setValue("Name", emp.getName());
-				drNew.setValue("FK_DeptText", emp.getFK_DeptText());
+				drNew = dtMyEmps.NewRow();
+				drNew.setValue("No",dr.getValue(0)==null?"":dr.getValue(0).toString());
+				drNew.setValue("Name", dr.getValue(1)==null?"":dr.getValue(1).toString());
+				drNew.setValue("FK_DeptText",dr.getValue(2)==null?"":dr.getValue(2).toString());
 
 				dtMyEmps.Rows.add(drNew);
 			}
-
-
-			if (bp.difference.SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
-			{
-				dtMyEmps.Columns.get("NO").ColumnName = "No";
-				dtMyEmps.Columns.get("NAME").ColumnName = "Name";
-				dtMyEmps.Columns.get("FK_DEPTTEXT").ColumnName = "FK_DeptText";
-			}
-
-			if (bp.difference.SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
-			{
-				dtMyEmps.Columns.get("no").ColumnName = "No";
-				dtMyEmps.Columns.get("name").ColumnName = "Name";
-				dtMyEmps.Columns.get("fk_depttext").ColumnName = "FK_DeptText";
-			}
-
-
-
 			//返回数据源.
 			return bp.tools.Json.ToJson(dtMyEmps);
-
-				///#endregion 从设置里获取-测试人员.
 
 		}
 		catch (RuntimeException ex)
 		{
 			return "err@您没有正确的设置开始节点的访问规则，这样导致没有可启动的人员，方法：TestFlow2020_Init。系统错误提示:" + ex.getMessage();
 		}
-}
-
-		///#endregion
-
+	}
 }

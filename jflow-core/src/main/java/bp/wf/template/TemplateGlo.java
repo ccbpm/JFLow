@@ -1888,15 +1888,15 @@ public class TemplateGlo
 			flow.Insert();
 
 			//如果是集团模式下.
-			if (Glo.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
-			{
+			/*if (Glo.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
+			{*/
 				// 记录创建人.
 				FlowExt fe = new FlowExt(flow.getNo());
 				fe.setDesignerNo(WebUser.getNo());
 				fe.setDesignerName(WebUser.getName());
 				fe.setDesignTime(DataType.getCurrentDateTime());
 				fe.DirectUpdate();
-			}
+			//}
 
 
 			Node nd = new Node();

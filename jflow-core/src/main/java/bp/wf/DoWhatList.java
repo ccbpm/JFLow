@@ -29,7 +29,10 @@ public class DoWhatList
 	public static final String DealWork = "DealWork";
 	public static final String Bill = "Bill";
 	public static final String Home = "Home";
-
+	public static final String MyStartFlows = "MyStartFlows";
+	public static final String GenerWorkFlowViews = "GenerWorkFlowViews";
+	public static final String CC = "CC";
+	public static final String MyJoinFlows = "MyJoinFlows";
 	/** 
 	 处理消息连接
 	*/
@@ -37,6 +40,10 @@ public class DoWhatList
 	public static final String Tools = "Tools";
 	public static final String ToolsSmall = "ToolsSmall";
 	public static final String Runing = "Runing";
+	public static final String Draft = "Draft";
+
+	public static final String Flows = "Flows";
+	public static final String Frms = "Frms";
 	/** 
 	 工作处理器
 	*/

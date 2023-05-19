@@ -268,6 +268,7 @@ public class MySystems extends EntitiesNoName
 	{
 
 	}
+	
 	/** 
 	 导入实体
 	 
@@ -307,6 +308,21 @@ public class MySystems extends EntitiesNoName
 		DataTable dt = ds.GetTableByName("GroupMethods");
 		for (DataRow dr : dt.Rows)
 		{
+			if(dr.getValue("Name").toString().equals("相关操作")){
+				GroupMethods gms = new GroupMethods();
+				int i= gms.Retrieve(GroupMethodAttr.No,dr.getValue("No").toString());
+				if (i == 0){
+					GroupMethod gm = new GroupMethod();
+					gm.getRow().LoadDataTable(dt, dr);
+					gm.setOrgNo(bp.web.WebUser.getOrgNo());
+					gm.setFrmID(realFrmID);
+					gm.setNo(dr.getValue("No").toString());
+					gm.DirectInsert();
+				}
+				continue;
+			}
+
+
 			GroupMethod gm = new GroupMethod();
 			gm.getRow().LoadDataTable(dt, dr);
 			gm.setOrgNo(bp.web.WebUser.getOrgNo());
@@ -343,7 +359,7 @@ public class MySystems extends EntitiesNoName
 		//导入实体集合.
 		file = path + "/" + frmID + "_Collections.xml";
 		ds.readXml(file);
-		dt = ds.GetTableByName("GroupMethods");
+		dt = ds.GetTableByName("Collections");
 		for (DataRow dr : dt.Rows)
 		{
 			Collection myen = new Collection();

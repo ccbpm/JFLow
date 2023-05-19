@@ -673,7 +673,7 @@ public class WorkFlowBuessRole
 			///#region 按绑定部门计算,该部门一人处理标识该工作结束(子线程)..
 		if (toNode.getHisDeliveryWay() == DeliveryWay.BySetDeptAsSubthread)
 		{
-			if (toNode.getHisRunModel() != RunModel.SubThread)
+			if (toNode.getIsSubThread()== false)
 			{
 				throw new RuntimeException("@您设置的节点接收人方式为：按绑定部门计算,该部门一人处理标识该工作结束(子线程)，但是当前节点非子线程节点。");
 			}
@@ -693,7 +693,7 @@ public class WorkFlowBuessRole
 			///#region 按照明细表,作为子线程的接收人.
 		if (toNode.getHisDeliveryWay() == DeliveryWay.ByDtlAsSubThreadEmps)
 		{
-			if (toNode.getHisRunModel() != RunModel.SubThread)
+			if (toNode.getIsSubThread()== false)
 			{
 				throw new RuntimeException("@您设置的节点接收人方式为：以分流点表单的明细表数据源确定子线程的接收人，但是当前节点非子线程节点。");
 			}
@@ -847,7 +847,7 @@ public class WorkFlowBuessRole
 				ps = new Paras();
 				ps.SQL = "SELECT FK_Emp FROM WF_GenerWorkerList WHERE WorkID=" + dbStr + "OID AND FK_Node=" + dbStr + "FK_Node AND IsPass=1 AND IsEnable=1 ";
 				ps.Add("FK_Node", Integer.parseInt(nd));
-				if (currNode.getHisRunModel() == RunModel.SubThread)
+				if (currNode.getIsSubThread()== true)
 				{
 					ps.Add("OID", workid);
 				}
@@ -913,7 +913,7 @@ public class WorkFlowBuessRole
 					ps = new Paras();
 					ps.SQL = "SELECT FK_Emp FROM WF_GenerWorkerList WHERE WorkID=" + dbStr + "OID AND FK_Node=" + dbStr + "FK_Node AND IsPass=1 AND IsEnable=1 ";
 					ps.Add("FK_Node", nd.getNodeID());
-					if (currNode.getHisRunModel() == RunModel.SubThread)
+					if (currNode.getIsSubThread()== true)
 					{
 						ps.Add("OID", gwf.getPFID());
 					}
@@ -945,7 +945,7 @@ public class WorkFlowBuessRole
 					ps.Add("ActionType5", ActionType.Skip.getValue());
 					ps.Add("NDFrom", nd.getNodeID());
 
-					if (currNode.getHisRunModel() == RunModel.SubThread)
+					if (currNode.getIsSubThread()== true)
 					{
 						ps.Add("OID", gwf.getPFID());
 					}

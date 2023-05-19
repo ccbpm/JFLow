@@ -330,6 +330,7 @@ public class App_OneFlow extends WebContralBase
             case MySQL:
             case UX:
             case PostgreSQL:
+            case HGDB:
                 ht.put("Dept_GWF_OverCounts", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM WF_GenerWorkerList WHERE  IsPass=0 AND FK_Flow='"+this.getFK_Flow()+"' AND FK_Dept='" +WebUser.getFK_Dept() + "' AND  STR_TO_DATE(SDT,'%Y-%m-%d %H:%i') <  NOW()"));
                 break;
             case Oracle:
@@ -379,6 +380,7 @@ public class App_OneFlow extends WebContralBase
             case MySQL:
             case UX:
             case PostgreSQL:
+            case HGDB:
                 ht.put("My_GWF_OverCounts", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM WF_GenerWorkerList WHERE  IsPass=0 AND FK_Emp='" + WebUser.getNo() + "' AND FK_Flow='" + this.getFK_Flow() + "' AND  STR_TO_DATE(SDT,'%Y-%m-%d %H:%i') <  NOW()"));
                 break;
             case Oracle:
@@ -461,6 +463,7 @@ public class App_OneFlow extends WebContralBase
             case MySQL:
             case PostgreSQL:
             case UX:
+            case HGDB:
                 dbSQL=" AND FK_NY>YEAR(CURDATE())+'-00' ";
                 break;
             case Oracle:

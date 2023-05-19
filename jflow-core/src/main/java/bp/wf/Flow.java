@@ -1828,7 +1828,7 @@ public class Flow extends bp.en.EntityNoName
 					///#endregion 如果是引用的表单库的表单，就要检查该表单是否有FID字段，没有就自动增加.
 
 				//如果是子线城，子线程的表单必须是轨迹模式。
-				if (nd.getHisRunModel() == RunModel.SubThread)
+				if (nd.getIsSubThread()== true)
 				{
 					md = new MapData("ND" + nd.getNodeID());
 					if (!md.getPTable().equals("ND" + nd.getNodeID()))
@@ -2953,7 +2953,7 @@ public class Flow extends bp.en.EntityNoName
 			attr.setUIVisible(true);
 			attr.setUIIsEnable(false);
 			attr.setMinLen(0);
-			attr.setMaxLen(32);
+			attr.setMaxLen(100);
 			attr.setIdx( -1);
 			attr.Insert();
 		}
@@ -2990,7 +2990,7 @@ public class Flow extends bp.en.EntityNoName
 			attr.setUIVisible(true);
 			attr.setUIIsEnable(false);
 			attr.setMinLen(0);
-			attr.setMaxLen(32);
+			attr.setMaxLen(100);
 			attr.setIdx( -1);
 			attr.Insert();
 		}
@@ -3126,7 +3126,7 @@ public class Flow extends bp.en.EntityNoName
 			attr.setUIIsEnable(false);
 			attr.setUIIsLine(true);
 			attr.setMinLen(0);
-			attr.setMaxLen(32);
+			attr.setMaxLen(100);
 			attr.setIdx(-100);
 			attr.Insert();
 		}
@@ -3285,7 +3285,7 @@ public class Flow extends bp.en.EntityNoName
 		GERpt gerpt = this.getHisGERpt();
 		gerpt.CheckPhysicsTable(); //让报表重新生成.
 
-		if (DBAccess.getAppCenterDBType() == DBType.PostgreSQL || DBAccess.getAppCenterDBType() == DBType.UX)
+		if (DBAccess.getAppCenterDBType() == DBType.PostgreSQL || DBAccess.getAppCenterDBType() == DBType.UX || DBAccess.getAppCenterDBType() == DBType.HGDB)
 		{
 			DBAccess.RunSQL("DELETE FROM Sys_GroupField WHERE FrmID='" + fk_mapData + "' AND  ''||OID NOT IN (SELECT GroupID FROM Sys_MapAttr WHERE FK_MapData = '" + fk_mapData + "')");
 		}

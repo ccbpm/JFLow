@@ -24,9 +24,14 @@ public enum RunModel
 	*/
 	FHL(3),
 	/** 
-	 子线程
+	 同表单子线程
 	*/
-	SubThread(4);
+	SubThreadSameWorkID(4),
+	/**
+	 * 异表单子线程
+	 */
+	SubThreadUnSameWorkID(5);
+
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 

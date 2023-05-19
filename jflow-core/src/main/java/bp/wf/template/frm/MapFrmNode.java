@@ -5,6 +5,8 @@ import bp.en.*;
 import bp.en.Map;
 import bp.sys.*;
 import bp.sys.CCFormAPI;
+import bp.wf.template.SysFormTree;
+import bp.wf.template.SysFormTrees;
 
 /** 
  自由表单属性
@@ -306,7 +308,7 @@ public class MapFrmNode extends EntityNoName
 			//  rm.GroupName = "高级设置";
 		rm.getHisAttrs().AddTBString("FrmID", null, "要复制新表单ID", true, false, 0, 100, 100);
 		rm.getHisAttrs().AddTBString("FrmName", null, "表单名称", true, false, 0, 100, 100);
-		rm.getHisAttrs().AddDDLEntities("FrmTree", null, "复制到表单目录", new FrmTrees(),true);
+		rm.getHisAttrs().AddDDLEntities("FrmTree", null, "复制到表单目录", new SysFormTrees(),true);
 
 		rm.ClassMethodName = this.toString() + ".DoCopyFrm";
 		rm.Icon = "../../WF/Img/Btn/Copy.GIF";

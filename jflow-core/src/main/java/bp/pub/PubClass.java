@@ -1,4 +1,5 @@
 package bp.pub;
+import bp.difference.handler.CommonUtils;
 import bp.en.*;
 import bp.da.*;
 import bp.difference.ContextHolderUtils;
@@ -527,6 +528,10 @@ public class PubClass
 				case MySQL:
 					AddCommentForTable_MySql(en);
 					break;
+				case PostgreSQL:
+				case HGDB:
+					AddCommentForTable_PSQL(en);
+					break;
 				default:
 					AddCommentForTable_MS(en);
 					break;
@@ -614,6 +619,58 @@ public class PubClass
 					row.getValue("is_nullable").equals("YES") ? " NULL" : " NOT NULL",
 					row.getValue("column_default").equals("NULL") ? " DEFAULT NULL" : (row.getValue("").equals("") ? ""
 							: " DEFAULT " + row.getValue((""))));
+
+			switch (attr.getMyFieldType()) {
+				case PK:
+					en.RunSQL(sql + String.format("'%1$s - 主键'", attr.getDesc()));
+					break;
+				case Normal:
+					en.RunSQL(sql + String.format("'%1$s'", attr.getDesc()));
+					break;
+				case Enum:
+					ses = new SysEnums(attr.getKey(), attr.UITag);
+					en.RunSQL(sql + String.format("'%1$s,枚举类型:%2$s'", attr.getDesc(), ses.ToDesc()));
+					break;
+				case PKEnum:
+					ses = new SysEnums(attr.getKey(), attr.UITag);
+					en.RunSQL(sql + String.format("'%1$s,主键:枚举类型:%2$s'", attr.getDesc(), ses.ToDesc()));
+					break;
+				case FK:
+					Entity myen = attr.getHisFKEn(); // ClassFactory.GetEns(attr.getUIBindKey()).getGetNewEntity();
+					en.RunSQL(sql + String.format("'%1$s,外键:对应物理表:%2$s,表描述:%3$s'", attr.getDesc(),
+							myen.getEnMap().getPhysicsTable(), myen.getEnDesc()));
+					break;
+				case PKFK:
+					Entity myen1 = attr.getHisFKEn(); // ClassFactory.GetEns(attr.getUIBindKey()).getGetNewEntity();
+					en.RunSQL(sql + String.format("'%1$s,主外键:对应物理表:%2$s,表描述:%3$s'", attr.getDesc(),
+							myen1.getEnMap().getPhysicsTable(), myen1.getEnDesc()));
+					break;
+				default:
+					break;
+			}
+		}
+	}
+
+	public static void AddCommentForTable_PSQL(Entity en) throws Exception {
+		String database = SystemConfig.getAppCenterDBDatabase();
+		if(DataType.IsNullOrEmpty(en.getEnMap().getPhysicsTable())) return;
+		//给表增加注释
+		en.RunSQL("comment on table " + en.getEnMap().getPhysicsTable().toLowerCase() + " is '" + en.getEnDesc()
+				+ "'");
+		// 获取当前实体对应表的所有字段结构信息
+		DataTable cols = DBAccess.RunSQLReturnTable(
+				"select column_name,column_default,is_nullable,character_set_name,data_type from information_schema.columns where  table_name='" + en.getEnMap().getPhysicsTable().toLowerCase() + "'");
+		SysEnums ses = new SysEnums();
+		String sql = "";
+		DataRow row = null;
+
+		for (Attr attr : en.getEnMap().getAttrs()) {
+			if (attr.getMyFieldType() == FieldType.RefText) {
+				continue;
+			}
+
+			row = cols.select(String.format("column_name='%1$s'", attr.getField())).get(0);
+			sql = String.format("comment on column %1$s.%2$s is ", en.getEnMap().getPhysicsTable().toLowerCase(), attr.getField());
 
 			switch (attr.getMyFieldType()) {
 				case PK:
@@ -804,49 +861,32 @@ public class PubClass
 
 	public static Hashtable GetMainTableHT() throws UnsupportedEncodingException
 	{
-		java.util.Hashtable htMain = new java.util.Hashtable();
-		HttpServletRequest request = ContextHolderUtils.getRequest();
-		Enumeration enu =request.getParameterNames();
-		while (enu.hasMoreElements()) {
-			String key = (String) enu.nextElement();
-			if (key == null) {
+		Hashtable htMain = new Hashtable();
+		for (String key : CommonUtils.getRequest().getParameterMap().keySet())
+		{
+			if (key == null)
+			{
 				continue;
 			}
 
-			if (key.toString().contains("TB_")) {
-				String val = request.getParameter(key);
-				if(DataType.IsNullOrEmpty(val)==false){
-					val = val.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
-					//val = val.replaceAll("\\+", "%2B");
-				}
-				if (htMain.containsKey(key.replace("TB_", "")) == false)
-					htMain.put(key.replace("TB_", ""), URLDecoder.decode(val, "UTF-8"));
-				else{
-					htMain.remove(key.replace("TB_", ""));
-					htMain.put(key.replace("TB_", ""), URLDecoder.decode(val, "UTF-8"));
-				}
-				continue;
-			}
+			String myKey = key;
+			String val = ContextHolderUtils.getRequest().getParameter(key);
+			myKey = myKey.replace("TB_", "");
+			myKey = myKey.replace("DDL_", "");
+			myKey = myKey.replace("CB_", "");
+			myKey = myKey.replace("RB_", "");
+			if(DataType.IsNullOrEmpty(val)==false)
+				val = URLDecoder.decode(val, "UTF-8");
 
-			if (key.toString().contains("DDL_")) {
-				if (htMain.containsKey(key.replace("DDL_", "")) == false)
-					htMain.put(key.replace("DDL_", ""), URLDecoder.decode(request.getParameter(key), "UTF-8"));
-				continue;
+			if (htMain.containsKey(myKey) == true)
+			{
+				htMain.put(myKey, val);
 			}
-
-			if (key.toString().contains("CB_")) {
-				if (htMain.containsKey(key.replace("CB_", "")) == false)
-					htMain.put(key.replace("CB_", ""), URLDecoder.decode(request.getParameter(key), "UTF-8"));
-				continue;
-			}
-
-			if (key.toString().contains("RB_")) {
-				if (htMain.containsKey(key.replace("RB_", "")) == false)
-					htMain.put(key.replace("RB_", ""), URLDecoder.decode(request.getParameter(key), "UTF-8"));
-				continue;
+			else
+			{
+				htMain.put(myKey, val);
 			}
 		}
-
 		return htMain;
 	}
 	public static bp.en.Entity CopyFromRequest(bp.en.Entity en) throws Exception

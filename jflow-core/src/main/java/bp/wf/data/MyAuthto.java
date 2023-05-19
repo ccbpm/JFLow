@@ -495,7 +495,7 @@ public class MyAuthto extends Entity
 		map.AddSearchAttr(MyAuthtoAttr.WFSta, 130);
 
 		map.DTSearchWay=DTSearchWay.ByDate;
-		map.DTSearchLable = "发起日期";
+		map.DTSearchLabel = "发起日期";
 		map.DTSearchKey=MyAuthtoAttr.RDT;
 
 

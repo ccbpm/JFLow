@@ -185,8 +185,8 @@ public class MapAttrString extends EntityMyPK
 		map.AddDDLSysEnum(MapAttrAttr.TextModel, 0, "文本类型", true, true, "TextModel",
 				"@0=普通文本@1=密码框@2=大文本@3=富文本");
 
-		map.AddBoolean(MapAttrAttr.IsSupperText, false, "是否大块文本？(是否该字段存放的超长字节字段)", true, true, true);
-		map.SetHelperAlert(MapAttrAttr.IsSupperText, "大块文本存储字节比较长，超过4000个字符.");
+		//map.AddBoolean(MapAttrAttr.IsSupperText, false, "是否大块文本？(是否该字段存放的超长字节字段)", true, true, true);
+		//map.SetHelperAlert(MapAttrAttr.IsSupperText, "大块文本存储字节比较长，超过4000个字符.");
 
 			///#endregion 基本字段信息.
 
@@ -205,7 +205,7 @@ public class MapAttrString extends EntityMyPK
 		map.AddTBInt(MapAttrAttr.RowSpan, 1, "行数", true, false);
 
 			//显示的分组.
-		map.AddDDLSQL(MapAttrAttr.GroupID, 0, "显示的分组", MapAttrString.getSQLOfGroupAttr(), true);
+		map.AddDDLSQL(MapAttrAttr.GroupID, "0", "显示的分组", MapAttrString.getSQLOfGroupAttr(), true);
 
 		map.AddTBInt(MapAttrAttr.Idx, 0, "顺序号", true, false);
 		map.SetHelperAlert(MapAttrAttr.Idx, "对傻瓜表单有效:用于调整字段在同一个分组中的顺序.");
@@ -285,6 +285,21 @@ public class MapAttrString extends EntityMyPK
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Icon = "icon-settings";
 		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
+		rm.Title = "字段名链接";
+		rm.ClassMethodName = this.toString() + ".DoFieldNameLink()";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.Icon = "icon-settings";
+		map.AddRefMethod(rm);
+
+		rm = new RefMethod();
+		rm.Title = "只读字段链接";
+		rm.ClassMethodName = this.toString() + ".DoReadOnlyLink()";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		rm.Icon = "icon-settings";
+		map.AddRefMethod(rm);
+
 
 		rm = new RefMethod();
 		rm.Title = "帮助弹窗显示";
@@ -440,7 +455,6 @@ public class MapAttrString extends EntityMyPK
 				sql = "SELECT '' AS No, '默认风格' as Name ";
 				break;
 			case Oracle:
-			case PostgreSQL:
 			case UX:
 			case KingBaseR3:
 			case KingBaseR6:
@@ -629,6 +643,15 @@ public class MapAttrString extends EntityMyPK
 	public final String DoFastEnter() throws Exception {
 		return "../../Admin/FoolFormDesigner/MapExt/FastInput.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
+	public String DoFieldNameLink()
+	{
+		return "../../Admin/FoolFormDesigner/MapExt/FieldNameLink.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
+	}
+	public String DoReadOnlyLink()
+	{
+		return "../../Admin/FoolFormDesigner/MapExt/ReadOnlyLink.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
+
+	}
 	public final String DoFieldBigHelper() throws Exception {
 		return "../../Admin/FoolFormDesigner/MapExt/FieldBigHelper.htm?FK_MapData=" + this.getFK_MapData() + "&KeyOfEn=" + this.getKeyOfEn();
 	}
@@ -816,17 +839,14 @@ public class MapAttrString extends EntityMyPK
 
 		//高度.
 		//  attr.UIHeightInt = this.GetValIntByKey("ExtRows") * 23;
-
 		//attr.setIsRichText(this.GetValBooleanByKey(MapAttrAttr.IsRichText)); //是否是富文本？
 		//attr.setSupperText(this.GetValIntByKey(MapAttrAttr.IsSupperText)); //是否是大块文本？
 
 		if (this.getTextModel() == 2 || this.getTextModel() == 3)
 		{
-			attr.setMaxLen(4000);
+
 			this.SetValByKey(MapAttrAttr.MaxLen, 4000);
 		}
-
-
 
 			///#region 自动扩展字段长度. 需要翻译.
 		if (attr.getMaxLen() < this.getMaxLen())
@@ -858,6 +878,7 @@ public class MapAttrString extends EntityMyPK
 							break;
 						case PostgreSQL:
 						case UX:
+						case HGDB:
 							sql = "ALTER table " + md.getPTable() + " alter " + attr.getField() + " type character varying(" + attr.getMaxLen() + ")";
 							break;
 						default:

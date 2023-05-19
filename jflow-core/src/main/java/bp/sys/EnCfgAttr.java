@@ -67,4 +67,7 @@ public class EnCfgAttr extends EntityNoAttr
 	 数据钻取
 	 */
 	public static final String Drill = "Drill";
+
+	public static final String MobileFieldShowModel ="MobileFieldShowModel";
+	public static final String MobileShowContent ="MobileShowContent";
 }

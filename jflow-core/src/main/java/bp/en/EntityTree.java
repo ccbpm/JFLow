@@ -180,7 +180,10 @@ public abstract class EntityTree extends Entity
 	{
 		bp.en.Entity tempVar = this.CreateInstance();
 		EntityTree en = tempVar instanceof EntityTree ? (EntityTree)tempVar : null;
-		en.setNo(String.valueOf(DBAccess.GenerOID(this.toString()))); // en.GenerNewNoByKey(EntityTreeAttr.No);
+		if (this.getClassID().contains("FlowSort") || this.getClassID().contains("SysFormTree"))
+			en.setNo(DBAccess.GenerGUID());
+		else
+			en.setNo(String.valueOf(DBAccess.GenerOID(this.toString()))); // en.GenerNewNoByKey(EntityTreeAttr.No);
 		en.setName("新建节点" + en.getNo());
 		en.setParentNo(this.getParentNo());
 	   // en.MenuType = this.MenuType;
@@ -199,7 +202,10 @@ public abstract class EntityTree extends Entity
 	{
 		bp.en.Entity tempVar = this.CreateInstance();
 		EntityTree en = tempVar instanceof EntityTree ? (EntityTree)tempVar : null;
-		en.setNo(String.valueOf(DBAccess.GenerOID(this.toString()))); // en.GenerNewNoByKey(EntityTreeAttr.No);
+		if (this.getClassID().contains("FlowSort") || this.getClassID().contains("SysFormTree"))
+			en.setNo(DBAccess.GenerGUID());
+		else
+			en.setNo(String.valueOf(DBAccess.GenerOID(this.toString()))); // en.GenerNewNoByKey(EntityTreeAttr.No);
 		
 		 if (name == null)
 			 en.setName("新建节点" + en.getNo());

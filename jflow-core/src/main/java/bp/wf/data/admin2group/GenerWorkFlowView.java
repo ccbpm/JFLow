@@ -459,7 +459,7 @@ public class GenerWorkFlowView extends Entity
 
 		map.DTSearchKey = GenerWorkFlowViewAttr.RDT;
 		map.DTSearchWay = DTSearchWay.ByDate;
-		map.DTSearchLable = "发起日期";
+		map.DTSearchLabel = "发起日期";
 
 
 			//把不等于 0 的去掉.

@@ -105,7 +105,7 @@ public class UserLog extends EntityMyPK
 		}
 		Map map = new Map("Sys_UserLogT", "用户日志");
 		map.AddMyPK();
-		map.AddTBString(UserLogAttr.EmpNo, null, "用户账号", true, true, 0, 30, 20);
+		map.AddTBString(UserLogAttr.EmpNo, null, "用户账号", true, true, 0, 50, 20);
 		map.AddTBString(UserLogAttr.EmpName, null, "用户名", true, true, 0, 30, 20);
 		map.AddTBString(UserLogAttr.RDT, null, "记录日期", true, true, 0, 20, 20);
 		map.AddTBString(UserLogAttr.IP, null, "IP", true, true, 0, 200, 20);

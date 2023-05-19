@@ -433,10 +433,10 @@ public class Monitor extends Entity
 		map.AddTBIntPK(MonitorAttr.WorkID, 0, "工作ID", true, true);
 		map.AddTBInt(MonitorAttr.FID, 0, "FID", false, false);
 		map.AddTBString(MonitorAttr.Title, null, "流程标题", true, false, 0, 300, 10,true);
-		map.AddTBString(MonitorAttr.FK_Emp, null, "当前处理人员", true, false, 0, 30, 10);
+		map.AddTBString(MonitorAttr.FK_Emp, null, "当前处理人员", true, false, 0, 100, 10);
 		map.AddDDLEntities(MonitorAttr.FK_Flow, null, "流程", new Flows(), false);
 		map.AddDDLEntities(MonitorAttr.FK_Dept, null, "发起部门", new Depts(), false);
-		map.AddTBString(MonitorAttr.Starter, null, "发起人编号", true, false, 0, 30, 10);
+		map.AddTBString(MonitorAttr.Starter, null, "发起人编号", true, false, 0, 100, 10);
 		map.AddTBString(MonitorAttr.StarterName, null, "名称", true, false, 0, 30, 10);
 		map.AddTBString(MonitorAttr.NodeName, null, "停留节点", true, false, 0, 100, 10);
 		map.AddTBString(MonitorAttr.TodoEmps, null, "处理人", true, false, 0, 100, 10);

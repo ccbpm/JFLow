@@ -103,7 +103,7 @@ public class MapAttrDataView extends EntityMyPK
 		map.AddTBFloat(MapAttrAttr.UIWidth, 100, "宽度", true, false);
 
 		  //  map.AddBoolean(MapAttrAttr.UIVisible, true, "可见", true, true);
-		map.AddDDLSQL(MapAttrAttr.GroupID, 0, "显示的分组", MapAttrString.getSQLOfGroupAttr(), true);
+		map.AddDDLSQL(MapAttrAttr.GroupID, "0", "显示的分组", MapAttrString.getSQLOfGroupAttr(), true);
 		map.AddTBInt(MapAttrAttr.Idx, 0, "顺序号", true, false);
 
 			///#endregion 基本信息.

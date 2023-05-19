@@ -62,6 +62,16 @@ public class RedisUtils
         }
     }
 
+    public void removeByKey(Boolean isShiroRedis,String key){
+        String oldKey = "*"+key + "*";
+        // keys()方法 类似于集合里面的contains
+        Set<String> keys =isShiroRedis?shiroRedisTemplate.keys(oldKey):redisTemplate.keys(oldKey);
+        // 批量删除 直接将keys集合传入即可
+        if(isShiroRedis)
+            shiroRedisTemplate.delete(keys);
+        else
+            redisTemplate.delete(keys);
+    }
     /**
      * 根据key获取过期时间
      *

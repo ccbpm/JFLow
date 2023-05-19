@@ -39,7 +39,13 @@ public class FlowSorts extends EntitiesNoName
 	public int RetrieveAll() throws Exception {
 		if (bp.wf.Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
 		{
-			return this.Retrieve(FlowSortAttr.OrgNo, bp.web.WebUser.getOrgNo(), FlowSortAttr.Idx);
+			QueryObject qo = new QueryObject(this);
+			qo.AddWhere(FlowSortAttr.OrgNo, "=", bp.web.WebUser.getOrgNo());
+			qo.addAnd();
+			qo.AddWhere(FlowSortAttr.ParentNo, "!=", "0");
+			qo.addOrderBy("Idx");
+			return qo.DoQuery();
+//			return this.Retrieve(FlowSortAttr.OrgNo, bp.web.WebUser.getOrgNo(), FlowSortAttr.Idx);
 		}
 
 		QueryObject qo = new QueryObject(this);
@@ -75,7 +81,53 @@ public class FlowSorts extends EntitiesNoName
 		return i;
 	}
 
-		///#endregion 构造.
+	@Override
+	public int RetrieveAllFromDBSource() throws Exception {
+		if (bp.wf.Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
+		{
+			QueryObject qo = new QueryObject(this);
+			qo.AddWhere(FlowSortAttr.OrgNo, "=", bp.web.WebUser.getOrgNo());
+			qo.addAnd();
+			qo.AddWhere(FlowSortAttr.ParentNo, "!=", "0");
+			qo.addOrderBy("Idx");
+			return qo.DoQuery();
+//			return this.Retrieve(FlowSortAttr.OrgNo, bp.web.WebUser.getOrgNo(), FlowSortAttr.Idx);
+		}
+
+		QueryObject qo = new QueryObject(this);
+		qo.AddWhere(FlowSortAttr.ParentNo, "!=", "0");
+		qo.addOrderBy("Idx");
+		int i = qo.DoQuery();
+
+		if (i == 0)
+		{
+			FlowSort fs = new FlowSort();
+			fs.setName("流程树");
+			fs.setNo("100");
+			fs.setParentNo("0");
+			fs.Insert();
+
+			fs = new FlowSort();
+			fs.setName("公文类");
+			fs.setNo("01");
+			fs.setParentNo("100");
+			fs.Insert();
+
+			fs = new FlowSort();
+			fs.setName("办公类");
+			fs.setNo("02");
+			fs.setParentNo("100");
+			fs.Insert();
+
+			qo = new QueryObject(this);
+			qo.AddWhere(FlowSortAttr.ParentNo, "!=", "");
+			qo.addOrderBy("Idx");
+			i = qo.DoQuery();
+		}
+		return i;
+	}
+
+	///#endregion 构造.
 
 
 

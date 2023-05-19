@@ -752,6 +752,10 @@ public class MapDtlExt extends EntityNoName
 		map.SetHelperAlert(MapDtlAttr.EditModel, "格式为:第1种类型就要新建行,其他类型新建的时候弹出卡片.");
 		map.AddTBString(MapDtlAttr.UrlDtl, null, "自定义Url", true, false, 0, 200, 20, true);
 
+		//列自动计算表达式.
+		map.AddTBString(MapDtlAttr.ColAutoExp, null, "列自动计算", true, false, 0, 200, 20, true);
+		map.SetHelperAlert(MapDtlAttr.ColAutoExp, "用于计算指定列字段求和/求平均例如：@ShuLiang=Sum@DanJia=Sum@XiaoJi=Sum");
+
 
 		map.AddTBInt(MapDtlAttr.NumOfDtl, 0, "最小从表集合", true, false);
 		map.SetHelperAlert(MapDtlAttr.NumOfDtl, "用于控制输入的行数据最小值，比如：从表不能为空，就是用这个模式。");
@@ -761,7 +765,7 @@ public class MapDtlExt extends EntityNoName
 		map.SetHelperAlert(MapDtlAttr.H, "对傻瓜表单有效");
 
 			//移动端数据显示方式
-		map.AddDDLSysEnum(MapDtlAttr.MobileShowModel, 0, "移动端数据显示方式", true, true, MapDtlAttr.MobileShowModel, "@0=新页面显示模式@1=列表模式");
+		map.AddDDLSysEnum(MapDtlAttr.MobileShowModel, 0, "移动端数据显示方式", true, true, MapDtlAttr.MobileShowModel, "@0=新页面显示模式@1=列表模式@2=主页面平铺模式");
 		map.AddTBString(MapDtlAttr.MobileShowField, null, "移动端列表显示字段", true, false, 0, 100, 20, false);
 
 			//map.AddTBFloat(MapDtlAttr.X, 5, "距左", false, false);
@@ -780,9 +784,6 @@ public class MapDtlExt extends EntityNoName
 		map.AddTBString(MapDtlAttr.OrderBySQLExp, null, "排序字段", true, false, 0, 200, 20, true);
 		map.SetHelperAlert(MapDtlAttr.OrderBySQLExp, "格式1: MyFile1,MyField2 ,格式2: MyFile1 DESC  就是SQL语句的 Ordery By 后面的字符串，默认按照 OID (输入的顺序)排序.");
 
-			//列自动计算表达式.
-			//map.AddTBString(MapDtlAttr.ColAutoExp, null, "列自动计算", true, false, 0, 200, 20, true);
-			//map.SetHelperAlert(MapDtlAttr.ColAutoExp, "格式为:@XiaoJi:Sum@NingLing:Avg 要对小计求合计,对年龄求平均数.不配置不显示.");
 
 			//要显示的列.
 		map.AddTBString(MapDtlAttr.ShowCols, null, "显示的列", true, false, 0, 500, 20, true);
@@ -1164,9 +1165,19 @@ public class MapDtlExt extends EntityNoName
 		attrs.Retrieve(MapAttrAttr.FK_MapData, refDtl, null);
 		for (MapAttr attr : attrs.ToJavaList())
 		{
+			String oldMyPK = attr.getMyPK();
 			attr.setMyPK(this.getNo() + "_" + attr.getKeyOfEn());
 			attr.setFK_MapData(this.getNo());
 			attr.Insert();
+			//存在字段附件
+			if(attr.getUIContralType() == UIContralType.AthShow)
+			{
+				bp.sys.FrmAttachment athDesc = new bp.sys.FrmAttachment(oldMyPK);
+				athDesc.setMyPK(attr.getMyPK());
+				athDesc.setFK_MapData(this.getNo());
+				athDesc.setFK_Node(this.getFK_Node());
+				athDesc.DirectInsert();
+			}
 		}
 
 		//处理mapExt 的问题.
@@ -1303,7 +1314,7 @@ public class MapDtlExt extends EntityNoName
 		}
 		else
 		{
-			this.setFEBD(febd.toString());
+			this.setFEBD(febd.getClass().getName());
 		}
 
 
@@ -1351,11 +1362,10 @@ public class MapDtlExt extends EntityNoName
 		gfs.Delete();
 
 		//如果启用了附件也需要删除
-		if (this.isEnableAthM() == true)
-		{
-			FrmAttachment ath = new FrmAttachment();
-			ath.Delete(FrmAttachmentAttr.MyPK, this.getNo() + "_AthMDtl");
-		}
+
+		FrmAttachment ath = new FrmAttachment();
+		ath.Delete(FrmAttachmentAttr.FK_MapData, this.getNo());
+
 
 
 		//执行清空缓存到的AutoNum.

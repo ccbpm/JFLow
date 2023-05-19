@@ -242,42 +242,20 @@ public class WF_MyView extends WebContralBase
 						dt.Rows.add(dr);
 					}
 
-					/***取回审批*/
-					//string para = "";
-					//sql = "SELECT NodeID FROM WF_Node WHERE CheckNodes LIKE '%" + gwf.FK_Node + "%'";
-					//int myNode = DBAccess.RunSQLReturnValInt(sql, 0);
-					//if (myNode != 0)
-					//{
-					//    GetTask gt = new GetTask(myNode);
-					//    if (gt.Can_I_Do_It())
-					//    {
-					//        dr = dt.NewRow();
-					//        dr["No"] = "TackBack";
-					//        dr["Name"] = "取回审批";
-					//        dr["Oper"] = "TackBack(" + gwf.FK_Node + "," + myNode + ")";
-					//        dt.Rows.add(dr);
-
-					//    }
-					//}
-
 
 					/*撤销发送*/
-					GenerWorkerLists workerlists = new GenerWorkerLists();
-					QueryObject info = new QueryObject(workerlists);
-					info.AddWhere(GenerWorkerListAttr.FK_Emp, WebUser.getNo());
-					info.addAnd();
-					info.AddWhere(GenerWorkerListAttr.IsPass, 1);
-					info.addAnd();
-					info.AddWhere(GenerWorkerListAttr.IsEnable, 1);
-					info.addAnd();
-					info.AddWhere(GenerWorkerListAttr.WorkID, this.getWorkID());
+					sql="SELECT WorkID,FK_Emp,FK_Node,WhoExeIt From WF_GenerWorkerList WHERE FK_Emp='"+WebUser.getNo()+"' AND ((IsPass=0 AND WhoExeIt=1) OR IsPass=1) AND IsEnable=1 AND WorkID="+this.getWorkID();
+					DataTable dtt = DBAccess.RunSQLReturnTable(sql);
 
-					if (info.DoQuery() > 0 || powers.contains("FlowDataUnSend") == true)
+					if (dtt.Rows.size() > 0 || powers.contains("FlowDataUnSend") == true)
 					{
 						dr = dt.NewRow();
 						dr.setValue("No", "UnSend");
 						dr.setValue("Name", "撤销");
-						dr.setValue("Oper", "UnSend()");
+						if(dtt.Rows.size() > 0 && dtt.Rows.get(0).getValue(3).toString().equals("1"))
+							dr.setValue("Oper", "UnSend(1)");
+						else
+							dr.setValue("Oper", "UnSend()");
 						dt.Rows.add(dr);
 					}
 
@@ -562,6 +540,26 @@ public class WF_MyView extends WebContralBase
 	 @return 
 	*/
 	public final String MyView_UnSend() throws Exception {
+		boolean isUnDelayedSend = this.GetRequestValBoolen("IsUnDelayedSend");
+		//是否撤销延期发送
+		if(isUnDelayedSend == true)
+		{
+			GenerWorkerList gwl = new GenerWorkerList();
+			int i = gwl.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, this.getFK_Node(), GenerWorkerListAttr.FK_Emp, WebUser.getNo());
+			if (i != 0)
+			{
+				gwl.setWhoExeIt(0);
+				gwl.SetPara("Day",0);
+				gwl.SetPara("hour", 0);
+				gwl.SetPara("Minute", 0);
+				gwl.SetPara("DelayedData", "");
+				gwl.SetPara("ToNodeID", 0);
+				gwl.SetPara("ToEmps", "");
+				gwl.Update();
+			}
+			return "撤销成功";
+		}
+
 		//获取用户当前所在的节点
 		String currNode = "";
 		switch (DBAccess.getAppCenterDBType())
@@ -574,6 +572,7 @@ public class WF_MyView extends WebContralBase
 			case MySQL:
 			case PostgreSQL:
 			case UX:
+			case HGDB:
 				currNode = "SELECT  FK_Node FROM WF_GenerWorkerlist WHERE FK_Emp='" + WebUser.getNo() + "' Order by RDT DESC LIMIT 1";
 				break;
 			case MSSQL:
@@ -778,19 +777,19 @@ public class WF_MyView extends WebContralBase
 		boolean isCanDoCurrWorker = false;
 
 		String toDoEmps = ";" + gwf.getTodoEmps();
-
+		boolean isReadonly = this.GetRequestValBoolen("IsReadonly");
 		//当前的流程还是运行中的，并且可以执行当前工作,如果是，就直接转到工作处理器.
 		if (gwf.getFID() != 0)
 		{
 			Node nd = new Node(gwf.getFK_Node());
-			if (nd.getHisRunModel() == RunModel.SubThread && toDoEmps.contains(";" + WebUser.getNo() + ","))
+			if (nd.getIsSubThread() == true && toDoEmps.contains(";" + WebUser.getNo() + ",") && isReadonly==false)
 			{
 				WF_MyFlow handler = new WF_MyFlow();
 				return handler.MyFlow_Init();
 			}
 		}
 
-		if (gwf.getFID() == 0 && gwf.getWFState() != WFState.Complete && toDoEmps.contains(";" + WebUser.getNo() + ","))
+		if (gwf.getFID() == 0 && gwf.getWFState() != WFState.Complete && toDoEmps.contains(";" + WebUser.getNo() + ",") && isReadonly==false)
 		{
 			WF_MyFlow handler = new WF_MyFlow();
 			return handler.MyFlow_Init();

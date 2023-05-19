@@ -70,6 +70,9 @@ input[type=checkbox]:disabled {
     width: 20px;
 }
 
+.mcheckbox {
+    display: none !important;
+}
 
 input[type="password"]::-webkit-input-placeholder {
     letter-spacing: 0;

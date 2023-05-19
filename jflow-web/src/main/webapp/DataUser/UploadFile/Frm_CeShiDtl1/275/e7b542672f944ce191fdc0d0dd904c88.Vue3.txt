@@ -1,0 +1,30 @@
+export default defineComponent({
+  
+  
+  data(){
+    return {
+      
+    }
+  },
+  setup() {
+    
+    
+    return {
+      
+    }
+  },
+    async mounted(){
+      
+    },
+  unmounted(){
+      
+  }
+})
+//提交
+// const emit = defineEmit(['kk', 'up']);
+// const handleClick = () => {
+//   emit('kk', '点了我');
+// };
+//获取上下文
+//const { slots, attrs } = useContext();
+</script>

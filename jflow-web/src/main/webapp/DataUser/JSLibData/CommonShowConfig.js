@@ -18,7 +18,7 @@ var CommonConfig = {
     FrmDevelop_IsShowStar: true, //开发者表单解析的时候，是否显示 star .
 
     //是否记录用户登陆，发送日志,admin的路程设计日志.
-    IsRecordUserLog: false,
+    IsRecordUserLog: true,
 
     //审核组件是否显示常用短语
     IsShowWorkCheckUsefulExpres: true,

@@ -11,43 +11,44 @@ var webUser = new WebUser();
 var sid = GetQueryString("Token");
 function Start() {
     if (webUser.CCBPMRunModel == 2)
-        vm.openTab('发起', basePath + '/App/Start.htm');
+        vm.openTab(vm.GetNameByLange('faqi'), basePath + '/App/Start.htm');
     else
-        vm.openTab('发起', basePath + '/WF/Start.htm');
+        vm.openTab(vm.GetNameByLange('faqi'), basePath + '/WF/Start.htm');
 }
 
 function Todolist() {
     if (webUser.CCBPMRunModel == 2)
-        vm.openTab('待办', basePath + '/App/Todolist.htm');
+        vm.openTab(vm.GetNameByLange('daiban'), basePath + '/App/Todolist.htm');
     else
-        vm.openTab('待办', basePath + '/WF/Todolist.htm');
+        vm.openTab(vm.GetNameByLange('daiban'), basePath + '/WF/Todolist.htm');
 }
 
 function Runing() {
     if (webUser.CCBPMRunModel == 2)
-        vm.openTab('在途', basePath + '/App/Runing.htm');
+        vm.openTab(vm.GetNameByLange('zaitu'), basePath + '/App/Runing.htm');
     else
-        vm.openTab('在途', basePath + '/WF/Runing.htm');
+        vm.openTab(vm.GetNameByLange('zaitu'), basePath + '/WF/Runing.htm');
 }
 
 function Batch() {
     if (webUser.CCBPMRunModel == 2)
-        vm.openTab('在途', basePath + '/App/Batch.htm');
+        vm.openTab(vm.GetNameByLange('pichuli'), basePath + '/App/Batch.htm');
     else
-        vm.openTab('在途', basePath + '/WF/Batch.htm');
+        vm.openTab(vm.GetNameByLange('pichuli'), basePath + '/WF/Batch.htm');
 }
 
 function Search() {
     if (webUser.CCBPMRunModel == 2)
-        vm.openTab('查询', basePath + '/App/Search.htm');
+        vm.openTab(vm.GetNameByLange('chaxun'), basePath + '/App/Search.htm');
     else
-        vm.openTab('查询', basePath + '/WF/Search.htm');
+        vm.openTab(vm.GetNameByLange('chaxun'), basePath + '/WF/Search.htm');
 }
 
 
 function OpenMessage() {
-    vm.openTab('消息', basePath + '/WF/Portal/Message.htm');
+    vm.openTab(vm.GetNameByLange('xiaoxi'), basePath + '/WF/Portal/Message.htm');
 }
+
 
 function Infos() {
     vm.openTab('通知', basePath + '/CCFast/Infos/Default.htm');
@@ -61,17 +62,17 @@ function BBS() {
 
 function Fasts() {
     var urlEnd = "?Token=" + GetQueryString("Token") + "&OrgNo=" + GetQueryString("OrgNo") + "&UserNo=" + GetQueryString("UserNo");
-    vm.openTab('业务协同', basePath + '/WF/GPM/Menus.htm' + urlEnd);
+    vm.openTab(vm.GetNameByLange('didaima'), basePath + '/WF/GPM/Menus.htm' + urlEnd);
 }
 
 function Flows() {
     var urlEnd = "?Token=" + GetQueryString("Token") + "&OrgNo=" + GetQueryString("OrgNo") + "&UserNo=" + GetQueryString("UserNo");
-    vm.openTab('流程', basePath + '/WF/Portal/Flows.htm' + urlEnd);
+    vm.openTab(vm.GetNameByLange('liucheng'), basePath + '/WF/Portal/Flows.htm' + urlEnd);
 }
 
 function Frms() {
     var urlEnd = "?Token=" + GetQueryString("Token") + "&OrgNo=" + GetQueryString("OrgNo") + "&UserNo=" + GetQueryString("UserNo");
-    vm.openTab('表单', basePath + '/WF/Portal/Frms.htm' + urlEnd);
+    vm.openTab(vm.GetNameByLange('biaodan'), basePath + '/WF/Portal/Frms.htm' + urlEnd);
 }
 
 function OpenOrg() {
@@ -79,16 +80,16 @@ function OpenOrg() {
     var urlEnd = "?Token=" + GetQueryString("Token") + "&OrgNo=" + GetQueryString("OrgNo") + "&UserNo=" + GetQueryString("UserNo");
 
     if (webUser.CCBPMRunModel == 2)
-        vm.openTab('组织', basePath + '/App/App/Organization.htm' + urlEnd);
+        vm.openTab(vm.GetNameByLange('zuzi'), basePath + '/App/App/Organization.htm' + urlEnd);
     else
-        vm.openTab('组织', basePath + '/GPM/Organization.htm' + urlEnd);
+        vm.openTab(vm.GetNameByLange('zuzi'), basePath + '/GPM/Organization.htm' + urlEnd);
 }
 
 function GoToOrgEn() {
 
     var urlEnd = "&Token=" + GetQueryString("Token") + "&OrgNo=" + GetQueryString("OrgNo") + "&UserNo=" + GetQueryString("UserNo");
     var url = basePath + '/WF/Comm/En.htm?EnName=BP.WF.Admin.Org&No=ccflow' + urlEnd;
-    window.location.href = url;
+    window.location.href = filterXSS(url);
     //WinOpenFull(url);
     return;
 
@@ -108,7 +109,7 @@ var menuNode;
 // 获取系统菜单
 MenuConvertTools.prototype.getSystemMenus = function () {
 
-    systemNodes =[];
+    systemNodes = [];
     systems = this.data['System'];
     moduleNode = this.data['Module'];
     menuNode = this.data['Menu'];

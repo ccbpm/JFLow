@@ -17,6 +17,8 @@ $(function () {
 
     for (var i = 0; i < ens.length; i++) {
         var en = ens[i];
+        if(en.isEnable==0)
+            continue;
         if(en.Mark=='Search')
             continue;
         if (pageId == en.MyPK)

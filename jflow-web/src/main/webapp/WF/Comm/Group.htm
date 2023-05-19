@@ -189,6 +189,7 @@
             DealGroupContent();
             //分析项目
             GroupAnalysis();
+            $("#layui-group").show();
             layui.form.render();
             //分析结果显示
             ShowData();
@@ -263,7 +264,7 @@
                 _html += '</div>';
                 _html += '</div>';
                 _html += '<div class="layui-inline" style="width:100px;margin-top:5px">';
-                _html += "<select style='width:80%' class='form-control' name='DDL_Aly_" + analyAtts[i].Field + "' ID='DDL_Aly_" + analyAtts[i].Field + "' onchange='javascript:ShowData(this,\"\")'>" + InitDDLAnalysisOperation(data, analyAtts[i], null) + "</select>";
+                _html += "<select style='width:80%' class='form-control' name='DDL_Aly_" + analyAtts[i].Field + "' ID='DDL_Aly_" + analyAtts[i].Field + "' onchange='javascript:ShowData(this,\"\")' lay-filter='switch'>" + InitDDLAnalysisOperation(data, analyAtts[i], null) + "</select>";
                 _html += '</div>';
                 _html += '</div>';
                 _html += '</div>';
@@ -310,7 +311,7 @@
             }
 
             else {
-                $("#Chart").show();
+                $("#Chart").hide();
                 $("#CB_IsShowPict").attr("disabled", false);
                 $($("#CB_IsShowPict").next()[0]).removeClass("layui-checkbox-disbaled").removeClass("layui-disabled");
                 $("#CB_IsShowPict").prop("checked", true);
@@ -816,125 +817,128 @@
     </script>
 </head>
 <body>
-    <div class="layui-body layui-tab-content site-demo site-demo-body" style="left:0px !important">
-        <form class="layui-form">
-            <div id="toolbar" class="layui-header layui-card" style="height:auto;padding:10px"></div>
-            <div class="layui-col-md3" style="height:550px">
-                <div class="layui-card">
-                    <div class="layui-card-header">分组条件</div>
-                    <div class="layui-card-body" style="height:135px;overflow-y:auto">
-                        <div id="CheckBoxList"></div>
-                    </div>
+<div class="layui-body layui-tab-content site-demo site-demo-body" style="left:0px !important">
+    <form class="layui-form">
+        <div id="toolbar" class="layui-header layui-card" style="height:auto;padding:10px"></div>
+        <div class="layui-col-md3" style="height:550px;display:none" id="layui-group">
+            <div class="layui-card">
+                <div class="layui-card-header">分组条件</div>
+                <div class="layui-card-body" style="height:135px;overflow-y:auto">
+                    <div id="CheckBoxList"></div>
                 </div>
-                <div class="layui-card">
-                    <div class="layui-card-header" style="border-top:1px solid #f6f6f6;">分析项目</div>
-                    <div class="layui-card-body" style="height:105px;overflow-y:auto"><div id="AnalyGroup"></div></div>
-                </div>
-                <div class="layui-card" style="height:150px" id="Chart">
-                    <div class="layui-card-header">图表</div>
-                    <div class="layui-card-body">
-                        <div class="layui-form-item" style="margin-top:0px;margin-bottom:0px;">
-                            <div class="layui-inline">
-                                <label class="layui-form-label" style="width:30px">高度</label>
-                                <div class="layui-input-inline" style="width:60px">
-                                    <input type="text" name="TB_H" id="TB_H" lay-verify="required|number" autocomplete="off" class="layui-input" />
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label" style="width:30px">宽度</label>
-                                <div class="layui-input-inline" style="width:60px">
-                                    <input type="text" name="TB_W" id="TB_W" lay-verify="required|number" autocomplete="off" class="layui-input" />
-                                </div>
-                            </div>
-                            <br />
-                            <div class="layui-input-inline" style="margin-left:20px">
-                                <input type="checkbox" checked="" name="CB_IsShowPict" id="CB_IsShowPict" lay-skin='primary' title="显示图表" lay-filter="switch">
+            </div>
+            <div class="layui-card">
+                <div class="layui-card-header" style="border-top:1px solid #f6f6f6;">分析项目</div>
+                <div class="layui-card-body" style="height:105px;overflow-y:auto"><div id="AnalyGroup"></div></div>
+            </div>
+            <div class="layui-card" style="height:150px" id="Chart">
+                <div class="layui-card-header">图表</div>
+                <div class="layui-card-body">
+                    <div class="layui-form-item" style="margin-top:0px;margin-bottom:0px;">
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width:30px">高度</label>
+                            <div class="layui-input-inline" style="width:60px">
+                                <input type="text" name="TB_H" id="TB_H" lay-verify="required|number" autocomplete="off" class="layui-input" />
                             </div>
                         </div>
-                        <!--<div class="layui-form-item" style="margin-bottom:0px;">
-
-                            <div class="layui-input-block" style="margin-left:20px">
-                                <input type="checkbox" checked="" name="CB_IsShowPict" id="CB_IsShowPict" lay-skin='primary' title="显示图表" lay-filter="switch">
+                        <div class="layui-inline">
+                            <label class="layui-form-label" style="width:30px">宽度</label>
+                            <div class="layui-input-inline" style="width:60px">
+                                <input type="text" name="TB_W" id="TB_W" lay-verify="required|number" autocomplete="off" class="layui-input" />
                             </div>
-                        </div>-->
+                        </div>
+                        <br />
+                        <div class="layui-input-inline" style="margin-left:20px">
+                            <input type="checkbox" checked="" name="CB_IsShowPict" id="CB_IsShowPict" lay-skin='primary' title="显示图表" lay-filter="switch">
+                        </div>
                     </div>
+                    <!--<div class="layui-form-item" style="margin-bottom:0px;">
+
+                        <div class="layui-input-block" style="margin-left:20px">
+                            <input type="checkbox" checked="" name="CB_IsShowPict" id="CB_IsShowPict" lay-skin='primary' title="显示图表" lay-filter="switch">
+                        </div>
+                    </div>-->
                 </div>
             </div>
-            <div class="layui-col-md9">
-                <div class="layui-card" id="Content" style="margin-left:20px;">
-
-                </div>
+        </div>
+        <div class="layui-col-md9">
+            <div class="layui-card" id="Content" style="margin-left:20px;">
 
             </div>
-        </form>
 
-    </div>
+        </div>
+    </form>
 
-    <script>
-        layui.use(['layedit', 'table', 'element', 'laydate'], function () {
-            var table = layui.table;
-            var form = layui.form;
-            form.on('checkbox(switch)', function (data) {
-                ShowData();
-            });
-            if ($("#TB_DTFrom").length == 1) {
-                layui.laydate.render({
-                    elem: '#TB_DTFrom'
-                    , format: $("#TB_DTFrom").attr("data-info")
-                });
-                layui.laydate.render({
-                    elem: '#TB_DTTo'
-                    , format: $("#TB_DTTo").attr("data-info")
-                });
-            }
+</div>
 
+<script>
+    layui.use(['layedit', 'table', 'element', 'laydate'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        form.on('checkbox(switch)', function (data) {
+            ShowData();
         });
-        /**
-        * 初始化下拉框
-        * @param frmData
-        * @param mapAttr
-        * @param defVal
-        */
-        function InitDDLAnalysisOperation(frmData, mapAttr, defVal) {
-
-            var operations = "";
-            if (defVal == "all")
-                operations += "<option value='all' >全部</option>";
-
-            var ens = frmData[mapAttr.Field];
-            if (ens == null) {
-                ens = [{ 'IntKey': 0, 'Lab': '否' }, { 'IntKey': 1, 'Lab': '是' }];
-            }
-            for (var i = 0; i < ens.length; i++) {
-
-                var en = ens[i];
-
-                var selected = "";
-                if (en.Selected && en.Selected.toString() == "true")
-                    selected = "selected=selected";
-
-                if (en.No == undefined)
-                    operations += "<option value='" + en.IntKey + "' " + selected + ">" + en.Lab + "</option>";
-                else
-                    operations += "<option value='" + en.No + "' " + selected + ">" + en.Name + "</option>";
-            }
-            return operations;
+        form.on('select(switch)', function(data){
+            ShowData();
+        });
+        if ($("#TB_DTFrom").length == 1) {
+            layui.laydate.render({
+                elem: '#TB_DTFrom'
+                , format: $("#TB_DTFrom").attr("data-info")
+            });
+            layui.laydate.render({
+                elem: '#TB_DTTo'
+                , format: $("#TB_DTTo").attr("data-info")
+            });
         }
-    </script>
-    <script type="text/javascript">
-        $(function () {
-            var theme = filterXSS(localStorage.getItem("themeColorInfo"));
-            if (theme == null || theme == undefined || theme == "")
-                return;
-            var data = JSON.parse(theme);
-            var html = "\n .layui-btn{\n background-color:" + data.selectedMenu + ";\n}\n .layui-laypage .layui-laypage-curr .layui-laypage-em{\n background-color:" + data.selectedMenu + ";\n}";
-            html += "\n .layui-laypage input:focus,.layui-laypage select:focus{\n border-color:" + data.selectedMenu + " !important\n}";
-            html += "\n .layui-form-select dl dd.layui-this{\n background-color:" + data.selectedMenu + " !important;\n}";
-            //html += "\n .layui-tab-title .layui-this{\n background-color:" + data.selectedMenu + " !important;\n} \n .layui-tab-title>.layui-this{\n color:#fff;\n} \n .layui-tab-title li {border: 1px solid " + data.selectedMenu + ";}";
-            html += "\n .layui-a-this{\n background-color:" + data.selectedMenu + ";\n color: #fff;\n}";
-            var styleScope = document.getElementById("theme-data");
-            styleScope.innerHTML = filterXSS(html);
-        })
-    </script>
+
+    });
+    /**
+     * 初始化下拉框
+     * @param frmData
+     * @param mapAttr
+     * @param defVal
+     */
+    function InitDDLAnalysisOperation(frmData, mapAttr, defVal) {
+
+        var operations = "";
+        if (defVal == "all")
+            operations += "<option value='all' >全部</option>";
+
+        var ens = frmData[mapAttr.Field];
+        if (ens == null) {
+            ens = [{ 'IntKey': 0, 'Lab': '否' }, { 'IntKey': 1, 'Lab': '是' }];
+        }
+        for (var i = 0; i < ens.length; i++) {
+
+            var en = ens[i];
+
+            var selected = "";
+            if (en.Selected && en.Selected.toString() == "true")
+                selected = "selected=selected";
+
+            if (en.No == undefined)
+                operations += "<option value='" + en.IntKey + "' " + selected + ">" + en.Lab + "</option>";
+            else
+                operations += "<option value='" + en.No + "' " + selected + ">" + en.Name + "</option>";
+        }
+        return operations;
+    }
+</script>
+<script type="text/javascript">
+    $(function () {
+        var theme = filterXSS(localStorage.getItem("themeColorInfo"));
+        if (theme == null || theme == undefined || theme == "")
+            return;
+        var data = JSON.parse(theme);
+        var html = "\n .layui-btn{\n background-color:" + data.selectedMenu + ";\n}\n .layui-laypage .layui-laypage-curr .layui-laypage-em{\n background-color:" + data.selectedMenu + ";\n}";
+        html += "\n .layui-laypage input:focus,.layui-laypage select:focus{\n border-color:" + data.selectedMenu + " !important\n}";
+        html += "\n .layui-form-select dl dd.layui-this{\n background-color:" + data.selectedMenu + " !important;\n}";
+        //html += "\n .layui-tab-title .layui-this{\n background-color:" + data.selectedMenu + " !important;\n} \n .layui-tab-title>.layui-this{\n color:#fff;\n} \n .layui-tab-title li {border: 1px solid " + data.selectedMenu + ";}";
+        html += "\n .layui-a-this{\n background-color:" + data.selectedMenu + ";\n color: #fff;\n}";
+        var styleScope = document.getElementById("theme-data");
+        styleScope.innerHTML = filterXSS(html);
+    })
+</script>
 </body>
 </html>

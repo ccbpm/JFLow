@@ -309,11 +309,11 @@
             url += "&MethodNo=" + GetQueryString("MethodNo");
 
             addTab(url, GetQueryString("FlowNo") + '高级查询')
-            //window.location.href = url;
+            //window.location.href = filterXSS(url);
 
         }
         function addTab(url, title = '高级查询') {
-            OpenTopWindowTab(title, url, true);
+            window.top.vm.openTab(title, url, true);
         }
     </script>
     <script>

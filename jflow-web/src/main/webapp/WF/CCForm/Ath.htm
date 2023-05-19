@@ -27,11 +27,10 @@
             pageData.FID = GetQueryString("FID");
             pageData.FK_Node = GetQueryString("FK_Node");
             pageData.IsReadonly = GetQueryString("IsReadonly");
-
             athchmentID = GetQueryString("AthPK");
             $("#Ath_Table").append($("<div id='Div_" + athchmentID + "'  name='Ath'></div>"));
 
-            AthTable_Init(athchmentID, "Div_" + athchmentID,pageData.WorkID );
+            AthTable_Init(athchmentID, "Div_" + athchmentID, pageData.WorkID);
         })
     </script>
     <style>

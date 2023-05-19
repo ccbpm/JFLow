@@ -67,8 +67,6 @@ INSERT INTO Sys_GloVar (No,Name,GroupKey) VALUES ('@FK_ND','当前年度','DefVa
 INSERT INTO Sys_GloVar (No,Name,GroupKey) VALUES ('@FK_YF','当前月份','DefVal');
 INSERT INTO Sys_GloVar (No,Name,GroupKey) VALUES ('@WebUser.OrgNo','登录人员组织','DefVal');
 INSERT INTO Sys_GloVar (No,Name,GroupKey) VALUES ('@WebUser.OrgName','登录人员组织名称','DefVal');
-
-
  
 -- 升级数据源 2016.;
 UPDATE Sys_SFTable SET SrcType=0 WHERE No LIKE '%.%';
@@ -82,8 +80,6 @@ UPDATE SYS_MAPATTR SET UIWidth=145 WHERE MYDATATYPE=7;
 -- 2020.10.27 为enCfg设置页面设置分组;
 DELETE FROM Sys_EnCfg WHERE No='BP.Sys.EnCfg';
 INSERT INTO Sys_EnCfg(No,GroupTitle) VALUES ('BP.Sys.EnCfg','@No=基础信息,基础信息权限信息.@BtnsShowLeft=工具栏按钮@SearchUrlOpenType=双击/单击弹窗@');
-
-
 
 
 -- 2016.11.18 升级维护附件属性.;

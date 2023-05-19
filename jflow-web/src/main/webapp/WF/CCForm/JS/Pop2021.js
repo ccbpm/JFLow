@@ -395,6 +395,7 @@ function xmSelectTree(eleID, mapExt, frmEleDBs, type, selectType) {
                 return data;
             }
         });
+        var valText = "";
         if (frmEleDBs && frmEleDBs.length > 0) {
             var vals = [];
             $.each(frmEleDBs, function (i, item) {
@@ -402,8 +403,10 @@ function xmSelectTree(eleID, mapExt, frmEleDBs, type, selectType) {
                     Name: item.Tag2,
                     No: item.Tag1
                 })
+                valText += item.Tag2 + ",";
             })
             tree.setValue(vals);
+            $("#TB_" + eleID.replace("mapExt_", "")).val(valText);
         }
     });
 }

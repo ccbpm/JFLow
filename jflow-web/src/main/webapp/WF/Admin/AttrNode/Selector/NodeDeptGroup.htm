@@ -65,7 +65,7 @@
         function loadTree(rootNo, global, orgNo, nodeID) {
 
 
-            var ens = new Entities("BP.WF.Port.Depts");
+            var ens = new Entities("BP.Port.Depts");
             ens.Retrieve("OrgNo", orgNo);
             var jsonTree = createJsonToTree(ens, rootNo);
 
@@ -94,7 +94,7 @@
         function createJsonToTree(jsonArray, parentNo) {
             if (parentNo != "0") {
                 //增加当前用户所在的部门
-                var en = new Entity("BP.WF.Port.Dept", parentNo);
+                var en = new Entity("BP.Port.Dept", parentNo);
                 var checked = false;
                 var selectedNodes = window.selectedNodes;
                 var sel = $.grep(selectedNodes, function (obj) {
@@ -186,9 +186,11 @@
             var orgNo = GetQueryString("OrgNo");
 
             //删除,该组织下已经保存的岗位. 
+            //var sql = "DELETE FROM WF_NodeDept WHERE FK_Node=" + nodeID + " AND FK_Dept IN (SELECT No FROM Port_Dept WHERE OrgNo='" + orgNo + "')";
+           // DBAccess.RunSQL(sql);
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_AttrNode");
-            handler.AddPara("orgNo", orgNo);
             handler.AddPara("nodeID", nodeID);
+            handler.AddPara("orgNo", orgNo);
             handler.DoMethodReturnString("NodeDeptGroup_Dele");
 
             //获取复选框选中的节点

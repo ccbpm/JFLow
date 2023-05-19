@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>在途</title>
+    <title>超时</title>
     <link href="Scripts/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
     <link href="Scripts/bootstrap/css/font-awesome.css" rel="stylesheet">
     <link href="Style/skin/css/style.css" rel="stylesheet" type="text/css" />
@@ -15,34 +15,8 @@
     <div class="wrapper wrapper-content animated fadeInRight">
         <div class="ibox-content">
             <table class="table  table-striped">
-                <thead>
-                    <tr>
-                        <th width="40">
-                            #
-                        </th>
-                        <th width="350"> 标题  </th>
-                        <!--  <th>流程</th>-->
-                        <th width="120">
-                            发起人
-                        </th>
-                        <th width="200">
-                            停留节点
-                        </th>
-                        <!--<th>申请时间</th>-->
-                        <th width="200">
-                            发起时间
-                        </th>
-
-                        <th width="180">
-                            应完成时间
-                        </th>
-                        <th width="80">
-                            优先级
-                        </th>
-                        <th width="120">
-                            状态
-                        </th>
-                    </tr>
+                <thead id="theadDiv">
+                    
                 </thead>
                 <tbody id="Table1">
                 </tbody>
@@ -63,6 +37,8 @@
 
     <script src="Scripts/layui/layui/lay/modules/layer.js" type="text/javascript"></script>
     <script src="../DataUser/JSLibData/CommonShowConfig.js"></script>
+    <!-- 处理多语言 -->
+    <script src="Data/lang/load.js" type="text/javascript"></script>
     <script language="javascript" type="text/javascript">
 
         var RunModel = { "Ordinary": 0, "HL": 1, "FL": 2, "FHL": 3, "SubThread": 4 };
@@ -73,6 +49,34 @@
 
         //页面启动函数.
         $(function () {
+            var _html = `<tr>
+                        <th width="40">
+                            #
+                        </th>
+                        <th width="350"> ${window.lang.biaoti} </th>
+                        <!--  <th>流程</th>-->
+                        <th width="120">
+                            ${window.lang.fqr}
+                        </th>
+                        <th width="200">
+                            ${window.lang.dqjd}
+                        </th>
+                        <!--<th>申请时间</th>-->
+                        <th width="200">
+                           ${window.lang.fqrq}
+                        </th>
+
+                        <th width="180">
+                            ${window.lang.ywcsj}
+                        </th>
+                        <th width="80">
+                             ${window.lang.youxianji}
+                        </th>
+                        <th width="120">
+                            ${window.lang.zhuangtai}
+                        </th>
+                    </tr>`;
+            $("#theadDiv").html(_html);
             InitPage();
         });
 
@@ -258,13 +262,7 @@
                     listbox += "<td>" + num + "</td>";
 
 
-                    var currNodeId = work.CurrNode;
-                    var currNodeName = work.CurrNodeName;
-                    if (currNodeName == "")
-                        currNodeName = work.NodeName
-
-
-                    listbox += "<td><a href=\"javascript:OpenFrm('" + work.WorkID + "','" + work.CurrNode + "','" + work.FK_Flow + "','" + work.FID + "','" + work.FlowName + "')\" >" + work.Title + "</a></td>";
+                    listbox += "<td><a href=\"javascript:OpenFrm('" + work.WorkID + "','" + work.NodeID + "','" + work.FlowNo + "','" + 0 + "','" + work.FlowName + "')\" >" + work.Title + "</a></td>";
                     listbox += "<td>" + work.StarterName + "</td>";
                     listbox += "<td>" + work.NodeName + "</td>";
                     listbox += "<td>" + work.RDT + "</td>";
@@ -294,7 +292,7 @@
                         listbox += "<td>" + '<font color=red>加签</font></td>';
                     }
 
-                
+
                     listbox += "</tr>";
 
                 }

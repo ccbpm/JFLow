@@ -26,6 +26,13 @@
 
             if (data.indexOf('url@') == 0) {
                 var url = data.replace('url@', '');
+                var token = getQueryStringByNameFromUrl(url,"Token") || GetQueryString("Token");
+                //中文简体Lang=zh-cn   English Lang=en-us
+                var lange = getQueryStringByNameFromUrl(url,"Lange") || GetQueryString("Lange");
+                localStorage.setItem('Token', token);
+                localStorage.setItem("Lange", lange);
+                //if (IsMobile() == true)
+                //    url = "/CCMobile/" + url;
                 SetHref(url);
                 return;
             }
@@ -44,7 +51,6 @@
 
         <div id="Msg"></div>
     </form>
-
 
 </body>
 </html>

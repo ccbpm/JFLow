@@ -398,7 +398,6 @@ function SaveIt(saveType) {
             contentWidow.SaveAll();
         }
     });
-
     //审核组件
     if ($("#WorkCheck_Doc").length == 1 || $("#WorkCheck_Doc0").length == 1) {
         //保存审核信息
@@ -451,7 +450,6 @@ function SaveIt(saveType) {
 
 //保存
 function Save(isSend) {
-debugger;
     if (isSend == null || isSend == undefined)
         isSend = 0;
     //保存从表数据
@@ -500,6 +498,9 @@ debugger;
     handler.AddPara("OID", pageData.OID);
     var params = getTreeFormData(true, true);
     handler.AddUrlData();
+   /* for (var key in params) {
+        handler.AddPara(key, encodeURIComponent(params[key]));
+    }*/
     handler.AddJson(params);
     var data = handler.DoMethodReturnString("FrmGener_Save");
 
@@ -554,7 +555,7 @@ function getTreeFormData(isCotainTextArea, isCotainUrlParam) {
         $(".rich").each(function (i, item) {
             var edit = layui.tinymce.get('#' + item.id)
             var val = edit.getContent();
-            formArrResult[item.id] = val;
+            formArrResult[item.id] = encodeURIComponent(val);
             haseExistStr += item.id + ","
         })
     }
@@ -638,7 +639,7 @@ function getTreeFormData(isCotainTextArea, isCotainUrlParam) {
                 break;
             //下拉框            
             case "SELECT":
-                formArrResult.push(name + '=' + encodeURIComponent($(disabledEle).children('option:checked').val()));
+                formArrResult[name]= encodeURIComponent($(disabledEle).children('option:checked').val());
                 var tbID = name.replace("DDL_", "TB_") + 'T';
                 if ($("#" + tbID).length == 1) {
                     if (haseExistStr.indexOf("," + tbID + ",") == -1) {

@@ -121,7 +121,7 @@
             var moduleNo = GetQueryString("ModuleNo");
             var module = new Entity("BP.CCFast.CCMenu.Module", moduleNo);
             var url = basePath + "/WF/GPM/Menus.htm?SystemNo=" + module.SystemNo;
-            OpenTopWindowTab(name, url);
+            window.top.vm.openTab(name, url);
         }
 
         //转到菜单
@@ -133,7 +133,7 @@
             OpenLayuiDialog(url, '', 9000, 0, null, false);
 
             //   OpenDialogAndCloseRefresh(url,"",9000,900,)
-            //  OpenTopWindowTab(name, url);
+            //  window.top.vm.openTab(name, url);
         }
 
         //到达集合组件.
@@ -143,7 +143,7 @@
             var url = basePath + "/WF/CCBill/Admin/Collection.htm?SystemNo=" + module.SystemNo;
             url += "&ModuleNo=" + moduleNo;
             url += "&FrmID=" + GetQueryString("FrmID");
-            OpenTopWindowTab(name, url);
+            window.top.vm.openTab(name, url);
         }
 
         function GoToFrmD() {
@@ -160,7 +160,7 @@
             //  var module = new Entity("BP.CCFast.CCMenu.Module", moduleNo);
             var url = basePath + "/WF/Admin/FoolFormDesigner/GoToFrmDesigner.htm?FK_MapData=" + frmID + "&FrmID=" + frmID;
 
-            OpenTopWindowTab(frmID, url);
+            window.top.vm.openTab(frmID, url);
         }
     </script>
 </head>
@@ -250,7 +250,7 @@
                                     <div class="layui-input-block" style="margin: 0" :data-id="method.No"
                                          @click="changeMethodEnableStatus(method,this)">
                                         <input type="checkbox" lay-skin="switch" lay-text="ON|OFF"
-                                               :checked="parseInt(method.IsEnable) === 1">
+                                               :checked="parseInt(method.IsEnable)== 1?true:false">
                                     </div>
                                 </div>
                             </form>

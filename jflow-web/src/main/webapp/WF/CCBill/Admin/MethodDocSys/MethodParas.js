@@ -225,11 +225,11 @@ function DesignerFlow(no, name) {
     var sid = GetQueryString("Token");
     var webUser = new WebUser();
     var url = "../Admin/CCBPMDesigner/Designer.htm?FK_Flow=" + no + "&UserNo=" + webUser.No + "&Token=" + sid + "&OrgNo=" + webUser.OrgNo + "&From=Ver2021";
-    OpenTopWindowTab(name, url);
+    window.top.vm.openTab(name, url);
 }
 
 function addTab(no, name, url) {
-    OpenTopWindowTab(name, url);
+    window.top.vm.openTab(name, url);
 }
 
 

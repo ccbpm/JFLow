@@ -70,7 +70,7 @@
             var dbTrees = new Entities("BP.Port.StationTypes");
             dbTrees.RetrieveAll();
 
-            var statDepts = new Entities("BP.CCBill.Template.FrmStationDepts");
+            var statDepts = new Entities("BP.Frm.FrmStationDepts");
             statDepts.Retrieve("FK_Frm", frmID, "FK_Dept", "");
             //选择的数据.
             $.each(statDepts, function (i, statDept) {

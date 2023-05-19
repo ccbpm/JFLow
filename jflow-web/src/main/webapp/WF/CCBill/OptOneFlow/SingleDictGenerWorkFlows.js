@@ -120,7 +120,7 @@ new Vue({
 })
 
 function addTab(no, name, url) {
-    OpenTopWindowTab(name, url);
+    window.top.vm.openTab(name, url);
 }
 
 /**

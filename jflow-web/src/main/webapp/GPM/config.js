@@ -11,11 +11,11 @@ var NewDeptNoModel = 1;
 var RegUserIDMode = 1;
 
 //部门类名.
-/*var deptEnsName = "BP.Port.Depts";
-var deptEnName = "BP.Port.Dept";*/
+var deptEnsName = "BP.WF.Port.Depts";
+var deptEnName = "BP.WF.Port.Dept";
 
-var deptEnName = "BP.WF.Port.Admin2Group.Dept";
-var deptEnsName = "BP.WF.Port.Admin2Group.Depts";
+//var deptEnName = "BP.WF.Port.Admin2Group.Dept";
+//var deptEnsName = "BP.WF.Port.Admin2Group.Depts";
 /*  新建人员编号模式. 0=手工输入自己编号.  1=自动生成，由实体类的 beforeInser 生成. */
 var NewEmpNoModel = 0;
 

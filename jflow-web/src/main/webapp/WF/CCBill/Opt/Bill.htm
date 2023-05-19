@@ -304,12 +304,12 @@
             url += "&PWorkID=" + GetQueryString("PWorkID");
             url += "&MothodNo=" + GetQueryString("MothodNo");
             //
-            //window.location.href = url;
+            //window.location.href = filterXSS(url);
             addTab(url, GetQueryString("FrmID") + '高级查询')
         }
 
         function addTab(url, title = '高级查询') {
-            OpenTopWindowTab(title, url, true);
+            window.top.vm.openTab(title, url, true);
         }
     </script>
     <script>

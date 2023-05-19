@@ -11,7 +11,8 @@
     methods: {
         DoDelete: function (mypk) {
             if (confirm('确定要删除吗') == true) {
-                var en = new Entity("BP.WF.SMS", mypk);
+                var en = new Entity("BP.WF.SMS");
+                en.SetPKVal(mypk);
                 console.log(mypk);
                // en.DoMethodReturnString("DoDelete");
                 en.Delete();

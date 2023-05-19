@@ -10,14 +10,32 @@ function getQueryString() {
 //Other
 function GetQueryString(name) {
 
+    if(typeof name === 'string' && name.toLocaleLowerCase() === 'token') {
+		if(localStorage.getItem("Token")!=null &&localStorage.getItem("Token")!= ""){
+			 return filterXSS(localStorage.getItem("Token"))
+		}
+    }
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
 
     var r = window.location.search.substr(1).match(reg);
 
     if (r != null)
-        return decodeURI(r[2]);
+        return filterXSS(decodeURI(r[2]));
     return null;
 
+}
+
+function GetQueryStringByUrl(url, name) {
+    //if (typeof name === 'string' && name.toLocaleLowerCase() === 'token') {
+   //     return filterXSS(localStorage.getItem("Token"))
+    //}
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+
+    var r = url.match(reg);
+
+    if (r != null)
+        return filterXSS(decodeURI(r[2]));
+    return null;
 }
 
 //通过URL获取QueryString的数组

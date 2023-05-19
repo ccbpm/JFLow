@@ -21,6 +21,8 @@
 
             var frmID = GetQueryString("FrmID");
             var oid = GetQueryString("OID");
+			if(oid == null)
+                oid = GetQueryString("WorkID");
 
             dbvars = new Entities("BP.Sys.FrmDBVers");
             dbvars = dbvars.DoMethodReturnJSON("ChapterFrmDBVers", frmID, oid);

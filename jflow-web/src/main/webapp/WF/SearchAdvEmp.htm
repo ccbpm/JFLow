@@ -35,10 +35,10 @@
                 _html += "</li>";
             })
             $("#FlowUL").html(_html);
-            $("#context").attr("src", "/WF/Comm/Search.htm?EnsName=BP.WF.Data.GenerWorkFlowExts&FK_Flow=" + flows[0].No);
+            $("#context").attr("src", basePath +"/WF/Comm/Search.htm?EnsName=BP.WF.Data.GenerWorkFlowExts&FK_Flow=" + flows[0].No);
         });
         function ChangeFlowNo(flowNo) {
-            $("#context").attr("src", "/WF/Comm/Search.htm?EnsName=BP.WF.Data.GenerWorkFlowExts&FK_Flow=" + flowNo);
+            $("#context").attr("src", basePath +"/WF/Comm/Search.htm?EnsName=BP.WF.Data.GenerWorkFlowExts&FK_Flow=" + flowNo);
         }
 
     </script>

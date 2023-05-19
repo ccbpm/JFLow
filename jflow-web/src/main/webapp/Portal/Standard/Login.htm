@@ -11,6 +11,7 @@
     <script src="../../WF/Scripts/QueryString.js" type="text/javascript"></script>
     <script src="../../WF/Scripts/bootstrap/js/jquery.min.js"></script>
     <script src="../../WF/Scripts/config.js" type="text/javascript"></script>
+    <script src="./js/md5.js"></script>
     <script src="../../WF/Comm/Gener.js" type="text/javascript"></script>
     <script src="../../WF/Scripts/bootstrap/js/bootstrap.min.js"></script>
     <script src="layer/layer.js"></script>
@@ -26,6 +27,8 @@
         //初始化页面函数.....
         $(function () {
 
+            localStorage.setItem('Token', '');
+
             debugger;
             if (! +[1,]) {
                 //  alert("这是ie浏览器，您只能使用sliverlight版本浏览器。");
@@ -33,10 +36,8 @@
                 // return;
             }
 
-            //$("#Msg").html("<img src='../Img/loading.gif' /><font color=blue>ccbpm 正在为登录/自动升级做准备.</font>");
-
-            //document.getElementById("Btn_Login").disabled = 'disabled';
-            //执行更新检查..
+            //清空token
+            localStorage.setItem("Token", "");
             var doType = GetQueryString("DoType");
             var href = GetHrefUrl();
             var urlParam = href.substring(href.indexOf('?') + 1, href.length);
@@ -91,11 +92,13 @@
             $("#verifycode").attr('src', handler.DoMethodReturnString("Login_VerifyCode"));
         }
         function LoginText() {
-            SetHref( "Default.htm");
+            SetHref("Default.htm");
         }
 
         //执行后台登录.
-        function Login() {
+        function Login(isZZJ) {
+            if (isZZJ == undefined)
+                isZZJ = '0';
             //$("#Msg").html("<font> ccbpm 正在登录流程&表单引擎设计器,请稍候... </font>");
             var loading = layer.load(1, { shade: [0.1, '#fff'] });
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
@@ -117,6 +120,7 @@
             handler.AddPara("VerifyCode", $("#inputCode").val());
             handler.AddPara("TB_No", userNo);
             handler.AddPara("TB_PW", pass);
+            handler.AddPara("IsZZJ", isZZJ);
 
             var data = handler.DoMethodReturnString("Login_Submit");
 
@@ -132,6 +136,53 @@
                 SetHref(data);
                 return;
             }
+
+            //集团模式登录,需要选择组织进行登录
+            if (data.indexOf("SelectOneOrg") != -1) {
+                var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_CCBPMDesigner");
+                var data = handler.DoMethodReturnString("SelectOneOrg_Init");
+                if (data.indexOf('err@') == 0) {
+                    $("#list").html(data);
+                    return;
+                }
+
+                datas = JSON.parse(data);
+
+                var webUser = new WebUser();
+
+                var orgNo = webUser.OrgNo;
+
+                var html = "<ul style='align:left'>";
+                for (var i = 0; i < datas.length; i++) {
+
+                    var data = datas[i];
+
+                    if (data.No == orgNo)
+                        html += "<li><h2><a href=\"javascript:SelectOrg('" + data.No + "');\" >" + data.No + " " + data.Name + " </a></h2> </li>";
+                    else
+                        html += "<li><a href=\"javascript:SelectOrg('" + data.No + "');\" >" + data.No + " " + data.Name + " </a> </li>";
+                }
+                html += "</ul>";
+                layer.open({
+                    title: '请选择下面的组织进行登录',
+                    type: 1,
+                    skin: 'layui-layer-rim',
+                    area: ['700px', '480px'],
+                    content: html,
+                    maxmin: true,
+                    minStack: false, //最小化不堆叠在左下角
+                    id: 'page1', //定义 ID，防止重复弹出
+                    min: function (layero, index) {
+
+                        layer.msg('阻止了默认的最小化');
+                        layer.style(index, { top: 'auto', bottom: 0 });
+
+                        return false;
+                    }
+                });
+                return;
+            }
+
             if (data.indexOf('url@') == 0) {
                 var data = data.replace('url@', '');
                 SetHref(data);
@@ -140,6 +191,22 @@
 
             layer.close(index);
             alert(data);
+        }
+
+        //选择组织
+        function SelectOrg(no) {
+
+            var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_CCBPMDesigner");
+            handler.AddPara("OrgNo", no);
+            var data = handler.DoMethodReturnString("SelectOneOrg_Selected");
+            if (data.indexOf('err@') == 0) {
+                alert(data);
+                return;
+            }
+
+            data = data.substring(4);
+            SetHref(data);
+            return;
         }
 
 
@@ -233,8 +300,8 @@
                         <div class="login-wrap">
                             <div class="form-group">
 
-                                <select class="form-control" id="DDL_System" >
-                                    <option value="Default" > 驰骋流程应用快速开发平台 - 专业版 </option>
+                                <select class="form-control" id="DDL_System">
+                                    <option value="Default"> 驰骋流程应用快速开发平台 - 专业版 </option>
                                     <!--<option value="Business" disabled="disabled" onclick="setCookie('username', $(this).val(), 30)"> 驰骋流程应用快速开发平台 - 商业版 </option>-->
                                 </select>
                             </div>
@@ -254,14 +321,15 @@
                                 <a href="javascript:void(0)" style="margin-left: 10px" onclick="createCode()">看不清</a>
                             </div>
 
-                            <input type="button" class="btn btn-lg btn-login btn-block" value="用户登录" id="Btn_Login" onclick="Login();" />
+                            <input type="button" class="btn btn-lg btn-login btn-block" value="登录-流程引擎中间件" id="Btn_Login" onclick="Login(1);" />
+                            <input type="button" class="btn btn-lg btn-login btn-block" value="登录-标准版低代码开发平台" id="Btn_Login" onclick="Login(0);" />
 
                             <!--<input type="button" class="btn btn-primary btn-block" value="测试版本test" id="Btn_LoginExt" onclick="LoginText();" />-->
                             <!--//  <input type="button" class="btn btn-primary btn-block" value="登录简洁版(开发中)" id="Btn_LoginSimple" onclick="LoginSimple();" />
                             // <input type="button" class="btn btn-primary btn-block" value="登录表单引擎(开发中)" id="Btn_LoginFrm" onclick="LoginFrm();" />-->
                             <!--<div class="text-center">
-                                <div class="forget-password">
-                                    <a href="javascript:Mobile();">手机登录</a>-->
+                            <div class="forget-password">
+                                <a href="javascript:Mobile();">手机登录</a>-->
                             <!--<a href="../AppClassic/Login.htm">前台登录</a>-->
                             <!--</div>
                             </div>-->

@@ -29,9 +29,9 @@ function deleteUrlParam(targetUrl, targetKey) {
 // 从指定字符串中获取参数
 function getQueryFromTargetStr(targetStr, targetKey) {
     if (typeof targetStr !== 'string') {
-        return null
+        return null;
     }
-    const queries = targetStr.split('?')
+    const queries = targetStr.split('?');
     if (queries.length > 1) {
         const search = queries[1].split('&');
         for (const kvStr of search) {
@@ -39,7 +39,7 @@ function getQueryFromTargetStr(targetStr, targetKey) {
             if (targetKey === key) return val
         }
     }
-    return null
+    return null;
 }
 
 function promptGener(msg, defVal) {
@@ -1018,9 +1018,11 @@ var Entity = (function () {
         var params = {};
         $.each(self, function (n, o) {
             if (typeof self[n] !== "function" && n != "enName" && n != "ensName") {
-                params[n] = self[n];
+                params[n] = encodeURIComponent(self[n]);
             }
         });
+        var token = GetQueryString("Token") || localStorage.getItem("Token");
+        params["Token"] = token;
         return params;
     }
 
@@ -1058,6 +1060,7 @@ var Entity = (function () {
             var pkval = self.pkval;
             if (dynamicHandler == "")
                 return;
+            var token = GetQueryString("Token") || localStorage.getItem("Token");
             $.ajax({
                 type: 'post',
                 async: false,
@@ -1065,7 +1068,7 @@ var Entity = (function () {
                     withCredentials: IsIELower10 == true ? false : true
                 },
                 crossDomain: IsIELower10 == true ? false : true,
-                url: dynamicHandler + "?DoType=Entity_Init&EnName=" + self.enName + "&PKVal=" + encodeURIComponent(pkval) + "&t=" + new Date().getTime(),
+                url: dynamicHandler + "?DoType=Entity_Init&EnName=" + self.enName + "&PKVal=" + encodeURIComponent(pkval) +"&Token="+token + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 success: function (data) {
 
@@ -1113,7 +1116,7 @@ var Entity = (function () {
                 params = getParams1(self);
 
             var result = "";
-
+            var token = GetQueryString("Token") || localStorage.getItem("Token");
             $.ajax({
                 type: 'post',
                 async: false,
@@ -1121,7 +1124,7 @@ var Entity = (function () {
                     withCredentials: IsIELower10 == true ? false : true
                 },
                 crossDomain: IsIELower10 == true ? false : true,
-                url: dynamicHandler + "?DoType=Entity_Insert&EnName=" + self.enName + "&t=" + new Date().getTime(),
+                url: dynamicHandler + "?DoType=Entity_Insert&EnName=" + self.enName +"&Token="+token + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 data: params,
                 success: function (data) {
@@ -1174,7 +1177,7 @@ var Entity = (function () {
                 params = getParams1(self);
 
             var result = "";
-
+            var token = GetQueryString("Token") || localStorage.getItem("Token");
             $.ajax({
                 type: 'post',
                 async: false,
@@ -1182,7 +1185,7 @@ var Entity = (function () {
                     withCredentials: IsIELower10 == true ? false : true
                 },
                 crossDomain: IsIELower10 == true ? false : true,
-                url: dynamicHandler + "?DoType=Entity_DirectInsert&EnName=" + self.enName + "&t=" + new Date().getTime(),
+                url: dynamicHandler + "?DoType=Entity_DirectInsert&EnName=" + self.enName +"&Token="+token +  "&t=" + new Date().getTime(),
                 dataType: 'html',
                 data: params,
                 success: function (data) {
@@ -1219,7 +1222,7 @@ var Entity = (function () {
             var self = this;
             var params = getParams(self);
             var result;
-
+            var token = GetQueryString("Token") || localStorage.getItem("Token");
             $.ajax({
                 type: 'post',
                 async: false,
@@ -1227,7 +1230,7 @@ var Entity = (function () {
                     withCredentials: IsIELower10 == true ? false : true
                 },
                 crossDomain: IsIELower10 == true ? false : true,
-                url: dynamicHandler + "?DoType=Entity_Update&EnName=" + self.enName + "&t=" + new Date().getTime(),
+                url: dynamicHandler + "?DoType=Entity_Update&EnName=" + self.enName +"&Token="+token +  "&t=" + new Date().getTime(),
                 dataType: 'html',
                 data: params,
                 success: function (data) {
@@ -1256,7 +1259,7 @@ var Entity = (function () {
             var self = this;
             var params = getParams(self);
             var result;
-
+            var token = GetQueryString("Token") || localStorage.getItem("Token");
             $.ajax({
                 type: 'post',
                 async: false,
@@ -1264,7 +1267,7 @@ var Entity = (function () {
                     withCredentials: IsIELower10 == true ? false : true
                 },
                 crossDomain: IsIELower10 == true ? false : true,
-                url: dynamicHandler + "?DoType=Entity_Save&EnName=" + self.enName + "&t=" + new Date().getTime(),
+                url: dynamicHandler + "?DoType=Entity_Save&EnName=" + self.enName +"&Token="+token + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 data: params,
                 success: function (data) {
@@ -1454,7 +1457,7 @@ var Entity = (function () {
             }
 
             //  alert(self.GetPKVal()); 
-
+            var token = GetQueryString("Token") || localStorage.getItem("Token");
             var result;
             $.ajax({
                 type: 'post',
@@ -1463,7 +1466,7 @@ var Entity = (function () {
                     withCredentials: IsIELower10 == true ? false : true
                 },
                 crossDomain: IsIELower10 == true ? false : true,
-                url: dynamicHandler + "?DoType=Entity_RetrieveFromDBSources&EnName=" + self.enName + "&PKVal=" + pkavl,
+                url: dynamicHandler + "?DoType=Entity_RetrieveFromDBSources&EnName=" + self.enName + "&PKVal=" + pkavl+"&Token="+token,
                 dataType: 'html',
                 success: function (data) {
                     result = data;
@@ -1533,7 +1536,7 @@ var Entity = (function () {
                 }
             });
             return result;
-        },   //一个参数直接传递,  多个参数，参数之间使用 ~隔开， 比如: zhangsna~123~1~山东杭州.
+        },   //一个参数直接传递,  多个参数，参数之间使用 ~隔开， 比如: zhangsna~123~1~山东济南.
         DoMethodReturnString: function (methodName, myparams) {
             methodName = filterXSS(methodName)
             if (dynamicHandler == "")
@@ -2047,7 +2050,10 @@ var Entities = (function () {
             for (var key in parameters) {
                 atPara += "@" + key + "=" + parameters[key];
             }
-
+            // 如果没有携带token， 自动补上
+            if (atPara.indexOf("@Token=")==-1) {
+                atPara+='@Token='+(GetQueryString('Token') || localStorage.getItem("Token"));
+            }
             var self = this;
             var string;
             $.ajax({
@@ -2593,6 +2599,36 @@ var HttpHandler = (function () {
                     }
                 });
             }
+            //获取form表单中disabled的表单字段
+            var disabledEles = $('form :disabled');
+            $.each(disabledEles, function (i, disabledEle) {
+                var name = $(disabledEle).attr('name');
+                if (name == null || name == undefined || name == "")
+                    return true;
+                switch (disabledEle.tagName.toUpperCase()) {
+                    case "INPUT":
+                        switch (disabledEle.type.toUpperCase()) {
+                            case "CHECKBOX": //复选框
+                                self.AddPara(name, encodeURIComponent($(disabledEle).is(':checked') ? 1 : 0));
+                                break;
+                            case "TEXT": //文本框
+                            case "NUMBER":
+                                self.AddPara(name, encodeURIComponent($(disabledEle).val()));
+                                break;
+                            case "RADIO": //单选钮
+                                self.AddPara(name, $('[name="' + name + ':checked"]').val());
+                                break;
+                        }
+                        break;
+                    //下拉框
+                    case "SELECT":
+                        self.AddPara(name, $(disabledEle).children('option:checked').val());
+                        break;
+                    case "TEXTAREA":
+                        self.AddPara(name, encodeURIComponent($(disabledEle).val()));
+                        break;
+                }
+            });
         },
         AddFileData: function () {
             var files = $("input[type=file]");
@@ -2610,10 +2646,10 @@ var HttpHandler = (function () {
             if (params.indexOf("&" + key + "=") == -1) {
                 if (value == undefined)
                     value = "";
-                if (IsIELower10 == true)
-                    parameters[key] = filterXSS(value);
+               if (IsIELower10 == true)
+                    parameters[key] = value;
                 else
-                    parameters.append(key, filterXSS(value));
+                    parameters.append(key, value);
                 params += key + "=" + value + "&";
             }
 
@@ -2665,9 +2701,8 @@ var HttpHandler = (function () {
 
             return params;
         },
-
-
-        customRequest: function(methodName) {
+		
+		customRequest: function(methodName) {
             methodName = filterXSS(methodName)
             if (dynamicHandler == "")
                 return;
@@ -2684,7 +2719,7 @@ var HttpHandler = (function () {
                         withCredentials: !IsIELower10
                     },
                     crossDomain: !IsIELower10,
-                    url: dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=BP.WF.HttpHandler.WF_Portal&t=" + Math.random(),
+                    url: dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random(),
                     data: new FormData(),
                     dataType: 'html',
                     contentType: false,
@@ -2707,8 +2742,7 @@ var HttpHandler = (function () {
                 });
             return jsonString;
         },
-
-
+		
         DoMethodReturnString: function (methodName) {
             methodName = filterXSS(methodName)
             if (dynamicHandler == "")
@@ -2719,11 +2753,15 @@ var HttpHandler = (function () {
             if (!parameters.has('Token')) {
                 parameters.append('Token', GetQueryString('Token'))
             }
-            if(methodName === 'Login_Submit') {
+	    if(methodName === 'Login_Submit') {
                 var isEncrypt = this.customRequest("CheckEncryptEnable")
-                if(isEncrypt === '1'){
-                    var key = "TB_PW"
-                    var encryptStr = window.btoa(parameters.get(key))
+                var key = "TB_PW"
+                if(isEncrypt === '0'){
+                    var encryptStr =encodeURIComponent(parameters.get(key));
+                    parameters.delete(key);
+                    parameters.append(key, encryptStr)
+                }else if(isEncrypt === '1'){
+                    var encryptStr = md5(parameters.get(key)).toUpperCase();
                     parameters.delete(key);
                     parameters.append(key, encryptStr)
                 }
@@ -2840,7 +2878,7 @@ var WebUser = function () {
     }
 
     //获得页面上的token. 在登录信息丢失的时候，用token重新登录.
-    var token = localStorage.getItem('Token');
+    var token = GetQueryString("Token") || localStorage.getItem("Token");
 
     $.ajax({
         type: 'post',
@@ -2859,12 +2897,18 @@ var WebUser = function () {
                 } else {
                     alert(data);
                 }
-                if (window.top.vm != null)
-                    window.top.vm.logoutExt();
-                else {
-                    if (GetHrefUrl().indexOf("Portal/Standard/") != -1)
-                        SetHref(basePath + "/Portal/Standard/Login.htm");
+                try {
+                    if (!!window.top && !!window.top.vm)
+                        window.top.vm.logoutExt();
+                    else {
+                        if (GetHrefUrl().indexOf("Portal/Standard/") != -1)
+                            SetHref(basePath + "/Portal/Standard/Login.htm");
+                    }
+                } catch (e) {
+                    //可能出现跨域
+                    //SetHref(basePath + "/Portal/Standard/Login.htm");
                 }
+                
                 return;
             }
 
@@ -2876,26 +2920,12 @@ var WebUser = function () {
             }
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            const responseTest = XMLHttpRequest.responseText;
-            if (responseTest.indexOf("err@") != -1) {
-                if (responseTest.indexOf('登录信息丢失') != -1) {
-                    alert("登录信息丢失，请重新登录。");
-                } else {
-                    alert(responseTest);
-                }
-                if (window.top.vm != null)
-                    window.top.vm.logoutExt();
-                else{
-                    if (GetHrefUrl().indexOf("Portal/Standard/") != -1)
-                        SetHref(basePath + "/Portal/Standard/Login.htm");
-                }
-                return;
-            }
-			// var url = dynamicHandler + "?DoType=WebUser_Init&t=" + new Date().getTime();
-            // ThrowMakeErrInfo("WebUser-WebUser_Init", textStatus, url);
+            var url = dynamicHandler + "?DoType=WebUser_Init&t=" + new Date().getTime();
+            ThrowMakeErrInfo("WebUser-WebUser_Init", textStatus, url);
         }
     });
     var self = this;
+    if (webUserJsonString!=null)
     $.each(webUserJsonString, function (n, o) {
         self[n] = filterXSS(o);
     });
@@ -3135,7 +3165,8 @@ function DealJsonExp(json, expStr, webUser) {
 
     if (expStr.indexOf('@') == -1)
         return expStr;
-
+    if (json == null)
+        return expStr;
     $.each(json, function (n, val) {
         if (expStr.indexOf("@") == -1)
             return;
@@ -3252,16 +3283,15 @@ $(function () {
     }
 
     var url = GetHrefUrl().toLowerCase();
-
     var pageName = window.document.location.pathname.toLowerCase();
     pageName = pageName.substring(pageName.lastIndexOf("/")+1);
-    //不需要权限信息..
-    var listPage = ['login.htm', 'dbinstall.htm', 'scanguide.htm', 'qrcodescan.htm', 'index.htm', 'gotourl.htm', 'invited.htm', 'registerbywebsite.htm', 'reqpassword.htm', 'reguser.htm', 'port.htm', 'ccbpm.cn', 'loginwebsite.htm', 'goto.htm'];
-    if (listPage.includes(pageName) || url == basePath || url.indexOf('appcoder/default.htm') != -1) {
+    
+    //不需要权限信息
+    var listPage = ['login.htm', 'dbinstall.htm', 'scanguide.htm', 'qrcodescan.htm', 'index.htm', 'gotourl.htm', 'invited.htm', 'registerbywebsite.htm', 'reqpassword.htm', 'reguser.htm', 'port.htm', 'ccbpm.cn/', 'loginwebsite.htm', 'goto.htm'];
+    if (listPage.includes(pageName) || url == basePath) {
         localStorage.setItem('Token', '');
         return;
     }
-
 
     loadWebUser = new WebUser();
 
@@ -3358,8 +3388,10 @@ function getConfigByKey(key, defVal) {
     }
     if (CommonConfig[key] == undefined)
         CommonConfig[key] = defVal;
-
-    return CommonConfig[key];
+    var val = CommonConfig[key];
+    if(typeof val=='string'&& val.indexOf("@")!=-1)
+        val = DealJsonExp(null,val);
+    return val;
 }
 /**
  * 对象数组分组

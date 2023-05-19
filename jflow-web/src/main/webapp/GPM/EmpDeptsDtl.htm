@@ -19,6 +19,7 @@
 
             var emp = new Entity("BP.Port.Emp", empNo);
 
+            var orgNo = emp.OrgNo;
             //该人员在当前部门下的所有岗位集合.
             var ens = new Entities("BP.Port.DeptEmpStations");
             ens.Retrieve("FK_Emp", empNo, "FK_Dept", deptNo);
@@ -69,9 +70,9 @@
 
 
                     if (isHave==true)
-                        html += "<td ><label><input type=checkbox checked=checked onclick=\"SaveStation('" + sta.No + "')\" id='" + sta.No + "'  ><font color=green>" + sta.Name + "</font></label></td>";
+                        html += "<td ><label><input type=checkbox checked=checked onclick=\"SaveStation('" + sta.No + "','"+orgNo+"')\" id='" + sta.No + "'  ><font color=green>" + sta.Name + "</font></label></td>";
                     else
-                        html += "<td ><label><input type=checkbox onclick=\"SaveStation('" + sta.No + "')\" id='" + sta.No + "'  >" + sta.Name + "</label></td>";
+                        html += "<td ><label><input type=checkbox onclick=\"SaveStation('" + sta.No + "','"+orgNo+"')\" id='" + sta.No + "'  >" + sta.Name + "</label></td>";
 
 
 
@@ -89,7 +90,7 @@
         });
 
         //保存
-        function SaveStation(staNo) {
+        function SaveStation(staNo,orgNo) {
 
             var empNo = GetQueryString("FK_Emp");
             var deptNo = GetQueryString("FK_Dept");
@@ -104,6 +105,10 @@
                 en.FK_Dept = deptNo;
                 en.FK_Emp = empNo;
                 en.FK_Station = staNo;
+
+                if(orgNo!= undefined && orgNo!= null && orgNo !="" ){
+                    en.OrgNo=orgNo;
+                }
                 en.Insert();
                 return;
             }

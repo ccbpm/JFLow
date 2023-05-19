@@ -151,6 +151,7 @@ window.onload = function () {
                         _this.selectedTabsIndex = index - 1
                     }
                 }, 100)
+                this.$refs['iframe-home'].contentWindow.location.reload();
             },
             // 关闭所有
             closeAllTabs: function () {
@@ -166,6 +167,38 @@ window.onload = function () {
                 var tab = this.tabsList[this.selectedTabsIndex]
                 this.tabsList = [tab]
                 this.selectedTabsIndex = 0
+                this.$refs['iframe-home'].contentWindow.location.reload();
+            },
+            closeTabByName: function (name) {
+                if (name == null || name == undefined || name == "")
+                    return;
+                if (this.tabsList.length == 0)
+                    return;
+                //获取当前标签所在的位置
+                var index = -1;
+                $.each(this.tabsList, function (i, item) {
+                    if (item.name == name) {
+                        index = i;
+                        return false;
+                    }
+                })
+                if (index == -1)
+                    return;
+                this.tabsList.splice(index, 1)
+                var _this = this
+                setTimeout(function () {
+                    if (_this.tabsList.length > index) {
+                        _this.selectedTabsIndex = index
+                    } else {
+                        _this.selectedTabsIndex = index - 1
+                    }
+                    if (_this.selectedTabsIndex == -1)
+                        _this.selectedId = "";
+                    else
+                        _this.selectedId = _this.tabsList[_this.selectedTabsIndex].no;
+
+                }, 100)
+                this.$refs['iframe-home'].contentWindow.location.reload();
             },
             // 处理tab滚动
             handleTabScroll: function () {
@@ -223,7 +256,7 @@ window.onload = function () {
                 /*
                  *  /WF/CCBill/Opt/StartFlowByNewEntity.htm
                  *  这里不解析特殊的业务逻辑, 让页面解析。
-                 * 
+                 *
                  */
 
 
@@ -383,18 +416,6 @@ window.onload = function () {
             },
 
             initMenus: function () {
-                /* var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
-                var data = handler.DoMethodReturnString("Default_Init");
-                if (data.indexOf('err@') == 0) {
-                    alert(data);
-                    return;
-                }
-                if (data.indexOf('url@') == 0) {
-                    var url = data.replace('url@', '');
-                    SetHref(url);
-                    return;
-                }
-                data = JSON.parse(data);*/
                 var httpHandler = new HttpHandler("BP.WF.HttpHandler.WF_CommEntity");
                 var enName = GetQueryString("EnName");
                 var type = GetQueryString("type");

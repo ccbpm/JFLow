@@ -39,8 +39,7 @@
 
     <!-- 处理多语言 -->
     <script src="Data/lang/load.js" type="text/javascript"></script>
-    <script src="Data/lang/js/zh-cn.js"></script>
-    <script src="Data/lang/lang.js" type="text/javascript"></script>
+
     <script type="text/javascript">
 
         var webUser = null;
@@ -141,7 +140,7 @@
             tablet += "<th>" + window.lang.qixian + "</th>";
             tablet += "<th>" + window.lang.zhuangtai + "</th>";
             tablet += "<th>" + window.lang.leixing + "</th>";
-            tablet += "<th>优先级</th>";
+            tablet += "<th>" + window.lang.youxianji + "</th>";
 
             $("#tablet").html(tablet);
 
@@ -482,7 +481,8 @@
                     return "<font color=#bc65e0>" + window.lang.caogao + "</font>";
                 case 2:
                     if (auther != null && auther != undefined && auther != "")
-                        return "<font color=orange>授权</font>";
+                        return "<font color=orange>window.lang.auth</font>";
+
                     return "<font color=green>" + window.lang.daiban + "</font>";
                     break;
                 case 3: //已完成.

@@ -1075,7 +1075,9 @@
                     case 7://时间类型
                         //生成中间的部分.
                         var enableAttr = '';
-                        var frmDate = mapAttr.IsSupperText; //获取日期格式
+                        var frmDate = 0; //获取日期格式
+                        if (mapAttr.MyDataType == 7)
+                            frmDate = 1;
                         var dateFmt = '';
                         var dateType = "";
                         if (frmDate == 0) {
@@ -1201,7 +1203,7 @@
             url = replaceParamVal(url, "PKVal", "");
 
             //新增时En.htm页面隐藏
-            if (window.parent && window.parent.$(".layui-side").length == 1 && isSameEnName == true) {
+            if (window.parent && window.parent.$ && window.parent.$(".layui-side").length == 1 && isSameEnName == true) {
                 parent.window.location.href = filterXSS(url).replace("EnOnly", "En"); //刷新.
                 return;
             }
@@ -1302,7 +1304,7 @@
 
 
                 //新增保存后显示En
-                if (window.parent && window.parent.$(".layui-side").length == 1 && isSameEnName == true && isRefresh == true) {
+                if (window.parent && window.parent.$ && window.parent.$(".layui-side").length == 1 && isSameEnName == true && isRefresh == true) {
                     url = url.replace("EnOnly", "En");
                     parent.window.location.href = filterXSS(url); //刷新.
                     return;
@@ -1442,7 +1444,7 @@
         }
 
         function CloseIt() {
-            if (window.parent && window.parent.$(".layui-side").length == 1) {
+            if (window.parent && window.parent.$ && window.parent.$(".layui-side").length == 1) {
                 if (isSameEnName == true) {
                     //En页面的基础信息删除时关闭页面
                     try {

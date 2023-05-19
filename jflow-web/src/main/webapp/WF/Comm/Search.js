@@ -122,7 +122,7 @@ function InitToolbar(type) {
         if (mapBase.DTSearchWay == 4)
             dataInfo = "yyyy";
 
-        _html += GetDateInputPart(mapBase.DTSearchWay, mapBase.DTSearchLable, ur.DTFrom, ur.DTTo, dataInfo);
+        _html += GetDateInputPart(mapBase.DTSearchWay, mapBase.DTSearchLabel, ur.DTFrom, ur.DTTo, dataInfo);
         len = len + 1;
     }
     var json = AtParaToJson(ur.Vals);
@@ -207,7 +207,7 @@ function InitToolbar(type) {
             _html += "<button type='button' class='layui-btn layui-btn-radius layui-btn-sm toolbar' id='Delete'>删除</button>";
         //导出
         if (cfg.IsExp == 1 || mapBase.IsExp.toString().toLowerCase() == "true")
-            _html += "<button type='button' class='layui-btn layui-btn-radius  layui-btn-sm toolbar' id='Exp'>导出Excel/Csv文件</button>";
+            _html += "<button type='button' class='layui-btn layui-btn-radius  layui-btn-sm toolbar' id='Exp'>导出</button>";
 
         //导入
         if (mapBase.IsImp.toString().toLowerCase() == "true")
@@ -300,11 +300,11 @@ function InitToolbar(type) {
     //树形结构
     $.each(treeKey, function (i, field) {
         var parentNo = 1;
-        if(field.toLowerCase().includes("dept"))
-            parentNo =  webUser.FK_Dept;
-        if(webUser.CCBPMRunModel === 1)
+        if (field.toLowerCase().includes("dept"))
+            parentNo = webUser.FK_Dept;
+        if (webUser.CCBPMRunModel === 1)
             parentNo = webUser.OrgNo;
-        var treeData = findChildren(data[field],parentNo);
+        var treeData = findChildren(data[field], parentNo);
         xmSelect.render({
             el: "#XmlSelect_" + field,
             autoRow: true,
@@ -368,10 +368,10 @@ function InitToolbar(type) {
         var selectVal = json[field];
         var urlVal = GetQueryString(field);
         if (urlVal != null && urlVal != undefined)
-            selectVal = GetQueryString(attr.Field);
+            selectVal = GetQueryString(field);
         selectVal = selectVal || "all";
         var exts = $.grep(mapExts, function (obj) {
-            return obj.AttrOfOper == attr.Field;
+            return obj.AttrOfOper == field;
         });
         $("#DDL_" + field).val(selectVal);
         if (exts.length == 0)
@@ -380,15 +380,10 @@ function InitToolbar(type) {
         var ddlChild = $("#DDL_" + mapExt.AttrsOfActive);
         if (ddlPerant != null && ddlChild != null) {
             ddlPerant.attr("onchange", "DDLRelation(this.value,\'" + "DDL_" + exts[0].AttrsOfActive + "\', \'" + exts[0].MyPK + "\',\'" + selectVal + "\')");
-
         }
-
     })
-
     $("#TB_Key").val(GetQueryString("Key"));
     layui.form.render();
-
-
 }
 /**
  * 点击下三角选择列的显示隐藏
@@ -688,7 +683,7 @@ function GetColoums(data, thrMultiTitle, secMultiTitle, colorSet, sortColumns, f
                         formatter = formatter.substring(0, formatter.indexOf(";"));
                         var strs = formatter.split("@");
                         if (strs.length == 2) {
-                            val = eval(strs[1] + "('" + row[field] + "')");
+                            val = eval(strs[1] + "('" + row[field] + "','" + JSON.stringify(row) + "')");
                         }
                     }
                    if (drillFields.indexOf(field + ",") != -1 && typeof Drill == "function") {
@@ -793,7 +788,7 @@ function GetColoums(data, thrMultiTitle, secMultiTitle, colorSet, sortColumns, f
             align: field.toLowerCase() == "icon" ? "center" : "left",
             rowspan: keyRowSpan,
             templet: function (row) {
-                //如果这个字段是Icon
+            	//如果这个字段是Icon
                 if (this.field.toLowerCase() == "icon" && row[this.field] != "") {
                     return "<i  class='" + row[this.field] + "'></i>";
                 }
@@ -805,7 +800,7 @@ function GetColoums(data, thrMultiTitle, secMultiTitle, colorSet, sortColumns, f
                     formatter = formatter.substring(0, formatter.indexOf(";"));
                     var strs = formatter.split("@");
                     if (strs.length == 2) {
-                        val = eval(strs[1] + "('" + val + "')");
+                        val = eval(strs[1] + "('" + val + "','" + JSON.stringify(row) + "')");
                     }
                 }
 
@@ -1348,7 +1343,7 @@ function SearchData(pageType, orderBy, orderWay) {
     return data;
 }
 
-
+var searchTableData = [];
 function transferHtmlData(tableData) {
     tableData = JSON.parse(filterXSS(JSON.stringify(tableData)))
     var val = "";
@@ -1366,6 +1361,7 @@ function transferHtmlData(tableData) {
             })
         });
     }
+    searchTableData = tableData;
     return tableData;
 }
 function htmlEncodeByRegExp(str) {
@@ -1401,9 +1397,7 @@ function htmlDecodeByRegExp(str) {
 }
 
 
-
-function OpenEn(pk, paras, flag, row) {
-
+function OpenEn(pk, paras, flag, row,obj) {
     if (row != null && row != undefined && row != "")
         row = JSON.parse(decodeURIComponent(row));
 
@@ -1470,8 +1464,10 @@ function OpenEn(pk, paras, flag, row) {
     var openModel = cfg.OpenModel;
 
     if (openModel == 0) {
-        if (cfg.IsRefreshParentPage == 1)
-            OpenLayuiDialog(url, mapBase.EnDesc + ' : 详细', windowW, 100, "r", true);
+        if (cfg.IsRefreshParentPage == 1) 
+            OpenLayuiDialog(url, mapBase.EnDesc + ' : 详细', windowW, 100, "r", false, false, false, null, function () {
+                ChangeTableData(pk,enName,obj);
+            });
         else
             OpenLayuiDialog(url, mapBase.EnDesc + ' : 详细', windowW, 100, "r", false);
     } else {
@@ -1491,6 +1487,34 @@ function OpenEn(pk, paras, flag, row) {
 
 }
 
+function ChangeTableData(pkVal,enName,obj) {
+    //根据PK获取到改行的最新信息
+    var en = new Entity(enName);
+    en.SetPKVal(pkVal);
+    en.RetrieveFromDBSources();
+
+    searchTableData.forEach(item => {
+        if (item[enPK] == pkVal) {
+            if (richAttrs.length != 0) {
+                richAttrs.forEach(key => {
+                    var val = item[key];
+                    if (val != "") {
+                        en[key] = filterXSS(val);
+                        console.log(item[key])
+                    }
+                });
+            }
+            for (var key in item)
+                item[key] = en[key];
+            if (typeof obj != "undefined") {
+                obj.update(item);
+            }
+            return;
+        }
+    });
+    if(typeof obj ==="undefined")
+        layui.table.reload('tableSearch', { data: searchTableData });
+}
 
 function New() {
     OpenEn("", "", 0, null);
@@ -1609,10 +1633,13 @@ function executeFunction(jsString, label) {
 
 //执行删除
 function Delete() {
+   
     if (batchData.length == 0) {
         layer.alert("请选择要删除的行");
         return;
     }
+    if (confirm("确定要删除选择的行吗") == false)
+        return;
     var deleteRow = batchData;
     //执行删除操作
     var enName = ensName.substring(0, ensName.length - 1);
@@ -1787,7 +1814,7 @@ $(window).keydown(function (e) {
 
     var key = window.event ? e.keyCode : e.which;
 
-    if (key.toString() == "13") {
+    if (!!key && key.toString() == "13") {
 
         return false;
 

@@ -85,11 +85,17 @@ new Vue({
             })
         },
         // 是否启用
-        changemyEnEnableStatus(myEn, ctrl) {
+        changeEnableStatus(myEn, ctrl) {
             // 当前启用状态
-            //else
-            //    en.IsEnable = 0; // myEn.IsEnable;
-            //en.Update();
+
+            var en = new Entity("BP.WF.Template.FlowTab", myEn.MyPK);
+            if (en.isEnable == 0)
+                en.isEnable = 1;
+            else
+                en.isEnable = 0;
+
+            en.Update();
+
             console.log("更新成功..");
         }
     },
@@ -221,6 +227,8 @@ function NewIt() {
 
     var no = GetQueryString("FlowNo");
 
-    var url = "SelfUrl.htm?FlowNo=" + no + "&MenuNo=" + no + "&SystemNo=" + systemNo;
+    //var url = "SelfUrl.htm?FlowNo=" + no + "&MenuNo=" + no + "&SystemNo=" + systemNo;
+    var url = "SelfUrl.htm?FlowNo=" + no;
+
     OpenLayuiDialog(url, '', 900, 80, "auto", true);
 }

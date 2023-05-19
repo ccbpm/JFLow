@@ -44,6 +44,7 @@ function isHaveActiveDDLSearchCond(mapAttr) {
 * @param defVal
 */
 function InitDDLOperation(frmData, mapAttr, defVal, ddlShowWays, selectSearch) {
+    const defaultValue = defVal;
     defVal = "," + defVal + ",";
     var operations = [];
     var isAutoFull = isHaveAutoFull(mapAttr);
@@ -89,7 +90,7 @@ function InitDDLOperation(frmData, mapAttr, defVal, ddlShowWays, selectSearch) {
         })
     }
 
-
+    defVal = defaultValue;
     if ((isAutoFull == true || isActiveDDL == true) && defVal == 'all') {
         defVal = operations[0].value;
 
@@ -566,7 +567,7 @@ function OpenIt(workid, entityType, billstate, row, isOpenAdd) {
 
     if (mapData.RowOpenModel == 0) {
         if (urlOpenType != 9)
-            url = "/WF/CCBill/" + url;
+            url = basePath + "/WF/CCBill/" + url;
         if (top.vm != null)
             top.vm.openTab(mapData.Name, url);
         else
@@ -1139,7 +1140,7 @@ function OpenFlowEntity(no, source) {
         return;
     }
     var menuNo = flowM.FrmID + "_" + flowNo;
-    var url = "../CCBill/Opt/StartFlowByNewEntity.htm?FK_Flow=" + flowNo + "&MenuNo=" + menuNo;
+    var url = "/WF/CCBill/Opt/StartFlowByNewEntity.htm?FK_Flow=" + flowNo + "&MenuNo=" + menuNo;
     window.top.vm.openTab(flowM.Name, url);
 }
 /**
@@ -1281,7 +1282,7 @@ function DoMethod(methodNo, workid, jsonStr) {
             window.open(method.Docs);
             return;
         }
-
+        
     }
 
 }

@@ -112,7 +112,7 @@
             var moduleNo = GetQueryString("ModuleNo");
             var module = new Entity("BP.CCFast.CCMenu.Module", moduleNo);
             var url = "../GPM/Menus.htm?SystemNo=" + module.SystemNo;
-            OpenTopWindowTab(name, url);
+            window.top.vm.openTab(name, url);
         }
 
         //转到菜单
@@ -124,7 +124,7 @@
             OpenLayuiDialog(url, '', 9000, 0, null, false);
 
             //   OpenDialogAndCloseRefresh(url,"",9000,900,)
-            //  OpenTopWindowTab(name, url);
+            //  window.top.vm.openTab(name, url);
         }
 
         function GoToFrmD() {
@@ -141,7 +141,7 @@
             //  var module = new Entity("BP.CCFast.CCMenu.Module", moduleNo);
             var url = "../Admin/FoolFormDesigner/GoToFrmDesigner.htm?FK_MapData=" + frmID + "&FrmID=" + frmID;
 
-            OpenTopWindowTab(frmID, url);
+            window.top.vm.openTab(frmID, url);
         }
         //到达集合组件.
         function GoToMethodD() {
@@ -150,7 +150,7 @@
             var url = "../CCBill/Admin/Method.htm?SystemNo=" + module.SystemNo;
             url += "&ModuleNo=" + moduleNo;
             url += "&FrmID=" + GetQueryString("FrmID");
-            OpenTopWindowTab(name, url);
+            window.top.vm.openTab(name, url);
         }
 
         function NewMethod() {

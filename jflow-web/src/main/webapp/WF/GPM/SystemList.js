@@ -21,7 +21,7 @@ function GoToFrmDesigner(frmID) {
 
 // 增加lab.
 function addTab(url, title) {
-    OpenTopWindowTab(title, url, true);
+    window.top.vm.openTab(title, url, true);
 }
 
 new Vue({
@@ -947,7 +947,7 @@ function DesignerFlow(no, name) {
     var sid = GetQueryString("Token");
     var webUser = new WebUser();
     var url = "../Admin/CCBPMDesigner/Designer.htm?FK_Flow=" + no + "&UserNo=" + webUser.No + "&Token=" + sid + "&OrgNo=" + webUser.OrgNo + "&From=Ver2021";
-    OpenTopWindowTab(name, url, true);
+    window.top.vm.openTab(name, url, true);
 }
 
 function obj2arr(obj) {

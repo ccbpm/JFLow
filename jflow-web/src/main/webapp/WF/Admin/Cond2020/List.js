@@ -25,6 +25,7 @@ new Vue({
                 var dropdown = layui.dropdown
                 _this.systemNodeItems = [
                     { title: '按表单条件计算', id: "CondByFrm" },
+                    { title: '按已选择的独立表单条件计算', id: "StandAloneFrm" },
                     { title: '按指定操作员的岗位条件', id: "CondStation" },
                     { title: '按指定操作员的部门条件', id: "CondDept" },
                     { title: '按SQL条件计算', id: "CondBySQL" },
@@ -33,7 +34,7 @@ new Vue({
                     { title: '按Url条件计算', id: "CondByUrl" },
                     { title: '按WebApi返回值', id: "CondByWebApi" },
                     { title: '按审核组件的立场计算', id: "CondByWorkCheck" },
-                    { title: '按已选择的独立表单条件计算', id: "StandAloneFrm" },
+                    
 
                 ]
 
@@ -318,11 +319,11 @@ function DesignerFlow(no, name) {
     var sid = GetQueryString("SID");
     var webUser = new WebUser();
     var url = "../Admin/CCBPMDesigner/Designer.htm?FK_Flow=" + no + "&UserNo=" + webUser.No + "&SID=" + sid + "&OrgNo=" + webUser.OrgNo + "&From=Ver2021";
-    OpenTopWindowTab(name, url);
+    window.top.vm.openTab(name, url);
 }
 
 function addTab(no, name, url) {
-    OpenTopWindowTab(name, url);
+    window.top.vm.openTab(name, url);
 }
 
 

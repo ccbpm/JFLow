@@ -64,16 +64,13 @@ function InitBar(optionKey) {
 
         html += "<option value=" + DeliveryWay.ByBindEmp + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的人员计算</option>";
         html += "<option value=" + DeliveryWay.ByDeptAndStation + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的岗位与部门交集计算</option>";
-        html += "<option value=" + DeliveryWay.ByStationAndEmpDept + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的岗位计算并且以绑定的部门集合为纬度</option>";
+       // html += "<option value=" + DeliveryWay.ByStationAndEmpDept + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的岗位计算并且以绑定的部门集合为纬度</option>";
         html += "<option value=" + DeliveryWay.BySpecNodeEmpStation + " >&nbsp;&nbsp;&nbsp;&nbsp;按指定节点的人员岗位计算</option>";
         html += "<option value=" + DeliveryWay.BySetDeptAsSubthread + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定部门计算，该部门一人处理标识该工作结束(子线程)</option>";
 
         html += "<option value=" + DeliveryWay.FindSpecDeptEmps + ">&nbsp;&nbsp;&nbsp;&nbsp;找本部门范围内的岗位集合里面的人员.</option>";
         html += "<option value=" + DeliveryWay.ByDeptLeader + ">&nbsp;&nbsp;&nbsp;&nbsp;找本部门的领导(主管,负责人).</option>";
         html += "<option value=" + DeliveryWay.ByEmpLeader + ">&nbsp;&nbsp;&nbsp;&nbsp;找指定节点的人员直属领导.</option>";
-        html += "<option value=" + DeliveryWay.ByTeamOnly + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的用户组</option>";
-        html += "<option value=" + DeliveryWay.ByTeamDeptOnly + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的用户组(本部门人员)</option>";
-
         //  html += "<option value=" + DeliveryWay.ByDeptShipLeader + ">&nbsp;&nbsp;&nbsp;&nbsp;找本部门的分管领导.</option>";
         // 与按照岗位智能计算不同的是，仅仅找本部门的人员.
     }
@@ -134,8 +131,10 @@ function InitBar(optionKey) {
         html += "<option value=" + DeliveryWay.ByGuest + ">&nbsp;&nbsp;&nbsp;&nbsp;仅外部用户可以发起.</option>";
 
 
-        if (webUser.CCBPMRunModel == 1)
+        if (webUser.CCBPMRunModel == 1){
             html += "<option value=" + DeliveryWay.BySelectedOrgs + ">&nbsp;&nbsp;&nbsp;&nbsp;指定的组织可以发起(对集团版有效).</option>";
+        }
+
 
 
     } else {
@@ -143,6 +142,7 @@ function InitBar(optionKey) {
 
         if (webUser.CCBPMRunModel == 1) {
             html += "<option value=" + DeliveryWay.BySelectedEmpsOrgModel + " >&nbsp;&nbsp;&nbsp;&nbsp;由上一节点发送人通过“人员选择器”选择接受人(集团模式)</option>";
+            html += "<option value=" + DeliveryWay.BySelectEmpByOfficer + " >&nbsp;&nbsp;&nbsp;&nbsp;由上一节点发送人选择其他组织的联络.</option>";
         }
 
         html += "<option value=" + DeliveryWay.BySelfUrl + " >&nbsp;&nbsp;&nbsp;&nbsp;自定义人员选择器</option>";
@@ -455,6 +455,9 @@ function changeOption() {
             break;
         case DeliveryWay.ByPreviousNodeFormStationsOnly:
             roleName = "54.ByPreviousNodeFormStationsOnly.htm";
+            break;
+        case DeliveryWay.BySelectEmpByOfficer:
+            roleName = "55.BySelectEmpByOfficer.htm";
             break;
         case DeliveryWay.ByPreviousNodeEmp:
             roleName = "6.ByPreviousNodeEmp.htm";

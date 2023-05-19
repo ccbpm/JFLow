@@ -302,8 +302,13 @@ function InitPage() {
                 var timeLeft = GetSpanTime(timeDot, toTimeDot);
 
                 if (timeLeft != 'NaN秒') {                  
-                    doc += "<span>还剩余:<font color=green>";
-                    doc += timeLeft+'</font></span>';
+                    if (timeLeft.startsWith('-')) {
+                        doc += "<span>已超时:<font color=red>";
+                        doc += timeLeft.substring(1, timeLeft.length) + '</font></span>'
+                    } else {
+                        doc += "<span>还剩余:<font color=green>";
+                        doc += timeLeft + '</font></span>'
+                    };
                 }
                 doc += "</p>";
                 var nodeSubFlows = $.grep(subFlows, function (subFlow) {
@@ -343,7 +348,7 @@ function InitPage() {
 //子线程，子流程的时间轴轨迹
 function OpenSubThreadTime(workID, mypks) {
 
-    OpenBootStrapModal("./TimeSubThread.htm?MyPks=" + mypks + "&FK_Flow=" + GetQueryString("FK_Flow") + "&FK_Node=" + GetQueryString("FK_Node"), "SubThread", "子线程", 500, 600);
+    OpenBootStrapModal("./TimeSubThread.htm?MyPKs=" + mypks + "&FK_Flow=" + GetQueryString("FK_Flow") + "&FK_Node=" + GetQueryString("FK_Node"), "SubThread", "子线程", 500, 600);
 }
 
 /**
@@ -379,7 +384,7 @@ function OpenSubFlowTable(obj,workid,fk_node) {
 
 /* 打开子流程表单. */
 function OpenSubFlow(workid, flowNo, nodeID, pworkid) {
-    var url = "../../MyView.htm?WorkID=" + workid + "&FK_Flow=" + flowNo + "&FK_Node=" + nodeID+ "&PWorkID=" + pworkid;
+    var url = "../../MyView.htm?WorkID=" + workid + "&FK_Flow=" + flowNo + "&FK_Node=" + nodeID+ "&PWorkID=" + pworkid+"&IsReadonly=1";
     window.open(url);
     //window.location.url = url;
     return;

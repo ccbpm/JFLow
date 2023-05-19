@@ -177,6 +177,15 @@ function InitAthPage(athDivID, uploadUrl) {
             var src = _this.parent().css("background-image").replace("url(\"", "").replace("\")", "")
             imgShow(this, src);
         });
+        $(".athImg").on("mousemove", function () {
+            debugger
+            var _this = $(this);
+            $(_this.children()[0]).show();
+        })
+        $(".athImg").on("mouseout", function () {
+            var _this = $(this);
+            $(_this.children()[0]).hide();
+        })
     }
     //4.2 普通附件的展示方式（包含图片，word文档，pdf等）
     else {
@@ -503,9 +512,11 @@ function FileShowPic(athDesc, dbs, uploadUrl) {
         var db = dbs[i];
         var url = GetFileStream(db.MyPK, db.FK_FrmAttachment);
         _Html += "<div id='" + db.MyPK + "' class='image-item athInfo' style='background-image: url(&quot;" + url + "&quot;);'>";
-        if ((athDesc.DeleteWay == 1) || ((athDesc.DeleteWay == 2) && (db.Rec == webUser.No)))
+        if(pageData.IsReadonly != 1 &&((athDesc.DeleteWay == 1) || ((athDesc.DeleteWay == 2) && (db.Rec == webUser.No))))
             _Html += "<div class='image-close' onclick='Del(\"" + db.MyPK + "\",\"" + db.FK_FrmAttachment + "\")'>X</div>";
-        _Html += "<div style ='width: 100%; height: 100%;' class='athImg' ></div>";
+        _Html += "<div style ='width: 100%; height: 100%;' class='athImg' >";
+        _Html += "<div class='Img_ShowText'><span>上传人:"+db.RecName+"</span><br/><span>上传时间:"+db.RDT+"</span></div>";
+        _Html +="</div > ";
         _Html += "<div class='image-name' id = 'name-0-0' > ";
         if (athDesc.IsDownload == 0)
             _Html += "<p style = 'text-align:center;width:63.4px;margin:0;padding:0;overflow:hidden;text-overflow: ellipsis;white-space: nowrap' >" + db.FileName + "</p>";
@@ -565,39 +576,7 @@ function Down2018(mypk) {
 
     var url = "";
     if (plant == "CCFlow") {
-        //url = basePath + '/WF/CCForm/DownFile.aspx?DoType=Down&MyPK=' + mypk + "&WorkID=" + workID + "&FK_Node=" + nodeID;
         SetHref(basePath + "/WF/Comm/Handler.ashx?DoType=HttpHandler&DoMethod=AttachmentUpload_Down&HttpHandlerName=BP.WF.HttpHandler.WF_CCForm&WorkID=" + workID + "&FK_Node=" + nodeID + "&MyPK=" + mypk);
-
-
-
-        //var xhr = new XMLHttpRequest();
-        //xhr.open('GET', url, true);
-        //xhr.responseType = 'blob';
-        //xhr.setRequestHeader('Content-Type', 'application/json;charset=utf-8');
-        //xhr.send();//JSON.stringify(params));   // 发送ajax请求
-        //xhr.onreadystatechange = function () {
-        //    if (xhr.readyState === XMLHttpRequest.DONE) {
-        //        // 获取唯一成功标识
-        //        var code = decodeURI(xhr.getResponseHeader("Code"));
-        //        console.log(code);
-        //        if (code.toString() === "OK") {
-        //            var fileName = decodeURI(xhr.getResponseHeader("content-disposition").split(";")[1].split("=")[1]);
-        //            console.log(fileName);
-        //            // 将`blob`对象转化成一个可访问的`url`
-        //            let dataUrl = window.URL.createObjectURL(new Blob([xhr.response]));
-        //            let link = document.createElement("a");
-        //            link.style.display = "none";
-        //            link.href = dataUrl;
-        //            link.setAttribute("download", fileName);
-        //            document.body.appendChild(link);
-        //            link.click();
-        //            document.body.removeChild(link);
-        //        } else {
-        //            alert("下载失败,请联系管理员.");
-        //        }
-        //    }
-        //}
-
         return;
     }
 
@@ -605,7 +584,13 @@ function Down2018(mypk) {
     var currentPath = GetHrefUrl();
     var path = currentPath.substring(0, currentPath.indexOf('/WF') + 1);
     url = path + 'WF/Ath/downLoad.do?MyPK=' + mypk + "&WorkID=" + workID + "&FK_Node=" + nodeID;
-
+    if(typeof filterXSS === 'function'){
+        url = filterXSS(url);
+    }else {
+        url = url.replace(/<\/?[^>]+>/gi, '')
+        .replace(/[(]/g, '')
+        .replace(/->/g, '_')
+    }
     if (IEVersion() < 11) {
         window.open(url);
         return;
@@ -615,11 +600,6 @@ function Down2018(mypk) {
     link.href = url;
     link.click();
 
-    var x = new XMLHttpRequest();
-    x.open("GET", url, true);
-    x.responseType = 'blob';
-    x.onload = function (e) { download(x.response, fileName, "image/gif"); }
-    x.send();
 }
 
 /**

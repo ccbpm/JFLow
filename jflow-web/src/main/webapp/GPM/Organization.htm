@@ -963,20 +963,36 @@
         function SearchDelEmp(no,dept){
             if (confirm('您确定要删除该人员吗？') == false)
                 return;
+            if('admin' == no){
+                alert("管理员账号不能删除");
+                return;
+            }
+            var emp = new Entity(empEnName, no);
+            if(webUser.CCBPMRunModel!==0) {
+                //当前人员时主管理员不能删除
+                var org = new Entity("BP.WF.Port.AdminGroup.Org");
+                org.SetPKVal(emp.OrgNo);
+                if(org.RetrieveFromDBSources()!=0){
+                    if(org.Adminer===no){
+                        alert("管理员账号不能删除");
+                        return;
+                    }
+                }
+            }
+
+            emp.Delete();
 
             var deptEmpPK = dept + "_" + no;
-
-
             //取消人员部门管理关系
             var en = new Entity("BP.Port.DeptEmp");
             en.SetPKVal(deptEmpPK);
             en.Delete();
-            var en = new Entity(empEnName, no);
-            en.Delete();
 
             //取消人员部门岗位管理关系
-            var sql = "delete from Port_DeptEmpStation where FK_Emp='" + no + "' and FK_Dept='" + deptNo + "'";
-            DBAccess.RunSQL(sql);
+            var handler = new HttpHandler("BP.WF.HttpHandler.GPMPage");
+            handler.AddPara("FK_Emp", no);
+            handler.AddPara("FK_Dept", deptNo);
+            handler.DoMethodReturnString("DeptEmpStation_Dele");
 
             SearchEmp();
         }
@@ -984,6 +1000,22 @@
 
             if (confirm('您确定要删除该人员吗？') == false)
                 return;
+            if('admin' == no){
+                alert("管理员账号不能删除");
+                return;
+            }
+            var emp = new Entity(empEnName, no);
+            if(parseInt(webUser.CCBPMRunModel)!==0) {
+                //当前人员时主管理员不能删除
+                var org = new Entity("BP.WF.Port.AdminGroup.Org");
+                org.SetPKVal(emp.OrgNo);
+                if(org.RetrieveFromDBSources()!=0){
+                    if(org.Adminer===no){
+                        alert("管理员账号不能删除");
+                        return;
+                    }
+                }
+            }
 
             var deptEmpPK = deptNo + "_" + no;
 
@@ -1003,11 +1035,10 @@
             }
 
             //取消人员部门岗位管理关系
-            var sql = "delete from Port_DeptEmpStation where FK_Emp='" + no + "' and FK_Dept='" + deptNo + "'";
-            DBAccess.RunSQL(sql);
-            //   var en = new Entity("BP.Port.DeptEmpStation");
-            //  en.Delete("FK_Dept",);
-            // SELECT * FROM Port_DeptEmpStation WHERE FK_Dept+'_'+FK_Emp not in (select MyPK FROM PORT_DEPTEMP)
+            var handler = new HttpHandler("BP.WF.HttpHandler.GPMPage");
+            handler.AddPara("FK_Emp", no);
+            handler.AddPara("FK_Dept", deptNo);
+            handler.DoMethodReturnString("DeptEmpStation_Dele");
 
             BindEmps();
         }

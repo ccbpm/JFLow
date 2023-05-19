@@ -21,6 +21,8 @@
     <script src="../Scripts/xss.js"></script>
     <script src="../Scripts/layui/ext/xmSelect.js"></script>
     <script src="../../DataUser/JSLibData/CommonShowConfig.js"></script>
+    <script src="../../DataUser/JSLibData/SearchAndEn.js"></script>
+
     <style id="theme-data"></style>
     <base target="_self" />
     <style type="text/css">
@@ -80,6 +82,7 @@
             max-width: 100%;
             height: auto;
         }
+
         xm-select > .xm-body .xm-toolbar {
             padding: 0 5px;
         }
@@ -104,7 +107,9 @@
         var cfg = new Entity("BP.Sys.EnCfg");
         cfg.No = ensName;
         cfg.RetrieveFromDBSources();
-
+        var drillFields = cfg.Drill || "";
+        drillFields = drillFields.replace(/@/g, ",");
+        drillFields += ",";
         //当前用户查询信息.
         var ur = GetUserRegedit();
 
@@ -254,6 +259,9 @@
                         case "Add":
                             New();
                             break;
+                        case "Delete":
+                            Delete();
+                            break;
                         case "Imp":
                             Imp();
                             break;
@@ -285,7 +293,7 @@
                 if (typeof window.top.vm != "undefined" && window.top.vm.tabsList.length > window.top.vm.selectedTabsIndex)
                     tableName = window.top.vm.tabsList[window.top.vm.selectedTabsIndex].name;
                 //主页面数据
-                var h = $(document).height() - $("#toolbar").height() - 100;
+                var h = $(document).height() - $("#toolbar").height() * 2 - 90;
                 vtable = table.render({
                     elem: '#tableSearch',
                     id: 'tableSearch',
@@ -295,6 +303,7 @@
                     height: h,
                     cellMinWidth: 120,
                     cols: cols,
+                    autoSort: false,
                     initSort: orderBys,
                     page: false,
                     done: function (res, curr, count) {
@@ -341,6 +350,7 @@
                         var func1 = cfg.EnBtnJS1;
                         if (func1 == null || func1 == undefined || func1 == "")
                             return;
+                        func1 = func1.replace(/~/g, "'");
                         if (func1.indexOf("(") != -1)
                             func1 = func1.replace("@PKVal", data[enPK]);
                         else
@@ -351,6 +361,7 @@
                         var func2 = cfg.EnBtnJS2;
                         if (func2 == null || func2 == undefined || func2 == "")
                             return;
+                        func2 = func2.replace(/~/g, "'");
                         if (func2.indexOf("(") != -1)
                             func2 = func2.replace("@PKVal", data[enPK]);
                         else
@@ -488,7 +499,7 @@
                 $(".layui-toolbar").append(btn);
                 btn.on('click', function () {
                     var method = $(this).data();
-                    operateBatch(idx,method);
+                    operateBatch(idx, method);
                 })
             })
 

@@ -5,7 +5,6 @@ var uiPlant = 'BS'; //风格文件.
 var basePath = basePath();
 
 function basePath() {
-    debugger
     //jflow下常用目录
     var dirs = ['/WF', '/DataUser', '/GPM', '/App', '/Portal', '/CCMobile', '/CCFast'];
     //获取当前网址，如： http://localhost:80/jflow-web/index.jsp
@@ -132,7 +131,7 @@ Skip.getXmlHttpRequest = function () {
             var oScript = document.createElement("script");
             oScript.type = "text/javascript";
             oScript.text = jsText;
-            rootObject.appendChild(oScript);
+            rootObject.append(oScript);
         }
     },
     //导入文件

@@ -353,6 +353,9 @@ function BindFrm() {
 
     //星级评分事件
     setScore(isReadonly);
+    var enName = flowData.Sys_MapData[0].No;
+    if (flowData.Sys_MapData[0].IsEnableJs == 1)
+        Skip.addJs("../DataUser/JSLibData/" + enName + "_Self.js?t=" + Math.random());
 
     //4.解析表单的扩展功能
     AfterBindEn_DealMapExt(flowData);
@@ -448,7 +451,7 @@ function Save(saveType) {
     }
     isSaveOnly = true;
     if (checkBlanks() == false) {
-        layer.alert("必填项不能为空");
+        layer.msg('必填项不能为空', { icon: 5 });
         isSaveOnly = false;
         return;
     }
@@ -626,10 +629,10 @@ function checkBlanks() {
             if (keyOfEn != null) {
                 var item = $("#TB_" + keyOfEn);
                 if (item.length != 0) {
-                    var val= item.val();
-                    if(item.hasClass("rich")){
-                        var edit = layui.tinymce.get("#TB_" + keyOfEn)
-                         val = edit.getContent();
+                    var val = item.val();
+                    if (item.hasClass('rich')) {
+                        var edit = layui.tinymce.get('#TB_' + keyOfEn)
+                        val = edit.getContent();
                     }
                     if (val == "") {
                         checkBlankResult = false;

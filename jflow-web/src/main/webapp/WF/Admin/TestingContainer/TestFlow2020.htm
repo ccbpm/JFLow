@@ -236,8 +236,10 @@
 
         //发起流程。
         function StartIt(empNo, workID) {
+
+            var token = GetQueryString("Token") || GetQueryString("Token") ;
+
             var webUser = new WebUser();
-            var token = GetQueryString("Token") || GetQueryString("Token") || webUser.Token;
 
             $("#Btn_Reset").val("正在以[" + empNo + "]启动流程,请稍候....");
 

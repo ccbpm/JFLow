@@ -267,7 +267,6 @@
         var isHaveDelOper = false;
         var isHaveSeachOper = false;
 
-
         var frmDict = new Entity("BP.CCBill.FrmDict", frmID);
         var mapData = frmDict;
         layui.use(['table', 'laytpl', 'form', 'laydate'], function () {
@@ -316,8 +315,6 @@
                 }
                 if (item.showWay ==2)
                     $("#DDL_" + item.key).val(item.value);
-                if (item.showWay == 0)
-                    $("#DDL_" + item.key).val(item.operations[0].value);
             })
 
             if ($(".layui-tab-title").length == 1) {
@@ -480,6 +477,7 @@
                         SetHref(url);
                         break;
                     case "Link"://链接
+                    case "LinkCollection":
                         var no = $(this).data('no');
                         var source = $(this).data('source');
                         OpenLink(no, source);

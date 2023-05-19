@@ -103,7 +103,7 @@
         function changeOrOpenTab(flowName, flowNo) {
             //"&UserNo=" + WebUser.No + "&Token=" + webUser.Token + "&Flow_V=1", node.iconCls
             var webUser = new WebUser();
-            var url = "../CCBPMDesigner/Designer.htm?FK_Flow=" + flowNo;
+            var url = basePath+"/WF/Admin/CCBPMDesigner/Designer.htm?FK_Flow=" + flowNo;
 
             url += "&UserNo=" + webUser.No + "&Token=" + webUser.Token + "&Flow_V=1&OrgNo=" + webUser.OrgNo;
             if (top.layui.index) {
@@ -112,8 +112,12 @@
                 url += "&UserNo=" + webUser.No + "&Token=" + webUser.Token + "&Flow_V=1&OrgNo=" + webUser.OrgNo;
                 top.layui.index.openTabsPage(url, flowNo + "." + flowName);
             } else {
-                window.parent.parent.addTab(flowNo, flowNo + "." + flowName, url,
-                    "icon-flow1");
+                if (typeof window.parent.parent.addTab != "undefined")
+                    window.parent.parent.addTab(flowNo, flowNo + "." + flowName, url,
+                        "icon-flow1");
+                else
+                    window.parent.parent.location.href = url;
+
             }
             
 

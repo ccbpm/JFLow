@@ -39,7 +39,6 @@ window.onload = function () {
                 msgListener: null,
                 plant:"CCFlow"
 
-
             };
         },
         computed: {
@@ -55,6 +54,25 @@ window.onload = function () {
             },
         },
         methods: {
+            initIM: function () {
+                var webUser = new WebUser();
+                var orgNo = webUser.OrgNo;
+                if (orgNo == "" || orgNo == null) {
+                    orgNo = "ccflow";
+                }
+                var bgc = JSON.parse(localStorage.getItem("themeColorInfo"));
+                umclient.init({
+                    No: webUser.No,
+                    Name: webUser.Name,
+                    Password: '',
+                    FG_OrgNo: orgNo,//必填，不能为空
+                    FG_OrgName: webUser.OrgName,
+                    FG_DeptNo: webUser.FK_Dept,
+                    FG_DeptName: webUser.FK_DeptName,
+                    isShowVideo: true, // 是否启用音视频通话 
+                    headerBgc: bgc.selectedMenu
+                }, '#iconIM')
+            },
             openTabDropdownMenu: function (e) {
                 this.tabDropdownVisible = true;
                 this.top = e.pageY;
@@ -194,30 +212,63 @@ window.onload = function () {
                         this.$refs['iframe-home'].contentWindow.location.reload();
                         return
                     }
-                    this.$refs['iframe-' + this.selectedTabsIndex][0].contentWindow.location
-                        .reload()
+                    var src = this.tabsList[this.selectedTabsIndex].src;
+                    var oldSrc = this.$refs['iframe-' + this.selectedTabsIndex][0].contentWindow.location.href;
+                    if (oldSrc.indexOf(src) != -1)
+                        this.$refs['iframe-' + this.selectedTabsIndex][0].contentWindow.location
+                            .reload()
+                    else
+                        this.$refs['iframe-' + this.selectedTabsIndex][0].contentWindow.location.href = src;
                 })
             },
             // 关闭当前标签页
-            closeCurrentTabs: function (index) {
+            closeCurrentTabs: function (index, isShowTip) {
+                isShowTip = isShowTip || false;
                 if (index == undefined)
                     index = this.selectedTabsIndex;
-                this.tabsList.splice(index, 1)
-                var _this = this
-                setTimeout(function () {
-                    if (_this.tabsList.length > index) {
-                        _this.selectedTabsIndex = index
-                    } else {
-                        _this.selectedTabsIndex = index - 1
-                    }
-                    if (_this.selectedTabsIndex == -1)
-                        _this.selectedId = "";
-                    else
-                        _this.selectedId = _this.tabsList[_this.selectedTabsIndex].no;
-                    var cur = _this.tabsList[_this.selectedTabsIndex];
-                    if ((cur!=undefined && cur.name == "待办")||  _this.selectedTabsIndex == -1)
-                        _this.reLoadCurrentPage();
-                }, 100)
+
+                var cur = this.tabsList[index];
+                var src = cur.src || "";
+                var _this = this;
+                if ((src.indexOf('MyFlowGener') != -1 || src.indexOf('MyFlowTree') != -1
+                    || src.indexOf('MyDict') != -1 || src.indexOf('MyBill') != -1) && src.indexOf('IsReadonly=1') == -1 && isShowTip) {
+                    layer.confirm('关闭当前页面,请检查是否已保存填写的内容', function (closeIndex) {
+                        layer.close(closeIndex);
+                        _this.tabsList.splice(index, 1)
+                        setTimeout(function () {
+                            if (_this.tabsList.length > index) {
+                                _this.selectedTabsIndex = index
+                            } else {
+                                _this.selectedTabsIndex = index - 1
+                            }
+                            if (_this.selectedTabsIndex == -1)
+                                _this.selectedId = "";
+                            else
+                                _this.selectedId = _this.tabsList[_this.selectedTabsIndex].no;
+                            var cur = _this.tabsList[_this.selectedTabsIndex];
+                            if ((cur != undefined && cur.name == "待办") || _this.selectedTabsIndex == -1)
+                                _this.reLoadCurrentPage();
+                        }, 100)
+                    });
+                } else {
+                    _this.tabsList.splice(index, 1)
+                    setTimeout(function () {
+                        if (_this.tabsList.length > index) {
+                            _this.selectedTabsIndex = index
+                        } else {
+                            _this.selectedTabsIndex = index - 1
+                        }
+                        if (_this.selectedTabsIndex == -1)
+                            _this.selectedId = "";
+                        else
+                            _this.selectedId = _this.tabsList[_this.selectedTabsIndex].no;
+                        var cur = _this.tabsList[_this.selectedTabsIndex];
+                        if ((cur != undefined && cur.name == "待办") || _this.selectedTabsIndex == -1)
+                            _this.reLoadCurrentPage();
+                    }, 100)
+                }
+
+               
             },
             closeTabByName: function (name) {
                 if (name == null || name == undefined || name == "")
@@ -247,7 +298,7 @@ window.onload = function () {
                     else
                         _this.selectedId = _this.tabsList[_this.selectedTabsIndex].no;
                     var cur = _this.tabsList[_this.selectedTabsIndex];
-                    if ((cur!=undefined && cur.name == "待办")|| _this.selectedTabsIndex == -1)
+                    if ((cur != undefined && cur.name == "待办") || _this.selectedTabsIndex == -1)
                         _this.reLoadCurrentPage();
                 }, 100)
             },
@@ -330,7 +381,7 @@ window.onload = function () {
                 else
                     this.selectedId = item.no;
                 var cur = this.tabsList[this.selectedTabsIndex];
-                if ((cur!=undefined && cur.name == "待办")|| index == -1)
+                if ((cur != undefined && cur.name == "待办") || index==-1)
                     this.reLoadCurrentPage();
             },
             checkExist: function (obj) {
@@ -360,8 +411,8 @@ window.onload = function () {
                     "   <div class=\"layui-form-item\" pane>" +
                     "   <label class=\"layui-form-label\">\u5206\u680F\u5E03\u5C40</label>" +
                     "<div class=\"layui-input-block\">";
-                if (this.IsShowTwoLevelMenu == true)
-                    tag += "<input type=\"checkbox\" lay-skin=\"switch\" lay-text=\"\u5F00\u542F|\u5173\u95ED\" lay-filter=\"layout\" disabled>" + "</div>" + "</div>" + "</form>" + "</div>" + "<hr class=\"layui-border-black\">" + "<div class='theme-picker'>";
+                if (this.IsShowTwoLevelMenu == true || getPortalConfigByKey("IsClassicalLayout", true) == false)
+                    tag += "<input type=\"checkbox\" lay-skin=\"switch\" lay-text=\"\u5F00\u542F|\u5173\u95ED\" lay-filter=\"layout\" disabled checked>" + "</div>" + "</div>" + "</form>" + "</div>" + "<hr class=\"layui-border-black\">" + "<div class='theme-picker'>";
                 else
                     tag += "<input type=\"checkbox\" lay-skin=\"switch\" lay-text=\"\u5F00\u542F|\u5173\u95ED\" lay-filter=\"layout\" ".concat(this.classicalLayout ? '' : 'checked', ">" + "</div>" + "</div>" + "</form>" + "</div>" + "<hr class=\"layui-border-black\">" + "<div class='theme-picker'>");
                 for (var key in themeData) {
@@ -433,6 +484,8 @@ window.onload = function () {
                 // chooseTheme(color)
                 if (this.IsShowTwoLevelMenu == true)
                     localStorage.setItem('classicalLayout', "1");
+                if (getPortalConfigByKey("IsClassicalLayout", true) == false)
+                    localStorage.setItem('classicalLayout', "1");
                 this.classicalLayout = parseInt(localStorage.getItem('classicalLayout')) === 1
                 this.updateLayout()
             },
@@ -468,11 +521,11 @@ window.onload = function () {
 
                 var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
                 var data = handler.DoMethodReturnString("Default_LogOut");
-                SetHref("/Portal/Standard/"+data);
+                SetHref(data); // "Login.htm?DoType=Logout";
 
                 //  win
                 //  var url = getPortalConfigByKey("LogoutPath", "./") + data;
-                //window.location.href = url;// "Login.htm?DoType=Logout";
+                //window.location.href = filterXSS(url);// "Login.htm?DoType=Logout";
             },
             logoutExt: function () {
                 var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
@@ -483,7 +536,7 @@ window.onload = function () {
             },
             GoToAppClassic: function () {
                 var webUser = new WebUser();
-                SetHref(basePath + "/WF/AppClassic/Login.htm?UserNo=" + webUser.No + "&Token=" + webUser.Token + "&OrgNo=" + webUser.OrgNo);
+                SetHref(basePath + "/WF/AppClassic/Home.htm?UserNo=" + webUser.No + "&Token=" + webUser.Token + "&OrgNo=" + webUser.OrgNo);
             },
             GoToMobile: function () {
                 var webUser = new WebUser();  //退出
@@ -543,7 +596,7 @@ window.onload = function () {
                 if (item.type === 'form') cList.push(type === 1 ? 'form-node' : 'form-node-child')
                 return cList
             },
-            /*startListenMsg: function () {
+            startListenMsg: function () {
                 var _this = this
                 if (this.msgListener) {
                     this.stopListenMsg()
@@ -581,7 +634,29 @@ window.onload = function () {
 
             stopListenMsg: function () {
                 clearInterval(this.msgListener)
-            }*/
+            },
+            ChangeLang: function () {
+                //初演示
+                layui.dropdown.render({
+                    elem: '#lange'
+                    , align: 'right'
+                    , data: [{
+                        title: '简体中文'
+                        , id: 'zh-cn'
+                    }, {
+                        title: 'English'
+                        , id: 'en-us'
+                    }],
+                    style:'top: 44px',
+                     click: function (obj) {
+                         localStorage.setItem("Lange", obj.id);
+                         SetHref(GetHrefUrl());
+                    }
+                });
+            },
+            GetNameByLange: function (key) {
+                return window.lang[key];
+            }
         },
         mounted: function () {
             // fix firefox bug
@@ -592,7 +667,7 @@ window.onload = function () {
             this.SystemName = getPortalConfigByKey("SystemName", "驰骋BPM");
             this.SystemLogo = getPortalConfigByKey("SystemLogo", "./image/logo.png");
             this.IsShowFast = getPortalConfigByKey("IsShowFast", true);
-            this.IsShowOA = getPortalConfigByKey("IsShowOA", false);
+            this.IsShowOA = getPortalConfigByKey("IsShowOA", true);
             this.IsShowRefresh = getPortalConfigByKey("IsShowRefresh", true);
             this.IsShowFullScreen = getPortalConfigByKey("IsShowFullScreen", true);
             this.IsShowTheme = getPortalConfigByKey("IsShowTheme", true);
@@ -602,8 +677,9 @@ window.onload = function () {
             this.isAdmin = this.webUser.No === "admin" || parseInt(this.webUser.IsAdmin) === 1;
             this.plant = plant;
             this.initMenus();
-            this.startListenMsg();
-
+            //this.startListenMsg();
+            //this.initIM();
+            this.ChangeLang();
         },
         beforeDestory: function () {
             this.stopListenMsg()

@@ -169,7 +169,7 @@ function changeOption() {
             break;
     }
 
-    SetHref("/WF/Admin/FoolFormDesigner/Components/" + roleName + "?FK_MapData=" + GetQueryString("FK_MapData") + "&FrmType=" + frmType);
+    SetHref("./" + roleName + "?FK_MapData=" + GetQueryString("FK_MapData") + "&FrmType=" + frmType);
 }
 
 

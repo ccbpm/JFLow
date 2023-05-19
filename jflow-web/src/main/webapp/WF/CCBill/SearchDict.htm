@@ -289,7 +289,6 @@
             laytpl(getTpl).render(InitToolBar(), function (html) {
                 view.innerHTML = html;
             });
-
             $.each(searchData["selectSearch"], function (i, item) {
                 if (item.showWay == 0 && item.isRadioSelect==0) {
                     xmSelect.render({

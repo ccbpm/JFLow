@@ -1,0 +1,16 @@
+<customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui" onLoad="OnAddinLoad">
+    <ribbon startFromScratch="false">
+        <tabs>
+            <!-- <tab id="wpsAddinTab" label="OA模块"> -->
+			<tab id="wpsAddinTab" label="工作流辅助" getVisible="OnGetVisible" insertBeforeMso="TabHome">
+                <group id="grpWPSWork" label="工作流助手文档操作功能组" getVisible="OnGetVisible">
+                    <button id="btnSaveToServer" label="保存" onAction="OnAction" getEnabled="OnGetEnabled" getImage="GetImage" size="large"/>
+                   <!-- <button id="btnSaveAsFile" label="保存本地" getLabel="OnGetLabel" onAction="OnAction" getEnabled="OnGetEnabled" getVisible="OnGetVisible" getImage="GetImage" size="large" /> -->
+                    <button id="btnInsertPic" label="签章" getLabel="OnGetLabel" onAction="OnAction" getEnabled="OnGetEnabled" getVisible="OnGetVisible" getImage="GetImage" size="large"/>
+                    
+					<separator id="sepWPSWork" getVisible="OnGetVisible" />
+                </group>
+            </tab>
+        </tabs>
+    </ribbon>
+</customUI>

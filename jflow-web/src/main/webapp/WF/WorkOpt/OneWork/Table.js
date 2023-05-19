@@ -239,6 +239,7 @@ function InitPage() {
                 newRow += "<td ></td>";
                 newRow += "</tr>";
                 $("tbody tr:last").after(newRow);
+                idx++;
             }
         }
     }

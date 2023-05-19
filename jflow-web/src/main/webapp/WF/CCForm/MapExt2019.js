@@ -86,7 +86,7 @@ function DoAnscToFillDiv(sender, selectVal, tbid, fk_mapExt, TBModel) {
 
                     var left = $("#autodiv").offset().left;
                     $("#autoComplete").css("left", left + "px");
-                    $("#autoComplete").append("<div style='" + itemStyle + "' name='" + idx + "' onmouseover='MyOver(this)' onmouseout='MyOut(this)' onclick=\"ItemClick('" + sender.id + "','" + no + "','" + tbid + "','" + fk_mapExt + "');\" value='" + no + "'>" + no + '|' + name + "</div></div>");
+                    $("#autoC omplete").append("<div style='" + itemStyle + "' name='" + idx + "' onmouseover='MyOver(this)' onmouseout='MyOut(this)' onclick=\"ItemClick('" + sender.id + "','" + no + "','" + tbid + "','" + fk_mapExt + "');\" value='" + no + "'>" + no + '|' + name + "</div></div>");
                 });
 
             }

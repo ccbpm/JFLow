@@ -2201,23 +2201,22 @@ public class WF extends WebContralBase
 			///#region 安全性校验. Token 模式.
 			///#endregion 安全性校验. Token 模式.
 			///#region 安全性校验. SID 模式.
-		String token = this.getSID();
+
 		if (this.getSID() == null)
 			return "err@必要的参数没有传入，请参考接口规则。SID";
-		if (DataType.IsNullOrEmpty(this.getUserNo()) == false)
+		String token = this.getSID();
+		/*if (DataType.IsNullOrEmpty(this.getUserNo()) == false)
 		{
 			Dev2Interface.Port_Login(this.getUserNo());
 			token = Dev2Interface.Port_GenerToken("PC");
 
-		}
-
-		if (DataType.IsNullOrEmpty(this.getUserNo()) == false)
+		}*/
+		if(DataType.IsNullOrEmpty(token) == false){
+			Dev2Interface.Port_LoginByToken(token);
+		}else if (DataType.IsNullOrEmpty(this.getUserNo()) == false)
 		{
 			Dev2Interface.Port_Login(this.getUserNo());
-			Dev2Interface.Port_GenerToken("PC");
-
-		}else if(DataType.IsNullOrEmpty(this.getSID()) == false){
-			Dev2Interface.Port_LoginByToken(token);
+			token = Dev2Interface.Port_GenerToken("PC");
 		}
 			///#endregion 安全性校验. SID 模式.
 

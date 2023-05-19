@@ -33,7 +33,7 @@ public class DevelopAPI extends HttpHandlerBase {
                 doType = request.getParameter("DoWhat");
             }
 
-            //如果是请求登录. @hongyan.
+            //如果是请求登录.
             if (doType.equals("Portal_Login_Submit") == true)
             {
                 String key = request.getParameter("PrivateKey");
@@ -77,7 +77,28 @@ public class DevelopAPI extends HttpHandlerBase {
             long workid = bp.wf.Dev2Interface.Node_CreateBlankWork(this.getFK_Flow(), bp.web.WebUser.getNo());
             return String.valueOf(workid);
         }
+        if (doType.equals("Node_IsCanDealWork") == true)
+        {
+            GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
+            String todoEmps = gwf.getTodoEmps();
+            boolean isCanDo = false;
+            if (String.valueOf(gwf.getFK_Node()).endsWith("01") == true)
+            {
+                if (gwf.getStarter().equals(WebUser.getNo()) == false)
+                    isCanDo = false; //处理开始节点发送后，撤销的情况，第2个节点打开了，第1个节点撤销了,造成第2个节点也可以发送下去.
+                else
+                    isCanDo = true; // 开始节点不判断权限.
+            }
+            else
+            {
+                isCanDo = todoEmps.contains(";" + WebUser.getNo() + ",");
+                if (isCanDo == false)
+                    isCanDo = Dev2Interface.Flow_IsCanDoCurrentWork(this.getWorkID(), WebUser.getNo());
+            }
 
+            return isCanDo==true?"1":"0";
+
+        }
         if (doType.equals("Node_SetDraft") == true)
         {
             bp.wf.Dev2Interface.Node_SetDraft(this.getFK_Flow(), this.getWorkID());
@@ -152,7 +173,20 @@ public class DevelopAPI extends HttpHandlerBase {
                 return "err@" + ex.getMessage();
             }
         }
-
+        //根据流程编号获得流程信息.
+        if (doType.equals("DB_GenerWorkFlow") == true)
+        {
+            GenerWorkFlows gwfs = new GenerWorkFlows();
+            QueryObject qo = new QueryObject(gwfs);
+            qo.AddWhere("FK_Flow", this.getFK_Flow());
+            qo.addAnd();
+            qo.AddWhere("WFState", ">", 1);
+            //  qo.addAnd();
+            // qo.AddWhere("WFState", "!=", 3);
+            qo.addOrderBy("RDT");
+            qo.DoQuery();
+            return gwfs.ToJson();
+        }
         if (doType.equals("DB_GenerWillReturnNodes") == true)
         {
             //获得可以退回的节点.
@@ -583,6 +617,23 @@ public class DevelopAPI extends HttpHandlerBase {
 
             String url = "";
             bp.wf.Node nd = new bp.wf.Node(nodeID);
+
+            GenerWorkFlow gwf = new GenerWorkFlow(workid);
+            String todoEmps = gwf.getTodoEmps();
+            boolean isCanDo = false;
+            if (String.valueOf(gwf.getFK_Node()).endsWith("01") == true)
+            {
+                if (gwf.getStarter().equals(bp.web.WebUser.getNo()) == false)
+                    isCanDo = false; //处理开始节点发送后，撤销的情况，第2个节点打开了，第1个节点撤销了,造成第2个节点也可以发送下去.
+                else
+                    isCanDo = true; // 开始节点不判断权限.
+            }
+            else
+            {
+                isCanDo = todoEmps.contains(";" + WebUser.getNo() + ",");
+                if (isCanDo == false)
+                    isCanDo = Dev2Interface.Flow_IsCanDoCurrentWork(this.getWorkID(), WebUser.getNo());
+            }
             if (nd.getFormType() == NodeFormType.SDKForm || nd.getFormType() == NodeFormType.SelfForm)
             {
                 url = nd.getFormUrl();

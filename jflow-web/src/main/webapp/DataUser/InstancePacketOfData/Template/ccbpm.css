@@ -677,7 +677,7 @@ border:none;
 
 #divTrack, #divCurrentForm {
     margin:0px;
-    float:right;
+    /**float:right;*/
     position:relative;
 }
     #divTrack iframe {

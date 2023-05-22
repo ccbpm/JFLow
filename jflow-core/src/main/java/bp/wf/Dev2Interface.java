@@ -1416,7 +1416,7 @@ public class Dev2Interface
 
 	public static DataTable DB_StarFlows(String userNo, String domain)
 	{
-		DataTable dt = DB_GenerCanStartFlowsOfDataTable(userNo);
+		DataTable dt = DB_GenerCanStartFlowsOfDataTable(userNo,domain);
 		return dt;
 	}
 	/** 
@@ -1429,17 +1429,21 @@ public class Dev2Interface
 	public static DataTable DB_GenerCanStartFlowsOfDataTable() throws Exception {
 		return DB_GenerCanStartFlowsOfDataTable(null);
 	}
-
-	public static DataTable DB_GenerCanStartFlowsOfDataTable(String userNo)
+	public static DataTable DB_GenerCanStartFlowsOfDataTable(String userNo){
+		return DB_GenerCanStartFlowsOfDataTable(userNo,null);
+	}
+	public static DataTable DB_GenerCanStartFlowsOfDataTable(String userNo,String domain)
 	{
 		if (DataType.IsNullOrEmpty(userNo) == true)
 			userNo = WebUser.getNo();
-
+		String sqlEnd = "";
+		if (DataType.IsNullOrEmpty(domain) == false)
+			sqlEnd = "  AND C.DoMain='" + domain + "'";
 		// 组成查询的sql. @hongyan.sql部分有变动.
 		String sql = "SELECT A.No,A.Name,a.IsBatchStart,a.FK_FlowSort,C.Name AS FK_FlowSortText,C.Domain,A.IsStartInMobile, A.Idx,A.WorkModel";
 		sql += " FROM WF_Flow A, V_FlowStarterBPM B, WF_FlowSort C  ";
 
-		sql += " WHERE A.No=B.FK_Flow AND A.IsCanStart=1 AND A.FK_FlowSort=C.No  AND B.FK_Emp='" + userNo + "' ";
+		sql += " WHERE A.No=B.FK_Flow AND A.IsCanStart=1 AND A.FK_FlowSort=C.No  AND B.FK_Emp='" + userNo + "' "+  sqlEnd;;
 
 
 		if (Glo.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
@@ -9324,7 +9328,6 @@ public class Dev2Interface
 	}
 
 
-	//ORIGINAL LINE: public static string Node_CC_WriteTo_CClist(int fk_node, Int64 workID, string title, string doc, string toEmps = null, string toDepts = null, string toStations = null, string toGroups = null)
 	public static String Node_CC_WriteTo_CClist(int fk_node, long workID, String title, String doc, String toEmps, String toDepts, String toStations, String toGroups) throws Exception {
 
 		Node nd = new Node(fk_node);
@@ -13440,5 +13443,231 @@ public class Dev2Interface
 		}
 
 		return DBAccess.RunSQLReturnStringIsNull(sql, "");
+	}
+	public static DataTable Node_GenerDTOfToNodes(GenerWorkFlow gwf, Node nd) throws Exception {
+		//增加转向下拉框数据.
+		if (nd.getCondModel() != DirCondModel.ByDDLSelected && nd.getCondModel() != DirCondModel.ByButtonSelected)
+			return null;
+
+		DataTable dtToNDs = new DataTable("ToNodes");
+		dtToNDs.Columns.Add("No", String.class); //节点ID.
+		dtToNDs.Columns.Add("Name", String.class); //到达的节点名称.
+		dtToNDs.Columns.Add("IsSelectEmps", String.class); //是否弹出选择人的对话框？
+		dtToNDs.Columns.Add("IsSelected", String.class); //是否选择？
+		dtToNDs.Columns.Add("DeliveryParas", String.class); //自定义URL
+
+		DataRow dr = dtToNDs.NewRow();
+
+		if (nd.isStartNode() == true || (gwf.getTodoEmps().contains(WebUser.getNo() + ",") == true))
+		{
+			/*如果当前不是主持人,如果不是主持人，就不让他显示下拉框了.*/
+
+			/*如果当前节点，是可以显示下拉框的.*/
+			//Nodes nds = nd.HisToNodes;
+
+			NodeSimples nds = nd.getHisToNodeSimples();
+
+
+			///#region 增加到达延续子流程节点。 @lizhen.
+			if (nd.getSubFlowYanXuNum() >= 1)
+			{
+				SubFlowYanXus ygflows = new SubFlowYanXus(gwf.getFK_Node());
+				for (SubFlowYanXu item : ygflows.ToJavaList())
+				{
+					String[] yanxuToNDs = item.getYanXuToNode().split("[,]", -1);
+					for (String str : yanxuToNDs)
+					{
+						if (DataType.IsNullOrEmpty(str) == true)
+						{
+							continue;
+						}
+
+						int toNodeID = Integer.parseInt(str);
+
+						Node subNode = new Node(toNodeID);
+
+						dr = dtToNDs.NewRow(); //创建行。 @lizhen.
+
+						//延续子流程跳转过了开始节点
+						if (toNodeID == Integer.parseInt(Integer.parseInt(item.getSubFlowNo()) + "01"))
+						{
+							dr.setValue("No", String.valueOf(toNodeID));
+							dr.setValue("Name", "启动:" + item.getSubFlowName() + " - " + subNode.getName());
+							dr.setValue("IsSelectEmps", "1");
+							dr.setValue("IsSelected", "0");
+							dtToNDs.Rows.add(dr);
+						}
+						else
+						{
+
+							dr.setValue("No", String.valueOf(toNodeID));
+							dr.setValue("Name", "启动:" + item.getSubFlowName() + " - " + subNode.getName());
+							if (subNode.getHisDeliveryWay() == DeliveryWay.BySelected)
+							{
+								dr.setValue("IsSelectEmps", "1");
+							}
+							else
+							{
+								dr.setValue("IsSelectEmps", "0");
+							}
+							dr.setValue("IsSelected", "0");
+							dtToNDs.Rows.add(dr);
+						}
+					}
+				}
+			}
+
+			///#endregion 增加到达延续子流程节点。
+
+
+			///#region 到达其他节点.
+			//上一次选择的节点.
+			int defalutSelectedNodeID = 0;
+			if (nds.size() > 1)
+			{
+				String mysql = "";
+				// 找出来上次发送选择的节点.
+				if (SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
+				{
+					mysql = "SELECT  top 1 NDTo FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + gwf.getFK_Node() + " AND ActionType=1 ORDER BY WorkID DESC";
+				}
+				else if (SystemConfig.getAppCenterDBType( ) == DBType.Oracle || SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR3 ||SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR6)
+				{
+					mysql = "SELECT * FROM ( SELECT  NDTo FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + gwf.getFK_Node() + " AND ActionType=1 ORDER BY WorkID DESC ) WHERE ROWNUM =1";
+				}
+				else if (SystemConfig.getAppCenterDBType( ) == DBType.MySQL)
+				{
+					mysql = "SELECT  NDTo FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + gwf.getFK_Node() + " AND ActionType=1 ORDER BY WorkID  DESC limit 1,1";
+				}
+				else if (SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.HGDB)
+				{
+					mysql = "SELECT  NDTo FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + gwf.getFK_Node() + " AND ActionType=1 ORDER BY WorkID  DESC limit 1";
+				}
+
+				//获得上一次发送到的节点.
+				defalutSelectedNodeID = DBAccess.RunSQLReturnValInt(mysql, 0);
+			}
+
+
+			///#region 为天业集团做一个特殊的判断.
+			if (SystemConfig.getCustomerNo().equals("TianYe") && nd.getName().contains("董事长") == true)
+			{
+				/*如果是董事长节点, 如果是下一个节点默认的是备案. */
+				for (NodeSimple item : nds.ToJavaList())
+				{
+					if (item.getName().contains("备案") == true && item.getName().contains("待") == false)
+					{
+						defalutSelectedNodeID = item.getNodeID();
+						break;
+					}
+				}
+			}
+
+			///#endregion 为天业集团做一个特殊的判断.
+
+
+			///#region 是否增加退回的节点
+			int returnNode = 0;
+			if (gwf.getWFState() == WFState.ReturnSta && nd.GetParaInt("IsShowReturnNodeInToolbar", 0) == 1)
+			{
+				String mysql = "";
+				ReturnWorks returnWorks = new ReturnWorks();
+				QueryObject qo = new QueryObject(returnWorks);
+				qo.AddWhere(ReturnWorkAttr.WorkID, gwf.getWorkID());
+				qo.addAnd();
+				qo.AddWhere(ReturnWorkAttr.ReturnToNode, gwf.getFK_Node());
+				qo.addAnd();
+				qo.AddWhere(ReturnWorkAttr.ReturnToEmp, WebUser.getNo());
+				qo.addOrderByDesc(ReturnWorkAttr.RDT);
+				qo.DoQuery();
+				if (returnWorks.size() != 0)
+				{
+					ReturnWork returnWork = returnWorks.get(0) instanceof ReturnWork ? (ReturnWork)returnWorks.get(0) : null;
+					dr = dtToNDs.NewRow();
+					dr.setValue("No", returnWork.getReturnNode());
+					dr.setValue("Name", returnWork.getReturnNodeName() + "(退回)");
+					dr.setValue("IsSelected", "1");
+					dr.setValue("IsSelectEmps", "0");
+					dtToNDs.Rows.add(dr);
+					returnNode = returnWork.getReturnNode();
+					defalutSelectedNodeID = 0; //设置默认。
+				}
+			}
+
+			///#endregion 是否增加退回的节点.
+
+			for (NodeSimple item : nds.ToJavaList())
+			{
+				if (item.getNodeID() == returnNode)
+				{
+					continue;
+				}
+
+				dr = dtToNDs.NewRow();
+				dr.setValue("No", item.getNodeID());
+				dr.setValue("Name", item.getName());
+
+				//判断到达的节点是不是双向箭头的节点
+				if (item.getIsResetAccepter() == false && item.getHisToNDs().contains("@" + nd.getNodeID()) == true
+						&& nd.getHisToNDs().contains("@" + item.getNodeID()) == true)
+				{
+					GenerWorkerLists gwls = new GenerWorkerLists();
+					gwls.Retrieve(GenerWorkerListAttr.WorkID, gwf.getWorkID(), GenerWorkerListAttr.FK_Node,
+							item.getNodeID(), GenerWorkerListAttr.IsPass, 1);
+					if (gwls.ToJavaList().size() > 0)
+					{
+						dr.setValue("IsSelectEmps", "0");
+						//设置默认选择的节点.
+						if (defalutSelectedNodeID == item.getNodeID())
+						{
+							dr.setValue("IsSelected","1");
+						}
+						else
+						{
+							dr.setValue("IsSelected", "0");
+						}
+
+						dtToNDs.Rows.add(dr);
+						continue;
+					}
+				}
+
+				if (item.getHisDeliveryWay() == DeliveryWay.BySelected)
+				{
+					dr.setValue("IsSelectEmps", "1");
+				}
+				else if (item.getHisDeliveryWay() == DeliveryWay.BySelfUrl)
+				{
+					dr.setValue("IsSelectEmps", "2");
+					dr.setValue("DeliveryParas", item.getDeliveryParas());
+				}
+				else if (item.getHisDeliveryWay() == DeliveryWay.BySelectedEmpsOrgModel)
+				{
+					dr.setValue("IsSelectEmps", "3");
+				}
+				else if(item.getHisDeliveryWay() == DeliveryWay.BySelectEmpByOfficer)
+					dr.setValue("IsSelectEmps","5");
+				else
+				{
+					dr.setValue("IsSelectEmps", "0"); //是不是，可以选择接受人.
+				}
+
+				//设置默认选择的节点.
+				if (defalutSelectedNodeID == item.getNodeID())
+				{
+					dr.setValue("IsSelected", "1");
+				}
+				else
+				{
+					dr.setValue("IsSelected", "0");
+				}
+
+				dtToNDs.Rows.add(dr);
+			}
+
+			///#endregion 到达其他节点。
+		}
+
+		return dtToNDs;
 	}
 }

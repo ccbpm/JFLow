@@ -731,6 +731,9 @@ public class FindWorker
 				depts="'"+depts.replace(",","','")+"'";
 			}
 			//获取人员
+			if(DataType.IsNullOrEmpty(depts) == true)
+				throw new RuntimeException("@您设置的接受人规则是按照表单指定的部门字段，没有选择部门");
+
 			sql="SELECT DISTINCT(FK_Emp) From Port_DeptEmp WHERE FK_Dept IN("+depts+")";
 			DataTable dtt = DBAccess.RunSQLReturnTable(sql);
 			if(dtt.Rows.size()==0)

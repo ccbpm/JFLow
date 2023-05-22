@@ -1,12 +1,25 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
+import bp.difference.SystemConfig;
 import bp.en.QueryObject;
 import bp.sys.*;
 import bp.web.*;
 import bp.wf.template.*;
 import bp.*;
 import bp.wf.*;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /** 
  页面功能实体
@@ -112,7 +125,6 @@ public class WF_WorkOpt_Batch extends bp.difference.handler.WebContralBase
 	}
 	/** 
 	 审核组件模式：批量发送
-	 
 	 @return 
 	*/
 	public final String WorkCheckModel_Send() throws Exception {
@@ -242,6 +254,175 @@ public class WF_WorkOpt_Batch extends bp.difference.handler.WebContralBase
 		return msg;
 	}
 
+	public final String WorkCheckModelVue_Send() throws Exception {
+		//审核批量发送.
+		Node nd = new Node(this.getFK_Node());
+		String workIds = this.GetRequestVal("WorkIDs");
+		String checkMsg = this.GetRequestVal("CheckMsg");
+		String selectItems = this.GetRequestVal("SelectItems");
+		JSONArray json = null;
+		if (DataType.IsNullOrEmpty(selectItems) == false)
+		{
+			selectItems = URLDecoder.decode(selectItems, "UTF-8");
+			json = JSONArray.fromObject(selectItems);
+		}
+		//获取要批处理数据
+		String sql = String.format("SELECT WorkID, FID,Title FROM WF_EmpWorks WHERE FK_Emp='%1$s' and FK_Node='%2$s' and WorkID IN('"+ workIds.replace(",","','")+"')", WebUser.getNo(), this.getFK_Node());
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		int idx = -1;
+		String msg = "";
+
+		//判断是否有传递来的参数.
+		int toNode = this.GetRequestValInt("ToNode");
+		String toEmps = this.GetRequestVal("ToEmps");
+
+		String editFiles = nd.GetParaString("EditFields");
+
+		//多表单的签批组件的修改
+		 FrmNode frmNode=null;
+		if(nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.RefOneFrmTree){
+			FrmNodes frmNodes = new FrmNodes();
+			QueryObject qo = new QueryObject(frmNodes);
+			qo.AddWhere(FrmNodeAttr.FK_Node,nd.getNodeID());
+			qo.addAnd();
+			qo.AddWhere(FrmNodeAttr.IsEnableFWC,1);
+			qo.addAnd();
+			qo.AddWhereIsNotNull(NodeWorkCheckAttr.CheckField);
+			qo.DoQuery();
+			if(frmNodes.size()!=0)
+				frmNode = (FrmNode) frmNodes.get(0);
+		}
+		final FrmNode frmNodel1 = frmNode;
+		int successCout = 0;
+		int errorCount = 0;
+		String successMsg = "";
+		String errorMsg = "";
+		//启用线程的时候设置持有上下文的Request容器
+		ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		RequestContextHolder.setRequestAttributes(servletRequestAttributes,true);
+		final int POOL_SIZE = dt.Rows.size();
+		ThreadPoolExecutor executor = new ThreadPoolExecutor(
+				POOL_SIZE,
+				POOL_SIZE,
+				POOL_SIZE, TimeUnit.SECONDS,
+				new ArrayBlockingQueue<>(POOL_SIZE),
+				new ThreadPoolExecutor.CallerRunsPolicy());
+		List<CompletableFuture<String>> futures = new ArrayList<CompletableFuture<String>>();
+		for (DataRow dr : dt.Rows)
+		{
+			long workid = Long.parseLong(dr.getValue(0).toString());
+			JSONObject obj = GetObject(workid,json);
+			SystemConfig.setIsBSsystem(false);
+			CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
+				String threadMsg = "";
+				try {
+					threadMsg+=SendOneWorkFlow(nd,frmNodel1,workid,Long.parseLong(dr.getValue("FID").toString()),checkMsg,editFiles, dr.getValue("Title"),toNode,toEmps);
+				} catch (Exception ex) {
+					threadMsg += "err@工作(" +  dr.getValue("Title") + ")发送出现错误:";
+					threadMsg += ex.getMessage();
+					threadMsg += "<br/>";
+				}
+				return threadMsg;
+			}, executor);
+			String result = future.get();
+			if(result.startsWith("err@")){
+				errorMsg+=result.replace("err@","");
+				errorCount++;
+			}else{
+				successMsg+=result;
+				successCout++;
+			}
+			futures.add(future);
+		}
+
+		if (successCout != 0)
+			msg += "@发送成功信息如下:<br/>" + successMsg;
+		if (errorCount != 0)
+			msg += "@发送失败信息如下:<br/>" + errorMsg;
+
+		if (msg.equals(""))
+			return "没有选择需要处理的工作";
+
+		return "本次批量发送成功"+successCout+"件，失败"+errorCount+"件。<br>"+msg;
+	}
+
+	private String SendOneWorkFlow(Node nd,FrmNode frmNode,long workid,long fid,String checkMsg,String editFiles,Object title,int toNode,String toEmps) throws Exception {
+		//是否启用了审核组件？
+		if (nd.getFrmWorkCheckSta() == FrmWorkCheckSta.Enable)
+		{
+			//绑定多表单，获取启用审核组件的表单
+			if(frmNode!=null){
+				GEEntity en = new GEEntity(frmNode.getFKFrm(),workid);
+				en.SetValByKey(frmNode.getCheckField(),en.GetValStrByKey(frmNode.getCheckField())+","+nd.getNodeID());
+				en.Update();
+			}else{
+				NodeWorkCheck workCheck = new NodeWorkCheck(nd.getNodeID()) ;
+				if(DataType.IsNullOrEmpty(workCheck.getCheckField())==false){
+					GEEntity en = new GEEntity(nd.getNodeFrmID(),workid);
+					en.SetValByKey(workCheck.getCheckField(),en.GetValStrByKey(workCheck.getCheckField())+","+nd.getNodeID());
+					en.Update();
+				}
+			}
+			//获取审核意见的值
+			String checkNote = "";
+
+			//选择的多条记录一个意见框.
+			int model = nd.GetParaInt("BatchCheckNoteModel", 0);
+
+			//多条记录一个意见.
+			if (model==0  || model ==2)
+				checkNote = checkMsg;
+
+			if (model==2)
+				checkNote = " ";
+
+			//写入审核意见.
+			if (DataType.IsNullOrEmpty(checkNote) == false)
+			{
+				Dev2Interface.WriteTrackWorkCheck(nd.getFK_Flow(), nd.getNodeID(), workid, fid, checkNote, null, null);
+			}
+		}
+
+		//设置字段的默认值.
+		Work wk = nd.getHisWork();
+		wk.setOID(workid);
+		wk.Retrieve();
+		wk.ResetDefaultVal(null, null, 0);
+		if (DataType.IsNullOrEmpty(editFiles) == false)
+		{
+			String[] files = editFiles.split(",");
+			String val = "";
+			for(String key : files)
+			{
+				if (DataType.IsNullOrEmpty(key) == true)
+					continue;
+				val =  this.GetRequestVal("TB_"+ workid+"_"+key);
+				wk.SetValByKey(key, val);
+			}
+		}
+		wk.Update();
+
+
+		SendReturnObjs objs = Dev2Interface.Node_SendWork(nd.getFK_Flow(), workid, toNode, toEmps);
+		//执行工作发送.
+		String msg= "@对工作(" +title + ")处理情况如下";
+		msg += objs.ToMsgOfHtml();
+		msg += "<br/>";
+		return msg;
+	}
+
+	private JSONObject GetObject(long compareWorkID,JSONArray json){
+		if(json == null)
+			return null;
+		for(int i=0;i<json.size();i++){
+			JSONObject obj = (JSONObject) json.get(i);
+			//从表编号
+			String workid=obj.get("WorkID").toString();
+			if(Long.parseLong(workid) == compareWorkID)
+				return obj;
+		}
+		return null;
+	}
 	public final String BatchList_Init() throws Exception {
 		DataSet ds = new DataSet();
 
@@ -316,7 +497,70 @@ public class WF_WorkOpt_Batch extends bp.difference.handler.WebContralBase
 
 
 		///#endregion 界面方法.
+		public String BatchToolBar_Init() throws Exception {
+			DataSet ds = new DataSet();
+			Node nd = new Node(this.getFK_Node());
+			//获取按钮权限
+			BtnLab btnLab = new BtnLab(this.getFK_Node());
+			DataTable dt = new DataTable("ToolBar");
+			dt.Columns.Add("No");
+			dt.Columns.Add("Name");
+			dt.Columns.Add("Oper");
+			dt.Columns.Add("Role", Integer.class);
+			dt.Columns.Add("Icon");
+			DataRow dr = dt.NewRow();
+			//发送
+			dr.setValue("No","Send");
+			dr.setValue("Name",btnLab.getSendLab());
+			dr.setValue("Oper","");
+			dt.Rows.add(dr);
+			if (btnLab.getReturnEnable())
+			{
+				/*退回*/
+				dr = dt.NewRow();
+				dr.setValue("No","Return");
+				dr.setValue("Name",btnLab.getReturnLab());
+				dr.setValue("Oper","");
+				dt.Rows.add(dr);
+			}
+			if (btnLab.getDeleteEnable() != 0)
+			{
+				dr = dt.NewRow();
+				dr.setValue("No","DeleteFlow");
+				dr.setValue("Name", btnLab.getDeleteLab());
+				dr.setValue("Oper","");
+				dt.Rows.add(dr);
 
+			}
+
+			if (btnLab.getEndFlowEnable() && nd.isStartNode() == false)
+			{
+				dr = dt.NewRow();
+				dr.setValue("No","EndFlow");
+				dr.setValue("Name",btnLab.getEndFlowLab());
+				dr.setValue("Oper","");
+				dt.Rows.add(dr);
+
+			}
+           /* int checkModel = nd.GetParaInt("BatchCheckNoteModel");
+            if (nd.FrmWorkCheckSta == FrmWorkCheckSta.Enable && checkModel == 0) {
+                *//*增加审核意见*//*
+                dr = dt.NewRow();
+                dr["No"] = "WorkCheckMsg";
+                dr["Name"] = "填写审核意见";
+                dr["Oper"] = "";
+                dt.Rows.Add(dr);
+            }*/
+			ds.Tables.add(dt);
+			GenerWorkFlow gwf = new GenerWorkFlow();
+			gwf.setTodoEmps(WebUser.getNo() + ",");
+			DataTable dtNodes = bp.wf.Dev2Interface.Node_GenerDTOfToNodes(gwf, nd);
+			if (dtNodes != null)
+				ds.Tables.add(dtNodes);
+
+			ds.Tables.add(nd.ToDataTableField("WF_Node"));
+			return bp.tools.Json.ToJson(ds);
+		}
 
 		///#region 通用方法.
 	/** 
@@ -342,41 +586,6 @@ public class WF_WorkOpt_Batch extends bp.difference.handler.WebContralBase
 			msg += "<hr>";
 		}
 		return "批量删除成功" + msg;
-
-		/*  MapAttrs attrs = new MapAttrs("ND" + this.FK_Node);
-
-		  //获取数据
-		  string sql = string.Format("SELECT Title,RDT,ADT,SDT,FID,WorkID,Starter FROM WF_EmpWorks WHERE FK_Emp='{0}' and FK_Node='{1}'", WebUser.getNo(), this.FK_Node);
-
-		  DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		  int idx = -1;
-		  string msg = "";
-		  foreach (DataRow dr in dt.Rows)
-		  {
-		      idx++;
-		      if (idx == nd.BatchListCount)
-		      {
-		          break;
-		      }
-
-		      Int64 workid = Int64.Parse(dr["WorkID"].ToString());
-		      string cb = this.GetValFromFrmByKey("CB_" + workid, "0");
-		      if (cb == "0") //没有选中
-		      {
-		          continue;
-		      }
-
-		      msg += "@对工作(" + dr["Title"] + ")处理情况如下。<br>";
-		      string mes = BP.WF.Dev2Interface.Flow_DoDeleteFlowByFlag(nd.FK_Flow, workid, "批量删除", true);
-		      msg += mes;
-		      msg += "<hr>";
-
-		  }
-		  if (msg == "")
-		  {
-		      msg = "没有选择需要处理的工作";
-		  }*/
-
 
 	}
 	/** 
@@ -427,7 +636,28 @@ public class WF_WorkOpt_Batch extends bp.difference.handler.WebContralBase
 		return msg;
 	}
 
+	/**
+	 * 批量结束流程
+	 * @return
+	 * @throws Exception
+	 */
+	public String Batch_StopFlow() throws Exception {
+		String workIDs = this.GetRequestVal("WorkIDs");
+		if (DataType.IsNullOrEmpty(workIDs) == true)
+			return "err@没有选择需要处理的工作";
+		String msg = "";
+		GenerWorkFlows gwfs = new GenerWorkFlows();
+		gwfs.RetrieveIn("WorkID", workIDs);
+		for(GenerWorkFlow gwf : gwfs.ToJavaList())
+		{
+			msg += "@对工作(" + gwf.getTitle() + ")处理情况如下。<br>";
+			String mes = bp.wf.Dev2Interface.Flow_DoFlowOver(gwf.getWorkID(), "批量结束流程");
+			msg += mes;
+			msg += "<hr>";
+		}
+		return "批量结束成功" + msg;
 
+	}
 	public final String Batch_WriteMsg() throws Exception {
 		Node nd = new Node(this.getFK_Node());
 		//获取要批处理数据

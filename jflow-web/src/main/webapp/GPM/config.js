@@ -11,8 +11,8 @@ var NewDeptNoModel = 1;
 var RegUserIDMode = 1;
 
 //部门类名.
-var deptEnsName = "BP.WF.Port.Depts";
-var deptEnName = "BP.WF.Port.Dept";
+var deptEnsName = "BP.Port.Depts";
+var deptEnName = "BP.Port.Dept";
 
 //var deptEnName = "BP.WF.Port.Admin2Group.Dept";
 //var deptEnsName = "BP.WF.Port.Admin2Group.Depts";

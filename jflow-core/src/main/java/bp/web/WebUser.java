@@ -431,7 +431,7 @@ public class WebUser {
      */
     public static String getDeptParentNo() throws Exception {
         String val = getItemValue("DeptParentNo");
-        if (val == null) {
+        if (DataType.IsNullOrEmpty(val)) {
             if (bp.web.WebUser.getFK_Dept() == null) {
                 throw new RuntimeException("@err-001 DeptParentNo, FK_Dept 登录信息丢失。");
             }

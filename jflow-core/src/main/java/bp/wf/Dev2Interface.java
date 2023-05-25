@@ -8067,9 +8067,30 @@ public class Dev2Interface
 	public static long Node_CreateBlankWork(String flowNo) throws Exception {
 		return Node_CreateBlankWork(flowNo, null, null, null, null, 0, 0, null, 0, null, 0, null, null, null);
 	}
+	/// <summary>
+	/// 把流程模板标记，转化为
+	/// </summary>
+	/// <param name="flowNoOrFlowMark"></param>
+	/// <returns></returns>
+	public static String Flow_TurnFlowMark2FlowNo(String flowNoOrFlowMark)
+	{
+		if (DataType.IsNullOrEmpty(flowNoOrFlowMark) == true)
+			return flowNoOrFlowMark;
 
+		if (DataType.IsNumStr(flowNoOrFlowMark) == true)
+			return flowNoOrFlowMark;
+
+		String sql = "";
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
+			sql = "SELECT No FROM WF_Flow WHERE FlowMark='"+ flowNoOrFlowMark + "'";
+		else
+			sql = "SELECT No FROM WF_Flow WHERE FlowMark='" + flowNoOrFlowMark + "' AND OrgNo='"+WebUser.getOrgNo()+"'";
+		return DBAccess.RunSQLReturnStringIsNull(sql, "err@流程标记[" + flowNoOrFlowMark + "]不存在.");
+	}
 	public static long Node_CreateBlankWork(String flowNo, Hashtable ht, DataSet workDtls, String starter, String title, long parentWorkID, long parentFID, String parentFlowNo, int parentNodeID, String parentEmp, int jumpToNode, String jumpToEmp, String todoEmps, String isStartSameLevelFlow) throws Exception {
 
+		flowNo = Flow_TurnFlowMark2FlowNo(flowNo);
+		parentFlowNo = Flow_TurnFlowMark2FlowNo(parentFlowNo);
 		//把一些其他的参数也增加里面去,传递给ccflow.
 		if (ht==null)
 			ht=new Hashtable();

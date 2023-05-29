@@ -442,7 +442,21 @@ public class DevelopAPI extends HttpHandlerBase {
                 fk_flow = DBAccess.RunSQLReturnString("SELECT FK_Flow FROM WF_GenerWorkFlow WHERE WorkID=" +WorkID);
             //执行发送.
             SendReturnObjs objs = bp.wf.Dev2Interface.Node_SendWork(fk_flow, WorkID, ht, null, ToNodeID, ToEmps);
-            return bp.tools.Json.ToJson(objs.ToMsgOfText());
+            int toNodeID = objs.getVarToNodeID(); //到达的节点IDs, 比如： 106
+            String toEmpIDs = objs.getVarAcceptersID(); //到达的人员ID, 比如; zhangsan,lisi
+
+            StringBuilder jsonString = new StringBuilder();
+            jsonString.append("[");
+            jsonString.append("{");
+            jsonString.append("\"toNodeID\":");
+            jsonString.append("\"" + toNodeID + "\",");
+            jsonString.append("\"toEmpIDs\":");
+            jsonString.append("\"" + toEmpIDs + "\",");
+            jsonString.append("\"valJson\":");
+            jsonString.append("\"" + objs.ToMsgOfText() + "\",");
+            jsonString.append("}");
+            jsonString.append("]");
+            return jsonString.toString();
 
         }catch(Exception e){
             return "err@发送失败:"+e.getMessage();

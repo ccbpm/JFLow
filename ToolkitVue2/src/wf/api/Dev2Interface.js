@@ -72,7 +72,7 @@ export function openMyView(params,_this){
  * @constructor
  */
 export function LoginCCBPM(privateKey,userNo){
-    const url = "/API/Port_Login_Submit?PrivateKey=" + privateKey + "&UserNo="+userNo;
+    const url = "/API/Portal_Login_Submit?PrivateKey=" + privateKey + "&UserNo="+userNo;
     const userInfo = RunUrlReturnString(url);
     if(userInfo === undefined || userInfo ==="")
         return "";

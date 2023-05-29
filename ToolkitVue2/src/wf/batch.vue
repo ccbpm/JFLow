@@ -1,13 +1,17 @@
 <template>
 	<div id="Runing">
-		<el-divider content-position="left">请选择要批处理的节点</el-divider>
-		<el-table :data="tableData" :show-header="false" @cell-click="sikpflows($event)">
-			<el-table-column width="300">
-				<template #default="scope">
-					<span class="message-title">{{scope.row.FlowName}}</span>
-				</template>
+		<span content-position="left" class="Tip">请选择要批处理的节点</span>
+		<el-divider ></el-divider>
+		<el-table :data="tableData" 
+			:show-header="true"  
+			:stripe="true"  
+			highlight-current-row
+			@current-change="sikpflows($event)"
+		>
+		<el-table-column fixed type="index" label="#" width="100"></el-table-column>
+			<el-table-column width="300" property="FlowName" label="流程名称">
 			</el-table-column>
-			<el-table-column>
+			<el-table-column  label="描述">
 				<template #default="scope">
 					<span>{{scope.row.Name}}({{scope.row.NUM}})</span>
 				</template>
@@ -139,5 +143,11 @@
 		padding-right: 0;
 		border-radius: 50%;
 		text-align: center;
+	}
+	.Tip{
+		color: #409EFF;
+	}
+	::v-deep .el-table__body tr:hover{
+		cursor: pointer;
 	}
 </style>

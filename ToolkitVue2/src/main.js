@@ -20,19 +20,19 @@ import $ from 'jquery'
 Vue.prototype.$ = $; // 当然还有这句话 给vue原型上添加 $
 
 //HttpHandler 暴露在全局
-import { HttpHandler } from "@/api/Gener.js";
+import { HttpHandler } from "@/wf/api/Gener.js";
 Vue.prototype.HttpHandler = HttpHandler;
 
-import { DBAccess } from "@/api/Gener.js";
+import { DBAccess } from "@/wf/api/Gener.js";
 Vue.prototype.DBAccess = DBAccess;
 
-import { Entities } from "@/api/Gener.js";
+import { Entities } from "@/wf/api/Gener.js";
 Vue.prototype.Entities = Entities;
 
-import { Entity } from "@/api/Gener.js";
+import { Entity } from "@/wf/api/Gener.js";
 Vue.prototype.Entity = Entity;
 
-import { GetPara } from "@/api/Gener.js";
+import { GetPara } from "@/wf/api/Gener.js";
 Vue.prototype.GetPara = GetPara;
 
 Vue.config.productionTip = false

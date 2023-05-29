@@ -91,7 +91,7 @@ import {
   beforeDelete,
 } from "@/datauser/jslidata/MyPublic.js";
 import OpenDialog from "./OpenDialog.vue";
-import {openMyFlow} from "@/api/Dev2Interface";
+import {openMyFlow} from "@/wf/api/Dev2Interface.js";
 
 export default {
   props: {
@@ -273,12 +273,22 @@ export default {
     },
     SaveFlow: function (isSend) {
       //保存
-      if (typeof beforeSave != "undefined" && beforeSave instanceof Function)
-        if (beforeSave() == false) return false;
-      this.saveLoading = true;
-      if(this.Save)
-        this.Save(isSend);
-      this.saveLoading = false;
+      try{
+        if (typeof beforeSave != "undefined" && beforeSave instanceof Function)
+          if (beforeSave() == false) return false;
+        this.saveLoading = true;
+        if ((this.currNode['FormType'] === 2 || this.currNode['FormType'] === 3) && this.Save) {
+          this.SendSelfFrom(false);
+          this.$message.success("保存成功");
+          return;
+        }
+        if(this.Save)
+          this.Save(isSend);
+      }catch(e){
+        this.$message({type:"error",message:e.toString()})
+      }finally{
+        this.saveLoading = false;
+      }
     },
     //弹出新页面窗体
     DialogOpen: function (btn) {
@@ -448,7 +458,7 @@ export default {
       this.sendLoading = true;
       //如果时嵌入式表单、SDK表单
       if (this.currNode['FormType'] === 2 || this.currNode['FormType'] === 3) {
-        if (this.SendSelfFrom() == false) {
+        if (this.SendSelfFrom(true) == false) {
           this.btnDisabled = false;
           this.sendLoading = false;
           this.$alert("嵌入式或者SDK表单模式发送时，保存数据失败");
@@ -658,22 +668,56 @@ export default {
      * 嵌入式，SDK模式执行组件中的保存方法
      * @constructor
      */
-    SendSelfFrom() {
+    SendSelfFrom(isSend) {
       let val = false;
-      if(this.Save)
-        val = this.Save(true);
+      if(this.Save){
+        const gwf = new this.Entity("BP.WF.GenerWorkFlow",this.params.WorkID);
+        let params = {};
+        for(let key in gwf){
+          if(['WorkID','WFState','TodoEmps','FlowEmps','FK_Node','NodeName','Starter','StarterName','FK_Dept','DeptName'].includes(key))
+            params[key] = gwf[key];
+          continue;
+        }
+        val = this.Save(params);
+      }else{
+        return true;
+      }
+
       if (typeof val == "boolean" && val === false)
         return val;
-
-      //就说明是传来的参数，这些参数需要存储到WF_GenerWorkFlow里面去，用于方向条件的判断。
-      let handler = new this.HttpHandler("BP.WF.HttpHandler.WF_MyFlow");
-      handler.AddPara("WorkID", this.params.WorkID);
-      handler.AddPara("Paras", val);
-      const data = handler.DoMethodReturnString("SaveParas");
-      if(typeof data === 'string' && data.includes('err@')){
-        this.$message.error(data);
-        this.btnDisabled = true;
-        this.sendLoading = true;
+      if(typeof val ==="string" && val !== ""){
+        //就说明是传来的参数，这些参数需要存储到WF_GenerWorkFlow里面去，用于方向条件的判断。
+        let handler = new this.HttpHandler("BP.WF.HttpHandler.WF_MyFlow");
+        handler.AddPara("WorkID", this.params.WorkID);
+        handler.AddPara("Paras", val);
+        const data = handler.DoMethodReturnString("SaveParas");
+        if(typeof data === 'string' && data.includes('err@')){
+          this.$message.error(data);
+        }
+      }
+      //保存审核组件
+      let workCheckRef = null;
+      let refs = this.$parent.$refs;
+      if(refs.toolbar == undefined)
+        refs = this.$parent.$parent.$refs;
+      if(refs.toolbar == undefined)
+        refs = this.$parent.$parent.$parent.$refs;
+      if(refs.toolbar != undefined)
+        workCheckRef = refs.WorkCheckRef;
+      if(workCheckRef!=null){
+        const filedFlag = workCheckRef.WorkCheck_Save();
+        if(filedFlag==false && isSend==true)
+          return false;
+      }
+      if(typeof val ==="object"){
+        let handler = new this.HttpHandler("BP.WF.HttpHandler.WF_MyFlow");
+        handler.AddJson(this.params);
+        handler.AddJson(val);
+        const data = handler.DoMethodReturnString("Save");
+        if(typeof data === 'string' && data.includes('err@')){
+          this.$message.error(data);
+          return false;
+        }
       }
       return true;
     },

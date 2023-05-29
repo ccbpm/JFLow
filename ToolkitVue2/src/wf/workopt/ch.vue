@@ -46,7 +46,7 @@
     </el-form>
 </template>
 <script>
-import {HttpHandler} from '@/api/Gener.js'
+import {HttpHandler} from '@/wf/api/Gener.js'
 export default {
      data() {
       return {

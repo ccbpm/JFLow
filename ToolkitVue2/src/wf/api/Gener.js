@@ -1597,7 +1597,7 @@ function decodeResponseParams(urlStr) {
         const args = url.split('?');
         //获取到页面名称
         let pageName = args[0].substring(args[0].lastIndexOf('/') + 1) || '';
-        pageName = pageName.replace('.htm', '').replace('.html', '');
+        pageName = pageName.replace('.htm', '').replace('.html', '').replace('.vue', '');
         if (args.length < 2 || !args[1].trim()) {
             return { PageName: pageName };
         }
@@ -1611,6 +1611,46 @@ function decodeResponseParams(urlStr) {
         return {};
     }
 }
+
+/**
+ * 执行url
+ * @param url
+ * @returns {*}
+ * @constructor
+ */
+function RunUrlReturnString(url) {
+    if (url == null || typeof url === "undefined") {
+        alert("err@url无效");
+        return;
+    }
+    url=basePath+url;
+    let str;
+    $.ajax({
+        type: 'post',
+        async: false,
+        url: url,
+        dataType: 'html',
+        success: function (data) {
+            if (typeof data === 'string' && data.includes('err@url')) {
+                str = data.replace('err@',''); //这个错误是合法的.
+                return;
+            }
+            if (typeof data === 'string' && data.includes("err@")){
+                alert(data);
+                return;
+            }
+            str = data;
+        },
+        error: function (e) {
+            if (confirm('系统异常:' + url + " 您想打开url查看吗？") == true) {
+                window.open(url);
+                str ="";
+                return;
+            }
+        }
+    });
+    return str;
+}
 export {
     HttpHandler,
     Entity,
@@ -1620,4 +1660,5 @@ export {
     AtParaToJson,
     GetPara,
     decodeResponseParams,
+    RunUrlReturnString,
 };

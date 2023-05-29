@@ -158,12 +158,10 @@ export default {
     WorkCheck_Save() {
       //是否需要填写审核意见
       if (this.isDoc == false) return true;
-
       if (this.WorkCheck_Doc == null || this.WorkCheck_Doc == "") {
         this.$message.error("审核意见不能为空");
         return false;
       }
-
       //保存审核意见
       let handler = new this.HttpHandler("BP.WF.HttpHandler.WF_WorkOpt");
       handler.AddJson(this.$route.query);

@@ -79,7 +79,7 @@
 
 <script>
 import OpenDialog from "@/wf/components/OpenDialog.vue";
-import {GetPara} from "@/api/Gener";
+import {GetPara} from "@/wf/api/Gener.js";
 import SelectiveRecipient from "./selectiveRecipient.vue";
 export default {
   props: {

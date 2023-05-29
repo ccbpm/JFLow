@@ -1,19 +1,20 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import HomeView from '@/AppDemo/Home.vue'
 
 Vue.use(VueRouter)
 // 重写路由的push方法
 
-const routerPush = VueRouter.prototype.push
-VueRouter.prototype.push = function push(location) {
-  return routerPush.call(this, location).catch(error => error)
-}
+// const routerPush = VueRouter.prototype.push
+// VueRouter.prototype.push = function push(location) {
+//   return routerPush.call(this, location).catch(error => error)
+// }
 
 const routes = [
   {
     path: '/home',
     name: 'home',
-    component: () => import('@/wf/appclassic/home.vue'),
+    component: HomeView,
     children: [
       {
         path: '/start', //发起
@@ -89,22 +90,27 @@ const routes = [
         component: () => import('@/wf/powerlist.vue')
       },
       {
+        path: '/API',//授权列表
+        name: 'API',
+        component: () => import('@/wf/API.vue')
+      },
+      {
         path: '/QingJia',
         name: 'QingJia',
-        component: () => import('@/demotools/frms/F024SDKToolbarFrm.vue')
+        component: () => import('@/AppDemo/Frms/F024SDKToolbarFrm.vue')
       }
     ]
   },
   {
     path: '/',
     name: 'login',
-    component: () => import('@/wf/appclassic/login.vue')
+    component: () => import('@/AppDemo/Login.vue')
   },
 
   {
     path: '/F024SDKToolbarFrm',
     name: 'F024SDKToolbarFrm',
-    component: () => import('@/demotools/frms/F024SDKToolbarFrm.vue')
+    component: () => import('@/AppDemo/Frms/F024SDKToolbarFrm.vue')
   },
 
 ]

@@ -22,7 +22,7 @@
 import timeBase from './timeBase.vue'//时间轴
 import timeTable from './timeTable.vue'
 import TrackChart from "./TrackChart";
-import {HttpHandler} from "../../api/Gener";
+import {HttpHandler} from "@/wf/api/Gener.js";
 
 export default {
   name: "Track",

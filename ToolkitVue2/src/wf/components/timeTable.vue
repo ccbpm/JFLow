@@ -54,7 +54,7 @@
 
 <script>
 	import $ from 'jquery';
-	import {ActionType} from "../../api/CommEnum.js";
+	import {ActionType} from "../api/CommEnum.js";
 export default {
 	name: "timeTable",
 

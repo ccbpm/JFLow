@@ -11,7 +11,7 @@
                    @on-toolbarData-change="ChangeToolbarData">
            </search-form>
            <!--Table表格-->
-           <el-table :data="tableData"  border
+           <el-table :data="tableData"  border 
                      :header-cell-style="{background:'#f5f7fab5',color:'#777'}"
                      @row-dblclick="RowSelect">
                <el-table-column label="序号" align="center" width="80">
@@ -24,6 +24,7 @@
            </el-table>
            <!--分页-->
            <el-pagination
+           style="float:right;margin: 20px 0px;"
                    @size-change="handleSizeChange"
                    @current-change="handleCurrentChange"
                    :current-page="currentPage"
@@ -42,7 +43,7 @@
 
 <script>
     import SearchForm from './searchForm.vue';
-    import {AtParaToJson} from '@/api/Gener.js';
+    import {AtParaToJson} from '@/wf/api/Gener.js';
     export default {
         name: "search",
         components:{

@@ -80,7 +80,7 @@
 import {jsPlumb} from "jsplumb";
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
-import {defaultConnectStyle,connectOptions} from "../../assets/config";
+import {defaultConnectStyle,connectOptions} from "../api/TrackConfig";
 dayjs.extend(duration)
 
 export default {

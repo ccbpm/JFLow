@@ -34,7 +34,7 @@
 </template>
 
 <script>
-    import {GetPara} from "../../api/Gener.js";
+    import {GetPara} from "@/wf/api/Gener.js";
     import SelectEmps from "../components/SelectEmps";
 export default {
     name:'HuiQian',

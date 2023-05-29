@@ -1,10 +1,10 @@
 <template>
   <el-container>
     <el-aside :style="isCollapse ? 'width: 64px;' : 'width: 200px;'">
-      <transition>
+        
         <el-menu
-          default-active="1-1"
-          :collapse="isCollapse"
+          :default-active="$route.path"
+          :collapse="false"
           background-color="#304156"
           text-color="#bfcbd9"
           :unique-opened="false"
@@ -16,25 +16,24 @@
             <el-image
               :src="
                 isCollapse
-                  ? require('../../../public/img/slogo.png')
-                  : require('../../../public/img/logoHome.png')
+                  ? require('./Img/slogo.png')
+                  : require('./Img/logoHome.png')
               "
             ></el-image>
           </el-menu-item>
           <el-submenu
             v-for="(item, index) in data"
-            :index="'m-' + index"
+            :index="(index+1).toString()"
             :key="index"
           >
             <template slot="title">
               <i :class="item.icon"></i>
               <span slot="title">{{ item.name }}</span>
             </template>
-
-            <div v-for="(itemList, indexList) in item.list" :key="indexList">
               <el-menu-item
-                :index="index + 1 + '-' + parseInt(indexList + 1)"
-                @click="skipClick(itemList.path, itemList.params)"
+              :index="'/'+itemList.path"
+              v-for="(itemList, indexList) in item.list" :key="indexList"
+              @click="skipClick(itemList.path, itemList.params)"
               >
                 <span class="pull-right side-ladge" v-if="itemList.count">{{
                   itemList.count
@@ -42,24 +41,24 @@
                 <i :class="itemList.icon"></i>
                 {{ itemList.name }}
               </el-menu-item>
-            </div>
           </el-submenu>
         </el-menu>
-      </transition>
     </el-aside>
     <el-container>
       <el-header>
         <common-header @on-collapse="Collapse"></common-header>
       </el-header>
       <el-main>
-        <router-view />
+        <keep-alive>
+          <router-view />
+        </keep-alive>
       </el-main>
     </el-container>
   </el-container>
 </template>
 
 <script>
-import CommonHeader from "../components/common-header.vue";
+import CommonHeader from "../wf/components/common-header.vue";
 
 export default {
   name: "index",
@@ -70,6 +69,7 @@ export default {
       isCollapse: false, //是否拉开
       btnIndex: "",
       menuList: "",
+      defaultActive:"-1",
       data: [
         {
           name: "基础功能",
@@ -171,8 +171,13 @@ export default {
       icon: "el-icon-files",
       count: 0,
     });
+    if(this.$route.name){
+      console.log('路由',this.$route.name);
+      this.defaultActive = this.$route.name;
+      this.isCollapse=false;
+    }
+   
   },
-
   methods: {
     // 跳转页面
     skipClick(path, params) {
@@ -185,26 +190,30 @@ export default {
     Collapse(data) {
       this.isCollapse = data;
     },
+    onMenuChange(ev) {
+      this.$router.push({path: ev})
+    }
   },
   components: {
     CommonHeader,
   },
 
   //监听
-  computed: {
-    activeMenu() {
-      const route = this.$route;
-      const { meta, path } = route;
-      // if set path, the sidebar will highlight the path you set
-      if (meta.activeMenu) {
-        return meta.activeMenu;
-      }
-      return path;
-    },
-  },
+  // computed: {
+  //   activeMenu() {
+  //     const route = this.$route;
+  //     const { meta, path } = route;
+  //     // if set path, the sidebar will highlight the path you set
+  //     if (meta.activeMenu) {
+  //       return meta.activeMenu;
+  //     }
+  //     return path;
+  //   },
+  // },
 
   //监听后执行动作
   watch: {},
+
 };
 </script>
 

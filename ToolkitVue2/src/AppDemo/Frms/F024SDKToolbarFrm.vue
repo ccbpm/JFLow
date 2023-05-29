@@ -22,9 +22,6 @@
               <el-date-picker placeholder="选择日期" v-model="form.Dao" style="width: 100%;"></el-date-picker>
             </el-col>
           </el-form-item>
-          <el-form-item label="是否含节假日">
-            <el-switch v-model="form.ShiFouBaoHanJieJiaRi" @change="changeSwitch"></el-switch>
-          </el-form-item>
           <el-form-item label="请假类型">
             <el-radio-group v-model="form.QJLX" style="text-align:left" @change="changeSwitch">
               <el-radio :label="0">事假</el-radio>
@@ -36,7 +33,7 @@
             <el-input type="textarea" v-model="form.QingJiaYuanYin"></el-input>
           </el-form-item>
         </el-form>
-      <!--- 工具栏组件请见文档: https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=6455415&doc_id=31094 -->
+        <!--- 工具栏组件请见文档: https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=6455415&doc_id=31094 -->
         <div  v-if="isHaveWorkCheck" style="text-align: left; font-size: 18px;box-sizing: border-box;padding-left: 12px;margin-bottom: 10px">审核信息</div>
         <WorkCheck v-if="isHaveWorkCheck" :isShowTagName="true"  :node="node" :isReadonly=isReadonly ref="WorkCheckRef"></WorkCheck>
       </el-card>
@@ -109,28 +106,44 @@ export default {
     },
     /**
      * Save,toolBar页面需要调用的页面保存方法
-     * @param isSend true发送时调用 false保存方法调用
+     * @param generWorkFlow (WorkID 实例的ID,WFState 状态 0=空白，1=草稿，2=运行中，3=已完成 5退回,TodoEmps 待办处理人,FlowEmps 参与人,FK_Node 停留节点,NodeName节点名字,Starter发起人ID,StarterName 发起人名称,FK_Dept 发起人部门,DeptName 部门名称)
      * @constructor
      */
-    Save(isSend){
-      isSend = isSend || false;
-      //保存表单
-      const en = new this.Entity(this.enName,this.params.WorkID);
-      en.CopyJSON(this.form);
-      en.ShiFouBaoHanJieJiaRi = this.form.ShiFouBaoHanJieJiaRi==true?1:0;
-      en.Update();
+    Save(generWorkFlow){
+      //第1步: 检查页面逻辑是否正确，必填项、正则表达式等等.
+      /*if (1==2)
+      {
+        this.$message.error("必填项不正确.");
+        return false;
+      }*/
 
-      //保存审核组件
-      if(this.isHaveWorkCheck){
-        let childVue = this.$refs.WorkCheckRef;
-        if(childVue!=null){
-          const filedFlag = childVue.WorkCheck_Save();
-          if(filedFlag==false && isSend==false)
-            return false;
-        }
-
+      // 第2步: 增加系统字段到自己的JSON中
+      for(let key in generWorkFlow){
+        this.form[key] = generWorkFlow[key];
       }
-      return '@QJLX='+this.form.QJLX;
+      try{
+        // 第3步: 执行入库保存
+        //调用自己的保存逻辑.
+        //保存表单
+        //  const en = new this.Entity(this.enName,this.params.WorkID);
+        //  en.CopyJSON(this.form);
+        //  en.ShiFouBaoHanJieJiaRi = this.form.ShiFouBaoHanJieJiaRi==true?1:0;
+        //  en.Update();
+
+        //4.返回值
+        //4.1 如果在流程中设计了节点表单，并且需要把当前表单中的字段保存到节点表单中，则返回
+        //return this.form;
+
+        //4.2 如果在流程中没有设计节点表单,但是需要把当前表单中的字段作为方向条件使用，则返回
+        //return  '@QJLX='+this.form.QJLX+'@QJTS='+this.form.QJTS;
+
+        //4.3 排除上面两种情况，则直接返回true即可
+        return true;
+        // eslint-disable-next-line no-unreachable
+      }catch(e){
+        this.$message.error(e.toString());
+        return false; //保存失败.
+      }
     },
     changeSwitch() {
       this.$forceUpdate()

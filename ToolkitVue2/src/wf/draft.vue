@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import {openMyFlow} from "@/api/Dev2Interface";
+import {openMyFlow} from "./api/Dev2Interface";
 
 export default {
 	name: "Runing",

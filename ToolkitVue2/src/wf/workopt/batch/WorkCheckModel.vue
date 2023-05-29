@@ -34,9 +34,9 @@
 </template>
 
 <script>
-	import { Entity } from "../../../api/Gener.js";
+	import { Entity } from "@/wf/api/Gener.js";
   import BatchToolBar from "../../components/BatchToolBar.vue";
-  import {openMyFlow} from "@/api/Dev2Interface";
+  import {openMyFlow} from "@/wf/api/Dev2Interface";
 	export default {
 		name: "WorkCheckModel",
 		components: {

@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import { WebUser, Entity } from "../../api/Gener.js";
+import { WebUser, Entity } from "@/wf/api/Gener.js";
 
 export default {
   name: "AccepterOfGener",

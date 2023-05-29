@@ -126,7 +126,7 @@
 		// uiPlant,
 		plant,
 		basePath,
-	} from '../api/config.js'
+	} from './api/config.js'
 	export default {
 		name: "user",
 		data() {

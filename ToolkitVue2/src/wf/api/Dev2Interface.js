@@ -1,4 +1,4 @@
-import { decodeResponseParams } from "@/api/Gener";
+import {decodeResponseParams, RunUrlReturnString} from "./Gener";
 
 /**
  * 跳转到待办处理页面
@@ -62,4 +62,20 @@ export function openMyView(params,_this){
         });
         return;
     }
+}
+
+/**
+ * 登录
+ * @param privateKey
+ * @param userNo
+ * @returns {*}
+ * @constructor
+ */
+export function LoginCCBPM(privateKey,userNo){
+    const url = "/API/Port_Login_Submit?PrivateKey=" + privateKey + "&UserNo="+userNo;
+    const userInfo = RunUrlReturnString(url);
+    if(userInfo === undefined || userInfo ==="")
+        return "";
+    localStorage.setItem("UserInfo",userInfo);
+    return JSON.parse(userInfo).Token;
 }

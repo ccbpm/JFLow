@@ -125,8 +125,8 @@
 </template>
 
 <script>
-import {domain} from "@/api/config";
-import {openMyFlow} from "@/api/Dev2Interface";
+import {domain} from "./api/config";
+import {openMyFlow} from "./api/Dev2Interface";
 
 export default {
   name: "Todolist",

@@ -24,19 +24,12 @@
 import { jsPlumb } from "jsplumb";
 import { HttpHandler } from "../../api/Gener";
 
-// 引用流程图配置，详情见TrackConfig文件
-import {
-  STYLE_NODE_COLOR_FORE_TRACK,
-  STYLE_NODE_COLOR_FORE_HOVER,
-  STYLE_NODE_BORDER_COLOR_END,
-  STYLE_NODE_BORDER_COLOR_FIRST,
-  STYLE_NODE_BORDER_RADIUS,
-  STYLE_NODE_DEFAULT_ICON,
-  STYLE_NODE_DEFAULT_ICON_PATH,
-  STYLE_NODE_BORDER_WIDTH_NORMAL, //节点边框宽度
-  STYLE_NODE_BORDER_WIDTH_HOVER,
-  STYLE_NODE_BORDER_COLOR, //节点边框鼠标悬停时的宽度
-} from "../../api/TrackConfig";
+// 引用流程图配置
+const STYLE_NODE_BORDER_COLOR_END = 'green';
+const STYLE_NODE_BORDER_COLOR_FIRST = 'green';    //开始节点边框颜色
+const STYLE_NODE_BORDER_WIDTH_NORMAL = 1; //节点边框宽度
+const STYLE_NODE_BORDER_COLOR = 'black';  //节点边框颜色
+
 
 export default {
   name: "v-js-plumb",

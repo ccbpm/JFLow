@@ -126,7 +126,7 @@
 </template>
 
 <script>
-import {openMyView} from "@/api/Dev2Interface"; // 轨迹
+import {openMyView} from "./api/Dev2Interface"; // 轨迹
 export default {
   name: "complete",
   data() {

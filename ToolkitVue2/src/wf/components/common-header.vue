@@ -2,20 +2,22 @@
 	<div>
 		<el-header>
 			<span class="fontClass" @click="collapse"><i :class="isCollapse?'fas fa-indent fa-lg':'fas fa-outdent fa-lg'"></i></span>
-			<el-menu class="user-info" mode="horizontal">
-          <el-menu-item index="1">
-            <el-link icon="el-icon-position" href="start">发起</el-link>
+			<el-menu class="user-info" mode="horizontal" :default-active="$route.path" router>
+          <el-menu-item index="/start">
+			<i class="el-icon-position"></i>
+			<span >发起</span>
           </el-menu-item>
-          <el-menu-item index="2">
-            <el-link icon="el-icon-bell" href="todolist">待办</el-link>
+          <el-menu-item index="/todolist">
+			<i class="el-icon-bell"></i>
+			<span >待办</span>
           </el-menu-item>
-          <el-menu-item index="3">
-            <el-link icon="el-icon-time" href="runing">在途</el-link>
+          <el-menu-item index="/runing">
+			<i class="el-icon-time"></i>
+			<span >在途</span>
           </el-menu-item>
           <el-submenu index="4">
             <template slot="title">{{ username }}</template>
-<!--			          <el-menu-item index="4-1" @click="userTo">个人信息</el-menu-item>-->
-            <el-menu-item index="4-1" @click="logout">退出</el-menu-item>
+            <el-menu-item  @click="logout">退出</el-menu-item>
           </el-submenu>
         </el-menu>
 		</el-header>
@@ -25,7 +27,7 @@
 <script>
 	import {
 		WebUser
-	} from "../../api/Gener.js";
+	} from "@/wf/api/Gener.js";
 	export default {
 		name: "common-header",
 		data() {
@@ -35,6 +37,7 @@
 				constRole: "",
 				username: "",
 				userRole: "",
+				defaultAvtive:"-1",
         isCollapse:false
 			};
 		},
@@ -70,6 +73,11 @@
 			var webUser = new WebUser();
 			this.username = webUser.Name;
 			this.$store.commit('setWebUser', webUser);
+			// console.log(this.$route.name);
+			if(this.$route.name){
+				this.defaultActive = this.$route.name;
+			}
+			
 
 		}
 	};

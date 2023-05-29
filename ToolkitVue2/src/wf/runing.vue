@@ -78,8 +78,8 @@
 </template>
 
 <script>
-import {domain} from "@/api/config";
-import {openMyView} from "@/api/Dev2Interface";
+import {domain} from "./api/config";
+import {openMyView} from "./api/Dev2Interface";
 
 export default {
   name: "Runing",

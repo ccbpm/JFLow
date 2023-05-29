@@ -410,6 +410,45 @@ public class DevelopAPI extends HttpHandlerBase {
 
         }
     }
+    @PostMapping(value = "/Node_SendWork_ReJson")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
+            @ApiImplicitParam(name = "WorkID", value = "流程实例WorkID", required = true),
+            @ApiImplicitParam(name = "FK_Flow", value = "流程编号", required = false),
+            @ApiImplicitParam(name = "ToNodeID", value = "到达节点ID,空时传0", required = false),
+            @ApiImplicitParam(name = "ToEmps", value = "到达人员编号，多人以,隔开", required = false)
+    })
+    public final String Node_SendWork_ReJson(String Token,long WorkID,String FK_Flow,int ToNodeID,String ToEmps) throws Exception {
+        if(DataType.IsNullOrEmpty(Token) == true)
+            return "err@用户的Token值不能为空";
+        if(DataType.IsNullOrEmpty(WorkID) == true)
+            return "err@流程实例WorkID值不能为空";
+        bp.wf.Dev2Interface.Port_LoginByToken(Token);
+        //执行发送.
+        java.util.Hashtable ht = new java.util.Hashtable();
+        Enumeration enu = ContextHolderUtils.getRequest().getParameterNames();
+        while (enu.hasMoreElements()) {
+            String str = (String) enu.nextElement();
+            if (DataType.IsNullOrEmpty(str) == true) {
+                continue;
+            }
+            String val = this.GetValByKey(str);
+            if (val != null)
+                ht.put(str, val);
+        }
+        try{
+            String fk_flow = FK_Flow;
+            if (DataType.IsNullOrEmpty(fk_flow) == true)
+                fk_flow = DBAccess.RunSQLReturnString("SELECT FK_Flow FROM WF_GenerWorkFlow WHERE WorkID=" +WorkID);
+            //执行发送.
+            SendReturnObjs objs = bp.wf.Dev2Interface.Node_SendWork(fk_flow, WorkID, ht, null, ToNodeID, ToEmps);
+            return bp.tools.Json.ToJson(objs.ToMsgOfText());
+
+        }catch(Exception e){
+            return "err@发送失败:"+e.getMessage();
+
+        }
+    }
 
     @PostMapping(value = "/DB_GenerWillReturnNodes")
     @ApiImplicitParams({

@@ -3,10 +3,13 @@ package cn.jflow.boot.controller;
 import bp.da.*;
 import bp.difference.ContextHolderUtils;
 import bp.difference.handler.HttpHandlerBase;
+import bp.en.Entity;
 import bp.en.QueryObject;
 import bp.tools.Json;
 import bp.web.WebUser;
 import bp.wf.*;
+import bp.wf.template.Direction;
+import bp.wf.template.Directions;
 import io.swagger.annotations.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -1151,8 +1154,20 @@ public class DevelopAPI extends HttpHandlerBase {
         bp.wf.Dev2Interface.Port_LoginByToken(Token);
         try{
             //获得可以退回的节点.
-            String dt = bp.wf.Dev2Interface.Node_GetNextStepNodesByNodeID(nodeID);
-            return dt;
+            Directions dirs = bp.wf.Dev2Interface.Node_GetNextStepNodesByNodeID(nodeID);
+            StringBuilder jsonString = new StringBuilder();
+            jsonString.append("[");
+            for(Direction dr: dirs.ToJavaList()){
+                jsonString.append("{");
+                jsonString.append("\"nodeId\":");
+                jsonString.append("\"" + dr.getNode() + "\",");
+                jsonString.append("\"toNodeId\":");
+                jsonString.append("\"" + dr.getToNode() + "\"");
+                jsonString.append("},");
+            }
+            jsonString.deleteCharAt(jsonString.length() - 1);
+            jsonString.append("]");
+            return jsonString.toString();
         }catch(Exception e){
             return "err@获取可以退回的节点失败:"+e.getMessage();
 

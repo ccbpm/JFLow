@@ -339,10 +339,16 @@ public class FrmEvents extends EntitiesOID
 					myURL = myURL + "&FK_Flow=" + str;
 				}
 
-				if (myURL.contains("&WorkID=") == false && en.getRow().containsKey("WorkID") == true)
+				if (myURL.contains("&WorkID=") == false)
 				{
-					String str = en.getRow().get("WorkID").toString();
-					myURL = myURL + "&WorkID=" + str;
+					String str = "";
+					if(en.getRow().containsKey("WorkID") == true) {
+						str = en.getRow().get("WorkID").toString();
+						myURL = myURL + "&WorkID=" + str;
+					}else if (en.getRow().containsKey("OID") == true) {
+						str = en.getRow().get("OID").toString();
+						myURL = myURL + "&WorkID=" + str;
+					}
 				}
 
 				try

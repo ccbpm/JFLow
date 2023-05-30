@@ -441,21 +441,7 @@ public class DevelopAPI extends HttpHandlerBase {
                 fk_flow = DBAccess.RunSQLReturnString("SELECT FK_Flow FROM WF_GenerWorkFlow WHERE WorkID=" +WorkID);
             //执行发送.
             SendReturnObjs objs = bp.wf.Dev2Interface.Node_SendWork(fk_flow, WorkID, ht, null, ToNodeID, ToEmps);
-            int toNodeID = objs.getVarToNodeID(); //到达的节点IDs, 比如： 106
-            String toEmpIDs = objs.getVarAcceptersID(); //到达的人员ID, 比如; zhangsan,lisi
-
-            StringBuilder jsonString = new StringBuilder();
-            jsonString.append("[");
-            jsonString.append("{");
-            jsonString.append("\"toNodeID\":");
-            jsonString.append("\"" + toNodeID + "\",");
-            jsonString.append("\"toEmpIDs\":");
-            jsonString.append("\"" + toEmpIDs + "\",");
-            jsonString.append("\"valJson\":");
-            jsonString.append("\"" + objs.ToMsgOfText() + "\",");
-            jsonString.append("}");
-            jsonString.append("]");
-            return jsonString.toString();
+            return objs.ToJson();
 
         }catch(Exception e){
             return "err@发送失败:"+e.getMessage();
@@ -1155,19 +1141,7 @@ public class DevelopAPI extends HttpHandlerBase {
         try{
             //获得可以退回的节点.
             Directions dirs = bp.wf.Dev2Interface.Node_GetNextStepNodesByNodeID(nodeID);
-            StringBuilder jsonString = new StringBuilder();
-            jsonString.append("[");
-            for(Direction dr: dirs.ToJavaList()){
-                jsonString.append("{");
-                jsonString.append("\"nodeId\":");
-                jsonString.append("\"" + dr.getNode() + "\",");
-                jsonString.append("\"toNodeId\":");
-                jsonString.append("\"" + dr.getToNode() + "\"");
-                jsonString.append("},");
-            }
-            jsonString.deleteCharAt(jsonString.length() - 1);
-            jsonString.append("]");
-            return jsonString.toString();
+            return dirs.ToJson();
         }catch(Exception e){
             return "err@获取可以退回的节点失败:"+e.getMessage();
 
@@ -1213,19 +1187,7 @@ public class DevelopAPI extends HttpHandlerBase {
         try{
             //获得可以退回的节点.
             Directions dirs = bp.wf.Dev2Interface.Node_GetNextStepNodesByWorkID(workID);
-            StringBuilder jsonString = new StringBuilder();
-            jsonString.append("[");
-            for(Direction dr: dirs.ToJavaList()){
-                jsonString.append("{");
-                jsonString.append("\"nodeId\":");
-                jsonString.append("\"" + dr.getNode() + "\",");
-                jsonString.append("\"toNodeId\":");
-                jsonString.append("\"" + dr.getToNode() + "\"");
-                jsonString.append("},");
-            }
-            jsonString.deleteCharAt(jsonString.length() - 1);
-            jsonString.append("]");
-            return jsonString.toString();
+            return dirs.ToJson();
         }catch(Exception e){
             return "err@获取可以退回的节点失败:"+e.getMessage();
         }

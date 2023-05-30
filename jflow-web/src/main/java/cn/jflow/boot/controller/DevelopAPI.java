@@ -4,6 +4,7 @@ import bp.da.*;
 import bp.difference.ContextHolderUtils;
 import bp.difference.handler.HttpHandlerBase;
 import bp.en.QueryObject;
+import bp.tools.Json;
 import bp.web.WebUser;
 import bp.wf.*;
 import io.swagger.annotations.*;
@@ -16,15 +17,13 @@ import java.util.Hashtable;
 @Api(tags="工具包接口")
 @RequestMapping(value = "/API")
 public class DevelopAPI extends HttpHandlerBase {
-    /**
-     * 根据密钥和用户名登录
-     * @param PrivateKey 密钥
-     * @param UserNo 用户名
-     * @return
-     * @throws Exception
-     */
-    @PostMapping(value = "/Portal_Login_Submit")
-    public final String Portal_Login_Submit(@RequestParam(required = true)String PrivateKey, @ApiParam("用户编号") @RequestParam(required = true)String UserNo) throws Exception {
+    @PostMapping(value = "/Port_Login_Submit")
+    @ApiOperation("根据密钥和用户名登录,返回用户登陆信息其中有Token")
+     @ApiImplicitParams({
+            @ApiImplicitParam(name="PrivateKey",value="密钥",paramType = "query",required = true),
+            @ApiImplicitParam(name="UserNo",value="用户编号",required = true),
+    })
+    public final String Port_Login_Submit(String PrivateKey, String UserNo) throws Exception {
         if(DataType.IsNullOrEmpty(PrivateKey) == true){
             return "err@参数privateKey不能为空";
         }
@@ -37,7 +36,6 @@ public class DevelopAPI extends HttpHandlerBase {
         try{
             bp.wf.Dev2Interface.Port_Login(UserNo);
             String Token = bp.wf.Dev2Interface.Port_GenerToken(UserNo);
-
             Hashtable ht = new Hashtable();
             ht.put("No", WebUser.getNo());
             ht.put("Name", WebUser.getName());
@@ -55,6 +53,7 @@ public class DevelopAPI extends HttpHandlerBase {
     @ApiOperation("人员信息保存")
     @ApiImplicitParams({
             @ApiImplicitParam(name="token",value="Token",paramType = "query",required = true),
+            @ApiImplicitParam(name="orgNo",value="组织编号",required = true),
             @ApiImplicitParam(name="userNo",value="用户编号",required = true),
             @ApiImplicitParam(name="userName",value="用户名称",required = true),
             @ApiImplicitParam(name="deptNo",value="部门编号",required = true),
@@ -69,10 +68,11 @@ public class DevelopAPI extends HttpHandlerBase {
 
     }
     /// <summary>
-    /// 保存岗位
+    /// 人员删除
     /// </summary>
-    /// <param name="userNo"></param>
-    /// <param name="stas">岗位用逗号分开</param>
+    /// <param name="token">Token</param>
+    /// <param name="orgNo">组织编号</param>
+    /// <param name="userNo">人员编号</param>
     /// <returns>reutrn 1=成功,  其他的标识异常.</returns>
     @PostMapping(value = "/Port_Emp_Delete")
     @ApiOperation("人员删除")
@@ -106,14 +106,14 @@ public class DevelopAPI extends HttpHandlerBase {
     }
 
     @PostMapping(value = "/Port_Dept_Save")
-    @ApiOperation("保存部门, 如果有此数据则修改，无此数据则增加.")
+    @ApiOperation("保存部门,如果有此数据则修改,无此数据则增加.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
-            @ApiImplicitParam(name = "orgNo", value = "组织编号", required = true),
+            @ApiImplicitParam(name = "orgNo", value = "组织编号", required = false),
             @ApiImplicitParam(name = "no", value = "部门编号", required = true),
             @ApiImplicitParam(name = "name", value = "名称", required = true),
             @ApiImplicitParam(name = "parentNo", value = "父节点编号", required = true),
-            @ApiImplicitParam(name = "keyVals", value = "其他的值:@Leaer=zhangsan@Tel=12233333@Idx=1", required = false)
+            @ApiImplicitParam(name = "keyVals", value = "其他的值:@Leaer=zhangsan@Tel=18660153393@Idx=1", required = false)
     })
     public String Port_Dept_Save(String token,String orgNo, String no, String name, String parentNo, String keyVals) throws Exception {
         bp.wf.Dev2Interface.Port_LoginByToken(token);
@@ -127,7 +127,7 @@ public class DevelopAPI extends HttpHandlerBase {
     @ApiOperation("删除部门.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
-            @ApiImplicitParam(name = "no", value = "部门编号", required = true)
+            @ApiImplicitParam(name = "no", value = "要删除的部门编号", required = true)
     })
     public String Port_Dept_Delete(String token,String no) throws Exception {
         bp.wf.Dev2Interface.Port_LoginByToken(token);
@@ -163,9 +163,10 @@ public class DevelopAPI extends HttpHandlerBase {
     /// <param name="no">删除指定的岗位编号</param>
     /// <returns></returns>
     @PostMapping(value = "/Port_Station_Delete")
+    @ApiOperation("删除岗位")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
-            @ApiImplicitParam(name = "no", value = "岗位编号", required = true)
+            @ApiImplicitParam(name = "no", value = "要删除的岗位编号", required = true)
     })
     public String Port_Station_Delete(String token,String no) throws Exception {
         bp.wf.Dev2Interface.Port_LoginByToken(token);
@@ -177,60 +178,49 @@ public class DevelopAPI extends HttpHandlerBase {
     /**
      * 创建根据流程编号WorkID
      * @param Token
-     * @param FK_Flow
+     * @param FlowNo
      * @return
      * @throws Exception
      */
     @PostMapping(value = "/Node_CreateBlankWorkID")
+    @ApiOperation("创建根据流程编号WorkID,开发者根据这个WorkID作为单据的主键保存单据表里.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
-            @ApiImplicitParam(name = "FK_Flow", value = "流程编号", required = true)
+            @ApiImplicitParam(name = "FlowNo", value = "流程模板编号", required = true)
     })
-    public final String Node_CreateBlankWorkID(String Token,String FK_Flow) throws Exception {
-        if(DataType.IsNullOrEmpty(Token) == true)
-            return "err@用户的Token值不能为空";
-        if(DataType.IsNullOrEmpty(FK_Flow) == true)
-            return "err@流程编号FK_Flow值的不能为空";
+    public final String Node_CreateBlankWorkID(String Token,String FlowNo) throws Exception {
         bp.wf.Dev2Interface.Port_LoginByToken(Token);
         try{
-            long WorkID = bp.wf.Dev2Interface.Node_CreateBlankWork(FK_Flow, bp.web.WebUser.getNo());
+            long WorkID = bp.wf.Dev2Interface.Node_CreateBlankWork(FlowNo, bp.web.WebUser.getNo());
             return String.valueOf(WorkID);
         }catch(Exception e){
             return "err@流程创建WorkID失败:"+e.getMessage();
         }
     }
 
-    /**
-     * 设置流程实例为草稿状态
-     * @param Token
-     * @param FK_Flow
-     * @param WorkID
-     * @return
-     * @throws Exception
-     */
     @PostMapping(value = "/Node_SetDraft")
+    @ApiOperation("设置草稿.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
-            @ApiImplicitParam(name = "FK_Flow", value = "流程编号", required = true),
+            @ApiImplicitParam(name = "flowNo", value = "流程编号", required = true),
             @ApiImplicitParam(name = "WorkID", value = "流程实例WorkID", required = true)
     })
-    public final String Node_SetDraft(String Token,String FK_Flow,long WorkID) throws Exception {
+    public final String Node_SetDraft(String Token,String flowNo,long WorkID) throws Exception {
         if(DataType.IsNullOrEmpty(Token) == true)
             return "err@用户的Token值不能为空";
-        if(DataType.IsNullOrEmpty(FK_Flow) == true)
+        if(DataType.IsNullOrEmpty(flowNo) == true)
             return "err@流程编号值的不能为空";
         if(DataType.IsNullOrEmpty(WorkID) == true)
             return "err@流程实例WorkID值不能为空";
 
         bp.wf.Dev2Interface.Port_LoginByToken(Token);
         try{
-            bp.wf.Dev2Interface.Node_SetDraft(FK_Flow, WorkID);
+            bp.wf.Dev2Interface.Node_SetDraft(flowNo, WorkID);
             return "流程实例设置草稿成功";
         }catch(Exception e){
             return "err@流程设置草稿失败:"+e.getMessage();
         }
     }
-
     /**
      * 指定给特定的移交人
      * @param Token
@@ -241,11 +231,12 @@ public class DevelopAPI extends HttpHandlerBase {
      * @throws Exception
      */
     @PostMapping(value = "/Node_Shift")
+    @ApiOperation("移交")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
             @ApiImplicitParam(name = "WorkID", value = "流程实例WorkID", required = true),
             @ApiImplicitParam(name = "ToEmpNo", value = "人员编号", required = true),
-            @ApiImplicitParam(name = "Msg", value = "说明", required = false)
+            @ApiImplicitParam(name = "Msg", value = "移交原因", required = true)
     })
     public final String Node_Shift(String Token,long WorkID,String ToEmpNo,String Msg) throws Exception {
         if(DataType.IsNullOrEmpty(Token) == true)
@@ -271,10 +262,11 @@ public class DevelopAPI extends HttpHandlerBase {
      * @throws Exception
      */
     @PostMapping(value = "/Node_AddTodolist")
+    @ApiOperation("给指定的流程实例增加指定的待办人员")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
             @ApiImplicitParam(name = "WorkID", value = "流程实例WorkID", required = true),
-            @ApiImplicitParam(name = "EmpNo", value = "人员编号", required = true)
+            @ApiImplicitParam(name = "EmpNo", value = "要增加的人员编号", required = true)
     })
     public final String Node_AddTodolist(String Token,long WorkID,String EmpNo) throws Exception {
         if(DataType.IsNullOrEmpty(Token) == true)
@@ -295,13 +287,14 @@ public class DevelopAPI extends HttpHandlerBase {
     }
 
     /**
-     * 获取指定的流程实例信息
+     * 
      * @param Token
      * @param WorkID
      * @return
      * @throws Exception
      */
     @PostMapping(value = "/Flow_GenerWorkFlow")
+    @ApiOperation("获取流程实例信息,节点状态,发起人,停留节点,当前人待办等.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
             @ApiImplicitParam(name = "WorkID", value = "流程实例WorkID", required = true)
@@ -323,10 +316,11 @@ public class DevelopAPI extends HttpHandlerBase {
     }
 
     @PostMapping(value = "/Node_SaveParas")
+    @ApiOperation("保存参数:可以作为方向条件,接受人规则等参数.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
             @ApiImplicitParam(name = "WorkID", value = "流程实例WorkID", required = true),
-            @ApiImplicitParam(name = "Paras", value = "参数", required = true)
+            @ApiImplicitParam(name = "Paras", value = "参数,格式@Key1=Val1@Key2=Val2比如,@Tel=18660153393@Addr=山东.济南@Age=35", required = true)
     })
     public final String Node_SaveParas(String Token,long WorkID,String Paras) throws Exception {
         if(DataType.IsNullOrEmpty(Token) == true)
@@ -346,13 +340,14 @@ public class DevelopAPI extends HttpHandlerBase {
     }
 
     @PostMapping(value = "/Flow_SetTitle")
+    @ApiOperation("设置标题:流程实例的标题,也可以使用流程属性的标题生成规则生成.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
             @ApiImplicitParam(name = "WorkID", value = "流程实例WorkID", required = true),
             @ApiImplicitParam(name = "Title", value = "标题", required = true),
-            @ApiImplicitParam(name = "FK_Flow", value = "流程编号", required = false)
+            @ApiImplicitParam(name = "flowNo", value = "流程编号", required = false)
     })
-    public final String Flow_SetTitle(String Token,long WorkID,String Title,String FK_Flow) throws Exception {
+    public final String Flow_SetTitle(String Token,long WorkID,String Title,String flowNo) throws Exception {
         if(DataType.IsNullOrEmpty(Token) == true)
             return "err@用户的Token值不能为空";
         if(DataType.IsNullOrEmpty(WorkID) == true)
@@ -362,7 +357,7 @@ public class DevelopAPI extends HttpHandlerBase {
 
         bp.wf.Dev2Interface.Port_LoginByToken(Token);
         try{
-            bp.wf.Dev2Interface.Flow_SetFlowTitle(FK_Flow, WorkID, Title);
+            bp.wf.Dev2Interface.Flow_SetFlowTitle(flowNo, WorkID, Title);
             return "标题设置成功";
         }catch(Exception e){
             return "err@标题设置失败:"+e.getMessage();
@@ -370,12 +365,13 @@ public class DevelopAPI extends HttpHandlerBase {
     }
 
     @PostMapping(value = "/Node_SendWork")
+    @ApiOperation("执行发送:从一个节点运动到下一个节点.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
             @ApiImplicitParam(name = "WorkID", value = "流程实例WorkID", required = true),
-            @ApiImplicitParam(name = "FK_Flow", value = "流程编号", required = false),
-            @ApiImplicitParam(name = "ToNodeID", value = "到达节点ID,空时传0", required = false),
-            @ApiImplicitParam(name = "ToEmps", value = "到达人员编号，多人以,隔开", required = false)
+            @ApiImplicitParam(name = "FK_Flow", value = "流程模板编号", required = false),
+            @ApiImplicitParam(name = "ToNodeID", value = "到达节点ID:设置0表示让ccbpm根据方向条件判断方向.", required = false),
+            @ApiImplicitParam(name = "ToEmps", value = "接受人:设置空表示,根据到达的节点的接受人规则计算接收人,多个接受人用逗号分开,比如:zhangsan,lisi", required = false)
     })
     public final String Node_SendWork(String Token,long WorkID,String FK_Flow,int ToNodeID,String ToEmps) throws Exception {
         if(DataType.IsNullOrEmpty(Token) == true)
@@ -463,13 +459,13 @@ public class DevelopAPI extends HttpHandlerBase {
 
         }
     }
-
     @PostMapping(value = "/DB_GenerWillReturnNodes")
+    @ApiOperation("退回到的节点:执行退回的时候,首先要选择可以退回的节点,放入到下拉框让操作员选择.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
             @ApiImplicitParam(name = "WorkID", value = "流程实例WorkID", required = true),
             @ApiImplicitParam(name = "FID", value = "流程ID", required = false),
-            @ApiImplicitParam(name = "FK_Node", value = "节点编号", required = true)
+            @ApiImplicitParam(name = "nodeID", value = "节点ID", required = true)
     })
     public final String DB_GenerWillReturnNodes(String Token,long WorkID,Long FID,Integer FK_Node) throws Exception {
         if(DataType.IsNullOrEmpty(Token) == true)
@@ -489,30 +485,19 @@ public class DevelopAPI extends HttpHandlerBase {
 
         }
     }
-
-    /**
-     * 执行退回
-     * @param Token
-     * @param WorkID
-     * @param ReturnToNodeID 退回到节点
-     * @param ReturnToEmp 退回给指定的人员
-     * @param Msg 退回原因
-     * @param IsBackToThisNode 是否原路返回
-     * @return
-     * @throws Exception
-     */
+   
     @PostMapping(value = "/Node_ReturnWork")
+    @ApiOperation("执行退回:退回与发送是相反的操作,在ccbpm没有同意不同意概念,只有前进后退.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
             @ApiImplicitParam(name = "WorkID", value = "流程实例WorkID", required = true),
-            @ApiImplicitParam(name = "FID", value = "流程ID", required = false),
             @ApiImplicitParam(name = "FK_Node", value = "当前节点编号", required = true),
             @ApiImplicitParam(name = "ReturnToNodeID", value = "退回到达节点编号，空时传0", required = false),
             @ApiImplicitParam(name = "ReturnToEmp", value = "退回到达人员编号", required = false),
             @ApiImplicitParam(name = "Msg", value = "退回原因", required = true),
             @ApiImplicitParam(name = "IsBackToThisNode", value = "是否按原路返回", required = false)
     })
-    public final String Node_ReturnWork(String Token,long WorkID,Integer FID,Integer FK_Node,Integer ReturnToNodeID,String ReturnToEmp,String Msg,boolean IsBackToThisNode) throws Exception {
+    public final String Node_ReturnWork(String Token,long WorkID, Integer FK_Node,Integer ReturnToNodeID,String ReturnToEmp,String Msg,boolean IsBackToThisNode) throws Exception {
         if(DataType.IsNullOrEmpty(Token) == true)
             return "err@用户的Token值不能为空";
         if(DataType.IsNullOrEmpty(WorkID) == true || WorkID ==0)
@@ -530,7 +515,7 @@ public class DevelopAPI extends HttpHandlerBase {
                 int nodeID = 0;
                 if(FK_Node!=null)
                     nodeID = FK_Node.intValue();
-                DataTable dt = bp.wf.Dev2Interface.DB_GenerWillReturnNodes(nodeID, WorkID, FID!=null?FID.longValue():0);
+                DataTable dt = bp.wf.Dev2Interface.DB_GenerWillReturnNodes(nodeID, WorkID, 0);
                 if (dt.Rows.size() == 1)
                 {
                     returnToNodeID = Integer.parseInt(dt.Rows.get(0).getValue("No").toString());
@@ -546,6 +531,7 @@ public class DevelopAPI extends HttpHandlerBase {
     }
 
     @PostMapping(value = "/Search_Init")
+    @ApiOperation("流程实例查询:对流程注册表的查询,WF_GenerWorkFlow请参考表结构.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
             @ApiImplicitParam(name = "Scop", value = "流程实例WorkID", required = false),
@@ -567,40 +553,34 @@ public class DevelopAPI extends HttpHandlerBase {
         }
     }
 
-    @PostMapping(value = "/GenerFrmUrl")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
-            @ApiImplicitParam(name = "WorkID", value = "流程实例WorkID", required = true),
-            @ApiImplicitParam(name = "FK_Flow", value = "流程编号", required = true),
-            @ApiImplicitParam(name = "FK_Node", value = "当前节点编号", required = false)
-    })
-    public final String GenerFrmUrl(String Token,long WorkID,String FK_Flow,Integer FK_Node) throws Exception {
-        if(DataType.IsNullOrEmpty(Token) == true)
-            return "err@用户的Token值不能为空";
-        if(DataType.IsNullOrEmpty(WorkID) == true)
-            return "err@流程实例WorkID值不能为空";
-        if(DataType.IsNullOrEmpty(FK_Flow) == true)
-            return "err@流程编号FK_Flow值不能为空";
-        bp.wf.Dev2Interface.Port_LoginByToken(Token);
-        try{
-            return GenerFrmUrl(WorkID,FK_Flow,FK_Node==null?0:FK_Node.intValue(),Token);
-        }catch(Exception e){
-            return "err@获取可以发起的流程列表失败:"+e.getMessage();
-
-        }
-    }
-
-    /**
-     * 获取可以发起的流程
-     * @param Token
-     * @param Domain
-     * @return
-     * @throws Exception
-     */
+    // @PostMapping(value = "/GenerFrmUrl")
+    // @ApiOperation("获得表单URL:对流程注册表的查询,WF_GenerWorkFlow请参考表结构.")
+    // @ApiImplicitParams({
+    //         @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
+    //         @ApiImplicitParam(name = "WorkID", value = "流程实例WorkID", required = true),
+    //         @ApiImplicitParam(name = "FK_Flow", value = "流程编号", required = true),
+    //         @ApiImplicitParam(name = "FK_Node", value = "当前节点编号", required = false)
+    // })
+    // public final String GenerFrmUrl(String Token,long WorkID,String FK_Flow,Integer FK_Node) throws Exception {
+    //     if(DataType.IsNullOrEmpty(Token) == true)
+    //         return "err@用户的Token值不能为空";
+    //     if(DataType.IsNullOrEmpty(WorkID) == true)
+    //         return "err@流程实例WorkID值不能为空";
+    //     if(DataType.IsNullOrEmpty(FK_Flow) == true)
+    //         return "err@流程编号FK_Flow值不能为空";
+    //     bp.wf.Dev2Interface.Port_LoginByToken(Token);
+    //     try{
+    //         return GenerFrmUrl(WorkID,FK_Flow,FK_Node==null?0:FK_Node.intValue(),Token);
+    //     }catch(Exception e){
+    //         return "err@获取可以发起的流程列表失败:"+e.getMessage();
+    //     }
+    // }
+  
     @PostMapping(value = "/DB_Start")
+    @ApiOperation("获得可发起的流程:一个可以发起的流程由他的身份决定的,在开始节点的右键属性里设置.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
-            @ApiImplicitParam(name = "Domain", value = "域，可传空或空字符串", required = false)
+            @ApiImplicitParam(name = "Domain", value = "域:可传空,比如:CRM,OA,ERP等,配置在流程目录属性上.", required = false)
     })
     public final String DB_Start(String Token,String Domain) throws Exception {
         if(DataType.IsNullOrEmpty(Token) == true)
@@ -615,19 +595,13 @@ public class DevelopAPI extends HttpHandlerBase {
         }
     }
 
-    /**
-     * 获取草稿列表
-     * @param Token
-     * @param FK_Flow
-     * @param Domain
-     * @return
-     * @throws Exception
-     */
+    
     @PostMapping(value = "/DB_Draft")
+    @ApiOperation("草稿:暂存的表单,请参考流程属性草稿规则.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
-            @ApiImplicitParam(name = "FK_Flow", value = "流程编号", required = false),
-            @ApiImplicitParam(name = "Domain", value = "域，可传空或空字符串", required = false)
+            @ApiImplicitParam(name = "FK_Flow", value = "流程模板编号", required = false),
+            @ApiImplicitParam(name = "Domain", value = "域:可传空,比如:CRM,OA,ERP等,配置在流程目录属性上.", required = false)
     })
     public final String DB_Draft(String Token,String FK_Flow,String Domain) throws Exception {
         if(DataType.IsNullOrEmpty(Token) == true)
@@ -642,21 +616,13 @@ public class DevelopAPI extends HttpHandlerBase {
         }
     }
 
-    /**
-     * 获取待办列表
-     * @param Token
-     * @param flowNo
-     * @param nodeID
-     * @param Domain
-     * @return
-     * @throws Exception
-     */
     @PostMapping(value = "/DB_Todolist")
+    @ApiOperation("待办:等待我解决的问题,包括发送、转发、移交、撤销的工作.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
-            @ApiImplicitParam(name = "flowNo", value = "流程编号", required = false),
-            @ApiImplicitParam(name = "nodeID", value = "当前节点编号", required = false),
-            @ApiImplicitParam(name = "Domain", value = "域，可传空或空字符串", required = false)
+            @ApiImplicitParam(name = "flowNo", value = "流程模板编号:要取得指定流程的待办就传入.", required = false),
+            @ApiImplicitParam(name = "nodeID", value = "节点ID:要取得指定节点的待办就传入,默认为0.", required = false),
+            @ApiImplicitParam(name = "Domain", value = "域:可传空,比如:CRM,OA,ERP等,配置在流程目录属性上.", required = false)
     })
     public final String DB_Todolist(String Token,String flowNo,Integer nodeID,String Domain) throws Exception {
         if(DataType.IsNullOrEmpty(Token) == true)
@@ -672,9 +638,10 @@ public class DevelopAPI extends HttpHandlerBase {
     }
 
     @PostMapping(value = "/DB_Runing")
+    @ApiOperation("在途:我参与的流程但是该流程没有走完,可以执行催办与撤销操作.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
-            @ApiImplicitParam(name = "Domain", value = "域，可传空或空字符串", required = false)
+            @ApiImplicitParam(name = "Domain", value = "域:可传空,比如:CRM,OA,ERP等,配置在流程目录属性上.", required = false)
     })
     public final String DB_Runing(String Token,String Domain) throws Exception {
         if(DataType.IsNullOrEmpty(Token) == true)
@@ -688,10 +655,12 @@ public class DevelopAPI extends HttpHandlerBase {
 
         }
     }
+    
     @PostMapping(value = "/DB_CCList")
+    @ApiOperation("抄送:发送给别人,知会给我的工作.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
-            @ApiImplicitParam(name = "Domain", value = "域，可传空或空字符串", required = false)
+            @ApiImplicitParam(name = "Domain", value = "域:可传空,比如:CRM,OA,ERP等,配置在流程目录属性上.", required = false)
     })
     public final String DB_CCList(String Token,String Domain) throws Exception {
         if(DataType.IsNullOrEmpty(Token) == true)
@@ -705,19 +674,12 @@ public class DevelopAPI extends HttpHandlerBase {
         }
     }
 
-    /**
-     * 根据抄送状态获取抄送列表
-     * @param Token
-     * @param Sta
-     * @param Domain
-     * @return
-     * @throws Exception
-     */
     @PostMapping(value = "/DB_CCListBySta")
+    @ApiOperation("抄送:发送给别人,知会给我的工作.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
             @ApiImplicitParam(name = "Sta", value = "状态,枚举类型:0 未读;1 已读;2 已回复;3 删除;", required = false),
-            @ApiImplicitParam(name = "Domain", value = "域，可传空或空字符串", required = false)
+            @ApiImplicitParam(name = "Domain", value = "域:可传空,比如:CRM,OA,ERP等,配置在流程目录属性上.", required = false)
     })
     public final String DB_CCListBySta(String Token,Integer Sta, String Domain) throws Exception {
         if(DataType.IsNullOrEmpty(Token) == true)
@@ -731,25 +693,14 @@ public class DevelopAPI extends HttpHandlerBase {
         }
     }
 
-    /**
-     * 给指定的节点增加抄送列表
-     * @param Token
-     * @param FK_Node
-     * @param Title
-     * @param Doc
-     * @param Emps
-     * @param Depts
-     * @param Stations
-     * @return
-     * @throws Exception
-     */
     @PostMapping(value = "/Node_CC_WriteTo_CClist")
+    @ApiOperation("执行抄送:写入抄送的方法")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
             @ApiImplicitParam(name = "WorkID", value = "流程实例WorkID", required = false),
-            @ApiImplicitParam(name = "FK_Node", value = "当前节点编号", required = true),
-            @ApiImplicitParam(name = "Title", value = "标题", required = false),
-            @ApiImplicitParam(name = "Doc", value = "内容", required = false),
+            @ApiImplicitParam(name = "FK_Node", value = "当前节点ID", required = true),
+            @ApiImplicitParam(name = "Title", value = "标题", required = true),
+            @ApiImplicitParam(name = "Doc", value = "内容", required = true),
             @ApiImplicitParam(name = "Emps", value = "人员编号,多人以,隔开", required = false),
             @ApiImplicitParam(name = "Depts", value = "部门编号,多个以,隔开", required = false),
             @ApiImplicitParam(name = "Stations", value = "岗位编号,多个以,隔开", required = false)
@@ -777,26 +728,31 @@ public class DevelopAPI extends HttpHandlerBase {
         }
     }
 
-    /**
-     * 批量催办
-     * @param Token
-     * @param WorkIDs
-     * @param Msg
-     * @return
-     * @throws Exception
-     */
     @PostMapping(value = "/Flow_DoPress")
+    @ApiOperation("催办:提醒当前流程的节点处理人,及时处理工作.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
-            @ApiImplicitParam(name = "WorkIDs", value = "流程实例WorkID集合,多个以,隔开", required = false),
-            @ApiImplicitParam(name = "Msg", value = "催办信息", required = false)
+            @ApiImplicitParam(name = "WorkIDs", value = "流程实例WorkID集合:多个以,隔开", required = false),
+            @ApiImplicitParam(name = "msg", value = "催办信息", required = false)
     })
-    public final String Flow_DoPress(String Token,String WorkIDs,String Msg) throws Exception {
+    public final String Flow_DoPress(String Token,String WorkIDs,String msg) throws Exception {
         if(DataType.IsNullOrEmpty(Token) == true)
             return "err@用户的Token值不能为空";
         bp.wf.Dev2Interface.Port_LoginByToken(Token);
         try{
-            return this.Flow_DoPress(WorkIDs,Msg);
+           
+            String[] strs = WorkIDs.split("[,]", -1);
+        if (DataType.IsNullOrEmpty(msg))
+            msg = "需要您处理待办工作.";
+        String info = "";
+        for (String WorkIDStr : strs)
+        {
+            if (bp.da.DataType.IsNullOrEmpty(WorkIDStr) == true)
+                continue;
+            info += "@" + bp.wf.Dev2Interface.Flow_DoPress(Integer.parseInt(WorkIDStr), msg, true);
+        }
+        return info;
+
         }catch(Exception e){
             return "err@催办失败:"+e.getMessage();
         }
@@ -810,9 +766,10 @@ public class DevelopAPI extends HttpHandlerBase {
      * @throws Exception
      */
     @PostMapping(value = "/CC_BatchCheckOver")
+    @ApiOperation("抄送批量阅知:批量阅知已读.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
-            @ApiImplicitParam(name = "WorkIDs", value = "流程实例WorkID集合,多个以,隔开", required = true)
+            @ApiImplicitParam(name = "WorkIDs", value = "流程实例WorkID集合:多个以,隔开", required = true)
     })
     public final String CC_BatchCheckOver(String Token,String WorkIDs) throws Exception {
         if(DataType.IsNullOrEmpty(Token) == true)
@@ -827,17 +784,11 @@ public class DevelopAPI extends HttpHandlerBase {
         }
     }
 
-    /**
-     * 批量逻辑删除流程实例
-     * @param Token
-     * @param WorkIDs
-     * @return
-     * @throws Exception
-     */
     @PostMapping(value = "/Flow_BatchDeleteByFlag")
+    @ApiOperation("批量逻辑删除流程实例:对流程实例在WF_GenerWorkFlow的WFState设置删除标记=8.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
-            @ApiImplicitParam(name = "WorkIDs", value = "流程实例WorkID集合,多个以,隔开", required = true)
+            @ApiImplicitParam(name = "WorkIDs", value = "流程实例WorkID集合:多个以,隔开", required = true)
     })
     public final String Flow_BatchDeleteByFlag(String Token,String WorkIDs) throws Exception {
         if(DataType.IsNullOrEmpty(Token) == true)
@@ -846,20 +797,21 @@ public class DevelopAPI extends HttpHandlerBase {
         if(DataType.IsNullOrEmpty(WorkIDs) == true)
             return "err@批删除WorkIDs值不能为空";
         try{
-            return this.Flow_BatchDeleteByFlag(WorkIDs);
+              String[] strs = WorkIDs.split("[,]", -1);
+        for (String WorkIDStr : strs)
+        {
+            if (bp.da.DataType.IsNullOrEmpty(WorkIDStr) == true)
+                continue;
+            bp.wf.Dev2Interface.Flow_DoDeleteFlowByFlag(Long.parseLong(WorkIDStr), "删除", true);
+        }
+        return "删除成功.";
         }catch(Exception e){
             return "err@催办失败:"+e.getMessage();
         }
     }
 
-    /**
-     * 批量物流删除流程实例
-     * @param Token
-     * @param WorkIDs
-     * @return
-     * @throws Exception
-     */
     @PostMapping(value = "/Flow_BatchDeleteByReal")
+    @ApiOperation("批量物理删除流程实例:对流程实例在WF_GenerWorkFlow里直接删除,并删除相关的轨迹,工作人员,业务表数据.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
             @ApiImplicitParam(name = "WorkIDs", value = "流程实例WorkID集合,多个以,隔开", required = true)
@@ -871,23 +823,26 @@ public class DevelopAPI extends HttpHandlerBase {
         if(DataType.IsNullOrEmpty(WorkIDs) == true)
             return "err@批删除WorkIDs值不能为空";
         try{
-            return this.Flow_BatchDeleteByReal(WorkIDs);
+            
+              String[] strs = WorkIDs.split("[,]", -1);
+        for (String WorkIDStr : strs)
+        {
+            if (bp.da.DataType.IsNullOrEmpty(WorkIDStr) == true)
+                continue;
+            bp.wf.Dev2Interface.Flow_DoDeleteFlowByReal(Long.parseLong(WorkIDStr), true);
+        }
+        return  "删除成功.";
+
         }catch(Exception e){
             return "err@催办失败:"+e.getMessage();
         }
     }
 
-    /**
-     * 批量撤销删除的流程
-     * @param Token
-     * @param WorkIDs
-     * @return
-     * @throws Exception
-     */
     @PostMapping(value = "/Flow_BatchDeleteByFlagAndUnDone")
+    @ApiOperation("批量撤销删除的流程:对已经逻辑删除流程实例在恢复正常状态.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
-            @ApiImplicitParam(name = "WorkIDs", value = "流程实例WorkID集合,多个以,隔开", required = true)
+            @ApiImplicitParam(name = "WorkIDs", value = "流程实例WorkID集合:多个以,隔开", required = true)
     })
     public final String Flow_BatchDeleteByFlagAndUnDone(String Token,String  WorkIDs) throws Exception {
         if(DataType.IsNullOrEmpty(Token) == true)
@@ -896,23 +851,27 @@ public class DevelopAPI extends HttpHandlerBase {
         if(DataType.IsNullOrEmpty(WorkIDs) == true)
             return "err@批量撤销删除WorkIDs值不能为空";
         try{
-            return this.Flow_BatchDeleteByFlagAndUnDone(WorkIDs);
+            
+            String[] strs = WorkIDs.split("[,]", -1);
+
+        for (String WorkIDStr : strs)
+        {
+            if (bp.da.DataType.IsNullOrEmpty(WorkIDStr) == true)
+                continue;
+            bp.wf.Dev2Interface.Flow_DoUnDeleteFlowByFlag(null, Integer.parseInt(WorkIDStr), "删除");
+        }
+
+        return "恢复成功.";
+        
         }catch(Exception e){
             return "err@批量删除流程实例失败:"+e.getMessage();
         }
     }
-
-    /**
-     * 批量撤销流程实例
-     * @param Token
-     * @param WorkIDs
-     * @return
-     * @throws Exception
-     */
     @PostMapping(value = "/Flow_DoUnSend")
+    @ApiOperation("批量撤销流程实例:撤销后当前工作返回自己的待办列表里.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
-            @ApiImplicitParam(name = "WorkIDs", value = "流程实例WorkID集合,多个以,隔开", required = true)
+            @ApiImplicitParam(name = "WorkIDs", value = "流程实例WorkID集合:多个以,隔开", required = true)
     })
     public final String Flow_DoUnSend(String Token,String WorkIDs) throws Exception {
         if(DataType.IsNullOrEmpty(Token) == true)
@@ -921,23 +880,32 @@ public class DevelopAPI extends HttpHandlerBase {
         if(DataType.IsNullOrEmpty(WorkIDs) == true)
             return "err@批量撤销WorkIDs值不能为空";
         try{
-            return this.Flow_DoUnSend(WorkIDs);
+           
+            String[] strs = WorkIDs.split("[,]", -1);
+
+        String info = "";
+        for (String WorkIDStr : strs)
+        {
+            if (bp.da.DataType.IsNullOrEmpty(WorkIDStr) == true)
+            {
+                continue;
+            }
+
+            info += bp.wf.Dev2Interface.Flow_DoUnSend(null, Long.parseLong(WorkIDStr), 0, 0);
+        }
+        return info;
+
         }catch(Exception e){
             return "err@批量撤销流程失败:"+e.getMessage();
         }
     }
 
-    /**
-     * 批量删除草稿
-     * @param Token
-     * @param WorkIDs
-     * @return
-     * @throws Exception
-     */
+    
     @PostMapping(value = "/Flow_DeleteDraft")
+    @ApiOperation("删除草稿:从草稿箱里执行批量删除操作,请参考流程属性,草稿规则.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
-            @ApiImplicitParam(name = "WorkIDs", value = "流程实例WorkID集合,多个以,隔开", required = true)
+            @ApiImplicitParam(name = "WorkIDs", value = "流程实例WorkID集合:多个以,隔开", required = true)
     })
     public final String Flow_DeleteDraft(String Token,String  WorkIDs) throws Exception {
         if(DataType.IsNullOrEmpty(Token) == true)
@@ -951,36 +919,36 @@ public class DevelopAPI extends HttpHandlerBase {
             return "err@批量删除草稿失败:"+e.getMessage();
         }
     }
-
-    /**
-     * 批量结束流程实例
-     * @param Token
-     * @param WorkIDs
-     * @return
-     * @throws Exception
-     */
     @PostMapping(value = "/Flow_DoFlowOver")
+    @ApiOperation("执行流程结束:对流程注册表WF_GenerWorkFlow的WFState设置为结束状态.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
-            @ApiImplicitParam(name = "WorkIDs", value = "流程实例WorkID集合,多个以,隔开", required = true)
+            @ApiImplicitParam(name = "WorkIDs", value = "流程实例WorkID集合:多个以,隔开", required = true)
     })
     public final String Flow_DoFlowOver(String Token,String WorkIDs) throws Exception {
         if(DataType.IsNullOrEmpty(Token) == true)
             return "err@用户的Token值不能为空";
         bp.wf.Dev2Interface.Port_LoginByToken(Token);
         try{
-            return this.Flow_DoFlowOver(WorkIDs);
+            
+              String[] strs = WorkIDs.split("[,]", -1);
+
+        String info = "";
+        for (String WorkIDStr : strs)
+        {
+            if (bp.da.DataType.IsNullOrEmpty(WorkIDStr) == true)
+                continue;
+            bp.wf.Dev2Interface.Flow_DoFlowOver(Long.parseLong(WorkIDStr), "批量结束", 1);
+        }
+        return "执行成功.";
+
         }catch(Exception e){
             return "err@批量结束流程实例失败:"+e.getMessage();
         }
     }
 
-    /**
-     * 退出登录
-     * @return
-     * @throws Exception
-     */
     @PostMapping(value = "/Port_LoginOut")
+    @ApiOperation("退出登录:清除当前的会话,注销cookies.")
     public final String Portal_LoginOut() throws Exception {
         try{
             bp.wf.Dev2Interface.Port_SigOut();
@@ -989,87 +957,7 @@ public class DevelopAPI extends HttpHandlerBase {
             return "err@退出成功失败:"+e.getMessage();
         }
     }
-
-    /**
-     * 获取消息类型
-     * @param Token
-     * @return
-     * @throws Exception
-     */
-    @PostMapping(value = "/InfoSorts")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true)
-    })
-    public final String InfoSorts(String Token) throws Exception {
-        if(DataType.IsNullOrEmpty(Token) == true)
-            return "err@用户的Token值不能为空";
-        bp.wf.Dev2Interface.Port_LoginByToken(Token);
-        try{
-            String sql = "SELECT * FROM OA_InfoType ";
-            DataTable dt = DBAccess.RunSQLReturnTable(sql);
-            return bp.tools.Json.ToJson(dt);
-        }catch(Exception e){
-            return "err@获取消息类型失败:"+e.getMessage();
-        }
-    }
-
-    /**
-     * 获取消息列表
-     * @param Token
-     * @param SortNo
-     * @return
-     * @throws Exception
-     */
-    @PostMapping(value = "/InfoDtls")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
-            @ApiImplicitParam(name = "SortNo", value = "类型,外键:对应物理表:OA_InfoType,表描述:信息类型", required = true)
-    })
-    public final String InfoDtls(String Token,String SortNo) throws Exception {
-        if(DataType.IsNullOrEmpty(Token) == true)
-            return "err@用户的Token值不能为空";
-        bp.wf.Dev2Interface.Port_LoginByToken(Token);
-        try{
-            String sql="";
-            if (DataType.IsNullOrEmpty(SortNo) == true)
-                sql = "SELECT * FROM OA_Info WHERE InfoPRI=1 ";
-            else
-                sql = "SELECT * FROM OA_Info WHERE InfoType='" + SortNo + "' ";
-
-            DataTable dt = DBAccess.RunSQLReturnTable(sql);
-            return bp.tools.Json.ToJson(dt);
-        }catch(Exception e){
-            return "err@获取消息列表失败:"+e.getMessage();
-        }
-    }
-
-    /**
-     * 根据编号获取消息内容
-     * @param Token
-     * @param No
-     * @return
-     * @throws Exception
-     */
-    @PostMapping(value = "/Dtl")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
-            @ApiImplicitParam(name = "No", value = "消息编号", required = true)
-    })
-    public final String Dtl(String Token,String No) throws Exception {
-        if(DataType.IsNullOrEmpty(Token) == true)
-            return "err@用户的Token值不能为空";
-        if(DataType.IsNullOrEmpty(No) == true)
-            return "err@消息编号No值不能为空";
-        bp.wf.Dev2Interface.Port_LoginByToken(Token);
-        try{
-            String sql = "SELECT * FROM OA_Info WHERE No='" + No + "' ";
-            DataTable dt = DBAccess.RunSQLReturnTable(sql);
-            dt.TableName = "OA_InfoDtl";
-            return bp.tools.Json.ToJson(dt);
-        }catch(Exception e){
-            return "err@根据编号["+No+"]获取消息信息失败:"+e.getMessage();
-        }
-    }
+  
 
     public String Search_Init(String scop,String key,String dtFrom,String dtTo,int pageIdx) throws Exception {
         GenerWorkFlows gwfs = new GenerWorkFlows();
@@ -1130,158 +1018,7 @@ public class DevelopAPI extends HttpHandlerBase {
         ds.Tables.add(mydt);
         return bp.tools.Json.ToJson(ds);
     }
-    ///#region 通用方法.
-    public final String GetValByKey(String key)
-    {
-        String str = ContextHolderUtils.getRequest().getParameter(key);
-        if (bp.da.DataType.IsNullOrEmpty(str))
-        {
-            return null;
-        }
-        return str;
-    }
-    public final int GetValIntByKey(String key)
-    {
-        String val = GetValByKey(key);
-        if (val == null)
-        {
-            return 0;
-        }
-        return Integer.parseInt(val);
-    }
-    public final boolean GetValBoolenByKey(String key)
-    {
-        String val = GetValByKey(key);
-        if (val == null)
-        {
-            return false;
-        }
-        if (val.equals("0") == true)
-        {
-            return false;
-        }
-        return true;
-    }
 
-
-    public final String Flow_DoFlowOver(String WorkIDs)throws Exception
-    {
-        String[] strs = WorkIDs.split("[,]", -1);
-
-        String info = "";
-        for (String WorkIDStr : strs)
-        {
-            if (bp.da.DataType.IsNullOrEmpty(WorkIDStr) == true)
-                continue;
-            bp.wf.Dev2Interface.Flow_DoFlowOver(Long.parseLong(WorkIDStr), "批量结束", 1);
-        }
-        return "执行成功.";
-    }
-    /**
-     删除草稿
-
-     */
-    public final String Flow_DeleteDraft()throws Exception
-    {
-        String WorkIDs = this.GetValByKey("WorkIDs");
-        String[] strs = WorkIDs.split("[,]", -1);
-
-        String info = "";
-        for (String WorkIDStr : strs)
-        {
-            if (bp.da.DataType.IsNullOrEmpty(WorkIDStr) == true)
-            {
-                continue;
-            }
-
-            bp.wf.Dev2Interface.Node_DeleteDraft(Long.parseLong(WorkIDStr));
-        }
-        return "删除成功.";
-    }
-
-    /**
-     撤销发送
-
-     */
-    public final String Flow_DoUnSend(String WorkIDs)throws Exception
-    {
-        String[] strs = WorkIDs.split("[,]", -1);
-
-        String info = "";
-        for (String WorkIDStr : strs)
-        {
-            if (bp.da.DataType.IsNullOrEmpty(WorkIDStr) == true)
-            {
-                continue;
-            }
-
-            info += bp.wf.Dev2Interface.Flow_DoUnSend(null, Long.parseLong(WorkIDStr), 0, 0);
-        }
-        return info;
-    }
-    public final String Flow_BatchDeleteByReal(String WorkIDs) throws Exception
-    {
-        String[] strs = WorkIDs.split("[,]", -1);
-        for (String WorkIDStr : strs)
-        {
-            if (bp.da.DataType.IsNullOrEmpty(WorkIDStr) == true)
-                continue;
-            bp.wf.Dev2Interface.Flow_DoDeleteFlowByReal(Long.parseLong(WorkIDStr), true);
-        }
-        return  "删除成功.";
-    }
-    /**
-     删除功能
-     */
-    public final String Flow_BatchDeleteByFlag(String WorkIDs)throws Exception
-    {
-        String[] strs = WorkIDs.split("[,]", -1);
-        for (String WorkIDStr : strs)
-        {
-            if (bp.da.DataType.IsNullOrEmpty(WorkIDStr) == true)
-                continue;
-            bp.wf.Dev2Interface.Flow_DoDeleteFlowByFlag(Long.parseLong(WorkIDStr), "删除", true);
-        }
-        return "删除成功.";
-    }
-    /**
-     恢复删除
-     */
-    public final String Flow_BatchDeleteByFlagAndUnDone(String WorkIDs) throws Exception
-    {
-        String[] strs = WorkIDs.split("[,]", -1);
-
-        for (String WorkIDStr : strs)
-        {
-            if (bp.da.DataType.IsNullOrEmpty(WorkIDStr) == true)
-                continue;
-            bp.wf.Dev2Interface.Flow_DoUnDeleteFlowByFlag(null, Integer.parseInt(WorkIDStr), "删除");
-        }
-
-        return "恢复成功.";
-    }
-
-    /**
-     * 批量催办
-     * @param WorkIDs
-     * @param msg
-     * @return
-     * @throws Exception
-     */
-    public final String Flow_DoPress(String WorkIDs,String msg)throws Exception
-    {
-        String[] strs = WorkIDs.split("[,]", -1);
-        if (DataType.IsNullOrEmpty(msg))
-            msg = "需要您处理待办工作.";
-        String info = "";
-        for (String WorkIDStr : strs)
-        {
-            if (bp.da.DataType.IsNullOrEmpty(WorkIDStr) == true)
-                continue;
-            info += "@" + bp.wf.Dev2Interface.Flow_DoPress(Integer.parseInt(WorkIDStr), msg, true);
-        }
-        return info;
-    }
     /**
      批量设置抄送查看完毕
      @return
@@ -1341,9 +1078,108 @@ public class DevelopAPI extends HttpHandlerBase {
             return "err@" + ex.getMessage();
         }
     }
+    ///#region 通用方法.
+    public final String GetValByKey(String key)
+    {
+        String str = ContextHolderUtils.getRequest().getParameter(key);
+        if (bp.da.DataType.IsNullOrEmpty(str))
+        {
+            return null;
+        }
+        return str;
+    }
+    public final int GetValIntByKey(String key)
+    {
+        String val = GetValByKey(key);
+        if (val == null)
+        {
+            return 0;
+        }
+        return Integer.parseInt(val);
+    }
+    public final boolean GetValBoolenByKey(String key)
+    {
+        String val = GetValByKey(key);
+        if (val == null)
+        {
+            return false;
+        }
+        if (val.equals("0") == true)
+        {
+            return false;
+        }
+        return true;
+    }
+    /*
+    删除草稿
 
+     */
+    public final String Flow_DeleteDraft()throws Exception
+    {
+        String WorkIDs = this.GetValByKey("WorkIDs");
+        String[] strs = WorkIDs.split("[,]", -1);
+
+        String info = "";
+        for (String WorkIDStr : strs)
+        {
+            if (bp.da.DataType.IsNullOrEmpty(WorkIDStr) == true)
+            {
+                continue;
+            }
+
+            bp.wf.Dev2Interface.Node_DeleteDraft(Long.parseLong(WorkIDStr));
+        }
+        return "删除成功.";
+    }
     @Override
     public Class getCtrlType() {
         return null;
+    }
+
+    @PostMapping(value = "/Node_GetNextStepNodesByNodeID")
+    @ApiOperation("获得到达节点的集合")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
+            @ApiImplicitParam(name = "nodeID", value = "节点ID", required = true)
+    })
+    public final String Node_GetNextStepNodesByNodeID(String Token,int nodeID) throws Exception {
+        if(DataType.IsNullOrEmpty(Token) == true)
+            return "err@用户的Token值不能为空";
+        if(DataType.IsNullOrEmpty(nodeID) == true || nodeID == 0)
+            return "err@节点编号nodeID不能为空";
+
+        bp.wf.Dev2Interface.Port_LoginByToken(Token);
+        try{
+            //获得可以退回的节点.
+            String dt = bp.wf.Dev2Interface.Node_GetNextStepNodesByNodeID(nodeID);
+            return dt;
+        }catch(Exception e){
+            return "err@获取可以退回的节点失败:"+e.getMessage();
+
+        }
+    }
+    @PostMapping(value = "/Node_GetNextStepEmpsByNodeID")
+    @ApiOperation("获得到指定节点上的工作人员集合")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
+            @ApiImplicitParam(name = "nodeID", value = "节点ID", required = true),
+            @ApiImplicitParam(name = "workID", value = "流程实例ID", required = true)
+    })
+    public final String Node_GetNextStepEmpsByNodeID(String Token,int nodeID, int workID) throws Exception {
+        if(DataType.IsNullOrEmpty(Token) == true)
+            return "err@用户的Token值不能为空";
+        if(DataType.IsNullOrEmpty(nodeID) == true || nodeID == 0)
+            return "err@节点编号nodeID不能为空";
+        if(DataType.IsNullOrEmpty(workID) == true || workID == 0)
+            return "err@流程实例workID不能为空";
+        bp.wf.Dev2Interface.Port_LoginByToken(Token);
+        try{
+            //获得可以退回的节点.
+            DataTable dt = bp.wf.Dev2Interface.Node_GetNextStepEmpsByNodeID(nodeID,workID);
+            return Json.ToJson(dt);
+        }catch(Exception e){
+            return "err@获取可以退回的节点失败:"+e.getMessage();
+
+        }
     }
 }

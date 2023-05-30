@@ -13691,4 +13691,54 @@ public class Dev2Interface
 
 		return dtToNDs;
 	}
+	/// <summary>
+	/// 获得到达节点的集合.
+	/// </summary>
+	/// <param name="nodeID">当前节点ID</param>
+	/// <returns>数据源:Directions</returns>
+	/// <exception cref="Exception">如果当前节点是到达节点是自动计算的，就抛出异常.</exception>
+	public static String Node_GetNextStepNodesByNodeID(int nodeID) throws Exception {
+		Node nd = new Node(nodeID);
+		if (nd.getCondModel() == DirCondModel.ByLineCond)
+			throw new Exception("err@当前节点转向规则是自动计算，不能获取到达的节点集合.");
+
+		Directions dirs = new Directions();
+		dirs.Retrieve(DirectionAttr.Node, nodeID, "Idx");
+		return Json.ToJson(dirs);
+	}
+	/// <summary>
+	/// 获得到指定节点上的工作人员集合
+	/// </summary>
+	/// <param name="nodeID">节点ID</param>
+	/// <returns></returns>
+	/// <exception cref="Exception"></exception>
+	public static DataTable Node_GetNextStepEmpsByNodeID(int nodeID, int workID) throws Exception {
+		GenerWorkFlow gwf = new GenerWorkFlow(workID);
+		WorkNode toWN = new WorkNode(workID, nodeID);
+		try
+		{
+			Flow fl = new Flow(gwf.getFK_Flow());
+			WorkNode currWN = new WorkNode(workID, gwf.getFK_Node());
+
+			FindWorker fw = new FindWorker();
+			DataTable dt = fw.DoIt(fl, currWN, toWN);
+			if (dt.Columns.size() == 1)
+			{
+				dt.Columns.Add("Name");
+				for (DataRow dr :dt.Rows)
+				{
+					String mainPK = dr.getValue("MainPK").toString();
+					dr.setValue("Name",DBAccess.RunSQLReturnString("SELECT Name FROM Port_Emp WHERE No='" +  dr.getValue(0)  + "'"));
+				}
+			}
+
+			dt.Columns.get(0).setColumnName("No");
+			dt.Columns.get(1).setColumnName("Name");
+			return dt;
+		}
+		catch (Exception ex)
+		{
+			throw new Exception("err@不支持或者没有判断的模式:" + toWN.getHisNode().getHisDeliveryWay() + "，技术信息:"+ex.getMessage());
+		}
+	}
 }

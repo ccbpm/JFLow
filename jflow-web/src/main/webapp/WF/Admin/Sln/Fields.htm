@@ -293,15 +293,8 @@
                 else
                     ff.IsWriteToFlowTable = 0;
 
-                //if ($('#' + ff.KeyOfEn + "_IsWriteToGenerWorkFlow").is(':checked'))
-                //    ff.IsWriteToGenerWorkFlow = 1;
-                //else
-                //    ff.IsWriteToGenerWorkFlow = 0;
-
                 //判断变化的是否需要保存.
                 var isNeedSave = false;
-                //if (ff.IsWriteToGenerWorkFlow == 1)
-                //    isNeedSave = true;
 
                 if (ff.IsWriteToFlowTable == 1)
                     isNeedSave = true;
@@ -316,6 +309,8 @@
                     isNeedSave = true;
 
                 if (en.UIIsInput != ff.IsNotNull)
+                    isNeedSave = true;
+                if(en.IsSigan!= ff.IsSigan)
                     isNeedSave = true;
 
                 if (ff.RegularExp != "")

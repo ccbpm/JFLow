@@ -13713,6 +13713,8 @@ public class Dev2Interface
 	/// <returns></returns>
 	/// <exception cref="Exception"></exception>
 	public static DataTable Node_GetNextStepEmpsByNodeID(int nodeID, int workID) throws Exception {
+		if (workID == 0)
+			workID = DBAccess.RunSQLReturnValInt("SELECT WorkID FROM WF_GenerWorkFlow WHERE FK_Node=" + nodeID + " AND TodoEmps LIKE '%" + WebUser.getNo() + ",%'");
 		GenerWorkFlow gwf = new GenerWorkFlow(workID);
 		WorkNode toWN = new WorkNode(workID, nodeID);
 		try

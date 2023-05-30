@@ -1003,6 +1003,10 @@ function SaveAndUpdateNodeName(activeId) {
     ReLoginByToken();
 
     var text = document.getElementById("TB_" + activeId).value; //新修改的值.
+    //$("#span_" + activeId).text(text);
+    //return;
+    //alert(text);
+
     var node = new Entity("BP.WF.Template.NodeExt", activeId);
     node.DoMethodReturnString("Do_SaveAndUpdateNodeName", text);
 

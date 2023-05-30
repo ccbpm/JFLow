@@ -13697,14 +13697,14 @@ public class Dev2Interface
 	/// <param name="nodeID">当前节点ID</param>
 	/// <returns>数据源:Directions</returns>
 	/// <exception cref="Exception">如果当前节点是到达节点是自动计算的，就抛出异常.</exception>
-	public static String Node_GetNextStepNodesByNodeID(int nodeID) throws Exception {
+	public static Directions Node_GetNextStepNodesByNodeID(int nodeID) throws Exception {
 		Node nd = new Node(nodeID);
 		if (nd.getCondModel() == DirCondModel.ByLineCond)
 			throw new Exception("err@当前节点转向规则是自动计算，不能获取到达的节点集合.");
 
 		Directions dirs = new Directions();
 		dirs.Retrieve(DirectionAttr.Node, nodeID, "Idx");
-		return Json.ToJson(dirs);
+		return dirs;
 	}
 	/// <summary>
 	/// 获得到指定节点上的工作人员集合
@@ -13740,5 +13740,14 @@ public class Dev2Interface
 		{
 			throw new Exception("err@不支持或者没有判断的模式:" + toWN.getHisNode().getHisDeliveryWay() + "，技术信息:"+ex.getMessage());
 		}
+	}
+	/// <summary>
+	/// 获得到达节点的集合
+	/// </summary>
+	/// <param name="workID">workID</param>
+	/// <returns>要到达的节点对象.</returns>
+	public static Directions Node_GetNextStepNodesByWorkID(int workID) throws Exception {
+		int nodeID = DBAccess.RunSQLReturnValInt("SELECT FK_Node FROM WF_GenerWorkFlow WHERE WorkID=" + workID);
+		return Node_GetNextStepNodesByNodeID(nodeID);
 	}
 }

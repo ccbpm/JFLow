@@ -1197,4 +1197,37 @@ public class DevelopAPI extends HttpHandlerBase {
 
         }
     }
+    @PostMapping(value = "/Node_GetNextStepNodesByWorkID")
+    @ApiOperation("获得到达节点的集合")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
+            @ApiImplicitParam(name = "workID", value = "流程实例ID", required = true)
+    })
+    public final String  Node_GetNextStepNodesByWorkID(String Token,int workID) throws Exception {
+        if(DataType.IsNullOrEmpty(Token) == true)
+            return "err@用户的Token值不能为空";
+        if(DataType.IsNullOrEmpty(workID) == true)
+            return "err@流程实例IDworkID不能为空";
+
+        bp.wf.Dev2Interface.Port_LoginByToken(Token);
+        try{
+            //获得可以退回的节点.
+            Directions dirs = bp.wf.Dev2Interface.Node_GetNextStepNodesByWorkID(workID);
+            StringBuilder jsonString = new StringBuilder();
+            jsonString.append("[");
+            for(Direction dr: dirs.ToJavaList()){
+                jsonString.append("{");
+                jsonString.append("\"nodeId\":");
+                jsonString.append("\"" + dr.getNode() + "\",");
+                jsonString.append("\"toNodeId\":");
+                jsonString.append("\"" + dr.getToNode() + "\"");
+                jsonString.append("},");
+            }
+            jsonString.deleteCharAt(jsonString.length() - 1);
+            jsonString.append("]");
+            return jsonString.toString();
+        }catch(Exception e){
+            return "err@获取可以退回的节点失败:"+e.getMessage();
+        }
+    }
 }

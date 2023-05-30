@@ -1152,15 +1152,15 @@ public class DevelopAPI extends HttpHandlerBase {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
             @ApiImplicitParam(name = "nodeID", value = "节点ID", required = true),
-            @ApiImplicitParam(name = "workID", value = "流程实例ID", required = true)
+            @ApiImplicitParam(name = "workID", value = "流程实例ID,可为0，系统自动查询", required = true)
     })
     public final String Node_GetNextStepEmpsByNodeID(String Token,int nodeID, int workID) throws Exception {
         if(DataType.IsNullOrEmpty(Token) == true)
             return "err@用户的Token值不能为空";
         if(DataType.IsNullOrEmpty(nodeID) == true || nodeID == 0)
             return "err@节点编号nodeID不能为空";
-        if(DataType.IsNullOrEmpty(workID) == true || workID == 0)
-            return "err@流程实例workID不能为空";
+        if(DataType.IsNullOrEmpty(workID) == true)
+            return "err@流程实例workID不能为空，可为0";
         bp.wf.Dev2Interface.Port_LoginByToken(Token);
         try{
             //获得可以退回的节点.

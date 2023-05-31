@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class Test {
 	//服务的地址
-	static String host="http://localhost:8085/API";
+	static String host="http://localhost:8085/WF/API";
 	static String webPath="";
 	//秘钥：用于双方系统登录的通讯, 只有在用户登录的时候用到.
 	static String privateKey= "DiGuaDiGua,IamCCBPM";
@@ -53,6 +53,11 @@ public class Test {
 			String ToNodeID ="102";//0时系统自动计算要发送到的节点ID
 			String ToEmps ="zhanghaicheng";//可不传，不传时流程要设定好接收人，系统可自动寻找对应的接收人
 			String msgSend =  Node_SendWork(Token, String.valueOf(WorkID),flowNo, ToNodeID, ToEmps);
+
+			int nodeID2=102;
+			String nodes = Node_GetNextStepNodesByNodeID(Token,nodeID2) ;
+			String stepemps = Node_GetNextStepEmpsByNodeID(Token,nodeID2, (int) WorkID);
+
 			//执行发送.到节点103
 			String ToNodeID3 ="103";//0时系统自动计算要发送到的节点ID
 			String ToEmps3 ="zhoupeng";//可不传，不传时流程要设定好接收人，系统可自动寻找对应的接收人
@@ -329,6 +334,23 @@ public class Test {
 		param.put("token",token);
 		param.put("no",no);
 		webPath=host+"/Port_Station_Delete";
+		String dtDel = HttpClientUtil.doPost(webPath,param,null,null);
+		return dtDel;
+	}
+	public static String Node_GetNextStepNodesByNodeID(String token,int nodeID) {
+		Map<String, String> param = new HashMap<String, String>();
+		param.put("Token",token);
+		param.put("nodeID", String.valueOf(nodeID));
+		webPath=host+"/Node_GetNextStepNodesByNodeID";
+		String dtDel = HttpClientUtil.doPost(webPath,param,null,null);
+		return dtDel;
+	}
+	public static String Node_GetNextStepEmpsByNodeID(String Token,int nodeID, int workID) {
+		Map<String, String> param = new HashMap<String, String>();
+		param.put("Token",Token);
+		param.put("nodeID", String.valueOf(nodeID));
+		param.put("workID", String.valueOf(workID));
+		webPath=host+"/Node_GetNextStepEmpsByNodeID";
 		String dtDel = HttpClientUtil.doPost(webPath,param,null,null);
 		return dtDel;
 	}

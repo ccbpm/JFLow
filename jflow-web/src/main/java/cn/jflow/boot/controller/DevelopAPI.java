@@ -18,15 +18,15 @@ import java.util.Hashtable;
 
 @RestController
 @Api(tags="工具包接口")
-@RequestMapping(value = "/API")
+@RequestMapping(value = "/WF/DevelopAPI")
 public class DevelopAPI extends HttpHandlerBase {
-    @PostMapping(value = "/Port_Login_Submit")
+    @PostMapping(value = "/Portal_Login")
     @ApiOperation("根据密钥和用户名登录,返回用户登陆信息其中有Token")
      @ApiImplicitParams({
             @ApiImplicitParam(name="PrivateKey",value="密钥",paramType = "query",required = true),
             @ApiImplicitParam(name="UserNo",value="用户编号",required = true),
     })
-    public final String Port_Login_Submit(String PrivateKey, String UserNo) throws Exception {
+    public final String Portal_Login(String PrivateKey, String UserNo) throws Exception {
         if(DataType.IsNullOrEmpty(PrivateKey) == true){
             return "err@参数privateKey不能为空";
         }

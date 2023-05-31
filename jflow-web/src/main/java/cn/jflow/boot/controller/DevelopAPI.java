@@ -18,7 +18,7 @@ import java.util.Hashtable;
 
 @RestController
 @Api(tags="工具包接口")
-@RequestMapping(value = "/WF/DevelopAPI")
+@RequestMapping(value = "/WF/API")
 public class DevelopAPI extends HttpHandlerBase {
     @PostMapping(value = "/Portal_Login")
     @ApiOperation("根据密钥和用户名登录,返回用户登陆信息其中有Token")

@@ -23,22 +23,22 @@ public class DevelopAPI extends HttpHandlerBase {
     @PostMapping(value = "/Portal_Login")
     @ApiOperation("根据密钥和用户名登录,返回用户登陆信息其中有Token")
      @ApiImplicitParams({
-            @ApiImplicitParam(name="PrivateKey",value="密钥",paramType = "query",required = true),
-            @ApiImplicitParam(name="UserNo",value="用户编号",required = true),
+            @ApiImplicitParam(name="privateKey",value="密钥",paramType = "query",required = true),
+            @ApiImplicitParam(name="userNo",value="用户编号",required = true),
     })
-    public final String Portal_Login(String PrivateKey, String UserNo) throws Exception {
-        if(DataType.IsNullOrEmpty(PrivateKey) == true){
+    public final String Portal_Login(String privateKey, String userNo) throws Exception {
+        if(DataType.IsNullOrEmpty(privateKey) == true){
             return "err@参数privateKey不能为空";
         }
-        if(DataType.IsNullOrEmpty(UserNo) == true){
+        if(DataType.IsNullOrEmpty(userNo) == true){
             return "err@参数userNo不能为空";
         }
         String localKey = bp.difference.SystemConfig.GetValByKey("PrivateKey", "DiGuaDiGua,IamCCBPM");
-        if (localKey.equals(PrivateKey) == false)
+        if (localKey.equals(privateKey) == false)
             return "err@私约错误，请检查全局文件中配置 PrivateKey ";
         try{
-            bp.wf.Dev2Interface.Port_Login(UserNo);
-            String Token = bp.wf.Dev2Interface.Port_GenerToken(UserNo);
+            bp.wf.Dev2Interface.Port_Login(userNo);
+            String Token = bp.wf.Dev2Interface.Port_GenerToken(userNo);
             Hashtable ht = new Hashtable();
             ht.put("No", WebUser.getNo());
             ht.put("Name", WebUser.getName());

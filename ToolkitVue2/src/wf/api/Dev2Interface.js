@@ -72,7 +72,7 @@ export function openMyView(params,_this){
  * @constructor
  */
 export function LoginCCBPM(privateKey,userNo){
-    const url = "/API/Portal_Login_Submit?PrivateKey=" + privateKey + "&UserNo="+userNo;
+    const url = "/WF/API/Portal_Login?privateKey=" + privateKey + "&userNo="+userNo;
     const userInfo = RunUrlReturnString(url);
     if(userInfo === undefined || userInfo ==="")
         return "";

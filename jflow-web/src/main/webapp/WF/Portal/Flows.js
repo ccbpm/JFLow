@@ -110,7 +110,8 @@ var baseInfo = new Vue({
                 if (self.closed) {
                    //管理员登录
                     var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_TestingContainer");
-                    handler.AddPara("Token", GetQueryString("Token"));
+                    var token = localStorage.getItem("AdminToken") || localStorage.getItem("Token");
+                    handler.AddPara("Token", token);
                     handler.AddPara("UserNo", GetQueryString("UserNo"));
                     handler.DoMethodReturnString("Default_LetAdminerLogin");
                     clearInterval(loop)

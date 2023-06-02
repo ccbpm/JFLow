@@ -373,11 +373,11 @@ public class DevelopAPI extends HttpHandlerBase {
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
             @ApiImplicitParam(name = "WorkID", value = "流程实例WorkID", required = true),
             @ApiImplicitParam(name = "ht", value = "主表单数据,没有可为null", required = false),
-            @ApiImplicitParam(name = "FK_Flow", value = "流程模板编号", required = false),
+            @ApiImplicitParam(name = "flowNo", value = "流程模板编号", required = false),
             @ApiImplicitParam(name = "ToNodeID", value = "到达节点ID:设置0表示让ccbpm根据方向条件判断方向.", required = false),
             @ApiImplicitParam(name = "ToEmps", value = "接受人:设置空表示,根据到达的节点的接受人规则计算接收人,多个接受人用逗号分开,比如:zhangsan,lisi", required = false)
     })
-    public final String Node_SendWork(String Token,long WorkID,Hashtable ht,String FK_Flow,int ToNodeID,String ToEmps) throws Exception {
+    public final String Node_SendWork(String Token,long WorkID,Hashtable ht,String flowNo,int ToNodeID,String ToEmps) throws Exception {
         if(DataType.IsNullOrEmpty(Token) == true)
             return "err@用户的Token值不能为空";
         if(DataType.IsNullOrEmpty(WorkID) == true)
@@ -387,7 +387,7 @@ public class DevelopAPI extends HttpHandlerBase {
 
         //执行发送.
         try{
-            String fk_flow = FK_Flow;
+            String fk_flow = flowNo;
             if (DataType.IsNullOrEmpty(fk_flow) == true)
                 fk_flow = DBAccess.RunSQLReturnString("SELECT FK_Flow FROM WF_GenerWorkFlow WHERE WorkID=" +WorkID);
             //执行发送.

@@ -9,6 +9,8 @@ import bp.wf.template.*;
 import bp.*;
 import bp.wf.*;
 
+import java.net.URLDecoder;
+
 /** 
  页面功能实体
 */
@@ -829,7 +831,7 @@ public class WF_Admin_Cond extends WebContralBase
 
 		String toNodeID = this.GetRequestVal("ToNodeID");
 		CondType condTypeEnum = CondType.forValue(this.GetRequestValInt("CondType"));
-		String sql = this.GetRequestVal("TB_Docs");
+		String sql = URLDecoder.decode(this.GetRequestVal("TB_Docs"), "UTF8");
 
 		Cond cond = new Cond();
 
@@ -840,7 +842,7 @@ public class WF_Admin_Cond extends WebContralBase
 
 		cond.setFK_Flow(this.getFK_Flow());
 		cond.setOperatorValue(sql);
-		cond.setNote(this.GetRequestVal("TB_Note")); //备注.
+		cond.setNote(URLDecoder.decode(this.GetRequestVal("TB_Note"), "UTF8")); //备注.
 
 		cond.setFK_Flow(this.getFK_Flow());
 		cond.setCondType(condTypeEnum);

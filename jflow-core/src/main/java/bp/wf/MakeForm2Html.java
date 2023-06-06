@@ -254,20 +254,20 @@ public class MakeForm2Html
 									String src = SystemConfig.getHostURL() + "/DataUser/Siganture/";
 									text = "<img src='" + src + SigantureNO + ".jpg' title='" + SigantureNO + "' onerror='this.src=\"" + src + "Siganture.jpg\"' style='height:50px;'  alt='图片丢失' /> ";
 								} else if (attr.getUIContralType() == UIContralType.SignCheck)//是不是签批字段
-							{
-								//获取当前节点的审核意见
-								DataTable mydt = GetWorkcheckInfoByNodeIDs(dt, en.GetValStrByKey(attr.getKeyOfEn()));
-								text = "<div style='min-height:17px;'>";
-								text += "<table style='width:100%'><tbody>";
-								for (DataRow dr : mydt.Rows)
 								{
-									text += "<tr><td style='border: 1px solid #D6DDE6;'>";
-									text += "<div style='word-wrap: break-word;line-height:20px;padding:5px;padding-left:50px;'><font color='#999'>" + dr.getValue(1).toString() + "</font></div>";
-									text += "<div style='text-align:right;padding-right:5px'>" + dr.getValue(3).toString() + "(" + dr.getValue(2).toString() + ")</div>";
-									text += "</td></tr>";
-								}
-								text += "</tbody></table></div>";
-							} else
+									//获取当前节点的审核意见
+									DataTable mydt = GetWorkcheckInfoByNodeIDs(dt, en.GetValStrByKey(attr.getKeyOfEn()));
+									text = "<div style='min-height:17px;'>";
+									text += "<table style='width:100%'><tbody>";
+									for (DataRow dr : mydt.Rows)
+									{
+										text += "<tr><td style='border: 1px solid #D6DDE6;'>";
+										text += "<div style='word-wrap: break-word;line-height:20px;padding:5px;padding-left:50px;'><font color='#999'>" + dr.getValue(1).toString() + "</font></div>";
+										text += "<div style='text-align:right;padding-right:5px'>" + dr.getValue(3).toString() + "(" + dr.getValue(2).toString() + ")</div>";
+										text += "</td></tr>";
+									}
+									text += "</tbody></table></div>";
+								} else
 									text = en.GetValStrByKey(attr.getKeyOfEn());
 								if (attr.getTextModel() == 3)
 									text = text.replace("white-space: nowrap;", "");
@@ -282,12 +282,14 @@ public class MakeForm2Html
 
 							if(attr.getMyDataType() == DataType.AppDouble || attr.getMyDataType() == DataType.AppFloat ||
 									attr.getMyDataType() == DataType.AppMoney){
-									String defval = attr.getDefVal();
-									if(defval ==""||defval==null||defval =="0")
-										defval="0.00";
-									String[] res = defval.split("[.]", -1);
-									Integer leg = res[1].split("").length;
-									text = en.GetValDecimalByKey(attr.getKeyOfEn(), leg).toString();
+								String defval = attr.getDefVal();
+								if(defval ==""||defval==null||defval =="0")
+									defval="0.00";
+								String[] res = defval.split("[.]", -1);
+								int leg = 0;
+								if(res.length>1)
+									leg = res[1].split("").length;
+								text = en.GetValDecimalByKey(attr.getKeyOfEn(), leg).toString();
 							}
 							break;
 						case Enum:
@@ -1968,6 +1970,11 @@ public class MakeForm2Html
 		try
 		{
 			GenerWorkFlow gwf = null;
+
+			if ((new File(path)).isDirectory() == false) {
+				setPDFPath(frmID,workid,flowNo,gwf);
+			}
+
 			if (flowNo != null)
 				gwf = new GenerWorkFlow(workid);
 
@@ -2241,27 +2248,9 @@ public class MakeForm2Html
 		}
 		if (System.getProperty("os.name").indexOf("Windows") == -1) {
 			// 非windows 系统
-			pdfFileExe = "wkhtmltopdf";
+			pdfFileExe = "/usr/local/bin/wkhtmltopdf ";
 			Log.DebugWriteInfo("linux生成");
 		}
-//		cmd.append(pdfFileExe);
-//		cmd.append(" ");
-//		cmd.append(" --header-line");// 页眉下面的线
-//		// cmd.append(" --header-center 这里是页眉这里是页眉这里是页眉这里是页眉 ");//页眉中间内容
-//		cmd.append(" --margin-top 3cm ");// 设置页面上边距 (default 10mm)
-//		cmd.append(htmFile);
-//		// cmd.append(" --header-html
-//		// file:///"+WebUtil.getServletContext().getRealPath("")+FileUtil.convertSystemFilePath("/style/pdf/head.html"));//
-//		// (添加一个HTML页眉,后面是网址)
-//		cmd.append(" --header-spacing 5 ");// (设置页眉和内容的距离,默认0)
-//		// cmd.append(" --footer-center (设置在中心位置的页脚内容)");//设置在中心位置的页脚内容
-//		// cmd.append(" --footer-html
-//		// file:///"+WebUtil.getServletContext().getRealPath("")+FileUtil.convertSystemFilePath("/style/pdf/foter.html"));//
-//		// (添加一个HTML页脚,后面是网址)
-//		cmd.append(" --footer-line");// * 显示一条线在页脚内容上)
-//		cmd.append(" --footer-spacing 5 ");// (设置页脚和内容的距离)
-//		cmd.append(" ");
-//		cmd.append(pdf);
 
 		cmd.append(pdfFileExe);
 		cmd.append(" -T 28mm -B 26mm -L 26mm -R 22mm ");

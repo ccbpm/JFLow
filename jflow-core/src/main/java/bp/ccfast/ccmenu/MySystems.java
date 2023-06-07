@@ -264,9 +264,21 @@ public class MySystems extends EntitiesNoName
 
 		return "执行成功.";
 	}
-	private void ImpSystem_Imp_DictTable(Menu en, String path)
+	private void ImpSystem_Imp_DictTable(Menu en, String path) throws Exception 
 	{
+		String frmID = en.getUrlExt();
 
+		//导入表单.
+		String file = path + "/" + frmID + ".xml";
+		DataSet ds = new DataSet();
+		ds.readXml(file);
+
+		//创建用户自定义表
+		DataTable dt = ds.GetTableByName("SFTable");
+		SFTable sFTable = new SFTable();
+		Row row = sFTable.getRow();
+		row.LoadDataTable(dt, dt.Rows.get(0));
+		sFTable.DirectInsert();
 	}
 	
 	/** 

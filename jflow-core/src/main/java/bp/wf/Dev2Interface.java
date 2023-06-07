@@ -2987,6 +2987,68 @@ public class Dev2Interface
 		String sql = "SELECT A.* FROM WF_GenerWorkFlow A, WF_SelectAccper B WHERE A.WorkID=B.WorkID AND B.FK_Emp='" + WebUser.getNo() + "'";
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		if(SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			String columnName = "";
+			for(DataColumn col : dt.Columns)
+			{
+				columnName = col.ColumnName.toUpperCase();
+				switch (columnName)
+				{
+					case "ATPARA":
+						col.ColumnName = "AtPara";
+						break;
+					case "WORKID":
+						col.ColumnName = "WorkID";
+						break;
+					case "FK_FLOW":
+						col.ColumnName = "FK_Flow";
+						break;
+					case "FK_FLOWSORT":
+						col.ColumnName = "FK_FlowSort";
+						break;
+					case "FK_NODE":
+						col.ColumnName = "FK_Node";
+						break;
+					case "FLOWNAME":
+						col.ColumnName = "FlowName";
+						break;
+					case "NODENAME":
+						col.ColumnName = "NodeName";
+						break;
+					case "BILLNO":
+						col.ColumnName = "BillNo";
+						break;
+					case "PWORKID":
+						col.ColumnName = "PWorkID";
+						break;
+					case "ORGNO":
+						col.ColumnName = "OrgNo";
+						break;
+					case "WFSTATE":
+						col.ColumnName = "WFSate";
+						break;
+					case "WFSTA":
+						col.ColumnName = "WFSta";
+						break;
+					case "TITLE":
+						col.ColumnName = "Title";
+						break;
+					case "STARTER":
+						col.ColumnName = "Starter";
+						break;
+					case "STARTERNAME":
+						col.ColumnName = "StarterName";
+						break;
+					case "EMPS":
+						col.ColumnName = "Emps";
+						break;
+					case "TODOEMPS":
+						col.ColumnName = "TodoEmps";
+						break;
+				}
+			}
+		}
 		return dt;
 	}
 

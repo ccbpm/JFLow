@@ -1920,7 +1920,6 @@ public class WF_CCBill extends WebContralBase
 	public final String SearchDB_Init() throws Exception {
 
 		DataSet ds = new DataSet();
-
 			///#region 查询语句
 		DBList md = new DBList(this.getFrmID());
 		if (DataType.IsNullOrEmpty(md.getExpList()) == true)
@@ -2058,11 +2057,7 @@ public class WF_CCBill extends WebContralBase
 			}
 
 		}
-
-
 			///#endregion 关键字段查询
-
-
 			///#region 时间段的查询
 		if (md.GetParaInt("DTSearchWay", 0) != DTSearchWay.None.getValue())
 		{
@@ -2076,7 +2071,8 @@ public class WF_CCBill extends WebContralBase
 			{
 				String dtFrom = ur.getDTFrom(); // this.GetTBByID("TB_S_From").Text.Trim().Replace("/", "-");
 				String dtTo = ur.getDTTo(); // this.GetTBByID("TB_S_To").Text.Trim().Replace("/", "-");
-
+				if(DataType.IsNullOrEmpty(dtTo)==true)
+					dtTo = DataType.getCurrentDate();
 				//按日期查询
 				if (md.GetParaInt("DTSearchWay", 0) == DTSearchWay.ByDate.getValue())
 				{
@@ -2183,10 +2179,8 @@ public class WF_CCBill extends WebContralBase
 			}
 
 		}
-
-			///#endregion
-
-			///#region 数据源SQL
+		///#endregion
+		///#region 数据源SQL
 		if (md.getDBType() == 0)
 		{
 
@@ -2199,30 +2193,30 @@ public class WF_CCBill extends WebContralBase
 
 			for (DataRow dataRow : whereDT.Rows)
 			{
-				String key = dataRow.get("Key").toString();
+				String key = dataRow.getValue("Key").toString();
 
 				if (expList.indexOf("@" + getKey()) != -1)
 				{
-					expList = expList.replace("@" + getKey(), dataRow.get("Value").toString());
+					expList = expList.replace("@" + getKey(), dataRow.getValue("Value").toString());
 					continue;
 				}
-				String type = dataRow.get("Type").toString();
+				String type = dataRow.getValue("Type").toString();
 				if (type.equals("SearchKey") == true)
 				{
 					if (isFirstSearchKey)
 					{
 						isFirstSearchKey = false;
 						if((SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) && expList.contains("\""))
-							whereSQL += " AND (\"" + key + "\" like '%" + dataRow.get("Value").toString() + "%' ";
+							whereSQL += " AND (\"" + key + "\" like '%" + dataRow.getValue("Value").toString() + "%' ";
 						else
-							whereSQL += " AND (" + mainTable + key + " like '%" + dataRow.get("Value").toString() + "%' ";
+							whereSQL += " AND (" + mainTable + key + " like '%" + dataRow.getValue("Value").toString() + "%' ";
 					}
 					else
 					{
 						if((SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) && expList.contains("\""))
-							whereSQL += " OR \""+ key + "\" like '%" + dataRow.get("Value").toString() + "%' ";
+							whereSQL += " OR \""+ key + "\" like '%" + dataRow.getValue("Value").toString() + "%' ";
 						else
-							whereSQL += " OR " + mainTable + key + " like '%" + dataRow.get("Value").toString() + "%' ";
+							whereSQL += " OR " + mainTable + key + " like '%" + dataRow.getValue("Value").toString() + "%' ";
 					}
 				}
 				if (isFirstSearchKey == false && type.equals("SearchKey") == false)
@@ -2234,9 +2228,9 @@ public class WF_CCBill extends WebContralBase
 				if (type.equals("StringKey") == true)
 				{
 					if((SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) && expList.contains("\""))
-						whereSQL += " AND \"" +  key + "\" like '%" + dataRow.get("Value").toString() + "%' ";
+						whereSQL += " AND \"" +  key + "\" like '%" + dataRow.getValue("Value").toString() + "%' ";
 					else
-						whereSQL += " AND " + mainTable + key + " like '%" + dataRow.get("Value").toString() + "%' ";
+						whereSQL += " AND " + mainTable + key + " like '%" + dataRow.getValue("Value").toString() + "%' ";
 				}
 				//时间解析
 				if (type.equals("Date") == true)
@@ -2246,25 +2240,25 @@ public class WF_CCBill extends WebContralBase
 					{
 						isFirstDateKey = false;
 						if((SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) && expList.contains("\""))
-							whereSQL += " AND (\"" + key + "\" " + dataRow.get("Oper").toString() + " '" + dataRow.get("Value").toString() + "' ";
+							whereSQL += " AND (\"" + key + "\" " + dataRow.getValue("Oper").toString() + " '" + dataRow.getValue("Value").toString() + "' ";
 						else
-							whereSQL += " AND (" + mainTable + key + " " + dataRow.get("Oper").toString() + " '" + dataRow.get("Value").toString() + "' ";
+							whereSQL += " AND (" + mainTable + key + " " + dataRow.getValue("Oper").toString() + " '" + dataRow.getValue("Value").toString() + "' ";
 						continue;
 					}
 					if (isFirstDateKey == false)
 					{
 						if((SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) && expList.contains("\""))
-							whereSQL += " AND \""  + key + "\" " + dataRow.get("Oper").toString() + " '" + dataRow.get("Value").toString() + "')";
+							whereSQL += " AND \""  + key + "\" " + dataRow.getValue("Oper").toString() + " '" + dataRow.getValue("Value").toString() + "')";
 						else
-							whereSQL += " AND " + mainTable + key + " " + dataRow.get("Oper").toString() + " '" + dataRow.get("Value").toString() + "')";
+							whereSQL += " AND " + mainTable + key + " " + dataRow.getValue("Oper").toString() + " '" + dataRow.getValue("Value").toString() + "')";
 					}
 				}
 				if (type.equals("Select") == true || type.equals("Normal") == true)
 				{
 					if((SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) && expList.contains("\""))
-						whereSQL += " AND \"" +  key + "\" " + dataRow.get("Oper").toString() + " '" + dataRow.get("Value").toString() + "'";
+						whereSQL += " AND \"" +  key + "\" " + dataRow.getValue("Oper").toString() + " '" + dataRow.getValue("Value").toString() + "'";
 					else
-						whereSQL += " AND " + mainTable + key + " " + dataRow.get("Oper").toString() + " '" + dataRow.get("Value").toString() + "'";
+						whereSQL += " AND " + mainTable + key + " " + dataRow.getValue("Oper").toString() + " '" + dataRow.getValue("Value").toString() + "'";
 
 				}
 			}
@@ -2273,10 +2267,6 @@ public class WF_CCBill extends WebContralBase
 			{
 				whereSQL += ")";
 			}
-			//expCount = expCount + whereSQL;
-			//expList = expList + whereSQL;
-
-
 			expList = "SELECT * From(" + expList + ") AS A WHERE 1=1 " + whereSQL; //查询列数的
 			String expCount = "SELECT Count(*) From(" + expList + ") AS A WHERE 1=1 " + whereSQL; //查询总条数的
 			String expPageSize="";
@@ -2361,7 +2351,6 @@ public class WF_CCBill extends WebContralBase
 		}
 
 			///#endregion 存储过程的查询
-
 		return bp.tools.Json.ToJson(ds);
 	}
 	/** 
@@ -2506,41 +2495,16 @@ public class WF_CCBill extends WebContralBase
 		return bp.tools.Json.ToJson(ds);
 	}
 
-		///#endregion 查询.
+	public final String SearchDB_Data() throws Exception {
 
-
-		///#region 单据导出
-	/*public final String Search_Exp() throws Exception {
-		FrmBill frmBill = new FrmBill(this.getFrmID());
-		GEEntitys rpts = new GEEntitys(this.getFrmID());
-
-		String name = "数据导出";
-		String filename = frmBill.getName() + "_" + DataType.getCurrentDateTimeCNOfLong() + ".xls";
-		String filePath = bp.tools.ExportExcelUtil.ExportDGToExcel(Search_Data(), rpts.getGetNewEntity(), filename,null);
-		return filePath;
-	}*/
-
-	public final void Search_Exp() throws Exception
-	{
-		FrmBill frmBill = new FrmBill(this.getFrmID());
-		GEEntitys rpts = new GEEntitys(this.getFrmID());
-		MapAttrs mapAttrs = new MapAttrs();
-		Attrs attrs = new Attrs();
-		mapAttrs.Retrieve(MapAttrAttr.FK_MapData, this.getEnsName(), MapAttrAttr.Idx);
-
-		for (MapAttr attr : mapAttrs.ToJavaList())
-			attrs.Add(attr.getHisAttr());
-		bp.tools.ExportExcelUtil.ExportDGToExcel(Search_Data(), rpts.getGetNewEntity(), frmBill.getName(), attrs);
-	}
-
-	public final DataTable Search_Data() throws Exception {
 		DataSet ds = new DataSet();
+		///#region 查询语句
+		DBList md = new DBList(this.getFrmID());
+		if (DataType.IsNullOrEmpty(md.getExpList()) == true)
+			return "err@列表数据源和的查询不能为空";
 
-
-			///#region 查询语句
-
-		MapData md = new MapData(this.getFrmID());
-
+		String expList = md.getExpList();
+		expList =bp.wf.Glo.DealExp(expList, null);
 
 		//取出来查询条件.
 		UserRegedit ur = new UserRegedit(WebUser.getNo(), this.getFrmID() + "_SearchAttrs");
@@ -2548,9 +2512,412 @@ public class WF_CCBill extends WebContralBase
 		GEEntitys rpts = new GEEntitys(this.getFrmID());
 
 		Attrs attrs = rpts.getGetNewEntity().getEnMap().getAttrs();
+		String systemKeys = "BillState,RDT,Starter,StarterName,OrgNo,AtPara,"; //创建表单时的系统字段
 
+		//获取查询条件
+		DataTable whereDT = new DataTable();
+		whereDT.Columns.Add("Key");
+		whereDT.Columns.Add("Oper");
+		whereDT.Columns.Add("Value");
+		whereDT.Columns.Add("Type");
+		DataRow dr;
+
+		///#region 关键字字段.
+		String keyWord = ur.getSearchKey();
+		Hashtable ht = new Hashtable();
+
+		if (md.GetParaBoolen("IsSearchKey") == true)
+		{
+			if (DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1)
+			{
+				ht.put("SearchKey", keyWord);
+			}
+			else
+			{
+				Attr attrPK = new Attr();
+				for (Attr attr : attrs.ToJavaList())
+				{
+					if (attr.getIsPK())
+					{
+						attrPK = attr;
+						break;
+					}
+				}
+				int i = 0;
+				String enumKey = ","; //求出枚举值外键.
+				for (Attr attr : attrs.ToJavaList())
+				{
+					if (systemKeys.indexOf(attr.getKey() + ",") != -1)
+						continue;
+					switch (attr.getMyFieldType())
+					{
+						case Enum:
+							enumKey = "," + attr.getKey() + "Text,";
+							break;
+						case FK:
+							continue;
+						default:
+							break;
+					}
+
+					if (attr.getMyDataType() != DataType.AppString)
+					{
+						continue;
+					}
+
+					//排除枚举值关联refText.
+					if (attr.getMyFieldType() == FieldType.RefText)
+					{
+						if (enumKey.contains("," + attr.getKey() + ",") == true)
+						{
+							continue;
+						}
+					}
+
+					if (attr.getKey().equals("FK_Dept"))
+					{
+						continue;
+					}
+					i++;
+					dr = whereDT.NewRow();
+					dr.setValue("Key", attr.getKey());
+					dr.setValue("Oper", "like");
+					dr.setValue("Value", keyWord);
+					dr.setValue("Type", "SearchKey");
+					whereDT.Rows.add(dr);
+
+				}
+				ht.put("SearchKey", keyWord);
+
+			}
+
+		}
+		else if (DataType.IsNullOrEmpty(md.GetParaString("StringSearchKeys")) == false)
+		{
+			String field = ""; //字段名
+			String fieldValue = ""; //字段值
+
+			//获取查询的字段
+			String[] searchFields = md.GetParaString("StringSearchKeys").split("[*]", -1);
+			for (String str : searchFields)
+			{
+				if (DataType.IsNullOrEmpty(str) == true)
+				{
+					continue;
+				}
+
+				//字段名
+				String[] items = str.split("[,]", -1);
+				if (items.length == 2 && DataType.IsNullOrEmpty(items[0]) == true)
+				{
+					continue;
+				}
+				field = items[0];
+				//字段名对应的字段值
+				fieldValue = ur.GetParaString(field);
+				if (DataType.IsNullOrEmpty(fieldValue) == true)
+				{
+					ht.put(field, "");
+					continue;
+				}
+
+				dr = whereDT.NewRow();
+				dr.setValue("Key", field);
+				dr.setValue("Oper", "like");
+				dr.setValue("Value", fieldValue);
+				dr.setValue("Type", "StringKey");
+				whereDT.Rows.add(dr);
+				ht.put(field, fieldValue);
+			}
+
+		}
+		///#endregion 关键字段查询
+		///#region 时间段的查询
+		if (md.GetParaInt("DTSearchWay", 0) != DTSearchWay.None.getValue())
+		{
+			if (DataType.IsNullOrEmpty(ur.getDTFrom()) == true)
+			{
+				ht.put("DTFrom", ur.getDTFrom());
+				ht.put("DTTo", ur.getDTTo());
+
+			}
+			else
+			{
+				String dtFrom = ur.getDTFrom(); // this.GetTBByID("TB_S_From").Text.Trim().Replace("/", "-");
+				String dtTo = ur.getDTTo(); // this.GetTBByID("TB_S_To").Text.Trim().Replace("/", "-");
+				if(DataType.IsNullOrEmpty(dtTo)==true)
+					dtTo = DataType.getCurrentDate();
+				//按日期查询
+				if (md.GetParaInt("DTSearchWay", 0) == DTSearchWay.ByDate.getValue())
+				{
+					dr = whereDT.NewRow();
+					dr.setValue("Key", md.GetParaString("DTSearchKey"));
+					dr.setValue("Oper", ">=");
+					dr.setValue("Value", dtFrom);
+					dr.setValue("Type", "Date");
+					whereDT.Rows.add(dr);
+					dtTo += " 23:59:59";
+					dr = whereDT.NewRow();
+					dr.setValue("Key", md.GetParaString("DTSearchKey"));
+					dr.setValue("Oper", "<=");
+					dr.setValue("Value", dtTo);
+					dr.setValue("Type", "Date");
+					whereDT.Rows.add(dr);
+					ht.put("DTFrom", dtFrom);
+					ht.put("DTTo", dtTo);
+				}
+
+				if (md.GetParaInt("DTSearchWay", 0) == DTSearchWay.ByDateTime.getValue())
+				{
+					//取前一天的24：00
+					if (dtFrom.trim().length() == 10) //2017-09-30
+					{
+						dtFrom += " 00:00:00";
+					}
+					if (dtFrom.trim().length() == 16) //2017-09-30 00:00
+					{
+						dtFrom += ":00";
+					}
+
+					dtFrom = DateUtils.addDay(DateUtils.parse(dtFrom, "yyyy-MM-dd"), -1) + " 24:00";
+
+					if (dtTo.trim().length() < 11 || dtTo.trim().indexOf(' ') == -1)
+					{
+						dtTo += " 24:00";
+					}
+
+					dr = whereDT.NewRow();
+					dr.setValue("Key", md.GetParaString("DTSearchKey"));
+					dr.setValue("Oper", ">=");
+					dr.setValue("Value", dtFrom);
+					dr.setValue("Type", "Date");
+					whereDT.Rows.add(dr);
+					dr = whereDT.NewRow();
+					dr.setValue("Key", md.GetParaString("DTSearchKey"));
+					dr.setValue("Oper", "<=");
+					dr.setValue("Value", dtTo);
+					dr.setValue("Type", "Date");
+					whereDT.Rows.add(dr);
+					ht.put("DTFrom", dtFrom);
+					ht.put("DTTo", dtTo);
+				}
+			}
+
+		}
+
+		///#endregion 时间段的查询
+
+
+		///#region 外键或者枚举的查询
+
+		//获得关键字.
+		AtPara ap = new AtPara(ur.getVals());
+		for (String str : ap.getHisHT().keySet())
+		{
+			String val = ap.GetValStrByKey(str);
+			if (val.equals("all"))
+			{
+				ht.put(str, "");
+				continue;
+			}
+
+			dr = whereDT.NewRow();
+			dr.setValue("Key", str);
+			dr.setValue("Oper", "=");
+			dr.setValue("Value", ap.GetValStrByKey(str));
+			dr.setValue("Type", "Select");
+			whereDT.Rows.add(dr);
+			ht.put(str, ap.GetValStrByKey(str));
+		}
+
+		///#endregion 外键或者枚举的查询
+
+
+		//增加表单字段的查询
+		for (String key : ContextHolderUtils.getRequest().getParameterMap().keySet())
+		{
+			if (DataType.IsNullOrEmpty(key) || key.equals("T") == true || key.equals("t") == true || key.equals("HttpHandlerName") == true || key.equals("DoMethod") == true || key.equals("DoType") == true)
+			{
+				continue;
+			}
+			if (attrs.contains(key) == true)
+			{
+				dr = whereDT.NewRow();
+				dr.setValue("Key", key);
+				dr.setValue("Oper", "=");
+				dr.setValue("Value", this.GetRequestVal(key.toString()));
+				dr.setValue("Type", "Normal");
+				whereDT.Rows.add(dr);
+				ht.put(key, this.GetRequestVal(key.toString()));
+				continue;
+			}
+
+		}
+		///#endregion
+		///#region 数据源SQL
+		if (md.getDBType() == 0)
+		{
+
+			String mainTable = "A.";
+			String mainTablePK = md.getMainTablePK();
+
+			String whereSQL = "";
+			boolean isFirstSearchKey = true;
+			boolean isFirstDateKey = true;
+
+			for (DataRow dataRow : whereDT.Rows)
+			{
+				String key = dataRow.getValue("Key").toString();
+
+				if (expList.indexOf("@" + getKey()) != -1)
+				{
+					expList = expList.replace("@" + getKey(), dataRow.getValue("Value").toString());
+					continue;
+				}
+				String type = dataRow.getValue("Type").toString();
+				if (type.equals("SearchKey") == true)
+				{
+					if (isFirstSearchKey)
+					{
+						isFirstSearchKey = false;
+						if((SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) && expList.contains("\""))
+							whereSQL += " AND (\"" + key + "\" like '%" + dataRow.getValue("Value").toString() + "%' ";
+						else
+							whereSQL += " AND (" + mainTable + key + " like '%" + dataRow.getValue("Value").toString() + "%' ";
+					}
+					else
+					{
+						if((SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) && expList.contains("\""))
+							whereSQL += " OR \""+ key + "\" like '%" + dataRow.getValue("Value").toString() + "%' ";
+						else
+							whereSQL += " OR " + mainTable + key + " like '%" + dataRow.getValue("Value").toString() + "%' ";
+					}
+				}
+				if (isFirstSearchKey == false && type.equals("SearchKey") == false)
+				{
+					whereSQL += ")";
+					isFirstSearchKey = true;
+				}
+
+				if (type.equals("StringKey") == true)
+				{
+					if((SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) && expList.contains("\""))
+						whereSQL += " AND \"" +  key + "\" like '%" + dataRow.getValue("Value").toString() + "%' ";
+					else
+						whereSQL += " AND " + mainTable + key + " like '%" + dataRow.getValue("Value").toString() + "%' ";
+				}
+				//时间解析
+				if (type.equals("Date") == true)
+				{
+
+					if (isFirstDateKey == true)
+					{
+						isFirstDateKey = false;
+						if((SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) && expList.contains("\""))
+							whereSQL += " AND (\"" + key + "\" " + dataRow.getValue("Oper").toString() + " '" + dataRow.getValue("Value").toString() + "' ";
+						else
+							whereSQL += " AND (" + mainTable + key + " " + dataRow.getValue("Oper").toString() + " '" + dataRow.getValue("Value").toString() + "' ";
+						continue;
+					}
+					if (isFirstDateKey == false)
+					{
+						if((SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) && expList.contains("\""))
+							whereSQL += " AND \""  + key + "\" " + dataRow.getValue("Oper").toString() + " '" + dataRow.getValue("Value").toString() + "')";
+						else
+							whereSQL += " AND " + mainTable + key + " " + dataRow.getValue("Oper").toString() + " '" + dataRow.getValue("Value").toString() + "')";
+					}
+				}
+				if (type.equals("Select") == true || type.equals("Normal") == true)
+				{
+					if((SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) && expList.contains("\""))
+						whereSQL += " AND \"" +  key + "\" " + dataRow.getValue("Oper").toString() + " '" + dataRow.getValue("Value").toString() + "'";
+					else
+						whereSQL += " AND " + mainTable + key + " " + dataRow.getValue("Oper").toString() + " '" + dataRow.getValue("Value").toString() + "'";
+
+				}
+			}
+
+			if (isFirstSearchKey == false)
+			{
+				whereSQL += ")";
+			}
+			expList = "SELECT * From(" + expList + ") AS A WHERE 1=1 " + whereSQL; //查询列数的
+
+			if (DataType.IsNullOrEmpty(md.getDBSrc()) == true)
+			{
+				md.setDBSrc("local");
+			}
+
+			SFDBSrc dbsrc = new SFDBSrc(md.getDBSrc());
+			DataTable dt = dbsrc.RunSQLReturnTable(expList);
+			return bp.tools.Json.ToJson(dt);
+		}
+
+		///#endregion 数据源SQL
+
+		///#region URL请求数据
+		if (md.getDBType() == 1)
+		{
+			// 请求的参数作为JSON字符串发送给列表URL
+			String postData = bp.tools.Json.ToJson(ht);
+			String json = SearchDB_UrlSearchData(md.getExpList(), postData);
+			if (DataType.IsNullOrEmpty(json) == true)
+			{
+				return "err@根据URL请求数据列表数据为空";
+			}
+			DataTable jd = Json.ToDataTable(json);
+			String data = jd.Rows.get(0).getValue("data").toString();
+			return data;
+
+		}
+
+		///#endregion URL请求数据
+
+
+		///#region 存储过程的查询
+		if (md.getDBType() == 2)
+		{
+			String sql = md.getExpList();
+			sql = sql.replace("~", "'");
+			Paras paras = new Paras();
+			for (Object key : ht.keySet())
+			{
+				paras.add(Integer.valueOf(key.toString()), (Para)ht.get(key));
+			}
+			DataTable dt = DBAccess.RunProcReturnTable(sql, paras);
+			return bp.tools.Json.ToJson(dt);
+		}
+		///#endregion 存储过程的查询
+		return null;
+	}
+
+
+
+	public final String Search_Exp() throws Exception
+	{
+		FrmBill frmBill = new FrmBill(this.getFrmID());
+		if(frmBill.getEntityType() == EntityType.DBList){
+			return SearchDB_Data();
+		}
+		return bp.tools.Json.ToJson(Search_Data());
+		/*GEEntitys rpts = new GEEntitys(this.getFrmID());
+		MapAttrs mapAttrs = new MapAttrs();
+		Attrs attrs = new Attrs();
+		mapAttrs.Retrieve(MapAttrAttr.FK_MapData, this.getEnsName(), MapAttrAttr.Idx);
+
+		for (MapAttr attr : mapAttrs.ToJavaList())
+			attrs.Add(attr.getHisAttr());
+		bp.tools.ExportExcelUtil.ExportDGToExcel(Search_Data(), rpts.getGetNewEntity(), frmBill.getName(), attrs);*/
+	}
+
+	public final DataTable Search_Data() throws Exception {
+		//#region 查询语句
+		MapData md = new MapData(this.getFrmID());
+		//取出来查询条件.
+		UserRegedit ur = new UserRegedit(WebUser.getNo(), this.getFrmID() + "_SearchAttrs");
+		GEEntitys rpts = new GEEntitys(this.getFrmID());
+		Attrs attrs = rpts.getGetNewEntity().getEnMap().getAttrs();
 		QueryObject qo = new QueryObject(rpts);
-
 
 			///#region 关键字字段.
 		String keyWord = ur.getSearchKey();
@@ -2760,10 +3127,7 @@ public class WF_CCBill extends WebContralBase
 				qo.addRightBracket();
 			}
 		}
-
 			///#endregion 时间段的查询
-
-
 			///#region 外键或者枚举的查询
 
 		//获得关键字.
@@ -2801,10 +3165,7 @@ public class WF_CCBill extends WebContralBase
 
 			qo.addRightBracket();
 		}
-
 			///#endregion 外键或者枚举的查询
-
-
 			///#region 设置隐藏字段的过滤查询
 		FrmBill frmBill = new FrmBill(this.getFrmID());
 		String hidenField = frmBill.GetParaString("HidenField");
@@ -2854,11 +3215,6 @@ public class WF_CCBill extends WebContralBase
 
 		}
 
-
-			///#endregion 设置隐藏字段的查询
-
-
-
 		if (isFirst == false)
 		{
 			qo.addAnd();
@@ -2874,10 +3230,7 @@ public class WF_CCBill extends WebContralBase
 				//qo.addAnd();
 				//qo.AddWhere("Starter", "=", WebUser.getNo());
 			}
-
 		}
-
-
 			///#endregion 查询语句
 		qo.addOrderBy("OID");
 		return qo.DoQueryToTable();

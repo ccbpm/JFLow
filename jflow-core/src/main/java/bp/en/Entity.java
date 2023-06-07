@@ -2094,8 +2094,8 @@ public abstract class Entity extends EnObj implements Serializable
 	public final int Delete(String attr, Object val) throws Exception
 	{
 		Paras ps = new Paras();
-		ps.Add(attr, val);
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		//ps.Add(attr, val);
+		if (SystemConfig.getAppCenterDBFieldIsParaDBType() == true)
 		{
 			ps.Add(attr, bp.sys.base.Glo.GenerRealType(this.getEnMap().getAttrs(), attr, val));
 		}
@@ -2110,7 +2110,7 @@ public abstract class Entity extends EnObj implements Serializable
 	{
 		Paras ps = new Paras();
 
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBFieldIsParaDBType() == true)
 		{
 			ps.Add(attr1, bp.sys.base.Glo.GenerRealType(this.getEnMap().getAttrs(), attr1, val1));
 			ps.Add(attr2, bp.sys.base.Glo.GenerRealType(this.getEnMap().getAttrs(), attr2, val2));
@@ -2128,7 +2128,7 @@ public abstract class Entity extends EnObj implements Serializable
 	{
 		Paras ps = new Paras();
 
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBFieldIsParaDBType() == true)
 		{
 			ps.Add(attr1, bp.sys.base.Glo.GenerRealType(this.getEnMap().getAttrs(), attr1, val1));
 			ps.Add(attr2, bp.sys.base.Glo.GenerRealType(this.getEnMap().getAttrs(), attr2, val2));
@@ -2147,7 +2147,7 @@ public abstract class Entity extends EnObj implements Serializable
 	{
 		Paras ps = new Paras();
 
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBFieldIsParaDBType() == true)
 		{
 			ps.Add(attr1, bp.sys.base.Glo.GenerRealType(this.getEnMap().getAttrs(), attr1, val1));
 			ps.Add(attr2, bp.sys.base.Glo.GenerRealType(this.getEnMap().getAttrs(), attr2, val2));

@@ -996,6 +996,7 @@ public class SystemConfig {
 		case KingBaseR6:
 		case DM:
 		case HGDB:
+		case PostgreSQL:
 		case MySQL:
 			return ":";
 		case Informix:
@@ -1012,6 +1013,7 @@ public class SystemConfig {
 		case KingBaseR6:
 		case DM:
 		case HGDB:
+		case PostgreSQL:
 			return "Length";
 		case MSSQL:
 			return "LEN";

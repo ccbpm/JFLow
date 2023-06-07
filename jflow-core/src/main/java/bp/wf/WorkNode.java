@@ -2255,8 +2255,6 @@ public class WorkNode
 			}
 
 				///#endregion 处理人与上一步相同
-
-
 				///#region 按照 表达式 处理. yln
 			if (DataType.IsNullOrEmpty(nd.getAutoJumpExp()) == false)
 			{
@@ -2270,29 +2268,19 @@ public class WorkNode
 					{
 						float val = DBAccess.RunSQLReturnValFloat(exp, 0);
 						if (val >= 0)
-						{
 							return nd;
-						}
 					}
 					else
 					{
 						if (exp.contains("?") == true)
-						{
 							exp += "&";
-						}
 						else
-						{
 							exp += "?";
-						}
-
 						exp += "WorkID=" + rptGe.getOID() + "&Token=" + WebUser.getToken() + "&UserNo=" + WebUser.getNo();
-
 						String str = DataType.ReadURLContext(exp, 10000);
 						float val = Float.parseFloat(str);
 						if (val <= 0)
-						{
 							return nd;
-						}
 					}
 				}
 				catch (RuntimeException ex)
@@ -9193,8 +9181,14 @@ public class WorkNode
 
 					Emp emp = new Emp(gwl.getFK_Emp());
 					gwl.setFK_Dept(emp.getFK_Dept());
-
-					gwl.setSDT(dr.getValue("RDT").toString());
+					if (this.getHisNode().getHisCHWay() == CHWay.None)
+					{
+						gwl.setSDT("无");
+					}
+					else
+					{
+						gwl.setSDT(dr.getValue("RDT").toString());
+					}
 					gwl.setDTOfWarning(gwf.getSDTOfNode());
 
 					gwl.setEnable(true);
@@ -9403,7 +9397,14 @@ public class WorkNode
 		gwl.setRead(true);
 		gwl.setCDT(DataType.getCurrentDateTime());
 		gwl.setRDT(gwl.getCDT());
-		gwl.setSDT(gwl.getCDT());
+		if (this.getHisNode().getHisCHWay() == CHWay.None)
+		{
+			gwl.setSDT("无");
+		}
+		else
+		{
+			gwl.setSDT(gwl.getCDT());
+		}
 		gwl.setSender(WebUser.getNo() + "," + WebUser.getName());
 		gwl.Save();
 

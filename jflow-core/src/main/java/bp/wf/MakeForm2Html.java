@@ -254,20 +254,20 @@ public class MakeForm2Html
 									String src = SystemConfig.getHostURL() + "/DataUser/Siganture/";
 									text = "<img src='" + src + SigantureNO + ".jpg' title='" + SigantureNO + "' onerror='this.src=\"" + src + "Siganture.jpg\"' style='height:50px;'  alt='图片丢失' /> ";
 								} else if (attr.getUIContralType() == UIContralType.SignCheck)//是不是签批字段
+							{
+								//获取当前节点的审核意见
+								DataTable mydt = GetWorkcheckInfoByNodeIDs(dt, en.GetValStrByKey(attr.getKeyOfEn()));
+								text = "<div style='min-height:17px;'>";
+								text += "<table style='width:100%'><tbody>";
+								for (DataRow dr : mydt.Rows)
 								{
-									//获取当前节点的审核意见
-									DataTable mydt = GetWorkcheckInfoByNodeIDs(dt, en.GetValStrByKey(attr.getKeyOfEn()));
-									text = "<div style='min-height:17px;'>";
-									text += "<table style='width:100%'><tbody>";
-									for (DataRow dr : mydt.Rows)
-									{
-										text += "<tr><td style='border: 1px solid #D6DDE6;'>";
-										text += "<div style='word-wrap: break-word;line-height:20px;padding:5px;padding-left:50px;'><font color='#999'>" + dr.getValue(1).toString() + "</font></div>";
-										text += "<div style='text-align:right;padding-right:5px'>" + dr.getValue(3).toString() + "(" + dr.getValue(2).toString() + ")</div>";
-										text += "</td></tr>";
-									}
-									text += "</tbody></table></div>";
-								} else
+									text += "<tr><td style='border: 1px solid #D6DDE6;'>";
+									text += "<div style='word-wrap: break-word;line-height:20px;padding:5px;padding-left:50px;'><font color='#999'>" + dr.getValue(1).toString() + "</font></div>";
+									text += "<div style='text-align:right;padding-right:5px'>" + dr.getValue(3).toString() + "(" + dr.getValue(2).toString() + ")</div>";
+									text += "</td></tr>";
+								}
+								text += "</tbody></table></div>";
+							} else
 									text = en.GetValStrByKey(attr.getKeyOfEn());
 								if (attr.getTextModel() == 3)
 									text = text.replace("white-space: nowrap;", "");
@@ -282,14 +282,14 @@ public class MakeForm2Html
 
 							if(attr.getMyDataType() == DataType.AppDouble || attr.getMyDataType() == DataType.AppFloat ||
 									attr.getMyDataType() == DataType.AppMoney){
-								String defval = attr.getDefVal();
-								if(defval ==""||defval==null||defval =="0")
-									defval="0.00";
-								String[] res = defval.split("[.]", -1);
-								int leg = 0;
-								if(res.length>1)
-									leg = res[1].split("").length;
-								text = en.GetValDecimalByKey(attr.getKeyOfEn(), leg).toString();
+									String defval = attr.getDefVal();
+									if(defval ==""||defval==null||defval =="0")
+										defval="0.00";
+									String[] res = defval.split("[.]", -1);
+									int leg = 0;
+									if(res.length>1)
+										leg = res[1].split("").length;
+									text = en.GetValDecimalByKey(attr.getKeyOfEn(), leg).toString();
 							}
 							break;
 						case Enum:

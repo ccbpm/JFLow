@@ -2566,7 +2566,7 @@ public class Map  implements Serializable
 	public final void AddMyPK(boolean uiVisable)
 	{
 		this.PKs = "MyPK";
-		this.AddTBStringPK("MyPK", null, "主键MyPK", uiVisable, true, 1, 100, 10);
+		this.AddTBStringPK("MyPK", null, "主键MyPK", uiVisable, true, 1, 150, 10);
 		//Attr attr = new Attr();
 		//attr.getKey() = "MyPK";
 		//attr.Field = "MyPK";

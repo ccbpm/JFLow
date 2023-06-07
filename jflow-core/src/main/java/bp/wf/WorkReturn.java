@@ -1179,7 +1179,10 @@ public class WorkReturn
 
 			item.setIsPassInt(0);
 			item.setRead(false);
-			item.setSDT(sdt);
+			if (this.ReturnToNode.getHisCHWay() == CHWay.None)
+				item.setSDT("无");
+			else
+				item.setSDT(sdt);
 			item.setRDT(DataType.getCurrentDateTimess());
 			item.setSender(WebUser.getNo() + "," + WebUser.getName());
 			item.Update();
@@ -1197,7 +1200,10 @@ public class WorkReturn
 
 			mygwl.setIsPassInt(0);
 			mygwl.setRead(false);
-			mygwl.setSDT(sdt);
+			if (this.ReturnToNode.getHisCHWay() == CHWay.None)
+				mygwl.setSDT("无");
+			else
+				mygwl.setSDT(sdt);
 			mygwl.setRDT(DataType.getCurrentDateTimess());
 			mygwl.setSender(WebUser.getNo() + "," + WebUser.getName());
 			mygwl.Insert();
@@ -1594,8 +1600,11 @@ public class WorkReturn
 
 		Date dtNew = new Date();
 		// dtNew = dtNew.AddDays(nd.WarningHour);
+		if (this.ReturnToNode.getHisCHWay() == CHWay.None)
+			wl.setSDT("无");
+		else
+			wl.setSDT(DateUtils.format(dtNew,DataType.getSysDateTimeFormat())); // DataType.getCurrentDataTime();
 
-		wl.setSDT(DateUtils.format(dtNew,DataType.getSysDateTimeFormat())); // DataType.getCurrentDataTime();
 		wl.setFK_Flow(this.HisNode.getFK_Flow());
 		wl.Insert();
 

@@ -98,7 +98,7 @@ public class Info extends EntityNoName
 		map.AddTBStringPK(InfoAttr.No, null, "编号", false, true, 1, 59, 59);
 		map.AddTBString(InfoAttr.Name, null, "标题", true, false, 0, 100, 10, true);
 
-		map.AddTBStringDoc("Docs", "Docs", null, "内容", true, false, 0, 5000, 20, true, true);
+		map.AddTBStringDoc("Docs", "Docs", null, "内容", true, false, 0, 4000, 20, true, true);
 
 		map.AddDDLSysEnum(InfoAttr.InfoPRI, 0, "重要性", true, true, "InfoPRI", "@0=普通@1=紧急@2=火急");
 

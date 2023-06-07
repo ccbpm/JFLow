@@ -870,7 +870,7 @@ public class MapAttrString extends EntityMyPK
 							break;
 						case Oracle:
 						case DM:
-							sql = "ALTER table " + md.getPTable() + " modify " + attr.getField() + " NVARCHAR2(" + attr.getMaxLen() + ")";
+							sql = "ALTER table " + md.getPTable() + " modify " + attr.getField() + " VARCHAR2(" + attr.getMaxLen() + ")";
 							break;
 						case KingBaseR3:
 						case KingBaseR6:

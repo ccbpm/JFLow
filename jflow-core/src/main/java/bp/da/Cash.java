@@ -109,9 +109,6 @@ public class Cash {
 		if(SystemConfig.getRedisIsEnable())
 			ContextHolderUtils.getRedisUtils().hdel(false,sqlCashKey,clName);
 	}
-
-
-
 	// EnsData cash
 	private static String ensDataCashKey = SystemConfig.getRedisCacheKey("EnsDataCash");
 	private static  Hashtable<String, Object> _EnsData_Cash = new Hashtable<>();
@@ -204,9 +201,11 @@ public class Cash {
 	}
 
 	private static String mapCashKey = SystemConfig.getRedisCacheKey("MapCash");
-	private static Hashtable<String, Object> _Map_Cash;
+	private static Hashtable<String, Object> _Map_Cash = new Hashtable<String, Object>();
 
 	public static Hashtable<String, Object> getMap_Cash() {
+		if(SystemConfig.getRedisIsEnable())
+			_Map_Cash = ContextHolderUtils.getRedisUtils().hget(false,mapCashKey);
 		if (_Map_Cash == null) {
 			_Map_Cash = new Hashtable<String, Object>();
 		}

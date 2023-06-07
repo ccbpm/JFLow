@@ -23,7 +23,7 @@ public class UserLogAttr
 	/** 
 	 级别
 	*/
-	public static final String Level = "Level";
+	public static final String LevelText = "LevelText";
 	/** 
 	 处理内容
 	*/

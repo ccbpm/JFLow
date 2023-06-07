@@ -322,10 +322,12 @@ public class Cond extends EntityMyPK
 		return s;
 	}
 	public final void setFKOperator(String value)throws Exception
-	{String val = "";
+	{
+		String val = "";
 
 		switch (value)
-	{case "dengyu":
+		{
+			case "dengyu":
 				val = "=";
 				break;
 			case "dayu":

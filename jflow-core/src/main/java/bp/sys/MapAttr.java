@@ -1383,7 +1383,7 @@ public class MapAttr extends EntityMyPK
 								break;
 							case Oracle:
 							case DM:
-								sql = "ALTER table " + md.getPTable() + " modify " + this.getField() + " NVARCHAR2(" + this.getMaxLen() + ")";
+								sql = "ALTER table " + md.getPTable() + " modify " + this.getField() + " VARCHAR2(" + this.getMaxLen() + ")";
 								break;
 							case KingBaseR3:
 							case KingBaseR6:

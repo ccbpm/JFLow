@@ -127,9 +127,7 @@ public class WorkNodePlus
 				GEEntity ge = new GEEntity(fn.getFKFrm());
 				ge.setOID(track.getWorkID());
 				if (ge.RetrieveFromDBSources() == 0)
-				{
 					continue;
-				}
 				//获取版本号
 				ps = new Paras();
 				ps.SQL = "SELECT MAX(Ver) From Sys_FrmDBVer WHERE FrmID=" + dbstr + "FrmID AND RefPKVal=" + dbstr + "RefPKVal";
@@ -137,6 +135,37 @@ public class WorkNodePlus
 				ps.Add("RefPKVal", track.getWorkID());
 				ver = DBAccess.RunSQLReturnValInt(ps, 0);
 				ver = ver == 0 ? 1 : ver + 1;
+				MapData md = new MapData(fn.getFKFrm());
+				if (md.getHisFrmType() == FrmType.ChapterFrm)
+				{
+					//获取字段
+					MapAttrs attrs = md.getMapAttrs();
+					for(MapAttr attr:attrs.ToJavaList())
+					{
+						if (attr.getUIVisible() == false)
+							continue;
+						FrmDBVer.AddKeyOfEnDBTrack(ver,md.getNo(), String.valueOf(track.getWorkID()), track.getMyPK(), ge.GetValStringByKey(attr.getKeyOfEn()), attr.getKeyOfEn());
+					}
+					String json = AddNodeFrmDtlDB(nd.getNodeID(), track.getWorkID(), md.getNo());
+					String aths = AddNodeFrmAthDB(nd.getNodeID(), (int) track.getWorkID(), md.getNo());
+					FrmDBVer.AddFrmDBTrack(ver,md.getNo(), String.valueOf(track.getWorkID()), track.getMyPK(), null, json, aths,true);
+
+					//获取控件类型是ChapterFrmLinkFrm的分组
+					GroupFields groups =new GroupFields();
+					groups.Retrieve(GroupFieldAttr.FrmID, md.getNo(), GroupFieldAttr.CtrlType, "ChapterFrmLinkFrm");
+					for(GroupField group : groups.ToJavaList())
+					{
+						//获取表单数据
+						GEEntity en = new GEEntity(group.getCtrlID(), track.getWorkID());
+						json = AddNodeFrmDtlDB(nd.getNodeID(), track.getWorkID(), group.getCtrlID());
+						aths = AddNodeFrmAthDB(nd.getNodeID(), (int) track.getWorkID(), group.getCtrlID());
+						if (en.getRow().containsKey("RDT"))
+							en.SetValByKey("RDT", "");
+						FrmDBVer.AddFrmDBTrack(ver,group.getCtrlID(), String.valueOf(track.getWorkID()), track.getMyPK(), en.ToJson(), json, aths, false);
+					}
+
+					return;
+				}
 				String dtlJson = AddNodeFrmDtlDB(nd.getNodeID(), track.getWorkID(), fn.getFKFrm());
 				String athJson = AddNodeFrmAthDB(nd.getNodeID(), (int)track.getWorkID(), fn.getFKFrm());
 				FrmDBVer.AddFrmDBTrack(ver,fn.getFKFrm(), String.valueOf(track.getWorkID()), track.getMyPK(), ge.ToJson(), dtlJson, athJson,false);

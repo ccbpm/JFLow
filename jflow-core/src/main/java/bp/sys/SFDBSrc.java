@@ -141,7 +141,6 @@ public class SFDBSrc extends EntityNoName
 		return DoQuery(ens, sql, expPageSize, pk, attrs, count, pageSize, pageIdx, orderBy, false);
 	}
 
-//ORIGINAL LINE: public Entities DoQuery(Entities ens, string sql, string expPageSize, string pk, Attrs attrs, int count, int pageSize, int pageIdx, string orderBy, bool isDesc = false)
 	public final Entities DoQuery(Entities ens, String sql, String expPageSize, String pk, Attrs attrs, int count, int pageSize, int pageIdx, String orderBy, boolean isDesc)throws Exception
 	{
 		DataTable dt = new DataTable();

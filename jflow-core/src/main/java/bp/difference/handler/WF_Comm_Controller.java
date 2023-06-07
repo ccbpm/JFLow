@@ -56,7 +56,9 @@ public class WF_Comm_Controller extends HttpHandlerBase {
 			|| doType.contains("dbinstall")
 			|| doType.contains("default_logout")
 			|| doType.contains("checkencryptenable")
-			|| doType.contains("ccbpmservices"))
+			|| doType.contains("ccbpmservices")
+			|| doType.contains("pcandmobileurl")
+			|| doType.contains("do_init"))
 			return;
 		String token = this.GetRequestVal("Token");
 		if(DataType.IsNullOrEmpty(token)==false &&(token.equals("undefined")==true ||  token.equals("null")==true))

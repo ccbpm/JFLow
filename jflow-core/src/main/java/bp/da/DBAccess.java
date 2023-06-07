@@ -1,19 +1,25 @@
 package bp.da;
 
-import bp.difference.ContextHolderUtils;
-import bp.difference.SystemConfig;
-import bp.en.*;
-import bp.tools.CRC32Helper;
-import bp.web.WebUser;
-import org.apache.commons.lang3.StringUtils;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.UUID;
+
+import bp.web.WebUser;
+import org.apache.commons.lang3.StringUtils;
+import bp.difference.ContextHolderUtils;
+import bp.difference.SystemConfig;
+import bp.en.*;
+import bp.tools.CRC32Helper;
+import bp.web.*;
 
 
 /**
@@ -67,7 +73,7 @@ public class DBAccess {
 		}
 
 		//设置默认值.
-		DBAccess.RunSQL(sql);
+		bp.da.DBAccess.RunSQL(sql);
 	}
 	
 	/** 
@@ -424,13 +430,13 @@ public class DBAccess {
 			if (dt.Rows.size() > 0) {
 				if (dt.Rows.get(0).getValue(0) != null && !"".equals(dt.Rows.get(0).getValue(0))) {
 					Object a = dt.Rows.get(0).getValue(0);
-					if (a instanceof Blob) {
-						Blob b = (Blob) dt.getValue(0, 0);
+					if (a instanceof java.sql.Blob) {
+						java.sql.Blob b = (java.sql.Blob) dt.getValue(0, 0);
 						InputStream is = b.getBinaryStream();
 						byteFile = new byte[(int) b.length()];
 						is.read(byteFile);
 						is.close();
-					} else if (a instanceof String) {
+					} else if (a instanceof java.lang.String) {
 						byteFile = ((String) a).getBytes("UTF-8");
 					} else {
 						byteFile = (byte[]) dt.getValue(0, 0);
@@ -702,7 +708,7 @@ public class DBAccess {
 				try {
 					CurrentSys_Serial.put(str, id);
 					KeyLockState.put(str, false);
-				} catch (Exception e) {
+				} catch (java.lang.Exception e) {
 				}
 			}
 			readCount++;
@@ -1152,7 +1158,7 @@ public class DBAccess {
 
 		try {
 			return DBAccess.RunSQLReturnTable(sql);
-		} catch (Exception e) {
+		} catch (java.lang.Exception e) {
 			sql = "select * from Port_Emp WHERE 1=2";
 			return DBAccess.RunSQLReturnTable(sql);
 		}
@@ -1881,7 +1887,7 @@ public class DBAccess {
 			Attr attr = null;
 			Entity myen = ens.getGetNewEntity();
 			SQLCash sqlCash = myen.getSQLCash();
-			Map map = myen.getEnMap();
+			bp.en.Map map = myen.getEnMap();
 
 			while (rs.next()) {
 
@@ -2243,7 +2249,7 @@ public class DBAccess {
 			Attr attr = null;
 			Entity myen = ens.getGetNewEntity();
 			SQLCash sqlCash = myen.getSQLCash();
-			Map map = myen.getEnMap();
+			bp.en.Map map = myen.getEnMap();
 
 			while (rs.next()) {
 
@@ -2317,7 +2323,7 @@ public class DBAccess {
 			Attr attr = null;
 			Entity myen = ens.getGetNewEntity();
 			SQLCash sqlCash = myen.getSQLCash();
-			Map map = myen.getEnMap();
+			bp.en.Map map = myen.getEnMap();
 
 			while (rs.next()) {
 
@@ -2712,7 +2718,7 @@ public class DBAccess {
 			Attr attr = null;
 			Entity myen = ens.getGetNewEntity();
 			SQLCash sqlCash = myen.getSQLCash();
-			Map map = myen.getEnMap();
+			bp.en.Map map = myen.getEnMap();
 
 			while (rs.next()) {
 
@@ -3128,7 +3134,7 @@ public class DBAccess {
 	public static int RunSQLReturnValInt(String sql, Paras paras, int isNullAsVal) {
 		try {
 			return Integer.parseInt(DBAccess.RunSQLReturnVal(sql, paras).toString());
-		} catch (Exception e) {
+		} catch (java.lang.Exception e) {
 			return isNullAsVal;
 		}
 	}
@@ -3692,7 +3698,7 @@ public class DBAccess {
 	 */
 	public static byte[] GetByteFromDB(String tableName, String tablePK, String pkVal, String fileSaveField)  throws Exception {
         //增加对oracle数据库的逻辑 qin
-        if (SystemConfig.getAppCenterDBType() == DBType.Oracle
+        if (bp.difference.SystemConfig.getAppCenterDBType() == DBType.Oracle
         		|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
         		|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
             Connection conn = DBAccess.getGetAppCenterDBConn_Oracle();
@@ -3730,7 +3736,7 @@ public class DBAccess {
             }
         }
 
-        if (SystemConfig.getAppCenterDBType() == DBType.MSSQL) {
+        if (bp.difference.SystemConfig.getAppCenterDBType() == DBType.MSSQL) {
 			Connection conn = DBAccess.getGetAppCenterDBConn_MSSQL();
 			String strSQL = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";
 			PreparedStatement pstmt = conn.prepareStatement(strSQL);
@@ -3759,7 +3765,7 @@ public class DBAccess {
 					conn.close();
 			}
 		}
-		if (SystemConfig.getAppCenterDBType() == DBType.MySQL) {
+		if (bp.difference.SystemConfig.getAppCenterDBType() == DBType.MySQL) {
 			Connection conn = DBAccess.getGetAppCenterDBConn_MySQL();
 			String strSQL = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";
 			PreparedStatement pstmt = conn.prepareStatement(strSQL);
@@ -4258,7 +4264,7 @@ public class DBAccess {
 		}
 		catch (RuntimeException ex)
 		{
-			Log.DebugWriteError(ex.getMessage());
+			bp.da.Log.DebugWriteError(ex.getMessage());
 			throw ex;
 		}
 	}

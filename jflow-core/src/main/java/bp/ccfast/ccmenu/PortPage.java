@@ -1,6 +1,7 @@
 package bp.ccfast.ccmenu;
 
 import bp.da.*;
+import bp.difference.SystemConfig;
 import bp.difference.handler.WebContralBase;
 import bp.web.*;
 
@@ -145,6 +146,16 @@ public class PortPage extends WebContralBase
 		sql2 += " AND FK_App = '" + appNo + "' ORDER BY Idx ";
 
 		DataTable menus = DBAccess.RunSQLReturnTable(sql2);
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			menus.Columns.get(0).ColumnName = "No";
+			menus.Columns.get(1).ColumnName = "Name";
+			menus.Columns.get(2).ColumnName = "FK_Menu";
+			menus.Columns.get(3).ColumnName = "ParentNo";
+			menus.Columns.get(4).ColumnName = "UrlExt";
+			menus.Columns.get(5).ColumnName = "Icon";
+			menus.Columns.get(6).ColumnName = "Idx";
+		}
 		menus.TableName = "Menus"; //获得菜单.
 
 		//组装数据.

@@ -39,22 +39,4 @@ public class WF_Admin_Port extends WebContralBase
 	}
 
 		///#endregion 执行父类的重写方法.
-
-
-		///#region OrderOfDept 部门顺序调整 .
-	/** 
-	 
-	 
-	 @return 
-	*/
-	public final String OrderOfDept_Init() throws Exception {
-		String sql = "SELECT No,Name,ParentNo,Idx FROM Port_Dept";
-		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		return "";
-	}
-
-		///#endregion xxx 界面方法.
-
-
-
 }

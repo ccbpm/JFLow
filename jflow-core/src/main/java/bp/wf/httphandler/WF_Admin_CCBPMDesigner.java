@@ -274,6 +274,9 @@ public class WF_Admin_CCBPMDesigner extends WebContralBase
 					sql = " UPDATE WF_Direction SET ToNodeName = WF_Node.Name FROM WF_Node  ";
 					sql += " WHERE WF_Direction.ToNode = WF_Node.NodeID AND WF_Direction.FK_Flow='" + this.getFK_Flow() + "'";
 					break;
+				case Oracle:
+					sql = "UPDATE WF_Direction E SET ToNodeName=(SELECT U.Name FROM WF_Node U WHERE E.ToNode=U.NodeID AND U.FK_Flow='" + this.getFK_Flow() + "') WHERE EXISTS (SELECT 1 FROM WF_Node U WHERE E.ToNode=U.NodeID  AND U.FK_Flow='" + this.getFK_Flow() + "')";
+					break;
 				default:
 					sql = "UPDATE WF_Direction A, WF_Node B SET A.ToNodeName=B.Name WHERE A.ToNode=B.NodeID AND A.FK_Flow='" + this.getFK_Flow() + "' ";
 					break;

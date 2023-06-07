@@ -1839,6 +1839,7 @@ public class WF_CCForm extends  WebContralBase
 							dr.setValue(MapAttrAttr.UIIsInput, ff.isNotNull()); // 是否必填?
 
 							dr.setValue(MapAttrAttr.DefVal, ff.getDefVal()); // 默认值.
+							dr.setValue(MapAttrAttr.IsSigan,ff.isSigan());
 
 							Attr attr = new Attr();
 							attr.setMyDataType(DataType.AppString);

@@ -943,6 +943,8 @@ public class WF_Admin_AttrNode extends bp.difference.handler.WebContralBase
 
 		String sql = "SELECT NodeAppType FROM WF_Node WHERE NodeID=" + this.GetRequestVal("FK_Node");
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+			dt.Columns.get(0).ColumnName = "NodeAppType";
 		return bp.tools.Json.ToJson(dt);
 	}
 }

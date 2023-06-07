@@ -1584,8 +1584,6 @@ public class WF_Comm extends WebContralBase
 		Map map = en.getEnMapInTime();
 
 		MapAttrs attrs = new MapAttrs();
-		;
-
 
 		MapData md = new MapData();
 		md.setNo(this.getEnsName());

@@ -737,23 +737,14 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		String FK_MapData = GetRequestVal("FK_MapData");
 		String KeyOfEn = GetRequestVal("KeyOfEn");
 		String sql = "";
-		//if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.Oracle || bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL)
-		//{
-		//    sql = "SELECT  Name FROM Sys_MapAttr WHERE (MyDataType=6 OR MyDataType=7) AND FK_MapData='" + FK_MapData + "'";
-		//}
-		//else if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MySQL)
-		//{
-		//    sql = "SELECT  Name FROM Sys_MapAttr WHERE (MyDataType=6 OR MyDataType=7) AND FK_MapData='" + FK_MapData + "'";
-		//}
-		//else
-		//{
-		//    sql = "SELECT Name FROM Sys_MapAttr WHERE (MyDataType=6 OR MyDataType=7) AND FK_MapData='" + FK_MapData + "'";
-		//}
-
 		sql = "SELECT KeyOfEn as No, Name FROM Sys_MapAttr WHERE (MyDataType='6' OR MyDataType='7') AND FK_MapData='" + FK_MapData + "'";
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			dt.Columns.get(0).ColumnName = "No";
+			dt.Columns.get(1).ColumnName = "Name";
+		}
 
 		return bp.tools.Json.ToJson(dt);
 	}
@@ -979,13 +970,9 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 	public final String RegularExpression_Init() throws Exception {
 		DataSet ds = new DataSet();
 
-		Paras ps = new Paras();
-		ps.SQL = "SELECT * FROM Sys_MapExt WHERE AttrOfOper=" + SystemConfig.getAppCenterDBVarStr() + "AttrOfOper AND FK_MapData=" + SystemConfig.getAppCenterDBVarStr() + "FK_MapData";
-		ps.Add("AttrOfOper", this.getKeyOfEn(), false);
-		ps.Add("FK_MapData", this.getFK_MapData(), false);
-		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		dt.TableName = "Sys_MapExt";
-		ds.Tables.add(dt);
+		MapExts mapExts = new MapExts();
+		mapExts.Retrieve(MapExtAttr.AttrOfOper, this.getKeyOfEn(), MapExtAttr.FK_MapData, this.getFK_MapData());
+		ds.Tables.add(mapExts.ToDataTableField("Sys_MapExt"));
 
 		bp.sys.xml.RegularExpressions res = new bp.sys.xml.RegularExpressions();
 		res.Retrieve("ForCtrl", "TB");
@@ -1516,7 +1503,7 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 
 		///#endregion
 
-	public final String NRCMaterielDtlSave() throws Exception {
+	/*public final String NRCMaterielDtlSave() throws Exception {
 		String fk_Template = this.GetRequestVal("FK_Template");
 		String workid = this.GetRequestVal("WorkId");
 		String sql = "SELECT * FROM STARCO_TemplateNRCMaterielDtl WHERE FK_Template='" + fk_Template + "'";
@@ -1562,6 +1549,6 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 		}
 
 		return "ok";
-	}
+	}*/
 
 }

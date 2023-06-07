@@ -138,6 +138,11 @@ public class WF_Admin_AttrNode_FrmSln extends bp.difference.handler.WebContralBa
 		String sql = Glo.getSQLOfCheckField();
 		sql = sql.replace("@FK_Frm", this.getFrmID());
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		if (bp.difference.SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			dt.Columns.get(0).ColumnName = "No";
+			dt.Columns.get(1).ColumnName = "Name";
+		}
 		dt.TableName = "CheckFields";
 		ds.Tables.add(dt);
 		return bp.tools.Json.ToJson(ds);

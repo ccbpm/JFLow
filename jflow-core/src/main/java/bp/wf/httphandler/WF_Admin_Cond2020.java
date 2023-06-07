@@ -125,8 +125,12 @@ public class WF_Admin_Cond2020 extends WebContralBase
 	 */
 	public final String SelectStation_StationTypes() throws Exception {
 		String sql = "select No,Name FROM port_StationType WHERE No in (SELECT Fk_StationType from Port_Station WHERE OrgNo ='" + this.GetRequestVal("OrgNo") + "')";
-
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		if(bp.difference.SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			dt.Columns.get(0).ColumnName = "No";
+			dt.Columns.get(1).ColumnName = "Name";
+		}
 		return bp.tools.Json.ToJson(dt);
 	}
 }

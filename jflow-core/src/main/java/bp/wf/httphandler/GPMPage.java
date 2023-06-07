@@ -28,7 +28,7 @@ import java.io.*;
 public class GPMPage extends WebContralBase
 {
 
-		///#region 构造函数
+		///#region 构造函数Organization_Init
 	/** 
 	 构造函数
 	*/
@@ -1071,6 +1071,8 @@ public class GPMPage extends WebContralBase
 		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		//获取当前人员所在的部门及兼职部门
 		String sql = "SELECT B.No AS \'FK_Dept\',B.Name AS \'FK_DeptText\',A.MyPK AS \'MyPK\' From Port_DeptEmp A,Port_Dept B WHERE A.FK_Dept=B.No AND A.FK_Emp="+dbstr+"FK_Emp";
+		if(SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB)
+			sql = "SELECT B.No AS \"FK_Dept\",B.Name AS \"FK_DeptText\",A.MyPK AS \"MyPK\" From Port_DeptEmp A,Port_Dept B WHERE A.FK_Dept=B.No AND A.FK_Emp="+dbstr+"FK_Emp";
 		if(SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 			sql +=" B.OrgNo='"+WebUser.getOrgNo()+"'";
 		Paras ps = new Paras();
@@ -1093,7 +1095,9 @@ public class GPMPage extends WebContralBase
 		ds.Tables.add(dt);
 		ps.clear();
 		//获取岗位
-		sql="SELECT B.No AS \'FK_Station\',B.Name AS \'FK_StationText\' ,A.FK_Dept From Port_DeptEmpStation A,Port_Station B WHERE A.FK_Station=B.No AND A.FK_Emp="+dbstr+"FK_Emp";
+		sql="SELECT B.No AS \'FK_Station\',B.Name AS \'FK_StationText\' ,A.FK_Dept AS \'FK_Dept\' From Port_DeptEmpStation A,Port_Station B WHERE A.FK_Station=B.No AND A.FK_Emp="+dbstr+"FK_Emp";
+		if(SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB)
+			sql="SELECT B.No AS \"FK_Station\",B.Name AS \"FK_StationText\" ,A.FK_Dept AS \"FK_Dept\" From Port_DeptEmpStation A,Port_Station B WHERE A.FK_Station=B.No AND A.FK_Emp="+dbstr+"FK_Emp";
 		if(SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 			sql +=" B.OrgNo='"+WebUser.getOrgNo()+"'";
 

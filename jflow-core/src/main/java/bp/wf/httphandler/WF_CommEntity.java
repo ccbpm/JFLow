@@ -1270,17 +1270,17 @@ public class WF_CommEntity extends WebContralBase
 			String emps = "";
 			for (DataRow drr : dtt.Rows)
 			{
-				if (emps.contains(drr.get("No").toString() + ",") == true)
+				if (emps.contains(drr.getValue(0).toString() + ",") == true)
 				{
 					continue;
 				}
-				emps += drr.get("No").toString() + ",";
+				emps += drr.getValue(0).toString() + ",";
 
 				DataRow dr = dt.NewRow();
-				dr.setValue("No", drr.get("No"));
-				dr.setValue("Name", drr.get("Name"));
-				dr.setValue("FK_DeptText", drr.get("FK_DeptText"));
-				dr.setValue("type", drr.get("TYPE"));
+				dr.setValue("No", drr.getValue(0));
+				dr.setValue("Name", drr.getValue(1));
+				dr.setValue("FK_DeptText", drr.getValue(2));
+				dr.setValue("type", drr.getValue(3));
 				dt.Rows.add(dr);
 			}
 			for (DataColumn col : dt.Columns)

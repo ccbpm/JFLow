@@ -440,12 +440,23 @@ public class WF_AppClassic extends WebContralBase
 		String sql = "SELECT FK_NY, count(WorkID) as Num FROM WF_GenerWorkFlow WHERE WFState=3 AND SendDT<=SDTOfNode And WFSta=1 " + whereStrPuls + " GROUP BY FK_NY ";
 		DataTable ComplateFlowsByNY = DBAccess.RunSQLReturnTable(sql);
 		ComplateFlowsByNY.TableName = "ComplateFlowsByNY";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			ComplateFlowsByNY.Columns.get(0).ColumnName = "FK_NY";
+			ComplateFlowsByNY.Columns.get(1).ColumnName = "Num";
+		}
+
 		ds.Tables.add(ComplateFlowsByNY);
 
 		//逾期完成
 		sql = "SELECT FK_NY, count(WorkID) as Num FROM WF_GenerWorkFlow WHERE WFState=3 AND SendDT>SDTOfNode And WFSta=1 " + whereStrPuls + " GROUP BY FK_NY ";
 		DataTable OverComplateFlowsByNY = DBAccess.RunSQLReturnTable(sql);
 		OverComplateFlowsByNY.TableName = "OverComplateFlowsByNY";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			OverComplateFlowsByNY.Columns.get(0).ColumnName = "FK_NY";
+			OverComplateFlowsByNY.Columns.get(1).ColumnName = "Num";
+		}
 		ds.Tables.add(OverComplateFlowsByNY);
 
 			///#endregion 完成的流程-按月分析
@@ -464,6 +475,12 @@ public class WF_AppClassic extends WebContralBase
 		}
 		DataTable TodoListAllByDept = DBAccess.RunSQLReturnTable(sql);
 		TodoListAllByDept.TableName = "TodoListAllByDept";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			TodoListAllByDept.Columns.get(0).ColumnName = "Name";
+			TodoListAllByDept.Columns.get(1).ColumnName = "Num";
+		}
+
 		ds.Tables.add(TodoListAllByDept);
 
 		//2.退回的数据
@@ -477,6 +494,11 @@ public class WF_AppClassic extends WebContralBase
 		}
 		DataTable TodoListReturnByDept = DBAccess.RunSQLReturnTable(sql);
 		TodoListReturnByDept.TableName = "TodoListReturnByDept";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			TodoListReturnByDept.Columns.get(0).ColumnName = "Name";
+			TodoListReturnByDept.Columns.get(1).ColumnName = "Num";
+		}
 		ds.Tables.add(TodoListReturnByDept);
 
 		//3.逾期的数据
@@ -497,6 +519,12 @@ public class WF_AppClassic extends WebContralBase
 
 		DataTable TodoListOverTByDept = DBAccess.RunSQLReturnTable(sql);
 		TodoListOverTByDept.TableName = "TodoListOverTByDept";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			TodoListOverTByDept.Columns.get(0).ColumnName = "Name";
+			TodoListOverTByDept.Columns.get(1).ColumnName = "Num";
+		}
+
 		ds.Tables.add(TodoListOverTByDept);
 
 		//4.预警的数据
@@ -513,6 +541,11 @@ public class WF_AppClassic extends WebContralBase
 		}
 		DataTable TodoListAllByFlow = DBAccess.RunSQLReturnTable(sql);
 		TodoListAllByFlow.TableName = "TodoListAllByFlow";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			TodoListAllByFlow.Columns.get(0).ColumnName = "Name";
+			TodoListAllByFlow.Columns.get(1).ColumnName = "Num";
+		}
 		ds.Tables.add(TodoListAllByFlow);
 
 		//2.退回的数据
@@ -526,6 +559,11 @@ public class WF_AppClassic extends WebContralBase
 		}
 		DataTable TodoListReturnByFlow = DBAccess.RunSQLReturnTable(sql);
 		TodoListReturnByFlow.TableName = "TodoListReturnByFlow";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			TodoListReturnByFlow.Columns.get(0).ColumnName = "Name";
+			TodoListReturnByFlow.Columns.get(1).ColumnName = "Num";
+		}
 		ds.Tables.add(TodoListReturnByFlow);
 
 		//3.逾期的数据
@@ -546,6 +584,11 @@ public class WF_AppClassic extends WebContralBase
 
 		DataTable TodoListOverTByFlow = DBAccess.RunSQLReturnTable(sql);
 		TodoListOverTByFlow.TableName = "TodoListOverTByFlow";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			TodoListOverTByFlow.Columns.get(0).ColumnName = "Name";
+			TodoListOverTByFlow.Columns.get(1).ColumnName = "Num";
+		}
 		ds.Tables.add(TodoListOverTByFlow);
 
 
@@ -554,18 +597,33 @@ public class WF_AppClassic extends WebContralBase
 		sql = "SELECT A.No,A.Name From Port_Emp A,Port_DeptEmp B Where A.No=B.FK_Emp AND B.FK_Dept='" + WebUser.getFK_Dept()+ "' order By A.Idx";
 		DataTable Emps = DBAccess.RunSQLReturnTable(sql);
 		Emps.TableName = "Emps";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			Emps.Columns.get(0).ColumnName = "No";
+			Emps.Columns.get(1).ColumnName = "Name";
+		}
 		ds.Tables.add(Emps);
 
 		//1.全部待办
 		sql = "SELECT FK_EmpText AS Name, count(WorkID) as Num FROM WF_GenerWorkerList WHERE FK_Dept='" + WebUser.getFK_Dept()+ "' GROUP BY FK_EmpText";
 		DataTable TodoListAllByEmp = DBAccess.RunSQLReturnTable(sql);
 		TodoListAllByEmp.TableName = "TodoListAllByEmp";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			TodoListAllByEmp.Columns.get(0).ColumnName = "Name";
+			TodoListAllByEmp.Columns.get(1).ColumnName = "Num";
+		}
 		ds.Tables.add(TodoListAllByEmp);
 
 		//2.退回的数据
 		sql = "SELECT A.FK_EmpText AS Name, count( A.WorkID) as Num FROM WF_GenerWorkerList A,WF_GenerWorkFlow B WHERE  A.FK_Dept='" + WebUser.getFK_Dept()+ "' AND A.WorkID=B.WorkID AND B.WFState=5 GROUP BY A.FK_EmpText";
 		DataTable TodoListReturnByEmp = DBAccess.RunSQLReturnTable(sql);
 		TodoListReturnByEmp.TableName = "TodoListReturnByEmp";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			TodoListReturnByEmp.Columns.get(0).ColumnName = "Name";
+			TodoListReturnByEmp.Columns.get(1).ColumnName = "Num";
+		}
 		ds.Tables.add(TodoListReturnByEmp);
 
 		//3.逾期的数据
@@ -586,6 +644,11 @@ public class WF_AppClassic extends WebContralBase
 
 		DataTable TodoListOverTByEmp = DBAccess.RunSQLReturnTable(sql);
 		TodoListOverTByEmp.TableName = "TodoListOverTByEmp";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			TodoListOverTByEmp.Columns.get(0).ColumnName = "Name";
+			TodoListOverTByEmp.Columns.get(1).ColumnName = "Num";
+		}
 		ds.Tables.add(TodoListOverTByEmp);
 
 			///#endregion 运行中的流程
@@ -655,12 +718,22 @@ public class WF_AppClassic extends WebContralBase
 		String sql = "SELECT FK_NY, count(WorkID) as Num FROM WF_GenerWorkFlow WHERE WFState=3 AND SendDT<=SDTOfNode And WFSta=1 " + whereStrPuls + " GROUP BY FK_NY ";
 		DataTable ComplateFlowsByNY = DBAccess.RunSQLReturnTable(sql);
 		ComplateFlowsByNY.TableName = "ComplateFlowsByNY";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			ComplateFlowsByNY.Columns.get(0).ColumnName = "FK_NY";
+			ComplateFlowsByNY.Columns.get(1).ColumnName = "Num";
+		}
 		ds.Tables.add(ComplateFlowsByNY);
 
 		//逾期完成
 		sql = "SELECT FK_NY, count(WorkID) as Num FROM WF_GenerWorkFlow WHERE WFState=3 AND SendDT>SDTOfNode And WFSta=1 " + whereStrPuls + " GROUP BY FK_NY ";
 		DataTable OverComplateFlowsByNY = DBAccess.RunSQLReturnTable(sql);
 		OverComplateFlowsByNY.TableName = "OverComplateFlowsByNY";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			OverComplateFlowsByNY.Columns.get(0).ColumnName = "FK_NY";
+			OverComplateFlowsByNY.Columns.get(1).ColumnName = "Num";
+		}
 		ds.Tables.add(OverComplateFlowsByNY);
 
 			///#endregion 完成的流程-按月分析
@@ -679,6 +752,11 @@ public class WF_AppClassic extends WebContralBase
 		}
 		DataTable TodoListAllByDept = DBAccess.RunSQLReturnTable(sql);
 		TodoListAllByDept.TableName = "TodoListAllByDept";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			TodoListAllByDept.Columns.get(0).ColumnName = "Name";
+			TodoListAllByDept.Columns.get(1).ColumnName = "Num";
+		}
 		ds.Tables.add(TodoListAllByDept);
 
 		//2.退回的数据
@@ -692,6 +770,11 @@ public class WF_AppClassic extends WebContralBase
 		}
 		DataTable TodoListReturnByDept = DBAccess.RunSQLReturnTable(sql);
 		TodoListReturnByDept.TableName = "TodoListReturnByDept";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			TodoListReturnByDept.Columns.get(0).ColumnName = "Name";
+			TodoListReturnByDept.Columns.get(1).ColumnName = "Num";
+		}
 		ds.Tables.add(TodoListReturnByDept);
 
 		//3.逾期的数据
@@ -712,6 +795,11 @@ public class WF_AppClassic extends WebContralBase
 
 		DataTable TodoListOverTByDept = DBAccess.RunSQLReturnTable(sql);
 		TodoListOverTByDept.TableName = "TodoListOverTByDept";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			TodoListOverTByDept.Columns.get(0).ColumnName = "Name";
+			TodoListOverTByDept.Columns.get(1).ColumnName = "Num";
+		}
 		ds.Tables.add(TodoListOverTByDept);
 
 		//4.预警的数据
@@ -728,6 +816,11 @@ public class WF_AppClassic extends WebContralBase
 		}
 		DataTable TodoListAllByFlow = DBAccess.RunSQLReturnTable(sql);
 		TodoListAllByFlow.TableName = "TodoListAllByFlow";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			TodoListAllByFlow.Columns.get(0).ColumnName = "Name";
+			TodoListAllByFlow.Columns.get(1).ColumnName = "Num";
+		}
 		ds.Tables.add(TodoListAllByFlow);
 
 		//2.退回的数据
@@ -741,6 +834,11 @@ public class WF_AppClassic extends WebContralBase
 		}
 		DataTable TodoListReturnByFlow = DBAccess.RunSQLReturnTable(sql);
 		TodoListReturnByFlow.TableName = "TodoListReturnByFlow";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			TodoListReturnByFlow.Columns.get(0).ColumnName = "Name";
+			TodoListReturnByFlow.Columns.get(1).ColumnName = "Num";
+		}
 		ds.Tables.add(TodoListReturnByFlow);
 
 		//3.逾期的数据
@@ -761,6 +859,11 @@ public class WF_AppClassic extends WebContralBase
 
 		DataTable TodoListOverTByFlow = DBAccess.RunSQLReturnTable(sql);
 		TodoListOverTByFlow.TableName = "TodoListOverTByFlow";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			TodoListOverTByFlow.Columns.get(0).ColumnName = "Name";
+			TodoListOverTByFlow.Columns.get(1).ColumnName = "Num";
+		}
 		ds.Tables.add(TodoListOverTByFlow);
 
 
@@ -769,18 +872,33 @@ public class WF_AppClassic extends WebContralBase
 		sql = "SELECT A.No,A.Name From Port_Emp A,Port_DeptEmp B Where A.No=B.FK_Emp AND B.FK_Dept='" + WebUser.getFK_Dept()+ "' order By A.Idx";
 		DataTable Emps = DBAccess.RunSQLReturnTable(sql);
 		Emps.TableName = "Emps";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			Emps.Columns.get(0).ColumnName = "No";
+			Emps.Columns.get(1).ColumnName = "Name";
+		}
 		ds.Tables.add(Emps);
 
 		//1.全部待办
 		sql = "SELECT FK_EmpText AS Name, count(WorkID) as Num FROM WF_GenerWorkerList WHERE FK_Dept='" + WebUser.getFK_Dept()+ "' GROUP BY FK_EmpText";
 		DataTable TodoListAllByEmp = DBAccess.RunSQLReturnTable(sql);
 		TodoListAllByEmp.TableName = "TodoListAllByEmp";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			TodoListAllByEmp.Columns.get(0).ColumnName = "Name";
+			TodoListAllByEmp.Columns.get(1).ColumnName = "Num";
+		}
 		ds.Tables.add(TodoListAllByEmp);
 
 		//2.退回的数据
 		sql = "SELECT A.FK_EmpText AS Name, count( A.WorkID) as Num FROM WF_GenerWorkerList A,WF_GenerWorkFlow B WHERE  A.FK_Dept='" + WebUser.getFK_Dept()+ "' AND A.WorkID=B.WorkID AND B.WFState=5 GROUP BY A.FK_EmpText";
 		DataTable TodoListReturnByEmp = DBAccess.RunSQLReturnTable(sql);
 		TodoListReturnByEmp.TableName = "TodoListReturnByEmp";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			TodoListReturnByEmp.Columns.get(0).ColumnName = "Name";
+			TodoListReturnByEmp.Columns.get(1).ColumnName = "Num";
+		}
 		ds.Tables.add(TodoListReturnByEmp);
 
 		//3.逾期的数据
@@ -801,6 +919,11 @@ public class WF_AppClassic extends WebContralBase
 
 		DataTable TodoListOverTByEmp = DBAccess.RunSQLReturnTable(sql);
 		TodoListOverTByEmp.TableName = "TodoListOverTByEmp";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			TodoListOverTByEmp.Columns.get(0).ColumnName = "Name";
+			TodoListOverTByEmp.Columns.get(1).ColumnName = "Num";
+		}
 		ds.Tables.add(TodoListOverTByEmp);
 
 

@@ -2642,6 +2642,23 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 				fullSQL = fullSQL.replace("~", ",");
 				fullSQL = Glo.DealExp(fullSQL, wk, null);
 				dt = DBAccess.RunSQLReturnTable(fullSQL);
+				if(SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+				{
+					String columnName = "";
+					for(DataColumn col : dt.Columns)
+					{
+						columnName = col.ColumnName.toUpperCase();
+						switch (columnName)
+						{
+							case "NO":
+								col.ColumnName = "No";
+								break;
+							case "NAME":
+								col.ColumnName = "Name";
+								break;
+						}
+					}
+				}
 				//重构新表
 				DataTable dt_FK_Dll = new DataTable();
 				dt_FK_Dll.TableName = keyOfEn; //可能存在隐患，如果多个字段，绑定同一个表，就存在这样的问题.
@@ -2824,10 +2841,18 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 		String sql = "";
 		String EnumName = this.GetRequestVal("EnumName");
 		if (EnumName == "")
-			sql = "SELECT * FROM Sys_EnumMain";
+			sql = "SELECT EnumKey,No,Name,CfgVal,Lang FROM Sys_EnumMain";
 		else
-			sql = "SELECT * FROM Sys_EnumMain WHERE (No like '%" + EnumName + "%') OR (Name like '%" + EnumName + "%')";
+			sql = "SELECT EnumKey,No,Name,CfgVal,Lang FROM Sys_EnumMain WHERE (No like '%" + EnumName + "%') OR (Name like '%" + EnumName + "%')";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			dt.Columns.get(0).ColumnName = "EnumKey";
+			dt.Columns.get(1).ColumnName = "No";
+			dt.Columns.get(2).ColumnName = "Name";
+			dt.Columns.get(3).ColumnName = "CfgVal";
+			dt.Columns.get(4).ColumnName = "Lang";
+		}
 		return bp.tools.Json.ToJson(dt);
 	}
 
@@ -2836,6 +2861,12 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 				"AND A.UIBindKey='" + this.GetRequestVal("UIBindKey") + "' AND B.OrgNo='" + this.GetRequestVal("OrgNo") + "'";
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			dt.Columns.get(0).ColumnName = "FK_MapData";
+			dt.Columns.get(1).ColumnName = "KeyOfEn";
+			dt.Columns.get(2).ColumnName = "Name";
+		}
 		return bp.tools.Json.ToJson(dt);
 	}
 

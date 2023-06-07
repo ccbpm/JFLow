@@ -796,12 +796,22 @@ public class WF_Admin_AttrFlow extends WebContralBase
 		String sql = "SELECT FK_NY, count(WorkID) as Num FROM WF_GenerWorkFlow WHERE WFState >1 AND Fk_flow = '" + fk_flow + "' GROUP BY FK_NY";
 		DataTable FlowsByNY = DBAccess.RunSQLReturnTable(sql);
 		FlowsByNY.TableName = "FlowsByNY";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			FlowsByNY.Columns.get(0).ColumnName = "FK_NY";
+			FlowsByNY.Columns.get(1).ColumnName = "Num";
+		}
 		ds.Tables.add(FlowsByNY);
 
 		//部门分组.
 		sql = "SELECT DeptName, count(WorkID) as Num FROM WF_GenerWorkFlow WHERE WFState >1 AND Fk_flow = '" + fk_flow + "' GROUP BY DeptName ";
 		DataTable FlowsByDept = DBAccess.RunSQLReturnTable(sql);
 		FlowsByDept.TableName = "FlowsByDept";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			FlowsByDept.Columns.get(0).ColumnName = "DeptName";
+			FlowsByDept.Columns.get(1).ColumnName = "Num";
+		}
 		ds.Tables.add(FlowsByDept);
 
 			///#endregion 实例分析。
@@ -813,6 +823,11 @@ public class WF_Admin_AttrFlow extends WebContralBase
 		sql = "SELECT DeptName, count(WorkID) as Num FROM WF_EmpWorks WHERE WFState >1 AND Fk_flow = '" + fk_flow + "' GROUP BY DeptName";
 		DataTable TodolistByDept = DBAccess.RunSQLReturnTable(sql);
 		TodolistByDept.TableName = "TodolistByDept";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			TodolistByDept.Columns.get(0).ColumnName = "DeptName";
+			TodolistByDept.Columns.get(1).ColumnName = "Num";
+		}
 		ds.Tables.add(TodolistByDept);
 
 		//逾期的 - 人员分组.
@@ -832,6 +847,11 @@ public class WF_Admin_AttrFlow extends WebContralBase
 		}
 		DataTable OverTimeByEmp = DBAccess.RunSQLReturnTable(sql);
 		OverTimeByEmp.TableName = "OverTimeByEmp";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			OverTimeByEmp.Columns.get(0).ColumnName = "Name";
+			OverTimeByEmp.Columns.get(1).ColumnName = "Num";
+		}
 		ds.Tables.add(OverTimeByEmp);
 		//逾期的 - 部门分组.
 		if (SystemConfig.getAppCenterDBType( ) == DBType.MySQL)
@@ -850,6 +870,11 @@ public class WF_Admin_AttrFlow extends WebContralBase
 		}
 		DataTable OverTimeByDept = DBAccess.RunSQLReturnTable(sql);
 		OverTimeByDept.TableName = "OverTimeByDept";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			OverTimeByDept.Columns.get(0).ColumnName = "DeptName";
+			OverTimeByDept.Columns.get(1).ColumnName = "Num";
+		}
 		ds.Tables.add(OverTimeByDept);
 		//逾期的 - 节点分组.
 		if (SystemConfig.getAppCenterDBType( ) == DBType.MySQL)
@@ -868,6 +893,11 @@ public class WF_Admin_AttrFlow extends WebContralBase
 		}
 		DataTable OverTimeByNode = DBAccess.RunSQLReturnTable(sql);
 		OverTimeByNode.TableName = "OverTimeByNode";
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			OverTimeByNode.Columns.get(0).ColumnName = "NodeName";
+			OverTimeByNode.Columns.get(1).ColumnName = "Num";
+		}
 		ds.Tables.add(OverTimeByNode);
 
 			///#endregion 逾期。

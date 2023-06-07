@@ -200,6 +200,12 @@
 			<artifactId>HgdbJdbc</artifactId>
 			<version>6.0.4.jre8</version>
 		</dependency>
+		<!--postgresql数据库-->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.1.1</version>
+		</dependency>
 
 		<dependency>
 			<groupId>net.sourceforge.jtds</groupId>

@@ -619,7 +619,7 @@ window.onload = function () {
                             layer.confirm("您有【" + json.Num + "】个新工作。", {
                                 btn: ["去处理", "忽略"],
                             }, function () {
-                                _this.openTab("待办", "/WF/Todolist.htm", false);
+                                _this.openTab("待办", basePath+"/WF/Todolist.htm", false);
                                 layer.close(layer.index);
                             }, function () {
                                 layer.close(layer.index);
@@ -677,8 +677,8 @@ window.onload = function () {
             this.isAdmin = this.webUser.No === "admin" || parseInt(this.webUser.IsAdmin) === 1;
             this.plant = plant;
             this.initMenus();
-            //this.startListenMsg();
-            //this.initIM();
+            this.startListenMsg();
+            this.initIM();
             this.ChangeLang();
         },
         beforeDestory: function () {

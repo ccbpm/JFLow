@@ -33,23 +33,23 @@
 
         function GoToFunc(funcName) {
             if (funcName === 'Calendar') {
-                vm.openTab(vm.GetNameByLange('rili'), '/CCFast/Calendar/Month.htm');
+                vm.openTab(vm.GetNameByLange('rili'),basePath+ '/CCFast/Calendar/Month.htm');
                 return;
             }
             if (funcName === 'WorkRec') {
-                vm.openTab(vm.GetNameByLange('rizhi'), '/CCFast/WorkRec/Default.htm');
+                vm.openTab(vm.GetNameByLange('rizhi'), basePath +  '/CCFast/WorkRec/Default.htm');
                 return;
             }
             if (funcName === 'Notepad') {
-                vm.openTab(vm.GetNameByLange('jishiben'), '/CCFast/Notepad/Notepad.htm');
+                vm.openTab(vm.GetNameByLange('jishiben'), basePath + '/CCFast/Notepad/Notepad.htm');
                 return;
             }
             if (funcName === 'Task') {
-                vm.openTab(vm.GetNameByLange('renwu'), '/CCFast/Task/Task.htm');
+                vm.openTab(vm.GetNameByLange('renwu'), basePath + '/CCFast/Task/Task.htm');
                 return;
             }
             if (funcName === 'KnowledgeManagement') {
-                vm.openTab(vm.GetNameByLange('zhishiku'), '/CCFast/KnowledgeManagement/Default.htm');
+                vm.openTab(vm.GetNameByLange('zhishiku'), basePath +  '/CCFast/KnowledgeManagement/Default.htm');
                 return;
             }
         }

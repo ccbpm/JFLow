@@ -48,7 +48,7 @@ function initPageParam() {
     pageData.OID = oid;
     pageData.WorkID = oid;
     pageData.Paras = GetQueryString("Paras");
-    pageData.IsReadonly = GetQueryString("IsReadonly");
+    pageData.IsReadonly = GetQueryString("IsReadonly") || "0";
     pageData.IsStartFlow = GetQueryString("IsStartFlow");
     pageData.FK_MapData = GetQueryString("FK_MapData");
     isReadonly = pageData.IsReadonly == null || pageData.IsReadonly == undefined || pageData.IsReadonly == "" || pageData.IsReadonly == "0" ? false : true;

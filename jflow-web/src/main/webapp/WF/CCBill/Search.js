@@ -52,7 +52,8 @@ function InitDDLOperation(frmData, mapAttr, defVal, ddlShowWays, selectSearch) {
     if (isAutoFull == false && isActiveDDL == false)
         operations.push({
             name: "全部",
-            value: "all"
+            value: "all",
+            selected: defVal.indexOf(",all,")!=-1 ? true : false
         });
     var ens = frmData[mapAttr.Field];
     if (ens == null || ens == undefined) {
@@ -442,7 +443,6 @@ function GetColoums(thrMultiTitle, secMultiTitle, colorSet, sortColumns, openMod
     }
     fieldColumns = {
         title: '操作',
-        field: 'Oper',
         align: 'center',
         minWidth: 80,
         rowspan: isThrHeader == true ? 3 : isSecHeader == true ? 2 : 1,
@@ -1120,7 +1120,8 @@ function OpenFlow(no, source) {
             layer.alert(data);
             return;
         }
-        window.top.vm.openTab(flowM.Name, data);
+        data = data.replace("../", "/WF/");
+        window.top.vm.openTab(flowM.Name, basePath+data);
 
     });
 }

@@ -1,4 +1,4 @@
-var baseInfo = new Vue({
+﻿var baseInfo = new Vue({
     el: '#flow',
     data: {
         flowNodes: [],
@@ -416,7 +416,7 @@ var baseInfo = new Vue({
                 event.stopPropagation();
             }
             var webUser = new WebUser();
-           
+
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
             var fss = handler.DoMethodReturnJSON("Frms_InitSort");
 

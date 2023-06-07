@@ -496,7 +496,8 @@ function Save(saveType) {
             layer.alert(data);
             isSaveOnly = false;
         }
-
+        if (saveType == 0)
+            layer.msg('保存成功',{ icon: 1 });
         return true;
     });
 

@@ -29,9 +29,9 @@ function deleteUrlParam(targetUrl, targetKey) {
 // 从指定字符串中获取参数
 function getQueryFromTargetStr(targetStr, targetKey) {
     if (typeof targetStr !== 'string') {
-        return null;
+        return null
     }
-    const queries = targetStr.split('?');
+    const queries = targetStr.split('?')
     if (queries.length > 1) {
         const search = queries[1].split('&');
         for (const kvStr of search) {
@@ -39,7 +39,7 @@ function getQueryFromTargetStr(targetStr, targetKey) {
             if (targetKey === key) return val
         }
     }
-    return null;
+    return null
 }
 
 function promptGener(msg, defVal) {
@@ -89,7 +89,7 @@ function DealText(text) {
 
 /**
  * 把表达式计算或者转化为json对象.
- * 
+ *
  * @param {表达式} str
  */
 function cceval(exp) {
@@ -147,7 +147,7 @@ function ReLoginByToken() {
 //检查字段,从表名,附件ID,输入是否合法.
 function CheckID(val) {
 
-    //首位可以是字母以及下划线。 
+    //首位可以是字母以及下划线。
     //首位之后可以是字母，数字以及下划线。下划线后不能接下划线
 
     var flag = false; //用来判断
@@ -448,10 +448,6 @@ function GenerBindEnumKey(ctrlDDLId, enumKey, selectVal) {
 
         type: 'post',
         async: false,
-        xhrFields: {
-            withCredentials: IsIELower10 == true ? false : true
-        },
-        crossDomain: IsIELower10 == true ? false : true,
         url: dynamicHandler + "?DoType=EnumList&EnumKey=" + enumKey + "&m=" + Math.random(),
         dataType: 'html',
         success: function (data) {
@@ -481,10 +477,6 @@ function GenerBindEntities(ctrlDDLId, ensName, selectVal, filter) {
     $.ajax({
         type: 'post',
         async: true,
-        xhrFields: {
-            withCredentials: IsIELower10 == true ? false : true
-        },
-        crossDomain: IsIELower10 == true ? false : true,
         url: dynamicHandler + "?DoType=EnsData&EnsName=" + ensName + "&Filter=" + filter + "&m=" + Math.random(),
         dataType: 'html',
         success: function (data) {
@@ -511,10 +503,6 @@ function GenerBindSFTable(ctrlDDLId, sfTable, selectVal) {
     $.ajax({
         type: 'post',
         async: true,
-        xhrFields: {
-            withCredentials: IsIELower10 == true ? false : true
-        },
-        crossDomain: IsIELower10 == true ? false : true,
         url: dynamicHandler + "?DoType=SFTable&SFTable=" + sfTable + "&m=" + Math.random(),
         dataType: 'html',
         success: function (data) {
@@ -545,10 +533,6 @@ function GenerBindSQL(ctrlDDLId, sqlKey, paras, colNo, colName, selectVal) {
     $.ajax({
         type: 'post',
         async: true,
-        xhrFields: {
-            withCredentials: IsIELower10 == true ? false : true
-        },
-        crossDomain: IsIELower10 == true ? false : true,
         url: dynamicHandler + "?DoType=SQLList&SQLKey=" + sqlKey + "&Paras=" + paras + "&m=" + Math.random(),
         dataType: 'html',
         success: function (data) {
@@ -708,7 +692,7 @@ function GenerFullAllCtrlsVal(data) {
 
                         $("#DDLPara_" + suffix).val(val); // 操作权限.
 
-                        //   window.setTimeout(function () { $("#DDLPara_" + suffix).val(row.districtCode); }, 1200); 
+                        //   window.setTimeout(function () { $("#DDLPara_" + suffix).val(row.districtCode); }, 1200);
                         //  json[kv[0]] = kv[1];
                         //   $("#DDLPara_" + suffix).val("2"); // 操作权限.
                         //console.log(suffix + "_" + val);
@@ -899,10 +883,6 @@ function AjaxServiceGener(param, myUrl, callback, scope) {
         data: param, //要发送的数据
         async: true,
         cache: false,
-        xhrFields: {
-            withCredentials: IsIELower10 == true ? false : true
-        },
-        crossDomain: IsIELower10 == true ? false : true,
         complete: function () { }, //AJAX请求完成时隐藏loading提示
         error: function (XMLHttpRequest, errorThrown) {
             callback(XMLHttpRequest);
@@ -965,7 +945,7 @@ function closeWhileEscUp() {
 
 /* 关于实体的类
 GEEntity_Init
-var pkval="Demo_DtlExpImpDtl1";  
+var pkval="Demo_DtlExpImpDtl1";
 var EnName="BP.WF.Template.Frm.MapDtlExt";
 GEntity en=new GEEntity(EnName,pkval);
 var strs=  en.ImpSQLNames;
@@ -1021,8 +1001,6 @@ var Entity = (function () {
                 params[n] = encodeURIComponent(self[n]);
             }
         });
-        var token = GetQueryString("Token") || localStorage.getItem("Token");
-        params["Token"] = token;
         return params;
     }
 
@@ -1043,13 +1021,7 @@ var Entity = (function () {
         return params.join("&");
     }
 
-    if (plant == "CCFlow") {
-        // CCFlow
-        dynamicHandler = basePath + "/WF/Comm/Handler.ashx";
-    } else {
-        // JFlow
-        dynamicHandler = basePath + "/WF/Comm/ProcessRequest.do";
-    }
+    dynamicHandler = basePath + "/WF/Comm/ProcessRequest";
 
     Entity.prototype = {
 
@@ -1060,15 +1032,10 @@ var Entity = (function () {
             var pkval = self.pkval;
             if (dynamicHandler == "")
                 return;
-            var token = GetQueryString("Token") || localStorage.getItem("Token");
             $.ajax({
                 type: 'post',
                 async: false,
-                xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
-                },
-                crossDomain: IsIELower10 == true ? false : true,
-                url: dynamicHandler + "?DoType=Entity_Init&EnName=" + self.enName + "&PKVal=" + encodeURIComponent(pkval) +"&Token="+token + "&t=" + new Date().getTime(),
+                url: dynamicHandler + "?DoType=Entity_Init&EnName=" + self.enName + "&PKVal=" + encodeURIComponent(pkval) + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 success: function (data) {
 
@@ -1116,15 +1083,11 @@ var Entity = (function () {
                 params = getParams1(self);
 
             var result = "";
-            var token = GetQueryString("Token") || localStorage.getItem("Token");
+
             $.ajax({
                 type: 'post',
                 async: false,
-                xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
-                },
-                crossDomain: IsIELower10 == true ? false : true,
-                url: dynamicHandler + "?DoType=Entity_Insert&EnName=" + self.enName +"&Token="+token + "&t=" + new Date().getTime(),
+                url: dynamicHandler + "?DoType=Entity_Insert&EnName=" + self.enName + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 data: params,
                 success: function (data) {
@@ -1177,15 +1140,11 @@ var Entity = (function () {
                 params = getParams1(self);
 
             var result = "";
-            var token = GetQueryString("Token") || localStorage.getItem("Token");
+
             $.ajax({
                 type: 'post',
                 async: false,
-                xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
-                },
-                crossDomain: IsIELower10 == true ? false : true,
-                url: dynamicHandler + "?DoType=Entity_DirectInsert&EnName=" + self.enName +"&Token="+token +  "&t=" + new Date().getTime(),
+                url: dynamicHandler + "?DoType=Entity_DirectInsert&EnName=" + self.enName + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 data: params,
                 success: function (data) {
@@ -1222,15 +1181,11 @@ var Entity = (function () {
             var self = this;
             var params = getParams(self);
             var result;
-            var token = GetQueryString("Token") || localStorage.getItem("Token");
+
             $.ajax({
                 type: 'post',
                 async: false,
-                xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
-                },
-                crossDomain: IsIELower10 == true ? false : true,
-                url: dynamicHandler + "?DoType=Entity_Update&EnName=" + self.enName +"&Token="+token +  "&t=" + new Date().getTime(),
+                url: dynamicHandler + "?DoType=Entity_Update&EnName=" + self.enName + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 data: params,
                 success: function (data) {
@@ -1259,15 +1214,11 @@ var Entity = (function () {
             var self = this;
             var params = getParams(self);
             var result;
-            var token = GetQueryString("Token") || localStorage.getItem("Token");
+
             $.ajax({
                 type: 'post',
                 async: false,
-                xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
-                },
-                crossDomain: IsIELower10 == true ? false : true,
-                url: dynamicHandler + "?DoType=Entity_Save&EnName=" + self.enName +"&Token="+token + "&t=" + new Date().getTime(),
+                url: dynamicHandler + "?DoType=Entity_Save&EnName=" + self.enName + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 data: params,
                 success: function (data) {
@@ -1299,10 +1250,6 @@ var Entity = (function () {
             $.ajax({
                 type: 'post',
                 async: false,
-                xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
-                },
-                crossDomain: IsIELower10 == true ? false : true,
                 url: dynamicHandler + "?DoType=Entity_Delete&EnName=" + self.enName + "&PKVal=" + this.GetPKVal() + "&Key1=" + key1 + "&Val1=" + val1 + "&Key2=" + key2 + "&Val2=" + val2 + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 data: params,
@@ -1335,10 +1282,6 @@ var Entity = (function () {
             $.ajax({
                 type: 'post',
                 async: false,
-                xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
-                },
-                crossDomain: IsIELower10 == true ? false : true,
                 url: dynamicHandler + "?DoType=Entity_Retrieve&EnName=" + self.enName + "&" + params,
                 dataType: 'html',
                 success: function (data) {
@@ -1456,17 +1399,13 @@ var Entity = (function () {
                 return;
             }
 
-            //  alert(self.GetPKVal()); 
-            var token = GetQueryString("Token") || localStorage.getItem("Token");
+            //  alert(self.GetPKVal());
+
             var result;
             $.ajax({
                 type: 'post',
                 async: false,
-                xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
-                },
-                crossDomain: IsIELower10 == true ? false : true,
-                url: dynamicHandler + "?DoType=Entity_RetrieveFromDBSources&EnName=" + self.enName + "&PKVal=" + pkavl+"&Token="+token,
+                url: dynamicHandler + "?DoType=Entity_RetrieveFromDBSources&EnName=" + self.enName + "&PKVal=" + pkavl,
                 dataType: 'html',
                 success: function (data) {
                     result = data;
@@ -1513,10 +1452,6 @@ var Entity = (function () {
             $.ajax({
                 type: 'post',
                 async: false,
-                xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
-                },
-                crossDomain: IsIELower10 == true ? false : true,
                 url: dynamicHandler + "?DoType=Entity_IsExits&EnName=" + self.enName + "&" + getParams1(self),
                 dataType: 'html',
                 success: function (data) {
@@ -1546,8 +1481,11 @@ var Entity = (function () {
                 myparams = "";
 
             $.each(arguments, function (i, o) {
-                if (i != 0)
+                if (i != 0) {
+                    if (!!o && o.indexOf('~') != -1)
+                        o = o.replace(/~/g, '`');
                     params += o + "~";
+                }
             });
             if (params.lastIndexOf("~") == params.length - 1)
                 params = params.substr(0, params.length - 1);
@@ -1565,10 +1503,6 @@ var Entity = (function () {
             $.ajax({
                 type: 'post',
                 async: false,
-                xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
-                },
-                crossDomain: IsIELower10 == true ? false : true,
                 url: dynamicHandler + "?DoType=Entity_DoMethodReturnString&EnName=" + self.enName + "&PKVal=" + encodeURIComponent(pkval) + "&MethodName=" + methodName + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 data: arguments,
@@ -1883,10 +1817,6 @@ var Entities = (function () {
             $.ajax({
                 type: 'post',
                 async: false,
-                xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
-                },
-                crossDomain: IsIELower10 == true ? false : true,
                 url: dynamicHandler + "?DoType=Entities_Init&EnsName=" + self.ensName + "&Paras=" + self.Paras + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 success: function (data) {
@@ -1931,10 +1861,6 @@ var Entities = (function () {
             $.ajax({
                 type: 'post',
                 async: false,
-                xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
-                },
-                crossDomain: IsIELower10 == true ? false : true,
                 url: dynamicHandler + "?DoType=Entities_Delete&EnsName=" + self.ensName + "&Paras=" + self.Paras + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 success: function (data) {
@@ -1993,10 +1919,6 @@ var Entities = (function () {
             $.ajax({
                 type: 'post',
                 async: false,
-                xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
-                },
-                crossDomain: IsIELower10 == true ? false : true,
                 url: dynamicHandler + "?DoType=Entities_RetrieveCond&EnsName=" + self.ensName + "&t=" + new Date().getTime(),
                 data: { "Paras": self.Paras },
                 dataType: 'html',
@@ -2050,19 +1972,12 @@ var Entities = (function () {
             for (var key in parameters) {
                 atPara += "@" + key + "=" + parameters[key];
             }
-            // 如果没有携带token， 自动补上
-            if (atPara.indexOf("@Token=")==-1) {
-                atPara+='@Token='+(GetQueryString('Token') || localStorage.getItem("Token"));
-            }
+
             var self = this;
             var string;
             $.ajax({
                 type: 'post',
                 async: false,
-                xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
-                },
-                crossDomain: IsIELower10 == true ? false : true,
                 url: dynamicHandler + "?DoType=Entities_DoMethodReturnString&EnsName=" + self.ensName + "&MethodName=" + methodName + "&paras=" + params + "&t=" + new Date().getTime(),
                 data: atPara = "" ? {} : { atPara: atPara },
                 dataType: 'html',
@@ -2126,10 +2041,6 @@ var Entities = (function () {
             $.ajax({
                 type: 'post',
                 async: false,
-                xhrFields: {
-                    withCredentials: IsIELower10 == true ? false : true
-                },
-                crossDomain: IsIELower10 == true ? false : true,
                 url: pathRe + dynamicHandler + "?DoType=Entities_RetrieveAll&EnsName=" + self.ensName + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 success: function (data) {
@@ -2279,13 +2190,7 @@ var DBAccess = (function () {
     function DBAccess() {
     }
 
-    if (plant == "CCFlow") {
-        // CCFlow
-        dynamicHandler = basePath + "/WF/Comm/Handler.ashx";
-    } else {
-        // JFlow
-        dynamicHandler = basePath + "/WF/Comm/ProcessRequest.do";
-    }
+    dynamicHandler = basePath + "/WF/Comm/ProcessRequest";
 
     DBAccess.RunSQL = function (sql, dbSrc) {
         if (dynamicHandler == "")
@@ -2295,10 +2200,6 @@ var DBAccess = (function () {
         $.ajax({
             type: 'post',
             async: false,
-            xhrFields: {
-                withCredentials: IsIELower10 == true ? false : true
-            },
-            crossDomain: IsIELower10 == true ? false : true,
             url: dynamicHandler + "?DoType=DBAccess_RunSQL&t=" + new Date().getTime(),
             dataType: 'html',
             data: { "SQL": encodeURIComponent(sql), "DBSrc": dbSrc },
@@ -2415,10 +2316,6 @@ var DBAccess = (function () {
         $.ajax({
             type: 'post',
             async: false,
-            xhrFields: {
-                withCredentials: IsIELower10 == true ? false : true
-            },
-            crossDomain: IsIELower10 == true ? false : true,
             url: dynamicHandler + "?DoType=DBAccess_RunSQLReturnTable" + "&t=" + new Date().getTime(),
             dataType: 'html',
             data: { "SQL": encodeURIComponent(sql), "DBSrc": dbSrc },
@@ -2460,10 +2357,6 @@ var DBAccess = (function () {
             url: dynamicHandler + "?DoType=RunUrlCrossReturnString&t=" + new Date().getTime(),
             data: { urlExt: url },
             dataType: 'html',
-            xhrFields: {
-                withCredentials: IsIELower10 == true ? false : true
-            },
-            crossDomain: IsIELower10 == true ? false : true,
             success: function (data) {
                 if (data.indexOf("err@") != -1) {
                     alert(data);
@@ -2545,13 +2438,7 @@ var HttpHandler = (function () {
         return true;
     }
 
-    if (plant == "CCFlow") {
-        // CCFlow
-        dynamicHandler = basePath + "/WF/Comm/Handler.ashx";
-    } else {
-        // JFlow
-        dynamicHandler = basePath + "/WF/Comm/ProcessRequest.do";
-    }
+    dynamicHandler = basePath + "/WF/Comm/ProcessRequest";
 
     HttpHandler.prototype = {
 
@@ -2584,7 +2471,7 @@ var HttpHandler = (function () {
                 throw Error('必须是Form表单才可以使用该方法');
 
             formData = $("form").serialize();
-            //序列化时把空格转成+，+转义成％２Ｂ，在保存时需要把+转成空格  
+            //序列化时把空格转成+，+转义成％２Ｂ，在保存时需要把+转成空格
             formData = formData.replace(/\+/g, " ");
             //form表单序列化时调用了encodeURLComponent方法将数据编码了
             // formData = decodeURIComponent(formData, true);
@@ -2634,11 +2521,14 @@ var HttpHandler = (function () {
             var files = $("input[type=file]");
             for (var i = 0; i < files.length; i++) {
                 var fileObj = files[i].files[0]; // js 获取文件对象
-                if (typeof (fileObj) == "undefined" || fileObj.size <= 0) {
+                if (typeof (fileObj) == "undefined") {
                     alert("请选择上传的文件.");
                     return;
                 }
-                //parameters["file"] = fileObj;
+                if (fileObj.size == 0) {
+                    alert("上传的文件大小为0KB,请查看内容后再重新上传");
+                    return;
+                }
                 parameters.append("file", fileObj)
             }
         },
@@ -2646,7 +2536,7 @@ var HttpHandler = (function () {
             if (params.indexOf("&" + key + "=") == -1) {
                 if (value == undefined)
                     value = "";
-               if (IsIELower10 == true)
+                if (IsIELower10 == true)
                     parameters[key] = value;
                 else
                     parameters.append(key, value);
@@ -2701,8 +2591,8 @@ var HttpHandler = (function () {
 
             return params;
         },
-		
-		customRequest: function(methodName) {
+
+        customRequest: function(methodName) {
             methodName = filterXSS(methodName)
             if (dynamicHandler == "")
                 return;
@@ -2712,37 +2602,33 @@ var HttpHandler = (function () {
             if (!parameters.has('Token')) {
                 parameters.append('Token', GetQueryString('Token'))
             }
-                $.ajax({
-                    type: 'post',
-                    async: false,
-                    xhrFields: {
-                        withCredentials: !IsIELower10
-                    },
-                    crossDomain: !IsIELower10,
-                    url: dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random(),
-                    data: new FormData(),
-                    dataType: 'html',
-                    contentType: false,
-                    processData: false,
-                    success: function (data) {
-                        if (methodName === 'Login_Submit' || methodName === 'TestFlow2020_StartIt') {
-                            localStorage.setItem('Token', getQueryFromTargetStr(data, 'Token'))
-                            jsonString = deleteUrlParam(data, 'Token')
-                        } else {
-                            jsonString = data;
-                        }
-
-                    },
-                    error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        var url = dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random();
-                        ThrowMakeErrInfo("HttpHandler-DoMethodReturnString-" + methodName, textStatus, url);
-
-
+            $.ajax({
+                type: 'post',
+                async: false,
+                url: dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random(),
+                data: new FormData(),
+                dataType: 'html',
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    if (methodName === 'Login_Submit' || methodName === 'TestFlow2020_StartIt') {
+                        localStorage.setItem('Token', getQueryFromTargetStr(data, 'Token'))
+                        jsonString = deleteUrlParam(data, 'Token')
+                    } else {
+                        jsonString = data;
                     }
-                });
+
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    var url = dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random();
+                    ThrowMakeErrInfo("HttpHandler-DoMethodReturnString-" + methodName, textStatus, url);
+
+
+                }
+            });
             return jsonString;
         },
-		
+
         DoMethodReturnString: function (methodName) {
             methodName = filterXSS(methodName)
             if (dynamicHandler == "")
@@ -2753,7 +2639,7 @@ var HttpHandler = (function () {
             if (!parameters.has('Token')) {
                 parameters.append('Token', GetQueryString('Token'))
             }
-	    if(methodName === 'Login_Submit') {
+            if(methodName === 'Login_Submit') {
                 var isEncrypt = this.customRequest("CheckEncryptEnable")
                 var key = "TB_PW"
                 if(isEncrypt === '0'){
@@ -2770,10 +2656,6 @@ var HttpHandler = (function () {
                 $.ajax({
                     type: 'post',
                     async: false,
-                    xhrFields: {
-                        withCredentials: IsIELower10 == true ? false : true
-                    },
-                    crossDomain: IsIELower10 == true ? false : true,
                     url: dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random(),
                     data: parameters,
                     dataType: 'html',
@@ -2799,10 +2681,6 @@ var HttpHandler = (function () {
                 $.ajax({
                     type: 'post',
                     async: false,
-                    xhrFields: {
-                        withCredentials: false
-                    },
-                    crossDomain: false,
                     url: dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random(),
                     data: parameters,
                     dataType: 'html',
@@ -2869,24 +2747,14 @@ var WebUser = function () {
     }
 
 
-    if (plant == "CCFlow") {
-        // CCFlow
-        dynamicHandler = basePath + "/WF/Comm/Handler.ashx";
-    } else {
-        // JFlow
-        dynamicHandler = basePath + "/WF/Comm/ProcessRequest.do";
-    }
+    dynamicHandler = basePath + "/WF/Comm/ProcessRequest";
 
     //获得页面上的token. 在登录信息丢失的时候，用token重新登录.
-    var token = GetQueryString("Token") || localStorage.getItem("Token");
+    var token =GetQueryString('Token');
 
     $.ajax({
         type: 'post',
         async: false,
-        xhrFields: {
-            withCredentials: IsIELower10 == true ? false : true
-        },
-        crossDomain: IsIELower10 == true ? false : true,
         url: dynamicHandler + "?DoType=WebUser_Init&Token=" + token + "&t=" + new Date().getTime(),
         dataType: 'html',
         success: function (data) {
@@ -2908,12 +2776,13 @@ var WebUser = function () {
                     //可能出现跨域
                     //SetHref(basePath + "/Portal/Standard/Login.htm");
                 }
-                
+
                 return;
             }
 
             try {
                 webUserJsonString = JSON.parse(filterXSS(data));
+                localStorage.setItem('Token', webUserJsonString.Token);
 
             } catch (e) {
                 alert("json解析错误: " + data);
@@ -2926,9 +2795,9 @@ var WebUser = function () {
     });
     var self = this;
     if (webUserJsonString!=null)
-    $.each(webUserJsonString, function (n, o) {
-        self[n] = filterXSS(o);
-    });
+        $.each(webUserJsonString, function (n, o) {
+            self[n] = filterXSS(o);
+        });
 };
 
 var guestUserJsonString = null;
@@ -2942,24 +2811,10 @@ var GuestUser = function () {
         });
         return;
     }
-
-
-    if (plant == "CCFlow") {
-        // CCFlow
-        dynamicHandler = basePath + "/WF/Comm/Handler.ashx";
-    } else {
-        // JFlow
-        dynamicHandler = basePath + "/WF/Comm/ProcessRequest.do";
-    }
-
-
+    dynamicHandler = basePath + "/WF/Comm/ProcessRequest";
     $.ajax({
         type: 'post',
         async: false,
-        xhrFields: {
-            withCredentials: IsIELower10 == true ? false : true
-        },
-        crossDomain: IsIELower10 == true ? false : true,
         url: dynamicHandler + "?DoType=GuestUser_Init&t=" + new Date().getTime(),
         dataType: 'html',
         success: function (data) {
@@ -3170,7 +3025,8 @@ function DealJsonExp(json, expStr, webUser) {
     $.each(json, function (n, val) {
         if (expStr.indexOf("@") == -1)
             return;
-        expStr = expStr.replace("@" + n, val);
+        //(str, oldKey, newKey)
+        expStr = replaceAll(expStr, "@" + n,val);
     });
     return expStr;
 }
@@ -3206,7 +3062,7 @@ function UserLogInsert(logType, logMsg, userNo) {
 }
 
 function SFTaleHandler(url) {
-    //获取当前网址，如： http://localhost:80/jflow-web/index.jsp  
+    //获取当前网址，如： http://localhost:80/jflow-web/index.jsp
     var curPath = GetHrefUrl();
     //获取主机地址之后的目录，如： jflow-web/index.jsp  
     var pathName = window.document.location.pathname;
@@ -3234,10 +3090,6 @@ function SFTaleHandler(url) {
         type: 'post',
         async: false,
         url: url,
-        xhrFields: {
-            withCredentials: IsIELower10 == true ? false : true
-        },
-        crossDomain: IsIELower10 == true ? false : true,
         dataType: 'html',
         success: function (data) {
             if (data.indexOf("err@") != -1) {
@@ -3274,20 +3126,13 @@ $(function () {
     if (ver == 6 || ver == 7 || ver == 8 || ver == 9) {
         jQuery.getScript(basePath + "/WF/Scripts/jquery.XDomainRequest.js")
     }
-    if (plant == "CCFlow") {
-        // CCFlow
-        dynamicHandler = basePath + "/WF/Comm/Handler.ashx";
-    } else {
-        // JFlow
-        dynamicHandler = basePath + "/WF/Comm/ProcessRequest.do";
-    }
-
+    dynamicHandler = basePath + "/WF/Comm/ProcessRequest";
     var url = GetHrefUrl().toLowerCase();
     var pageName = window.document.location.pathname.toLowerCase();
     pageName = pageName.substring(pageName.lastIndexOf("/")+1);
-    
+
     //不需要权限信息
-    var listPage = ['login.htm', 'dbinstall.htm', 'scanguide.htm', 'qrcodescan.htm', 'index.htm', 'gotourl.htm', 'invited.htm', 'registerbywebsite.htm', 'reqpassword.htm', 'reguser.htm', 'port.htm', 'ccbpm.cn/', 'loginwebsite.htm', 'goto.htm'];
+    var listPage = ['login.htm', 'dbinstall.htm', 'scanguide.htm', 'qrcodescan.htm', 'index.htm', 'gotourl.htm', 'invited.htm', 'registerbywebsite.htm', 'reqpassword.htm', 'reguser.htm', 'port.htm', 'ccbpm.cn/', 'loginwebsite.htm', 'goto.htm','do.htm'];
     if (listPage.includes(pageName) || url == basePath) {
         localStorage.setItem('Token', '');
         return;
@@ -3323,7 +3168,7 @@ function ChildrenPostMessage(info, action) {
     var pathName = window.document.location.pathname;
     var pos = curPath.indexOf(pathName);
     var localhostPath = curPath.substring(0, pos);
-    parent.postMessage({ action: action, info: info }, localhostPath);
+    window.postMessage({ action: action, info: info }, localhostPath);
 }
 
 /**

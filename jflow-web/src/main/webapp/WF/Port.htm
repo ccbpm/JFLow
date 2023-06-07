@@ -31,8 +31,6 @@
                 var lange = getQueryStringByNameFromUrl(url,"Lange") || GetQueryString("Lange");
                 localStorage.setItem('Token', token);
                 localStorage.setItem("Lange", lange);
-                //if (IsMobile() == true)
-                //    url = "/CCMobile/" + url;
                 SetHref(url);
                 return;
             }

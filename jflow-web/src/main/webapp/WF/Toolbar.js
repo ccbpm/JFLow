@@ -1544,17 +1544,19 @@ function SaveEnd(formType) {
 
 //关注 按钮.
 function FocusBtn(btn, workid) {
+	btn = $('[name=Focus]');
+    if (btn.length == 1) {
+        if (btn[0].innerText.trim() == "关注") {
+            btn[0].innerHTML = "<img src='Img/Btn/Focus.png' width='22px' height='22px'>&nbsp;取消关注";
+        }
+        else {
+            btn[0].innerHTML = "<img src='Img/Btn/Focus.png' width='22px' height='22px'>&nbsp;关注";
+        }
 
-    if (btn.innerText.trim() == "关注") {
-        btn.innerHTML = "<img src='Img/Btn/Focus.png' width='22px' height='22px'>&nbsp;取消关注";
+        var handler = new HttpHandler("BP.WF.HttpHandler.WF_MyFlow");
+        handler.AddPara("WorkID", workid);
+        handler.DoMethodReturnString("Focus"); //执行保存方法.
     }
-    else {
-        btn.innerHTML = "<img src='Img/Btn/Focus.png' width='22px' height='22px'>&nbsp;关注";
-    }
-
-    var handler = new HttpHandler("BP.WF.HttpHandler.WF_MyFlow");
-    handler.AddPara("WorkID", workid);
-    handler.DoMethodReturnString("Focus"); //执行保存方法.
 }
 
 //确认 按钮.

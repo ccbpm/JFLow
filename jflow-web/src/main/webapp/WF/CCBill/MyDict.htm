@@ -94,8 +94,8 @@
                     return;
                 }
                 var url = GetHrefUrl();
-                if (url.indexOf('WorkID') == 01)
-                    url = url + "&WorkID=" + workID;
+                if (url.indexOf("WorkID") == -1)
+                    url += "&WorkID=" + workID;
                 else
                     url = replaceParamVal(url, "WorkID", workID);
                 SetHref(url);

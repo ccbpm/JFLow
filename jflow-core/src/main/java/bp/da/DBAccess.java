@@ -1,25 +1,19 @@
 package bp.da;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import bp.difference.ContextHolderUtils;
+import bp.difference.SystemConfig;
+import bp.en.*;
+import bp.tools.CRC32Helper;
+import bp.web.WebUser;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.*;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.UUID;
-
-import bp.web.WebUser;
-import org.apache.commons.lang3.StringUtils;
-import bp.difference.ContextHolderUtils;
-import bp.difference.SystemConfig;
-import bp.en.*;
-import bp.tools.CRC32Helper;
-import bp.web.*;
 
 
 /**
@@ -73,7 +67,7 @@ public class DBAccess {
 		}
 
 		//设置默认值.
-		bp.da.DBAccess.RunSQL(sql);
+		DBAccess.RunSQL(sql);
 	}
 	
 	/** 
@@ -278,16 +272,7 @@ public class DBAccess {
 					return;
 				}
 			}
-			if (SystemConfig.getAppCenterDBType().getValue() == DBType.PostgreSQL.getValue()){
-				if (DBAccess.IsExitsTableCol(tableName, saveToFileField) == false)
-				{
-					/*如果没有此列，就自动创建此列.*/
-					String sql = "ALTER TABLE " + tableName + " ADD  " + saveToFileField + " bytea NULL ";
-					DBAccess.RunSQL(sql);
-					SaveBytesToDB(bytes,tableName, tablePK, pkVal, saveToFileField);
-					return;
-				}
-			}
+
 			throw new RuntimeException(ex);
 		} finally {
 			try {
@@ -363,7 +348,7 @@ public class DBAccess {
 			String saveToFileField) throws Exception {
 		//对于特殊的数据库进行判断.
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL
+				//|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL
 				|| SystemConfig.getAppCenterDBType() == DBType.DM
 				||  SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
 				||  SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
@@ -439,13 +424,13 @@ public class DBAccess {
 			if (dt.Rows.size() > 0) {
 				if (dt.Rows.get(0).getValue(0) != null && !"".equals(dt.Rows.get(0).getValue(0))) {
 					Object a = dt.Rows.get(0).getValue(0);
-					if (a instanceof java.sql.Blob) {
-						java.sql.Blob b = (java.sql.Blob) dt.getValue(0, 0);
+					if (a instanceof Blob) {
+						Blob b = (Blob) dt.getValue(0, 0);
 						InputStream is = b.getBinaryStream();
 						byteFile = new byte[(int) b.length()];
 						is.read(byteFile);
 						is.close();
-					} else if (a instanceof java.lang.String) {
+					} else if (a instanceof String) {
 						byteFile = ((String) a).getBytes("UTF-8");
 					} else {
 						byteFile = (byte[]) dt.getValue(0, 0);
@@ -717,7 +702,7 @@ public class DBAccess {
 				try {
 					CurrentSys_Serial.put(str, id);
 					KeyLockState.put(str, false);
-				} catch (java.lang.Exception e) {
+				} catch (Exception e) {
 				}
 			}
 			readCount++;
@@ -1167,7 +1152,7 @@ public class DBAccess {
 
 		try {
 			return DBAccess.RunSQLReturnTable(sql);
-		} catch (java.lang.Exception e) {
+		} catch (Exception e) {
 			sql = "select * from Port_Emp WHERE 1=2";
 			return DBAccess.RunSQLReturnTable(sql);
 		}
@@ -1663,6 +1648,7 @@ public class DBAccess {
 				return RunSQLReturnResultSet_201809_MySQL(sql, paras, ens, attrs);
 			case DM:
 			case HGDB:
+			case PostgreSQL:
 				return RunSQLReturnResultSet_201809_DM(sql, paras, ens, attrs);
 			default:
 				throw new RuntimeException("@发现未知的数据库连接类型！");
@@ -1895,7 +1881,7 @@ public class DBAccess {
 			Attr attr = null;
 			Entity myen = ens.getGetNewEntity();
 			SQLCash sqlCash = myen.getSQLCash();
-			bp.en.Map map = myen.getEnMap();
+			Map map = myen.getEnMap();
 
 			while (rs.next()) {
 
@@ -2257,7 +2243,7 @@ public class DBAccess {
 			Attr attr = null;
 			Entity myen = ens.getGetNewEntity();
 			SQLCash sqlCash = myen.getSQLCash();
-			bp.en.Map map = myen.getEnMap();
+			Map map = myen.getEnMap();
 
 			while (rs.next()) {
 
@@ -2331,7 +2317,7 @@ public class DBAccess {
 			Attr attr = null;
 			Entity myen = ens.getGetNewEntity();
 			SQLCash sqlCash = myen.getSQLCash();
-			bp.en.Map map = myen.getEnMap();
+			Map map = myen.getEnMap();
 
 			while (rs.next()) {
 
@@ -2726,7 +2712,7 @@ public class DBAccess {
 			Attr attr = null;
 			Entity myen = ens.getGetNewEntity();
 			SQLCash sqlCash = myen.getSQLCash();
-			bp.en.Map map = myen.getEnMap();
+			Map map = myen.getEnMap();
 
 			while (rs.next()) {
 
@@ -3142,7 +3128,7 @@ public class DBAccess {
 	public static int RunSQLReturnValInt(String sql, Paras paras, int isNullAsVal) {
 		try {
 			return Integer.parseInt(DBAccess.RunSQLReturnVal(sql, paras).toString());
-		} catch (java.lang.Exception e) {
+		} catch (Exception e) {
 			return isNullAsVal;
 		}
 	}
@@ -3665,7 +3651,6 @@ public class DBAccess {
 	public static String GetBigTextFromDB(String tableName, String tablePK, String pkVal, String fileSaveField)throws Exception {
 		//对于特殊的数据库进行判断.
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-				|| SystemConfig.getAppCenterDBType() == DBType.PostgreSQL
 				|| SystemConfig.getAppCenterDBType() == DBType.DM
 				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
 				|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
@@ -3707,7 +3692,7 @@ public class DBAccess {
 	 */
 	public static byte[] GetByteFromDB(String tableName, String tablePK, String pkVal, String fileSaveField)  throws Exception {
         //增加对oracle数据库的逻辑 qin
-        if (bp.difference.SystemConfig.getAppCenterDBType() == DBType.Oracle
+        if (SystemConfig.getAppCenterDBType() == DBType.Oracle
         		|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
         		|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6) {
             Connection conn = DBAccess.getGetAppCenterDBConn_Oracle();
@@ -3745,7 +3730,7 @@ public class DBAccess {
             }
         }
 
-        if (bp.difference.SystemConfig.getAppCenterDBType() == DBType.MSSQL) {
+        if (SystemConfig.getAppCenterDBType() == DBType.MSSQL) {
 			Connection conn = DBAccess.getGetAppCenterDBConn_MSSQL();
 			String strSQL = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";
 			PreparedStatement pstmt = conn.prepareStatement(strSQL);
@@ -3774,7 +3759,7 @@ public class DBAccess {
 					conn.close();
 			}
 		}
-		if (bp.difference.SystemConfig.getAppCenterDBType() == DBType.MySQL) {
+		if (SystemConfig.getAppCenterDBType() == DBType.MySQL) {
 			Connection conn = DBAccess.getGetAppCenterDBConn_MySQL();
 			String strSQL = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + "='" + pkVal + "'";
 			PreparedStatement pstmt = conn.prepareStatement(strSQL);
@@ -4199,6 +4184,7 @@ public class DBAccess {
 				return false;
 			}
 		case HGDB:
+		case PostgreSQL:
 			sql="SELECT relkind FROM pg_class WHERE relname='"+tabelOrViewName.toLowerCase()+"'";
 			DataTable dt4 = DBAccess.RunSQLReturnTable(sql);
 			if (dt4.Rows.size() == 0) {
@@ -4272,7 +4258,7 @@ public class DBAccess {
 		}
 		catch (RuntimeException ex)
 		{
-			bp.da.Log.DebugWriteError(ex.getMessage());
+			Log.DebugWriteError(ex.getMessage());
 			throw ex;
 		}
 	}

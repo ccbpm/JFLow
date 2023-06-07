@@ -908,9 +908,7 @@ public class CCFormAPI extends Dev2Interface
 
 				dt.TableName = uiBindKey;
 
-				if (SystemConfig.getAppCenterDBType() == DBType.Oracle
-						|| SystemConfig.getAppCenterDBType().equals(DBType.KingBaseR3)
-						|| SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
+				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 				{
 					if (dt.Columns.contains("NO") == true)
 					{
@@ -926,7 +924,7 @@ public class CCFormAPI extends Dev2Interface
 					}
 				}
 
-				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
 				{
 					if (dt.Columns.contains("no") == true)
 					{

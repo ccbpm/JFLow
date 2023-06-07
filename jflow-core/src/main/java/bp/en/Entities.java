@@ -2,11 +2,13 @@ package bp.en;
 
 import bp.da.*;
 import bp.difference.SystemConfig;
-import java.io.*;
+
+import java.io.File;
+import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.math.*;
 
 /** 
  数据实体集合
@@ -111,7 +113,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 			attr = this.getGetNewEntity().getEnMap().GetAttrByKey("IsDtl");
 			return true;
 		}
-		catch (java.lang.Exception e)
+		catch (Exception e)
 		{
 			return false;
 		}
@@ -171,7 +173,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 						{
 							en.getRow().SetValByKey(attr.getKey(), dr.getValue(attr.getKey()));
 						}
-						catch (java.lang.Exception e)
+						catch (Exception e)
 						{
 						}
 					}
@@ -672,7 +674,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 		/* 把查询个数加入内存 */
 		Entity en = this.getGetNewEntity();
 		CashEntity.PubEns(en.toString(), this, en.getPK());
-		bp.da.Log.DefaultLogWriteLineInfo("成功[" + en.toString() + "-" + num + "]放入缓存。");
+		Log.DefaultLogWriteLineInfo("成功[" + en.toString() + "-" + num + "]放入缓存。");
 		return num;
 	}
 	/** 
@@ -1257,7 +1259,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	{
 		QueryObject qo = new QueryObject(this);
 
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB)
 		{
 			qo.AddWhere(key, bp.sys.base.Glo.GenerRealType(this.getGetNewEntity().getEnMap().getAttrs(), key, val));
 		}
@@ -1283,7 +1285,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	{
 		QueryObject qo = new QueryObject(this);
 
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB)
 		{
 			qo.AddWhere(key, bp.sys.base.Glo.GenerRealType(this.getGetNewEntity().getEnMap().getAttrs(), key, val));
 			qo.addAnd();
@@ -1313,7 +1315,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	{
 		QueryObject qo = new QueryObject(this);
 
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB)
 		{
 			qo.AddWhere(key, bp.sys.base.Glo.GenerRealType(this.getGetNewEntity().getEnMap().getAttrs(), key, val));
 			qo.addAnd();
@@ -1351,7 +1353,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	{
 		QueryObject qo = new QueryObject(this);
 
-		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB)
 		{
 			qo.AddWhere(key, bp.sys.base.Glo.GenerRealType(this.getGetNewEntity().getEnMap().getAttrs(), key, val));
 			qo.addAnd();
@@ -1504,7 +1506,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 					{
 						dr.setValue("tmp" + attr.getKey(), Date.parse(dr.getValue(attr.getKey()).toString()));
 					}
-					catch (java.lang.Exception e)
+					catch (Exception e)
 					{
 						if (attr.getDefaultVal().toString().equals(""))
 						{
@@ -1952,7 +1954,7 @@ public abstract class Entities extends ArrayList<Entity> implements Serializable
 	public final int RetrieveFromCashInSQL(String cashKey, String inSQL) throws Exception
 	{
 		this.clear();
-		bp.en.Entities tempVar = Cash.GetEnsDataExt(cashKey);
+		Entities tempVar = Cash.GetEnsDataExt(cashKey);
 		Entities ens = tempVar instanceof Entities ? (Entities)tempVar : null;
 		if (ens == null)
 		{

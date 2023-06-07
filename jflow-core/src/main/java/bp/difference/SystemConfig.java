@@ -976,6 +976,8 @@ public class SystemConfig {
 				return DBType.KingBaseR6;
 			} else if(dbType.equalsIgnoreCase("HGDB")){
 				return DBType.HGDB;
+			} else if(dbType.equalsIgnoreCase("PostgreSQL")){
+				return DBType.PostgreSQL;
 			}
 		}
 		throw new RuntimeException("位置的数据库类型，请配置AppCenterDBType属性。");

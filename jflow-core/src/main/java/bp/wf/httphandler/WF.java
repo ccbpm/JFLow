@@ -417,7 +417,7 @@ public class WF extends WebContralBase
 		}
 
 		//如果有流程状态.
-		if (DataType.IsNullOrEmpty(wfState) == true || wfState.equals("all") == false)
+		if (DataType.IsNullOrEmpty(wfState) == false && wfState.equals("all") == false)
 		{
 			sql += " AND  WFState= '" + wfState + "' ";
 		}
@@ -427,6 +427,18 @@ public class WF extends WebContralBase
 		}
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		if(SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			dt.Columns.get(0).ColumnName = "WorkID";
+			dt.Columns.get(1).ColumnName = "FlowName";
+			dt.Columns.get(2).ColumnName = "NodeName";
+			dt.Columns.get(3).ColumnName = "StarterName";
+			dt.Columns.get(4).ColumnName = "RDT";
+			dt.Columns.get(5).ColumnName = "SendDT";
+			dt.Columns.get(6).ColumnName = "WFState";
+			dt.Columns.get(7).ColumnName = "Title";
+			dt.Columns.get(8).ColumnName = "SDTOfNode";
+		}
 		return bp.tools.Json.ToJson(dt);
 	}
 
@@ -643,7 +655,7 @@ public class WF extends WebContralBase
 
 					String workID = strs[1];
 					String empNo = strs[2];
-
+					bp.wf.Dev2Interface.Port_GenerToken(empNo);
 					GenerWorkerList wl = new GenerWorkerList();
 					int i = wl.Retrieve(GenerWorkerListAttr.FK_Emp, empNo, GenerWorkerListAttr.WorkID, workID, GenerWorkerListAttr.IsPass, 0);
 
@@ -827,6 +839,15 @@ public class WF extends WebContralBase
 
 		DataTable dtStart = DBAccess.RunSQLReturnTable(sql);
 		dtStart.TableName = "Start";
+		if(SystemConfig.AppCenterDBFieldCaseModel()!= FieldCaseModel.None)
+		{
+			dtStart.Columns.get(0).ColumnName = "No";
+			dtStart.Columns.get(1).ColumnName = "Name";
+			dtStart.Columns.get(2).ColumnName = "FK_FlowSort";
+			dtStart.Columns.get(3).ColumnName = "FK_FlowSortText";
+			dtStart.Columns.get(4).ColumnName = "Domain";
+			dtStart.Columns.get(5).ColumnName = "Num";
+		}
 		ds.Tables.add(dtStart);
 
 		DataTable dtSort = new DataTable("Sort");
@@ -2201,22 +2222,23 @@ public class WF extends WebContralBase
 			///#region 安全性校验. Token 模式.
 			///#endregion 安全性校验. Token 模式.
 			///#region 安全性校验. SID 模式.
-
+		String token = this.getSID();
 		if (this.getSID() == null)
 			return "err@必要的参数没有传入，请参考接口规则。SID";
-		String token = this.getSID();
-		/*if (DataType.IsNullOrEmpty(this.getUserNo()) == false)
+		if (DataType.IsNullOrEmpty(this.getUserNo()) == false)
 		{
 			Dev2Interface.Port_Login(this.getUserNo());
 			token = Dev2Interface.Port_GenerToken("PC");
 
-		}*/
-		if(DataType.IsNullOrEmpty(token) == false){
-			Dev2Interface.Port_LoginByToken(token);
-		}else if (DataType.IsNullOrEmpty(this.getUserNo()) == false)
+		}
+
+		if (DataType.IsNullOrEmpty(this.getUserNo()) == false)
 		{
 			Dev2Interface.Port_Login(this.getUserNo());
-			token = Dev2Interface.Port_GenerToken("PC");
+			Dev2Interface.Port_GenerToken("PC");
+
+		}else if(DataType.IsNullOrEmpty(this.getSID()) == false){
+			Dev2Interface.Port_LoginByToken(token);
 		}
 			///#endregion 安全性校验. SID 模式.
 
@@ -2550,6 +2572,14 @@ public class WF extends WebContralBase
 		sql += "     GROUP BY Auther, AuthName, FK_Flow, FlowName  ";
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		if(SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			dt.Columns.get(0).ColumnName = "Auther";
+			dt.Columns.get(1).ColumnName = "AuthName";
+			dt.Columns.get(2).ColumnName = "FK_Flow";
+			dt.Columns.get(3).ColumnName = "FlowName";
+			dt.Columns.get(4).ColumnName = "Num";
+		}
 		return bp.tools.Json.ToJson(dt);
 	}
 	/**
@@ -2564,6 +2594,50 @@ public class WF extends WebContralBase
 		sql += "  AND TakeBackDT >= '" + this.GetRequestVal("nowDate") + "'";
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			String columnName = "";
+			for(DataColumn col : dt.Columns)
+			{
+				columnName = col.ColumnName.toUpperCase();
+				switch (columnName)
+				{
+					case "AUTHER":
+						col.ColumnName = "Auther";
+						break;
+					case "AUTHNAME":
+						col.ColumnName = "AutherName";
+						break;
+					case "PWORKID":
+						col.ColumnName = "PWorkID";
+						break;
+					case "FK_NODE":
+						col.ColumnName = "FK_Node";
+						break;
+					case "FID":
+						col.ColumnName = "FID";
+						break;
+					case "WORKID":
+						col.ColumnName = "WorkID";
+						break;
+					case "AUTHERTOEMPNO":
+						col.ColumnName = "AutherToEmpNo";
+						break;
+					case "TAKEBACKDT":
+						col.ColumnName = "TakeBackDT";
+						break;
+					case "FK_FLOW":
+						col.ColumnName = "FK_Flow";
+						break;
+					case "FLOWNAME":
+						col.ColumnName = "FlowName";
+						break;
+					case "TITLE":
+						col.ColumnName = "Title";
+						break;
+				}
+			}
+		}
 		return bp.tools.Json.ToJson(dt);
 	}
 }

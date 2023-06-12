@@ -5,6 +5,7 @@ import bp.port.*;
 import bp.en.*;
 import bp.web.*;
 import bp.wf.*;
+import bp.wf.Glo;
 
 /** 
  处理延期的任务 的摘要说明

@@ -2314,6 +2314,7 @@ public class WorkNode
 
 		//按照指定的字段抄送.
 		String ccMsg2 = WorkFlowBuessRole.DoCCByEmps(node, this.rptGe, this.getWorkID(), this.getHisWork().getFID());
+		String ccMsg3 = "";
 		//手工抄送
 		if (this.getHisNode().getHisCCRole() == CCRole.HandCC)
 		{
@@ -2321,7 +2322,89 @@ public class WorkNode
 			CCLists cclist = new CCLists(node.getNodeID(), this.getWorkID(), this.getHisWork().getFID());
 			if (cclist.size() == 0)
 			{
-				ccMsg1 = "@没有选择抄送人。";
+				//查看WorkOpt中是否存在数据
+				WorkOpt opt = new WorkOpt();
+				opt.setMyPK(WebUser.getNo() + "_" + node.getNodeID() + "_" + this.getWorkID());
+				int i = opt.RetrieveFromDBSources();
+				if (i == 0)
+					ccMsg1 = "@没有选择抄送人。";
+				else {
+					if (DataType.IsNullOrEmpty(opt.getCCNote()) == false)
+						ccMsg3 = "抄送信息:" + opt.getCCNote();
+					DataTable dt = opt.GenerCCers();
+					if (dt.Rows.size() == 0) ccMsg1 = "@没有选择抄送人。";
+					else {
+						ccMsg1 = "@消息手动抄送给";
+						for (DataRow dr : dt.Rows)
+						{
+							String toUserNo = dr.get(0).toString();
+							String toUserName = dr.get(1).toString();
+							//抄送信息.
+							ccMsg1 += "(" + toUserNo + " - " + toUserName + ");";
+							CCList list = new CCList();
+							list.setMyPK(this.getWorkID() + "_" + node.getNodeID() + "_" + dr.get(0).toString());
+							list.setFK_Flow(node.getFK_Flow());
+							list.setFlowName(node.getFlowName());
+							list.setFK_Node(node.getNodeID());
+							list.setNodeName(node.getName());
+							list.setTitle(opt.GetValStrByKey(WorkOptAttr.Title));
+							list.setDoc(opt.getCCNote());
+							list.setCCTo(dr.get(0).toString());
+							list.setCCToName(dr.get(1).toString());
+							list.setRDT(DataType.getCurrentDateTime());
+							list.setRec(WebUser.getNo());
+							list.setWorkID(this.getWorkID());
+							list.setFID(this.getHisWork().getFID());
+
+							list.setInEmpWorks(node.getCCWriteTo() == CCWriteTo.CCList ? false : true);
+
+							//写入待办和写入待办与抄送列表,状态不同
+							if (node.getCCWriteTo() == CCWriteTo.All || node.getCCWriteTo() == CCWriteTo.Todolist)
+							{
+								list.setHisSta(CCSta.UnRead);
+							}
+							//结束节点只写入抄送列表
+							if (node.isEndNode() == true)
+							{
+								list.setHisSta(CCSta.UnRead);
+								list.setInEmpWorks(false);
+							}
+							try
+							{
+								list.Insert();
+							}
+							catch (java.lang.Exception e)
+							{
+								list.Update();
+							}
+							PushMsgs pms = new PushMsgs();
+							pms.Retrieve(PushMsgAttr.FK_Node, node.getNodeID(), PushMsgAttr.FK_Event, EventListNode.CCAfter);
+
+							if (pms.size() > 0)
+							{
+								PushMsg pushMsg = pms.get(0) instanceof PushMsg ? (PushMsg)pms.get(0) : null;
+								bp.wf.port.WFEmp wfemp = new bp.wf.port.WFEmp(list.getCCTo());
+
+								String title = String.format("工作抄送:%1$s.工作:%2$s,发送人:%3$s,需您查阅", node.getFlowName(), node.getName(), WebUser.getName());
+								String mytemp = pushMsg.getSMSDoc();
+								mytemp = mytemp.replace("{Title}", title);
+								mytemp = mytemp.replace("@WebUser.No", WebUser.getNo());
+								mytemp = mytemp.replace("@WebUser.Name", WebUser.getName());
+								mytemp = mytemp.replace("@WorkID", String.valueOf(this.getWorkID()));
+								mytemp = mytemp.replace("@OID", String.valueOf(this.getWorkID()));
+
+								/*如果仍然有没有替换下来的变量.*/
+								if (mytemp.contains("@") == true)
+								{
+									mytemp = bp.wf.Glo.DealExp(mytemp, this.rptGe, null);
+								}
+								bp.wf.Dev2Interface.Port_SendMsg(wfemp.getNo(), title, mytemp, null, bp.wf.SMSMsgType.CC, list.getFK_Flow(), list.getFK_Node(), list.getWorkID(), list.getFID(), pushMsg.getSMSPushModel());
+							}
+						}
+
+					}
+				}
+
 			}
 
 			if (cclist.size() > 0)
@@ -2376,7 +2459,7 @@ public class WorkNode
 		{
 			this.addMsg("CC", bp.wf.Glo.multilingual("@自动抄送给:{0}.", "WorkNode", "cc", ccMsg));
 
-			this.AddToTrack(ActionType.CC, WebUser.getNo(), WebUser.getName() , node.getNodeID(), node.getName(), ccMsg1 + ccMsg2, node);
+			this.AddToTrack(ActionType.CC, WebUser.getNo(), WebUser.getName() , node.getNodeID(), node.getName(), ccMsg1 + ccMsg2 + ccMsg3, node);
 		}
 	}
 	/** 

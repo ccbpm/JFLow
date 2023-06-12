@@ -1165,7 +1165,7 @@ public class Dev2Interface
 		}
 		// 增加一个Sta列.
 		Paras ps = new Paras();
-		if (domain == null)
+		if (DataType.IsNullOrEmpty(domain))
 		{
 			if (fk_flow == null)
 			{

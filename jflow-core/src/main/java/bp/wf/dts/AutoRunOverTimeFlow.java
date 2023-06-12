@@ -189,7 +189,7 @@ public class AutoRunOverTimeFlow extends Method
 							wk.setOID(workid);
 							wk.Retrieve();
 
-							doOutTime = Glo.DealExp(doOutTime, wk, null);
+							doOutTime = bp.wf.Glo.DealExp(doOutTime, wk, null);
 
 							//替换字符串
 							doOutTime.replace("@OID", workid + "");

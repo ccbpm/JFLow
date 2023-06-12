@@ -39,8 +39,8 @@
 - http://demo.ccflow.org 在线演示
 - http://ccflow.org 官方网站
 - https://ccfast.cc  驰骋低代码开发平台
-- http://doc.ccbbpm.cn  操作手册
-- http://ccflow.org/ke.htm 视频教程
+- http://doc.ccbpm.cn  操作手册
+- http://ccflow.org/Ke.html 视频教程
 
 ### 系统截图
 - 登录

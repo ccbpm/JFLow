@@ -159,11 +159,6 @@
             font-weight:700;
             font-size:15px;
         }
-        .item-omit{
-            white-space:nowrap;
-            overflow:hidden;
-            text-overflow:ellipsis;
-        }
     </style>
     <script type="text/javascript">
         var frms;
@@ -240,6 +235,18 @@
                         baseInfo.bindMenu();
                         //baseInfo.initSortArea();
                     }, 800);
+                    //点击节点高亮
+                    //var nodes = document.getElementsByClassName('layui-tree-txt');
+                    //for (var i = 0; i < nodes.length; i++) {
+                    //    if (nodes[i].innerHTML === obj.data.title) {
+                    //        nodes[i].style.color = "#000";
+                    //        nodes[i].style.fontWeight = "bold";
+                    //    } else {
+                    //        nodes[i].style.color = "#555";
+                    //        nodes[i].style.fontWeight = "normal";
+                    //    }
+                    //}
+
                 }
             });
 
@@ -264,6 +271,7 @@
             html += "<ul class='top-newfrm'>";
             html += "<li id='EditSort' class='flow-menu' onclick=\"topNodeOption(id,frmSortNo,nameTitle)\">属性名称</li>";
             html += "<li id='NewFrm' class='flow-menu' onclick=\"topNodeOption(id,frmSortNo,nameTitle)\">新建表单</li>";
+            //html += "<li id='ImpFlowTemplate' onclick=\"topNodeOption(id)\">导入流程模版</li>";
             html += "<li id='NewSortOne' class='flow-menu'>新建目录</li>";
             html += "</ul>";
             $("#top-choose").html(html)
@@ -450,15 +458,15 @@
                 <div ref="child-row" id="s-main">
                     <div class="row" v-for="(flow,idx) in frms" :key="idx" :data-pid="SortNo" :data-id="flow.No">
 
-                        <div class="item item-name item-name-dp item-omit" @click.stop="Designer(flow.No,flow.Name)" style="text-align: left" :data-no="flow.No" :data-name="flow.Name" :data-idx="idx">
+                        <div class="item item-name item-name-dp" @click.stop="Designer(flow.No,flow.Name)" style="text-align: left" :data-no="flow.No" :data-name="flow.Name" :data-idx="idx">
                             <i class="icon-heart" style="margin-right: 8px"></i>
                             <span>{{flow.No}}.{{flow.Name}}</span>
                         </div>
-                        <div class="item item-other item-omit">{{flow.FrmType}}</div>
-                        <div class="item item-other item-omit">{{flow.PTable}}</div>
-                        <div class="item item-other item-omit">{{flow.EntityType}}</div>
-                        <div class="item item-other item-omit">{{flow.Ver}}</div>
-                        <div class="item item-other item-omit">{{flow.Name}}</div>
+                        <div class="item item-other">{{flow.FrmType}}</div>
+                        <div class="item item-other">{{flow.PTable}}</div>
+                        <div class="item item-other">{{flow.EntityType}}</div>
+                        <div class="item item-other">{{flow.Ver}}</div>
+                        <div class="item item-other">{{flow.Name}}</div>
                         <!--<div class="item item-other">
         <button class="layui-btn layui-btn-primary layui-border-blue layui-btn-xs c-btn" :data-name="flow.Name" :data-no="flow.No" :data-idx="idx">
             <i class="layui-icon layui-icon-down layui-font-12"></i>表单

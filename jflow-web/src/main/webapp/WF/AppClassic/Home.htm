@@ -55,13 +55,13 @@
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <span class="clear">
                                     <span class="block m-t-xs" style="font-size:20px;">
-                                        <strong class="font-bold"><img style="width:40px;height:40px" src="../../DataUser/ICON/cclogo.png" /><div class="ml-2 truncate md:opacity-200 xs:opacity-0"  style="padding-top: 5px; font-size: 18px;display:inline"> 驰骋中间件</div></strong>
+                                        <strong class="font-bold"><img style="width:40px;height:40px" src="../../DataUser/ICON/cclogo.png" /><div class="ml-2 truncate md:opacity-200 xs:opacity-0" style="padding-top: 5px; font-size: 18px;display:inline"> 驰骋中间件</div></strong>
                                     </span>
                                 </span>
                             </a>
                         </div>
                         <!-- 驰骋 -->
-                        <div class="logo-element lang" ><img style="width:40px;height:40px" src="../../DataUser/ICON/cclogo.png" /></div>
+                        <div class="logo-element lang"><img style="width:40px;height:40px" src="../../DataUser/ICON/cclogo.png" /></div>
                     </li>
 
                     <li>
@@ -82,6 +82,8 @@
                             <li><a href="../../WF/Draft.htm" class="J_menuItem"><i class="icon-note"></i><span class="lang" data-key="">草稿</span></a></li>
                             <li><a href="../../WF/RecentWork.htm" class="J_menuItem"><i class="icon-envelope"></i><span class="lang" data-key="jq">近期工作</span></a></li>
                             <li><a href="../../WF/Timeout.htm" class="J_menuItem"><i class="icon-bell"></i><span class="lang" data-key="jq">超时工作</span></a></li>
+                            <li><a href="../../WF/AppClassic/API.htm" class="J_menuItem"><i class="icon-bell"></i><span class="lang" data-key="jq">API接口</span></a></li>
+
                         </ul>
                     </li>
 
@@ -97,7 +99,7 @@
                             <li><a href="../../WF/RptSearch/DistributedOfMy.htm" class="J_menuItem"><i class="icon iconfont icon-huaban"></i><span class="lang" data-key="wdlcfb">我的流程分布</span></a></li>
                             <li><a href="../../WF/SearchDataGrid.htm" class="J_menuItem"><i class="icon iconfont icon-liuchengdingyi"></i><span class="lang" data-key="wdlc">我的流程</span></a></li>
                             <!--<li><a href="../../WF/RptDfine/Flowlist.htm" class="J_menuItem"><i class="icon iconfont icon-lcchaxun"></i><span class="lang" data-key="dlccx">单流程查询</span></a></li>-->
-                            <li><a href="../../WF/SearchZongHe.htm" class="J_menuItem"><i class="icon iconfont icon-zonghechaxun"></i><span class="lang" >综合查询2022</span></a></li>
+                            <li><a href="../../WF/SearchZongHe.htm" class="J_menuItem"><i class="icon iconfont icon-zonghechaxun"></i><span class="lang">综合查询2022</span></a></li>
 
                             <li><a href="../../WF/RptSearch/Default.htm" class="J_menuItem"><i class="icon iconfont icon-zonghechaxun"></i><span class="lang" data-key="zhcx">综合查询</span></a></li>
                             <li><a href="../../WF/Watchdog.htm" class="J_menuItem"><i class="icon iconfont icon-lcchaxun"></i><span class="lang">流程监控</span></a></li>
@@ -123,13 +125,12 @@
                     <li>
                         <a href="#">
                             <i class="icon-grid ant-menu-item-icon"></i>
-                            <span class="nav-label"><span class="lang" data-key="gjgn">流程高级功能</span><span class="fa arrow"></span></span>
+                            <span class="nav-label"><span class="lang" data-key="gjgn">高级功能</span><span class="fa arrow"></span></span>
                         </a>
-
                         <ul class="nav nav-second-level">
                             <li><a href="../../WF/StartEarlyer.htm" class="J_menuItem"><i class="icon iconfont icon-faqi"></i><span class="lang" data-key="lcfq3">最近发起</span></a></li>
                             <!--<li><a href="../../WF/TaskPoolSharing.htm" class="J_menuItem"><i class="icon iconfont icon-fenbu"></i><span class="lang" data-key="gxrw">共享任务</span><label id="Todolist_Sharing" class="label label-danger pull-right"></label></a></li>
-    <li><a href="../../WF/TaskPoolApply.htm" class="J_menuItem"><i class="icon iconfont icon-guanxi-"></i><span class="lang" data-key="sqrw">申请下来的任务</span><label id="Todolist_Apply" class="label label-default pull-right"></label></a></li>-->
+            <li><a href="../../WF/TaskPoolApply.htm" class="J_menuItem"><i class="icon iconfont icon-guanxi-"></i><span class="lang" data-key="sqrw">申请下来的任务</span><label id="Todolist_Apply" class="label label-default pull-right"></label></a></li>-->
 
                             <li><a href="../../WF/Focus.htm" class="J_menuItem"><i class="icon iconfont icon-wodeguanzhu"></i><span class="lang" data-key="wdgz">我的关注</span></a></li>
                             <li><a href="../../WF/GetTask.htm" class="J_menuItem"><i class="icon iconfont icon-buliangquhui"></i><span class="lang" data-key="qhsp">取回审批</span></a></li>
@@ -137,6 +138,23 @@
                             <li><a href="../../DataUser/LocalWS.asmx" class="J_menuItem"><i class="icon iconfont icon-wode-shezhi"></i><span class="lang" data-key="wdsz">开发接口</span></a></li>
                         </ul>
                     </li>
+
+                    <li class="treeview">
+                        <a href="#" onclick="changeShow('API')" class="cg_color">
+                            <i class="fa fa-fw icon-grid"></i>
+                            <span class="nav-label lang" data-key="jcgn"><b>API接口</b></span>
+                            <!--<span class="icon-arrow-down"></span>-->
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul id="API" class="nav nav-second-level treeview-menu">
+                            <li class="treeview"><a title="接口测试" href="javascript:" data-href="./Dev2InterfaceDemo.htm" class="J_menuItem addTabPage">&nbsp;&nbsp;&nbsp;&nbsp;<i class="icon iconfont icon-caogao"></i><span class="lang">接口测试</span></a></li>
+
+                        </ul>
+                    </li>
+
+
 
                 </ul>
             </div>

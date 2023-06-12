@@ -62,16 +62,16 @@
                 if (deptRoot.No == deptRoot.OrgNo) {
                     html = html +"<div style='font-size: 15px;font - weight: bold; '>" + deptRoot.Name + "</div><ul style='padding-left:30px'>";
                     if (deptRoot.CurrentDept == 1)
-                        html += "<li ><font color='green'><b>" + deptRoot.Name + "（当前部门）</b></font></li>";
+                        html += "<li style='cursor:pointer;'><font color='green'><b>" + deptRoot.Name + "（当前部门）</b></font></li>";
                     else
-                        html += "<li onclick=\"ChangeDept_Submit('" + deptRoot.No + "','" + deptRoot.OrgNo + "');\" style='font-color:green;' ><u>" + deptRoot.Name + "</u></li>";
+                        html += "<li style='cursor:pointer;' onclick=\"ChangeDept_Submit('" + deptRoot.No + "','" + deptRoot.OrgNo + "');\" style='font-color:green;' ><u>" + deptRoot.Name + "</u></li>";
                     for (var j = 0; j < data.length; j++) {
                         var dept = data[j];
                         if (dept.OrgNo == deptRoot.OrgNo && dept.No != deptRoot.No) {
                             if (dept.CurrentDept == 1)
-                                html += "<li ><font color='green'><b>" + dept.Name + "（当前部门）</b></font></li>";
+                                html += "<li style='cursor:pointer;' ><font color='green'><b>" + dept.Name + "（当前部门）</b></font></li>";
                             else
-                                html += "<li onclick=\"ChangeDept_Submit('" + dept.No + "','" + dept.OrgNo + "');\" style='font-color:green;' ><u>" + dept.Name + "</u></li>";
+                                html += "<li style='cursor:pointer;' onclick=\"ChangeDept_Submit('" + dept.No + "','" + dept.OrgNo + "');\" style='font-color:green;' ><u>" + dept.Name + "</u></li>";
                         }
                     }
                     html += "</ul>";

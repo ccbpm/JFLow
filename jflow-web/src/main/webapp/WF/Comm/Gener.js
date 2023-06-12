@@ -2861,7 +2861,7 @@ var GuestUser = function () {
 };
 
 function ThrowMakeErrInfo(funcName, textStatus, url, XMLHttpRequest, errorThrown) {
-
+    if (url == undefined || url == null) url = '';
     var msg = "1. " + funcName + " err@系统发生异常.";
     msg += "\t\n2.检查请求的URL连接是否错误：" + url;
     msg += "\t\n3.估计是数据库连接错误或者是系统环境问题. ";

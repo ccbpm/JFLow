@@ -77,7 +77,7 @@
                 var data = handler.DoMethodReturnJSON("ChapterFrm_Init");
                 console.log(data)
                 groupFields = data["GroupFields"];//章.
-                attrs = data["MapAttrs"];//节.
+                attrs = data["Sys_MapAttr"];//节.
                 console.log(attrs)
 
                 var group = [];
@@ -97,6 +97,10 @@
                     var n = 0;
                     for (var idx = 0; idx < attrs.length; idx++) {
                         var attr = attrs[idx];
+                        if (attr.MyDataType != 1)
+                            continue;
+                        if (attr.UIVisible == 0)
+                            continue;
                         var clist = {
                             title: attr.Name,
                             id: attr.KeyOfEn,

@@ -15,7 +15,6 @@ $(function () {
         isEqualsDomain = true;
     //引入关联的js
     jQuery.getScript(ccbpmPath + "/WF/Scripts/config.js", function () {
-        debugger
         jQuery.getScript(ccbpmPath + "/WF/Scripts/QueryString.js", function () {
             jQuery.getScript(ccbpmPath + "/WF/Comm/Gener.js", function () {
                 if ($('#ccbpmJS').length != 0) {

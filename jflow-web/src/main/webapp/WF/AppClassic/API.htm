@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Demo:发起</title>
+
+    <!-- 引入常用的JS脚本. -->
+    <script src="/WF/Scripts/QueryString.js"></script>
+    <!-- 引入ccbpm 的sdk开发js.  -->
+    <script src="/WF/Scripts/config.js"></script>
+    <script language="javascript" type="text/javascript">
+        function ShowSwagger() {
+
+         //   var host = window.location.href;
+
+          //  "http://xxx:xxx";
+            var host = basePath;
+
+            var url = "";
+            if (plant === "CCFlow")
+                url = host + "//swagger/ui/index#/API";
+            if (plant === "JFlow")
+                url = host + "/swagger-ui.html";
+            window.open(url);
+        }
+    </script>
+</head>
+
+<body>
+
+    <br />
+    <fieldset>
+        <legend>驰骋BPM  - API功能调用说明</legend>
+        <ul>
+            <li>接口列表 <a href="javascript:void(0)" onclick="ShowSwagger()">打开：Swagger</a></li>
+            <li> 详细文档请参考:<a href="https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=8101800&doc_id=31094" target="_blank">  打开在线doc.ccbpm.cn文档 </a></li>
+        </ul>
+    </fieldset>
+ 
+
+</body>
+</html>

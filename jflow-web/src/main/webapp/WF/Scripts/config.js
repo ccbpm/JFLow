@@ -3,7 +3,7 @@
 var uiPlant = 'BS'; //风格文件.
 
 //  For .net 后台的调用的url ,  java的与.net的不同.
-var plant = 'JFlow'; //运行平台.
+var plant = 'JFlow'; //运行平台. JFlow
 var basePath = basePath();
 var Handler = basePath + "/WF/Comm/ProcessRequest"; //处理器,一般来说，都放在与当前处理程序的相同的目录下。
 var webUser = null; //定义通用变量用户信息

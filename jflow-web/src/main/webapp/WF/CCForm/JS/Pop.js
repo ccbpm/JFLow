@@ -134,7 +134,7 @@ function PopBranchesAndLeaf(mapExt, val, targetId, index, oid, objtr) {
 function GetInitJsonData(mapExt, oid, val) {
     var frmEleDBs = new Entities("BP.Sys.FrmEleDBs");
     frmEleDBs.Retrieve("FK_MapData", mapExt.FK_MapData, "EleID", mapExt.AttrOfOper, "RefPKVal", oid);
-   /* if (frmEleDBs.length == 0 && val != "")
+    /*if (frmEleDBs.length == 0 && val != "")
         frmEleDBs = [{ "Tag1": "", "Tag2": val }];*/
     var initJsonData = [];
     $.each(frmEleDBs, function (i, o) {

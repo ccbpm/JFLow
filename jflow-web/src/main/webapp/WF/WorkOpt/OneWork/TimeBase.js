@@ -34,7 +34,7 @@ function InitPage() {
     var fwc = data["FrmWorkCheck"][0];
 
     //获得工作人员列表.
-    var gwls = data["WF_GenerWorkerList"];
+    var gwls = data["WF_GenerWorkerlist"];
 
     //该流程启动的子流程数据
     subFlows = data["WF_SubFlow"];

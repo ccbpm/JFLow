@@ -721,7 +721,7 @@ function InitMapAttrOfCtrlFool(frmData, mapAttr) {
                             imgPath = "../../";
                         if (currentURL.indexOf("AdminFrm.htm") != -1)
                             imgPath = "../../../";
-                        var imgSrc = imgPath + "DataUser/Siganture/UnName.JPG";
+                        var imgSrc = imgPath + "DataUser/Siganture/UnName.jpg";
                         //如果是图片签名，并且可以编辑
                         var ondblclick = ""
                         if (mapAttr.UIIsEnable == 1 && isReadonly == false) {
@@ -729,8 +729,7 @@ function InitMapAttrOfCtrlFool(frmData, mapAttr) {
                         }
                         val = val || "";
                         if (val.indexOf("data:image/")==-1)
-                            val = imgPath + val.substring(val.indexOf("DataUser"));
-                        var html = "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' name='TB_" + mapAttr.KeyOfEn + "' value='" + val + "' type=hidden />";
+                            val = imgPath + val.substring(val.indexOf("DataUser"));                        var html = "<input maxlength=" + mapAttr.MaxLen + "  id='TB_" + mapAttr.KeyOfEn + "' name='TB_" + mapAttr.KeyOfEn + "' value='" + val + "' type=hidden />";
                         eleHtml += "<img src='" + val + "' " + ondblclick + " onerror=\"this.src='" + imgSrc + "'\"  style='border:0px;height:" + mapAttr.UIHeight + "px;' id='Img" + mapAttr.KeyOfEn + "' />" + html;
                         return eleHtml;
 
@@ -1120,7 +1119,7 @@ function GetLab(attr, frmData) {
                 _html += "<div>";
                 _html += "<fieldset>";
                 _html += "<legend style='margin-bottom:0px'>";
-                _html += ' <div class="layui-btn layui-btn-primary" id="editimg" data-ref="' + frmImg.MyPK + '" data-info="' + url + '">修改图片</div >';
+                _html += ' <div class="layui-btn layui-btn-primary editimg" id="' + frmImg.MyPK+'Img"  data-ref="' + frmImg.MyPK + '" data-info="' + url + '">修改图片</div >';
                 _html += "</legend>";
                 _html += "<img  id='Img" + frmImg.MyPK + "' name='Img" + frmImg.MyPK + "' src='" + imgSrc + "' onerror=\"this.src='" + basePath + "/DataUser/ICON/CCFlow/LogBig.png'\" style='width:" + frmImg.W + "px;height:" + frmImg.H + "px;' onclick='imgShow(this)'/>";
                 _html += "</fieldset>";

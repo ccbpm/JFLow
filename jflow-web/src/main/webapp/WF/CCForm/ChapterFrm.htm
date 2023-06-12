@@ -61,7 +61,6 @@
                     frmID = GetQueryString("FK_MapData");
                 if (frmID == null)
                     frmID = "Frm_ZhangJieBiaoDAN";
-
                 oid = GetQueryString("OID");
                 if (oid == null)
                     oid = GetQueryString("WorkID");
@@ -70,7 +69,7 @@
 
                 if (oid == null)
                     oid = 100;
-
+                console.log("请求章节表单的参数", frmID, typeof oid)
 
                 var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
                 handler.AddPara("FrmID", frmID);
@@ -445,9 +444,13 @@
             var keylist = [];
             function IsAtPara(attrs, list) {
                 attrs.forEach(item => {
-                    if (item.AtPara.includes('@IsStar')) {
-                        keylist.push(item.KeyOfEn);
+                    console.log('节点',item);
+                    if (item.AtPara != null && item.AtPara != "") {
+                        if (item.AtPara.includes('@IsStar')) {
+                            keylist.push(item.KeyOfEn);
+                        }
                     }
+                    
                 })
                 showRate(list)
             }
@@ -464,9 +467,12 @@
             var Kylist = [];
             function IsAtParaKey(attr, list) {
                 attr.forEach(item => {
-                    if (item.AtPara.includes('@IsStar')) {
-                        Kylist.push(item.title);
+                    if (item.AtPara != null) {
+                        if (item.AtPara.includes('@IsStar')) {
+                            Kylist.push(item.title);
+                        }
                     }
+                    
                 })
                 keyshowRate(list)
             }
@@ -703,7 +709,7 @@
                 //var Data = ChapterFrmShow(key);
                 //tinymce.activeEditor.setContent(Data);
 
-
+                console.log("获得的节点", KeyOfEn);
                 var cdata = ChapterFrmShow(KeyOfEn);
                 changeDBval(cdata, KeyOfEn);
                 var Cdata = '';

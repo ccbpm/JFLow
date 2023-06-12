@@ -13,13 +13,10 @@
             if (confirm('确定要删除吗') == true) {
                 var en = new Entity("BP.WF.SMS");
                 en.SetPKVal(mypk);
-                console.log(mypk);
-               // en.DoMethodReturnString("DoDelete");
                 en.Delete();
                 this.initData();
             }
 
-            //en.Delete();
         },
         //OpenIt: function (mypk, paraStr) {
         OpenIt: function (item) {

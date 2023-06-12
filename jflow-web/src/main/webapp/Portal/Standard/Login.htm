@@ -26,9 +26,7 @@
 
         //初始化页面函数.....
         $(function () {
-
             localStorage.setItem('Token', '');
-
             debugger;
             if (! +[1,]) {
                 //  alert("这是ie浏览器，您只能使用sliverlight版本浏览器。");
@@ -43,21 +41,31 @@
             var urlParam = href.substring(href.indexOf('?') + 1, href.length);
             urlParam = urlParam.replace('&DoType=', '&DoTypeDel=xx');
 
+        
+
+
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
             if (doType != null && doType != undefined && doType != "")
                 handler.AddPara("LoginType", doType);
             handler.AddUrlData(urlParam);
-            data = handler.DoMethodReturnString("Login_Init");
-
+            data = handler.DoMethodReturnString("Login_Init"); 
             if (data.indexOf('err@') == 0) {
                 alert(data);
                 return;
             }
-            if (data.indexOf("Install") != -1) {
+            if (data.indexOf("url@") != -1) {
                 var data = data.replace('url@', '');
                 SetHref(data);
                 return;
             }
+
+            var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
+            var sysInfo = handler.DoMethodReturnJSON("Login_InitInfo");
+            if (sysInfo.OSModel == 2) {
+                SetHref("../Saas/SelectOneOrg.htm");
+                return;
+            }
+
             data = JSON.parse(data);
 
             //调用公共类库的方法:执行批量主表赋值
@@ -138,7 +146,11 @@
             }
 
             //集团模式登录,需要选择组织进行登录
-            if (data.indexOf("SelectOneOrg") != -1) {
+            if (data.indexOf("SelectOneOrg") != -1 && 1==2) {
+                var data = data.replace('url@', '');
+                SetHref(data);
+                return;
+
                 var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_CCBPMDesigner");
                 var data = handler.DoMethodReturnString("SelectOneOrg_Init");
                 if (data.indexOf('err@') == 0) {
@@ -164,7 +176,7 @@
                 }
                 html += "</ul>";
                 layer.open({
-                    title: '请选择下面的组织进行登录',
+                    title: '请选择要登陆的组织',
                     type: 1,
                     skin: 'layui-layer-rim',
                     area: ['700px', '480px'],
@@ -185,6 +197,8 @@
 
             if (data.indexOf('url@') == 0) {
                 var data = data.replace('url@', '');
+                if (data.indexOf("/WF/AppClassic/Home.htm") != -1)
+                    data = basePath + data;
                 SetHref(data);
                 return;
             }
@@ -272,7 +286,9 @@
                             <img alt="logo" src="image/logo.png" /><span>流程引擎技术</span>
                         </div>
                         <h2 class="login-sidebox-subtitle">
-                            驰骋低代码开发平台<br /> CCFast 2.0
+                            <!--驰骋低代码开发平台<br /> CCFast 2.0-->
+                            <div>驰骋低代码开发平台</div>
+                            <div style="margin-top:10px;"> CCFast 2.0</div>
                         </h2>
                     </div>
                     <div class="login-sidebox-body">
@@ -288,23 +304,24 @@
                             <a href="http://ccflow.org/frm=Localhost">官网</a> - <a href="http://doc.ccbpm.cn">文档</a> - <a href="http://ccflow.org/ke.htm">视频教程</a>
                         </div>
                     </div>
+                    <div class="bottom-bg-img"></div>
                 </div>
             </section>
             <section class="login-form">
                 <div class="login-form-header">
-                    <h2>驰骋软件</h2>
+                    <div>驰骋软件</div>
                 </div>
                 <div class="login-form-body">
                     <form id="cc" class="form-signin">
 
                         <div class="login-wrap">
-                            <div class="form-group">
+                            <!--<div class="form-group">-->
 
-                                <select class="form-control" id="DDL_System">
-                                    <option value="Default"> 驰骋流程应用快速开发平台 - 专业版 </option>
+                                <!--<select class="form-control" id="DDL_System">
+                                    <option value="Default"> 驰骋流程应用快速开发平台 - 专业版 </option>-->
                                     <!--<option value="Business" disabled="disabled" onclick="setCookie('username', $(this).val(), 30)"> 驰骋流程应用快速开发平台 - 商业版 </option>-->
-                                </select>
-                            </div>
+                                <!--</select>-->
+                            <!--</div>-->
 
                             <div class="form-group">
 
@@ -321,9 +338,10 @@
                                 <a href="javascript:void(0)" style="margin-left: 10px" onclick="createCode()">看不清</a>
                             </div>
 
-                            <input type="button" class="btn btn-lg btn-login btn-block" value="登录-流程引擎中间件" id="Btn_Login" onclick="Login(1);" />
-                            <input type="button" class="btn btn-lg btn-login btn-block" value="登录-标准版低代码开发平台" id="Btn_Login" onclick="Login(0);" />
-
+                            <div id="">
+                                <input  type="button" class="btn btn-lg btn-login btn-block" value="登录-中间件" id="Btn_Login" onclick="Login(1);" />
+                                <input type="button" class="btn btn-lg btn-login btn-block" value="登录-低代码开发平台" id="Btn_Login" onclick="Login(0);" />
+                            </div>
                             <!--<input type="button" class="btn btn-primary btn-block" value="测试版本test" id="Btn_LoginExt" onclick="LoginText();" />-->
                             <!--//  <input type="button" class="btn btn-primary btn-block" value="登录简洁版(开发中)" id="Btn_LoginSimple" onclick="LoginSimple();" />
                             // <input type="button" class="btn btn-primary btn-block" value="登录表单引擎(开发中)" id="Btn_LoginFrm" onclick="LoginFrm();" />-->
@@ -375,12 +393,17 @@
         <div class="login-footer">
             <ul class="login-footer-body">
                 <li>
-                    <a href="http://ccflow.org?Frm=Localhot" target="_blank">
-                        济南驰骋信息技术有限公司, 053182374939
-                        <br />
-                        济南市.高新区.碧桂园凤凰国际F19
-                    </a>
+                    <!--<a href="http://ccflow.org?Frm=Localhot" target="_blank">
+        济南驰骋信息技术有限公司, 053182374939
+        <br />
+        济南市.高新区.碧桂园凤凰国际F19
+    </a>-->
+                    <a href="http://ccflow.org?Frm=Localhot" target="_blank">地区：济南市高新区.碧桂园凤凰国际A座F19</a>
+
+
                 </li>
+                <li> <a href="http://ccflow.org?Frm=Localhot" target="_blank">电话：0531-82374939,18660153393</a></li>
+                <li><a href="http://ccflow.org?Frm=Localhot" target="_blank">济南驰骋信息技术有限公司@2003-2022</a></li>
             </ul>
         </div>
     </div>
@@ -429,13 +452,18 @@
             align-items: center;
             justify-content: center;
             min-width: 1000px;
+            background-image: url(./image/ccloginbg.jpg);
+            background-size: 100% 100%;
+            background-position: 100%;
+            background-repeat: no-repeat;
         }
 
         .login-container {
-            min-height: 500px;
+            min-height: 590px;
             box-shadow: 0px 20px 80px 0px rgba(0,0,0,0.3);
             display: flex;
-            width: 1000px;
+            width: 1120px;
+            border-radius:2vh;
         }
 
             .login-container section {
@@ -444,9 +472,12 @@
 
             .login-container .login-sidebox {
                 position: relative;
-                background: -webkit-gradient(linear, left bottom, left top, from(#3a485a), to(#607089));
-                background: linear-gradient(0deg, #3a485a 0%, #607089 100%);
+                /*         background: -webkit-gradient(linear, left bottom, left top, from(#3a485a), to(#607089));
+                background: linear-gradient(0deg, #3a485a 0%, #607089 100%);*/
                 color: #fff;
+                border-top-left-radius: 2vh;
+                border-bottom-left-radius: 2vh;
+                background: linear-gradient(to bottom right, #122d70, rgba(255, 255, 255, 0));
             }
 
                 .login-container .login-sidebox::before, .login-container .login-sidebox::after {
@@ -471,10 +502,16 @@
                     position: relative;
                     z-index: 1;
                 }
+                    .login-container .login-sidebox .login-sidebox-content .login-sidebox-body ul{
+                        padding-left:20px;
+                    }
+                    .login-container .login-sidebox .login-sidebox-content .login-sidebox-body ul li {
+                        margin: 10px 0;
+                    }
 
-        .login-sidebox-header {
-            margin-bottom: 40px;
-        }
+                    .login-sidebox-header {
+                        margin-bottom: 40px;
+                    }
 
         .login-sidebox-logo {
             display: flex;
@@ -491,57 +528,76 @@
 
             .login-sidebox-logo span {
                 display: inline;
-                font-size: 1.5rem;
+                font-size: 2rem;
                 font-weight: 700;
             }
 
         .login-sidebox-subtitle {
             font-size: 20pt;
-            font-weight: normal;
+            font-weight: nor
         }
 
         .login-sidebox-footer {
-            margin-top: 40px;
+            margin-top: 20px;
             border-top: solid 1px #ddd;
-            padding-top: 28px;
+            padding-top: 20px;
             font-size: 0.875rem;
             font-weight: 500;
+            position:relative;
+            z-index:10;
         }
+        /*.bottom-bg-img {
+            width: 240px;
+            height: 240px;
+            position: absolute;
+            left: -10px;
+            bottom: -120px;*/
+            /*background-image: url(./image/ccloginbottom.png);*/
+            /*background-size: 100% 100%;
+            background-position: 100%;
+        }*/
 
-            .login-sidebox-footer a {
-                cursor: pointer;
-                color: #fff;
-            }
+        .login-sidebox-footer a {
+            cursor: pointer;
+            color: #fff;
+        }
 
         .login-form {
             padding: 64px;
             font-size: 0.875rem;
+            border-top-right-radius: 2vh;
+            border-bottom-right-radius: 2vh;
+            background-color: #fff;
         }
 
         .login-form-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
+            margin-left:40px;
             margin-bottom: 20px;
+            margin-top:10px;
+            text-align:center;
+
         }
 
-            .login-form-header h2 {
+            .login-form-header div {
                 margin-bottom: 0;
-                font-size: 1.714rem;
+                font-size: 2rem;
+                color: #122d70;
             }
-
-        .login-other {
-            display: table;
-            text-align: center;
-            white-space: nowrap;
-            margin: 0.25rem 0 0.625rem 0;
+        .form-signin{
+            margin:auto;
+            width:80%;
         }
 
+
         .login-other {
             display: table;
             text-align: center;
             white-space: nowrap;
             margin: 0.25rem 0 0.625rem 0;
+            margin-top:30px;
         }
 
             .login-other:before, .login-other:after {
@@ -565,34 +621,48 @@
         .login-list {
             display: flex;
             justify-content: space-between;
+            width:80%;
+            margin:auto;
+            /*margin-left:30px;*/
         }
 
             .login-list .item {
-                width: 32px;
-                height: 32px;
+                width: 25px;
+                height: 25px;
             }
-
+        .form-group{
+            margin-bottom:30px;
+        }
+        .login-wrap{
+            margin-top:35px;
+        }
         .login-wrap .form-control {
             font-weight: bold;
             padding: 8px 10px;
+            /*width:*/
             height: auto;
             line-height: 24px;
+            border-radius: 2vh;
         }
+
 
         .btn-login {
             color: #fff;
-            background: #fe7300;
+            /*background: #fe7300;*/
+            background-color: #122d70;
             border: 0px;
+            border-radius: 2.5vh;
         }
 
             .btn-login:hover {
-                background: #f38d30;
+                /*background: #f38d30;*/
+                background: #122d70;
                 color: #fff;
                 outline: none
             }
 
             .btn-login:focus {
-                background: #f38d30;
+                background: #122d70;
                 color: #fff;
                 border: 0px;
                 outline: none;
@@ -607,12 +677,16 @@
                 display: block;
                 position: absolute;
                 bottom: 40px;
+                width:100%;
+
             }
 
                 .login-footer .login-footer-body {
                     display: flex;
-                    width: 600px;
                     justify-content: space-around;
+                    margin:auto;
+                    padding-left:0;
+                    width: 1000px;
                 }
 
                     .login-footer .login-footer-body li {
@@ -620,7 +694,8 @@
                     }
 
                         .login-footer .login-footer-body li a {
-                            color: #7e8392;
+                            /*color: #7e8392;*/
+                            color:#fff;
                         }
         }
     </style>

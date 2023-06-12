@@ -16,29 +16,16 @@
     <script src="../../Scripts/QueryString.js" type="text/javascript"></script>
     <script src="../../Scripts/config.js" type="text/javascript"></script>
     <script src="../../Comm/Gener.js" type="text/javascript"></script>
-    <script src="../../../Admin/AttrFlow/Limit/DDLBar.js" type="text/javascript"></script>
-    <script type="text/javascript" src="../../../DataUser/OverrideFiles/WorkCheck/WorkCheck.js" ></script>
-    <script type="text/javascript" src="../../../DataUser/OverrideFiles/WorkCheck/XTXSAB.js" ></script>
     <script type="text/javascript" language="javascript">
 
         var nodeID = GetQueryString("FK_Node");
         var node = null;
         //页面启动函数.
         $(function () {
-
             InitPage();
-
         });
-        function closespan(){
 
-            $('#batchStampDiv').modal('hide');
-        };
-        function closeMsgspan(){
-
-            $('#batchMsgDiv').modal('hide');
-        };
         function InitPage() {
-            $('#batchMsgDiv').modal('hide');
 
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt_Batch");
             handler.AddPara("FK_Node", nodeID);
@@ -103,7 +90,7 @@
                 tbody += "<tr>";
                 tbody += "<td>" + parseInt(i + 1) + "</td>";
 
-                tbody += "<td ><label><input type='checkbox' id='CB_" + wk.WorkID + "' name='CB_" + wk.WorkID + "'/></label></td>";
+                tbody += "<td ><label><input type='checkbox' id='CB_" + wk.WorkID + "' name='CB_" + wk.WorkID + "'/>选择</label></td>";
                 tbody += "<td><a href=\"javascript:To('../../MyFlow.htm?WorkID=" + wk.WorkID + "&FK_Node=" + node.NodeID + "&FK_Flow=" + node.FK_Flow + "');\" >" + wk.Title + "</a></td>";
                 tbody += "<td>" + wk.StarterName + "</td>";
                 tbody += "<td>" + wk.ADT + "</td>";
@@ -118,7 +105,7 @@
                         continue;
                     if (mapAttr.Name == "审核意见")
                         continue;
-                    if (editFiles.indexOf(mapAttr.KeyOfEn)<0){
+                    if (editFiles.indexOf(mapAttr.KeyOfEn) < 0) {
                         if (parseInt(mapAttr.UIContralType) == 9) {
                             var val = mapAttr.Tag2;
                             //替换@符号的数据
@@ -128,13 +115,14 @@
                             tbody += "<td>" + wk[mapAttr.KeyOfEn] + "</td>";
                         }
                     }
+                       
                     else
-                        tbody += "<td><input type= 'text' size='6' id='TB_"+ wk.WorkID + "_" + mapAttr.KeyOfEn + "' name='TB_" + wk.WorkID + "_" + mapAttr.KeyOfEn + "' value='" + wk[mapAttr.KeyOfEn]+"'></td>";
+                        tbody += "<td><input type='text' id='TB_" + wk.WorkID + "_" + mapAttr.KeyOfEn + "' name='TB_" + wk.WorkID + "_" + mapAttr.KeyOfEn + "' value='" + wk[mapAttr.KeyOfEn]+"'></td>";
                 }
 
                 // 启用审核组件并且可编辑 ，如果是：每个记录后面都有一个意见框.的模式.
                 if (sta == 1 && BatchCheckNoteModel == "1") {
-                    tbody += "<td><textarea class='form-control'  style='height:50px;width:240px;' name='TB_" + works[i].OID + "_WorkCheck_Doc' id='TB_" + works[i].OID + "_WorkCheck_Doc' type='text'   >"+ works[i].msg+"</textarea></td>";
+                    tbody += "<td><textarea class='form-control'  style='height:50px;width:240px;' name='TB_" + works[i].OID + "_WorkCheck_Doc' id='TB_" + works[i].OID + "_WorkCheck_Doc' type='text'   ></textarea></td>";
                 }
 
                 tbody += "</tr>";
@@ -146,25 +134,25 @@
             //处理按钮权限。
             var bar = "";
             var btns = data.Sys_BtnLab[0];
-            bar += '<button type=button onclick="Send()" id=Btn_Send >' + btns.SendLab + '</button>&nbsp;&nbsp;';
-            bar += '<button type=button onclick="BatchStamp(1)" id=Btn_Send><img width="15px" src="../../Img/Btn/gaizhang.png" /> 批量盖章</button> &nbsp;&nbsp;';
-            bar += '<button type=button onclick="BatchStamp(2)" id=Btn_Send><img width="16px" src="../../Img/Btn/qianming.png" /> 批量签名</button>&nbsp;&nbsp;';
-            bar += '<button type=button onclick="BatchMsg()" id=Btn_Send> <img width="12px" src="../../Img/Btn/yijian.png" />批量意见</button>&nbsp;&nbsp;';
+            bar += '<button type=button onclick="Send()" id=Btn_Send >' + btns.SendLab + '</button>';
+
             //bar += '<div id=toNode />';
 
 
             if (btns.ReturnRole != 0) {
-                bar += '<button type=button onclick="Btn_Return()" ><img src="../../Img/Btn/CycleEvent.gif" />' + btns.ReturnLab + '</button>&nbsp;&nbsp;';
+                bar += '<button type=button onclick="Btn_Return()" >' + btns.ReturnLab + '</button>';
             }
 
             if (btns.DelEnable != 0) {
-                bar += '<button type=button onclick="Btn_Delete()">' + btns.DelLab + '</button>&nbsp;&nbsp;';
+                bar += '<button type=button onclick="Btn_Delete()">' + btns.DelLab + '</button>';
             }
 
-            bar += '<button type=button   onclick="Btn_Back()"><img  />返回</button>';
+            if (sta == 1 && BatchCheckNoteModel == "1")
+                bar += '<button type=button   onclick="Btn_BatchCheckMsg()">批量意见</button>';
+
+            bar += '<button type=button   onclick="Btn_Back()">返回</button>';
 
             $("#btnDiv").append(bar);
-
 
             //处理下拉框, 到达方向.
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_MyFlow");
@@ -175,13 +163,10 @@
                 console.log(data);
                 return;
             }
-            var toNDs;
-            if(data==null|| data=="")
-                toNDs = "";
-            else
-                toNDS = JSON.parse(data);
+
+            var toNDS = JSON.parse(data);
             if (toNDS != null && toNDS != undefined && toNDS != "") {
-                var toNodeDDL = $('<select  id="DDL_ToNode"></select>');
+                var toNodeDDL = $('<select style="width:auto;" id="DDL_ToNode"></select>');
                 $.each(toNDS, function (i, toNode) {
                     var opt = "";
                     if (toNode.IsSelected == "1") {
@@ -198,8 +183,7 @@
             }
 
         }
-
-        function BatchMsg() {
+        function Btn_BatchCheckMsg() {
             $('#TextArea').val('');
             $('#WorkCheckModal').modal('show');
             $('#TextArea').focus();
@@ -222,7 +206,6 @@
             val = val.replace(/[\r\n]/g, "");
             return val;
         }
-
         function To(url) {
             WinOpen(url);
             return;
@@ -257,60 +240,6 @@
             });
             if (isHave == false) {
                 alert("请选择批处理的待办数据");
-                return;
-            }
-
-            var msgL="";
-            var workids="";
-            //验证建议减刑月份、审核意见、盖章是否都填了
-            $("input[type='checkbox']:checked").each(function () {
-                var id = $(this).attr('id');
-                if (id != null && id != undefined) {
-
-                    workid = id.replace("CB_", "");
-                    workids += workid+",";
-                    // 验证分监区建议减刑月份
-                    if(nodeID == "102"){
-                        if($("#TB_"+workid+"_FenJianQuJianYiJianX").val() == ""
-                                || $("#TB_"+workid+"_FenJianQuJianYiJianX").val() == null){
-                            msgL="请填写选中流程的分监区建议减刑月份再发送。";
-                            return false;
-                        }
-                    }
-                    // 验证监区建议减刑月份
-                    if(nodeID == "103") {
-                        if ($("#TB_" + workid + "_JianQuJianYiJianXing").val() == ""
-                            || $("#TB_" + workid + "_JianQuJianYiJianXing").val() == null) {
-                            msgL="请填写选中流程的监区建议减刑月份再发送。";
-
-                            return false;
-                        }
-                    }
-                    if(nodeID != "110" && nodeID != "107"){
-                        //验证审核意见是否填写
-                        if ($("#TB_" + workid + "_WorkCheck_Doc").val() == ""
-                            || $("#TB_" + workid + "_WorkCheck_Doc").val() == null) {
-                            msgL="请填写选中流程的审核意见再发送。";
-                            return false;
-                        }
-                    }
-
-                   // return false;
-                }
-            });
-            if (msgL != "") {
-                alert(msgL);
-                return;
-            }
-
-            //验证是否盖章，盖章与签名只要盖一个就允许发送
-            var handlerS = new HttpHandler("bp.jianyu.AppHandler");
-            //handler.AddFormData();
-            handlerS.AddPara("workids", workids);
-            handlerS.AddPara("nodeID", nodeID);
-            var datam = handlerS.DoMethodReturnString("CheckStamp");
-            if (datam != undefined && datam != "") {
-                alert(datam);
                 return;
             }
 
@@ -362,14 +291,10 @@
             handler.AddFormData();
             handler.AddPara("FK_Node", nodeID);
             handler.AddPara("CheckNote", checkNote);
-
             var toNodeID = $("#DDL_ToNode").val();
-
-
             //加入两个可选择参数.
             handler.AddPara("ToNode", toNodeID);
             handler.AddPara("ToEmps", $("#ToEmps").html());
-
 
             var data = handler.DoMethodReturnString("WorkCheckModel_Send");
             if (data.indexOf("err@") != -1) {
@@ -398,18 +323,17 @@
         function SelectEmps(OperHtml, nodeID, workid) {
             toNodeID = nodeID;
             $('#modalHeader').text("选择接受人");
-            modalIframeSrc = "../" + OperHtml + ".htm?FK_Node=" + GetQueryString("FK_Node") + "&WorkID=" + workid + "&ToNode=" + nodeID + "&IsSend=0&PageFrom=WorkCheckModel" + "&s=" + Math.random();
+            modalIframeSrc = "../" + OperHtml + ".htm?FK_Node=" + GetQueryString("FK_Node") + "&WorkID=" + workid + "&ToNode=" + nodeID + "&IsSend=1&PageFrom=WorkCheckModel" + "&s=" + Math.random();
             $('#iframeReturnWorkForm').attr('src', modalIframeSrc);
             $('#returnWorkModal').modal().show();
         }
 
         function returnWorkWindowClose(data) {
-            if (data != "取消")
-                document.getElementById("ToEmps").innerHTML = data;
-
+            document.getElementById("ToEmps").innerHTML = data;
             $('#returnWorkModal').modal('hide');
-            Send();
-
+            if (data != "取消" && data != "")
+                Send();
+            return;
         }
 
         function Btn_Group() {
@@ -424,8 +348,9 @@
 
         function Btn_Return() {
 
-            if (window.confirm('您确定要执行本次批处理退回操作吗？') == false)
-                return;
+            //if (window.confirm('您确定要执行本次批处理退回操作吗？') == false)
+            //    return;
+
             var workIds = GetWorkIDs();
 
             if (workIds == "") {
@@ -750,92 +675,17 @@
         function ReloadPage() {
             window.location.reload();
         }
-        /*function BatchMsg(){
-            //获取选择的行数
-            var isHave = false;
-            var workid = 0;
-            $("input[type='checkbox']:checked").each(function () {
-                var id = $(this).attr('id');
-                if (id != null && id != undefined) {
-                    isHave = true;
-                    workid = id.replace("CB_", "");
-                    return false;
-                }
-
-            });
-            if (isHave == false) {
-                alert("请选择批处理的待办数据");
-                return;
-            }
-            $('#batchMsgDiv').modal().show();
-        }
-        function batchSubmitMsg(){
-
-            var batchMsg = ($('#batchmsg').val());
-            //document.getElementsByTagName('textarea').val(batchMsg);
-            var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt_Batch");
-            handler.AddPara("batchMsg", batchMsg);
-            handler.AddPara("FK_Node", nodeID);
-            handler.AddFormData();
-            var data = handler.DoMethodReturnString("Batch_WriteMsg");
-            $('#batchMsgDiv').modal('hide');
-            alert(data);
-            ReloadPage();
-        }*/
     </script>
 </head>
-<style>
-    /*按钮样式*/
-
-
-
-    button, #Btn_Send, #DDL_ToNode, #Btn_Send {
-        background: #1D8C80;
-        border: none;
-        border-radius: 7px;
-        color: #fff;
-        width: 73px;
-        height: 22px;
-
-        line-height: 22px;
-    }
-    button{
-        background: #226A62;
-    }
-    #DDL_ToNode{
-        width: 90px;
-        text-indent: 6px;
-        margin: 0 0 0 5px;
-    }
-
-    #DDL_ToNode option{
-        background-color:  #1D8C80;
-        color:#ffff;
-        border: 1px solid #0066FF;
-
-    }
-    #Btn_Send{
-        width: 90px;
-    }
-    </style>
 <body class="gray-bg">
 
     <div class="wrapper wrapper-content animated fadeInRight">
-        <div style="float: right ;width: 100%;">
-            <h3 id="title" style="float: left">  </h3>
-            <div class="row" style="float: right">
-                <div class="col-sm-12">
-                    <span id="btnDiv"></span>
-                </div>
-            </div>
-        </div>
-
-        <div class="ibox-content"  style='overflow:auto;  padding: 20px; width:100%;height:485px;white-space: nowrap'>
-
+        <h3 id="title">  </h3>
+        <div class="ibox-content">
             <form id="divCCForm" method="post">
                 <table class="table  table-striped">
                     <thead id="Table1"></thead>
-                    <br />
+                    <br/>
                     <tbody id="Table2"></tbody>
                 </table>
                 <span id="ToEmps" style="display:none"></span>
@@ -881,168 +731,13 @@
         </div><!-- /.modal-dialog -->'
     </div>
 
-    <div class="modal fade" id="batchStampDiv" data-backdrop="static">
-        <div class="modal-dialog" style="width:40%;height:40%">
-            <div class="modal-content" style="height:90%">
-                <div class="modal-body" style="margin:0px;padding:0px;height:210px;background: #fff;">
-                    <div class="modal-top" style="background: #226a62;height: 42px ;width:100%;float: left">
-                        <span style="float: left; color: #fff;display: block  ;line-height: 42px;text-indent: 16px;"> &nbsp;&nbsp;&nbsp;证书认证</span>
-                        <span id="closeSpan" onclick="closespan()" style="background: url('../../../DataUser/Style/Img/close.png') no-repeat 0px 12px; float: right ; display: block; width:36px;height:36px;"></span>
-
-                    </div>
-
-                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                        <tr>
-                            <td>
-                                <table width="100%" border="0"  cellpadding="0" cellspacing="0" style=" margin: 20px 0 0 80px">
-                                    <tr>
-                                        <td valign="top" height="151">
-                                            <form method="post" ID="LoginForm" name="LoginForm">
-                                                <table id="bs" width="90%" border="0" align="center"
-                                                       cellpadding="0" cellspacing="0">
-                                                    <tr>
-                                                        <td height="15" colspan="2"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="70" class="font1">
-                                                            选择证书
-                                                        </td>
-                                                        <td>
-                                                            <select id="UserList" name="UserList" style="width: 100px">
-                                                                <option value="volvo">请选择证书</option>
-                                                            </select>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td >
-                                                            &nbsp;
-                                                        </td>
-                                                        <td>
-                                                            &nbsp;
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="font1">
-                                                            证书密码
-                                                        </td>
-                                                        <td>
-                                                            <input type="password" name="pwd1" id="UserPwd" size="30" maxlength="16" >
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td >
-                                                            &nbsp;
-                                                        </td>
-                                                        <td>
-                                                            &nbsp;
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td></td>
-                                                        <td width="70%">
-                                                            <input type="button"  onclick="btnonsubmit()"
-                                                                   style="border: none;  width: 100px; height: 30px; float: center;background: #009688;text-align: center;line-height: 30px;color: #fff;"
-                                                                   value="批量盖章" name="B1">
-                                                        </td>
-
-                                                        <!--<td width="65">
-                                                            <input type="button"  onclick="getbtnonsubmit()"
-                                                                   style="border: none;width: 58px; height: 30px;"
-                                                                   value="1获取身份证号码" name="B1">
-                                                        </td>-->
-                                                        <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </form>
-                                        </td>
-
-                                    </tr>
-
-                                    <tr>
-                                        <td colspan="4" height="110"></td>
-                                    </tr>
-
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="batchMsgDiv" data-backdrop="static">
-        <div class="modal-dialog" style="width:40%;height:40%">
-            <div class="modal-content" style="height:90%">
-                <div class="modal-body" style="margin:0px;padding:0px;height:210px;background: #fff;">
-                    <div class="modal-top" style="background: #226a62;height: 42px ;width:100%;float: left">
-                        <span style="float: left; color: #fff;display: block  ;line-height: 42px;text-indent: 16px;"> &nbsp;&nbsp;&nbsp;审核意见</span>
-                        <span id="closeSpan" onclick="closeMsgspan()" style="background: url('../../../DataUser/Style/Img/close.png') no-repeat 0px 12px; float: right ; display: block; width:36px;height:36px;"></span>
-
-                    </div>
-
-                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                        <tr>
-                            <td>
-                                <table width="100%" border="0"  cellpadding="0" cellspacing="0" style=" margin: 20px 0 0 80px">
-                                    <tr>
-                                        <td valign="top" height="151">
-                                            <form method="post" ID="LoginForm" name="LoginForm">
-                                                <table id="bs" width="90%" border="0" align="center"
-                                                       cellpadding="0" cellspacing="0">
-                                                    <tr>
-                                                        <td height="15" colspan="2"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="70%" class="font1">
-                                                            输入审核意见
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td ></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <textarea id="batchmsg" name="batchmsg" style="height:80px;width:340px;" type="text"></textarea>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="70%">
-
-                                                            <input type="button"  onclick="batchSubmitMsg()"
-                                                                   style="border: none;  width: 100px; height: 30px; float: center;background: #009688;text-align: center;line-height: 30px;color: #fff;"
-                                                                   value="确定" name="B1">
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </form>
-                                        </td>
-
-                                    </tr>
-
-                                    <tr>
-                                        <td colspan="4" height="110"></td>
-                                    </tr>
-
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
     <!--批量增加审核意见-->
     <div class="modal fade" id="WorkCheckModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">请输入</h4>
+                    <h4 class="modal-title" id="myModalLabel">请输入审核意见</h4>
                 </div>
                 <div class="modal-body">
                     <textarea id="TextArea" cols="20" rows="2" style="width: 350px; height: 150px; margin-top: 5px; overflow: hidden;"></textarea>

@@ -74,6 +74,7 @@
             //加载表单字段
             $.each(initData.Sys_MapAttr, function (i, attr) {
 
+                //过滤不显示的字段.
                 if (expStrs.indexOf(attr.KeyOfEn) != -1)
                     return;
 
@@ -108,11 +109,7 @@
                 } else {
                     mapAttrHtml += '<td><input type="text" id="TB_' + attr.KeyOfEn + '" name="TB_' + attr.KeyOfEn + '" value="" /></td>';
                 }
-
                 mapAttrHtml += '</tr>';
-
-                //mapAttrHtml += '<tr><td>' + (i + 1) + '</td><td>' + attr.KeyOfEn + '</td><td>' + attr.Name + '</td><td><input type="radio" id="' + attr.KeyOfEn + '0" name="' + attr.KeyOfEn + '" value="0"/><label for="' + attr.KeyOfEn + '0" >不设置</label></td><td><input type="radio" id="' + attr.KeyOfEn + '1" name="' + attr.KeyOfEn + '" value="1"/><label for="' + attr.KeyOfEn + '1" >可用</label></td><td><input type="radio" id="' + attr.KeyOfEn + '2" name="' + attr.KeyOfEn + '" value="2"/><label for="' + attr.KeyOfEn + '2" >可见</label></td></td><td><input type="radio" id="' + attr.KeyOfEn + '3" name="' + attr.KeyOfEn + '" value="3"/> <label for="' + attr.KeyOfEn + '3" >不可见</label></td></tr>';
-
             })
             $('#Fields tbody').html(mapAttrHtml);
 
@@ -330,7 +327,7 @@
         function Save() {
 
             $("#Btn_Save").text("正在保存请稍后...");
-
+            console.trace('保存数据', initData.Sys_FrmRB);
             //保存当前打开表单信息
             SaveCurrentConfig();
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_FoolFormDesigner_MapExt");

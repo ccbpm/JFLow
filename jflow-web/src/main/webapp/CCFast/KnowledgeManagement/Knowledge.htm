@@ -860,7 +860,8 @@
                     var myknow = [];
                     for (i = 0; i < enDtlData.length; i++) {
                         var en = enDtlData[i];
-                        var FoucsDate = en.Foucs
+                        var FoucsDate = en.Foucs;
+                        FoucsDate = FoucsDate == null ? "" : FoucsDate;
                         if (FoucsDate.indexOf(webUser.Name)) {
                             en.gz = 0
                         } else {
@@ -1024,7 +1025,8 @@
                         var myknow = []
                         for (i = 0; i < pageList.length; i++) {
                             var en = pageList[i];
-                            var FoucsDate = en.Foucs
+                            var FoucsDate = en.Foucs;
+                            FoucsDate = FoucsDate == null ? "" : FoucsDate;
                             if (FoucsDate.indexOf(webUser.Name)) {
                                 en.gz = 0
                             } else {
@@ -1039,7 +1041,8 @@
                     }
                     if (type == 2) {
                         var pageData = new Entity("BP.CCOA.KnowledgeManagement.KMDtl", no);
-                        var FoucsDate = pageData.Foucs
+                        var FoucsDate = pageData.Foucs;
+                        FoucsDate = FoucsDate == null ? "" : FoucsDate;
                         if (FoucsDate.indexOf(webUser.Name)) {
                             pageData.gz = 0
                         } else {

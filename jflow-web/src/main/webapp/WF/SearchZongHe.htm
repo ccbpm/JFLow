@@ -1,5 +1,5 @@
 <!DOCTYPE html
-        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+          PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -40,9 +40,9 @@
             margin: 20px 10px;
         }
 
-        .box .content {
-            padding-right: 40px;
-        }
+            .box .content {
+                padding-right: 40px;
+            }
 
         .f-left {
             float: left;
@@ -59,54 +59,54 @@
 </head>
 
 <body class="gray-bg">
-<div id="app" class="wrapper wrapper-content animated fadeInRight">
-    <div class="box ibox-content">
-        <div>
-            <div class="f-left title">关键字：</div>
-            <div class="f-left content">
-                <el-input v-model="keyWord" placeholder="请输入内容"></el-input>
+    <div id="app" class="wrapper wrapper-content animated fadeInRight">
+        <div class="box ibox-content">
+            <div>
+                <div class="f-left title">关键字：</div>
+                <div class="f-left content">
+                    <el-input v-model="keyWord" placeholder="请输入内容"></el-input>
+                </div>
+            </div>
+            <div>
+                <div class="f-left title">日期从：</div>
+                <div class="f-left content">
+                    <el-date-picker v-model="date" type="daterange" range-separator="至" start-placeholder="开始日期"
+                                    end-placeholder="结束日期" value-format="yyyy-MM-dd">
+                    </el-date-picker>
+                </div>
+            </div>
+            <div>
+                <div class="f-left title">状态：</div>
+                <div class="f-left content">
+                    <el-select v-model="status" placeholder="请选择">
+                        <el-option v-for="item in statusOpt" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+            </div>
+            <div>
+                <el-button type="primary" icon="el-icon-search" @click="onSearch">搜索</el-button>
             </div>
         </div>
-        <div>
-            <div class="f-left title">日期从：</div>
-            <div class="f-left content">
-                <el-date-picker v-model="date" type="daterange" range-separator="至" start-placeholder="开始日期"
-                                end-placeholder="结束日期" value-format="yyyy-MM-dd">
-                </el-date-picker>
-            </div>
-        </div>
-        <div>
-            <div class="f-left title">状态：</div>
-            <div class="f-left content">
-                <el-select v-model="status" placeholder="请选择">
-                    <el-option v-for="item in statusOpt" :key="item.value" :label="item.label" :value="item.value">
-                    </el-option>
-                </el-select>
-            </div>
-        </div>
-        <div>
-            <el-button type="primary" icon="el-icon-search" @click="onSearch">搜索</el-button>
-        </div>
+        <el-table :data="tableData" border=border style="width: 100%;">
+            <el-table-column prop="no" label="序号" type="index" />
+            </el-table-column>
+            <el-table-column prop="Title" label="标题" />
+            </el-table-column>
+            <el-table-column prop="flow" label="流程/停留节点" />
+            </el-table-column>
+            <el-table-column prop="StarterName" label="发起人" />
+            </el-table-column>
+            <el-table-column prop="initiateDate" label="发起日期" />
+            </el-table-column>
+            <el-table-column prop="lastDate" label="最后日期" />
+            </el-table-column>
+            <!--<el-table-column prop="time" label="耗时" />
+            </el-table-column>-->
+            <el-table-column prop="status" label="状态" />
+            </el-table-column>
+        </el-table>
     </div>
-    <el-table :data="tableData" border=border style="width: 100%;">
-        <el-table-column prop="no" label="序号" type="index" />
-        </el-table-column>
-        <el-table-column prop="Title" label="标题" />
-        </el-table-column>
-        <el-table-column prop="flow" label="流程/停留节点" />
-        </el-table-column>
-        <el-table-column prop="StarterName" label="发起人" />
-        </el-table-column>
-        <el-table-column prop="initiateDate" label="发起日期" />
-        </el-table-column>
-        <el-table-column prop="lastDate" label="最后日期" />
-        </el-table-column>
-        <!--<el-table-column prop="time" label="耗时" />
-        </el-table-column>-->
-        <el-table-column prop="status" label="状态" />
-        </el-table-column>
-    </el-table>
-</div>
 </body>
 <script type="text/javascript">
     new Vue({
@@ -183,7 +183,7 @@
                     } else {
                         //diffm = dayjs.duration(dayjs().diff(dayjs(item.RDT)))
                     }
-                    // const dayObj = dayjs.duration(diffm).$d.$ds;
+                   // const dayObj = dayjs.duration(diffm).$d.$ds;
                     //item.time = `${dayObj.days}天${dayObj.hours}时${dayObj.minutes}分`
                     /*
                         dayjs diff
@@ -206,7 +206,7 @@
             }
         },
         created() {
-            // dayjs.extend(dayjs_plugin_duration);
+           // dayjs.extend(dayjs_plugin_duration);
         },
         mounted() {
             this.search();

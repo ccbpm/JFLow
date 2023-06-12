@@ -61,13 +61,13 @@
                     ${window.lang.fqbm}
                 </th>
                 <!--<th>申请时间</th>-->
-                 <th width="180">
+                <th width="180">
                      ${window.lang.dqjd}
                 </th>
                 <th width="200">
                    ${window.lang.sdrq}
                 </th>
-
+                
                 <th width="120">
                     ${window.lang.dqclr}
                 </th>
@@ -150,7 +150,8 @@
                 handler.AddPara("FID", fid);
             if (pworkid != null && pworkid != undefined)
                 handler.AddPara("PWorkID", pworkid);
-            handler.AddPara("IsReadonly", 1);
+           
+                handler.AddPara("IsReadonly", 1);
             if (paras != null && paras != undefined)
                 handler.AddPara("Paras", paras);
 

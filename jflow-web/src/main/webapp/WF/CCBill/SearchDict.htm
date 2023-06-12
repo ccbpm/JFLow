@@ -486,16 +486,19 @@
                         OpenLayuiDialog(url, "导入模板数据", window.innerWidth / 2, 0, null, true);
                         break;
                     case "ExpExcel"://导出
-                        var handler = new HttpHandler("BP.CCBill.WF_CCBill");
-                        handler.AddPara("FrmID", GetQueryString("FrmID"));
-                        //查询集合
-                        var  data = handler.DoMethodReturnString("Search_Exp");
-                        if (data.indexOf("err@") != -1) {
-                            layer.alert(data);
-                            return;
+                        if (plant != 'CCFlow')
+                            downLoadExcel(basePath + "/WF/Export/Search_Exp?type=dict&FrmID=" + GetQueryString("FrmID"));
+                        else {
+                            var handler = new HttpHandler("BP.CCBill.WF_CCBill");
+                            handler.AddPara("FrmID", GetQueryString("FrmID"));
+                            //查询集合
+                            var data = handler.DoMethodReturnString("Search_Exp");
+                            if (data.indexOf("err@") != -1) {
+                                layer.alert(data);
+                                return;
+                            }
+                            window.open(data);
                         }
-                        let searchData = JSON.parse(data);
-                        layui.table.exportFile("tableSearch", searchData, 'xls');
                         break;
                     case "Group"://跳转到分组页面
                         url = "Group.htm?FrmID=" + GetQueryString("FrmID");

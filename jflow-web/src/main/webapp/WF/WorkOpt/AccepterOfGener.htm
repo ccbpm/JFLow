@@ -318,7 +318,7 @@
                 layer.alert(data);
                 return;
             }
-             Close(true);
+            CloseAll();
         }
         //执行发送.
         function Send() {
@@ -333,6 +333,10 @@
         }
 
         function SendIt() {
+            if (pageFrom != null && pageFrom != undefined && pageFrom == "WorkCheckModel") {
+                window.parent.returnWorkWindowClose(selectEmpNo);
+                return;
+            }
 
             var httphandler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt");
             httphandler.AddUrlData(); //FK_Flow,FK_Node,WorkID,FID,ToNode 等参数.

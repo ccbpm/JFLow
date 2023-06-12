@@ -380,10 +380,15 @@ function InitToolbar(type) {
         var ddlChild = $("#DDL_" + mapExt.AttrsOfActive);
         if (ddlPerant != null && ddlChild != null) {
             ddlPerant.attr("onchange", "DDLRelation(this.value,\'" + "DDL_" + exts[0].AttrsOfActive + "\', \'" + exts[0].MyPK + "\',\'" + selectVal + "\')");
+
         }
+
     })
+
     $("#TB_Key").val(GetQueryString("Key"));
     layui.form.render();
+
+
 }
 /**
  * 点击下三角选择列的显示隐藏
@@ -793,6 +798,8 @@ function GetColoums(data, thrMultiTitle, secMultiTitle, colorSet, sortColumns, f
                     return "<i  class='" + row[this.field] + "'></i>";
                 }
                 var val = row[this.field];
+                if (val == null)
+                    val = "";
                 var formatter = "";
 
                 if (foramtFunc != "" && foramtFunc.indexOf(this.field + "@") != -1) {
@@ -1478,7 +1485,7 @@ function OpenEn(pk, paras, flag, row, obj, openType) {
                     SearchData();
                     return;
                 }
-                ChangeTableData(pk,enName,obj);
+				ChangeTableData(pk,enName,obj);
             });
         else
             OpenLayuiDialog(url, mapBase.EnDesc + ' : ' + tName, windowW, 100, "r", false);
@@ -1499,33 +1506,42 @@ function OpenEn(pk, paras, flag, row, obj, openType) {
 
 }
 
-function ChangeTableData(pkVal,enName,obj) {
-    //根据PK获取到改行的最新信息
-    var en = new Entity(enName);
-    en.SetPKVal(pkVal);
-    en.RetrieveFromDBSources();
+function ChangeTableData(pkVal, enName, obj) {
+    if (typeof obj != "undefined") {
+        //根据PK获取到改行的最新信息
+        var en = new Entity(enName);
+        en.SetPKVal(pkVal);
+        en.RetrieveFromDBSources();
 
-    searchTableData.forEach(item => {
-        if (item[enPK] == pkVal) {
-            if (richAttrs.length != 0) {
-                richAttrs.forEach(key => {
-                    var val = item[key];
-                    if (val != "") {
-                        en[key] = filterXSS(val);
-                        console.log(item[key])
-                    }
-                });
+        searchTableData.forEach(item => {
+            if (item[enPK] == pkVal) {
+                if (richAttrs.length != 0) {
+                    richAttrs.forEach(key => {
+                        var val = item[key];
+                        if (val != "") {
+                            en[key] = filterXSS(val);
+                            console.log(item[key])
+                        }
+                    });
+                }
+                for (var key in item)
+                    item[key] = en[key];
+                if (typeof obj != "undefined") {
+                    obj.update(item);
+                }
+                return;
             }
-            for (var key in item)
-                item[key] = en[key];
-            if (typeof obj != "undefined") {
-                obj.update(item);
-            }
-            return;
-        }
-    });
-    if(typeof obj ==="undefined")
-        layui.table.reload('tableSearch', { data: searchTableData });
+        });
+    }
+    
+    if (typeof obj === "undefined") {
+        pageIdx = 1;
+        var data = SearchData("search");
+        //获取列
+        var tableData = transferHtmlData(data["DT"]);
+        layui.table.reload('tableSearch', { data: tableData });
+    }
+        
 }
 
 function New() {
@@ -1621,7 +1637,7 @@ function openFun(warning, url, title) {
 
 function downLoadFile(PKVal) {
     if (plant == "CCFlow")
-        SetHref('../CCForm/DownFile.aspx?DoType=EntityFile_Load&DelPKVal=' + PKVal + '&EnsName=' + GetQueryString("EnsName"));
+        SetHref(basePath + '/WF/Comm/ProcessRequest?DoType=HttpHandler&HttpHandlerName=BP.WF.HttpHandler.WF_CommEntity&DoMethod=EntityFile_Load&DelPKVal=' + PKVal + '&EnsName=' + GetQueryString("EnsName"));
     else {
         var currentPath = GetHrefUrl();
         var path = currentPath.substring(0, currentPath.indexOf('/WF') + 1);

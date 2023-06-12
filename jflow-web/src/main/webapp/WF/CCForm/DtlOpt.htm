@@ -139,6 +139,9 @@
                 return;
             }
 
+            // var href = GetHrefUrl();
+            //var urlParam = href.substring(href.indexOf('?') + 1, href.length);
+            var url = Handler + "?DoType=DtlOpt_Search&Key=" + key + "&FK_MapDtl=" + GetQueryString("FK_MapDtl") + "&RefPKVal=" + GetQueryString("RefPKVal") + "&m=" + Math.random();
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_MyFlow");
             handler.AddPara("Key", key);
             handler.AddPara("FK_MapDtl", GetQueryString("FK_MapDtl"));

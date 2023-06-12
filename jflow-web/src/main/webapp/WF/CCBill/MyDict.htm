@@ -39,7 +39,7 @@
     <script id="view" type="text/html">
         <div class="layui-btn-container">
             {{#  layui.each(d, function(index, item){ }}
-            <button type="button" class="layui-btn layui-btn-sm" name="{{item.BtnID}}" {{# if(item.BtnID=="Save"|| item.BtnID=="Submit"){}}= lay-submit="" lay-filter="{{item.BtnID}}" {{#  }; }}= data-type="{{=item.Type}}"><i class="iconfont icon-{{item.Icon}}"></i>{{item.BtnLab}}</button>
+            <button type="button" class="layui-btn layui-btn-sm" name="{{item.BtnID}}" {{# if(item.BtnID=="Save"|| item.BtnID=="Submit"){}} lay-submit="" lay-filter="{{item.BtnID}}" {{#  }; }} data-type="{{=item.Type}}"><i class="iconfont icon-{{item.Icon}}"></i>{{item.BtnLab}}</button>
             {{#  }); }}
         </div>
     </script>
@@ -94,8 +94,8 @@
                     return;
                 }
                 var url = GetHrefUrl();
-                if (url.indexOf("WorkID") == -1)
-                    url += "&WorkID=" + workID;
+                if (url.indexOf('WorkID') == -1)
+                    url = url + "&WorkID=" + workID;
                 else
                     url = replaceParamVal(url, "WorkID", workID);
                 SetHref(url);

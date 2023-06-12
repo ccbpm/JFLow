@@ -48,8 +48,9 @@ layui.config({
         "\n" +
         "</div>";
     var obj = {
-        render: function(e){
-            $('body').append(html);
+        render: function (e) {
+            if ($(".showImgEdit").length==0)
+                $('body').append(html);
             var self = this,
                 elem = e.elem,
                 saveW = e.saveW,
@@ -64,8 +65,8 @@ layui.config({
                 ,preview = '.showImgEdit .img-preview'
                 ,file = $(".showImgEdit input[name='file']")
                 , options = { aspectRatio: mark, preview: preview, viewMode: 1 };
-           
             $(elem).on('click', function () {
+                editImg = elem;
                 layer.open({
                     type: 1
                     , content: content
@@ -73,7 +74,7 @@ layui.config({
                     , success: function () {
                        
                         //默认的图片附件是不是存在
-                        var elementID = "Img" + $("#editimg").attr("data-ref");
+                        var elementID = "Img" + $(elem).attr("data-ref");
                         //获取原始的图片src
                         var src = $("#" + elementID).attr("src");
                         $(".showImgEdit .readyimg img").cropper('destroy').attr('src', src);
@@ -84,52 +85,57 @@ layui.config({
                         image.cropper('destroy');
                     }
                 });
-            });
-            $(".layui-btn").on('click',function () {
-                var event = $(this).attr("cropper-event");
-                //监听确认保存图像
-                if(event === 'confirmSave'){
-                    image.cropper("getCroppedCanvas",{
-                        width: saveW,
-                        height: saveH
-                    }).toBlob(function(blob){
-                        var formData=new FormData();
-                        formData.append('file',blob,'head.jpg');
-                        $.ajax({
-                            method:"post",
-                            url: url, //用于文件上传的服务器端请求地址
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            success: function (result) {
-                                result = JSON.parse(result);
-                                if (result.SourceImage!=undefined){
-                                    layer.closeAll('page');
-                                    return done(result);
-                                } else if (result.err !=undefined){
-                                    layer.alert("文件上传报错");
-                                }
+                $(".layui-btn-fluid").on('click', function () {
+                    var event = $(this).attr("cropper-event");
+                    //监听确认保存图像
+                    if (event === 'confirmSave') {
+                        if (editImg == elem) {
+                            image.cropper("getCroppedCanvas", {
+                                width: saveW,
+                                height: saveH
+                            }).toBlob(function (blob) {
+                                var formData = new FormData();
+                                formData.append('file', blob, 'head.jpg');
+                                $.ajax({
+                                    method: "post",
+                                    url: url, //用于文件上传的服务器端请求地址
+                                    data: formData,
+                                    processData: false,
+                                    contentType: false,
+                                    success: function (result) {
+                                        result = JSON.parse(result);
+                                        if (result.SourceImage != undefined) {
+                                            layer.closeAll('page');
+                                            return done(result);
+                                        } else if (result.err != undefined) {
+                                            layer.alert("文件上传报错");
+                                        }
 
-                            }
-                        });
-                    });
-                    //监听旋转
-                }else if(event === 'rotate'){
-                    var option = $(this).attr('data-option');
-                    image.cropper('rotate', option);
-                    //重设图片
-                }else if(event === 'reset'){
-                    image.cropper('reset');
-                }
-                //文件选择
-                file.change(function () {
-                    var r= new FileReader();
-                    var f=this.files[0];
-                    r.readAsDataURL(f);
-                    r.onload=function (e) {
-                        image.cropper('destroy').attr('src', this.result).cropper(options);
-                    };
+                                    }
+                                });
+                            });
+                        }
+                        
+                        //监听旋转
+                    } else if (event === 'rotate') {
+                        var option = $(this).attr('data-option');
+                        image.cropper('rotate', option);
+                        //重设图片
+                    } else if (event === 'reset') {
+                        image.cropper('reset');
+                    }
+
                 });
+            });
+            
+            //文件选择
+            file.change(function () {
+                var r = new FileReader();
+                var f = this.files[0];
+                r.readAsDataURL(f);
+                r.onload = function (e) {
+                    image.cropper('destroy').attr('src', this.result).cropper(options);
+                };
             });
         }
 

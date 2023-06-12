@@ -105,7 +105,7 @@
                 return;
             }
             //打开文件.
-            fillTemplate();
+            //fillTemplate();
         });
 
         //替换从表数据.
@@ -211,9 +211,9 @@
             //var filePath = prompt("请输入打开文件路径（本地或是url）：", GetDemoPath("样章.docx"))
             // var uploadPath = "BP.WF.Dev2Interface.UploadFile"
 
-            var uploadPath =basePath + "/restful/wpssavefile?&FrmID=" + frmID + "&WorkID=" + oid;
+            var uploadPath = dynamicHandler + "?DoType=HttpHandler&DoMethod=WpsFrm_SaveFile&HttpHandlerName=BP.WF.HttpHandler.WF_CCForm&FrmID=" + frmID + "&WorkID=" + oid;
             var uploadFieldName = "fileField";
-//alert(uploadPath);
+
             var invokeParam = {
                 "fileName": wpsTempURL,
                 "templateDataUrl": wpsData,
@@ -222,7 +222,6 @@
                 "uploadPath": uploadPath, // 保存文档上传接口
                 //"fileName": filePath,
                 "uploadFieldName": uploadFieldName,
-                "suffix":"ofd",
                 "userName": "东方不败"
 
             }; //根据需求任意定义

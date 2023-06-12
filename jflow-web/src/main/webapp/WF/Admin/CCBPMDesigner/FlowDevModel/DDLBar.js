@@ -55,8 +55,8 @@ function InitBar(optionKey) {
 
 //创建流程.
 function Save() {
-	var flowName = $("#TB_Name").val();
-    if(flowName == ''){
+    var flowName = $("#TB_Name").val();
+    if (flowName == '') {
         alert("请输入流程名称。");
         return;
     }

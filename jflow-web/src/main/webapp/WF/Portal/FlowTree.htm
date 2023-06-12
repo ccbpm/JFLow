@@ -19,8 +19,14 @@
     <script src="../Scripts/layui/LayuiDialog.js"></script>
     <script type="text/javascript" src="./js/vue/vue.js"></script>
     <style>
+        /* 全局 */
+        .layui-row{
+            box-sizing:border-box;
+        }
         .flow {
-            width: 75%;
+            /*width: 75%;*/
+            width: 79%;
+            margin: 10px 10px 10px 5px;
         }
 
         .flow .row {
@@ -31,25 +37,31 @@
             line-height: 40px;
             background-color: #FAFAFA;
         }
-            
-        .flow .row .item {
-            box-sizing: border-box;
-            flex-shrink: 0;
-            text-align: center;
-            border-right: 1px solid #eee;
-            border-bottom: 1px solid #eee;
+
+            .flow .row .item {
+                box-sizing: border-box;
+                flex-shrink: 0;
+                text-align: center;
+                border-right: 1px solid #eee;
+                border-bottom: 1px solid #eee;
+                
+            }
+        .item-title {
+            color: #666666;
+            font-weight: 700
         }
 
         .item-name {
-            width: 40%;
+            width: 25%;
+            padding-left: 30px;
             text-overflow: ellipsis;
             white-space: nowrap;
             cursor: pointer;
-            padding-left: 30px;
+
         }
 
         .item-other {
-            width: 12%;
+            width: 15%;
         }
 
         .item-index {
@@ -71,50 +83,127 @@
 
         #s-main {
             transition: all ease .4s;
-            margin-top: 40px;
+            height:20px;
+            font-size:13px;
         }
-        .fixed {
+        /*.fixed {
             position: fixed;
-            top: 0;
-            left: 25%;
-            width: 75%;
+            top: 50px;*/
+            /*left: 25%;*/
+            /*width: 75%;
+        }*/
+         /* 左侧菜单栏布局 */
+        .flow_layout {
+            border: 1px solid #1010ce;
+            margin: 10px 10px 0 15px;
+            width: 225px;
+            border-radius:5px;
+            background:#fff;
         }
+        .menu-treetitle {
+            height: 50px;
+            line-height: 30px;
+            font-size: 16px;
+            padding: 10px;
+            box-sizing: border-box;
+            border-bottom: 1px solid #f0f2f5;
+        }
+        .layui-tree {
+            background: #fff;
+            padding: 15px;
+        }
+        /* 右侧内容区域 */
+
+        .top-choose {
+            /*margin-bottom: 15px;*/
+            /*border-radius: 5px;*/
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            background: #fff;
+            border-bottom: 1px solid #f0f2f5;
+        }
+        .flow-main {
+            /*border-radius: 5px;*/
+            background-color: #fff;
+            padding: 10px;
+            height:87%;
+        }
+        .top-newflow {
+            display: flex;
+            height: 50px;
+            align-items: center;
+            justify-content: flex-end;
+            margin-right: 5px;
+        
+        }
+        .flow-menu {
+            cursor: pointer;
+            margin: 0 5px;
+            height: 26px;
+            line-height:26px;
+            border-radius: 5px;
+            padding: 0 10px;
+            background-color: #316ee6;
+            color: #fff;
+            border-color: #316ee6;
+        }
+
+            .flow-menu:hover {
+                background: #316ee6;
+            }
+
+        .layui-tree-set-active > .layui-tree-entry .layui-tree-main {
+            color: #000;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
     </style>
     <script type="text/javascript">
         var flows;
+        var flowSortNo;
+        var nameTitle;
+
         $(function () {
-            //获取流程类别
-            var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
-            var data = handler.DoMethodReturnString("Flows_InitSort");
-            if (data.indexOf("err@") != -1) {
-                layer.alert(data.indexOf("err@", ""));
+
+            var webUser = new WebUser();
+            if (webUser.IsAdmin == false) {
+                alert("非管理员用户.");
                 return;
             }
-            data = JSON.parse(data);
-            webUserJsonString = null;
-            var webUser = new WebUser();
-            var emp = new Entity("BP.Port.Emp", webUser.No);
-            var rootNo = webUser.OrgNo;
-            if (emp.FK_Dept != webUser.FK_Dept)
-                rootNo = webUser.FK_Dept;
 
-            data = CoverDataToTree(data, rootNo)
-            layui.tree.render({
+            var sorts = new Entities("BP.WF.Template.FlowSorts");
+            sorts.RetrieveAll();
+            var rootNo = "0";
+            if (webUser.CCBPMRunModel == 1 || webUser.CCBPMRunModel == 2)
+                rootNo = webUser.OrgNo;
+            if (webUser.No == "admin")
+                rootNo = "0";
+            var data = CoverDataToTree(sorts, rootNo);
+
+            tree = layui.tree.render({
                 elem: '#flowSort'
                 , data: data
                 , id: "flowSort"
                 //, edit: ['add', 'update', 'del'] //操作节点的图标
                 , click: function (obj) {
+                    flowSortNo = obj.data.id;
+                    $("#EditSort").text("属性：" + obj.data.title);
+                    nameTitle = obj.data.title;
                     //根据id获取流程集合
                     flows = new Entities("BP.WF.Flows");
                     flows.Retrieve("FK_FlowSort", obj.data.id);
                     baseInfo.flows = flows.GetEns().data;
                     baseInfo.SortNo = obj.data.id;
+                    //点击时产生节点产生flowSortNo显示
+                    $('#NewSortOne').show();
                     setTimeout(function () {
                         baseInfo.bindMenu();
                         //baseInfo.initSortArea();
                     }, 800);
-                    
+                    // 点击高亮
+                    $(".layui-tree-set").removeClass('layui-tree-set-active');
+                    obj.elem.addClass('layui-tree-set-active');
                 }
             });
 
@@ -133,16 +222,45 @@
                 trigger: 'contextmenu',
                 data: topNodeItems,
                 click: function (data) {
+                    debugger;
                     topNodeOption(data.id, $(this.elem).parent().parent().parent().data().id, $(this.elem)[0].innerHTML)
                 }
             });
 
+            var html = "";
+            html += "<ul class='top-newflow'>";
+            html += "<li id='EditSort' class='flow-menu' onclick=\"topNodeOption(id,flowSortNo,nameTitle)\">属性名称</li>";
+            html += "<li id='NewFlow' class='flow-menu' onclick=\"topNodeOption(id,flowSortNo,nameTitle)\">新建流程</li>";
+            html += "<li id='ImpFlowTemplate' class='flow-menu' onclick=\"topNodeOption(id,flowSortNo,nameTitle)\">导入流程模版</li>";
+            html += "<li id='NewSortOne' class='flow-menu'>新建目录</li>";
+            html += "</ul>";
+            $("#top-choose").html(html);
+            //一开始隐藏
+            $('#NewSortOne').hide();
+
+
+            //新建目录   新建子集，新建同级
+            dropdown.render({
+                elem: '#NewSortOne', // 绑定元素选择器，此处指向 class 可同时绑定多个元素
+                trigger: 'hover',
+                data: [
+                    { title: '<i class=icon-folder></i> 新建同级', id: "NewSame", Icon: "icon-magnifier-add" },
+                    { title: '<i class=icon-folder></i> 新建子级', id: "NewSort", Icon: "icon-magnifier-add" },
+                ],
+                click: function (data) {
+                    topNodeOption(data.id, flowSortNo, nameTitle)
+                }
+            });
+
+
         })
         function topNodeOption(key, flowSortNo, name, idx) {
+            //获取屏幕的宽
+            var W = document.body.clientWidth - 250;
             switch (key) {
                 case "EditSort":
                     var url = basePath + "/WF/Comm/EnOnly.htm?EnName=BP.WF.Template.FlowSort&No=" + flowSortNo;
-                    OpenLayuiDialog(url, "目录:" + name, window.innerWidth * 3 / 2, 70, 'auto', true);
+                    OpenLayuiDialog(url, "目录:" + name, W, 100, "r", false);
                     break;
                 case "EditSortName":
                     var val = prompt("新名称", name);
@@ -155,8 +273,9 @@
                     break;
                 case "ImpFlowTemplate":
                     var fk_flowSort = data;
-                    url = basePath +"/WF/Admin/AttrFlow/Imp.htm?FK_FlowSort=" + fk_flowSort + "&Lang=CH";
-                    window.top.vm.openTab("导入流程模板",  url);
+                    url = basePath + "/WF/Admin/AttrFlow/Imp.htm?FK_FlowSort=" + fk_flowSort + "&Lang=CH";
+                    //window.top.vm.openTab("导入流程模板", url);
+                    OpenLayuiDialog(url, "导入流程模板", W, 100, "r", false);
                     break;
                 //case "BatchImpFlowTemplate":
                 //    this.BatchImpFlowTemplate(data);
@@ -172,7 +291,29 @@
                         layer.close(index);
                         var en = new Entity("BP.WF.Template.FlowSort", flowSortNo);
                         var data = en.DoMethodReturnString("DoCreateSubNodeMy", value);
-                        layer.msg("创建成功" + data);
+                        if (data == undefined || data == '') {
+                            return;
+                        } else {
+                            layer.msg("创建成功" + value);
+                        }
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 800);
+                    });
+                    break;
+                case "NewSame": 
+                    layer.prompt({
+                        value: '',
+                        title: '新建同级流程类别',
+                    }, function (value, index, elem) {
+                        layer.close(index);
+                        var en = new Entity("BP.WF.Template.FlowSort", flowSortNo);
+                        var data = en.DoMethodReturnString("DoCreateSameLevelNodeMy", value);
+                        if (data == undefined || data == '') {
+                            return;
+                        } else {
+                            layer.msg("创建成功" + value);
+                        }
                         setTimeout(function () {
                             window.location.reload();
                         }, 800);
@@ -198,7 +339,8 @@
                     url = basePath + "/WF/Admin/CCBPMDesigner/FlowDevModel/Default.htm?SortNo=" + flowSortNo + "&From=FlowTree.htm&RunModel=1&s=" + Math.random();
                     url += "&UserNo=" + GetQueryString("UserNo");
                     url += "&Token=" + GetQueryString("Token");
-                    window.open(url);
+                    OpenLayuiDialog(url, name, W, 100, "r", false);
+                    //window.open(url);
                     break;
                 default:
                     layer.alert("没有判断的命令" + key);
@@ -227,12 +369,12 @@
             var jsonchildTree = [];
             if (treeJson.length > 0 && typeof rootNo !== "undefined") {
                 $.each(treeJson, function (i, o) {
-                    if (o.No == rootNo) {
+                    if (o.ParentNo == rootNo) {
                         jsonchildTree.push(o);
                         jsonTree.push({
                             "id": o.No,
                             "title": o.Name,
-                            "spread":true,
+                            "spread": true,
                             "children": []
                         });
                     }
@@ -262,41 +404,54 @@
 
 </head>
 
-<body style="background-color:white">
+<body style="background-color: #f0f2f5; overflow-y: hidden; ">
     <div class="layui-row">
         <!--流程类别-->
-        <div class="layui-col-sm3 layui-col-md3 layui-col-xs3" style="border:1px solid #f5f5ff ">
-            <div id="flowSort" class="" style="width: 100%; height: calc(100%); ">
-            </div>
+        <div class="layui-col-sm3 layui-col-md3 layui-col-xs3 flow_layout" style="border:1px solid #f5f5ff ">
+            <div class="menu-treetitle"><i class="fa fa-fw icon-grid" style="vertical-align: -1px;"></i>流程</div>
+            <div id="flowSort" class="" style="width: 100%; height: calc(90%); "></div>
         </div>
         <!--流程信息-->
+        <!--<div id="toolBar">
+            <button> xxx</button>
+            <button> xxx</button>
+            <button> xxx</button>
+            <button> xxx</button>
+        </div>-->
         <div class="layui-col-sm8 layui-col-md8 layui-col-xs4 flow" id="flow" v-cloak>
-            <div class="row fixed">
-                <div class="item item-name">流程名称</div>
-                <div class="item item-other">实例</div>
-                <div class="item item-other">运行中</div>
-                <div class="item item-other">退回</div>
-                <div class="item item-other">操作</div>
-            </div>
-            <div ref="child-row" id="s-main">
-                <div class="row" v-for="(flow,idx) in flows" :key="idx" :data-pid="SortNo" :data-id="flow.No">
-                   
-                    <div class="item item-name item-name-dp" @click.stop="Designer(flow.No,flow.Name)" style="text-align: left" :data-no="flow.No" :data-name="flow.Name" :data-idx="idx">
-                        <i class="icon-heart" style="margin-right: 8px"></i>
-                        <span>{{flow.No}}.{{flow.Name}}</span>
-                    </div>
-                    <div class="item item-other"></div>
-                    <div class="item item-other"></div>
-                    <div class="item item-other"></div>
-                    <div class="item item-other">
-                        <button class="layui-btn layui-btn-primary layui-border-blue layui-btn-xs c-btn" :data-name="flow.Name" :data-no="flow.No" :data-idx="idx">
-                            <i class="layui-icon layui-icon-down layui-font-12"></i>流程
-                        </button>
+
+            <div class="top-choose" id="top-choose"></div>
+            <div class="flow-main">
+                <div class="row fixed">
+                    <div class="item item-name item-title">编号</div>
+                    <div class="item item-other item-title">名称</div>
+                    <div class="item item-other item-title">存储表</div>
+                    <div class="item item-other item-title">设计类型</div>
+                    <div class="item item-other item-title">创建日期</div>
+                    <div class="item item-other item-title">创建人</div>
+                </div>
+                <div ref="child-row" id="s-main">
+                    <div class="row" v-for="(flow,idx) in flows" :key="idx" :data-pid="SortNo" :data-id="flow.No">
+
+                        <div class="item item-name item-name-dp" @click.stop="Designer(flow.No,flow.Name)" style="text-align: center" :data-no="flow.No" :data-name="flow.Name" :data-idx="idx">
+                            <i class="icon-heart" style="margin-right: 8px"></i>
+                            <span>{{flow.No}}.{{flow.Name}}</span>
+                        </div>
+                        <div class="item item-other">{{flow.FrmType}}</div>
+                        <div class="item item-other">{{flow.PTable}}</div>
+                        <div class="item item-other">{{flow.EntityType}}</div>
+                        <div class="item item-other">{{flow.Ver}}</div>
+                        <div class="item item-other">{{flow.Name}}</div>
+                        <!--<div class="item item-other">
+        <button class="layui-btn layui-btn-primary layui-border-blue layui-btn-xs c-btn" :data-name="flow.Name" :data-no="flow.No" :data-idx="idx">
+            <i class="layui-icon layui-icon-down layui-font-12"></i>流程
+        </button>
+    </div>-->
                     </div>
                 </div>
             </div>
-           </div>
         </div>
+    </div>
     <script type="text/javascript">
         var baseInfo = new Vue({
             el: '#flow',

@@ -113,7 +113,7 @@
         //设置表格高度
         function SetTableSize() {
             var height = $(window).innerHeight();
-            height = height - 110;
+            height = height - 100;
             if (condtionsArry && condtionsArry.length > 0) {
                 //展现方式,0平铺、1下拉
                 var selectType = mapExt.GetPara("SelectType");
@@ -352,40 +352,13 @@
             dbSrc = dbSrc.replace(reg, keyWord);
 
             //处理SQL
-
             //替换表达式常用的用户信息
-            var dbSrcArr = dbSrc.split("~");
             var webUser = new WebUser();
-            for(i in dbSrcArr){
-                if(dbSrcArr[i] !=""& dbSrcArr[i] !=null) {
-                    if (dbSrcArr[i].indexOf("@WebUser.No") != -1){
-                        dbSrc = dbSrc.replace("@WebUser.No", webUser.No);
-                        continue;
-                    }
-                    if (dbSrcArr[i].indexOf("@WebUser.Name") != -1) {
-                        dbSrc = dbSrc.replace("@WebUser.Name", webUser.Name);
-                        continue;
-                    }
-                    if (dbSrcArr[i].indexOf("@WebUser.FK_DeptNameOfFull") != -1){
-                        dbSrc = dbSrc.replace("@WebUser.FK_DeptNameOfFull", webUser.FK_DeptNameOfFull);
-                        continue;
-                    }
-                    if (dbSrcArr[i].indexOf("@WebUser.FK_DeptName") != -1){
-                        dbSrc = dbSrc.replace("@WebUser.FK_DeptName", webUser.FK_DeptName);
-                        continue;
-                    }
-                    if (dbSrcArr[i].indexOf("@WebUser.FK_Dept") != -1){
-                        dbSrc = dbSrc.replace("@WebUser.FK_Dept", webUser.FK_Dept);
-                        continue;
-                    }
-                }
-            }
-            // var webUser = new WebUser();
-            // dbSrc = dbSrc.replace('@WebUser.No', webUser.No);
-            // dbSrc = dbSrc.replace('@WebUser.Name', webUser.Name);
-            // dbSrc = dbSrc.replace("@WebUser.FK_DeptNameOfFull", webUser.FK_DeptNameOfFull);
-            // dbSrc = dbSrc.replace('@WebUser.FK_DeptName', webUser.FK_DeptName);
-            // dbSrc = dbSrc.replace('@WebUser.FK_Dept', webUser.FK_Dept);
+            dbSrc = dbSrc.replace('@WebUser.No', webUser.No);
+            dbSrc = dbSrc.replace('@WebUser.Name', webUser.Name);
+            dbSrc = dbSrc.replace("@WebUser.FK_DeptNameOfFull", webUser.FK_DeptNameOfFull);
+            dbSrc = dbSrc.replace('@WebUser.FK_DeptName', webUser.FK_DeptName);
+            dbSrc = dbSrc.replace('@WebUser.FK_Dept', webUser.FK_Dept);
             //替换
 
             $.each(condtionFieldsArry, function (i, obj) {
@@ -574,8 +547,6 @@
             if (window.parent && window.parent.CloseBootstrapDialog) {
                 window.parent.CloseBootstrapDialog("取消");
             }
-            //重新加载从表MapExt
-            opener.location.reload();
             window.close();
         }
     </script>
@@ -610,12 +581,15 @@
                 </div>
             </td>
         </tr>
-
+        <tr>
+            <td style="float:right;">
+                <div style="margin-top:10px; margin-right:10px;">
+                    <input type="button" class="btn" onclick="DalogModelCose()" value="取消" />
+                    <input type="button" class="btn btn-danger" onclick="DalogModelOK()" value="确定" />
+                </div>
+            </td>
+        </tr>
     </table>
-        <div style="text-align: right;width:100%;margin-top:10px; background: #e3eaf1;margin-right:10px;position:fixed;bottom: 0;left: 0;">
-            <input type="button" class="btn" onclick="DalogModelCose()" value="取消" />
-            <input style="background: #83bebb;border: 1px solid #d5e9e8;" type="button" class="btn btn-danger" onclick="DalogModelOK()" value="确定" />
-        </div>
     </form>
     <input type="hidden" id="HD_GroupField" value="" />
 </body>

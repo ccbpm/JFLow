@@ -1,6 +1,6 @@
 
 function MenuConvertTools(data) {
-
+ 
     this.data = data;
 }
 
@@ -21,14 +21,14 @@ MenuConvertTools.prototype.getSystemMenus = function () {
     var j = 0;
     for (var i = 0; i < endtM.length; i++) {
         var en = endtM[i];
-
-        if (en.GroupName == null || en.GroupName == "")
+        
+        if (en.GroupName == null || en.GroupName == "") 
             continue;
-
+        
         if (GroupNames.indexOf(en.GroupName) == -1) {
             j++;
             GroupNames[j] = en.GroupName;
-
+            
             Gl = { "Name": en.GroupName, "No": "Tno" + j, "Icon":"icon-folder"}
             GroupName.push(Gl);
         }
@@ -48,15 +48,15 @@ MenuConvertTools.prototype.getSystemMenus = function () {
         }
         if (count != 0 && userRegedit.MVals.indexOf(",dtM_" + systemNode.Name + ",") != -1)
             continue;
-        /* var gName = GroupName[i];
-         if (gName == "")
-             continue;
-         if (userRegedit != null && userRegedit != undefined && userRegedit.MVals.indexOf(",dtM_" + gName + ",") != -1)
-             continue;
-         if (gName.length == 2 && gName.indexOf('基本信息') != -1)
-             html += "";
-         else
-             systemNode=gName;*/
+       /* var gName = GroupName[i];
+        if (gName == "")
+            continue;
+        if (userRegedit != null && userRegedit != undefined && userRegedit.MVals.indexOf(",dtM_" + gName + ",") != -1)
+            continue;
+        if (gName.length == 2 && gName.indexOf('基本信息') != -1)
+            html += "";
+        else
+            systemNode=gName;*/
 
 
         //填入菜单内容.
@@ -68,7 +68,7 @@ MenuConvertTools.prototype.getSystemMenus = function () {
         for (var idx = 0; idx < endtM.length; idx++) {
 
             var moduleEn = endtM[idx];
-
+            
             if (moduleEn.RefAttrKey != null && moduleEn.RefAttrKey !="")
                 continue;
             console.log(moduleEn)
@@ -81,18 +81,18 @@ MenuConvertTools.prototype.getSystemMenus = function () {
                 continue;
 
             moduleEn.children = [];
-            /* var myName = moduleEn.GroupName;
-             if (myName == null || myName == "")
-                 myName = "基本信息";
+           /* var myName = moduleEn.GroupName;
+            if (myName == null || myName == "")
+                myName = "基本信息";
 
-             if (gName != myName)
-                 continue;
+            if (gName != myName)
+                continue;
 
-             if ((moduleEn.RefAttrKey != null && moduleEn.RefAttrKey != "") || moduleEn.IsCanBatch == "1" || moduleEn.Visable == "0")
-                 continue;
+            if ((moduleEn.RefAttrKey != null && moduleEn.RefAttrKey != "") || moduleEn.IsCanBatch == "1" || moduleEn.Visable == "0")
+                continue;
 
-             moduleEn.open = false;
-            html += "<li>" + GenerRM(en) + "</li>";*/
+            moduleEn.open = false;
+           html += "<li>" + GenerRM(en) + "</li>";*/
             if (!moduleEn.Icon) moduleEn.Icon = "icon-drop";
             if (moduleEn.Icon.indexOf('Img') != -1) {
                 moduleEn.Icon = "icon-drop";
@@ -102,14 +102,14 @@ MenuConvertTools.prototype.getSystemMenus = function () {
         }
         //console.log(systemNode);
         adminMenuNodes.push(systemNode)
-    }
+    }  
 
     return adminMenuNodes
 }
 MenuConvertTools.prototype.convertToTreeData = function () {
     var topNodes = [];
-
+    
     topNodes = topNodes.concat(this.getSystemMenus(this.data))
-
+  
     return topNodes
 }

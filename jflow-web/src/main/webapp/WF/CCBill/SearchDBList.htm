@@ -313,7 +313,7 @@
                         },
                     });
                 }
-                if (item.showWay ==2 || item.showWay ==0)
+                if (item.showWay ==2)
                     $("#DDL_" + item.key).val(item.value);
             })
 
@@ -470,17 +470,7 @@
                         OpenLayuiDialog(url, "导入模板数据", window.innerWidth / 2, 0, null, true);
                         break;
                     case "ExpExcel"://导出
-                        var handler = new HttpHandler("BP.CCBill.WF_CCBill");
-                        handler.AddPara("FrmID", GetQueryString("FrmID"));
-                        //查询集合
-                        var  data = handler.DoMethodReturnString("Search_Exp");
-                        if (data.indexOf("err@") != -1) {
-                            layer.alert(data);
-                            return;
-                        }
-                        let searchData = JSON.parse(data);
-                        table.exportFile(vtable.config.id, searchData, 'xls');
-                        //table.exportFile(vtable.config.id, tableData, 'xls');
+                        table.exportFile(vtable.config.id, tableData, 'xls');
                         break;
                     case "Group"://跳转到分组页面
                         url = "Group.htm?FrmID=" + GetQueryString("FrmID");

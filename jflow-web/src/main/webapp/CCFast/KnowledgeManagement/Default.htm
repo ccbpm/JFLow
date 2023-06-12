@@ -568,7 +568,8 @@
                     var myknow = []
                     for (i = 0; i < ens.length; i++) {
                         var en = ens[i];
-                        var FoucsDate = en.Foucs
+                        var FoucsDate = en.Foucs;
+                        FoucsDate = FoucsDate == null ? "" : FoucsDate;
                         if (FoucsDate.indexOf(webUser.Name)) {
                             en.gz = 0
                         } else {
@@ -589,7 +590,8 @@
                 var myknow=[]
                 for (i = 0; i < ens.length; i++) {
                     var en = ens[i];
-                    var FoucsDate = en.Foucs
+                    var FoucsDate = en.Foucs;
+                    FoucsDate = FoucsDate == null ? "" : FoucsDate;
                     if (FoucsDate.indexOf(webUser.Name)) {
                         en.gz=0
                     } else {

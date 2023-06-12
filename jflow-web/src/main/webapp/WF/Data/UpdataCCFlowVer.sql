@@ -184,7 +184,5 @@ DELETE FROM Sys_Enum WHERE EnumKey ='CondModel';
 INSERT INTO Sys_Enum(MyPK,Lab,EnumKey,IntKey,Lang) VALUES('CondModel_CH_0','由连接线条件控制','CondModel',0,'CH');
 INSERT INTO Sys_Enum(MyPK,Lab,EnumKey,IntKey,Lang) VALUES('CondModel_CH_1','按照用户选择计算','CondModel',1,'CH');
 INSERT INTO Sys_Enum(MyPK,Lab,EnumKey,IntKey,Lang) VALUES('CondModel_CH_2','发送按钮旁下拉框选择','CondModel',2,'CH');
+ 
 
--- 20230519
-UPDATE WF_Node SET RunModel=4 WHERE SubThreadType = 0 AND RunModel=4
-UPDATE WF_Node SET RunModel=5  WHERE SubThreadType = 1 AND RunModel=4

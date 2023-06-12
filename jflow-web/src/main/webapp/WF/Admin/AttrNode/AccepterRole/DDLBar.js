@@ -60,6 +60,7 @@ function InitBar(optionKey) {
             html += "<option value=" + DeliveryWay.ByTeamOrgOnly + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的用户组(本组织人员)</option>";
             html += "<option value=" + DeliveryWay.ByTeamDeptOnly + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的用户组(本部门人员)</option>";
             html += "<option value=" + DeliveryWay.ByBindTeamEmp + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的岗位用户组的人员计算</option>";
+         
         }
 
         html += "<option value=" + DeliveryWay.ByBindEmp + " >&nbsp;&nbsp;&nbsp;&nbsp;按绑定的人员计算</option>";
@@ -89,7 +90,7 @@ function InitBar(optionKey) {
         html += "<option value=null disabled='disabled' >+按指定节点处理人</option>";
         html += "<option value=" + DeliveryWay.ByStarter + " >&nbsp;&nbsp;&nbsp;&nbsp;与开始节点处理人相同</option>";
         html += "<option value=" + DeliveryWay.ByPreviousNodeEmp + ">&nbsp;&nbsp;&nbsp;&nbsp;与上一节点处理人相同</option>";
-        html += "<option value=" + DeliveryWay.BySpecNodeEmp + " >&nbsp;&nbsp;&nbsp;&nbsp;与指定节点处理人相同</option>";
+       
     }
 
 
@@ -131,10 +132,8 @@ function InitBar(optionKey) {
         html += "<option value=" + DeliveryWay.ByGuest + ">&nbsp;&nbsp;&nbsp;&nbsp;仅外部用户可以发起.</option>";
 
 
-        if (webUser.CCBPMRunModel == 1){
+        if (webUser.CCBPMRunModel == 1)
             html += "<option value=" + DeliveryWay.BySelectedOrgs + ">&nbsp;&nbsp;&nbsp;&nbsp;指定的组织可以发起(对集团版有效).</option>";
-        }
-
 
 
     } else {
@@ -142,7 +141,7 @@ function InitBar(optionKey) {
 
         if (webUser.CCBPMRunModel == 1) {
             html += "<option value=" + DeliveryWay.BySelectedEmpsOrgModel + " >&nbsp;&nbsp;&nbsp;&nbsp;由上一节点发送人通过“人员选择器”选择接受人(集团模式)</option>";
-            html += "<option value=" + DeliveryWay.BySelectEmpByOfficer + " >&nbsp;&nbsp;&nbsp;&nbsp;由上一节点发送人选择其他组织的联络.</option>";
+            html += "<option value=" + DeliveryWay.BySelectEmpByOfficer + " >&nbsp;&nbsp;&nbsp;&nbsp;由上一节点发送人选择其他组织的联络员</option>";
         }
 
         html += "<option value=" + DeliveryWay.BySelfUrl + " >&nbsp;&nbsp;&nbsp;&nbsp;自定义人员选择器</option>";
@@ -552,6 +551,7 @@ function changeOption() {
         case DeliveryWay.ByGuest:
             roleName = "51.ByGuest.htm";
             break;
+       
         default:
             roleName = "0.ByStation.htm";
             break;

@@ -52,7 +52,7 @@
                 var childNodeMenuItems = [
                     { title: '<i class=icon-star></i> 流程属性', id: "Attr" },
                     { title: '<i class=icon-settings></i> 设计流程', id: "Designer" },
-                    { title: '<i class=icon-plane></i> 测试容器', id: "Start" },
+                    //{ title: '<i class=icon-plane></i> 测试容器', id: "Start" },
                     { title: '<i class=icon-docs></i> 复制流程', id: "Copy" },
                     { title: '<i class=icon-pencil></i> 修改名称', id: "EditFlowName" },
                     { title: '<i class=icon-close></i> 删除流程', id: "Delete" }
@@ -116,7 +116,7 @@
                     handler.DoMethodReturnString("Default_LetAdminerLogin");
                     clearInterval(loop)
                 }
-            }, 1);
+            }, 1000);
 
         },
         EditSort: function (no, name) {
@@ -439,7 +439,7 @@
                 event.stopPropagation();
             }
             var webUser = new WebUser();
-
+         
 
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
             var fss = handler.DoMethodReturnJSON("Flows_InitSort");

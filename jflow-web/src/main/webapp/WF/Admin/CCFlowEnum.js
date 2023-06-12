@@ -57,6 +57,7 @@ if (typeof DeliveryWay == "undefined") {
         DeliveryWay.ByPreviousNodeFormStationsOnly = 54,
         //选择其他组织的联络员
         DeliveryWay.BySelectEmpByOfficer = 55,
+
         //按表单选择部门
         // 与上一节点的人员相同
         DeliveryWay.ByPreviousNodeEmp = 6,
@@ -304,18 +305,14 @@ if (typeof OvertimeRole == "undefined") {
 //批处理规则
 if (typeof BatchRole == "undefined") {
     var BatchRole = {}
-    /// <summary>
     /// 不处理
-    /// </summary>
     BatchRole.None = 0,
-        /// <summary>
         /// 审核组件模式
-        /// </summary>
         BatchRole.WorkCheckModel = 1,
-        /// <summary>
         /// 审核字段分组模式
-        /// </summary>
-        BatchRole.Group = 2
+        BatchRole.Group = 2,
+        //自定义.
+        BatchRole.Self = 3
 }
 
 //发送后转向
@@ -497,7 +494,7 @@ if (typeof AutoStart == "undefined") {
         /// </summary>
         AutoStart.ByTrigger = 3,
         AutoStart.ByDesigneeAdv = 4,
-        AutoStart.ByDesigneeAdminSendTo02Node=5
+        AutoStart.ByDesigneeAdminSendTo02Node = 5
 
 }
 //前置导航
@@ -621,7 +618,11 @@ if (typeof FrmType == "undefined") {
         /// <summary>
         /// 开发者表单
         /// </summary>
-        FrmType.Develop = 8
+        FrmType.Develop = 8,
+        /// <summary>
+        /// 章节表单
+        /// </summary>
+        FrmType.ChapterFrm = 9
 }
 
 //节点表单方案
@@ -678,9 +679,13 @@ if (typeof FormSlnType == "undefined") {
         /// </summary>
         FormSlnType.Developer = 12,
         /// <summary>
-        /// 只能SDK表单
+        /// 智能SDK表单
         /// </summary>
         FormSlnType.SDKFormSmart = 13,
+        /// <summary>
+        /// 章节表单
+        /// </summary>
+        FormSlnType.ChapterFrm = 14,
         /// <summary>
         /// 禁用(对多表单流程有效)
         /// </summary>
@@ -889,18 +894,18 @@ if (typeof TemplateFileModel == "undefined") {
     /// 旧版本的rtf模版格式
     /// </summary>
     TemplateFileModel.RTF = 0,
-    /// <summary>
-    /// VSTo的Word模板方式
-   /// </summary>
-    TemplateFileModel.VSTOForWord = 1,
-    /// <summary>
-    /// VSTO的Excel模板方式
-    /// </summary>
-    TemplateFileModel.VSTOForExcel = 2,
-   /// <summary>
-    /// WPS的模板方式
-    /// </summary>
-    TemplateFileModel.WPS = 3
+        /// <summary>
+        /// VSTo的Word模板方式
+        /// </summary>
+        TemplateFileModel.VSTOForWord = 1,
+        /// <summary>
+        /// VSTO的Excel模板方式
+        /// </summary>
+        TemplateFileModel.VSTOForExcel = 2,
+        /// <summary>
+        /// WPS的模板方式
+        /// </summary>
+        TemplateFileModel.WPS = 3
 }
 
 

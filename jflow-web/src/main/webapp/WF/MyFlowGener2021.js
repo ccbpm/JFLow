@@ -130,11 +130,7 @@ function GenerWorkNode() {
     ShowWorkReturnTip();
     //解析表单
     BindFrm();
-    //加载JS文件 改变JS文件的加载方式 解决JS在资源中不显示的问题.
-    var enName = flowData.Sys_MapData[0].No;
-    if (flowData.Sys_MapData[0].IsEnableJs == 1)
-        loadScript("../DataUser/JSLibData/" + enName + "_Self.js?t=" + Math.random());
-
+   
     layer.close(index);
 }
 
@@ -233,6 +229,7 @@ function BindFrm() {
             if (frmNode != null && frmNode != undefined) {
                 // frmNode = frmNode[0];
                 if (frmNode.FrmType == 0) { //傻瓜表单
+                    $('head').append('<link href="../DataUser/Style/FoolFrmStyle/Default.css" rel="stylesheet" type="text/css" />');
                     Skip.addJs("./CCForm/FrmFool.js?ver=" + Math.random());
                     GenerFoolFrm(flowData);
                 }
@@ -353,9 +350,12 @@ function BindFrm() {
 
     //星级评分事件
     setScore(isReadonly);
+
+    //加载JS文件 改变JS文件的加载方式 解决JS在资源中不显示的问题.
     var enName = flowData.Sys_MapData[0].No;
     if (flowData.Sys_MapData[0].IsEnableJs == 1)
         Skip.addJs("../DataUser/JSLibData/" + enName + "_Self.js?t=" + Math.random());
+
 
     //4.解析表单的扩展功能
     AfterBindEn_DealMapExt(flowData);

@@ -13,7 +13,7 @@ function Port_Login(userNo) {
 
     var handler = new HttpHandler("BP.WF.HttpHandler.WF_AppClassic");
     handler.AddPara("UserNo", userNo);
-    handler.DoMethodReturnString("Portal_Login");
+    handler.DoMethodReturnString("Port_Login");
 
 }
 
@@ -140,8 +140,6 @@ function CCForm_SaveAsDraftByBillNo(frmID, billNo) {
     // var billOID = handler.DoMethodReturnString("MyBill_CreateBlankBillID");
     //return billOID;
 }
-
-
 
 /**
  * 创建表单实例. 说明:指定表单的ID, specID,与参数创建表单实例.

@@ -681,11 +681,12 @@
             }
             html += "</tbody>";
 
-            //取消人员部门岗位管理关系. @不能出现sql.
-            var deptEmps = new Entities("BP.Port.DeptEmps");
-            deptEmps.DoMethodReturnString("DelteNotInEmp");
-            var deptEmpStas = new Entities("BP.Port.DeptEmpStations");
-            deptEmpStas.DoMethodReturnString("DelteNotInEmp");
+            //取消人员部门岗位管理关系.
+            //var deptEmps = new Entities("BP.Port.DeptEmps");
+            //deptEmps.DoMethodReturnString("DelteNotInEmp");
+
+            //var deptEmpStas = new Entities("BP.Port.DeptEmpStations");
+            //deptEmpStas.DoMethodReturnString("DelteNotInEmp");
 
 
             //查询出来兼职人员.

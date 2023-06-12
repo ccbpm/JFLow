@@ -24,6 +24,7 @@ function CommPop(popType, mapAttr, mapExt, frmData, mapExts, targetID) {
     var data = [];
     //获取实体信息
     var ens = [];
+    var valTexts = "";
     if (popType == "PopBranches") {
         $("#TB_" + targetID).hide();
         $("#TB_" + targetID).after("<div id='mapExt_" + targetID + "' style='width:99%'></div>")

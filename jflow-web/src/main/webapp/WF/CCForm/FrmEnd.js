@@ -1,6 +1,7 @@
 ﻿/// <reference path="frmdevelop2021.js" />
 
 var athDesc = {}
+var editImg = "";
 $(function () {
     Skip.addJs(basePath + "/WF/Scripts/xss.js");
     var theme = filterXSS(localStorage.getItem("themeColorInfo"));
@@ -42,6 +43,7 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
     var mapAttrs = frmData.Sys_MapAttr;
     frmMapAttrs = mapAttrs;
     var checkData = null;
+    // 主要是这里开始，这个mapAttrs就是定义的字段属性。根据不同类型的字段处理，看是数字还是金额还是xxx
     $.each(mapAttrs, function (i, mapAttr) {
         if (mapAttr.UIContralType == 18)
             return true;
@@ -50,9 +52,12 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
             $('#CCForm').append($("<input type='hidden' id='TB_" + mapAttr.KeyOfEn + "' name='TB_" + mapAttr.KeyOfEn + "' value='" + val + "' />"));
             return true;
         }
-
+        // 这里大致分为了三类
+        // TB_前缀是文本框
         $('#TB_' + mapAttr.KeyOfEn).attr("name", "TB_" + mapAttr.KeyOfEn);
+        // DDL => 下拉框
         $('#DDL_' + mapAttr.KeyOfEn).attr("name", "DDL_" + mapAttr.KeyOfEn);
+        // CB => 单选多选
         $('#CB_' + mapAttr.KeyOfEn).attr("name", "CB_" + mapAttr.KeyOfEn);
 
 
@@ -259,10 +264,10 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
             if (mapAttr.MyDataType == "8")
                 $('#TB_' + mapAttr.KeyOfEn).css("text-align", "");
         }
-        $('#TB_' + mapAttr.KeyOfEn).removeClass("form-control");
-        $('#CB_' + mapAttr.KeyOfEn).removeClass("form-control");
-        $('#RB_' + mapAttr.KeyOfEn).removeClass("form-control");
-        $('#DDL_' + mapAttr.KeyOfEn).removeClass("form-control");
+       // $('#TB_' + mapAttr.KeyOfEn).removeClass("form-control");
+        //$('#CB_' + mapAttr.KeyOfEn).removeClass("form-control");
+       // $('#RB_' + mapAttr.KeyOfEn).removeClass("form-control");
+        //$('#DDL_' + mapAttr.KeyOfEn).removeClass("form-control");
         var layVerify = "";
         var expression = $.grep(expressions, function (mapExt) {
             return mapExt.AttrOfOper == mapAttr.KeyOfEn && mapExt.FK_MapData == mapAttr.FK_MapData;
@@ -300,7 +305,7 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
     layui.form.verify(verifys);
 
     //是否存在图标附件
-    if ($("#editimg").length > 0) {
+    if ($(".editimg").length > 0) {
         layui.config({
             base: laybase + 'Scripts/layui/ext/'
         }).use(['form', 'croppers'], function () {
@@ -308,23 +313,24 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
                 , layer = layui.layer;
 
             //创建一个头像上传组件
-            croppers.render({
-                elem: '#editimg'
-                , saveW: 150     //保存宽度
-                , saveH: 150   //保存高度
-                , mark: 1 / 1    //选取比例
-                , area: '900px'  //弹窗宽度
-                , url: $("#editimg").data("info") //图片上传接口返回和（layui 的upload 模块）返回的JOSN一样
-                , done: function (data) { //上传完毕回调
-                    if (data.SourceImage != undefined) {
-                        $('#Img' + $("#editimg").data("ref")).attr('src', basePath + "/" + data.SourceImage + "?M=" + Math.random());
-                    } else {
-                        return layer.msg('上传失败');
+            $.each($(".editimg"), function (idex, item) {
+                croppers.render({
+                    elem: '#' + item.id
+                    , saveW: 150     //保存宽度
+                    , saveH: 150   //保存高度
+                    , mark: 1 / 1    //选取比例
+                    , area: '900px'  //弹窗宽度
+                    , url: $(item).data("info") //图片上传接口返回和（layui 的upload 模块）返回的JOSN一样
+                    , done: function (data) { //上传完毕回调
+                        if (data.SourceImage != undefined) {
+                            $('#Img' + $(item).data("ref")).attr('src', basePath + "/" + data.SourceImage + "?M=" + Math.random());
+                        } else {
+                            return layer.msg('上传失败');
+                        }
+
                     }
-
-                }
+                });
             });
-
         });
 
     }
@@ -332,6 +338,7 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
     //设置是否隐藏分组、获取字段分组所有的tr
     var trs = $("#CCForm .FoolFrmGroupBar");
     var isHidden = false;
+    // 这部分应该是在处理分组和隐藏字段
     $.each(trs, function (i, obj) {
         //获取所有跟随的同胞元素，其中有不隐藏的tr,就跳出循环
         var sibles = $(obj).nextAll();
@@ -419,6 +426,7 @@ function AfterBindEn_DealMapExt(frmData) {
 
     var isHaveLoadMapExt = false;
     var isHaveEnableJs = false;
+    // 这里是处理栅格，计算宽度百分比
     $.each(mapAttrs, function (idx, mapAttr) {
         //字段不可见
         if (mapAttr.UIVisible == 0)

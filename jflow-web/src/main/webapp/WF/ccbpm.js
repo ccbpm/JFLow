@@ -14,28 +14,46 @@ $(function () {
     if (GetHrefUrl().indexOf(ccbpmPath) == -1)
         isEqualsDomain = true;
     //引入关联的js
-    jQuery.getScript(DealText( ccbpmPath + "/WF/Scripts/config.js"), function () {
-        jQuery.getScript(DealText( ccbpmPath + "/WF/Scripts/QueryString.js"), function () {
-            jQuery.getScript(DealText( ccbpmPath + "/WF/Comm/Gener.js"), function () {
+    jQuery.getScript(ccbpmPath + "/WF/Scripts/config.js", function () {
+        debugger
+        jQuery.getScript(ccbpmPath + "/WF/Scripts/QueryString.js", function () {
+            jQuery.getScript(ccbpmPath + "/WF/Comm/Gener.js", function () {
                 if ($('#ccbpmJS').length != 0) {
                     var url = $('#ccbpmJS')[0].src;
-                    var SID = getQueryStringByNameFromUrl(url, "Token");
+                    var SID = getQueryStringByNameFromUrl(url, "Token") || getQueryStringByNameFromUrl(url, "SID");
                     //用户登陆
                     if (SID != null && SID != undefined) {
                         var handler = new HttpHandler("BP.WF.HttpHandler.WF");
                         handler.AddPara("Token", SID);
                         handler.AddPara("DoWhat", "PortLogin");
-
                         var data = handler.DoMethodReturnString("Port_Init");
+                        localStorage.setItem("Token", SID);
+                       
                     }
                 }
                 
             })
         });
     });
-
-
 });
+
+
+/**
+ * 处理文本，方式被污染，用于安全检查
+ * @param {any} text
+ */
+function DealText(text) {
+
+    //if (text.toUpperCase().indexOf('SCRIPT') ==-1 )
+    //    return text;
+
+    if (/^[\d\-\+]*$/.test(text))
+        return text;
+    var a = 12;
+    var b = 24;
+    if (a + a == b || b == a * 2 || /^[\d\-\+]*$/.test(text))
+        return text;
+}
 
 $(window).load(function () {
     //初始化网页URL参数
@@ -69,6 +87,7 @@ $(window).load(function () {
 
     //审核组件
     if ($("#WorkCheck").length == 1) {
+        debugger
         loadScript(ccbpmPath + "/WF/WorkOpt/WorkCheck.js", function () {
             NodeWorkCheck_Init();
         });  

@@ -1,4 +1,23 @@
-﻿
+﻿/**
+ * 异步加载（layui.open）
+ * @param {any} msg 加载时的提示信息
+ * @returns
+ */
+const asyncLoad = (msg) => new Promise((resolve, _) => {
+    const index = layer.open({
+        content: msg,
+        shade: [0.2, '#000'],
+        title: '',
+        btn: [],
+        closeBtn: 0,
+        icon: 16,
+    })
+    setTimeout(() => {
+        resolve(index);
+    }, 16)
+
+})
+
 function deleteUrlParam(targetUrl, targetKey) {
     if (typeof targetUrl !== 'string') {
         return targetUrl
@@ -89,7 +108,7 @@ function DealText(text) {
 
 /**
  * 把表达式计算或者转化为json对象.
- *
+ * 
  * @param {表达式} str
  */
 function cceval(exp) {
@@ -147,7 +166,7 @@ function ReLoginByToken() {
 //检查字段,从表名,附件ID,输入是否合法.
 function CheckID(val) {
 
-    //首位可以是字母以及下划线。
+    //首位可以是字母以及下划线。 
     //首位之后可以是字母，数字以及下划线。下划线后不能接下划线
 
     var flag = false; //用来判断
@@ -480,7 +499,6 @@ function GenerBindEntities(ctrlDDLId, ensName, selectVal, filter) {
         url: dynamicHandler + "?DoType=EnsData&EnsName=" + ensName + "&Filter=" + filter + "&m=" + Math.random(),
         dataType: 'html',
         success: function (data) {
-
             data = JSON.parse(data);
             //绑定枚举值.
             GenerBindDDL(ctrlDDLId, data, "No", "Name", selectVal);
@@ -692,7 +710,7 @@ function GenerFullAllCtrlsVal(data) {
 
                         $("#DDLPara_" + suffix).val(val); // 操作权限.
 
-                        //   window.setTimeout(function () { $("#DDLPara_" + suffix).val(row.districtCode); }, 1200);
+                        //   window.setTimeout(function () { $("#DDLPara_" + suffix).val(row.districtCode); }, 1200); 
                         //  json[kv[0]] = kv[1];
                         //   $("#DDLPara_" + suffix).val("2"); // 操作权限.
                         //console.log(suffix + "_" + val);
@@ -945,7 +963,7 @@ function closeWhileEscUp() {
 
 /* 关于实体的类
 GEEntity_Init
-var pkval="Demo_DtlExpImpDtl1";
+var pkval="Demo_DtlExpImpDtl1";  
 var EnName="BP.WF.Template.Frm.MapDtlExt";
 GEntity en=new GEEntity(EnName,pkval);
 var strs=  en.ImpSQLNames;
@@ -1399,7 +1417,7 @@ var Entity = (function () {
                 return;
             }
 
-            //  alert(self.GetPKVal());
+            //  alert(self.GetPKVal()); 
 
             var result;
             $.ajax({
@@ -1485,7 +1503,7 @@ var Entity = (function () {
                     if (!!o && o.indexOf('~') != -1)
                         o = o.replace(/~/g, '`');
                     params += o + "~";
-                }
+                }   
             });
             if (params.lastIndexOf("~") == params.length - 1)
                 params = params.substr(0, params.length - 1);
@@ -2471,7 +2489,7 @@ var HttpHandler = (function () {
                 throw Error('必须是Form表单才可以使用该方法');
 
             formData = $("form").serialize();
-            //序列化时把空格转成+，+转义成％２Ｂ，在保存时需要把+转成空格
+            //序列化时把空格转成+，+转义成％２Ｂ，在保存时需要把+转成空格  
             formData = formData.replace(/\+/g, " ");
             //form表单序列化时调用了encodeURLComponent方法将数据编码了
             // formData = decodeURIComponent(formData, true);
@@ -2536,7 +2554,7 @@ var HttpHandler = (function () {
             if (params.indexOf("&" + key + "=") == -1) {
                 if (value == undefined)
                     value = "";
-                if (IsIELower10 == true)
+               if (IsIELower10 == true)
                     parameters[key] = value;
                 else
                     parameters.append(key, value);
@@ -2591,8 +2609,8 @@ var HttpHandler = (function () {
 
             return params;
         },
-
-        customRequest: function(methodName) {
+		
+		customRequest: function(methodName) {
             methodName = filterXSS(methodName)
             if (dynamicHandler == "")
                 return;
@@ -2602,33 +2620,33 @@ var HttpHandler = (function () {
             if (!parameters.has('Token')) {
                 parameters.append('Token', GetQueryString('Token'))
             }
-            $.ajax({
-                type: 'post',
-                async: false,
-                url: dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random(),
-                data: new FormData(),
-                dataType: 'html',
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    if (methodName === 'Login_Submit' || methodName === 'TestFlow2020_StartIt') {
-                        localStorage.setItem('Token', getQueryFromTargetStr(data, 'Token'))
-                        jsonString = deleteUrlParam(data, 'Token')
-                    } else {
-                        jsonString = data;
+                $.ajax({
+                    type: 'post',
+                    async: false,
+                    url: dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random(),
+                    data: new FormData(),
+                    dataType: 'html',
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        if (methodName === 'Login_Submit' || methodName === 'TestFlow2020_StartIt') {
+                            localStorage.setItem('Token', getQueryFromTargetStr(data, 'Token'))
+                            jsonString = deleteUrlParam(data, 'Token')
+                        } else {
+                            jsonString = data;
+                        }
+
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        var url = dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random();
+                        ThrowMakeErrInfo("HttpHandler-DoMethodReturnString-" + methodName, textStatus, url);
+
+
                     }
-
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    var url = dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random();
-                    ThrowMakeErrInfo("HttpHandler-DoMethodReturnString-" + methodName, textStatus, url);
-
-
-                }
-            });
+                });
             return jsonString;
         },
-
+		
         DoMethodReturnString: function (methodName) {
             methodName = filterXSS(methodName)
             if (dynamicHandler == "")
@@ -2639,7 +2657,7 @@ var HttpHandler = (function () {
             if (!parameters.has('Token')) {
                 parameters.append('Token', GetQueryString('Token'))
             }
-            if(methodName === 'Login_Submit') {
+	    if(methodName === 'Login_Submit') {
                 var isEncrypt = this.customRequest("CheckEncryptEnable")
                 var key = "TB_PW"
                 if(isEncrypt === '0'){
@@ -2735,7 +2753,6 @@ var HttpHandler = (function () {
 
 var webUserJsonString = null;
 var WebUser = function () {
-
     if (dynamicHandler == "")
         return;
     if (webUserJsonString != null) {
@@ -2745,13 +2762,9 @@ var WebUser = function () {
         });
         return;
     }
-
-
     dynamicHandler = basePath + "/WF/Comm/ProcessRequest";
-
     //获得页面上的token. 在登录信息丢失的时候，用token重新登录.
     var token =GetQueryString('Token');
-
     $.ajax({
         type: 'post',
         async: false,
@@ -2776,7 +2789,7 @@ var WebUser = function () {
                     //可能出现跨域
                     //SetHref(basePath + "/Portal/Standard/Login.htm");
                 }
-
+                
                 return;
             }
 
@@ -2795,9 +2808,9 @@ var WebUser = function () {
     });
     var self = this;
     if (webUserJsonString!=null)
-        $.each(webUserJsonString, function (n, o) {
-            self[n] = filterXSS(o);
-        });
+    $.each(webUserJsonString, function (n, o) {
+        self[n] = filterXSS(o);
+    });
 };
 
 var guestUserJsonString = null;
@@ -3062,7 +3075,7 @@ function UserLogInsert(logType, logMsg, userNo) {
 }
 
 function SFTaleHandler(url) {
-    //获取当前网址，如： http://localhost:80/jflow-web/index.jsp
+    //获取当前网址，如： http://localhost:80/jflow-web/index.jsp  
     var curPath = GetHrefUrl();
     //获取主机地址之后的目录，如： jflow-web/index.jsp  
     var pathName = window.document.location.pathname;
@@ -3130,9 +3143,9 @@ $(function () {
     var url = GetHrefUrl().toLowerCase();
     var pageName = window.document.location.pathname.toLowerCase();
     pageName = pageName.substring(pageName.lastIndexOf("/")+1);
-
+    
     //不需要权限信息
-    var listPage = ['login.htm', 'dbinstall.htm', 'scanguide.htm', 'qrcodescan.htm', 'index.htm', 'gotourl.htm', 'invited.htm', 'registerbywebsite.htm', 'reqpassword.htm', 'reguser.htm', 'port.htm', 'ccbpm.cn/', 'loginwebsite.htm', 'goto.htm','do.htm'];
+    var listPage = ['login.htm', 'selectoneorg.htm', 'dbinstall.htm', 'scanguide.htm', 'qrcodescan.htm', 'index.htm', 'gotourl.htm', 'invited.htm', 'registerbywebsite.htm', 'reqpassword.htm', 'reguser.htm', 'port.htm', 'ccbpm.cn/', 'loginwebsite.htm', 'goto.htm','do.htm'];
     if (listPage.includes(pageName) || url == basePath) {
         localStorage.setItem('Token', '');
         return;

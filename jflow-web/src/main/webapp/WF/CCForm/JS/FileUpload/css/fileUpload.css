@@ -142,7 +142,7 @@
 .image-item {
     width: 75px !important;
     height: 75px;
-    background-image: url(/WF/CCForm/JS/FileUpload/css/iconfont-tianjia.png);
+    background-image: url(./iconfont-tianjia.png);
     background-size: 100% 100%;
     display: inline-block;
     position: relative;
@@ -218,4 +218,16 @@
 #Div_Frm_ZQXXPLSWSP_Ath1 th,
 #Div_Frm_ZQXXPLSWSP_Ath1 td{
     vertical-align:middle;
+}
+.Img_ShowText {
+    width: 180px;
+    background: white;
+    box-shadow: 0px 0px 4px 2px #cccccc57;
+    left: 35px;
+    top: 55px;
+    position: absolute;
+    z-index: 19999;
+    padding: 5px;
+    font-size:12px;
+    display:none;
 }

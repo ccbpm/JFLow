@@ -4,6 +4,7 @@ var token = null;
 var userNo = null;
 $(function () {
 
+    return;
     //if (window.screenLeft == 0 && window.document.body.clientWidth == window.screen.width) {
     //    alert("full");
     //}

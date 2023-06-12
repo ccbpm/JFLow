@@ -25,9 +25,9 @@
             var emp = new Entity("BP.Port.Emp", empNo);
 
             var handler = new HttpHandler("BP.WF.HttpHandler.GPMPage");
-            handler.AddPara("FK_Emp",empNo);
-            var data = handler.DoMethodReturnString("EnpDepts_Init");
-            if(data.indexOf("err@")!=-1){
+            handler.AddPara("FK_Emp", empNo);
+            var data = handler.DoMethodReturnString("EmpDepts_Init");
+            if (data.indexOf("err@") != -1) {
                 layer.alert(data);
                 return;
             }
@@ -44,7 +44,7 @@
             html += "<th>多个岗位</th>";
             html += "<th>操作</th>";
             html += "</tr>";
-            deptEmps.forEach(function(deptEmp){
+            deptEmps.forEach(function (deptEmp) {
                 html += "<tr>";
                 if (deptEmp.FK_Dept.length > 23)
                     html += "<td class='showTD' data-info='" + deptEmp.FK_Dept + "' style='white-space:nowrap;word-break:keep-all;text-overflow: ellipsis;'>" + deptEmp.FK_Dept.substring(0, 23) + "..." + "</td>";
@@ -59,15 +59,15 @@
                     html += "<td><a href=\"javascript:SetMainDept('" + deptEmp.FK_Dept + "','" + empNo + "')\">设置主部门</a></td>";
                 }
                 //求岗位集合.
-                var dess = deptempStations.filter(item=>item.FK_Dept==deptEmp.FK_Dept);
+                var dess = deptempStations.filter(item => item.FK_Dept == deptEmp.FK_Dept);
                 if (dess.length == 0) {
                     html += "<td>无岗位-<a href=\"javascript:AddStation('" + deptEmp.FK_Dept + "','" + empNo + "')\">增加</a></td>";
                 } else {
-                    var staNames =dess.map(item=>item.FK_StationText).join(",");
-                  /*  dess.forEach(function(des){
-                        staNames += des.Name + ",";
-                    })
-                   */
+                    var staNames = dess.map(item => item.FK_StationText).join(",");
+                    /*  dess.forEach(function(des){
+                          staNames += des.Name + ",";
+                      })
+                     */
                     html += "<td><a href=\"javascript:AddStation('" + deptEmp.FK_Dept + "','" + empNo + "')\">" + staNames + "</a></td>";
                 }
 
@@ -109,7 +109,7 @@
 
             var empNo = GetQueryString("FK_Emp");
             var emp = new Entity("BP.Port.Emp", empNo);
-            SetHref( "EmpDeptMainDept.htm?FK_Emp=" + empNo + "&FK_DEPT=" + emp.FK_Dept);
+            SetHref("EmpDeptMainDept.htm?FK_Emp=" + empNo + "&FK_DEPT=" + emp.FK_Dept);
 
 
         }
@@ -159,7 +159,7 @@
 <body>
 
 
-<div id="Msg"></div>
+    <div id="Msg"></div>
 
 </body>
 </html>

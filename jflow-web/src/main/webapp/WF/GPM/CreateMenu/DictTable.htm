@@ -71,12 +71,7 @@
             if (name == "")
                 return;
 
-            var str = "BP.WF.HttpHandler.WF_Admin_CCFormDesigner";
-            var webUser = new WebUser();
-            if (webUser.CCBPMRunModel == 2)
-                str = "BP.Cloud.HttpHandler.Admin_CCFormDesigner";
-
-            var handler = new HttpHandler(str);
+            var handler = new HttpHandler("BP.Cloud.HttpHandler.Admin_CCFormDesigner");
             handler.AddPara("IsQuanPin", isQuanPin);
             handler.AddPara("TB_Name", encodeURIComponent(name));
             var data = handler.DoMethodReturnString("NewFrmGuide_GenerPinYin");
@@ -86,6 +81,7 @@
                 $("#Msg").html("<font color=red>" + data + "</font>");
                 return;
             }
+            var webUser = new WebUser();
 
             $('#TB_No').val(data);
             //  $('#TB_PTable').val(key);

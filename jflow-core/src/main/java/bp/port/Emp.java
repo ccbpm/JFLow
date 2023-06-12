@@ -398,72 +398,72 @@ public class Emp extends EntityNoName
 
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception {
-		if (DataType.IsNullOrEmpty(this.getOrgNo()) == true)
-			this.setOrgNo(WebUser.getOrgNo());
-		//增加拼音，以方便查找.
-		if (DataType.IsNullOrEmpty(this.getName()) == true)
-			throw new RuntimeException("名称不能为空.");
-
-		if (WebUser.getIsAdmin() == false && this.getNo().equals(WebUser.getNo())==false)
-		{
-			throw new RuntimeException("非管理员无法操作.");
-		}
-
-		if (DataType.IsNullOrEmpty(this.getEmail()) == false)
-		{
-			//邮箱格式
-
-			if (Pattern.matches("^(\\w+([-.][A-Za-z0-9]+)*){3,18}@\\w+([-.][A-Za-z0-9]+)*\\.\\w+([-.][A-Za-z0-9]+)*$",
-					this.getEmail()) == false)
-			{
-				throw new RuntimeException("邮箱格式不正确.");
-			}
-		}
-
-		//设置orgNo.
-		if (bp.difference.SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single && DataType.IsNullOrEmpty(this.getFK_Dept())==false)
-		{
-
-			Dept dept = new Dept();
-			dept.setNo(this.getFK_Dept());
-			dept.RetrieveFromDBSources();
-			this.setOrgNo(dept.getOrgNo());
-		}
+//		if (DataType.IsNullOrEmpty(this.getOrgNo()) == true)
+//			this.setOrgNo(WebUser.getOrgNo());
+//		//增加拼音，以方便查找.
+//		if (DataType.IsNullOrEmpty(this.getName()) == true)
+//			throw new RuntimeException("名称不能为空.");
+//
+//		if (WebUser.getIsAdmin() == false && this.getNo().equals(WebUser.getNo())==false)
+//		{
+//			throw new RuntimeException("非管理员无法操作.");
+//		}
+//
+//		if (DataType.IsNullOrEmpty(this.getEmail()) == false)
+//		{
+//			//邮箱格式
+//
+//			if (Pattern.matches("^(\\w+([-.][A-Za-z0-9]+)*){3,18}@\\w+([-.][A-Za-z0-9]+)*\\.\\w+([-.][A-Za-z0-9]+)*$",
+//					this.getEmail()) == false)
+//			{
+//				throw new RuntimeException("邮箱格式不正确.");
+//			}
+//		}
+//
+//		//设置orgNo.
+//		if (bp.difference.SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single && DataType.IsNullOrEmpty(this.getFK_Dept())==false)
+//		{
+//
+//			Dept dept = new Dept();
+//			dept.setNo(this.getFK_Dept());
+//			dept.RetrieveFromDBSources();
+//			this.setOrgNo(dept.getOrgNo());
+//		}
 
 		String pinyinQP = DataType.ParseStringToPinyin(this.getName()).toLowerCase();
 		String pinyinJX = DataType.ParseStringToPinyinJianXie(this.getName()).toLowerCase();
 		this.setPinYin("," + pinyinQP + "," + pinyinJX + ",");
 
-		//处理岗位信息.
-		DeptEmpStations des = new DeptEmpStations();
-		des.Retrieve(DeptEmpStationAttr.FK_Emp, this.getNo());
-
-		String depts = "";
-		String stas = "";
-		for (DeptEmpStation item : des.ToJavaList())
-		{
-			Dept dept = new Dept();
-			dept.setNo(item.getFK_Dept());
-			if (dept.RetrieveFromDBSources() == 0)
-			{
-				item.Delete();
-				continue;
-			}
-
-			//给拼音重新定义值,让其加上部门的信息.
-			this.setPinYin(this.getPinYin() + pinyinJX + "/" + DataType.ParseStringToPinyinJianXie(dept.getName()).toLowerCase() + ",");
-
-			bp.port.Station sta = new bp.port.Station();
-			sta.setNo(item.getFK_Station());
-			if (sta.RetrieveFromDBSources() == 0)
-			{
-				item.Delete();
-				continue;
-			}
-
-			stas += "@" + dept.getNameOfPath() + "|" + sta.getName();
-			depts += "@" + dept.getNameOfPath();
-		}
+//		//处理岗位信息.
+//		DeptEmpStations des = new DeptEmpStations();
+//		des.Retrieve(DeptEmpStationAttr.FK_Emp, this.getNo());
+//
+//		String depts = "";
+//		String stas = "";
+//		for (DeptEmpStation item : des.ToJavaList())
+//		{
+//			Dept dept = new Dept();
+//			dept.setNo(item.getFK_Dept());
+//			if (dept.RetrieveFromDBSources() == 0)
+//			{
+//				item.Delete();
+//				continue;
+//			}
+//
+//			//给拼音重新定义值,让其加上部门的信息.
+//			this.setPinYin(this.getPinYin() + pinyinJX + "/" + DataType.ParseStringToPinyinJianXie(dept.getName()).toLowerCase() + ",");
+//
+//			bp.port.Station sta = new bp.port.Station();
+//			sta.setNo(item.getFK_Station());
+//			if (sta.RetrieveFromDBSources() == 0)
+//			{
+//				item.Delete();
+//				continue;
+//			}
+//
+//			stas += "@" + dept.getNameOfPath() + "|" + sta.getName();
+//			depts += "@" + dept.getNameOfPath();
+//		}
 		return super.beforeUpdateInsertAction();
 	}
 	@Override

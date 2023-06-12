@@ -512,6 +512,9 @@ public class WF_AppClassic extends WebContralBase
 			sql = "SELECT  B.Name, count(DISTINCT C.WorkID) as Num FROM WF_GenerWorkerList A,Port_Dept B,WF_GenerWorkFlow C WHERE A.FK_Dept=B.No AND A.WorkID=C.WorkID  and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}') AND(TO_DATE(C.SDTOfNode, 'yyyy-mm-dd hh24:mi:ss') - TO_DATE(A.SDT, 'yyyy-mm-dd hh24:mi:ss')) > 0 GROUP BY B.Name ";
 			sql += "UNION SELECT  B.Name, count(DISTINCT C.WorkID) as Num FROM WF_GenerWorkerList A,Port_Dept B,WF_GenerWorkFlow C WHERE A.FK_Dept=B.No AND A.WorkID=C.WorkID and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$') AND (TO_DATE(SDTOfNode, 'yyyy-mm-dd') - TO_DATE(SDT, 'yyyy-mm-dd')) > 0 GROUP BY B.Name";
 		}
+		else if (SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.HGDB){
+			sql = "SELECT  B.Name, count(DISTINCT C.WorkID) as Num FROM WF_GenerWorkerList A,Port_Dept B,WF_GenerWorkFlow C WHERE A.FK_Dept=B.No AND A.WorkID=C.WorkID  and to_timestamp(CASE WHEN A.SDT='无' THEN '' ELSE A.SDT END, 'yyyy-mm-dd hh24:MI:SS') < to_timestamp(CASE WHEN C.SDTOfNode='无' THEN '' ELSE C.SDTOfNode END, 'yyyy-mm-dd hh24:MI:SS') GROUP BY B.Name";
+		}
 		else
 		{
 			sql = "SELECT  B.Name, count(DISTINCT C.WorkID) as Num FROM WF_GenerWorkerList A,Port_Dept B,WF_GenerWorkFlow C WHERE A.FK_Dept=B.No AND A.WorkID=C.WorkID  and convert(varchar(100),A.SDT,120) < CONVERT(varchar(100), C.SDTOfNode, 120) GROUP BY B.Name";
@@ -577,6 +580,9 @@ public class WF_AppClassic extends WebContralBase
 			sql = "SELECT  B.FlowName AS Name, count(DISTINCT A.WorkID) as Num FROM WF_GenerWorkerList A,WF_GenerWorkFlow B WHERE A.FK_Flow=B.FK_Flow AND A.WorkID=B.WorkID  and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}') AND(TO_DATE(B.SDTOfNode, 'yyyy-mm-dd hh24:mi:ss') - TO_DATE(A.SDT, 'yyyy-mm-dd hh24:mi:ss')) > 0 GROUP BY B.FlowName ";
 			sql += "UNION SELECT  B.FlowName AS Name, count(DISTINCT A.WorkID) as Num FROM WF_GenerWorkerList A,WF_GenerWorkFlow B WHERE A.FK_Flow=B.FK_Flow AND A.WorkID=B.WorkID and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$') AND (TO_DATE(B.SDTOfNode, 'yyyy-mm-dd') - TO_DATE(SDT, 'yyyy-mm-dd')) > 0 GROUP BY B.FlowName";
 		}
+		else if (SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.HGDB){
+			sql = "SELECT B.FlowName AS Name, count(DISTINCT A.WorkID) as Num FROM WF_GenerWorkerList A,WF_GenerWorkFlow B WHERE A.FK_Flow=B.FK_Flow AND A.WorkID=B.WorkID  and to_timestamp(CASE WHEN A.SDT='无' THEN '' ELSE A.SDT END, 'yyyy-mm-dd hh24:MI:SS') < to_timestamp(CASE WHEN B.SDTOfNode='无' THEN '' ELSE B.SDTOfNode END, 'yyyy-mm-dd hh24:MI:SS') GROUP BY B.FlowName";
+		}
 		else
 		{
 			sql = "SELECT B.FlowName AS Name, count(DISTINCT A.WorkID) as Num FROM WF_GenerWorkerList A,WF_GenerWorkFlow B WHERE A.FK_Flow=B.FK_Flow AND A.WorkID=B.WorkID  and convert(varchar(100),A.SDT,120) < CONVERT(varchar(100), B.SDTOfNode, 120) GROUP BY B.FlowName";
@@ -636,6 +642,9 @@ public class WF_AppClassic extends WebContralBase
 		{
 			sql = "SELECT  A.FK_EmpText AS Name, count( A.WorkID) as Num FROM WF_GenerWorkerList A,WF_GenerWorkFlow B WHERE  A.FK_Dept='" + WebUser.getFK_Dept()+ "' AND A.WorkID=B.WorkID  and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}') AND(TO_DATE(B.SDTOfNode, 'yyyy-mm-dd hh24:mi:ss') - TO_DATE(A.SDT, 'yyyy-mm-dd hh24:mi:ss')) > 0 GROUP BY A.FK_EmpText ";
 			sql += "UNION SELECT A.FK_EmpText AS Name, count(DISTINCT A.WorkID) as Num FROM WF_GenerWorkerList A,WF_GenerWorkFlow B WHERE A.FK_Dept='" + WebUser.getFK_Dept()+ "' AND A.WorkID=B.WorkID and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$') AND (TO_DATE(B.SDTOfNode, 'yyyy-mm-dd') - TO_DATE(SDT, 'yyyy-mm-dd')) > 0 GROUP BY A.FK_EmpText";
+		}
+		else if (SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.HGDB){
+			sql = "SELECT A.FK_EmpText AS Name, count( A.WorkID) as Num FROM WF_GenerWorkerList A,WF_GenerWorkFlow B WHERE A.FK_Dept='" + WebUser.getFK_Dept()+ "' AND A.WorkID=B.WorkID  and to_timestamp(CASE WHEN A.SDT='无' THEN '' ELSE A.SDT END, 'yyyy-mm-dd hh24:MI:SS') < to_timestamp(CASE WHEN B.SDTOfNode='无' THEN '' ELSE B.SDTOfNode END, 'yyyy-mm-dd hh24:MI:SS') GROUP BY A.FK_EmpText";
 		}
 		else
 		{
@@ -788,6 +797,9 @@ public class WF_AppClassic extends WebContralBase
 			sql = "SELECT  B.Name, count(DISTINCT C.WorkID) as Num FROM WF_GenerWorkerList A,Port_Dept B,WF_GenerWorkFlow C WHERE A.FK_Dept=B.No AND A.WorkID=C.WorkID  and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}') AND(TO_DATE(C.SDTOfNode, 'yyyy-mm-dd hh24:mi:ss') - TO_DATE(A.SDT, 'yyyy-mm-dd hh24:mi:ss')) > 0 GROUP BY B.Name ";
 			sql += "UNION SELECT  B.Name, count(DISTINCT C.WorkID) as Num FROM WF_GenerWorkerList A,Port_Dept B,WF_GenerWorkFlow C WHERE A.FK_Dept=B.No AND A.WorkID=C.WorkID and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$') AND (TO_DATE(SDTOfNode, 'yyyy-mm-dd') - TO_DATE(SDT, 'yyyy-mm-dd')) > 0 GROUP BY B.Name";
 		}
+		else if(SystemConfig.getAppCenterDBType()== DBType.PostgreSQL ||SystemConfig.getAppCenterDBType() == DBType.HGDB){
+			sql="SELECT  B.Name, count(DISTINCT C.WorkID) as Num FROM WF_GenerWorkerList A,Port_Dept B,WF_GenerWorkFlow C WHERE A.FK_Dept=B.No AND A.WorkID=C.WorkID  and to_timestamp(CASE WHEN A.SDT='无' THEN '' ELSE A.SDT END, 'yyyy-mm-dd hh24:MI:SS') < to_timestamp(CASE WHEN C.SDTOfNode='无' THEN '' ELSE C.SDTOfNode END, 'yyyy-mm-dd hh24:MI:SS') GROUP BY B.Name ";
+		}
 		else
 		{
 			sql = "SELECT  B.Name, count(DISTINCT C.WorkID) as Num FROM WF_GenerWorkerList A,Port_Dept B,WF_GenerWorkFlow C WHERE A.FK_Dept=B.No AND A.WorkID=C.WorkID  and convert(varchar(100),A.SDT,120) < CONVERT(varchar(100), C.SDTOfNode, 120) GROUP BY B.Name";
@@ -852,6 +864,9 @@ public class WF_AppClassic extends WebContralBase
 			sql = "SELECT  B.FlowName AS Name, count(DISTINCT A.WorkID) as Num FROM WF_GenerWorkerList A,WF_GenerWorkFlow B WHERE A.FK_Flow=B.FK_Flow AND A.WorkID=B.WorkID  and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}') AND(TO_DATE(B.SDTOfNode, 'yyyy-mm-dd hh24:mi:ss') - TO_DATE(A.SDT, 'yyyy-mm-dd hh24:mi:ss')) > 0 GROUP BY B.FlowName ";
 			sql += "UNION SELECT  B.FlowName AS Name, count(DISTINCT A.WorkID) as Num FROM WF_GenerWorkerList A,WF_GenerWorkFlow B WHERE A.FK_Flow=B.FK_Flow AND A.WorkID=B.WorkID and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$') AND (TO_DATE(B.SDTOfNode, 'yyyy-mm-dd') - TO_DATE(SDT, 'yyyy-mm-dd')) > 0 GROUP BY B.FlowName";
 		}
+		else if(SystemConfig.getAppCenterDBType()== DBType.PostgreSQL ||SystemConfig.getAppCenterDBType() == DBType.HGDB){
+			sql="SELECT B.FlowName AS Name, count(DISTINCT A.WorkID) as Num FROM WF_GenerWorkerList A,WF_GenerWorkFlow B WHERE A.FK_Flow=B.FK_Flow AND A.WorkID=B.WorkID  and to_timestamp(CASE WHEN A.SDT='无' THEN '' ELSE A.SDT END, 'yyyy-mm-dd hh24:MI:SS') < to_timestamp(CASE WHEN B.SDTOfNode='无' THEN '' ELSE B.SDTOfNode END, 'yyyy-mm-dd hh24:MI:SS') GROUP BY B.FlowName ";
+		}
 		else
 		{
 			sql = "SELECT B.FlowName AS Name, count(DISTINCT A.WorkID) as Num FROM WF_GenerWorkerList A,WF_GenerWorkFlow B WHERE A.FK_Flow=B.FK_Flow AND A.WorkID=B.WorkID  and convert(varchar(100),A.SDT,120) < CONVERT(varchar(100), B.SDTOfNode, 120) GROUP BY B.FlowName";
@@ -911,6 +926,9 @@ public class WF_AppClassic extends WebContralBase
 		{
 			sql = "SELECT  A.FK_EmpText AS Name, count( A.WorkID) as Num FROM WF_GenerWorkerList A,WF_GenerWorkFlow B WHERE  A.FK_Dept='" + WebUser.getFK_Dept()+ "' AND A.WorkID=B.WorkID  and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}') AND(TO_DATE(B.SDTOfNode, 'yyyy-mm-dd hh24:mi:ss') - TO_DATE(A.SDT, 'yyyy-mm-dd hh24:mi:ss')) > 0 GROUP BY A.FK_EmpText ";
 			sql += "UNION SELECT A.FK_EmpText AS Name, count(DISTINCT A.WorkID) as Num FROM WF_GenerWorkerList A,WF_GenerWorkFlow B WHERE A.FK_Dept='" + WebUser.getFK_Dept()+ "' AND A.WorkID=B.WorkID and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$') AND (TO_DATE(B.SDTOfNode, 'yyyy-mm-dd') - TO_DATE(SDT, 'yyyy-mm-dd')) > 0 GROUP BY A.FK_EmpText";
+		}
+		else if(SystemConfig.getAppCenterDBType()== DBType.PostgreSQL ||SystemConfig.getAppCenterDBType() == DBType.HGDB){
+			sql="SELECT A.FK_EmpText AS Name, count( A.WorkID) as Num FROM WF_GenerWorkerList A,WF_GenerWorkFlow B WHERE A.FK_Dept='" + WebUser.getFK_Dept()+ "' AND A.WorkID=B.WorkID  and to_timestamp(CASE WHEN A.SDT='无' THEN '' ELSE A.SDT END, 'yyyy-mm-dd hh24:MI:SS') < to_timestamp(CASE WHEN B.SDTOfNode='无' THEN '' ELSE B.SDTOfNode END, 'yyyy-mm-dd hh24:MI:SS') GROUP BY A.FK_EmpText ";
 		}
 		else
 		{

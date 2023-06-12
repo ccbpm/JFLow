@@ -814,16 +814,23 @@ public class WF_Admin_FoolFormDesigner_MapExt extends WebContralBase
 
 		//获取外键值
 		DataTable dt = bp.pub.PubClass.GetDataTableByUIBineKey(attr.getUIBindKey(), null);
-		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
+		if (bp.difference.SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
 		{
-			dt.Columns.get("NO").ColumnName = "No";
-			dt.Columns.get("NAME").ColumnName = "Name";
-		}
-
-		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
-		{
-			dt.Columns.get("no").ColumnName = "No";
-			dt.Columns.get("name").ColumnName = "Name";
+			String columnName = "";
+			for (DataColumn col : dt.Columns)
+			{
+				columnName = col.ColumnName.toUpperCase();
+				switch (columnName)
+				{
+					case "NO":
+						col.ColumnName = "No";
+						break;
+					case "NAME":
+						col.ColumnName = "Name";
+						break;
+					default:break;
+				}
+			}
 		}
 
 		//字段值.

@@ -62,7 +62,7 @@ public class WF_Admin_TestingContainer extends bp.difference.handler.WebContralB
 		//流程引擎人员列表.
 		GenerWorkerLists gwls = new GenerWorkerLists(this.getWorkID());
 		gwls.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.RDT);
-		ds.Tables.add(gwls.ToDataTableField("WF_GenerWorkerList"));
+		ds.Tables.add(gwls.ToDataTableField("WF_GenerWorkerlist"));
 
 
 		//获得Track数据.
@@ -103,8 +103,6 @@ public class WF_Admin_TestingContainer extends bp.difference.handler.WebContralB
 	 @return 
 	*/
 	public final String SelectOneUser_Init() throws Exception {
-		//Default_LetAdminerLogin();
-
 		GenerWorkerLists ens = new GenerWorkerLists();
 		QueryObject qo = new QueryObject(ens);
 		qo.AddWhere("WorkID", this.getWorkID());
@@ -126,6 +124,8 @@ public class WF_Admin_TestingContainer extends bp.difference.handler.WebContralB
 		{
 			String token = this.GetRequestVal("Token");
 			String userNo = Dev2Interface.Port_LoginByToken(token);
+			//@lyc
+			// Dev2Interface.Port_GenerToken();
 			return userNo;
 		}
 		catch (RuntimeException ex)
@@ -133,8 +133,9 @@ public class WF_Admin_TestingContainer extends bp.difference.handler.WebContralB
 			//@ 多人用同一个账号登录，就需要加上如下代码.
 			if (DataType.IsNullOrEmpty(this.getUserNo()) == false)
 			{
-				Dev2Interface.Port_GenerToken(this.getUserNo());
 				Dev2Interface.Port_Login(this.getUserNo());
+				//
+				//Dev2Interface.Port_GenerToken();
 				return this.getUserNo();
 			}
 			return ex.getMessage();
@@ -188,17 +189,20 @@ public class WF_Admin_TestingContainer extends bp.difference.handler.WebContralB
 		//此SID是管理员的SID.
 
 		String testerNo = this.GetRequestVal("TesterNo");
+		String orgNo = this.GetRequestVal("OrgNo");//@lyc
 		FlowExt fl = new FlowExt(this.getFK_Flow());
 		fl.setTester(testerNo);
 		fl.Update();
 
 		//选择的人员登录
+		bp.wf.Dev2Interface.Port_Login(testerNo, orgNo);
 		String token = bp.wf.Dev2Interface.Port_GenerToken(testerNo,"PC");
-		bp.wf.Dev2Interface.Port_Login(testerNo);
 
+		//@lyc
+		int model = SystemConfig.getCCBPMRunModel().getValue();
 
 		//组织url发起该流程.
-		String url = "Default.html?RunModel=1&FK_Flow=" + this.getFK_Flow() + "&TesterNo=" + testerNo;
+		String url = "Default.html?RunModel=" + model + "&FK_Flow=" + this.getFK_Flow() + "&TesterNo=" + testerNo;
 		url += "&OrgNo=" + WebUser.getOrgNo();
 		url += "&UserNo=" + WebUser.getNo();
 		url += "&Token=" + token;

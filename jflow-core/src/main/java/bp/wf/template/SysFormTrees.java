@@ -1,10 +1,12 @@
 package bp.wf.template;
 
 import bp.da.*;
+import bp.difference.SystemConfig;
 import bp.en.*;
 import bp.port.*;
 import bp.sys.*;
 import bp.*;
+import bp.web.WebUser;
 import bp.wf.*;
 import java.util.*;
 
@@ -27,11 +29,18 @@ public class SysFormTrees extends EntitiesTree
 	}
 	@Override
 	public int RetrieveAll() throws Exception {
-		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS || bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
-		{
-			return this.Retrieve(SysFormTreeAttr.OrgNo, bp.web.WebUser.getOrgNo(), null);
-		}
 
+		if (WebUser.getNo().equals("admin") == true)
+			return this.RetrieveAll(FlowSortAttr.Idx);
+
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
+			return this.Retrieve(FlowSortAttr.OrgNo, WebUser.getOrgNo(), FlowSortAttr.Idx);
+
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
+			return this.RetrieveAll(FlowSortAttr.Idx);
+
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+			return this.Retrieve(FlowSortAttr.OrgNo,  WebUser.getOrgNo(), FlowSortAttr.Idx);
 
 		int i = super.RetrieveAll();
 		if (i == 0)

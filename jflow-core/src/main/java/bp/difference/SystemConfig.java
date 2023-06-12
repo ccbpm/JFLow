@@ -976,7 +976,7 @@ public class SystemConfig {
 				return DBType.KingBaseR6;
 			} else if(dbType.equalsIgnoreCase("HGDB")){
 				return DBType.HGDB;
-			} else if(dbType.equalsIgnoreCase("PostgreSQL")){
+			} else if(dbType.equalsIgnoreCase("PostgreSQL") || dbType.equalsIgnoreCase("PGSQL")){
 				return DBType.PostgreSQL;
 			}
 		}

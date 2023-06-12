@@ -94,6 +94,9 @@ public class DataUser_AppCoder extends bp.difference.handler.WebContralBase
 
 			ht.put("OverTimeNum", DBAccess.RunSQLReturnValInt(sql));
 		}
+		else if(SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB){
+			ht.put("OverTimeNum", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM WF_GenerWorkerList WHERE IsPass=0 AND to_timestamp(CASE WHEN SDT='无' THEN '' ELSE SDT END, 'yyyy-mm-dd hh24:MI:SS') < now()"));
+		}
 		else
 		{
 			ht.put("OverTimeNum", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM WF_GenerWorkerList WHERE IsPass=0 AND convert(varchar(100),SDT,120) < CONVERT(varchar(100), GETDATE(), 120)"));
@@ -178,6 +181,9 @@ public class DataUser_AppCoder extends bp.difference.handler.WebContralBase
 			sql = "SELECT FlowName as name, count(WorkID) as value FROM WF_EmpWorks WHERE WFState >1 " + whereStrPuls + "  and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}') AND(sysdate - TO_DATE(SDT, 'yyyy-mm-dd hh24:mi:ss')) > 0 GROUP BY FlowName ";
 			sql += "UNION SELECT FlowName as name, count(WorkID) as value FROM WF_EmpWorks WHERE WFState >1 " + whereStrPuls + "  and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$') AND (sysdate - TO_DATE(SDT, 'yyyy-mm-dd')) > 0 GROUP BY FlowName";
 		}
+		else if(SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB){
+			sql = "SELECT FlowName as name, count(WorkID) as value FROM WF_EmpWorks WHERE WFState >1 " + whereStrPuls + "  and to_timestamp(CASE WHEN SDT='无' THEN '' ELSE SDT END, 'yyyy-mm-dd hh24:MI:SS') < now() GROUP BY FlowName";
+		}
 		else
 		{
 			sql = "SELECT FlowName as name, count(WorkID) as value FROM WF_EmpWorks WHERE WFState >1 " + whereStrPuls + "  and convert(varchar(100),SDT,120) < CONVERT(varchar(100), GETDATE(), 120) GROUP BY FlowName";
@@ -198,6 +204,9 @@ public class DataUser_AppCoder extends bp.difference.handler.WebContralBase
 		{
 			sql = "SELECT DeptName, count(WorkID) as Num FROM WF_EmpWorks WHERE WFState >1 " + whereStrPuls + "  and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}') AND(sysdate - TO_DATE(SDT, 'yyyy-mm-dd hh24:mi:ss')) > 0 GROUP BY DeptName ";
 			sql += "UNION SELECT DeptName, count(WorkID) as Num FROM WF_EmpWorks WHERE WFState >1 " + whereStrPuls + "  and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$') AND (sysdate - TO_DATE(SDT, 'yyyy-mm-dd')) > 0 GROUP BY DeptName";
+		}
+		else if(SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB){
+			sql = "SELECT DeptName, count(WorkID) as Num FROM WF_EmpWorks WHERE WFState >1 " + whereStrPuls + "  and to_timestamp(CASE WHEN SDT='无' THEN '' ELSE SDT END, 'yyyy-mm-dd hh24:MI:SS') < NOW() GROUP BY DeptName";
 		}
 		else
 		{

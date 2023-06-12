@@ -118,4 +118,18 @@ public class DataColumnCollection extends ArrayList<DataColumn>
 		}
 		return false;
 	}
+
+	/**
+	 * 区分大小写
+	 * @param o
+	 * @return
+	 */
+	public boolean containsMatchCase(Object o) {
+		for (int i = 0; i < this.size(); i++) {
+			if (o.toString().equals(this.get(i).toString())) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

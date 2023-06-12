@@ -502,8 +502,8 @@ public class MyJoinFlow extends Entity
 			//map.IsShowSearchKey = false;
 
 			//增加隐藏的查询条件. 我参与的流程.
-		AttrOfSearch search = new AttrOfSearch(MyFlowAttr.Emps, "人员", MyFlowAttr.Emps, " LIKE ", "%" + bp.web.WebUser.getNo() + "%", 0, true);
-		map.getAttrsOfSearch().add(search);
+		SearchNormal search = new SearchNormal(MyFlowAttr.Emps, "人员", MyFlowAttr.Emps, " LIKE ", "%" + bp.web.WebUser.getNo() + "%", 0, true);
+		map.getSearchNormals().add(search);
 
 
 		RefMethod rm = new RefMethod();

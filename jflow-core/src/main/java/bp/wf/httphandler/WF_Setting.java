@@ -230,7 +230,10 @@ public class WF_Setting extends WebContralBase
 	*/
 	public final String ChangeDept_Init() throws Exception {
 		Paras ps = new Paras();
-		ps.SQL = "SELECT a.No,a.Name, NameOfPath, '0' AS  CurrentDept FROM Port_Dept A, Port_DeptEmp B WHERE A.No=B.FK_Dept AND B.FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
+			ps.SQL = "SELECT a.No, a.Name, A.NameOfPath, '0' AS  CurrentDept, A.OrgNo, '' as OrgName FROM Port_Dept A, Port_DeptEmp B WHERE A.No=B.FK_Dept AND B.FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
+		else
+			ps.SQL = "SELECT a.No, a.Name, A.NameOfPath, '0' AS  CurrentDept  FROM Port_Dept A, Port_DeptEmp B WHERE A.No=B.FK_Dept AND B.FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
 		ps.Add("FK_Emp", WebUser.getNo(), false);
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 
@@ -241,6 +244,23 @@ public class WF_Setting extends WebContralBase
 			dt = DBAccess.RunSQLReturnTable(sql);
 		}
 
+		dt.Columns.get(0).setColumnName("No");
+		dt.Columns.get(1).setColumnName("Name");
+		dt.Columns.get(2).setColumnName("NameOfPath");
+		dt.Columns.get(3).setColumnName("CurrentDept");
+
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
+		{
+			dt.Columns.get(4).setColumnName("OrgNo");
+			dt.Columns.get(5).setColumnName("OrgName");
+
+			//设置组织名字.
+			for (DataRow dr : dt.Rows)
+			{
+				String orgNo = dr.getValue(4).toString();
+				dr.setValue(5, DBAccess.RunSQLReturnVal("SELECT Name FROM Port_Org WHERE No='" + orgNo + "'", null));
+			}
+		}
 		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			dt.Columns.get("NO").ColumnName = "No";
@@ -266,7 +286,7 @@ public class WF_Setting extends WebContralBase
 
 			if (!dr.getValue("NameOfPath").toString().equals(""))
 			{
-				dr.setValue("Name", dr.getValue("NameOfPath"));
+				dr.setValue("NameOfPath", dr.getValue("Name"));
 			}
 		}
 

@@ -1353,7 +1353,8 @@ public class MapDtlExt extends EntityNoName
 	protected void afterDelete() throws Exception {
 		MapDtl dtl = new MapDtl();
 		dtl.setNo(this.getNo());
-		dtl.setFK_MapData(this.getFK_MapData());
+		dtl.SetValByKey(MapDtlAttr.FK_MapData,this.getFK_MapData());
+		dtl.SetValByKey(MapDtlAttr.PTable, this.getPTable());
 		dtl.Delete();
 
 		//删除分组

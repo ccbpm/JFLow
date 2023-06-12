@@ -1062,28 +1062,38 @@ public class GPMPage extends WebContralBase
 		return "执行完成.";
 	}
 
-	public String EnpDepts_Init() throws Exception {
+	public String EmpDepts_Init() throws Exception {
 		String empNo = this.getFK_Emp();
 		if(DataType.IsNullOrEmpty(empNo)==true)
 			return "err@参数FK_Emp不能为空";
-		Emp emp = new Emp(empNo);
+		Emp emp = new Emp();
+		emp.setNo(empNo);
+		emp.Retrieve();
 		DataSet ds = new DataSet();
-		String dbstr = SystemConfig.getAppCenterDBVarStr();
 		//获取当前人员所在的部门及兼职部门
-		String sql = "SELECT B.No AS \'FK_Dept\',B.Name AS \'FK_DeptText\',A.MyPK AS \'MyPK\' From Port_DeptEmp A,Port_Dept B WHERE A.FK_Dept=B.No AND A.FK_Emp="+dbstr+"FK_Emp";
-		if(SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB)
-			sql = "SELECT B.No AS \"FK_Dept\",B.Name AS \"FK_DeptText\",A.MyPK AS \"MyPK\" From Port_DeptEmp A,Port_Dept B WHERE A.FK_Dept=B.No AND A.FK_Emp="+dbstr+"FK_Emp";
+		String sql = "SELECT B.No AS FK_Dept,B.Name AS  FK_DeptText,A.MyPK  From Port_DeptEmp A,Port_Dept B WHERE A.FK_Dept=B.No AND A.FK_Emp='"+ empNo + "'";
+		if(SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB
+		|| SystemConfig.getAppCenterDBType() == DBType.Oracle)
+			sql = "SELECT B.No AS FK_Dept,B.Name AS FK_DeptText,A.MyPK AS MyPK From Port_DeptEmp A,Port_Dept B WHERE A.FK_Dept=B.No AND A.FK_Emp='"+ empNo + "'";
 		if(SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
-			sql +=" B.OrgNo='"+WebUser.getOrgNo()+"'";
-		Paras ps = new Paras();
-		ps.SQL = sql;
-		ps.Add("FK_Emp",empNo);
-		DataTable dt = DBAccess.RunSQLReturnTable(ps);
+			sql +=" AND B.OrgNo='"+WebUser.getOrgNo()+"'";
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			dt.Columns.get(0).ColumnName = "FK_Dept";
+			dt.Columns.get(1).ColumnName = "FK_DeptText";
+			dt.Columns.get(2).ColumnName = "MyPK";
+		}
+
 		if(dt.Rows.size()==0){
 			DeptEmp deptEmp =new DeptEmp();
 			deptEmp.setFK_Dept(emp.getFK_Dept());
 			deptEmp.setFK_Emp(emp.getNo());
-			deptEmp.setMyPK(emp.getFK_Dept() + "_" + emp.getNo());
+			if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+				deptEmp.setMyPK( emp.getFK_Dept()  + "_" + emp.getUserID());
+			else
+				deptEmp.setMyPK(emp.getFK_Dept() + "_" + emp.getNo());
+
 			deptEmp.Insert();
 			DataRow dr = dt.NewRow();
 			dr.setValue(0,emp.getFK_Dept());
@@ -1093,17 +1103,21 @@ public class GPMPage extends WebContralBase
 		}
 		dt.TableName = "Port_DeptEmp";
 		ds.Tables.add(dt);
-		ps.clear();
-		//获取岗位
-		sql="SELECT B.No AS \'FK_Station\',B.Name AS \'FK_StationText\' ,A.FK_Dept AS \'FK_Dept\' From Port_DeptEmpStation A,Port_Station B WHERE A.FK_Station=B.No AND A.FK_Emp="+dbstr+"FK_Emp";
-		if(SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB)
-			sql="SELECT B.No AS \"FK_Station\",B.Name AS \"FK_StationText\" ,A.FK_Dept AS \"FK_Dept\" From Port_DeptEmpStation A,Port_Station B WHERE A.FK_Station=B.No AND A.FK_Emp="+dbstr+"FK_Emp";
-		if(SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
-			sql +=" B.OrgNo='"+WebUser.getOrgNo()+"'";
 
-		ps.SQL = sql;
-		ps.Add("FK_Emp",empNo);
-		dt = DBAccess.RunSQLReturnTable(ps);
+		//获取岗位
+		sql = "SELECT B.No AS FK_Station,B.Name AS FK_StationText ,A.FK_Dept AS FK_Dept From Port_DeptEmpStation A,Port_Station B WHERE A.FK_Station=B.No AND A.FK_Emp='"+empNo+"'";
+		if(SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.Oracle)
+			sql = "SELECT B.No AS FK_Station,B.Name AS FK_StationText,A.FK_Dept AS FK_Dept From Port_DeptEmpStation A,Port_Station B WHERE A.FK_Station=B.No AND A.FK_Emp='"+empNo+"'";
+		if(SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+			sql +=" AND B.OrgNo='"+WebUser.getOrgNo()+"'";
+
+		dt = DBAccess.RunSQLReturnTable(sql);
+		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			dt.Columns.get(0).ColumnName = "FK_Station";
+			dt.Columns.get(1).ColumnName = "FK_StationText";
+			dt.Columns.get(2).ColumnName = "FK_Dept";
+		}
 		dt.TableName = "Port_DeptEmpStation";
 		ds.Tables.add(dt);
 		return bp.tools.Json.ToJson(ds);

@@ -1744,13 +1744,15 @@ public class QueryObject
 					row = new Row();
 					for (Attr attr : attrs.ToJavaList()) {
 						if (caseModel == FieldCaseModel.UpperCase){
-							if(SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
-									&& attr.getMyFieldType() == FieldType.RefText)
-									en.SetValByKey(attr.getKey(), dr.getValue(attr.getKey()));
-								else
-									en.SetValByKey(attr.getKey(), dr.getValue(attr.getKey().toUpperCase()));
+							if(attr.getMyFieldType() == FieldType.RefText && dt.Columns.containsMatchCase(attr.getKey()))
+								en.SetValByKey(attr.getKey(), dr.getValue(attr.getKey()));
+							else
+								en.SetValByKey(attr.getKey(), dr.getValue(attr.getKey().toUpperCase()));
 						}else if(caseModel == FieldCaseModel.Lowercase) {
-							row.SetValByKey(attr.getKey(), dr.getValue(attr.getKey().toLowerCase()));
+							if(attr.getMyFieldType() == FieldType.RefText && dt.Columns.containsMatchCase(attr.getKey()))
+								row.SetValByKey(attr.getKey(), dr.getValue(attr.getKey()));
+							else
+								row.SetValByKey(attr.getKey(), dr.getValue(attr.getKey().toLowerCase()));
 						}
 						else
 							row.SetValByKey(attr.getKey(), dr.getValue(attr.getKey()));
@@ -1776,12 +1778,15 @@ public class QueryObject
 			for (String str : fullAttrs) {
 				if (caseModel== FieldCaseModel.UpperCase){
 					if(SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
-						&& dt.Columns.contains(str)==true)
+						&& dt.Columns.containsMatchCase(str)==true)
 						row.SetValByKey(str, dr.getValue(str));
 					else
 						row.SetValByKey(str, dr.getValue(str.toUpperCase()));
 				}else if(caseModel == FieldCaseModel.Lowercase) {
-					row.SetValByKey(str, dr.getValue(str.toLowerCase()));
+					if(dt.Columns.containsMatchCase(str)==true)
+						row.SetValByKey(str, dr.getValue(str));
+					else
+						row.SetValByKey(str, dr.getValue(str.toLowerCase()));
 				}
 				else
 					row.SetValByKey(str, dr.getValue(str));

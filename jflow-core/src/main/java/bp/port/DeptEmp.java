@@ -1,5 +1,6 @@
 package bp.port;
 
+import bp.da.DataType;
 import bp.en.*;
 
 /** 
@@ -83,6 +84,11 @@ public class DeptEmp extends EntityMyPK
 		map.AddDDLEntities(DeptEmpAttr.FK_Emp, null, "操作员", new bp.port.Emps(), false);
 		map.AddTBString(DeptEmpAttr.OrgNo, null, "组织编码", false, false, 0, 50, 50);
 
+		//For Vue3版本.
+		map.AddTBString("DeptName", null, "部门名称(Vue3)", false, false, 0, 500, 36);
+		map.AddTBString("StationNo", null, "岗位编号(Vue3)", false, false, 0, 500, 36);
+		map.AddTBString("StationNoT", null, "岗位名称(Vue3)", false, false, 0, 500, 36);
+
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
@@ -93,7 +99,8 @@ public class DeptEmp extends EntityMyPK
 	*/
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception {
-		this.setMyPK(this.getFK_Dept() + "_" + this.getFK_Emp());
+		if (DataType.IsNullOrEmpty(this.getMyPK()) == true)
+			this.setMyPK(this.getFK_Dept() + "_" + this.getFK_Emp());
 		return super.beforeUpdateInsertAction();
 	}
 }

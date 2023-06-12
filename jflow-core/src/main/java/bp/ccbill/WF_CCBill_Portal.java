@@ -116,7 +116,7 @@ public class WF_CCBill_Portal extends WebContralBase
 			case PostgreSQL:
 			case UX:
 			case HGDB:
-				sql = " SELECT DISTINCT FK_Flow,FlowName,F.Icon FROM WF_GenerWorkFlow G ,WF_Flow F WHERE  F.IsCanStart=1 AND F.No=G.FK_Flow AND Starter='" + WebUser.getNo() + "'  Order By SendDT  limit  " + top;
+				sql = " SELECT DISTINCT A.FK_Flow,A.FlowName,B.Icon,A.SendDT  FROM WF_GenerWorkFlow A ,WF_Flow B WHERE B.IsCanStart=1 AND B.No=A.FK_Flow AND A.Starter='"+WebUser.getNo()+"'  Order By A.SendDT  limit " + top;
 				break;
 			case Oracle:
 			case DM:

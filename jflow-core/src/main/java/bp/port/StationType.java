@@ -89,7 +89,7 @@ public class StationType extends EntityNoName
 		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 		{
 			map.AddTBString(StationAttr.OrgNo, null, "隶属组织", true, true, 0, 50, 250);
-			map.AddHidden(StationAttr.OrgNo, "=", bp.web.WebUser.getOrgNo()); //加隐藏条件.
+			map.AddHidden(StationAttr.OrgNo, "=", "@WebUser.OrgNo"); //加隐藏条件.
 		}
 
 		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
@@ -98,7 +98,7 @@ public class StationType extends EntityNoName
 
 			if (SystemConfig.getGroupStationModel() == 0)
 			{
-				map.AddHidden(StationAttr.OrgNo, "=", bp.web.WebUser.getOrgNo()); //每个组织都有自己的岗责体系的时候. 加隐藏条件.
+				map.AddHidden(StationAttr.OrgNo, "=", "@WebUser.OrgNo"); //每个组织都有自己的岗责体系的时候. 加隐藏条件.
 			}
 		}
 

@@ -6,6 +6,7 @@ import bp.port.*;
 import bp.sys.*;
 import bp.tools.*;
 import bp.web.*;
+import bp.wf.port.WFEmp;
 import bp.wf.template.*;
 import bp.difference.*;
 import bp.wf.template.sflow.*;
@@ -193,8 +194,9 @@ public class Dev2Interface
 
 			sql = "SELECT COUNT(*) from (SELECT *  FROM WF_GenerWorkerList WHERE IsPass=0 AND FK_Emp='" + WebUser.getNo() + "' AND REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}') AND (sysdate - TO_DATE(SDT, 'yyyy-mm-dd hh24:mi:ss')) > 0 ";
 			sql += "UNION SELECT * FROM WF_GenerWorkerList WHERE IsPass=0 AND FK_Emp='" + WebUser.getNo() + "' AND REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$') AND (sysdate - TO_DATE(SDT, 'yyyy-mm-dd')) > 0 )";
-
-
+		}
+		else if(SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB){
+			sql = "SELECT COUNT(*) FROM WF_GenerWorkerList WHERE IsPass=0 AND FK_Emp='" + WebUser.getNo() + "' AND  to_timestamp(CASE WHEN SDT='无' THEN '' ELSE SDT END, 'yyyy-mm-dd hh24:MI:SS') <  now()";
 		}
 		else
 		{
@@ -4015,6 +4017,17 @@ public class Dev2Interface
 			{
 				throw new RuntimeException("err@非法的Token.");
 			}
+
+			if(SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS){
+				Token mytk = new Token();
+				mytk.setMyPK(token);
+				if(mytk.RetrieveFromDBSources() == 0){
+					throw new RuntimeException("@token=[" + token + "]失效");
+				}
+				bp.wf.Dev2Interface.Port_Login(mytk.getEmpNo(), mytk.getOrgNo());
+				return mytk.getEmpNo();
+			}
+
 			//如果是宽泛模式.
 			if (SystemConfig.getTokenModel() == 0)
 			{
@@ -4036,12 +4049,12 @@ public class Dev2Interface
 			if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
 			{
 				if(SystemConfig.getAppCenterDBType( ) == DBType.MySQL)
-					paras.SQL="SELECT No FROM WF_Emp WHERE AtPara LIKE  CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() +  "token,'%')";
+					paras.SQL="SELECT No,OrgNo FROM WF_Emp WHERE AtPara LIKE  CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() +  "token,'%')";
 				else
-					paras.SQL="SELECT No FROM WF_Emp WHERE AtPara LIKE  '%'+" + SystemConfig.getAppCenterDBVarStr() + "token+'%'";
+					paras.SQL="SELECT No,OrgNo FROM WF_Emp WHERE AtPara LIKE  '%'+" + SystemConfig.getAppCenterDBVarStr() + "token+'%'";
 			}
 			else
-				paras.SQL="SELECT No FROM WF_Emp WHERE AtPara LIKE  '%'||" + SystemConfig.getAppCenterDBVarStr() + "token||'%'";
+				paras.SQL="SELECT No,OrgNo FROM WF_Emp WHERE AtPara LIKE  '%'||" + SystemConfig.getAppCenterDBVarStr() + "token||'%'";
 			paras.Add("token",token);
 			//String sql = "SELECT No FROM WF_Emp WHERE AtPara LIKE '%" + token + "%'";
 			DataTable dt = DBAccess.RunSQLReturnTable(paras);
@@ -4051,10 +4064,11 @@ public class Dev2Interface
 			}
 
 			String no = dt.Rows.get(0).getValue(0).toString();
+			String orgNo = dt.Rows.get(0).getValue(1) != null ? dt.Rows.get(0).getValue(1).toString() : "";
 
 			//执行登录.
 			WebUser.setToken(token);
-			bp.wf.Dev2Interface.Port_Login(no);
+			bp.wf.Dev2Interface.Port_Login(no,orgNo);
 			return no;
 		}
 		catch (RuntimeException ex)
@@ -4105,11 +4119,19 @@ public class Dev2Interface
 				throw new Exception("err@缺少OrgNo参数.");
 			emp.setNo(orgNo + "_" + userID);
 			emp.setOrgNo(orgNo);
+
+			if(emp.RetrieveFromDBSources() == 0)
+			{
+				throw new RuntimeException("err@用户名:" + emp.GetValByKey("No") + "不存在.");
+			}
+
+			WebUser.SignInOfGener(emp);
+
+			return;
+
 		}
-		else
-		{
-			emp.setNo(userID);
-		}
+
+		emp.setNo(userID);
 
 		int i = emp.RetrieveFromDBSources();
 		if (i == 0)
@@ -4250,7 +4272,40 @@ public class Dev2Interface
 	/// <param name="logDev">设备</param>
 	/// <returns></returns>
 	public static String Port_GenerToken(String userNo,String logDev,int activeMinutes ) throws Exception {
-		logDev= "PC";
+		if(DataType.IsNullOrEmpty(logDev))
+			logDev= "PC";
+
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+		{
+			//@lyc
+			Token mytk = new Token();
+			mytk.setMyPK(DBAccess.GenerGUID());
+			mytk.setEmpNo(WebUser.getNo());
+			mytk.setEmpName(WebUser.getName());
+			mytk.setDeptNo(WebUser.getFK_Dept());
+			mytk.setDeptName(WebUser.getFK_DeptName());
+			mytk.setOrgNo(WebUser.getOrgNo());
+			mytk.setOrgName(WebUser.getOrgName());
+			mytk.Insert();
+			WebUser.setToken(mytk.getMyPK());
+//			WFEmp wfemp = new WFEmp();
+//			wfemp.setNo(WebUser.getOrgNo() + "_" + WebUser.getNo());
+//			if (wfemp.RetrieveFromDBSources() == 0)
+//			{
+//				wfemp.setName(WebUser.getName());
+//				wfemp.setOrgNo(WebUser.getOrgNo());
+//				wfemp.setToken(DBAccess.GenerGUID());
+//				wfemp.Insert();
+//				return wfemp.getToken();
+//			}
+//
+//			wfemp.setName(WebUser.getName());
+//			wfemp.setOrgNo(WebUser.getOrgNo());
+//			wfemp.setToken(DBAccess.GenerGUID());
+//			wfemp.Update();
+			return mytk.getMyPK();
+		}
+
 		//单点模式,严格模式.
 		if (SystemConfig.getTokenModel() == 1)
 			return Port_GenerToken_2021(userNo, logDev, 0, false);
@@ -4266,7 +4321,7 @@ public class Dev2Interface
 		tk.setDeptName(bp.web.WebUser.getFK_DeptName());
 
 		tk.setOrgNo(bp.web.WebUser.getOrgNo());
-		tk.setOrgName(bp.web.WebUser.getOrgName());
+		//tk.setOrgName(bp.web.WebUser.getOrgName());
 		tk.setRDT(DataType.getCurrentDateTime()); //记录日期.
 
 		if (logDev.equals("PC"))
@@ -4279,18 +4334,21 @@ public class Dev2Interface
 		return tk.getMyPK();
 	}
 	public static String Port_GenerToken_2021(String userNo, String logDev, int activeMinutes, boolean isGenerNewToken) throws Exception {
-		if (logDev == null)
+		if (DataType.IsNullOrEmpty(logDev))
 			logDev = "PC";
 
 		if (activeMinutes == 0)
 			activeMinutes = 300; //默认为300分钟.
 
 		String key = "Token_" + logDev; //para的参数.
-
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+		{
+			userNo = WebUser.getOrgNo() + "_" +userNo;
+		}
 		bp.wf.port.WFEmp emp = new bp.wf.port.WFEmp(userNo);
 		String myGuid = emp.GetParaString(key); //获得token.
 		String guidOID_Dt = emp.GetParaString(key + "_DT"); // token 的过期日期.
-
+		emp.setOrgNo(WebUser.getOrgNo());
 
 			///#region 如果是第1次登录，就生成新的token.
 		if (isGenerNewToken == true || DataType.IsNullOrEmpty(myGuid) == true || DataType.IsNullOrEmpty(guidOID_Dt) == true)

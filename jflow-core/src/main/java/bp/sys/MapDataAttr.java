@@ -83,7 +83,7 @@ public class MapDataAttr extends EntityNoNameAttr
 	/**
 	 htm表单
 	 */
-	//public static final String HtmlTemplateFile = "HtmlTemplateFile";
+	public static final String HtmlTemplateFile = "HtmlTemplateFile";
 
 
 	/** 

@@ -80,7 +80,7 @@ public class Station extends EntityNoName
 			return this.get_enMap();
 		}
 
-		Map map = new Map("Port_Station", "岗位");
+		Map map = new Map("Port_Station", "角色");
 	//	map.setCodeStruct("3");
 		//map.setIsAutoGenerNo(true);
 
@@ -90,11 +90,11 @@ public class Station extends EntityNoName
 		map.AddTBString(StationAttr.OrgNo, null, "隶属组织", true, true, 0, 50, 250);
         //#region 根据组织结构类型不同.
 		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
-			map.AddHidden(StationAttr.OrgNo, "=", bp.web.WebUser.getOrgNo()); //加隐藏条件.
+			map.AddHidden(StationAttr.OrgNo, "=", "@WebUser.OrgNo"); //加隐藏条件.
 
 		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
 			if (bp.difference.SystemConfig.getGroupStationModel() == 0)
-				map.AddHidden(StationAttr.OrgNo, "=", bp.web.WebUser.getOrgNo());//每个组织都有自己的岗责体系的时候. 加隐藏条件.
+				map.AddHidden(StationAttr.OrgNo, "=", "@WebUser.OrgNo");//每个组织都有自己的岗责体系的时候. 加隐藏条件.
 
 		map.AddTBInt(StationAttr.Idx, 0, "顺序号", true, false);
 			//根据组织结构类型不同.

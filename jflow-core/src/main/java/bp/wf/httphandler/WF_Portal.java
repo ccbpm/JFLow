@@ -93,7 +93,7 @@ public class WF_Portal extends WebContralBase
 		Hashtable ht = new Hashtable();
 		ht.put("SysNo", SystemConfig.getSysNo());
 		ht.put("SysName", SystemConfig.getSysName());
-
+		ht.put("OSModel", Integer.valueOf(SystemConfig.getCCBPMRunModel().getValue()));
 		return Json.ToJson(ht);
 	}
 	/** 
@@ -108,11 +108,22 @@ public class WF_Portal extends WebContralBase
 			return "url@../../WF/Admin/DBInstall.htm";
 		}
 
+		//#region 如果是saas模式.
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+		{
+			if (DataType.IsNullOrEmpty(this.GetRequestVal("OrgNo")) == true)
+				return "url@/Portal/SaaS/SelectOneOrg.htm";
+			else
+				return "url@/Portal/SaaS/Login.htm?OrgNo=" + this.getOrgNo();
+		}
+		//#endregion 如果是saas模式.
+
 		String doType = GetRequestVal("LoginType");
 		if (DataType.IsNullOrEmpty(doType) == false && doType.equals("Out") == true)
 		{
 			//清空cookie
 			WebUser.Exit();
+			return "成功退出.";
 		}
 
 		//是否需要自动登录。 这里都把cookeis的数据获取来了.
@@ -360,7 +371,8 @@ public class WF_Portal extends WebContralBase
 			//判断是否是多个组织的情况.
 			if (adminers.size() == 1)
 				return "url@Default.htm?Token=" + token + "&UserNo=" + emp.getUserID() + "&OrgNo=" + emp.getOrgNo();
-			return "url@SelectOneOrg.htm?Token=" + token + "&UserNo=" + emp.getUserID() + "&OrgNo=" + emp.getOrgNo();
+			return "url@Default.htm?Token=" + token + "&UserNo=" + emp.getUserID() + "&OrgNo=" + emp.getOrgNo();
+			//return "url@SelectOneOrg.htm?Token=" + token + "&UserNo=" + emp.getUserID() + "&OrgNo=" + emp.getOrgNo();
 		}
 		catch (RuntimeException ex)
 		{
@@ -549,7 +561,16 @@ public class WF_Portal extends WebContralBase
 			}
 		}
 
-		///#region Flows.htm 流程.
+	/// <summary>
+	/// 初始化
+	/// </summary>
+	/// <returns></returns>
+	public String FlowTree_InitSort()
+	{
+		//   if (SystemConfig.CCBPMRunModel==)
+		return "";
+	}
+	///#region Flows.htm 流程.
 	/** 
 	 初始化类别.
 	 
@@ -1248,14 +1269,15 @@ public class WF_Portal extends WebContralBase
 		return false;
 	}
 	public final String Default_LogOut() throws Exception {
+		String orgNo = WebUser.getOrgNo();
 		WebUser.Exit();
 
 		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 		{
-			return "http://passport.ccbpm.cn/";
+			return "/Portal/SaaS/Login.htm?OrgNo=" + orgNo;
 		}
 
-		return "Login.htm?DoType=Logout";
+		return "./Login.htm?DoType=Logout&SystemNo=CCFast";
 	}
 	/** 
 	 返回构造的JSON.
@@ -1307,7 +1329,7 @@ public class WF_Portal extends WebContralBase
 
 
 			///#region 如果是admin.
-		if (WebUser.getIsAdmin() == true && this.getIsMobile() == false)
+		if (WebUser.getIsAdmin() == true && this.getIsMobile() == false && SystemConfig.getCCBPMRunModel() ==CCBPMRunModel.SAAS)
 		{
 
 				///#region 增加默认的系统.
@@ -1374,22 +1396,27 @@ public class WF_Portal extends WebContralBase
 		//   myds.WriteXml("c:/11.xml");
 
 
-			///#region 让第一个系统的第1个模块的默认打开的.
-		//让第一个打开.
-		myds.GetTableByName("System").Rows.get(0).setValue("IsOpen", "true") ;
-		String systemNo = myds.GetTableByName("System").Rows.get(0).getValue("No").toString();
-		for (DataRow dr : myds.GetTableByName("Module").Rows)
+		///#region 让第一个系统的第1个模块的默认打开的.
+		if(myds.GetTableByName("System").Rows.size() != 0)
 		{
-			if (dr.getValue("SystemNo").toString().equals(systemNo) == false)
+			//让第一个打开.
+			myds.GetTableByName("System").Rows.get(0).setValue("IsOpen", "true") ;
+			String systemNo = myds.GetTableByName("System").Rows.get(0).getValue("No").toString();
+			for (DataRow dr : myds.GetTableByName("Module").Rows)
 			{
-				continue;
+				if (dr.getValue("SystemNo").toString().equals(systemNo) == false)
+				{
+					continue;
+				}
+
+				dr.setValue("IsOpen", "true");
+				break;
 			}
-
-			dr.setValue("IsOpen", "true");
-			break;
 		}
-
-			///#endregion 让第一个系统的第1个模块的第一个菜单打开.
+		else
+		{
+		}
+		///#endregion 让第一个系统的第1个模块的第一个菜单打开.
 
 
 		return Json.ToJson(myds);

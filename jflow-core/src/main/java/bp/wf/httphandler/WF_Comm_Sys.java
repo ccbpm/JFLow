@@ -646,6 +646,9 @@ public class WF_Comm_Sys extends WebContralBase
 				if(en==null)
 					continue;
 				String className = en.getClass().getName();
+				if(DataType.IsNullOrEmpty(className) == true)
+					continue;
+
 				switch (className.toUpperCase()) {
 					case "BP.WF.STARTWORK":
 					case "BP.WF.WORK":

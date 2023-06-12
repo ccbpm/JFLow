@@ -490,12 +490,12 @@ public class MyStartFlow extends Entity
 		map.DTSearchKey=MyStartFlowAttr.RDT;
 
 			//我发起的流程.
-		AttrOfSearch search = new AttrOfSearch(MyStartFlowAttr.Starter, "发起人", MyStartFlowAttr.Starter, "=", bp.web.WebUser.getNo(), 0, true);
+		SearchNormal search = new SearchNormal(MyStartFlowAttr.Starter, "发起人", MyStartFlowAttr.Starter, "=", bp.web.WebUser.getNo(), 0, true);
 
-		map.getAttrsOfSearch().add(search);
+		map.getSearchNormals().add(search);
 
-		search = new AttrOfSearch(MyStartFlowAttr.WFState, "流程状态", MyStartFlowAttr.WFState, "not in", "('0')", 0, true);
-		map.getAttrsOfSearch().add(search);
+		search = new SearchNormal(MyStartFlowAttr.WFState, "流程状态", MyStartFlowAttr.WFState, "not in", "('0')", 0, true);
+		map.getSearchNormals().add(search);
 
 	   RefMethod rm = new RefMethod();
 			/*  rm.Title = "轨迹";

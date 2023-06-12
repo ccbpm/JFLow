@@ -5,6 +5,7 @@ import bp.da.*;
 import bp.tools.Cryptos;
 import bp.en.*;
 import bp.difference.*;
+import bp.web.WebUser;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -422,13 +423,12 @@ public class Glo
 
 //ORIGINAL LINE: public static void WriteUserLog(string msg, string logType = "通用操作")
 	public static void WriteUserLog(String msg, String logType) throws Exception {
-		/*if (SystemConfig.GetValByKeyBoolen("IsEnableLog", false) == false)
+		if (SystemConfig.GetValByKeyBoolen("IsEnableLog", false) == false)
 		{
 			return;
 		}
 
 	//    string sql = "INSERT INTO Sys_Log (id,title,exception,) value('" + DBAccess.GenerGUID() + "','" + logType + "','" + msg + "')";
-
 		UserLog ul = new UserLog();
 		ul.setMyPK(DBAccess.GenerGUID());
 		ul.setEmpNo(WebUser.getNo());
@@ -441,13 +441,15 @@ public class Glo
 		{
 			if (SystemConfig.getIsBSsystem())
 			{
-				ul.setIP(HttpContextHelper.getRequest().UserHostAddress);
+				ul.setIP(getRequest().getRemoteAddr());
 			}
 		}
 		catch (java.lang.Exception e)
 		{
+			e.printStackTrace();
+			Log.DebugWriteError("获取IP地址出现异常" + e.getMessage());
 		}
-		ul.Insert();*/
+		ul.Insert();
 	}
 
 		///#endregion 写入用户日志.

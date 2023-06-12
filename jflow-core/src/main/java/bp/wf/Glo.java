@@ -1,6 +1,7 @@
 package bp.wf;
 
 import bp.difference.handler.CommonUtils;
+import bp.port.Dept;
 import bp.sys.*;
 import bp.da.*;
 import bp.en.*;
@@ -12,6 +13,7 @@ import bp.port.*;
 import bp.wf.data.*;
 import bp.wf.data.GERpt;
 import bp.wf.port.WFEmp;
+import bp.wf.port.admin2group.*;
 import bp.wf.template.*;
 import bp.tools.*;
 import bp.difference.*;
@@ -1408,11 +1410,6 @@ public class Glo {
 			return "info@SAAS模式需要手工升级.";
 		}
 
-		//string checkErr = CheckFlows();
-		//if (DataType.IsNullOrEmpty(checkErr) == false)
-		//    return checkErr;
-
-
 		///#region 检查是否需要升级，并更新升级的业务逻辑.
 		String updataNote = "";
 		/*
@@ -2713,10 +2710,10 @@ public class Glo {
 	 * @return
 	 */
 	public static boolean IsCanInstall() throws Exception {
-
-		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single) {
-			throw new RuntimeException("err@初次安装必须设置 CCBPMRunModel=0 为单机版，安装后在修改集团或者saas版.");
-		}
+//      @hongyan 去掉.
+//		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single) {
+//			throw new RuntimeException("err@初次安装必须设置 CCBPMRunModel=0 为单机版，安装后在修改集团或者saas版.");
+//		}
 
 		String sql = "";
 		String errInfo = "";
@@ -2879,6 +2876,24 @@ public class Glo {
 		bp.wf.port.WFEmp wfemp = new bp.wf.port.WFEmp();
 		wfemp.CheckPhysicsTable();
 
+		//@hongyan.
+		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
+		{
+			Org org = new Org();
+			org.CheckPhysicsTable();
+
+			OrgAdminer oa = new OrgAdminer();
+			oa.CheckPhysicsTable();
+
+//			BP.WF.Template.FlowSort fs = new FlowSort();
+			FlowSort fs = new FlowSort();
+			fs.CheckPhysicsTable();
+
+//			BP.WF.Template.SysFormTree ft = new SysFormTree();
+			SysFormTree ft = new SysFormTree();
+			ft.CheckPhysicsTable();
+		}
+
 		if (DBAccess.IsExitsTableCol("WF_Emp", "StartFlows") == false) {
 			String sql = "";
 			//增加StartFlows这个字段
@@ -2918,14 +2933,39 @@ public class Glo {
 		empGPM.CheckPhysicsTable();
 
 		//DBAccess.RunSQL("ALTER TABLE Port_Emp ADD Pass NVARCHAR(90) DEFAULT '' NULL ");
-
-		sqlscript = SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/Port_Inc_CH_BPM.sql";
+		if (DBAccess.IsExitsTableCol("Port_Emp", "Pass") == false)
+		{
+			if (bp.difference.SystemConfig.getAppCenterDBType() == DBType.Oracle)
+				DBAccess.RunSQL("ALTER TABLE Port_Emp ADD Pass VARCHAR(90) DEFAULT '' NULL ");
+			else if (bp.difference.SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+				DBAccess.RunSQL("ALTER TABLE Port_Emp ADD Pass VARCHAR(90) DEFAULT '' NULL ");
+			else
+				DBAccess.RunSQL("ALTER TABLE Port_Emp ADD Pass NVARCHAR(90) DEFAULT '' NULL ");
+		}
+		sqlscript = SystemConfig.getCCFlowAppPath() + "WF/Data/Install/SQLScript/Port_Inc_CH_RunModel_" + SystemConfig.getCCBPMRunModel().getValue() + ".sql";
 		DBAccess.RunSQLScript(sqlscript);
 
-		Emp empAdmin = new Emp("admin");
+//		Emp empAdmin = new Emp("admin");
 		//生成Token
-		bp.wf.Dev2Interface.Port_GenerToken("admin");
-		WebUser.SignInOfGener(empAdmin, "CH", false, false, null, null);
+//		bp.wf.Dev2Interface.Port_GenerToken("admin");
+//		WebUser.SignInOfGener(empAdmin, "CH", false, false, null, null);
+
+
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
+		{
+			Emp empAdmin = new Emp("admin");
+			WebUser.SignInOfGener(empAdmin);
+		}
+
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+		{
+			Dev2Interface.Port_Login("admin", "100", null);
+		}
+
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
+		{
+			Dev2Interface.Port_Login("admin", "100", null);
+		}
 
 		///#endregion 执行基本的 sql
 
@@ -3253,12 +3293,6 @@ public class Glo {
 			s1.setName("人力资源类");
 			s1.Update();
 
-
-			//创建一个空白的流程，不然，整个结构就出问题。
-			//bp.wf.template.SysFormTrees frmTrees = new FrmTrees();
-			//frmTrees.RetrieveAll();
-			//frmTrees.Delete();
-
 			DBAccess.RunSQL("DELETE FROM Sys_FormTree ");
 			SysFormTree ftree = new SysFormTree();
 			ftree.setName("表单树");
@@ -3336,6 +3370,7 @@ public class Glo {
 
 		///#region 增加大文本字段列.
 		try {
+
 			DBAccess.GetBigTextFromDB("Sys_MapData", "No", "001", "HtmlTemplateFile");
 		} catch (java.lang.Exception e4) {
 		}

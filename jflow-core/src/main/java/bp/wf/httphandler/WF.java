@@ -1814,7 +1814,11 @@ public class WF extends WebContralBase
 	 @return 
 	*/
 	public final String AuthorList_Init() throws Exception {
-		Paras ps = new Paras();
+		Auths ens = new Auths();
+		ens.Retrieve(AuthAttr.AutherToEmpNo, WebUser.getNo());
+		return ens.ToJson();
+
+		/*Paras ps = new Paras();
 		ps.SQL = "SELECT No,Name,AuthorDate FROM WF_Emp WHERE AUTHOR=" + SystemConfig.getAppCenterDBVarStr() + "AUTHOR";
 		ps.Add("AUTHOR", WebUser.getNo(), false);
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
@@ -1831,7 +1835,7 @@ public class WF extends WebContralBase
 			dt.Columns.get("name").ColumnName = "Name";
 			dt.Columns.get("authordate").ColumnName = "AuthorDate";
 		}
-		return bp.tools.Json.ToJson(dt);
+		return bp.tools.Json.ToJson(dt);*/
 	}
 	/** 
 	 当前登陆人是否有授权
@@ -1866,7 +1870,6 @@ public class WF extends WebContralBase
 	}
 
 		///#endregion 登录相关.
-
 	/** 
 	 获得抄送列表
 	 

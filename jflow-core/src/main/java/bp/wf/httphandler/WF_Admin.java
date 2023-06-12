@@ -333,7 +333,7 @@ public class WF_Admin extends WebContralBase
 			}
 
 			Hashtable ht = new Hashtable();
-			ht.put("OSModel", 1); //组织结构类型.
+			ht.put("CCBPMRunModel", SystemConfig.getCCBPMRunModel().getValue()); //组织结构类型.
 			ht.put("DBType", SystemConfig.getAppCenterDBType( ).toString()); //数据库类型.
 			ht.put("Ver", Glo.Ver); //版本号.
 
@@ -355,21 +355,28 @@ public class WF_Admin extends WebContralBase
 		Glo.DoInstallDataBase(lang, demoTye);
 
 		//执行ccflow的升级。
-		Glo.UpdataCCFlowVer();
+		//Glo.UpdataCCFlowVer();
 
 		//加注释.
 		bp.pub.PubClass.AddComment();
 
-		if (DBAccess.IsExitsTableCol("Port_Emp", "EmpSta") == true)
-		{
-			DBAccess.DropTableColumn("Port_Emp", "EmpSta");
-			//string sql = "UPDATE Port_Emp SET EmpSta=1 ";
-			//if (DBAccess.RunSQLReturnValInt(sql, 1) == 0)
-			//    return "err@该用户已经被禁用.";
-		}
+//		if (DBAccess.IsExitsTableCol("Port_Emp", "EmpSta") == true)
+//		{
+//			DBAccess.DropTableColumn("Port_Emp", "EmpSta");
+//			String sql = "UPDATE Port_Emp SET EmpSta=1 ";
+//			if (DBAccess.RunSQLReturnValInt(sql, 1) == 0)
+//			    return "err@该用户已经被禁用.";
+//		}
 
-		return "info@系统成功安装 点击:<a href='../../Portal/Standard/Login.htm' >这里直接登录流程设计器</a>";
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
+			return "info@单组织版本,系统成功安装 点击:<a href='../../Portal/Default.htm' >这里直接登录流程设计器</a>";
+
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
+			return "info@集团版本,系统成功安装 点击:<a href='../../Portal/Default.htm' >这里直接登录流程设计器</a>";
+
+		return "info@SAAS版本安装成功 点击:<a href='/Portal/SaaS/Admin/Login.htm' >登陆后台, 超级管理员账号:admin,123  演示公司账号:yuwen,123 </a>";
 		// this.Response.Redirect("DBInstall.aspx?DoType=OK", true);
+
 	}
 
 		///#endregion

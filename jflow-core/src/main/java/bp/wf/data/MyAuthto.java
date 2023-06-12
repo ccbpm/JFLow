@@ -501,16 +501,16 @@ public class MyAuthto extends Entity
 
 			///#region 增加多个隐藏条件.
 			////我授权的流程.
-			//AttrOfSearch search = new AttrOfSearch(MyAuthtoAttr.Starter, "发起人",
+			//SearchNormal search = new SearchNormal(MyAuthtoAttr.Starter, "发起人",
 			//    MyAuthtoAttr.Starter, "=", bp.web.WebUser.getNo(), 0, true);
 			//map.AttrsOfSearch.Add(search);
 
-			//search = new AttrOfSearch(MyAuthtoAttr.WFState, "流程状态",
+			//search = new SearchNormal(MyAuthtoAttr.WFState, "流程状态",
 			//    MyAuthtoAttr.WFState, " not in", "('0')", 0, true);
 			//map.AttrsOfSearch.Add(search);
 
-		AttrOfSearch search = new AttrOfSearch(MyAuthtoAttr.AtPara, "授权人", MyAuthtoAttr.AtPara, " LIKE ", " '%@Auth=" + bp.web.WebUser.getName() + "%' ", 0, true);
-		map.getAttrsOfSearch().add(search);
+		SearchNormal search = new SearchNormal(MyAuthtoAttr.AtPara, "授权人", MyAuthtoAttr.AtPara, " LIKE ", " '%@Auth=" + bp.web.WebUser.getName() + "%' ", 0, true);
+		map.getSearchNormals().add(search);
 
 
 			///#endregion 增加多个隐藏条件.

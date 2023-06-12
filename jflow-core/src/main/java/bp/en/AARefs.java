@@ -23,7 +23,7 @@ public class AARefs extends ArrayList<Object>
 	*/
 	public final void Add(String lab, String key, String refKey, String defaultSymbol, String defaultvalue, int tbWidth) throws Exception
 	{
-		AttrOfSearch aos = new AttrOfSearch(key, lab, refKey, defaultSymbol, defaultvalue, tbWidth, false);
+		SearchNormal aos = new SearchNormal(key, lab, refKey, defaultSymbol, defaultvalue, tbWidth, false);
 		this.add(aos);
 	}
 }

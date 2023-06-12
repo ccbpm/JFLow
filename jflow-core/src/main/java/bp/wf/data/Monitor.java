@@ -453,7 +453,7 @@ public class Monitor extends Entity
 		map.AddSearchAttr(MonitorAttr.FK_Flow, 130);
 
 			////增加隐藏的查询条件.
-			//AttrOfSearch search = new AttrOfSearch(MonitorAttr.WorkerDept, "部门",
+			//SearchNormal search = new SearchNormal(MonitorAttr.WorkerDept, "部门",
 			//    MonitorAttr.WorkerDept, "=", bp.web.WebUser.getFK_Dept(), 0, true);
 			//map.AttrsOfSearch.Add(search);
 

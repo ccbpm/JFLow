@@ -499,9 +499,9 @@ public class MyDeptFlow extends Entity
 		map.AddHidden(MyStartFlowAttr.FID, "=", "0");
 
 			//增加隐藏的查询条件.
-		AttrOfSearch search = new AttrOfSearch(MyDeptFlowAttr.FK_Dept, "部门", MyDeptFlowAttr.FK_Dept, "=", bp.web.WebUser.getFK_Dept(), 0, true);
+		SearchNormal search = new SearchNormal(MyDeptFlowAttr.FK_Dept, "部门", MyDeptFlowAttr.FK_Dept, "=", bp.web.WebUser.getFK_Dept(), 0, true);
 
-		map.getAttrsOfSearch().add(search);
+		map.getSearchNormals().add(search);
 
 			///#endregion 查询条件.
 

@@ -837,7 +837,7 @@ public class MapData extends EntityNoName
 		map.AddTBString(MapDataAttr.FlowCtrls, null, "流程控件", true, true, 0, 200, 20);
 
 		//表单
-		//map.AddTBString(MapDataAttr.HtmlTemplateFile, null, "表单", true, true, 0, 200, 20);
+		map.AddTBString(MapDataAttr.HtmlTemplateFile, null, "表单", true, true, 0, 200, 20);
 
 			//增加参数字段.
 		map.AddTBAtParas(4000);

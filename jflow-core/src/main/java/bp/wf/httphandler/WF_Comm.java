@@ -2193,7 +2193,7 @@ public class WF_Comm extends WebContralBase
 
 		///#region 普通属性
 		String opkey = ""; // 操作符号。
-		for (AttrOfSearch attr : en.getEnMap().getAttrsOfSearch())
+		for (SearchNormal attr : en.getEnMap().getSearchNormals())
 		{
 
 
@@ -2225,15 +2225,10 @@ public class WF_Comm extends WebContralBase
 				}
 
 				//获得真实的数据类型.
-				if (SystemConfig.getAppCenterDBFieldIsParaDBType() == true)
-				{
-					String valType = String.valueOf(bp.sys.base.Glo.GenerRealType(en.getEnMap().getAttrs(), attr.getRefAttrKey(), attr.getDefaultValRun()));
-					qo.AddWhere(attr.getRefAttrKey(), attr.getDefaultSymbol(), valType);
-				}
+				if (SystemConfig.getAppCenterDBFieldIsParaDBType() == true && (attr.getDefaultSymbol().equals("=")||attr.getDefaultSymbol().equals("!=")))
+					qo.AddWhere(attr.getRefAttrKey(), attr.getDefaultSymbol(), bp.sys.base.Glo.GenerRealType(en.getEnMap().getAttrs(), attr.getRefAttrKey(), attr.getDefaultValRun()));
 				else
-				{
 					qo.AddWhere(attr.getRefAttrKey(), attr.getDefaultSymbol(), attr.getDefaultValRun());
-				}
 				qo.addRightBracket();
 				if (keys.contains(attr.getRefAttrKey()) == false)
 				{
@@ -2784,7 +2779,7 @@ public class WF_Comm extends WebContralBase
 
 		///#region 普通属性
 		String opkey = ""; // 操作符号。
-		for (AttrOfSearch attr : en.getEnMap().getAttrsOfSearch())
+		for (SearchNormal attr : en.getEnMap().getSearchNormals())
 		{
 			if (attr.getIsHidden())
 			{
@@ -4384,6 +4379,7 @@ public class WF_Comm extends WebContralBase
 		String httpHandlerName = this.GetRequestVal("HttpHandlerName");
 		httpHandlerName = httpHandlerName.replace("BP.WF.HttpHandler", "bp.wf.httphandler");
 		httpHandlerName = httpHandlerName.replace("BP.CCBill", "bp.ccbill");
+		httpHandlerName = httpHandlerName.replace("BP.Cloud.HttpHandler", "bp.cloud.httphandler");
 		//httpHandlerName = httpHandlerName.replace("BP.IC","bp.ic");
 		String methodName = this.GetRequestVal("DoMethod");
 		Object tempVar = ClsCache.get(httpHandlerName);
@@ -4441,7 +4437,7 @@ public class WF_Comm extends WebContralBase
 		Hashtable ht = new Hashtable();
 
 		String token = this.GetRequestVal("Token");
-		if(DataType.IsNullOrEmpty(token)==false &&(token.equals("undefined")==true ||  token.equals("null")==true))
+		if(DataType.IsNullOrEmpty(token)==false || token.equals("undefined") == true ||  token.equals("null") == true)
 			token="";
 		if(DataType.IsNullOrEmpty(token) == false)
 			bp.wf.Dev2Interface.Port_LoginByToken(token);

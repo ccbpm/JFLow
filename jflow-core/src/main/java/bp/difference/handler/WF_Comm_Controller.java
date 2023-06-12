@@ -52,6 +52,8 @@ public class WF_Comm_Controller extends HttpHandlerBase {
 		doType = doType.toLowerCase();
 		if(doType.contains("login")==true
 			|| doType.contains("index")
+			|| doType.contains("selectoneorg_init")
+			|| doType.contains("getorgbyno")
 			|| doType.contains("admiin")
 			|| doType.contains("dbinstall")
 			|| doType.contains("default_logout")

@@ -172,17 +172,14 @@ public class Map  implements Serializable
 
 
 	///非枚举值与外键条件查询
-	private AttrsOfSearch _attrsOfSearch = null;
-	/**
-	 查找属性
-	 */
-	public final AttrsOfSearch getAttrsOfSearch()
+	private SearchNormals _SearchNormals = null;
+	public final SearchNormals getSearchNormals()
 	{
-		if (this._attrsOfSearch == null)
+		if(this._SearchNormals == null)
 		{
-			this._attrsOfSearch = new AttrsOfSearch();
+			this._SearchNormals = new SearchNormals();
 		}
-		return this._attrsOfSearch;
+		return this._SearchNormals;
 	}
 	/**
 	 得到全部的Attrs
@@ -218,8 +215,8 @@ public class Map  implements Serializable
 	}
 	public final void AddHidden(String refKey, String symbol, String val)
 	{
-		AttrOfSearch aos = new AttrOfSearch("K" + this.getAttrsOfSearch().size(), refKey, refKey, symbol, val, 0, true);
-		this.getAttrsOfSearch().Add(aos);
+		SearchNormal aos = new SearchNormal("K" + this.getSearchNormals().size(), refKey, refKey, symbol, val, 0, true);
+		this.getSearchNormals().Add(aos);
 	}
 	/**
 	 加入查找属性.必须是外键盘/枚举类型/boolen.

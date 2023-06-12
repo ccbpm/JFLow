@@ -458,9 +458,9 @@ public class MyDeptTodolist extends Entity
 			////增加隐藏的查询条件.
 		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
 		{
-			AttrOfSearch search = new AttrOfSearch(MyDeptTodolistAttr.OrgNo, "组织",
+			SearchNormal search = new SearchNormal(MyDeptTodolistAttr.OrgNo, "组织",
 					MyDeptTodolistAttr.OrgNo, "=",WebUser.getOrgNo(), 0, true);
-			map.getAttrsOfSearch().Add(search);
+			map.getSearchNormals().Add(search);
 		}
 
 		RefMethod rm = new RefMethod();

@@ -1339,6 +1339,19 @@ public class WF_CommEntity extends WebContralBase
 		}
 		qo.DoQuery();
 
+		DataTable dt = ensMen.ToDataTableField();
+		Entity en = ensMen.getGetNewEntity();
+		String tableName = en.getEnMap().getPhysicsTable();
+		if (tableName.equals("Port_Emp") == true
+				&& dt.Columns.contains("UserID")==true)
+		{
+			for(DataRow dr: dt.Rows)
+			{
+				//dr["No"] = dr["UserID"];
+				dr.setValue("No", dr.get("UserID"));
+			}
+		}
+
 		return ensMen.ToJson("dt");
 	}
 	public final String BranchesAndLeaf_Delete() throws Exception {

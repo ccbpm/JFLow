@@ -182,8 +182,10 @@ public abstract class WebContralBase {
 			tempVar = mp.invoke(myEn, paras);
 		} catch (InvocationTargetException e ) {
 			String msg = null;
-			if(e.getTargetException()!=null && e.getTargetException().getCause()!=null)
-				msg = e.getTargetException().getCause().getMessage();
+			if(e.getTargetException()!=null && e.getTargetException().getCause()!=null){
+				msg = e.getTargetException().toString();
+				msg += e.getTargetException().getCause().getMessage();
+			}
 			if (msg==null && e.getCause() != null) {
 				msg = e.getCause().getMessage();
 			}

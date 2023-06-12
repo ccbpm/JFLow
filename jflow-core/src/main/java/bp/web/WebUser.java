@@ -95,7 +95,7 @@ public class WebUser {
         }
         HashMap<String, String> ht = new HashMap<>();
         //存储WebUser信息
-        ht.put("No", em.getNo());
+        ht.put("No", em.getUserID());
         ht.put("Name", em.getName());
 
         // 增加他的orgNo

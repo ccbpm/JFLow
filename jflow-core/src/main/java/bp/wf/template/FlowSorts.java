@@ -28,10 +28,18 @@ public class FlowSorts extends EntitiesTree
 	*/
 	@Override
 	public int RetrieveAll() throws Exception {
-		if (bp.wf.Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
-		{
+
+		if (bp.web.WebUser.getNo().equals("admin") == true)
+			return this.RetrieveAll(FlowSortAttr.Idx);
+
+		if (bp.wf.Glo.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
 			return this.Retrieve(FlowSortAttr.OrgNo, bp.web.WebUser.getOrgNo(), FlowSortAttr.Idx);
-		}
+
+		if (bp.wf.Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
+			return this.RetrieveAll(FlowSortAttr.Idx);
+
+		if (bp.wf.Glo.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+			return this.Retrieve(FlowSortAttr.OrgNo, bp.web.WebUser.getOrgNo(), FlowSortAttr.Idx);
 
 		int i = super.RetrieveAll(FlowSortAttr.Idx);
 		if (i == 0)

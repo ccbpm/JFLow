@@ -2422,7 +2422,7 @@ public class WF_MyFlow extends WebContralBase
 				//有可能是，实体调用
 				GenerWorkFlow gwf = new GenerWorkFlow();
 				gwf.setWorkID(this.getPWorkID());
-				if(gwf.RetrieveFromDBSources() == 1) {
+				if ( DataType.IsNumStr(this.getPFlowNo())==true && gwf.RetrieveFromDBSources() == 1 ){
 					Dev2Interface.SetParentInfo(this.getFK_Flow(), this.getWorkID(), this.getPWorkID(), gwf.getPEmp(), gwf.getPNodeID());
 				}
 			}

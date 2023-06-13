@@ -122,6 +122,9 @@ public class Station extends EntityNoName
 			if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
 				this.setOrgNo(bp.web.WebUser.getOrgNo());
 		}
+		//每个部门都有自己的角色体系.
+		if (bp.difference.SystemConfig.getGroupStationModel() == 2)
+			this.SetValByKey(StationAttr.FK_Dept, bp.web.WebUser.getFK_Dept());
 		return super.beforeUpdateInsertAction();
 	}
 

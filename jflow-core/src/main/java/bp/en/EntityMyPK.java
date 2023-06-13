@@ -1,6 +1,9 @@
 package bp.en;
 
-/** 
+import bp.da.DBAccess;
+import bp.da.DataType;
+
+/**
  NoEntity 的摘要说明。
 */
 public abstract class EntityMyPK extends Entity
@@ -51,6 +54,20 @@ public abstract class EntityMyPK extends Entity
 	protected EntityMyPK(String _MyPK) throws Exception {
 		this.setMyPK(_MyPK);
 		this.Retrieve();
+	}
+	/**
+	 赋值
+
+	 @return
+	 */
+	@Override
+	protected boolean beforeInsert() throws Exception {
+		if (DataType.IsNullOrEmpty(this.getMyPK()) == true)
+		{
+			this.setMyPK(DBAccess.GenerGUID());
+		}
+
+		return super.beforeInsert();
 	}
 
 		///

@@ -726,7 +726,7 @@ public class WF extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String PCAndMobileUrl() throws Exception {
+	public final String Do_PCAndMobileUrl() throws Exception {
 		Hashtable ht = new Hashtable();
 		ht.put("PCUrl", SystemConfig.getHostURL());
 		ht.put("MobileUrl", SystemConfig.getMobileURL());

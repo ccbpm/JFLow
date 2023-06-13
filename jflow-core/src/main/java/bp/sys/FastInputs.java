@@ -24,6 +24,62 @@ public class FastInputs extends EntitiesMyPK
 		return new FastInput();
 	}
 
+	/**
+	 * 获得已经有的数据
+	 * @return
+	 */
+	public String InitData_Flow() throws Exception {
+		String userNo = WebUser.getNo();
+		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+			userNo = WebUser.getOrgNo() + "_" + userNo;
+
+		int i = this.Retrieve("CfgKey", "Flow", "FK_Emp", userNo);
+		if (i == 0)
+		{
+			FastInput en = new FastInput();
+			en.setMyPK("Flow" + userNo + "_1");
+			en.SetValByKey("CfgKey", "Flow");
+
+			en.SetValByKey("FK_Emp", userNo);
+			en.SetValByKey("Vals", "同意");
+			en.Insert();
+
+			en = new FastInput();
+			en.setMyPK("Flow" + userNo + "_2");
+			en.SetValByKey("CfgKey", "Flow");
+
+			en.SetValByKey("FK_Emp", userNo);
+			en.SetValByKey("Vals", "不同意");
+			en.Insert();
+
+			en = new FastInput();
+			en.setMyPK("Flow" + userNo + "_3");
+			en.SetValByKey("CfgKey", "Flow");
+
+			en.SetValByKey("FK_Emp", userNo);
+			en.SetValByKey("Vals", "请领导斟酌");
+			en.Insert();
+
+			this.Retrieve("CfgKey", "Flow", "FK_Emp", userNo);
+		}
+
+		if (i < 12)
+		{
+			for (int idx = 0; idx < 12 - this.size(); idx++)
+			{
+				FastInput en = new FastInput();
+				en.setMyPK("Flow" + userNo + "_11" + idx);
+				en.SetValByKey("CfgKey", "Flow");
+				en.SetValByKey("FK_Emp", userNo);
+				en.SetValByKey("Vals", "");
+				en.Insert();
+			}
+		}
+
+		this.Retrieve("CfgKey", "Flow", "FK_Emp", userNo);
+		return this.ToJson();
+	}
+
 	/** 
 	 查询全部
 	 

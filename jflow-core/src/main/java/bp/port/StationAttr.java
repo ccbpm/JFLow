@@ -21,5 +21,8 @@ public class StationAttr extends EntityNoNameAttr
 	public static final String OrgNo = "OrgNo";
 
 	public static final String Idx = "Idx";
-
+/// <summary>
+	/// 隶属部门
+	/// </summary>
+public static final String FK_Dept = "FK_Dept";
 }

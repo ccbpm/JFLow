@@ -113,6 +113,8 @@ public class StationType extends EntityNoName
 			if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single) {
 				this.setOrgNo(bp.web.WebUser.getOrgNo());
 			}
+			if (bp.difference.SystemConfig.getGroupStationModel() == 2)
+				this.SetValByKey(StationAttr.FK_Dept, bp.web.WebUser.getFK_Dept());
 		}
 		return super.beforeUpdateInsertAction();
 	}

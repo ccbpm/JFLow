@@ -2808,7 +2808,21 @@ public abstract class Entity extends EnObj implements Serializable
 			{
 				return 0;
 			}
+			// 判断是否有参数字段.
+			if (this.get_enMap().ParaFields != null)
+			{
+				String[] strs = this.get_enMap().ParaFields.split(",");
+				for (String key : strs)
+				{
+					if (DataType.IsNullOrEmpty(key) == true)
+						continue;
+					if (this.getRow().containsKey(key) == false)
+						throw new Exception("err@类[" + this.toString() + "]参数字段[" + key + "]的值不存在,您在ParaFields配置的参数字段列表,它们不在attrs集合里面.");
 
+					String val = this.getRow().get(key).toString(); // as string;
+					this.SetPara(key, val);
+				}
+			}
 			str = "@更新时出现错误";
 			int i = EntityDBAccess.Update(this, keys);
 			str = "@更新之后出现错误";

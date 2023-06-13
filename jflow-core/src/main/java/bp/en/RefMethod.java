@@ -163,8 +163,14 @@ public class RefMethod
 		
 		String str = StringHelper.trim(this.ClassMethodName, ' ', ';', '.');
 		int pos = str.lastIndexOf(".");
-		String clas = str.substring(0, pos);
-		String meth = str.substring(pos + 1, str.length());
+		String clas = this.HisEn.toString();
+		String meth = str;
+		if (pos > 0)
+		{
+			clas = str.substring(0, pos);
+			meth = str.substring(pos, str.length() - pos).trim();
+		}
+
 		if (meth.contains("()"))
 		{
 			meth = meth.replace("()", "");

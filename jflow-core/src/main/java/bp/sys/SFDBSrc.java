@@ -877,8 +877,10 @@ public class SFDBSrc extends EntityNoName
 		map.AddTBString(SFDBSrcAttr.Name, null, "名称", true, false, 0, 30, 20);
 //		String cfg = "@0=应用系统主数据库(默认)@1=SQLServer数据库@2=Oracle数据库@3=MySQL数据库@4=Informix数据库@50=Dubbo服务@100=WebService数据源";
 //		map.AddDDLSysEnum(SFDBSrcAttr.DBSrcType, 0, "数据源类型", true, true, SFDBSrcAttr.DBSrcType, cfg1);
-		String cfg1 = "@local=应用系统数据库(默认)@MSSQL=SQLServer数据库@Oracle=Oracle数据库@MySQL=MySQL数据库@Informix=Informix数据库@KindingBase3=人大金仓库R3@KindingBase6=人大金仓库R6@UX=优漩@Dubbo=Dubbo服务@WS=WebService数据源@URL=url模式@CCFromRef.js";
-		map.AddDDLStringEnum(SFDBSrcAttr.DBSrcType, "local", "类型", cfg1, true, null, false);
+	//	String cfg1 = "@local=应用系统数据库(默认)@MSSQL=SQLServer数据库@Oracle=Oracle数据库@MySQL=MySQL数据库@Informix=Informix数据库@KindingBase3=人大金仓库R3@KindingBase6=人大金仓库R6@UX=优漩@Dubbo=Dubbo服务@WS=WebService数据源@URL=url模式@CCFromRef.js";
+	//	map.AddDDLStringEnum(SFDBSrcAttr.DBSrcType, "local", "类型", cfg1, true, null, false);
+		map.AddTBString("DBSrcType", "local", "类型", true, false, 0, 30, 20);
+
 		map.AddTBString(SFDBSrcAttr.DBName, null, "数据库名称/Oracle保持为空", true, false, 0, 30, 20);
 		map.AddTBStringDoc(SFDBSrcAttr.ConnString, null, "连接串", true, false, true);
 

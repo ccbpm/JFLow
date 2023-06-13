@@ -128,11 +128,9 @@ public class FlowSort extends EntityTree
 	*/
 	@Override
 	protected boolean beforeInsert() throws Exception {
-		if (Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
-		{
-			this.setOrgNo(bp.web.WebUser.getOrgNo());
-		}
 
+		if (DataType.IsNullOrEmpty(this.getOrgNo()) == true && Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
+			this.SetValByKey("OrgNo",bp.web.WebUser.getOrgNo());
 		return super.beforeInsert();
 	}
 	@Override

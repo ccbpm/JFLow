@@ -123,7 +123,7 @@ public class Dev2Interface {
             f1s.setOrgNo(orgNo);
             f1s.setNo(orgNo);
             f1s.setParentNo("100");
-            f1s.setName("流程树" + orgNo);
+            f1s.setName(orgName);
             f1s.Insert();
 
             f1s = new FrmSort();

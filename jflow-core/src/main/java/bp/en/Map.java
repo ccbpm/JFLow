@@ -1945,6 +1945,53 @@ public class Map  implements Serializable
 	}
    //#endregion 方法分组.
 
+	//#region 属性.
+	public void AddDDLStringEnum(String key, String defaultVal, String name, String cfgString, Boolean uiIsEnable, String helpDoc, Boolean isUILine)
+	{
+		if(DataType.IsNullOrEmpty(helpDoc))	helpDoc = "";
+		if(DataType.IsNullOrEmpty(isUILine)) isUILine = false;
+
+		Attr attr = new Attr();
+		attr.setKey(key);
+		attr.setField(key);
+
+		attr.setDefaultVal(defaultVal);
+		attr.setMyDataType(DataType.AppString);
+
+		// 设置外部数据源类型字段.
+		attr.setMyFieldType(FieldType.Normal);
+		attr.setUIContralType(UIContralType.DDL);
+		attr.setMaxLength(50);
+		attr.setMinLength(0);
+		attr.setDesc(name);
+		//转化为sql.
+		attr.setUIBindKey(bp.difference.Glo.DealSQLStringEnumFormat(cfgString));
+		// alert(attr.UIBindKey);
+
+		attr.setUIIsReadonly(!uiIsEnable);
+		attr.HelperUrl = helpDoc;
+		attr.UIIsLine = isUILine;
+		this.getAttrs().Add(attr);
+
+		//他的名称列.
+		Attr attr2 = new Attr();
+		attr2.setKey(key + 'T');
+		attr2.setField(key + 'T');
+		attr2.setDefaultVal(defaultVal);
+		attr2.setMyDataType(DataType.AppString);
+		attr2.setMyFieldType(FieldType.Normal);
+		attr2.setMaxLength(200);
+		attr2.setDesc(name);
+		attr2.setUIContralType(UIContralType.TB);
+		attr2.HelperUrl = helpDoc;
+		attr2.UIIsLine = !!isUILine;
+		//	attr.UIBindKey = sql;
+		attr2.setUIIsReadonly(true);
+		attr2.setUIVisible(false);
+		this.getAttrs().Add(attr2);
+	}
+    //#endregion 枚举属性
+
 	///增加大块文本输入
 	public final void AddTBStringDoc()
 	{

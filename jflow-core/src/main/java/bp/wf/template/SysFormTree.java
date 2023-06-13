@@ -135,10 +135,9 @@ public class SysFormTree extends EntityTree
 	*/
 	@Override
 	protected boolean beforeInsert() throws Exception {
-		if (Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
-		{
-			this.setOrgNo(bp.web.WebUser.getOrgNo());
-		}
+		if (DataType.IsNullOrEmpty(this.getOrgNo())==true && Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
+			this.SetValByKey("OrgNo", bp.web.WebUser.getOrgNo());
+
 		if (DataType.IsNullOrEmpty(this.getNo()) == true)
 			this.setNo(String.valueOf(DBAccess.GenerOID(this.toString())));
 		return super.beforeInsert();

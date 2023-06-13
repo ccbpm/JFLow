@@ -847,9 +847,19 @@ public class SFDBSrc extends EntityNoName
 	*/
 	public SFDBSrc() {
 	}
-	public SFDBSrc(String mypk) throws Exception {
+	public SFDBSrc(String mypk) throws Exception{
 		this.setNo(mypk);
-		this.Retrieve();
+		try{
+			this.Retrieve();
+		}catch (Exception e){
+			if(mypk.equals("local") == true){
+				this.setName(mypk);
+				this.setDBSrcType(DBSrcType.Localhost);
+				this.setDBName(mypk);
+				this.Insert();
+			}
+		}
+
 	}
 	/** 
 	 EnMap
@@ -863,19 +873,24 @@ public class SFDBSrc extends EntityNoName
 
 		Map map = new Map("Sys_SFDBSrc", "数据源");
 
-		map.AddTBStringPK(SFDBSrcAttr.No, null, "数据源编号(必须是英文)", true, false, 1, 20, 20);
-		map.AddTBString(SFDBSrcAttr.Name, null, "数据源名称", true, false, 0, 30, 20);
-
-		map.AddDDLSysEnum(SFDBSrcAttr.DBSrcType, 0, "数据源类型", true, true, SFDBSrcAttr.DBSrcType, "@0=应用系统主数据库(默认)@1=SQLServer数据库@2=Oracle数据库@3=MySQL数据库@4=Informix数据库@50=Dubbo服务@100=WebService数据源");
+		map.AddTBStringPK(SFDBSrcAttr.No, null, "编号", true, false, 1, 20, 20);
+		map.AddTBString(SFDBSrcAttr.Name, null, "名称", true, false, 0, 30, 20);
+//		String cfg = "@0=应用系统主数据库(默认)@1=SQLServer数据库@2=Oracle数据库@3=MySQL数据库@4=Informix数据库@50=Dubbo服务@100=WebService数据源";
+//		map.AddDDLSysEnum(SFDBSrcAttr.DBSrcType, 0, "数据源类型", true, true, SFDBSrcAttr.DBSrcType, cfg1);
+		String cfg1 = "@local=应用系统数据库(默认)@MSSQL=SQLServer数据库@Oracle=Oracle数据库@MySQL=MySQL数据库@Informix=Informix数据库@KindingBase3=人大金仓库R3@KindingBase6=人大金仓库R6@UX=优漩@Dubbo=Dubbo服务@WS=WebService数据源@URL=url模式@CCFromRef.js";
+		map.AddDDLStringEnum(SFDBSrcAttr.DBSrcType, "local", "类型", cfg1, true, null, false);
 		map.AddTBString(SFDBSrcAttr.DBName, null, "数据库名称/Oracle保持为空", true, false, 0, 30, 20);
 		map.AddTBStringDoc(SFDBSrcAttr.ConnString, null, "连接串", true, false, true);
-		String runPlant = bp.difference.SystemConfig.getRunOnPlant();
-		if (runPlant.equals("CCFlow") == false && runPlant.equals("bp")==false)
-		{
-		   map.AddTBString(SFDBSrcAttr.UserID, null, "数据库登录用户ID", true, false, 0, 30, 20);
-			map.AddTBString(SFDBSrcAttr.Password, null, "密码", true, false, 0, 30, 20);
-			map.AddTBString(SFDBSrcAttr.IP, null, "IP地址/数据库实例名", true, false, 0, 500, 20);
-		}
+
+		map.AddTBAtParas(200);
+
+//		String runPlant = bp.difference.SystemConfig.getRunOnPlant();
+//		if (runPlant.equals("CCFlow") == false && runPlant.equals("bp")==false)
+//		{
+//		   map.AddTBString(SFDBSrcAttr.UserID, null, "数据库登录用户ID", true, false, 0, 30, 20);
+//			map.AddTBString(SFDBSrcAttr.Password, null, "密码", true, false, 0, 30, 20);
+//			map.AddTBString(SFDBSrcAttr.IP, null, "IP地址/数据库实例名", true, false, 0, 500, 20);
+//		}
 
 			//map.AddDDLSysEnum(SFDBSrcAttr.DBSrcType, 0, "数据源类型", true, true,
 			//    SFDBSrcAttr.DBSrcType, "@0=应用系统主数据库@1=SQLServer@2=Oracle@3=MySQL@4=Infomix");

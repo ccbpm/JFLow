@@ -430,8 +430,8 @@ public class Emp extends EntityNoName {
         int count = DBAccess.RunSQLReturnValInt(sql);
         if (count == 0) {
             sql = "INSERT INTO WF_Emp (No,Name) VALUES('" + this.getNo() + "','" + this.getName() + "')";
+            DBAccess.RunSQL(sql);
         }
-        DBAccess.RunSQL(sql);
 
         //修改Port_Emp中的缓存
         bp.port.Emp emp = new bp.port.Emp();

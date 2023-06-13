@@ -1066,17 +1066,21 @@ public class GPMPage extends WebContralBase
 		String empNo = this.getFK_Emp();
 		if(DataType.IsNullOrEmpty(empNo)==true)
 			return "err@参数FK_Emp不能为空";
+
+
 		Emp emp = new Emp();
 		emp.setNo(empNo);
 		emp.Retrieve();
+
 		DataSet ds = new DataSet();
 		//获取当前人员所在的部门及兼职部门
-		String sql = "SELECT B.No AS FK_Dept,B.Name AS  FK_DeptText,A.MyPK  From Port_DeptEmp A,Port_Dept B WHERE A.FK_Dept=B.No AND A.FK_Emp='"+ empNo + "'";
+		String sql = "SELECT B.No AS FK_Dept,B.Name AS  FK_DeptText,A.MyPK  From Port_DeptEmp A,Port_Dept B WHERE A.FK_Dept=B.No AND A.FK_Emp='" + empNo + "'";
 		if(SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB
 		|| SystemConfig.getAppCenterDBType() == DBType.Oracle)
-			sql = "SELECT B.No AS FK_Dept,B.Name AS FK_DeptText,A.MyPK AS MyPK From Port_DeptEmp A,Port_Dept B WHERE A.FK_Dept=B.No AND A.FK_Emp='"+ empNo + "'";
+			sql = "SELECT B.No AS FK_Dept,B.Name AS FK_DeptText,A.MyPK AS MyPK From Port_DeptEmp A,Port_Dept B WHERE A.FK_Dept=B.No AND A.FK_Emp='" + empNo + "'";
 		if(SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
-			sql +=" AND B.OrgNo='"+WebUser.getOrgNo()+"'";
+			sql +=" AND B.OrgNo='"+emp.getOrgNo()+"'";
+
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
 		{
@@ -1094,6 +1098,7 @@ public class GPMPage extends WebContralBase
 			else
 				deptEmp.setMyPK(emp.getFK_Dept() + "_" + emp.getNo());
 
+			deptEmp.setOrgNo(emp.getOrgNo());
 			deptEmp.Insert();
 			DataRow dr = dt.NewRow();
 			dr.setValue(0,emp.getFK_Dept());

@@ -110,7 +110,7 @@ public class FlowSort extends EntityNoName
 	*/
 	@Override
 	protected boolean beforeInsert() throws Exception {
-		if (bp.wf.Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
+		if (DataType.IsNullOrEmpty(this.getOrgNo()) == true && bp.wf.Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
 		{
 			this.setOrgNo(bp.web.WebUser.getOrgNo());
 		}
@@ -129,7 +129,7 @@ public class FlowSort extends EntityNoName
 		}
 		else
 		{
-			sql = "UPDATE WF_Emp SET StartFlows='' ";
+			sql = "UPDATE WF_Emp SET StartFlows='' WHERE OrgNo='"+bp.web.WebUser.getOrgNo()+"' ";
 		}
 
 		DBAccess.RunSQL(sql);

@@ -1261,7 +1261,14 @@ public class CCFormAPI
 		ds.Tables.add(Sys_MapFrame);
 
 		//Sys_FrmAttachment.
-		DataTable Sys_FrmAttachment = md.getFrmAttachments().ToDataTableField("Sys_FrmAttachment");
+		FrmAttachments aths = md.getFrmAttachments();
+		//获取从表中的附件字段
+		for (MapDtl dtl : md.getOrigMapDtls().ToJavaList())
+		{
+			FrmAttachments dtlAths = new FrmAttachments(dtl.getNo());
+			aths.AddEntities(dtlAths);
+		}
+		DataTable Sys_FrmAttachment = aths.ToDataTableField("Sys_FrmAttachment");
 		ds.Tables.add(Sys_FrmAttachment);
 
 		//FrmImgAths. 上传图片附件.

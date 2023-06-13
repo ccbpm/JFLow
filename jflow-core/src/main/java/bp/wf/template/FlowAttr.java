@@ -425,4 +425,6 @@ public class FlowAttr
 	 流程发起测试人
 	*/
 	public static final String Tester = "Tester";
+	public static final String DevModelType = "DevModelType";
+	public static final String DevModelPara = "DevModelPara";
 }

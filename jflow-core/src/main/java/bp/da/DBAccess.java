@@ -4407,6 +4407,44 @@ public class DBAccess {
 			}
 		}
 	}
+	public static void RenameTableField(String table, String oldfield, String newfield) throws Exception {
+		if (oldfield.equals(newfield) == true)
+		{
+			return;
+		}
+		if (DBAccess.IsExitsTableCol(table, oldfield) == false)
+		{
+			return;
+		}
+		if (DBAccess.IsExitsTableCol(table, newfield) == true)
+		{
+			return;
+		}
+		String sql = "";
+		DataTable dt = null;
+		switch (SystemConfig.getAppCenterDBType())
+		{
+			case Oracle:
+			case KingBaseR3:
+			case KingBaseR6:
+			case PostgreSQL:
+				sql = "alter table " + table + " rename column " + oldfield + " to " + newfield;
+				break;
+			case MSSQL:
+				sql = "exec sp_rename '" + table + ".[" + oldfield + "]','" + newfield + "','column'";
+				break;
+
+			case MySQL:
+			case DM:
+				sql = "select COLUMN_TYPE, COLUMN_DEFAULT  FROM information_schema.columns WHERE TABLE_SCHEMA='" + SystemConfig.getAppCenterDBDatabase() + "' AND table_name='" + table + "' AND  column_Name='" + oldfield + "'";
+				dt = DBAccess.RunSQLReturnTable(sql);
+				sql = "ALTER TABLE " + table + " CHANGE " + oldfield + " " + newfield + " " + dt.Rows.get(0).getValue(0);
+				break;
+			default:
+				throw new RuntimeException("err@DropTablePK不支持的数据库类型." + SystemConfig.getAppCenterDBType());
+		}
+		DBAccess.RunSQL(sql);
+	}
 
 
 }

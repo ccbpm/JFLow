@@ -595,6 +595,10 @@ public class MapAttrString extends EntityMyPK
 		{
 			return "err@与现在的名字相同.";
 		}
+		MapData md = new MapData(this.getFK_MapData());
+
+		if (DBAccess.IsExitsTableCol(md.getPTable(), newField) == true)
+			return "err@该字段已经存在数据表:" + md.getPTable() + ",您不能重命名.";
 
 		String sql = "SELECT COUNT(MyPK) as Num FROM Sys_MapAttr WHERE MyPK='" + this.getKeyOfEn() + "_" + newField + "'";
 		if (DBAccess.RunSQLReturnValInt(sql) >= 1)
@@ -605,6 +609,36 @@ public class MapAttrString extends EntityMyPK
 		//修改字段名.
 		sql = "UPDATE Sys_MapAttr SET KeyOfEn='" + newField + "', MyPK='" + this.getFK_MapData() + "_" + newField + "'  WHERE KeyOfEn='" + this.getKeyOfEn() + "' AND FK_MapData='" + this.getFK_MapData() + "'";
 		DBAccess.RunSQL(sql);
+
+		//更新处理他的相关业务逻辑.
+		MapExts exts = new MapExts(this.getFK_MapData());
+		for (MapExt item : exts.ToJavaList())
+		{
+			item.setMyPK(item.getMyPK().replace("_" + this.getKeyOfEn(), "_" + newField));
+
+			if (item.getAttrOfOper().equals(this.getKeyOfEn()))
+				item.setAttrOfOper(newField);
+
+			if (item.getAttrsOfActive().equals(this.getKeyOfEn()))
+				item.setAttrsOfActive(newField);
+
+			item.setTag(item.getTag().replace(this.getKeyOfEn(), newField));
+			item.setTag1(item.getTag1().replace(this.getKeyOfEn(), newField));
+			item.setTag2(item.getTag2().replace(this.getKeyOfEn(), newField));
+			item.setTag3(item.getTag3().replace(this.getKeyOfEn(), newField));
+
+			item.setAtPara(item.getAtPara().replace(this.getKeyOfEn(), newField));
+			item.setDoc(item.getDoc().replace(this.getKeyOfEn(), newField));
+			item.Save();
+		}
+
+		//如果是表单库的表单，需要把数据库中的字段重命名
+		if (DataType.IsNullOrEmpty(md.getFK_FormTree()) == false && this.getFK_MapData().startsWith("ND") == false)
+		{
+			//对数据库中的字段重命名
+			DBAccess.RenameTableField(md.getPTable(), this.getKeyOfEn(), newField);
+			return "重名成功,关闭设置页面重新查看表单设计器中字段属性";
+		}
 
 		//如果是节点表单，就修改其他的字段.
 		if (this.getFK_MapData().indexOf("ND") != 0)

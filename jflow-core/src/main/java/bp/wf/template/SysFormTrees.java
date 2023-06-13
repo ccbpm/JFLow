@@ -63,7 +63,7 @@ public class SysFormTrees extends EntitiesTree
 			fs.setNo(bp.web.WebUser.getOrgNo());
 			fs.setParentNo("100");
 			fs.SetValByKey("OrgNo", bp.web.WebUser.getOrgNo());
-			fs.Save(); 
+			fs.Save();
 
 			fs = new SysFormTree();
 			fs.setName("公文类");

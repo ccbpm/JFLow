@@ -3876,7 +3876,12 @@ public class Flow extends bp.en.EntityNoName
 
 		map.AddTBString(FlowAttr.OrgNo, null, "OrgNo", true, true, 0, 50, 10);
 			//  map.AddTBString(FlowAttr.Domain, null, "Domain", true, true, 0, 50, 10);
+		map.AddTBDateTime(FlowAttr.CreateDate, null, "创建日期", true, true);
+		map.AddTBString(FlowAttr.Creater, null, "创建人", true, true, 0, 100, 10, true);
 
+		// 改造参数类型.
+		map.AddTBInt(FlowAttr.DevModelType, 0, "设计模式", false, false);
+		map.AddTBString(FlowAttr.DevModelPara, null, "设计模式参数", false, false, 0, 50, 10, false);
 			//参数.
 		map.AddTBAtParas(1000);
 

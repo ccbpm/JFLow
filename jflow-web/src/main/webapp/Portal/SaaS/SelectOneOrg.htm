@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <title>驰骋流程&表单设计器 </title>
-    <script src="../../WF/Scripts/jquery-1.11.0.min.js" type="text/javascript"></script>
     <script src="../../WF/Scripts/QueryString.js" type="text/javascript"></script>
+    <script src="../../WF/Scripts/jquery-1.11.0.min.js" type="text/javascript"></script>
     <script src="../../WF/Scripts/config.js" type="text/javascript"></script>
     <link href="../../WF/Style/skin/css/login.css" type="text/css" rel="stylesheet" />
     <script src="../../WF/Comm/Gener.js" type="text/javascript"></script>
@@ -16,7 +16,7 @@
         //初始化页面函数.....
         $(function () {
             var orgs;
-            if(plant == "JFlow"){
+            if (plant == "JFlow") {
                 var httphandler = new HttpHandler("BP.Cloud.HttpHandler.Portal_SaaS");
                 var data = httphandler.DoMethodReturnJSON("SelectOneOrg_Init");
                 if (data.indexOf('err@') == 0) {
@@ -24,7 +24,7 @@
                     return;
                 }
                 orgs = data;
-            }else {
+            } else {
                 var orgs = new Entities("BP.Cloud.Orgs");
                 orgs.RetrieveAll();
             }
@@ -34,7 +34,6 @@
                 var en = orgs[i];
                 if (en.No == 100)
                     continue;
-
                 html += "<li><a href='Login.htm?OrgNo=" + en.No + "'>" + en.No + " - " + en.Name + "</a></li>";
 
             }
@@ -44,7 +43,8 @@
 
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_CCBPMDesigner");
             var data = handler.DoMethodReturnString("SelectOneOrg_Init");
-            if (data.indexOf('err@') == 0) {
+            if (data.indexOf('err@') == 0)
+            {
                 $("#list").html(data);
                 return;
             }
@@ -87,7 +87,7 @@
             return;
         }
     </script>
-<!--    <script src="../../Scripts/jquery-1.11.0.min.js"></script>-->
+    <script src="../../Scripts/jquery-1.11.0.min.js"></script>
 </head>
 
 <body class="login-bg">

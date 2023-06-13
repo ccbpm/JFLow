@@ -66,6 +66,7 @@
                 alert(data);
                 return;
             }
+
             var org;
             if (plant == "JFlow") {
                 //改为handler
@@ -74,9 +75,10 @@
                 org = httphandler.DoMethodReturnJSON("GetOrgByNo");
             } else {
                 org = new Entity("BP.Cloud.Org", orgNo);
+                // org.RetrieveAll();
             }
 
-            $("#incoName").html("登陆:" + org.Name + ",组织账号:" + org.No);
+            $("#incoName").html("登陆:<font color=green>" + org.Name + "</font>,组织账号:<font color=green>" + org.No+"</font>");
 
             $("#TB_No").val(org.No);
 
@@ -146,7 +148,7 @@
     </script>
 </head>
 
-<body onload="checkCookie()">
+<body>
     <div class="container-fluid">
         <div class="login-container">
             <section class="login-sidebox">
@@ -200,7 +202,15 @@
                                 <input type="button" class="btn btn-lg btn-login btn-block" value="登录-低代码开发平台" id="Btn_Login" onclick="Login(0);" />
                                 <!--<input type="button" class="btn btn-lg btn-login btn-block" value="超管admin登陆" id="Btn_Login" onclick="LoginAdmin();" />-->
                                 <br />
-                                <a href="javascript:LoginAdmin()"> 超管admin登陆</a>
+
+                                <div style="float:left">
+                                    <a href="javascript:LoginAdmin()"> 超管admin登陆</a>
+                                </div>
+                                <div style="float:right">
+
+                                    <a href="SelectOneOrg.htm"> 选择登陆组织</a>
+                                </div>
+
                             </div>
                             <!--<input type="button" class="btn btn-primary btn-block" value="测试版本test" id="Btn_LoginExt" onclick="LoginText();" />-->
                             <!--//  <input type="button" class="btn btn-primary btn-block" value="登录简洁版(开发中)" id="Btn_LoginSimple" onclick="LoginSimple();" />

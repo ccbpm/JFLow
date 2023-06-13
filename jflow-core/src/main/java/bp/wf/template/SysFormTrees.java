@@ -45,21 +45,64 @@ public class SysFormTrees extends EntitiesTree
 		int i = super.RetrieveAll();
 		if (i == 0)
 		{
-			SysFormTree fs = new SysFormTree();
-			fs.setName("公文类");
-			fs.setNo("01");
-			fs.Insert();
-
-			fs = new SysFormTree();
-			fs.setName("办公类");
-			fs.setNo("02");
-			fs.Insert();
-			i = super.RetrieveAll();
+			InitData();
+			return this.RetrieveAll();
 		}
 
 		return i;
 	}
 
+	/**
+	 初始化数据.
+	 */
+	private void InitData() throws Exception {
+		SysFormTree fs = new SysFormTree();
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+		{
+			fs.setName("流程树");
+			fs.setNo(bp.web.WebUser.getOrgNo());
+			fs.setParentNo("100");
+			fs.SetValByKey("OrgNo", bp.web.WebUser.getOrgNo());
+			fs.Save(); 
+
+			fs = new SysFormTree();
+			fs.setName("公文类");
+			fs.setNo(DBAccess.GenerGUID());
+			fs.setParentNo(bp.web.WebUser.getOrgNo());
+			fs.SetValByKey("OrgNo", bp.web.WebUser.getOrgNo());
+			fs.Insert();
+
+			fs = new SysFormTree();
+			fs.setName("办公类");
+			fs.setNo(DBAccess.GenerGUID());
+			fs.setParentNo(bp.web.WebUser.getOrgNo());
+			fs.SetValByKey("OrgNo", bp.web.WebUser.getOrgNo());
+			fs.Insert();
+			return;
+		}
+
+		fs = new SysFormTree();
+		fs.setName("流程树");
+		fs.setNo("100");
+		fs.setParentNo("0");
+		fs.SetValByKey("OrgNo", bp.web.WebUser.getOrgNo());
+		fs.Insert();
+
+		fs = new SysFormTree();
+		fs.setName("办公类");
+		fs.setNo("01");
+		fs.setParentNo("100");
+		fs.SetValByKey("OrgNo", bp.web.WebUser.getOrgNo());
+		fs.Insert();
+
+		fs = new SysFormTree();
+		fs.setName("公文类");
+		fs.setNo("01");
+		fs.setParentNo("100");
+		fs.SetValByKey("OrgNo", bp.web.WebUser.getOrgNo());
+		fs.Insert();
+
+	}
 
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 

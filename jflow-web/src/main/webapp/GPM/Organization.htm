@@ -53,9 +53,11 @@
         .ztree * {
             font-size: 14px;
         }
-        .ztree{
-            padding:15px;
+
+        .ztree {
+            padding: 15px;
         }
+
         .ztreeDragUL {
             z-index: 999
         }
@@ -159,31 +161,38 @@
                     color: #fff !important;
                     background: #4d49bf !important;
                 }
-           /* 头部内容 */
-        .top-area{
-            display:flex;
-            width:1314px !important;
+        /* 头部内容 */
+        .top-area {
+            display: flex;
+            width: 1314px !important;
         }
+
         .left-search, .right-post {
             display: flex;
-            align-items:center;
+            align-items: center;
         }
-            .left-search{
-                padding-left:10px;
-            }
+
+        .left-search {
+            padding-left: 10px;
+        }
+
         .search-inp {
             margin-left: 10px;
             margin-right: 10px;
+            display: flex;
         }
+
         .left-search div span {
             font-size: 14px;
             font-weight: 700;
             margin-right: 10px;
         }
+
         .right-post {
             margin-left: auto;
-                padding-right:10px;
+            padding-right: 10px;
         }
+
         .cc-btn-tab {
             height: 26px;
             padding: 0 10px;
@@ -194,9 +203,11 @@
             border-radius: 5px;
             color: #fff !important;
         }
+
             .cc-btn-tab:hover {
                 background: #316ee6 !important;
             }
+
         .btn-change {
             margin: 0 5px;
             height: 26px;
@@ -204,17 +215,20 @@
             background: #316ee6;
             color: #fff !important;
             border-color: #316ee6;
-            font-size:14px;
-            border-radius:5px;
+            font-size: 14px;
+            border-radius: 5px;
         }
-        .table-striped > tbody > tr:nth-of-type(odd){
-            background:#fff;
+
+        .table-striped > tbody > tr:nth-of-type(odd) {
+            background: #fff;
         }
     </style>
 
+    <script src="../Portal/Standard/js/vue/ThemeData.js"></script>
 
     <script type="text/javascript">
         var deptNo = "";
+        var selectOrgNo = "";
         var webUser = new WebUser();
         var tree = {
             zTree: '',
@@ -271,7 +285,10 @@
                 },
                 callback: {
                     onClick: function (event, treeId, treeNode) {
+                        $('#Emps').html('正在加载请稍后....');
+                        //$('#table-loading').html('正在加载请稍后....');
                         deptNo = treeNode.id;
+                        selectOrgNo = treeNode.org;
                         BindEmps();
                     },
                     // beforeDrag: zTreeBeforeDrag,
@@ -605,7 +622,10 @@
             if (confirm("你确定删除该部门吗？") == false)
                 return;
             var dept = new Entity(deptEnName, treeNode.id);
-            dept.Delete();
+            var i = dept.Delete();
+            if (i != 1)
+                return;
+
             //树节点删除
             var my = document.getElementById(treeNode.tId);
             if (my != null)
@@ -682,16 +702,13 @@
 
             //    alert(webUser.OSModel);
             //  console.log(webUser);
-
+            $("#btnOrg").hide();
             if (webUser.No == 'admin' && webUser.CCBPMRunModel == 2) {
-
-                //   alert()
-                // var html = "<button class='cc-btn - tab' id='ResetBtn' onclick='Reset()' >新建组织</button>";
-                $("#btnOrg").attr('display', 'block');
+                $("#btnOrg").show();
             }
 
             // 绑定表格右键菜单
-            bindContextMenu()
+            bindContextMenu();
 
             //默认父节点获得父节点数据
             const rootElement = document.querySelector('.ztree li:first-child a');
@@ -731,7 +748,7 @@
             //获得树形图对象
             var nodeList = tree.zTree.getNodes();　　　　　　 //展开第一个根节点
             for (var i = 0; i < nodeList.length; i++) { //设置节点展开第二级节点
-                tree.zTree.expandNode(nodeList[i], true, false, true,true); //设置回调为true，默认展开二级节点
+                tree.zTree.expandNode(nodeList[i], true, false, true, true); //设置回调为true，默认展开二级节点
                 //添加默认选中获得id
                 tree.zTree.selectNode(nodeList[i]);
             }
@@ -755,6 +772,7 @@
                         continue;
                     treeJson.push({
                         "id": data.No,
+                        "org": data.OrgNo,
                         "pid": data.ParentNo,
                         "name": data.Name,
                         "idx": data.Idx,
@@ -771,6 +789,7 @@
                     if (o.No == parentNo) {
                         treeJson.push({
                             "id": o.No,
+                            "org": o.OrgNo,
                             "pid": o.ParentNo,
                             "name": o.Name,
                             "idx": o.Idx,
@@ -794,6 +813,7 @@
                 if (o.ParentNo == parentNo) {
                     treeJson.push({
                         "id": o.No,
+                        "org": o.OrgNo,
                         "pid": o.ParentNo,
                         "name": o.Name,
                         "idx": o.Idx,
@@ -813,7 +833,7 @@
             var html = "";
             html += "<div class='container'>";
             html += "<div class='fixed-table-header'>";
-            html += "<table class='table table-hover table-striped table-bordered' style='width: 97%;margin-top:10px;margin-left:15px;' >";
+            html += "<table class='table table-hover table-striped table-bordered' id='table-loading' style='width: 97%;margin-top:10px;margin-left:15px;' >";
             html += "<tr><h5 style='display:flex;align-items:center;justify-content: flex-end;margin-right: 10px;height:50px;border-bottom: 1px solid #f0f2f5; '><a class='layui-btn layui-btn-primary layui-border-gray layui-btn-sm btn-change' href=\"javascript:EditDept('" + dept.No + "')\" >" + dept.Name + " </a>  " +
                 "<a class='layui-btn layui-btn-primary layui-border-blue layui-btn-sm btn-change' href='javascript:EditEmp()'>新建人员</a>   " +
                 "<a class='layui-btn layui-btn-primary layui-border-green layui-btn-sm btn-change' href='javascript:RefEmps()'>关联兼职</a>  </h5></tr>";
@@ -896,23 +916,23 @@
                 }
 
                 html += "<tr data-id='" + emp.No + "'  data-pid='" + emp.FK_Dept + "' class='ptj-dropdown-item' ondblclick=\"EditEmp('" + emp.No + "')\" >";
-                html += "<td class='Idx' >" + num + "</td>";
-                html += "<td>" + emp.No + "</td>";
-                html += "<td><a href=\"javascript:EditEmp('" + emp.No + "')\">" + emp.Name + "</a></td>";
-                html += "<td>兼职</td>";
+                html += "<td class='Idx' style='text-align:center;' >" + num + "</td>";
+                html += "<td style='text-align:center;'>" + emp.No + "</td>";
+                html += "<td style='text-align:center;'><a href=\"javascript:EditEmp('" + emp.No + "')\">" + emp.Name + "</a></td>";
+                html += "<td style='text-align:center;'>兼职</td>";
                 if (emp.Email == null || emp.Email === "")
-                    html += "<td>-</td>";
+                    html += "<td style='text-align:center;'>-</td>";
                 else
-                    html += "<td>" + emp.Email + "</td>";
+                    html += "<td style='text-align:center;'>" + emp.Email + "</td>";
                 if (emp.Tel == null || emp.Tel === "")
-                    html += "<td>-</td>";
+                    html += "<td style='text-align:center;'>-</td>";
                 else
-                    html += "<td>" + emp.Tel + "</td>";
+                    html += "<td style='text-align:center;'>" + emp.Tel + "</td>";
                 if (emp.EmpSta == 0)
-                    html += "<td>正常</td>";
+                    html += "<td style='text-align:center;'>正常</td>";
                 if (emp.EmpSta == 1)
-                    html += "<td>禁用</td>";
-                html += "<td><button data-id='" + emp.No + "'  data-pid='" + emp.FK_Dept + "' class='ptj-dropdown-btn layui-btn layui-btn-primary layui-border-green layui-btn-sm' style='width: 100%'>兼职操作</button></td>";
+                    html += "<td style='text-align:center;'>禁用</td>";
+                html += "<td style='text-align:center;'><button data-id='" + emp.No + "'  data-pid='" + emp.FK_Dept + "' class='ptj-dropdown-btn layui-btn layui-btn-primary layui-border-green layui-btn-sm layui-btn-xs layui-border-blue' style='width: 100%'>兼职操作</button></td>";
                 html += "</tr>";
                 num++;
 
@@ -930,19 +950,19 @@
                 if (empNos.indexOf(',' + emp.No + ',') != -1)
                     continue;
                 html += "<tr data-id='" + emp.No + "'  data-pid='" + emp.FK_Dept + "' class='bl-dropdown-item' ondblclick=\"EditEmp('" + emp.No + "')\" >";
-                html += "<td class='Idx' >" + (i + 1) + "</td>";
-                html += "<td>" + emp.No + "</td>";
-                html += "<td>" + emp.Name + "</td>";
-                html += "<td>" + dept.Name + "</td>";
+                html += "<td class='Idx'style='text-align:center; >" + (i + 1) + "</td>";
+                html += "<td style='text-align:center;>" + emp.No + "</td>";
+                html += "<td style='text-align:center;>" + emp.Name + "</td>";
+                html += "<td style='text-align:center;>" + dept.Name + "</td>";
                 if (emp.Email == null || emp.Email === "")
-                    html += "<td>-</td>";
+                    html += "<td style='text-align:center;>-</td>";
                 else
-                    html += "<td>" + emp.Email + "</td>";
+                    html += "<td style='text-align:center;>" + emp.Email + "</td>";
                 if (emp.Tel == null || emp.Tel === "")
-                    html += "<td>-</td>";
+                    html += "<td style='text-align:center;>-</td>";
                 else
-                    html += "<td>" + emp.Tel + "</td>";
-                html += "<td><button data-id='" + emp.No + "'  data-pid='" + emp.FK_Dept + "' class='bl-dropdown-btn layui-btn layui-btn-primary layui-border-red layui-btn-sm' style='width: 100%'>黑名单操作</button></td>";
+                    html += "<td style='text-align:center;>" + emp.Tel + "</td>";
+                html += "<td style='text-align:center;><button data-id='" + emp.No + "'  data-pid='" + emp.FK_Dept + "' class='bl-dropdown-btn layui-btn layui-btn-primary layui-border-red layui-btn-sm layui-btn-xs layui-border-blue' style='width: 100%'>黑名单操作</button></td>";
                 html += "</tr>";
                 empNos += emp.No + ',';
             }
@@ -1038,7 +1058,7 @@
             }
 
             if (webUser.CCBPMRunModel == 2)
-                empEnName = "BP.Cloud.Port.Emp";
+                empEnName = "BP.Cloud.Emp";
 
             if (no == undefined) {
 
@@ -1047,36 +1067,42 @@
                 }
 
                 if (webUser.CCBPMRunModel == 2) {
+                    if (selectOrgNo == "" || selectOrgNo == undefined || selectOrgNo == null) {
+                        alert("请选择组织部门后再创建人员.");
+                        return;
+                    }
                     var userNo = window.prompt('请输入账号,若账号已经存,就作为兼职存在当前部门:', '');
                     if (userNo == null || userNo == undefined)
                         return;
 
-                    var en = new Entity("BP.Cloud.Port.Emp");
-                    en.No = webUser.OrgNo + '_' + userNo;
+                    var en = new Entity(empEnName);
+                    en.No = selectOrgNo + '_' + userNo;
                     if (en.RetrieveFromDBSources() == 0) {
                         en.Name = userNo;
                         en.FK_Dept = deptNo;
-                        en.OrgNo = webUser.OrgNo;
+                        en.OrgNo = selectOrgNo;
                         en.UserID = userNo;
                         en.Insert();
 
                         var dp = new Entity("BP.Port.DeptEmp");
                         dp.MyPK = deptNo + '_' + userNo;
                         dp.FK_Dept = deptNo;
-                        dp.FK_Emp = userNo;
-                        dp.OrgNo = webUser.OrgNo;
+                        dp.FK_Emp = en.No;
+                        dp.OrgNo = selectOrgNo;
                         dp.Insert();
                     } else {
                         var dp = new Entity("BP.Port.DeptEmp");
                         dp.MyPK = deptNo + '_' + userNo;
-                        dp.FK_Dept = deptNo;
-                        dp.FK_Emp = userNo;
-                        dp.OrgNo = webUser.OrgNo;
-                        dp.Insert();
+                        if (dp.RetrieveFromDBSources() == 0) {
+                            dp.FK_Dept = deptNo;
+                            dp.FK_Emp = en.No;
+                            dp.OrgNo = selectOrgNo;
+                            dp.Insert();
+                        }
                     }
 
                     no = en.No;
-                    var url = '/WF/Comm/En.htm?EnName=BP.Cloud.Port.Emp&No=' + no;
+                    var url = '/WF/Comm/En.htm?EnName=' + empEnName + '&No=' + no;
 
                     OpenBootStrapModal(url, "eudlgframe", "编辑", '800', '500', "icon-edit", false, function () {
                     }, null, function () {
@@ -1153,7 +1179,8 @@
                 }
             }
             var deptEmpPK = deptNo + "_" + no;
-
+            if (webUser.CCBPMRunModel == 2)
+                deptEmpPK = deptNo + "_" + emp.UserID;
 
             //取消人员部门管理关系
             var en = new Entity("BP.Port.DeptEmp");
@@ -1201,7 +1228,7 @@
             var html = "";
             html += "<div class='container'>";
             html += "<div class='fixed-table-header'>";
-            html += "<table class='table table-hover table-striped' style='width:90%;' >";
+            html += "<table class='table table-hover table-striped table-bordered' style='width:97%; margin:15px 15px; ' >";
             html += "<thead ><tr> ";
             html += "<th style='background-color:#F2F2F2;'>序号</th>";
             html += "<th style='background-color:#F2F2F2;'>编号</th>";
@@ -1215,19 +1242,19 @@
             for (var i = 0; i < emps.length; i++) {
                 var emp = emps[i];
                 html += "<tr ondblclick=\"EditEmp('" + emp.No + "')\" >";
-                html += "<td class='Idx' >" + (i + 1) + "</td>";
-                html += "<td>" + emp.No + "</td>";
-                html += "<td><a href=\"javascript:EditEmp('" + emp.No + "')\">" + emp.Name + "</a></td>";
-                html += "<td>" + emp.deptName + "</td>";
+                html += "<td class='Idx'style='text-align:center;' >" + (i + 1) + "</td>";
+                html += "<td style='text-align:center;' > " + emp.No + "</td>";
+                html += "<td style='text-align:center;' ><a href=\"javascript:EditEmp('" + emp.No + "')\">" + emp.Name + "</a></td>";
+                html += "<td style='text-align:center;' >" + emp.deptName + "</td>";
                 if (emp.Email == null || emp.Email === "")
-                    html += "<td>-</td>";
+                    html += "<td style='text-align:center;' >-</td>";
                 else
-                    html += "<td>" + emp.Email + "</td>";
+                    html += "<td style='text-align:center;' >" + emp.Email + "</td>";
                 if (emp.Tel == null || emp.Tel === "")
-                    html += "<td>-</td>";
+                    html += "<td style='text-align:center;' >-</td>";
                 else
-                    html += "<td>" + emp.Tel + "</td>";
-                html += "<td><a href=\"javascript:SearchDelEmp('" + emp.No + "','" + emp.FK_Dept + "');\"  class='cc-btn-tab btn-del'>删除</a></td>";
+                    html += "<td style='text-align:center;' >" + emp.Tel + "</td>";
+                html += "<td style='text-align:center;' ><a href=\"javascript:SearchDelEmp('" + emp.No + "','" + emp.FK_Dept + "');\"  class='cc-btn-tab btn-del'>删除</a></td>";
                 html += "</tr>";
             }
             html += "</tbody>";
@@ -1246,11 +1273,11 @@
             // window.open(url);
             var W = document.body.clientWidth - 250;
             OpenLayuiDialog(url, "", W, 100, "r", false);
-          /*  OpenLayuiDialog(url, "", 90000, false, false, true, false, false);*/
+            /*  OpenLayuiDialog(url, "", 90000, false, false, true, false, false);*/
         }
         function EditStationTypes() {
             //获取屏幕的宽
-         
+
             var url = "../WF/Comm/Search.htm?EnsName=" + ensOfStationTypes;
             /*   OpenLayuiDialog(url, "", 90000, false, false, true, false, false);*/
             var W = document.body.clientWidth - 250;
@@ -1293,19 +1320,24 @@
                     border: 1px solid #fff !important;
                     color: white !important;
                 }
+
         .panel {
             background: #f0f2f5 !important;
         }
-        .layout-panel-west{
-            margin:15px 10px 0 15px !important;
+
+        .layout-panel-west {
+            margin: 15px 10px 0 15px !important;
         }
-        .layout-split-center{
+
+        .layout-split-center {
             /*width:900px !important;*/
         }
-        .container{
-            width:100%;
-            padding:0;
+
+        .container {
+            width: 100%;
+            padding: 0;
         }
+
         .menu-treetitle {
             height: 50px;
             line-height: 30px;
@@ -1324,7 +1356,7 @@
     <div data-options="region:'north',split:false" style="overflow:hidden;height:40px;width:1314px !important" class="top-area">
         <!--<div style="float:left">-->
         <div class="left-search">
-            <div class="search-inp"><span>关键字:</span><input id="searchKey" name="searchKey" type="text" style=" height: 23px;"/></div>
+            <div class="search-inp"><span>关键字:</span><div style="width: 160px; border-width: 1px; border-style: solid; background-color: #fff; border-color: #eee;"><input id="searchKey" name="searchKey" type="text" style="margin-left:5px; height: 23px; border:none;outline:none;" /></div></div>
             <button class="cc-btn-tab" id="SearchBtn" onclick="SearchEmp()">查询</button>
             <button class="cc-btn-tab" id="ResetBtn" onclick="Reset()">重置</button>
             <button class="cc-btn-tab" id="btnOrg" onclick="NewOrg()">新建组织</button>

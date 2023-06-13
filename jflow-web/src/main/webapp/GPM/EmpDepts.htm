@@ -12,16 +12,12 @@
     <script src="../WF/Scripts/layui/layui/lay/modules/layer.js"></script>
 
     <script type="text/javascript">
-
+        var webUser = new WebUser();
         $(function () {
 
             $("#Msg").html("正在加载请稍候...");
 
             var empNo = GetQueryString("FK_Emp");
-
-            if (empNo == null)
-                empNo = 'liping';
-
             var emp = new Entity("BP.Port.Emp", empNo);
 
             var handler = new HttpHandler("BP.WF.HttpHandler.GPMPage");

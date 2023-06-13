@@ -1,31 +1,33 @@
 package bp.wf.template;
 
+import bp.da.DBAccess;
+import bp.difference.SystemConfig;
 import bp.en.*;
 import bp.sys.*;
 import java.util.*;
 
-/** 
+/**
  流程类别
-*/
+ */
 public class FlowSorts extends EntitiesTree
 {
-	/** 
+	/**
 	 流程类别s
-	*/
+	 */
 	public FlowSorts()  {
 	}
-	/** 
+	/**
 	 得到它的 Entity 
-	*/
+	 */
 	@Override
 	public Entity getGetNewEntity()  {
 		return new FlowSort();
 	}
-	/** 
-	 
-	 
-	 @return 
-	*/
+	/**
+
+
+	 @return
+	 */
 	@Override
 	public int RetrieveAll() throws Exception {
 
@@ -44,44 +46,79 @@ public class FlowSorts extends EntitiesTree
 		int i = super.RetrieveAll(FlowSortAttr.Idx);
 		if (i == 0)
 		{
-			FlowSort fs = new FlowSort();
-			fs.setName("流程树");
-			fs.setNo("100");
-			fs.setParentNo("0");
-			fs.Save();
-
-			fs = new FlowSort();
-			fs.setName("公文类");
-			fs.setNo("01");
-			fs.setParentNo("100");
-			fs.Insert();
-
-			fs = new FlowSort();
-			fs.setName("办公类");
-			fs.setNo("02");
-			fs.setParentNo("100");
-			fs.Insert();
-			i = super.RetrieveAll(FlowSortAttr.Idx);
+			InitData();
+			return this.RetrieveAll();
 		}
 		return i;
 	}
 
+	/**
+	 初始化数据.
+	 */
+	private void InitData() throws Exception {
+		FlowSort fs = new FlowSort();
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+		{
+			fs.setName("流程树");
+			fs.setNo(bp.web.WebUser.getOrgNo());
+			fs.setParentNo("100");
+			fs.SetValByKey("OrgNo", bp.web.WebUser.getOrgNo());
+			fs.Save();
+
+			fs = new FlowSort();
+			fs.setName("公文类");
+			fs.setNo(DBAccess.GenerGUID());
+			fs.setParentNo(bp.web.WebUser.getOrgNo());
+			fs.SetValByKey("OrgNo", bp.web.WebUser.getOrgNo());
+			fs.Insert();
+
+			fs = new FlowSort();
+			fs.setName("办公类");
+			fs.setNo(DBAccess.GenerGUID());
+			fs.setParentNo(bp.web.WebUser.getOrgNo());
+			fs.SetValByKey("OrgNo", bp.web.WebUser.getOrgNo());
+			fs.Insert();
+			return;
+		}
+
+		fs = new FlowSort();
+		fs.setName("流程树");
+		fs.setNo("100");
+		fs.setParentNo("0");
+		fs.SetValByKey("OrgNo", bp.web.WebUser.getOrgNo());
+		fs.Insert();
+
+		fs = new FlowSort();
+		fs.setName("办公类");
+		fs.setNo("01");
+		fs.setParentNo("100");
+		fs.SetValByKey("OrgNo", bp.web.WebUser.getOrgNo());
+		fs.Insert();
+
+		fs = new FlowSort();
+		fs.setName("公文类");
+		fs.setNo("01");
+		fs.setParentNo("100");
+		fs.SetValByKey("OrgNo", bp.web.WebUser.getOrgNo());
+		fs.Insert();
+
+	}
 
 
-		///#region 为了适应自动翻译成java的需要,把实体转换成List.
-	/** 
+	///#region 为了适应自动翻译成java的需要,把实体转换成List.
+	/**
 	 转化成 java list,C#不能调用.
-	 
+
 	 @return List
-	*/
+	 */
 	public final java.util.List<FlowSort> ToJavaList() {
 		return (java.util.List<FlowSort>)(Object)this;
 	}
-	/** 
+	/**
 	 转化成list
-	 
+
 	 @return List
-	*/
+	 */
 	public final ArrayList<FlowSort> Tolist()  {
 		ArrayList<FlowSort> list = new ArrayList<FlowSort>();
 		for (int i = 0; i < this.size(); i++)
@@ -91,5 +128,5 @@ public class FlowSorts extends EntitiesTree
 		return list;
 	}
 
-		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
+	///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

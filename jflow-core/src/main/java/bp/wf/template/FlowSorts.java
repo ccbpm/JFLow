@@ -48,7 +48,7 @@ public class FlowSorts extends EntitiesTree
 			fs.setName("流程树");
 			fs.setNo("100");
 			fs.setParentNo("0");
-			fs.Insert();
+			fs.Save();
 
 			fs = new FlowSort();
 			fs.setName("公文类");

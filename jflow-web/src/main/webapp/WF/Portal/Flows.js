@@ -26,8 +26,8 @@
                     { title: '<i class=icon-folder></i> 新建目录', id: "NewSort", Icon: "icon-magnifier-add" },
                     { title: '<i class=icon-pencil></i> 修改名称', id: "EditSortName", Icon: "icon-magnifier-add" },
                     { title: '<i class=icon-share-alt ></i> 导入流程模版', id: "ImpFlowTemplate", Icon: "icon-plus" },
-                   // { title: '<i class=icon-share-alt ></i> 批量导入流程模版', id: "BatchImpFlowTemplate", Icon: "icon-plus" },
-                  //  { title: '<i class=icon-share-alt ></i> 批量导出流程模版', id: "BatchExpFlowTemplate", Icon: "icon-plus" },
+                    // { title: '<i class=icon-share-alt ></i> 批量导入流程模版', id: "BatchImpFlowTemplate", Icon: "icon-plus" },
+                    //  { title: '<i class=icon-share-alt ></i> 批量导出流程模版', id: "BatchExpFlowTemplate", Icon: "icon-plus" },
                     { title: '<i class=icon-close></i> 删除目录', id: "DeleteSort", Icon: "icon-close" }
                 ]
                 var tRenderOptions = [{
@@ -94,7 +94,7 @@
                 type: 2,
                 title: name,
                 content: [uri, 'auto'],
-                area: [w + 'px','100%'],
+                area: [w + 'px', '100%'],
                 offset: 'r',
                 shadeClose: true,
             })
@@ -108,7 +108,7 @@
             var self = WinOpenFull(url, "xx");
             var loop = setInterval(function () {
                 if (self.closed) {
-                   //管理员登录
+                    //管理员登录
                     var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_TestingContainer");
                     var token = localStorage.getItem("AdminToken") || localStorage.getItem("Token");
                     handler.AddPara("Token", token);
@@ -127,12 +127,12 @@
             var url = basePath + "/WF/Admin/TestingContainer/TestFlow2020.htm?FK_Flow=" + no;
             //window.top.vm.fullScreenOpen(url, name);
             //window.top.vm.openTab(name, url);
-             this.openLayer(url, name);
+            this.openLayer(url, name);
         },
         flowAttr: function (no, name) {
             var url = basePath + "/WF/Comm/En.htm?EnName=BP.WF.Template.FlowExt&No=" + no;
             //window.top.vm.openTab(name, url);
-            this.openLayer(url, name,900);
+            this.openLayer(url, name, 900);
         },
 
         copyFlow: function (no) {
@@ -211,7 +211,7 @@
                     this.BatchImpFlowTemplate(data);
                     break;
                 case "BatchExpFlowTemplate":
-                    this.BatchExpFlowTemplate(data,name);
+                    this.BatchExpFlowTemplate(data, name);
                     break;
                 case "NewSort":
                     this.NewSort(data, true);
@@ -281,7 +281,7 @@
             url = basePath + "/WF/Admin/AttrFlow/Imp.htm?FK_FlowSort=" + fk_flowSort + "&Lang=CH";
             addTab("ImpFlowTemplate", "导入流程模版", url);
         },
-        BatchExpFlowTemplate: function (flowSortNo,flowSortName) {
+        BatchExpFlowTemplate: function (flowSortNo, flowSortName) {
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
             handler.AddPara("FK_Sort", flowSortNo);
             handler.AddPara("FlowSortName", flowSortName);
@@ -355,13 +355,13 @@
             layer.msg(data)
         },
         updateFlow(pastNodeArrStr, pastNodeId, currentNodeArrStr, currentNodeId) {
-          
+
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
             handler.AddPara("SourceSortNo", pastNodeId); //所在的组编号.
             handler.AddPara("SourceFlowNos", pastNodeArrStr); // 流程编号.
             handler.AddPara("ToSortNo", currentNodeId); //所在的组编号.
             handler.AddPara("ToFlowNos", currentNodeArrStr); // 流程编号.
-         
+
             var data = handler.DoMethodReturnString("Flows_Move");
             layer.msg(data)
         },
@@ -438,17 +438,23 @@
                 event.preventDefault();
                 event.stopPropagation();
             }
-            var webUser = new WebUser();
-         
 
-            var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
-            var fss = handler.DoMethodReturnJSON("Flows_InitSort");
+            window.location.href = "FlowTree.htm";
+            return; 
+            var webUser = new WebUser();
+
+            //查询全部.
+            var fss = new Entities("BP.WF.Template.FlowSorts");
+            fss.RetrieveAll();
+
+            //var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
+            //var fss = handler.DoMethodReturnJSON("Flows_InitSort");
 
             var nodes = fss;
-            nodes = nodes.filter(function (item) {
-                console.log(item)
-                return item.Name !== '流程树';
-            })
+            //nodes = nodes.filter(function (item) {
+            //    console.log(item)
+            //    return item.Name !== '流程树';
+            //})
 
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
             var fls = handler.DoMethodReturnJSON("Flows_Init");
@@ -478,7 +484,7 @@
 
     }
 })
-function AppendFlowToFlowSort(flowSort,no,name) {
+function AppendFlowToFlowSort(flowSort, no, name) {
     baseInfo.flowNodes.forEach(item => {
         if (item.No === flowSort) {
             if (item.children == null) item.children = [];

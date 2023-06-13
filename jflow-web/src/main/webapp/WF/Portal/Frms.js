@@ -417,10 +417,16 @@
                 event.stopPropagation();
             }
             var webUser = new WebUser();
+            window.location.href = "FrmTree.htm";
+            return; 
             
-            var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
-            var fss = handler.DoMethodReturnJSON("Frms_InitSort");
+            //var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
+            //var fss = handler.DoMethodReturnJSON("Frms_InitSort");
 
+            //查询全部.
+            var fss = new Entities("BP.WF.Template.SysFormTrees");
+            fss.RetrieveAll();
+         
             var nodes = fss;
             nodes = nodes.filter(function (item) {
                 console.log(item)

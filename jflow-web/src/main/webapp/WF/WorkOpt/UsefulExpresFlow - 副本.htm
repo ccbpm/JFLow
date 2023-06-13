@@ -37,9 +37,8 @@
             margin: 5px 3px 5px 3px;
             padding: 4px 15px;
         }
-
-        .fixed-table-body {
-            overflow-x: hidden;
+        .fixed-table-body{
+            overflow-x:hidden;
         }
 
         button:hover {
@@ -49,41 +48,71 @@
     </style>
     <script type="text/javascript">
 
+        // AttrKey =WorkCheck, FlowBBS, WorkReturn
+        var attrKey = GetQueryString("AttrKey");
+        if (attrKey == null || attrKey == '')
+            attrKey = "WorkCheck";
+
+        var elementID = GetQueryString("ElementID");
         var webUser = new WebUser();
-        var ens = null;
         $(function () {
-
-            //获得存储的数据.
-            var webUser = new WebUser();
-            ens = new Entities("BP.Sys.FastInputs");
-            ens = ens.DoMethodReturnJSON("InitData_Flow");
-
-            var html = "<ul>";
-            for (var i = 0; i < ens.length; i++) {
-
-                var en = ens[i];
-                html += "<li><input type=check id='CB_" + en.MyPK + "' /> <input type=text id='TB_" + en.MyPK + "' value='" + en.Vals + "'><li>";
-            }
-            html += "</ul>";
-
+            $('#myModal').modal('hide');
+            LoadGridData(1, 10);
         });
 
-        function Save() {
+        function GetSearchData() {
+            var handler = new HttpHandler("BP.WF.HttpHandler.WF_WorkOpt");
+            handler.AddPara("AttrKey", attrKey);
+            var ens = handler.DoMethodReturnJSON("UsefulExpresFlow_Init");
+            //ens.RetrieveAll();
+            var dataInfo = {}
+            var mainData = [];
+            //获得数据
 
-            for (var i = 0; i < ens.length; i++) {
-                var en = ens[i];
-                var val = $("#TB_" + en.MyPK).val();
-                if (val != en.Vals) {
-                    var en1 = new Entiy("BP.Sys.FastInput", en);
-                    en1.Vals = val;
-                    en1.Update();
-                }
-            }
+            $.each(ens, function (i, item) {
+                if (item != "")
+                    mainData.push({ "MYPK": item.MyPK, "CURVALUE": item.Vals });
+            })
+            dataInfo.rows = mainData;
+            dataInfo.total = mainData.length;
+
+            return dataInfo;
+        }
+        function LoadGridData() {
+            $("#newsGrid").html("");
+            $('#newsGrid').bootstrapTable('load', []);
+            var data = GetSearchData();
+
+
+            $('#newsGrid').bootstrapTable({
+                columns: [
+                    {
+                        checkbox: true, width: 1,
+                        cellStyle: { css: { "width": "1px" } }
+                    },
+                    { field: 'CURVALUE', title: '', align: 'left' }
+                ],
+                idField: 'MYPK',
+                selectOnCheck: false,
+                clickToSelect: true,
+                checkOnSelect: true,
+                singleSelect: false,
+                data: data,
+                width: 'auto',
+                height: 'auto',
+                striped: true,
+                showHeader: false,
+                showFooter: false,
+                sidePagination: 'server',//在服务器分页
+
+            });
+            $('#newsGrid').bootstrapTable('load', data);
         }
         var insEdit = true;
         //添加数据
         function btnOpenWindow() {
             insEdit = true;
+
             $('#TextArea').val('');
             $('#myModal').modal('show');
             $('#TextArea').focus();
@@ -138,8 +167,8 @@
                 }
                 //输入数据没有改变
                 if (text == againText) {
-                    // alert("数据没有任何改变哦");
-                    // return;
+                   // alert("数据没有任何改变哦");
+                   // return;
                 }
 
                 var en = new Entity("BP.Sys.FastInput", mypk)
@@ -148,6 +177,7 @@
                 $('#myModal').modal('hide');
                 LoadGridData();
             }
+
         }
 
         var againText;
@@ -175,13 +205,32 @@
             val = val.replace(/[\r\n]/g, "");
             return val;
         }
+        //删除
+        function btnDelete() {
+
+            var rows = $('#newsGrid').bootstrapTable('getAllSelections');
+            if (rows.length >= 1) {
+                if (confirm('确定要删除这' + rows.length + '条数据吗？') == false)
+                    return;
+
+                $.each(rows, function (i, item) {
+                    var en = new Entity("BP.Sys.FastInput", item.MYPK);
+                    en.Delete();
+                });
+
+                LoadGridData();
+            }
+            else {
+                alert("请选择要删除的数据");
+            }
+        }
         //关闭主窗体
         function btnClose() {
             var index = parent.layer.getFrameIndex(window.name); //获取当前窗口的name
-            parent.layer.close(index);
+            parent.layer.close(index);	
         }
         //返回数据
-        function BtnOK() {
+        function btnOk() {
 
             var rows = $('#newsGrid').bootstrapTable('getAllSelections');
             if (rows.length == 0) {
@@ -209,8 +258,9 @@
             }
             parent.$("#" + elementID).val(str);
             var index = parent.layer.getFrameIndex(window.name); //获取当前窗口的name
-            parent.layer.close(index);
+            parent.layer.close(index);	
             //window.parent.ChangeWorkCheck(elementID, str);
+
         }
     </script>
 </head>
@@ -219,9 +269,9 @@
         <!--button按钮-->
         <div>
             <div id="tools" style="text-align: left; float: left;margin:3px 5px">
-                <button type="button" id="btnEdit" onclick='BtnOK()'><img src="../Img/Btn/Confirm.png" width="18" height="18" /> 选取</button>
-                <button type="button" id="btnEdit" onclick='Save()'><img src="../Img/Btn/Edit.png" width="18" height="18" /> 保存</button>
-                <button type="button" id="btnEdit" onclick='btnClose()'><img src="../Img/Btn/cancel_dafalut.png" width="18" height="18" /> 取消</button>
+                <button type="button" id="btnAdd" onclick='btnOpenWindow()'><img src="../Img/Btn/addDT.png" width="22" height="22" />添加数据 </button>
+                <button type="button" id="btnEdit" onclick='btnEdit()'><img src="../Img/Btn/Edit.png" width="18" height="18" /> 编辑</button>
+                <button type="button" id="btnDel" onclick='btnDelete()'><img src="../Img/Btn/Delete.png" /> 删除</button>
             </div>
 
         </div>
@@ -238,12 +288,12 @@
             </div>
         </div>
 
-        <!--<div>
+        <div>
             <div style="float: right; margin:3px 5px">
                 <button type="button" onclick='btnOk()' id='btnOk'><img src="../Img/Btn/Confirm.png" /> 确定</button>
                 <button type="button" onclick='btnClose()' id='btnClose'><img src="../Img/Btn/cancel_dafalut.png" /> 取消</button>
             </div>
-        </div>-->
+        </div>
     </div>
     <!--bootstrap弹出页面-->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

@@ -159,6 +159,11 @@
             font-weight:700;
             font-size:15px;
         }
+        .item-omit{
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
+        }
     </style>
     <script type="text/javascript">
         var frms;
@@ -193,7 +198,7 @@
                     $(".layui-tree-set").removeClass('layui-tree-set-active');
                     obj.elem.addClass('layui-tree-set-active');
 
-                    //根据id获取流程集合
+                    //根据id获取表单集合
                     frmSortNo = obj.data.id;
                     $('#EditSort').text("属性：" + obj.data.title)
                     nameTitle = obj.data.title;
@@ -201,7 +206,6 @@
                     $('#NewSortOne').show();
                     frms = new Entities("BP.Sys.MapDatas");
                     frms.Retrieve("FK_FormTree", obj.data.id);
-                    console.log({ ...frms })
                     baseInfo.frms = frms.GetEns().data;
                     for (var j = 0; j < baseInfo.frms.length; j++) {
                         var frm = baseInfo.frms[j];
@@ -235,18 +239,6 @@
                         baseInfo.bindMenu();
                         //baseInfo.initSortArea();
                     }, 800);
-                    //点击节点高亮
-                    //var nodes = document.getElementsByClassName('layui-tree-txt');
-                    //for (var i = 0; i < nodes.length; i++) {
-                    //    if (nodes[i].innerHTML === obj.data.title) {
-                    //        nodes[i].style.color = "#000";
-                    //        nodes[i].style.fontWeight = "bold";
-                    //    } else {
-                    //        nodes[i].style.color = "#555";
-                    //        nodes[i].style.fontWeight = "normal";
-                    //    }
-                    //}
-
                 }
             });
 
@@ -271,7 +263,6 @@
             html += "<ul class='top-newfrm'>";
             html += "<li id='EditSort' class='flow-menu' onclick=\"topNodeOption(id,frmSortNo,nameTitle)\">属性名称</li>";
             html += "<li id='NewFrm' class='flow-menu' onclick=\"topNodeOption(id,frmSortNo,nameTitle)\">新建表单</li>";
-            //html += "<li id='ImpFlowTemplate' onclick=\"topNodeOption(id)\">导入流程模版</li>";
             html += "<li id='NewSortOne' class='flow-menu'>新建目录</li>";
             html += "</ul>";
             $("#top-choose").html(html)
@@ -458,15 +449,16 @@
                 <div ref="child-row" id="s-main">
                     <div class="row" v-for="(flow,idx) in frms" :key="idx" :data-pid="SortNo" :data-id="flow.No">
 
-                        <div class="item item-name item-name-dp" @click.stop="Designer(flow.No,flow.Name)" style="text-align: left" :data-no="flow.No" :data-name="flow.Name" :data-idx="idx">
+                        <div class="item item-name item-name-dp item-omit" @click.stop="Designer(flow.No,flow.Name)"  :data-no="flow.No" :data-name="flow.Name" :data-idx="idx">
                             <i class="icon-heart" style="margin-right: 8px"></i>
-                            <span>{{flow.No}}.{{flow.Name}}</span>
+                            <!--<span>{{flow.No}}.{{flow.Name}}</span>-->
+                            <span>{{flow.No}}</span>
                         </div>
-                        <div class="item item-other">{{flow.FrmType}}</div>
-                        <div class="item item-other">{{flow.PTable}}</div>
-                        <div class="item item-other">{{flow.EntityType}}</div>
-                        <div class="item item-other">{{flow.Ver}}</div>
-                        <div class="item item-other">{{flow.Name}}</div>
+                        <div class="item item-other item-omit">{{flow.Name}}</div>
+                        <div class="item item-other item-omit">{{flow.PTable}}</div>
+                        <div class="item item-other item-omit">{{flow.ChartType}}</div>
+                        <div class="item item-other item-omit">{{flow.Ver}}</div>
+                        <div class="item item-other item-omit">{{flow.Name}}</div>
                         <!--<div class="item item-other">
         <button class="layui-btn layui-btn-primary layui-border-blue layui-btn-xs c-btn" :data-name="flow.Name" :data-no="flow.No" :data-idx="idx">
             <i class="layui-icon layui-icon-down layui-font-12"></i>表单
@@ -544,8 +536,7 @@
                     var sid = GetQueryString("Token");
                     var webUser = new WebUser();
                     var url = basePath + "/WF/Admin/FoolFormDesigner/GoToFrmDesigner.htm?FK_MapData=" + no + "&FrmID=" + no + "&UserNo=" + webUser.No + "&Token=" + sid + "&OrgNo=" + webUser.OrgNo + "&From=Ver2021";
-                    //window.top.vm.openTab(name, url);
-                   /* window.location.href(url)*/
+                    window.top.vm.openTab(name, url);
                     ////获取屏幕的宽
                     //var W = document.body.clientWidth - 250;
                     //OpenLayuiDialog(url, name, W, 100, "r", false);

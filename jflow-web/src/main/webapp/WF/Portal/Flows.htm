@@ -50,7 +50,7 @@
         .item-name {
             width: 30%;
             text-overflow: ellipsis;
-			overflow: hidden;
+            overflow: hidden;
             white-space: nowrap;
             cursor: pointer;
             padding-left: 30px;
@@ -59,6 +59,7 @@
         .item-other {
             width: 10%;
         }
+
         .item-Date {
             width: 10%;
             text-overflow: ellipsis;
@@ -66,6 +67,7 @@
             white-space: nowrap;
             cursor: pointer;
         }
+
         .item-index {
             background-color: #FAFAFA;
             padding-right: 40px;
@@ -111,7 +113,10 @@
 
             <div class="item item-name">
                 <div class="item item-content">
-                    <a href="http://ccflow.org/ke.htm" target="_blank" class="icon-camrecorder"><font color="blue">&nbsp;视频教程</font></a>
+                    <a href="http://ccflow.org/Ke.html" target="_blank" class="icon-camrecorder"><font color="blue">&nbsp;视频教程</font></a> 
+                    &nbsp;
+                    <a href="FlowTree.htm" class="icon-heart"><font color="blue">&nbsp;树结构</font></a>
+
                 </div>
             </div>
 
@@ -134,9 +139,6 @@
                         <i class="icon-folder" style="margin-right: 8px"></i>
                         <!--<span @click.stop="EditSort(item.No,item.Name)">{{item.Name}}</span>-->
                         <span :id="item.No">{{item.Name}}</span>
-                        <!--<div class="item item-other">{{item.WFSta2 + item.WFSta3 + item.WFSta5}}</div>
-        <div class="item item-other">{{item.WFSta2}}</div>
-        <div class="item item-other">{{item.WFSta5}}</div>-->
                     </div>
 
 

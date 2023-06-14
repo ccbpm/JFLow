@@ -168,7 +168,7 @@ public class RefMethod
 		if (pos > 0)
 		{
 			clas = str.substring(0, pos);
-			meth = str.substring(pos, str.length() - pos).trim();
+			meth = str.substring(pos + 1, str.length()).trim();
 		}
 
 		if (meth.contains("()"))

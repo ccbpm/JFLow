@@ -77,5 +77,5 @@ export function LoginCCBPM(privateKey,userNo){
     if(userInfo === undefined || userInfo ==="")
         return "";
     localStorage.setItem("UserInfo",userInfo);
-    return JSON.parse(userInfo).Token;
+    return JSON.parse(userInfo.data).Token;
 }

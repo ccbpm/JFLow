@@ -6,21 +6,19 @@ import bp.difference.SystemConfig;
 import bp.difference.handler.CommonUtils;
 import bp.difference.handler.WebContralBase;
 import bp.en.*;
+import bp.en.Map;
 import bp.sys.*;
 import bp.sys.xml.ActiveAttrAttr;
 import bp.sys.xml.ActiveAttrs;
 import bp.sys.xml.SQLList;
+import bp.tools.*;
 import bp.tools.DataTableConvertJson;
-import bp.tools.DateUtils;
-import bp.tools.HttpClientUtil;
-import bp.tools.Json;
 import bp.web.GuestUser;
 import bp.web.WebUser;
 import bp.wf.Dev2Interface;
 import bp.wf.Glo;
 import bp.wf.Node;
 import bp.wf.NodeFormType;
-import bp.wf.port.WFEmp;
 import net.sf.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -28,10 +26,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -4476,8 +4473,8 @@ public class WF_Comm extends WebContralBase
 		}
 
 		//每次访问表很消耗资源.
-		WFEmp emp = new WFEmp(WebUser.getNo());
-		ht.put("Theme", emp.GetParaString("Theme"));
+		//WFEmp emp = new WFEmp(WebUser.getNo());
+		//ht.put("Theme", emp.GetParaString("Theme"));
 
 
 		//增加运行模式. add by zhoupeng 2020.03.10 适应saas模式.
@@ -5400,4 +5397,38 @@ public class WF_Comm extends WebContralBase
 
 	///#endregion
 
+	private static final String APP_KEY = "447d8b671ee948b8";     // 您的应用ID
+	private static final String APP_SECRET = "rF1HBr3QjtPD1gXVFfIAGKtDRF6Q2HuB";  // 您的应用密钥
+
+	public final String ToLang() throws NoSuchAlgorithmException {
+		// 添加请求参数
+		java.util.Map<String, String[]> params = createRequestParams();
+		// 添加鉴权相关参数
+		AuthV3Util.addAuthParams(APP_KEY, APP_SECRET, params);
+		// 请求api服务
+		byte[] result = HttpUtil.doPost("https://openapi.youdao.com/api", null, params, "application/json");
+		// 打印返回结果
+		if (result != null) {
+			return new String(result, StandardCharsets.UTF_8);
+		}
+		return "";
+	}
+
+	private java.util.Map<String, String[]> createRequestParams() {
+		/*
+		 * note: 将下列变量替换为需要请求的参数
+		 * 取值参考文档: https://ai.youdao.com/DOCSIRMA/html/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E7%BF%BB%E8%AF%91/API%E6%96%87%E6%A1%A3/%E6%96%87%E6%9C%AC%E7%BF%BB%E8%AF%91%E6%9C%8D%E5%8A%A1/%E6%96%87%E6%9C%AC%E7%BF%BB%E8%AF%91%E6%9C%8D%E5%8A%A1-API%E6%96%87%E6%A1%A3.html
+		 */
+		String q = this.GetRequestVal("Txt");//待翻译文本
+		String from = "zh-CHS";//源语言语种
+		String to = this.GetRequestVal("ToLang");//目标语言语种
+		String vocabId = "";//非必填项，用户指定的词典 out_id，目前支持英译中
+
+		return new HashMap<String, String[]>() {{
+			put("q", new String[]{q});
+			put("from", new String[]{from});
+			put("to", new String[]{to});
+			put("vocabId", new String[]{vocabId});
+		}};
+	}
 }

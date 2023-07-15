@@ -34,4 +34,8 @@ public class OrgAttr extends EntityNoNameAttr
 	 序号
 	*/
 	public static final String Idx = "Idx";
+
+	public static final String OrgSta = "OrgSta";
+
+	public static final String SSOUrl="SSOUrl";
 }

@@ -209,7 +209,7 @@ public class AttrsOfOneVSM extends ArrayList<AttrOfOneVSM>
 		AddGroupListModel(_ensOfMM, _ensOfM, AttrOfOneInMM, AttrOfMInMM, desc, defaultGroupKey, AttrOfMText, "No");
 	}
 
-	public final void AddGroupListModel(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String defaultGroupKey) throws Exception
+	public final void AddGroupListModel(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String defaultGroupKey)
 	{
 		AddGroupListModel(_ensOfMM, _ensOfM, AttrOfOneInMM, AttrOfMInMM, desc, defaultGroupKey, "Name", "No");
 	}
@@ -252,16 +252,15 @@ public class AttrsOfOneVSM extends ArrayList<AttrOfOneVSM>
 		AddGroupPanelModel(_ensOfMM, _ensOfM, AttrOfOneInMM, AttrOfMInMM, desc, defaultGroupKey, AttrOfMText, "No");
 	}
 
-	public final void AddGroupPanelModel(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String defaultGroupKey) throws Exception
+	public final void AddGroupPanelModel(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String defaultGroupKey)
 	{
 		AddGroupPanelModel(_ensOfMM, _ensOfM, AttrOfOneInMM, AttrOfMInMM, desc, defaultGroupKey, "Name", "No");
 	}
 
-	public final void AddGroupPanelModel(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc) throws Exception
+	public final void AddGroupPanelModel(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc)
 	{
 		AddGroupPanelModel(_ensOfMM, _ensOfM, AttrOfOneInMM, AttrOfMInMM, desc, null, "Name", "No");
 	}
-
 
 	public final void AddGroupPanelModel(Entities _ensOfMM, Entities _ensOfM, String AttrOfOneInMM, String AttrOfMInMM, String desc, String defaultGroupKey, String AttrOfMText, String AttrOfMValue)
 	{

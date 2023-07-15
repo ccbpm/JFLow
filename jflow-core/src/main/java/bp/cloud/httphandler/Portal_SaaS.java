@@ -1,6 +1,6 @@
 package bp.cloud.httphandler;
 
-import bp.cloud.port.Org;
+import bp.cloud.Org;
 import bp.da.*;
 import bp.difference.*;
 import bp.difference.handler.WebContralBase;
@@ -32,15 +32,15 @@ public class Portal_SaaS extends WebContralBase {
      * @return
      */
     public final String SelectOneOrg_Init() throws Exception {
-        bp.cloud.port.Orgs orgs = new bp.cloud.port.Orgs();
-        orgs.RetrieveAll();
+        bp.cloud.Orgs orgs = new bp.cloud.Orgs();
+        orgs.Retrieve(bp.cloud.OrgAttr.OrgSta, 0);
         DataTable dt = orgs.ToDataTableField("Orgs");
         return bp.tools.Json.ToJson(dt);
     }
 
     public final String GetOrgByNo() throws Exception {
         String no = this.GetRequestVal("OrgNo");
-        bp.cloud.port.Org org = new Org();
+        bp.cloud.Org org = new Org();
         org.setNo(no);
         if(org.RetrieveFromDBSources() == 0) {
             return "err@组织不存在.";
@@ -69,7 +69,7 @@ public class Portal_SaaS extends WebContralBase {
             }
 
             bp.wf.Dev2Interface.Port_Login(userNo,this.getOrgNo());
-            String token = bp.wf.Dev2Interface.Port_GenerToken(userNo);
+            String token = bp.wf.Dev2Interface.Port_GenerToken();
             /*Hashtable ht = new Hashtable();
             ht.Add("No", emp.No);
             ht.Add("Name", emp.Name);

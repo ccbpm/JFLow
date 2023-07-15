@@ -7,7 +7,6 @@ import bp.en.*;
 */
 public class TeamEmp extends EntityMM
 {
-
 		///#region 属性
 	public final String getFK_Emp()
 	{
@@ -26,10 +25,6 @@ public class TeamEmp extends EntityMM
 		this.SetValByKey(TeamEmpAttr.FK_Team, value);
 	}
 
-		///#endregion
-
-
-		///#region 构造方法
 	/** 
 	 用户组人员
 	*/

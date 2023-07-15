@@ -1215,18 +1215,16 @@ public class WorkFlowBuessRole
 			///#region 仅按用户组计算
 		if (toNode.getHisDeliveryWay() == DeliveryWay.ByTeamOnly)
 		{
-			sql = "SELECT DISTINCT A.FK_Emp FROM Port_TeamEmp A, WF_NodeTeam B WHERE A.FK_Team=B.FK_Team AND B.FK_Node=" + dbStr + "FK_Node ORDER BY A.FK_Emp";
-			ps = new Paras();
-			ps.Add("FK_Node", toNode.getNodeID());
-			ps.SQL = sql;
-			dt = DBAccess.RunSQLReturnTable(ps);
+			sql = "SELECT DISTINCT A.FK_Emp FROM Port_TeamEmp A, WF_NodeTeam B WHERE A.FK_Team=B.FK_Team AND B.FK_Node="+toNode.getNodeID();
+
+			dt = DBAccess.RunSQLReturnTable(sql);
 			if (dt.Rows.size() > 0)
 			{
 				return dt;
 			}
 			else
 			{
-				throw new RuntimeException("@节点访问规则错误:节点(" + toNode.getNodeID() + "," + toNode.getName() + "), 仅按用户组计算，没有找到人员:SQL=" + ps.getSQLNoPara());
+				throw new RuntimeException("@节点访问规则错误:节点(" + toNode.getNodeID() + "," + toNode.getName() + "), 仅按用户组计算，没有找到人员:SQL=" + sql);
 			}
 		}
 
@@ -1568,7 +1566,10 @@ public class WorkFlowBuessRole
 		ps.SQL = sql;
 		ps.Add("FK_Node", toNode.getNodeID());
 		ps.Add("FK_Dept", deptNo, false);
-		ps.Add("FK_Emp", empNo, false);
+		if(SystemConfig.getCCBPMRunModel()==CCBPMRunModel.SAAS && empNo.startsWith(WebUser.getOrgNo())==false)
+			ps.Add("FK_Emp", WebUser.getOrgNo()+"_"+empNo, false);
+		else
+			ps.Add("FK_Emp", empNo, false);
 
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 		if (dt.Rows.size() == 0)
@@ -1579,7 +1580,7 @@ public class WorkFlowBuessRole
 				throw new RuntimeException("@节点没有岗位:" + toNode.getNodeID() + "  " + toNode.getName());
 			}
 
-			sql = "SELECT " + bp.sys.base.Glo.getUserNo() + " FROM Port_Emp WHERE " + bp.sys.base.Glo.getUserNoWhitOutAS() + " IN ";
+			sql = "SELECT " + bp.sys.base.Glo.getUserNo() + " FROM Port_Emp WHERE No IN ";
 			sql += "(SELECT  FK_Emp  FROM Port_DeptEmpStation  WHERE FK_Station IN (SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + dbStr + "FK_Node ) )";
 			sql += " AND " + bp.sys.base.Glo.getUserNoWhitOutAS() + " IN ";
 
@@ -1713,7 +1714,7 @@ public class WorkFlowBuessRole
 				PushMsg pushMsg = pms.get(0) instanceof PushMsg ? (PushMsg)pms.get(0) : null;
 				//     //写入消息提示.
 				//     ccMsg += list.CCTo + "(" + dr[1].ToString() + ");";
-				bp.wf.port.WFEmp wfemp = new bp.wf.port.WFEmp(list.getCCTo());
+			//	bp.wf.port.WFEmp wfemp = new bp.wf.port.WFEmp(list.getCCTo());
 
 				String title = String.format("工作抄送:%1$s.工作:%2$s,发送人:%3$s,需您查阅", node.getFlowName(), node.getName(), WebUser.getName());
 				String mytemp = pushMsg.getSMSDoc();
@@ -1728,7 +1729,7 @@ public class WorkFlowBuessRole
 				{
 					mytemp = bp.wf.Glo.DealExp(mytemp, rpt, null);
 				}
-				bp.wf.Dev2Interface.Port_SendMsg(wfemp.getNo(), title, mytemp, null, bp.wf.SMSMsgType.CC, list.getFK_Flow(), list.getFK_Node(), list.getWorkID(), list.getFID(), pushMsg.getSMSPushModel());
+				bp.wf.Dev2Interface.Port_SendMsg( list.getCCTo(), title, mytemp, null, bp.wf.SMSMsgType.CC, list.getFK_Flow(), list.getFK_Node(), list.getWorkID(), list.getFID(), pushMsg.getSMSPushModel());
 			}
 		}
 
@@ -1840,7 +1841,8 @@ public class WorkFlowBuessRole
 			if (pms.size() > 0)
 			{
 				ccMsg += list.getCCTo() + "(" + ht.get(item).toString() + ");";
-				bp.wf.port.WFEmp wfemp = new bp.wf.port.WFEmp(list.getCCTo());
+			//	bp.wf.port.WFEmp wfemp = new bp.wf.port.WFEmp(list.getCCTo());
+
 
 				String sid = list.getCCTo() + "_" + list.getWorkID() + "_" + list.getFK_Node() + "_" + list.getRDT();
 				String url = basePath + "WF/Do.htm?DoType=DoOpenCC&Token=" + sid;
@@ -1853,11 +1855,11 @@ public class WorkFlowBuessRole
 
 				Object tempVar3 = mailTemp;
 				String mytemp = tempVar3 instanceof String ? (String)tempVar3 : null;
-				mytemp = String.format(mytemp, wfemp.getName(), WebUser.getName() , url, urlWap);
+				mytemp = String.format(mytemp, list.getCCTo(), WebUser.getName() , url, urlWap);
 
 				String title = String.format("工作抄送:%1$s.工作:%2$s,发送人:%3$s,需您查阅", nd.getFlowName(), nd.getName(), WebUser.getName());
 
-				bp.wf.Dev2Interface.Port_SendMsg(wfemp.getNo(), title, mytemp, null, bp.wf.SMSMsgType.CC, list.getFK_Flow(), list.getFK_Node(), list.getWorkID(), list.getFID(), ((PushMsg)pms.get(0)).getSMSPushModel());
+				bp.wf.Dev2Interface.Port_SendMsg(list.getCCTo(), title, mytemp, null, bp.wf.SMSMsgType.CC, list.getFK_Flow(), list.getFK_Node(), list.getWorkID(), list.getFID(), ((PushMsg)pms.get(0)).getSMSPushModel());
 			}
 
 				///#endregion 写入消息机制.

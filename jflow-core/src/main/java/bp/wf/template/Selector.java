@@ -627,7 +627,7 @@ public class Selector extends Entity
 		}
 		else
 		{
-			sql = "SELECT distinct a." + bp.sys.base.Glo.getUserNo() + ",a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a." + bp.sys.base.Glo.getUserNo() + "=c.FK_Emp AND C.FK_Dept='" + WebUser.getFK_Dept()+ "' AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID + "  ORDER BY A.Idx";
+			sql = "SELECT distinct a." + bp.sys.base.Glo.getUserNo() + ",a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND C.FK_Dept='" + WebUser.getFK_Dept()+ "' AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID + "  ORDER BY A.Idx";
 		}
 
 		DataTable dtEmp = DBAccess.RunSQLReturnTable(sql);
@@ -680,7 +680,7 @@ public class Selector extends Entity
 		ds.Tables.add(dt);
 
 		//@zkr.
-		sql = "SELECT distinct a." + bp.sys.base.Glo.getUserNo() + ",a.Name, a.FK_Dept,a.Idx FROM Port_Emp A,  WF_NodeStation b, Port_DeptEmpStation c,WF_NodeDept D WHERE a." + bp.sys.base.Glo.getUserNo() + "=c.FK_Emp AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID + " AND D.FK_Dept=A.FK_Dept AND D.FK_Node=" + nodeID + "  ORDER BY A.Idx ";
+		sql = "SELECT distinct a." + bp.sys.base.Glo.getUserNo() + ",a.Name, a.FK_Dept,a.Idx FROM Port_Emp A,  WF_NodeStation b, Port_DeptEmpStation c,WF_NodeDept D WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID + " AND D.FK_Dept=A.FK_Dept AND D.FK_Node=" + nodeID + "  ORDER BY A.Idx ";
 		DataTable dtEmp = DBAccess.RunSQLReturnTable(sql);
 		dtEmp.TableName = "Emps";
 		ds.Tables.add(dtEmp);
@@ -957,7 +957,7 @@ public class Selector extends Entity
 		if (nd.getHisDeliveryWay() == DeliveryWay.BySelectedForPrj)
 		{
 			//部门.
-			sql = "SELECT distinct a.No, a.Name, a.ParentNo,a.Idx FROM Port_Dept a, WF_NodeStation b, Port_DeptEmpStation c, Port_Emp d, WF_PrjEmp E WHERE a.No=d.FK_Dept AND b.FK_Station=c.FK_Station AND C.FK_Emp=D." + bp.sys.base.Glo.getUserNoWhitOutAS() + " AND d." + bp.sys.base.Glo.getUserNoWhitOutAS() + "=e.FK_Emp And C.FK_Emp=E.FK_Emp  AND B.FK_Node=" + nodeID + " AND E.FK_Prj='" + en.GetValStrByKey("PrjNo") + "' ORDER BY A.No,A.Idx";
+			sql = "SELECT distinct a.No, a.Name, a.ParentNo,a.Idx FROM Port_Dept a, WF_NodeStation b, Port_DeptEmpStation c, Port_Emp d, WF_PrjEmp E WHERE a.No=d.FK_Dept AND b.FK_Station=c.FK_Station AND C.FK_Emp=D.No AND d.No=e.FK_Emp And C.FK_Emp=E.FK_Emp  AND B.FK_Node=" + nodeID + " AND E.FK_Prj='" + en.GetValStrByKey("PrjNo") + "' ORDER BY A.No,A.Idx";
 			dt = DBAccess.RunSQLReturnTable(sql);
 			dt.TableName = "Depts";
 			ds.Tables.add(dt);
@@ -976,7 +976,7 @@ public class Selector extends Entity
 			}
 			else
 			{
-				sql = "SELECT distinct a." + bp.sys.base.Glo.getUserNo() + ",a.Name, a.FK_Dept,A.Idx FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c, WF_PrjEmp d WHERE a." + bp.sys.base.Glo.getUserNoWhitOutAS() + "=c.FK_Emp AND B.FK_Station=C.FK_Station And a." + bp.sys.base.Glo.getUserNoWhitOutAS() + "=d.FK_Emp And C.FK_Emp=d.FK_Emp AND b.FK_Node=" + nodeID + " AND D.FK_Prj='" + en.GetValStrByKey("PrjNo") + "'  ORDER BY A.Idx ";
+				sql = "SELECT distinct a." + bp.sys.base.Glo.getUserNo() + ",a.Name, a.FK_Dept,A.Idx FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c, WF_PrjEmp d WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station And a." + bp.sys.base.Glo.getUserNoWhitOutAS() + "=d.FK_Emp And C.FK_Emp=d.FK_Emp AND b.FK_Node=" + nodeID + " AND D.FK_Prj='" + en.GetValStrByKey("PrjNo") + "'  ORDER BY A.Idx ";
 			}
 
 			dtEmp = DBAccess.RunSQLReturnTable(sql);
@@ -987,7 +987,7 @@ public class Selector extends Entity
 
 
 		//部门.
-		sql = "SELECT distinct a.No, a.Name, a.ParentNo,a.Idx FROM Port_Dept a, WF_NodeStation b, Port_DeptEmpStation c, Port_Emp d WHERE a.No=d.FK_Dept AND b.FK_Station=c.FK_Station AND C.FK_Emp=D." + bp.sys.base.Glo.getUserNoWhitOutAS() + " AND B.FK_Node=" + nodeID + " ORDER BY A.No,A.Idx";
+		sql = "SELECT distinct a.No, a.Name, a.ParentNo,a.Idx FROM Port_Dept a, WF_NodeStation b, Port_DeptEmpStation c, Port_Emp d WHERE a.No=d.FK_Dept AND b.FK_Station=c.FK_Station AND C.FK_Emp=D.No AND B.FK_Node=" + nodeID + " ORDER BY A.No,A.Idx";
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Depts";
 		ds.Tables.add(dt);
@@ -1006,7 +1006,7 @@ public class Selector extends Entity
 		}
 		else
 		{
-			sql = "SELECT distinct a." + bp.sys.base.Glo.getUserNo() + ",a.Name, a.FK_Dept,a.Idx FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a." + bp.sys.base.Glo.getUserNo() + "=c.FK_Emp AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID + "  ORDER BY A.Idx";
+			sql = "SELECT distinct a." + bp.sys.base.Glo.getUserNo() + ",a.Name, a.FK_Dept,a.Idx FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID + "  ORDER BY A.Idx";
 		}
 
 		dtEmp = DBAccess.RunSQLReturnTable(sql);

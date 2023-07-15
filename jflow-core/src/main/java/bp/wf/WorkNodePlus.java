@@ -840,7 +840,7 @@ public class WorkNodePlus
 
 			//求出来我使用的岗位集合.
 			String sqlGroupMy = ""; //我使用岗位.
-			sqlGroupMy = "SELECT FK_Station FROM Port_DeptEmpStation  WHERE FK_Station IN (" + stasSQLIn + ") AND FK_Emp='" + WebUser.getNo() + "'";
+			sqlGroupMy = "SELECT FK_Station FROM Port_DeptEmpStation  WHERE FK_Station IN (" + stasSQLIn + ") AND FK_Emp='" + WebUser.getUserID() + "'";
 			DataTable dtGroupMy = DBAccess.RunSQLReturnTable(sqlGroupMy);
 			String stasGroupMy = "";
 			for (int i = 0; i < dtGroupMy.Rows.size(); i++)

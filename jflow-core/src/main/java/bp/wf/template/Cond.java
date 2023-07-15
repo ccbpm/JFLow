@@ -563,7 +563,11 @@ public class Cond extends EntityMyPK
 			String strs1 = "";
 
 			bp.port.DeptEmpStations sts = new bp.port.DeptEmpStations();
-			sts.Retrieve("FK_Emp", this.getSpecOper(), null);
+			if(SystemConfig.getCCBPMRunModel()==CCBPMRunModel.SAAS){
+				sts.Retrieve("FK_Emp", WebUser.getOrgNo()+'_'+this.getSpecOper(), null);
+			}else {
+				sts.Retrieve("FK_Emp", this.getSpecOper(), null);
+			}
 			for (bp.port.DeptEmpStation st : sts.ToJavaList())
 			{
 				if (strs.contains("@" + st.getFK_Station() + "@"))

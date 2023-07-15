@@ -121,7 +121,8 @@ public class Org extends EntityNoName
 
 		map.AddTBString(OrgAttr.Adminer, null, "主要管理员(创始人)", true, true, 0, 60, 200, true);
 		map.AddTBString(OrgAttr.AdminerName, null, "管理员名称", true, true, 0, 60, 200, true);
-
+		map.AddTBString(OrgAttr.SSOUrl, null, "SSOUrl", true, false, 0, 200, 200, true);
+		map.AddTBInt(OrgAttr.OrgSta, 0, "组织状态", true, false);
 		map.AddTBInt("FlowNums", 0, "流程数", true, true);
 		map.AddTBInt("FrmNums", 0, "表单数", true, true);
 		map.AddTBInt("Users", 0, "用户数", true, true);

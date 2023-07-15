@@ -61,7 +61,7 @@ public class CC extends Entity
 			if (this.getCCStaWay() == bp.wf.CCStaWay.StationOnly)
 			{
 
-					sql = "SELECT " + bp.sys.base.Glo.getUserNo() + ",Name FROM Port_Emp A, Port_DeptEmpStation B, WF_CCStation C  WHERE A." + bp.sys.base.Glo.getUserNoWhitOutAS() + "= B.FK_Emp AND B.FK_Station=C.FK_Station AND C.FK_Node=" + this.getNodeID();
+					sql = "SELECT " + bp.sys.base.Glo.getUserNo() + ",Name FROM Port_Emp A, Port_DeptEmpStation B, WF_CCStation C  WHERE A.No= B.FK_Emp AND B.FK_Station=C.FK_Station AND C.FK_Node=" + this.getNodeID();
 
 				mydt = DBAccess.RunSQLReturnTable(sql);
 				for (DataRow mydr : mydt.Rows)
@@ -87,7 +87,7 @@ public class CC extends Entity
 				}
 
 
-					sql = "SELECT " + bp.sys.base.Glo.getUserNo() + ",Name FROM Port_Emp A, Port_DeptEmpStation B, WF_CCStation C WHERE A." + bp.sys.base.Glo.getUserNoWhitOutAS() + "=B.FK_Emp AND B.FK_Station=C.FK_Station  AND C.FK_Node=" + this.getNodeID() + " AND B.FK_Dept='" + deptNo + "'";
+					sql = "SELECT " + bp.sys.base.Glo.getUserNo() + ",Name FROM Port_Emp A, Port_DeptEmpStation B, WF_CCStation C WHERE A.No=B.FK_Emp AND B.FK_Station=C.FK_Station  AND C.FK_Node=" + this.getNodeID() + " AND B.FK_Dept='" + deptNo + "'";
 
 				mydt = DBAccess.RunSQLReturnTable(sql);
 				for (DataRow mydr : mydt.Rows)
@@ -102,7 +102,7 @@ public class CC extends Entity
 			if (this.getCCStaWay() == bp.wf.CCStaWay.StationAdndDept)
 			{
 
-					sql = "SELECT " + bp.sys.base.Glo.getUserNo() + ",Name FROM Port_Emp A, Port_DeptEmpStation B, WF_CCStation C, WF_CCDept D WHERE A." + bp.sys.base.Glo.getUserNoWhitOutAS() + "=B.FK_Emp AND B.FK_Station=C.FK_Station AND A.FK_Dept=D.FK_Dept AND B.FK_Dept=D.FK_Dept AND C.FK_Node=" + this.getNodeID() + " AND D.FK_Node=" + this.getNodeID();
+					sql = "SELECT " + bp.sys.base.Glo.getUserNo() + ",Name FROM Port_Emp A, Port_DeptEmpStation B, WF_CCStation C, WF_CCDept D WHERE A.No=B.FK_Emp AND B.FK_Station=C.FK_Station AND A.FK_Dept=D.FK_Dept AND B.FK_Dept=D.FK_Dept AND C.FK_Node=" + this.getNodeID() + " AND D.FK_Node=" + this.getNodeID();
 
 				mydt = DBAccess.RunSQLReturnTable(sql);
 				for (DataRow mydr : mydt.Rows)
@@ -134,7 +134,7 @@ public class CC extends Entity
 					Dept dept = new Dept(deptNo);
 
 
-						sql = "SELECT " + bp.sys.base.Glo.getUserNo() + ",Name FROM Port_Emp A, Port_DeptEmpStation B, WF_CCStation C WHERE A." + bp.sys.base.Glo.getUserNoWhitOutAS() + "=B.FK_Emp AND B.FK_Station=C.FK_Station  AND C.FK_Node=" + this.getNodeID() + " AND B.FK_Dept='" + deptNo + "'";
+						sql = "SELECT " + bp.sys.base.Glo.getUserNo() + ",Name FROM Port_Emp A, Port_DeptEmpStation B, WF_CCStation C WHERE A.No=B.FK_Emp AND B.FK_Station=C.FK_Station  AND C.FK_Node=" + this.getNodeID() + " AND B.FK_Dept='" + deptNo + "'";
 
 					mydt = DBAccess.RunSQLReturnTable(sql);
 					for (DataRow mydr : mydt.Rows)
@@ -192,7 +192,7 @@ public class CC extends Entity
 				if (DataType.IsNullOrEmpty(ccers) == false)
 				{
 					//判断该字段是否启用了pop返回值？
-					sql = "SELECT  Tag1 AS VAL FROM Sys_FrmEleDB WHERE RefPKVal=" + workid + " AND EleID='" + attr + "'";
+					sql = "SELECT  Tag1 AS VAL FROM Sys_FrmEleDB WHERE RefPKVal='" + workid + "' AND EleID='" + attr + "'";
 					DataTable dtVals = DBAccess.RunSQLReturnTable(sql);
 					String emps = "";
 					//获取接受人并格式化接受人, 

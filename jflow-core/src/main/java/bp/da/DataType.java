@@ -14,6 +14,12 @@ import java.util.regex.Pattern;
 
 import bp.difference.SystemConfig;
 import bp.tools.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import net.sf.json.JSONObject;
+import net.sf.json.util.JSONUtils;
 import org.apache.commons.io.FileUtils;
 import bp.wf.Glo;
 import bp.web.*;
@@ -565,6 +571,32 @@ public class DataType {
         return doc;
     }
 
+    public static String ReadURLContextByGET(String url, int timeOut) {
+        String doc = "";
+        try {
+            // xiaozhoupeng 20150106 update Start
+            if (!url.contains("http")) {
+                String temp_url = url.substring(1, url.length()).replace(".aspx", ".jsp");
+                url = Glo.getCCFlowAppPath() + temp_url;
+            }
+            // xiaozhoupeng 20150106 update End
+            URL ul = new URL(url);
+            java.net.HttpURLConnection conn = (java.net.HttpURLConnection) ul.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("GET");
+            conn.setReadTimeout(timeOut);
+            java.io.BufferedReader in = new java.io.BufferedReader(
+                    new java.io.InputStreamReader(conn.getInputStream(), "UTF-8"));
+            String line;
+            while ((line = in.readLine()) != null) {
+                doc += line;
+            }
+            in.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return doc;
+    }
     /**
      * 读取文件
      * <p>
@@ -2081,5 +2113,39 @@ public class DataType {
         newKey = newKey.replaceAll("\"", "\\\\\"");
 
         return newKey;
+    }
+
+    /**
+     * 判断字符串是否为JSON格式
+     * @param val
+     * @return
+     */
+    public static boolean IsJson(String val){
+        boolean isJson = false;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            JsonNode jsonNode = mapper.readTree(val);
+            isJson = true;
+        }catch (JsonProcessingException e){
+        }
+        return isJson;
+    }
+
+     /**
+     * JSON符串转Hashtable
+     * @param jsonString
+     * @return 
+     */
+    public static Hashtable ToHashtable(String jsonString){
+        Hashtable<String, Object> hashtable = new Hashtable<>();
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            JsonNode jsonNode = mapper.readTree(jsonString);
+            hashtable = mapper.convertValue(jsonNode, Hashtable.class);
+        }catch (JsonProcessingException e){
+            e.printStackTrace();
+            Log.DebugWriteError("err@转换JSON时出现异常." + e.getMessage());
+        }
+        return hashtable;
     }
 }

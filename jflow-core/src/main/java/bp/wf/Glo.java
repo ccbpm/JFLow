@@ -2844,6 +2844,8 @@ public class Glo {
 
 
 		///#region 首先创建Port类型的表, 让admin登录.
+		SFDBSrc sf = new SFDBSrc();
+		sf.CheckPhysicsTable();
 
 		FrmRB rb = new FrmRB();
 		rb.CheckPhysicsTable();

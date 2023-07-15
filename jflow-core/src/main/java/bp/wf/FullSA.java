@@ -86,7 +86,7 @@ public class FullSA
 				// string sql = "SELECT No, Name FROM Port_Emp WHERE No IN (SELECT A.FK_Emp FROM " + BP.WF.Glo.EmpStation + " A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + item.NodeID + ")";
 
 				String sql = "SELECT DISTINCT a." + bp.sys.base.Glo.getUserNo() + ", a.Name FROM Port_Emp A, Port_DeptEmpStation B, WF_NodeStation C "; // WHERE No IN (SELECT A.FK_Emp FROM " + BP.WF.Glo.EmpStation + " A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + item.NodeID + ")";
-				sql += " WHERE A." + bp.sys.base.Glo.getUserNoWhitOutAS() + "=B.FK_Emp AND B.FK_Station=C.FK_Station AND C.FK_Node=" + item.getNodeID();
+				sql += " WHERE A.No=B.FK_Emp AND B.FK_Station=C.FK_Station AND C.FK_Node=" + item.getNodeID();
 
 				dt = DBAccess.RunSQLReturnTable(sql);
 				if (dt.Rows.size() == 0)
@@ -256,7 +256,7 @@ public class FullSA
 				///#region 2019-09-25 byzhoupeng, 仅按岗位计算
 			if (item.getHisDeliveryWay() == DeliveryWay.ByStationOnly)
 			{
-			   String sql = "SELECT DISTINCT c." + bp.sys.base.Glo.getUserNo() + ",c.Name FROM Port_DeptEmpStation A, WF_NodeStation B, Port_Emp C WHERE A.FK_Emp=C." + bp.sys.base.Glo.getUserNoWhitOutAS() + " AND A.FK_Station=B.FK_Station AND B.FK_Node=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "FK_Node ORDER BY C." + bp.sys.base.Glo.getUserNoWhitOutAS();
+			   String sql = "SELECT DISTINCT c." + bp.sys.base.Glo.getUserNo() + ",c.Name FROM Port_DeptEmpStation A, WF_NodeStation B, Port_Emp C WHERE A.FK_Emp=C.No AND A.FK_Station=B.FK_Station AND B.FK_Node=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "FK_Node ORDER BY C." + bp.sys.base.Glo.getUserNoWhitOutAS();
 				Paras ps = new Paras();
 				ps.Add("FK_Node", item.getNodeID());
 				ps.SQL = sql;
@@ -409,11 +409,11 @@ public class FullSA
 					case MySQL:
 					case MSSQL:
 						sql = "select DISTINCT x." + bp.sys.base.Glo.getUserNo() + " from Port_Emp x inner join (select FK_Emp from Port_DeptEmpStation a inner join WF_NodeStation b ";
-						sql += " on a.FK_Station=b.FK_Station where FK_Node=" + dbStr + "FK_Node) as y on x." + bp.sys.base.Glo.getUserNoWhitOutAS() + "=y.FK_Emp inner join Port_DeptEmp z on";
-						sql += " x." + bp.sys.base.Glo.getUserNoWhitOutAS() + "=z.FK_Emp where z.FK_Dept =" + dbStr + "FK_Dept order by x." + bp.sys.base.Glo.getUserNoWhitOutAS();
+						sql += " on a.FK_Station=b.FK_Station where FK_Node=" + dbStr + "FK_Node) as y on x.No=y.FK_Emp inner join Port_DeptEmp z on";
+						sql += " x.No=z.FK_Emp where z.FK_Dept =" + dbStr + "FK_Dept order by x." + bp.sys.base.Glo.getUserNoWhitOutAS();
 						break;
 					default:
-						sql = "SELECT DISTINCT " + bp.sys.base.Glo.getUserNo() + " FROM Port_Emp WHERE " + bp.sys.base.Glo.getUserNoWhitOutAS() + " IN " + "(SELECT  FK_Emp  FROM Port_DeptEmpStation WHERE FK_Station IN (SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + dbStr + "FK_Node) )" + " AND  " + bp.sys.base.Glo.getUserNoWhitOutAS() + " IN " + "(SELECT  FK_Emp  FROM Port_DeptEmp WHERE FK_Dept =" + dbStr + "FK_Dept)";
+						sql = "SELECT DISTINCT " + bp.sys.base.Glo.getUserNo() + " FROM Port_Emp WHERE No IN " + "(SELECT  FK_Emp  FROM Port_DeptEmpStation WHERE FK_Station IN (SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + dbStr + "FK_Node) )" + " AND  No IN " + "(SELECT  FK_Emp  FROM Port_DeptEmp WHERE FK_Dept =" + dbStr + "FK_Dept)";
 						sql += " ORDER BY  " + bp.sys.base.Glo.getUserNoWhitOutAS();
 						break;
 				}

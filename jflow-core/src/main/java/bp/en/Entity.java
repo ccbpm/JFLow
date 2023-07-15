@@ -3164,7 +3164,7 @@ public abstract class Entity extends EnObj implements Serializable
 					throw new RuntimeException("@未判断的数据库类型。");
 			}
 
-			this.RunSQL(sql);
+			DBAccess.RunSQL(sql);
 			this.CreateIndexAndPK();
 			return;
 		}

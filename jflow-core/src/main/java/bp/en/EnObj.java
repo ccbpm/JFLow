@@ -49,6 +49,7 @@ public abstract class EnObj implements Serializable
 				_HisUAC.IsInsert = true;
 				_HisUAC.IsUpdate = true;
 				_HisUAC.IsView = true;
+				return _HisUAC;
 			}
 		}
 		return _HisUAC;

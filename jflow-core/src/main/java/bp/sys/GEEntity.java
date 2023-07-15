@@ -294,4 +294,18 @@ public class GEEntity extends Entity
 		}
 		return _Dtls;
 	}
+	/**
+	 按照指定的OID 保存
+
+	 @param oid
+	 */
+	public final void SaveAsOID(int oid) throws Exception {
+		this.SetValByKey("OID", oid);
+		if (this.Update() == 0)
+		{
+			this.InsertAsOID(oid);
+		}
+
+	}
+
 }

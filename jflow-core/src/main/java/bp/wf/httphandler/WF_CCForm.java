@@ -5990,8 +5990,31 @@ public class WF_CCForm extends  WebContralBase
 
 		try
 		{
-			bp.da.DBAccess.SaveBigTextToDB(vals, ptable, "OID", String.valueOf(this.getOID()), this.getKeyOfEn());
-
+			if(SystemConfig.getAppCenterDBType() == DBType.Oracle)
+			{
+				try
+				{
+					Paras ps = new Paras();
+					ps.SQL = "UPDATE " + ptable + " SET " + this.getKeyOfEn() + "=" + SystemConfig.getAppCenterDBVarStr() + "KeyOfEn WHERE OID=" + this.getOID();
+					ps.Add("KeyOfEn", vals);
+					bp.da.DBAccess.RunSQL(ps);
+				}catch(Exception ex)
+				{
+					if (ex.getMessage().contains("的值太大") == true)
+					{
+						//更改当前字段的长度
+						DBAccess.RunSQL("ALTER table " + ptable + " modify " + this.getKeyOfEn() + " VARCHAR2(4000)");
+						Paras ps = new Paras();
+						ps.SQL = "UPDATE " + ptable + " SET " + this.getKeyOfEn() + "=" + SystemConfig.getAppCenterDBVarStr() + "KeyOfEn WHERE OID=" + this.getOID();
+						ps.Add("KeyOfEn", vals);
+						bp.da.DBAccess.RunSQL(ps);
+					}
+				}
+			}
+			else
+			{
+				bp.da.DBAccess.SaveBigTextToDB(vals, ptable, "OID", String.valueOf(this.getOID()), this.getKeyOfEn());
+			}
 			String atparas = DBAccess.RunSQLReturnStringIsNull("SELECT AtPara FROM " + ptable + " WHERE OID=" + String.valueOf(this.getOID()), "");
 
 			//标记该字段已经完成.
@@ -6040,6 +6063,21 @@ public class WF_CCForm extends  WebContralBase
 			}
 			return ex.getMessage();
 		}
+	}
+	public String ChapterFrm_SaveAttr() throws Exception {
+		//获取表单数据
+		Hashtable ht = bp.pub.PubClass.GetMainTableHT();
+		MapAttrs attrs = new MapAttrs();
+		attrs.Retrieve(MapAttrAttr.FK_MapData, this.getFrmID(), MapAttrAttr.GroupID, this.GetRequestValInt("GroupID"));
+
+		GEEntity ge = new GEEntity(this.getFrmID(), this.getPKVal());
+		for(MapAttr attr : attrs.ToJavaList())
+		{
+			String val = ht.get(attr.getKeyOfEn()) == null ? "" : ht.get(attr.getKeyOfEn()).toString();
+			ge.SetValByKey(attr.getKeyOfEn(), val);
+		}
+		ge.Update();
+		return "保存成功";
 	}
 	/// <summary>
 	/// 根据版本号获取表单的历史数据

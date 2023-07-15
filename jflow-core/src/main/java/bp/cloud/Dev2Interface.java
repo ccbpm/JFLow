@@ -1,6 +1,8 @@
 package bp.cloud;
 
 import bp.da.*;
+import bp.port.Station;
+import bp.port.StationType;
 import bp.web.*;
 import bp.wf.*;
 import bp.difference.*;
@@ -20,130 +22,199 @@ public class Dev2Interface {
      */
     public static String Port_CreateOrg(String orgNo, String orgName) throws Exception {
 
-        try {
-
-            ///#region 1.检查完整性.
-            bp.cloud.port.Org org = new bp.cloud.port.Org();
-            org.setNo(orgNo);
-            if (org.RetrieveFromDBSources() == 1) {
+        try
+        {
+            //    #region 1.检查完整性.
+            Org org = new Org();
+            org.SetValByKey("No", orgNo);
+            if (org.RetrieveFromDBSources() == 1)
                 return "err@组织编号已经存在";
-            }
 
-            bp.cloud.port.Dept dept = new bp.cloud.port.Dept();
-            dept.setNo(orgNo);
-            if (dept.RetrieveFromDBSources() == 1) {
+            Dept dept = new  Dept();
+            dept.SetValByKey("No", orgNo);
+            if (dept.RetrieveFromDBSources() == 1)
                 return "err@部门编号已经存在";
-            }
 
-            bp.cloud.port.Emp emp = new bp.cloud.port.Emp();
-            emp.setNo(orgNo + "_" + orgNo);
-            if (emp.RetrieveFromDBSources() == 1) {
+            Emp emp = new  Emp();
+            emp.SetValByKey("No", orgNo + "_" + orgNo);
+            if (emp.RetrieveFromDBSources() == 1)
                 return "err@人员编号已经存在";
-            }
+           //     #endregion 检查完整性.
 
-            ///#endregion 检查完整性.
-
-
-            ///#region 3.创建部门.
-            dept.setParentNo("100");
-            dept.setName(orgName);
-            dept.setOrgNo(orgNo);
+            //    #region 3.创建部门.
+                dept.SetValByKey("ParentNo","100");
+            dept.SetValByKey("Name", orgName);
+            dept.SetValByKey("OrgNo",orgNo);
             dept.Insert();
 
-            dept.setNo(DBAccess.GenerGUID());
-            dept.setParentNo(orgNo);
-            dept.setName("部门1");
-            dept.setOrgNo(orgNo);
+            dept.SetValByKey("No", DBAccess.GenerGUID());
+            dept.SetValByKey("ParentNo", orgNo);
+
+            dept.SetValByKey("Name","部门1");
+            dept.SetValByKey("OrgNo",orgNo);;
             dept.Insert();
 
-            dept.setNo(DBAccess.GenerGUID());
-            dept.setParentNo(orgNo);
-            dept.setName("部门2");
-            dept.setOrgNo(orgNo);
+            dept.SetValByKey("No",DBAccess.GenerGUID());
+            dept.SetValByKey("ParentNo",orgNo);
+            dept.SetValByKey("Name","部门2");
+            dept.SetValByKey("OrgNo",orgNo);;
             dept.Insert();
+             //   #endregion 创建部门.
 
-            ///#endregion 创建部门.
-
-
-            ///#region 2.创建组织+ 人员
+            //    #region 2.创建组织+ 人员
             //创建组织.
-            org.setName(orgName);
-            org.setAdminer(orgNo); //创始人.
-            org.setAdminerName(orgName);
-            org.Insert();
+            org.SetValByKey("AdminerName", orgName);
+            org.SetValByKey("Adminer", orgNo);
+            org.SetValByKey("Name", orgName);
+            org.DirectInsert();
 
-            emp.setName(orgName);
-            emp.setFK_Dept(orgNo);
-            emp.setOrgNo(orgNo);
-            emp.setUserID(orgNo);
-            emp.Insert();
+            emp.SetValByKey("Name", orgName);
+            emp.SetValByKey("FK_Dept", orgNo);
+            emp.SetValByKey("OrgNo",orgNo);
+            emp.SetValByKey("UserID", orgNo);
 
-            ///#endregion 创建组织.
+            emp.DirectInsert();
+           //     #endregion 创建组织.
 
+            //    #region 4. 设置管理员.
+            OrgAdminer oa = new bp.wf.port.admin2group.OrgAdminer();;
+            oa.setMyPK( orgNo + "_" + orgNo);
+            oa.SetValByKey("OrgNo",orgNo);
+            oa.SetValByKey("FK_Emp", emp.getNo());
+            oa.SetValByKey("EmpName", orgName);
+            oa.DirectInsert();
+           //     #endregion 设置管理员.
 
-            ///#region 4. 设置管理员.
-            OrgAdminer oa = new OrgAdminer();
-            oa.setMyPK(orgNo + "_" + orgNo);
-            oa.setFK_Emp(orgNo);
-            oa.setOrgNo(orgNo);
-            oa.setEmpName(orgName);
-            oa.Insert();
-
-            ///#endregion 设置管理员.
-
-
-            ///#region 5. 增加流程树.
+           //     #region 5. 增加流程树.
             FlowSort fs = new FlowSort();
-            fs.setOrgNo(orgNo);
-            fs.setNo(orgNo);
-            fs.setParentNo("100");
-            fs.setName("流程树" + orgNo);
-            fs.Insert();
+            fs.SetValByKey("OrgNo",orgNo);;
+            fs.SetValByKey("No", orgNo);
+
+            fs.SetValByKey("ParentNo","100");
+            fs.SetValByKey("Name", orgName);
+            fs.DirectInsert();
 
             fs = new FlowSort();
-            fs.setOrgNo(orgNo);
-            fs.setNo(DBAccess.GenerGUID());
-            fs.setParentNo(orgNo);
-            fs.setName("类型1");
-            fs.Insert();
+            fs.SetValByKey("OrgNo",orgNo);;
+            fs.SetValByKey("No", DBAccess.GenerGUID());
+
+            fs.SetValByKey("ParentNo",orgNo);
+            fs.SetValByKey("Name", "类型1");
+            fs.DirectInsert();
 
             fs = new FlowSort();
-            fs.setOrgNo(orgNo);
-            fs.setNo(DBAccess.GenerGUID());
-            fs.setParentNo(orgNo);
-            fs.setName("类型2");
+            fs.SetValByKey("OrgNo",orgNo);
+            fs.SetValByKey("No", DBAccess.GenerGUID());
+            fs.SetValByKey("ParentNo",orgNo);
+            fs.SetValByKey("Name", "类型2");
             fs.Insert();
 
+             //   #endregion   增加流程树.
 
-            ///#endregion   增加流程树.
-
-
-            ///#region 6. 增加表单树.
+              //  #region 6. 增加表单树.
             FrmSort f1s = new FrmSort();
-            f1s.setOrgNo(orgNo);
-            f1s.setNo(orgNo);
-            f1s.setParentNo("100");
-            f1s.setName(orgName);
-            f1s.Insert();
+            f1s.SetValByKey("OrgNo",orgNo);
+            f1s.SetValByKey("No", orgNo);
+            f1s.SetValByKey("ParentNo","100");
+            f1s.SetValByKey("Name", orgName);
+            f1s.DirectInsert();
 
             f1s = new FrmSort();
-            f1s.setOrgNo(orgNo);
-            f1s.setNo(DBAccess.GenerGUID());
-            f1s.setParentNo(orgNo);
-            f1s.setName("类型1");
-            f1s.Insert();
+            f1s.SetValByKey("OrgNo",orgNo);
+            f1s.SetValByKey("No", DBAccess.GenerGUID());
+            f1s.SetValByKey("ParentNo",orgNo);
+            f1s.SetValByKey("Name", "类型1");
+            f1s.DirectInsert();
 
             f1s = new FrmSort();
-            f1s.setOrgNo(orgNo);
-            f1s.setNo(DBAccess.GenerGUID());
-            f1s.setParentNo(orgNo);
-            f1s.setName("类型2");
-            f1s.Insert();
+            f1s.SetValByKey("OrgNo",orgNo);;
+            f1s.SetValByKey("No", DBAccess.GenerGUID());
+            f1s.SetValByKey("ParentNo",orgNo);
+            f1s.SetValByKey("Name", "类型2");
+            f1s.DirectInsert();
+             //   #endregion   增加流程树.
 
-            ///#endregion   增加流程树.
+           //     #region 7. 创建岗位类型.
+                StationType st = new StationType();
+            st.SetValByKey("No", DBAccess.GenerGUID());
+            st.SetValByKey("OrgNo", orgNo);
+            st.SetValByKey("Name", "高层");
+            st.DirectInsert();
+
+            Station sta = new Station();
+            sta.SetValByKey("No", DBAccess.GenerGUID());
+            sta.SetValByKey("OrgNo", orgNo);
+            sta.SetValByKey("Name", "总经理");
+            sta.SetValByKey("FK_StationType",st.getNo());
+            sta.DirectInsert();
+
+            sta = new Station();
+            sta.SetValByKey("No", DBAccess.GenerGUID());
+            sta.SetValByKey("OrgNo", orgNo);
+            sta.SetValByKey("Name", "副总经理");
+            sta.SetValByKey("FK_StationType", st.getNo());
+            sta.DirectInsert();
+
+            st = new StationType();
+            st.SetValByKey("No", DBAccess.GenerGUID());
+            st.SetValByKey("OrgNo", orgNo);
+            st.SetValByKey("Name", "中层");
+            st.DirectInsert();
+            sta = new Station();
+            sta.SetValByKey("No", DBAccess.GenerGUID());
+            sta.SetValByKey("OrgNo", orgNo);
+            sta.SetValByKey("Name", "研发部经理");
+            sta.SetValByKey("FK_StationType", st.getNo());
+            sta.DirectInsert();
+
+            sta = new Station();
+            sta.SetValByKey("No", DBAccess.GenerGUID());
+            sta.SetValByKey("OrgNo", orgNo);
+            sta.SetValByKey("Name", "市场部经理");
+            sta.SetValByKey("FK_StationType", st.getNo());
+            sta.DirectInsert();
+
+            sta = new Station();
+            sta.SetValByKey("No", DBAccess.GenerGUID());
+            sta.SetValByKey("OrgNo", orgNo);
+            sta.SetValByKey("Name", "财务部经理");
+            sta.SetValByKey("FK_StationType", st.getNo());
+            sta.DirectInsert();
+
+
+            st = new StationType();
+            st.SetValByKey("No", DBAccess.GenerGUID());
+            st.SetValByKey("Name", "基层");
+            st.SetValByKey("OrgNo", orgNo);
+            st.DirectInsert();
+
+            sta = new Station();
+            sta.SetValByKey("No", DBAccess.GenerGUID());
+            sta.SetValByKey("OrgNo", orgNo);
+            sta.SetValByKey("Name", "开发工程师");
+            sta.SetValByKey("FK_StationType", st.getNo());
+            sta.DirectInsert();
+
+            sta = new Station();
+            sta.SetValByKey("No", DBAccess.GenerGUID());
+            sta.SetValByKey("OrgNo", orgNo);
+            sta.SetValByKey("Name", "销售员");
+            sta.SetValByKey("FK_StationType", st.getNo());
+            sta.DirectInsert();
+
+            sta = new Station();
+            sta.SetValByKey("No", DBAccess.GenerGUID());
+            sta.SetValByKey("OrgNo", orgNo);
+            sta.SetValByKey("Name", "出纳");
+            sta.SetValByKey("FK_StationType", st.getNo());
+            sta.DirectInsert();
+
+              //  #endregion 7. 创建岗位类型.
 
             return "info@创建成功.";
-        } catch (RuntimeException ex) {
+        }
+        catch (Exception ex)
+        {
             String sql = "DELETE FROM Port_Org WHERE No='" + orgNo + "';";
             sql += "DELETE FROM Port_OrgAdminer WHERE OrgNo='" + orgNo + "'; ";
             sql += "DELETE FROM Port_Dept WHERE OrgNo='" + orgNo + "'; ";
@@ -163,7 +234,7 @@ public class Dev2Interface {
      * @param orgNo
      */
     public static String Port_Login(String userID, String orgNo) throws Exception {
-        bp.cloud.port.Emp emp = new bp.cloud.port.Emp();
+        bp.cloud.Emp emp = new bp.cloud.Emp();
         int i = emp.Retrieve("UserID", userID, "OrgNo", orgNo);
         if (i == 0) {
             throw new RuntimeException("err@用户名[" + userID + "],OrgNo[" + orgNo + "]不存在.");
@@ -172,13 +243,13 @@ public class Dev2Interface {
         //调用登录.
         String str = Port_Login(emp);
 
-        return bp.wf.Dev2Interface.Port_GenerToken("PC");
+        return bp.wf.Dev2Interface.Port_GenerToken();
     }
 
     /**
      * 登录
      */
-    public static String Port_Login(bp.cloud.port.Emp emp) {
+    public static String Port_Login(bp.cloud.Emp emp) {
         // cookie操作，为适应不同平台，统一使用HttpContextHelper
         java.util.HashMap<String, String> cookieValues = new java.util.HashMap<String, String>();
 

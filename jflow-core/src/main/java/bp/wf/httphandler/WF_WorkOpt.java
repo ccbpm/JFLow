@@ -1279,25 +1279,15 @@ public class WF_WorkOpt extends WebContralBase
 			{
 				if (SystemConfig.getCustomerNo().equals("TianYe")) // 只改了oracle的
 				{
-					//string endSql = "";
-					//if (bp.web.WebUser.getFK_Dept().IndexOf("18099") == 0)
-					//    endSql = " AND B.No LIKE '18099%' ";
-					//else
-					//    endSql = " AND B.No NOT LIKE '18099%' ";
-
 					String specFlowNos = SystemConfig.getAppSettings().get("SpecFlowNosForAccpter").toString();
 					if (DataType.IsNullOrEmpty(specFlowNos) == true)
-					{
 						specFlowNos = ",001,";
-					}
 
 					String specEmpNos = "";
 					if (specFlowNos.contains(String.valueOf(this.getFK_Node()) + ",") == false)
-					{
 						specEmpNos = " AND a.No!='00000001' ";
-					}
 
-					sql = "SELECT a." + Glo.UserNo + ",a.Name || '/' || b.FullName as Name FROM Port_Emp a, Port_Dept b WHERE  (a.fk_dept=b.no) and (a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%'  OR a.PinYin LIKE '%," + emp.toLowerCase() + "%') AND rownum<=12 " + specEmpNos;
+					sql = "SELECT a.No,a.Name || '/' || b.FullName as Name FROM Port_Emp a, Port_Dept b WHERE  (a.fk_dept=b.no) and (a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%'  OR a.PinYin LIKE '%," + emp.toLowerCase() + "%') AND rownum<=12 " + specEmpNos;
 				}
 				else
 				{
@@ -1307,7 +1297,7 @@ public class WF_WorkOpt extends WebContralBase
 					{
 						if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 						{
-							sql = "SELECT TOP 12 a.UserID as No,a.Name +'/'+b.name as Name FROM Port_Emp a,Port_Dept b  WHERE a.OrgNo=" + WebUser.getOrgNo() + " AND (a.fk_dept=b.no) and (a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%'  OR a.PinYin LIKE '%," + emp.toLowerCase() + "%') ";
+							sql = "SELECT TOP 12 a.No as No,a.Name +'/'+b.name as Name FROM Port_Emp a,Port_Dept b  WHERE a.OrgNo=" + WebUser.getOrgNo() + " AND (a.fk_dept=b.no) and (a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%'  OR a.PinYin LIKE '%," + emp.toLowerCase() + "%') ";
 						}
 						else
 						{
@@ -1363,7 +1353,7 @@ public class WF_WorkOpt extends WebContralBase
 					{
 						if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 						{
-							sql = "SELECT TOP 12 a.UserID as No,a.Name +'/'+b.name as Name FROM Port_Emp a,Port_Dept b  WHERE A.OrgNo='" + WebUser.getOrgNo() + "' AND (a.fk_dept=b.no) and ( a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%'  OR a.PinYin LIKE '%," + emp.toLowerCase() + "%')";
+							sql = "SELECT TOP 12 a.No as No,a.Name +'/'+b.name as Name FROM Port_Emp a,Port_Dept b  WHERE A.OrgNo='" + WebUser.getOrgNo() + "' AND (a.fk_dept=b.no) and ( a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%'  OR a.PinYin LIKE '%," + emp.toLowerCase() + "%')";
 						}
 						else
 						{
@@ -1372,11 +1362,17 @@ public class WF_WorkOpt extends WebContralBase
 					}
 					if (SystemConfig.getAppCenterDBType( ) == DBType.Oracle || SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR3 ||SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR6)
 					{
-						sql = "SELECT a.No,a.Name || '/' || b.name as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and ( a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%'  OR  a.PinYin LIKE '%," + emp.toLowerCase() + "%') AND rownum<=12 ";
+						if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+							sql = "SELECT a.No,a.Name || '/' || b.name as Name FROM Port_Emp a,Port_Dept b  WHERE A.OrgNo='" + WebUser.getOrgNo() + "' AND  (a.fk_dept=b.no) and ( a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%'  OR  a.PinYin LIKE '%," + emp.toLowerCase() + "%') AND rownum<=12 ";
+						else
+							sql = "SELECT a.No,a.Name || '/' || b.name as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and ( a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%'  OR  a.PinYin LIKE '%," + emp.toLowerCase() + "%') AND rownum<=12 ";
 					}
 					if (SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.HGDB)
 					{
-						sql = "SELECT a.No,CONCAT(a.Name,'/',b.name) as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and ( a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%'  OR  a.PinYin LIKE '%," + emp.toLowerCase() + "%' ) LIMIT 12";
+						if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+							sql = "SELECT a.No,CONCAT(a.Name,'/',b.name) as Name FROM Port_Emp a,Port_Dept b  WHERE  A.OrgNo='" + WebUser.getOrgNo() + "' AND (a.fk_dept=b.no) and ( a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%'  OR  a.PinYin LIKE '%," + emp.toLowerCase() + "%' ) LIMIT 12";
+						else
+							sql = "SELECT a.No,CONCAT(a.Name,'/',b.name) as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and ( a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%'  OR  a.PinYin LIKE '%," + emp.toLowerCase() + "%' ) LIMIT 12";
 					}
 				}
 			}
@@ -1387,44 +1383,32 @@ public class WF_WorkOpt extends WebContralBase
 			{
 				if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 				{
-					sql = "SELECT TOP 12 a." + Glo.UserNo + ",a.Name +'/'+b.name as Name FROM Port_Emp a,Port_Dept b  WHERE  a.OrgNo='" + WebUser.getOrgNo() + "'  AND (a.fk_dept=b.no) and (a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%')";
+					sql = "SELECT TOP 12 a.No,a.Name +'/'+b.Name as Name FROM Port_Emp a,Port_Dept b  WHERE  a.OrgNo='" + WebUser.getOrgNo() + "'  AND (a.fk_dept=b.no) and (a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%')";
 				}
 				else
 				{
-					sql = "SELECT TOP 12 a." + Glo.UserNo + ",a.Name +'/'+b.name as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and (a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%')";
+					sql = "SELECT TOP 12 a.No,a.Name +'/'+b.name as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and (a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%')";
 				}
 			}
 			if (SystemConfig.getAppCenterDBType( ) == DBType.Oracle || SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR3 ||SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR6)
 			{
-				sql = "SELECT a.No,a.Name || '/' || b.name as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and (a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%') and rownum<=12 ";
+				sql = "SELECT a.No,a.Name || '/' || b.Name as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and (a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%') and rownum<=12 ";
 			}
 			if (SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.HGDB)
 			{
-				sql = "SELECT a.No,CONCAT(a.Name,'/',b.name) as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and (a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%') LIMIT 12";
-			}
-		}
+				if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
+					sql = "SELECT a.No,CONCAT(a.Name,'/',b.name) as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and (a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%') LIMIT 12";
+				else
+					sql = "SELECT a.No,CONCAT(a.Name,'/',b.name) as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and (a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%')  AND a.OrgNo='" + bp.web.WebUser.getOrgNo() + "' LIMIT 12 ";
 
-		//saas模式的.
-		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
-		{
-			if (sql.contains("Port_Emp a") == true)
-			{
-				sql += " AND a.OrgNo='" + WebUser.getOrgNo() + "'";
-			}
-			else
-			{
-				sql += " AND OrgNo='" + WebUser.getOrgNo() + "'";
+				//sql = "SELECT a.No,CONCAT(a.Name,'/',b.name) as Name FROM Port_Emp a,Port_Dept b  WHERE  (a.fk_dept=b.no) and (a.No like '%" + emp + "%' OR a.NAME  LIKE '%" + emp + "%') LIMIT 12";
 			}
 		}
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
-		//Log.DebugWriteError(sql);
-
-
 		dt.Columns.get(0).setColumnName("No");
 		dt.Columns.get(1).setColumnName("Name");
-
 
 		return bp.tools.Json.ToJson(dt);
 	}
@@ -2948,7 +2932,7 @@ public class WF_WorkOpt extends WebContralBase
 
 		for (FrmAttachmentDB athDB : athDBs.ToJavaList())
 		{
-			if (athNames.toLowerCase().indexOf("|" + athDB.getFileName().toLowerCase() + "|") == -1)
+			if (athNames!=null && athNames.toLowerCase().indexOf("|" + athDB.getFileName().toLowerCase() + "|") == -1)
 			{
 				continue;
 			}
@@ -3128,8 +3112,7 @@ public class WF_WorkOpt extends WebContralBase
 				DBAccess.RunSQL(sql);
 			}
 
-			Dev2Interface.WriteTrackWorkCheck(this.getFK_Flow(), this.getFK_Node(), this.getWorkID(),
-					this.getFID(), msg, wcDesc.getFWCOpLabel(),
+			Dev2Interface.WriteTrackWorkCheck(this.getWorkID(),msg, wcDesc.getFWCOpLabel(),
 					wcDesc.getSigantureEnabel() == 2 || wcDesc.getSigantureEnabel() == 3 || wcDesc.getSigantureEnabel() == 5?
 							writeImg : "", fwcView);
 		}
@@ -3748,12 +3731,9 @@ public class WF_WorkOpt extends WebContralBase
 	public final String SelectEmps_Init() throws Exception {
 		String fk_dept = this.getFK_Dept();
 		if (DataType.IsNullOrEmpty(fk_dept) == true || fk_dept.equals("undefined") == true)
-		{
 			fk_dept = WebUser.getFK_Dept();
-		}
 
 		DataSet ds = new DataSet();
-
 		String sql = "";
 		sql = "SELECT No,Name,ParentNo FROM Port_Dept WHERE No='" + fk_dept + "' OR ParentNo='" + fk_dept + "' ORDER BY Idx";
 
@@ -3795,17 +3775,14 @@ public class WF_WorkOpt extends WebContralBase
 			}
 
 			sql = "SELECT No,Name,FK_Dept FROM Port_Emp WHERE FK_Dept='" + fk_dept + "' " + specEmpNos + "  ORDER BY Idx ";
-
 		}
 		else
 		{
 			if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 			{
-				sql = "SELECT distinct CONCAT('Emp_',A.UserID ) AS No, A.Name, '" + fk_dept + "' as FK_Dept, a.Idx FROM Port_Emp A LEFT JOIN Port_DeptEmp B  ON A.No=B.FK_Emp WHERE A.FK_Dept='" + fk_dept + "' OR B.FK_Dept='" + fk_dept + "' ";
+				sql = "SELECT distinct CONCAT('Emp_',A.No ) AS No, A.Name, '" + fk_dept + "' as FK_Dept, a.Idx FROM Port_Emp A LEFT JOIN Port_DeptEmp B  ON A.No=B.FK_Emp WHERE A.FK_Dept='" + fk_dept + "' OR B.FK_Dept='" + fk_dept + "' ";
 				if (SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
-				{
-					sql = "SELECT distinct 'Emp_'+A.UserID AS No, A.Name, '" + fk_dept + "' as FK_Dept, a.Idx FROM Port_Emp A LEFT JOIN Port_DeptEmp B  ON A.No=B.FK_Emp WHERE A.FK_Dept='" + fk_dept + "' OR B.FK_Dept='" + fk_dept + "' ";
-				}
+					sql = "SELECT distinct 'Emp_'+A.No AS No, A.Name, '" + fk_dept + "' as FK_Dept, a.Idx FROM Port_Emp A LEFT JOIN Port_DeptEmp B  ON A.No=B.FK_Emp WHERE A.FK_Dept='" + fk_dept + "' OR B.FK_Dept='" + fk_dept + "' ";
 
 			}
 			else {
@@ -3925,13 +3902,6 @@ public class WF_WorkOpt extends WebContralBase
 			return "err@配置接受人范围为空,请联系管理员.";
 		}
 
-		////只有一个人，就让其发送下去.
-		//if (ds.GetTableByName("Emps"].Rows.size() == 1)
-		//{
-		//    string emp = ds.GetTableByName("Emps"].Rows.get(0).getValue(0).ToString();
-		//    SendReturnObjs objs= BP.WF.Dev2Interface.Node_SendWork(this.FK_Flow, this.WorkID, toNodeID, emp);
-		//    return  "info@"+objs.ToMsgOfText();
-		//}
 
 
 			///#region 计算上一次选择的结果, 并把结果返回过去.
@@ -4064,9 +4034,7 @@ public class WF_WorkOpt extends WebContralBase
 			//求到达的节点. 
 			int toNodeID = 0;
 			if (!this.GetRequestVal("ToNode").equals("0"))
-			{
 				toNodeID = Integer.parseInt(this.GetRequestVal("ToNode"));
-			}
 
 			if (toNodeID == 0)
 			{ //没有就获得第一个节点.
@@ -4081,7 +4049,6 @@ public class WF_WorkOpt extends WebContralBase
 			selectEmps = selectEmps.replace(";", ",");
 
 
-				///#region 处理授权人.
 			//授权人
 			String auther = this.GetRequestVal("Auther");
 			if (DataType.IsNullOrEmpty(auther) == false)
@@ -4097,9 +4064,6 @@ public class WF_WorkOpt extends WebContralBase
 				WebUser.setAuthName(""); // bp.da.DBAccess.RunSQLReturnString("SELECT Name FROM Port_Emp WHERE No='" + auther + "'");
 			}
 
-				///#endregion 处理授权人.
-
-
 			//执行发送.
 			SendReturnObjs objs = Dev2Interface.Node_SendWork(this.getFK_Flow(), this.getWorkID(), toNodeID, selectEmps);
 
@@ -4112,12 +4076,8 @@ public class WF_WorkOpt extends WebContralBase
 				gwf.SetPara("Auth", WebUser.getAuthName() + "授权");
 				gwf.Update();
 			}
-
-				///#endregion 处理授权
-
 			//当前节点.
 			Node currNode = new Node(currNodeID);
-
 
 				///#region 处理发送后转向.
 			/*处理转向问题.*/
@@ -4179,15 +4139,9 @@ public class WF_WorkOpt extends WebContralBase
 			return "err@" + ex.getMessage();
 		}
 	}
-
-		///#endregion
-
-
-		///#region 回滚.
-	/** 
+	/**
 	 回滚操作.
-	 
-	 @return 
+	 @return
 	*/
 	public final String Rollback_Init() throws Exception {
 		String andsql = " ";
@@ -4236,7 +4190,7 @@ public class WF_WorkOpt extends WebContralBase
 	public final String Return_Init() throws Exception {
 		try
 		{
-			DataTable dt = Dev2Interface.DB_GenerWillReturnNodes(this.getFK_Node(), this.getWorkID(), this.getFID());
+			DataTable dt = Dev2Interface.DB_GenerWillReturnNodes(this.getWorkID());
 
 			//如果只有一个退回节点，就需要判断是否启用了单节点退回规则.
 			if (dt.Rows.size() == 1)

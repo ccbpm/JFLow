@@ -2,6 +2,8 @@ package bp.wf.port;
 
 import bp.en.*;
 import bp.port.*;
+import bp.sys.CCBPMRunModel;
+import bp.web.WebUser;
 
 /**
  操作员
@@ -147,26 +149,29 @@ public class WFEmp extends EntityNoName
 	*/
 	public WFEmp()  {
 	}
-	/**
-	 操作员
+	public WFEmp(String userID) throws Exception {
 
-	 param userID
-	*/
-	public WFEmp(String no) throws Exception
-	{
-		this.setNo( no);
-		try
+		if (userID == null || userID.length() == 0)
+			throw new Exception("@要查询的操作员编号为空。");
+
+		userID = userID.trim();
+		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 		{
-			if (this.RetrieveFromDBSources() == 0)
-			{
-				Emp emp = new Emp(no);
-				this.Copy(emp);
-				this.Insert();
-			}
+			if (userID.equals("admin") == true)
+				this.SetValByKey("No", userID);
+			else
+				this.SetValByKey("No", WebUser.getOrgNo() + "_" + userID);
 		}
-		catch (java.lang.Exception e)
+		else
 		{
-			this.CheckPhysicsTable();
+			this.SetValByKey("No", userID);
+		}
+
+		if (this.RetrieveFromDBSources() == 0)
+		{
+			bp.port.Emp emp = new bp.port.Emp(userID);
+			this.setRow(emp.getRow());
+			this.Insert();
 		}
 	}
 	/**

@@ -325,10 +325,9 @@ public class WF_AppClassic extends WebContralBase
 				return "err@用户名或者密码错误.";
 			}
 
-			//调用登录方法.
-			Dev2Interface.Port_GenerToken(emp.getUserID());
 			Dev2Interface.Port_Login(emp.getUserID());
-
+			//调用登录方法.
+			Dev2Interface.Port_GenerToken();
 
 			return "登陆成功";
 		}

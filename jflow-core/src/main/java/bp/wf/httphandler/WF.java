@@ -16,6 +16,7 @@ import bp.wf.*;
 import java.util.*;
 import java.io.*;
 import bp.wf.data.GERpt;
+import net.sf.json.JSONObject;
 
 public class WF extends WebContralBase
 {
@@ -380,7 +381,7 @@ public class WF extends WebContralBase
 	 */
 	public String Timeout_Init()
 	{
-		DataTable dt = bp.wf.Dev2Interface.DB_Timeout();
+		DataTable dt = Dev2Interface.DB_Timeout();
 		return bp.tools.Json.ToJson(dt);
 	}
 	/** 
@@ -655,7 +656,6 @@ public class WF extends WebContralBase
 
 					String workID = strs[1];
 					String empNo = strs[2];
-					bp.wf.Dev2Interface.Port_GenerToken(empNo);
 					GenerWorkerList wl = new GenerWorkerList();
 					int i = wl.Retrieve(GenerWorkerListAttr.FK_Emp, empNo, GenerWorkerListAttr.WorkID, workID, GenerWorkerListAttr.IsPass, 0);
 
@@ -726,7 +726,7 @@ public class WF extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String PCAndMobileUrl() throws Exception {
+	public final String Do_PCAndMobileUrl() throws Exception {
 		Hashtable ht = new Hashtable();
 		ht.put("PCUrl", SystemConfig.getHostURL());
 		ht.put("MobileUrl", SystemConfig.getMobileURL());
@@ -897,11 +897,13 @@ public class WF extends WebContralBase
 		if (em.RetrieveFromDBSources() == 0)
 		{
 			em.setFK_Dept(WebUser.getFK_Dept());
-			em.setName(bp.web.WebUser.getName());
+			em.setName(WebUser.getName());
 			em.Insert();
 		}
-
-		json = DBAccess.GetBigTextFromDB("WF_Emp", "No", WebUser.getNo(), "StartFlows");
+		String userNo = WebUser.getNo();
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+			userNo = WebUser.getOrgNo() + "_" + WebUser.getNo();
+		json = DBAccess.GetBigTextFromDB("WF_Emp", "No", userNo, "StartFlows");
 		if (DataType.IsNullOrEmpty(json) == false)
 			return json;
 
@@ -909,7 +911,7 @@ public class WF extends WebContralBase
 		DataSet ds = new DataSet();
 
 		//获得能否发起的流程.
-		DataTable dtStart = Dev2Interface.DB_StarFlows(WebUser.getNo());
+		DataTable dtStart = Dev2Interface.DB_StarFlows(userNo);
 		dtStart.TableName = "Start";
 		ds.Tables.add(dtStart);
 
@@ -952,7 +954,7 @@ public class WF extends WebContralBase
 		//把json存入数据表，避免下一次再取.
 		if (dtStart.Rows.size() > 0)
 		{
-			DBAccess.SaveBigTextToDB(json, "WF_Emp", "No", WebUser.getNo(), "StartFlows");
+			DBAccess.SaveBigTextToDB(json, "WF_Emp", "No", userNo, "StartFlows");
 		}
 
 		//返回组合
@@ -2169,7 +2171,7 @@ public class WF extends WebContralBase
 		{
 			return DBAccess.RunSQLReturnString(ps);
 		}
-		catch (java.lang.Exception e)
+		catch (Exception e)
 		{
 			// 处理track表.
 			Track.CreateOrRepairTrackTable(fk_flow);
@@ -2231,14 +2233,14 @@ public class WF extends WebContralBase
 		if (DataType.IsNullOrEmpty(this.getUserNo()) == false)
 		{
 			Dev2Interface.Port_Login(this.getUserNo());
-			token = Dev2Interface.Port_GenerToken("PC");
+			token = Dev2Interface.Port_GenerToken();
 
 		}
 
 		if (DataType.IsNullOrEmpty(this.getUserNo()) == false)
 		{
 			Dev2Interface.Port_Login(this.getUserNo());
-			Dev2Interface.Port_GenerToken("PC");
+			Dev2Interface.Port_GenerToken();
 
 		}else if(DataType.IsNullOrEmpty(this.getSID()) == false){
 			Dev2Interface.Port_LoginByToken(token);
@@ -2642,5 +2644,310 @@ public class WF extends WebContralBase
 			}
 		}
 		return bp.tools.Json.ToJson(dt);
+	}
+	public String PortSaaS_Init() throws Exception {
+		if (this.getDoWhat() == null)
+			return "err@必要的参数没有传入，请参考接口规则。DoWhat";
+
+		String token = "";
+
+        //region 根据用户的token, 调用配置的ssoURL ，获得用户名，并登录.
+		String userNo = "ccs";
+		bp.wf.port.admingroup.Org org = new bp.wf.port.admingroup.Org();
+		org.setNo(this.getOrgNo());
+		if(org.RetrieveFromDBSources()==0){
+			return "err@组织编号为"+this.getOrgNo()+"在数据库中不存在";
+		}
+		String url = org.GetValStringByKey("SSOUrl", "");
+		//String url = "https://zgapp.nbport.com.cn/ttapi/web/getUserInfo?token={$Token}";
+		if (DataType.IsNullOrEmpty(url) == true || (url.contains("{$Token}") == false && url.contains("{$ticket}") == false))
+			return "err@组织信息配置错误,没有配置回调访问验证的token的服务地址，请让组织管理员登陆系统在=》组织管理=》组织属性=》SSOUrl进行设置。";
+
+		//根据配置的地址，获得token.
+		String ticket = this.GetRequestVal("ticket");
+		url = url.replace("{$ticket}", ticket).replace("{$Token}", ticket);
+		String result = DataType.ReadURLContextByGET(url,8000);  //执行回调：url返回用户编号.
+		if (DataType.IsNullOrEmpty(result) == true)
+			return "err@执行URL没有返回结果值";
+
+		JSONObject j = JSONObject.fromObject(result);
+		if (!j.get("code").toString().equals("0000"))
+			return "err@执行SSOUrl回调URL返回结果失败";
+		//获取返回的数据
+		String jData = j.get("result").toString();
+		JSONObject jd = JSONObject.fromObject(jData);
+		if (jd.size() == 0)
+			return "err@执行SSOUrl回调URL返回result为空";;
+		//获取主表数据
+		userNo =  jd.get("mobilePhone") != null ?   jd.get("mobilePhone").toString() : "";
+		if (DataType.IsNullOrEmpty(userNo) == true)
+			return "err@读取url错误:" + userNo;
+
+
+		String empID = this.getOrgNo() + "_" + userNo;
+		bp.port.Emp emp = new bp.port.Emp();
+		emp.setNo(empID);
+		if (emp.RetrieveFromDBSources() == 0)
+			return "err@用户错误:" + emp.getNo();
+
+		//执行登陆.
+		Dev2Interface.Port_Login(userNo, this.getOrgNo());
+          //  #endregion 获得token.
+
+		if (this.getDoWhat().equals("PortLogin") == true)
+			return "登陆成功";
+
+         //   #region 生成参数串.
+		String paras = "";
+		for (Object str : CommonUtils.getRequest().getParameterMap().keySet())
+		{
+			String val = this.GetRequestVal(String.valueOf(str));
+			if (val.indexOf('@') != -1)
+			{
+				return "err@您没有能参数: [ " + str + " ," + val + " ] 给值 ，URL 将不能被执行。";
+			}
+
+			switch (str.toString())
+			{
+				case DoWhatList.DoNode:
+				case DoWhatList.Emps:
+				case DoWhatList.EmpWorks:
+				case DoWhatList.FlowSearch:
+				case DoWhatList.Login:
+				case DoWhatList.MyFlow:
+				case DoWhatList.MyWork:
+				case DoWhatList.Start:
+				case DoWhatList.Start5:
+				case DoWhatList.StartSimple:
+				case DoWhatList.FlowFX:
+				case DoWhatList.DealWork:
+				case "StartFlow":
+				case "FK_Flow":
+				case "WorkID":
+				case "FK_Node":
+				case "Token":
+				case "DoType":
+				case "DoMethod":
+				case "HttpHandlerName":
+				case "t":
+				case "FrmID":
+				case "FK_MapData":
+				case "MyFrm":
+				case "MyView":
+				case "DoWhat":
+				case "EntityPK":
+					break;
+				default:
+					paras += "&" + str + "=" + val;
+					break;
+			}
+		}
+		paras += "&Token=" + token;
+		String nodeID = (this.getFK_Flow() + "01").toString();
+
+		//发起流程.
+		if (this.getDoWhat().equals("StartClassic") == true)
+		{
+			if (this.getFK_Flow() == null)
+			{
+				return "url@./AppClassic/Home.htm";
+			}
+			else
+			{
+				return "url@./AppClassic/Home.htm?FK_Flow=" + this.getFK_Flow() + paras + "&FK_Node=" + nodeID;
+			}
+		}
+
+		//打开工作轨迹。
+		if (this.getDoWhat().equals(DoWhatList.OneWork) == true)
+		{
+			if (this.getFK_Flow() == null || this.getWorkID() == 0)
+				throw new Exception("@参数 FK_Flow 或者 WorkID 为 Null 。");
+			return "url@/"+this.getDevType()+"/MyView.htm?FK_Flow=" + this.getFK_Flow() + "&WorkID=" + this.getWorkID() + "&o2=1" + paras;
+		}
+
+		//查看表单不需要FK_Node参数。
+		if (this.getDoWhat().equals("MyView") == true)
+		{
+			//if (this.NodeID != 0)
+			//    return "err@执行MyView不需要NodeID/FK_Node参数.";
+			long workID = this.GenerWorkIDByEntityPK();
+			if (workID == 0)
+				return "err@执行MyView不需要NodeID/FK_Node参数.";
+
+			if (this.getFK_Node() == 0)
+			{
+				GenerWorkFlow gwf = new GenerWorkFlow(workID);
+				paras += "&FK_Node=" + gwf.getFK_Node();
+			}
+
+			return "url@/"+this.getDevType()+"/MyView.htm?FK_Flow=" + this.getFK_Flow() + "&WorkID=" + workID + "&o2=1" + paras;
+		}
+
+		//查看指定的节点表单需要FK_Node参数。
+		if (this.getDoWhat().equals("MyFrm") == true)
+		{
+			if (this.getFK_Node() == 0)
+				return "err@执行 MyFrm 需要NodeID/FK_Node参数.";
+
+			int workID = (int) this.GenerWorkIDByEntityPK();
+			if (workID == 0)
+				return "err@执行MyView不需要NodeID/FK_Node参数.";
+
+			return "url@/"+this.getDevType()+"/MyFrm.htm?FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node() + "&WorkID=" + workID + "&o2=1" + paras;
+		}
+
+		//发起页面,或者调用发起流程.
+		if (this.getDoWhat().equals(DoWhatList.Start) == true || this.getDoWhat().equals("StartFlow"))
+		{
+			if (this.getFK_Flow() == null)
+				return "url@Start.htm";
+
+			//实体编号,启动指定实体编号隶属的工作流程ID.
+			int workID = (int) this.GenerWorkIDByEntityPK();
+			if (workID == 0)
+				return "url@MyFlow.htm?FK_Flow=" + this.getFK_Flow() + paras + "&FK_Node=" + nodeID;
+
+			// 是否可以执行当前的工作.
+			if (bp.wf.Dev2Interface.Flow_IsCanDoCurrentWork(workID, WebUser.getNo()) == true)
+			{
+				return "url@/"+this.getDevType()+"/MyFlow.htm?FK_Flow=" + this.getFK_Flow() + paras + "&WorkID=" + workID;
+			}
+
+			return "url@/"+this.getDevType()+"/MyView.htm?FK_Flow=" + this.getFK_Flow() + paras + "&WorkID=" + workID;
+		}
+
+		//发起表单.
+		if (this.getDoWhat().equals("StartFrm"))
+		{
+			int oid = (int) this.getOID();
+			if (oid == 0)
+			{
+				GEEntity gn = new GEEntity(this.getFrmID());
+				oid = DBAccess.GenerOIDByGUID();
+				try
+				{
+					gn.SaveAsOID(oid);
+				}
+				catch (Exception ex)
+				{
+					gn.CheckPhysicsTable();
+					gn.SaveAsOID(oid);
+				}
+			}
+			return "url@/"+this.getDevType()+"/CCForm/Frm.htm?FrmID=" + this.getFrmID() + "&OID=" + oid + "" + paras;
+		}
+
+
+		//处理工作.
+		if (this.getDoWhat().equals(DoWhatList.DealWork) == true)
+		{
+			if (DataType.IsNullOrEmpty(this.getFK_Flow()) || this.getWorkID() == 0)
+				return "err@参数 FK_Flow 或者 WorkID 为Null 。";
+			return "url@MyFlow.htm?FK_Flow=" + this.getFK_Flow() + "&WorkID=" + this.getWorkID() + "&o2=1" + paras;
+		}
+		//流程设计器
+		if (this.getDoWhat().equals(DoWhatList.Flows) == true)
+			return "url@Portal/Flows.htm";
+		//表单设计器
+		if (this.getDoWhat().equals(DoWhatList.Frms) == true)
+			return "url@Portal/Frms.htm";
+
+		//请求在途.
+		if (this.getDoWhat().equals(DoWhatList.Runing) == true)
+			return "url@/"+this.getDevType()+"/Runing.htm?FK_Flow=" + this.getFK_Flow();
+
+		//请求首页.
+		if (this.getDoWhat().equals("Home") == true){
+			if(this.getDevType().equals("CCMobile"))
+				return "url@/CCMobilePortal/SaaS/Home.htm?FK_Flow=" + this.getFK_Flow();
+			return "url@/Portal/Standard/Default.htm?FK_Flow=" + this.getFK_Flow();
+		}
+
+
+		//请求待办。
+		if (this.getDoWhat().equals(DoWhatList.EmpWorks) == true || this.getDoWhat().equals("Todolist") == true)
+		{
+			if (DataType.IsNullOrEmpty(this.getFK_Flow()))
+			{
+				return "url@/"+this.getDevType()+"/Todolist.htm";
+			}
+			else
+			{
+				return "url@/"+this.getDevType()+"/Todolist.htm?FK_Flow=" + this.getFK_Flow();
+			}
+		}
+		//草稿
+		if (this.getDoWhat().equals(DoWhatList.Draft) == true)
+			return "url@Draft.htm?FK_Flow=" + this.getFK_Flow();
+		//请求流程查询。
+		if (this.getDoWhat().equals(DoWhatList.FlowSearch) == true)
+		{
+			if (DataType.IsNullOrEmpty(this.getFK_Flow()))
+			{
+				return "url@./RptSearch/Default.htm";
+			}
+			else
+			{
+				return "url@./RptDfine/Search.htm?2=1&FK_Flow=001&EnsName=ND" + Integer.valueOf(this.getFK_Flow()) + "Rpt" + paras;
+			}
+		}
+
+		//流程查询小页面.
+		if (this.getDoWhat().equals(DoWhatList.FlowSearchSmall) == true)
+		{
+			if (this.getFK_Flow() == null)
+				return "url@./RptSearch/Default.htm";
+			else
+				return "url./Comm/Search.htm?EnsName=ND" + Integer.valueOf(this.getFK_Flow()) + "Rpt" + paras;
+		}
+
+		//打开消息.
+		if (this.getDoWhat().equals(DoWhatList.DealMsg) == true)
+		{
+			String guid = this.GetRequestVal("GUID");
+			SMS sms = new SMS();
+			sms.setMyPK(guid);
+			sms.Retrieve();
+
+			//判断当前的登录人员.
+			if (bp.web.WebUser.getNo() != sms.getSendToEmpNo())
+			{
+				Dev2Interface.Port_Login(sms.getSendToEmpNo());
+			}
+
+			AtPara ap = new AtPara(sms.getAtPara());
+			switch (sms.getMsgType())
+			{
+				case SMSMsgType.SendSuccess: // 发送成功的提示.
+
+					if (bp.wf.Dev2Interface.Flow_IsCanDoCurrentWork(ap.GetValInt64ByKey("WorkID"), WebUser.getNo()) == true)
+					{
+						return "url@/"+this.getDevType()+"/MyFlow.htm?FK_Flow=" + ap.GetValStrByKey("FK_Flow") + "&WorkID=" + ap.GetValStrByKey("WorkID") + "&o2=1" + paras;
+					}
+					else
+					{
+						return "url@/"+this.getDevType()+"/MyView.htm?FK_Flow=" + ap.GetValStrByKey("FK_Flow") + "&WorkID=" + ap.GetValStrByKey("WorkID") + "&o2=1" + paras;
+					}
+
+				default: //其他的情况都是查看工作报告.
+					return "url@/"+this.getDevType()+"/MyView.htm?FK_Flow=" + ap.GetValStrByKey("FK_Flow") + "&WorkID=" + ap.GetValStrByKey("WorkID") + "&o2=1" + paras;
+			}
+		}
+		return "url@/" + this.getDevType() + "/AppClassic/Home.htm?Token=" + paras;
+		//  return "err@没有判断的标记.";
+		//  return "warning@没有约定的标记:DoWhat=" + this.DoWhat;
+	}
+	public final String getDevType()
+	{
+		String val = this.GetRequestVal("DevType");
+		if (DataType.IsNullOrEmpty(val) == true || val.equals("PC"))
+		{
+			return "WF";
+		}
+		else
+		{
+			return "CCMobile";
+		}
 	}
 }

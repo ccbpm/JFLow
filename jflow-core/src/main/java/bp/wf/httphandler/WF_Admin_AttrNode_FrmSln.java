@@ -27,7 +27,7 @@ public class WF_Admin_AttrNode_FrmSln extends bp.difference.handler.WebContralBa
 	*/
 	public final String RefOneFrmTree_SetAllNodeFrmUseThisSln() throws Exception {
 		String nodeID = GetRequestVal("FK_Node");
-		Node currNode = new Node(nodeID);
+		Node currNode = new Node(this.getFK_Node());
 		String flowNo = currNode.getFK_Flow();
 		Nodes nds = new Nodes();
 		nds.Retrieve("FK_Flow", flowNo, null);

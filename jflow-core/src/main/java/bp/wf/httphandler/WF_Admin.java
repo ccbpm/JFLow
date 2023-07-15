@@ -299,7 +299,7 @@ public class WF_Admin extends WebContralBase
 	public final String TestFlow_ReturnToUser() throws Exception {
 		String userNo = this.GetRequestVal("UserNo");
 		Dev2Interface.Port_Login(userNo);
-		String sid = Dev2Interface.Port_GenerToken(userNo);
+		String sid = Dev2Interface.Port_GenerToken();
 		String url = "../../WF/Port.htm?UserNo=" + userNo + "&Token=" + sid + "&DoWhat=" + this.GetRequestVal("DoWhat") + "&FK_Flow=" + this.getFK_Flow() + "&IsMobile=" + this.GetRequestVal("IsMobile");
 		return "url@" + url;
 	}

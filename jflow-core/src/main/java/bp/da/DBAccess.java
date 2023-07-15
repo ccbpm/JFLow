@@ -46,6 +46,12 @@ public class DBAccess {
 				else
 					sql = "ALTER TABLE " + table + " ALTER COLUMN " + colName + " SET DEFAULT '" + defaultVal.toString() + "'";
 				break;
+			case Oracle:
+				if (defaultVal.getClass() == Integer.class || defaultVal.getClass() == Float.class || defaultVal.getClass() == BigDecimal.class)
+					sql = "ALTER TABLE " + table + " MODIFY " + colName + " DEFAULT " + defaultVal.toString();
+                else
+					sql ="ALTER TABLE "+table+ " MODIFY "+colName+ " DEFAULT '" + defaultVal.toString() + "'";
+				break;
 			case MSSQL:
 				sql = "SELECT  b.name FROM sysobjects b join syscolumns a on b.id = a.cdefault WHERE a.id = object_id('" + table + "') AND a.name = '" + colName + "'";
 				String yueShu = DBAccess.RunSQLReturnStringIsNull(sql, null);
@@ -4049,7 +4055,7 @@ public class DBAccess {
 		String sqlstr = "SELECT * FROM (" + sql + ") T1 WHERE T1." + key + (orderType.equals("ASC") ? " >= " : " <= ")
 				+ "(SELECT T2." + key + " FROM (" + sql + ") T2"
 				+ (DataType.IsNullOrEmpty(orderKey) ? "" : String.format(" ORDER BY T2.%1$s %2$s", orderKey, orderType))
-				+ " LIMIT " + ((pageIdx - 1) * pageSize) + ",1) LIMIT " + pageSize;
+				+ " LIMIT 1 offset " + ((pageIdx - 1) * pageSize) + ") LIMIT " + pageSize;
 
 
 		return RunSQLReturnTable(sqlstr);

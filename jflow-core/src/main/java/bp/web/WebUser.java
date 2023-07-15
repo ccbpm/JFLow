@@ -100,8 +100,7 @@ public class WebUser {
 
         // 增加他的orgNo
         if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single) {
-            ht.put("OrgNo",
-                    DBAccess.RunSQLReturnString("SELECT OrgNo FROM Port_Emp WHERE No='" + em.getNo() + "'"));
+            ht.put("OrgNo",em.getOrgNo());
         }
 
         if (DataType.IsNullOrEmpty(authNo) == false) {
@@ -112,45 +111,69 @@ public class WebUser {
             ht.put("AuthName", "");
         }
 
+        //解决没有部门编号的问题.
+        if (DataType.IsNullOrEmpty(em.getOrgNo()) == false && DataType.IsNullOrEmpty(em.getFK_Dept()) == true)
+        {
+            bp.port.DeptEmp de = new bp.port.DeptEmp();
+            de.SetValByKey("FK_Dept", em.getOrgNo());
+            de.SetValByKey("FK_Emp", em.getNo());
+            de.SetValByKey("OrgNo", em.getOrgNo());
+            de.Insert();
+            // em.FK_Dept = em.OrgNo;
+        }
+
         /// 解决部门的问题.
         if (DataType.IsNullOrEmpty(em.getFK_Dept()) == true) {
             String sql = "";
 
-            sql = "SELECT FK_Dept FROM Port_DeptEmp WHERE FK_Emp='" + em.getNo() + "'";
+                sql = "SELECT FK_Dept FROM Port_DeptEmp WHERE FK_Emp='" + em.getNo() + "'";
 
             String deptNo = DBAccess.RunSQLReturnString(sql);
             if (DataType.IsNullOrEmpty(deptNo) == true) {
-                sql = "SELECT FK_Dept FROM Port_Emp WHERE No='" + em.getNo() + "'";
-                deptNo = DBAccess.RunSQLReturnString(sql);
-                if (DataType.IsNullOrEmpty(deptNo) == true) {
-                    throw new RuntimeException("@登录人员(" + em.getNo() + "," + em.getName() + ")没有维护部门...");
+                if ("Guest".equals(em.getNo()) == true)
+                {
+                    if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+                    {
+                        bp.port.DeptEmp de = new bp.port.DeptEmp();
+                        de.SetValByKey("FK_Dept", "ccs");
+                        de.SetValByKey("FK_Emp", "Guest");
+                        de.Insert();
+                    }
+                }
+                else
+                {
+                    if (DataType.IsNullOrEmpty(deptNo) == true)
+                        throw new Exception("@登录人员(" + em.getUserID() + "," + em.getName() + ")没有维护部门." + sql);
                 }
             } else {
                 // 调用接口更改所在的部门.
                 WebUser.ChangeMainDept(em.getNo(), deptNo);
+                em.SetValByKey("FK_Dept", deptNo);
             }
         }
 
         bp.port.Dept dept = new Dept();
-        dept.setNo(em.getFK_Dept());
+        dept.SetValByKey("No", em.getFK_Dept());
         if (dept.RetrieveFromDBSources() == 0) {
             throw new RuntimeException(
-                    "@登录人员(" + em.getNo() + "," + em.getName() + ")没有维护部门,或者部门编号{" + em.getFK_Dept() + "}不存在.");
+                    "@登录人员(" + em.getUserID() + "," + em.getName() + ")没有维护部门,或者部门编号{" + em.getFK_Dept() + "}不存在.");
         }
-
         /// 解决部门的问题.
 
         ht.put("FK_Dept", em.getFK_Dept());
         ht.put("FK_DeptName", em.getFK_DeptText());
 
         ht.put("SysLang", lang);
-        if(SystemConfig.getRedisIsEnable()){
+
+        //判断是否启用Redis
+        if(SystemConfig.getRedisIsEnable()==true){
             String ip = getIp();
             if (!StringUtils.isBlank(ip)) {
                 ContextHolderUtils.getRedisUtils().set(false, SystemConfig.getRedisCacheKey("WebUser_" + ip), ht,300);
             }
         }else{
             for (java.util.Map.Entry<String, String> next: ht.entrySet()) {
+
                 WebUser.setItemValue(next.getKey(),next.getValue());
             }
         }
@@ -158,7 +181,7 @@ public class WebUser {
         if (SystemConfig.getIsBSsystem()) {
 
             // cookie操作，为适应不同平台，统一使用HttpContextHelper
-            ContextHolderUtils.addCookie("No", em.getNo());
+            ContextHolderUtils.addCookie("No", em.getUserID());
             if (isRememberMe) {
                 ContextHolderUtils.addCookie("IsRememberMe", "1");
             } else {
@@ -166,6 +189,10 @@ public class WebUser {
             }
 
             ContextHolderUtils.addCookie("FK_Dept", em.getFK_Dept());
+
+            //设置组织编号.
+            if (bp.difference.SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
+                ContextHolderUtils.addCookie("OrgNo", em.getOrgNo());
 
             ContextHolderUtils.addCookie("Tel", em.getTel());
             ContextHolderUtils.addCookie("Lang", lang);
@@ -177,12 +204,8 @@ public class WebUser {
             if (authName == null) {
                 authName = "";
             }
-
         }
     }
-
-
-    ///#region 静态方法
 
     /**
      * 通过key,取出session.
@@ -302,7 +325,11 @@ public class WebUser {
         return GetValFromCookie(item, null, true);
     }
 
-    public static void setItemValue(String item, String value) {
+    public static void setItemValue(String item, String value)  {
+        if (value==null || value=="" )
+            value="null";
+        value=value.replace(" ","");
+
         if(SystemConfig.getRedisIsEnable()){
             String ip = getIp();
             if (StringUtils.isBlank(ip)) {
@@ -321,7 +348,10 @@ public class WebUser {
             }
             return;
         }
+
+        ContextHolderUtils.addCookie(item, value.trim());
         SetSessionByKey(item, value.trim());
+
     }
 
     public static void setAuth(String value) throws Exception {
@@ -522,9 +552,9 @@ public class WebUser {
     }
 
     public static boolean getIsAdmin() {
-        if (WebUser.getNo() != null && WebUser.getNo().equals("admin")) {
+        if (WebUser.getNo() != null && WebUser.getNo().equals("admin"))
             return true;
-        }
+
         try{
             if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single) {
                 GloVar gloVar = new GloVar();
@@ -540,7 +570,7 @@ public class WebUser {
 
         // SAAS版本. 集团版
         if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single) {
-            String sql = "SELECT FK_Emp FROM Port_OrgAdminer WHERE FK_Emp='" + WebUser.getNo() + "' AND OrgNo='"
+            String sql = "SELECT FK_Emp FROM Port_OrgAdminer WHERE FK_Emp='" + WebUser.getUserID() + "' AND OrgNo='"
                     + WebUser.getOrgNo() + "'";
             if (DBAccess.RunSQLReturnTable(sql).Rows.size() == 0) {
                 return false;
@@ -555,6 +585,11 @@ public class WebUser {
      */
     public static String getNo() {
         return getItemValue("No");
+    }
+    public static String getUserID() {
+        if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+            return WebUser.getOrgNo() + "_" + WebUser.getNo();
+        return WebUser.getNo();
     }
 
     public static void setNo(String value) throws Exception {
@@ -764,6 +799,9 @@ public class WebUser {
     public static Stations getHisStations() throws Exception {
         Stations sts = new Stations();
         QueryObject qo = new QueryObject(sts);
+        if(SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+            qo.AddWhereInSQL("No", "SELECT FK_Station FROM Port_DeptEmpStation WHERE FK_Emp='" +WebUser.getUserID()+ "'");
+        else
         qo.AddWhereInSQL("No", "SELECT FK_Station FROM Port_DeptEmpStation WHERE FK_Emp='" + WebUser.getNo() + "'");
         qo.DoQuery();
 

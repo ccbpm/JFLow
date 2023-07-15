@@ -1094,6 +1094,9 @@ public class CCFormAPI
 		mapdata.setNo(frmID);
 		mapdata.RetrieveFromDBSources();
 		Cash2019.UpdateRow(mapdata.toString(), frmID, mapdata.getRow());
+		GEEntity en = new GEEntity(frmID);
+		en.setRow(null);
+		en.setSQLCash(null);
 		mapdata.CleanObject();
 		return;
 	}
@@ -1737,9 +1740,11 @@ public class CCFormAPI
 
 		return mapAttrs.ToJson();
 	}
-
+	private static DataTable GetDtlInfo(MapDtl dtl, GEDtls dtls, GEEntity en,String dtlRefPKVal) throws Exception {
+		return GetDtlInfo(dtl, dtls, en,dtlRefPKVal,false);
+	}
 		///#endregion 其他功能.
-		private static DataTable GetDtlInfo(MapDtl dtl, GEDtls dtls, GEEntity en,String dtlRefPKVal) throws Exception
+		private static DataTable GetDtlInfo(MapDtl dtl, GEDtls dtls, GEEntity en,String dtlRefPKVal,boolean isReload) throws Exception
 		{
 			QueryObject qo = null;
 			try
@@ -1818,8 +1823,15 @@ public class CCFormAPI
 			}
 			catch (RuntimeException ex)
 			{
-				dtls.getGetNewEntity().CheckPhysicsTable();
-				return GetDtlInfo(dtl, dtls, en,dtlRefPKVal);
+				dtl.IntMapAttrs();
+				dtl.CheckPhysicsTable();
+				CashFrmTemplate.Remove(dtl.getNo());
+				Cash.SetMap(dtl.getNo(), null);
+				Cash.getSQL_Cash().remove(dtl.getNo());
+				if (isReload == false)
+					return GetDtlInfo(dtl,dtls, en, dtlRefPKVal, true);
+				else
+					throw new Exception("获取从表[" + dtl.getName() + "]失败,错误:" + ex.getMessage());
 			}
 
 		}

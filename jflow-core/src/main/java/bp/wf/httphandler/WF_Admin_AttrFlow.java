@@ -548,6 +548,62 @@ public class WF_Admin_AttrFlow extends WebContralBase
 
 
 		///#region 数据导入.
+
+	/**
+	 * 导入bpmn2.0
+	 * @return
+	 */
+	public final String Imp_DoneBPMN() throws Exception {
+		File xmlFile = null;
+		String fileName = UUID.randomUUID().toString();
+		try {
+			xmlFile = File.createTempFile(fileName, ".xml");
+		} catch (IOException e1) {
+			xmlFile = new File(System.getProperty("java.io.tmpdir"), fileName + ".xml");
+		}
+		xmlFile.deleteOnExit();
+		HttpServletRequest request = ContextHolderUtils.getRequest();
+		try{
+			CommonFileUtils.upload(request,"File_UploadBPMN", xmlFile);
+		}catch(Exception e){
+			e.printStackTrace();
+			return "err@执行失败";
+		}
+
+		String flowNo = this.getFK_Flow();
+		String FK_FlowSort = this.GetRequestVal("FK_Sort");
+
+		//检查流程编号
+		if (DataType.IsNullOrEmpty(flowNo) == false)
+		{
+			Flow fl = new Flow(flowNo);
+			FK_FlowSort = fl.getFK_FlowSort();
+		}
+
+		//检查流程类别编号
+		if (DataType.IsNullOrEmpty(FK_FlowSort) == true)
+		{
+			if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
+			{
+				FK_FlowSort = bp.web.WebUser.getOrgNo();
+			}
+			else
+			{
+				return "err@所选流程类别编号不存在。";
+			}
+		}
+
+		//执行导入
+		Flow flow = TemplateGlo.NewFlowByBPMN(FK_FlowSort, xmlFile.getAbsolutePath());
+		flow.DoCheck(); //要执行一次检查.
+
+		Hashtable ht = new Hashtable();
+		ht.put("FK_Flow", flow.getNo());
+		ht.put("FlowName", flow.getName());
+		ht.put("FK_FlowSort", flow.getFK_FlowSort());
+		ht.put("Msg", "导入成功,流程编号为:" + flow.getNo() + "名称为:" + flow.getName());
+		return bp.tools.Json.ToJson(ht);
+	}
 	/** 
 	 流程模版导入.
 	 

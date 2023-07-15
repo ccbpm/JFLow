@@ -262,8 +262,8 @@ public class WorkOpt extends EntityMyPK
 				for (int i = 0; i < empNos.length; i++)
 				{
 					dr = dt.NewRow();
-					dr.set("No", empNos[i]);
-					dr.set("Name", empNames[i]);
+					dr.setValue("No", empNos[i]);
+					dr.setValue("Name", empNames[i]);
 					dt.Rows.add(dr);
 				}
 			}
@@ -275,8 +275,8 @@ public class WorkOpt extends EntityMyPK
 				for (DataRow mydr : mydt.Rows)
 				{
 					dr = dt.NewRow();
-					dr.set("No", mydr.get("No"));
-					dr.set("Name", mydr.get("Name"));
+					dr.setValue("No", mydr.getValue("No"));
+					dr.setValue("Name", mydr.getValue("Name"));
 					dt.Rows.add(dr);
 				}
 			}
@@ -288,8 +288,8 @@ public class WorkOpt extends EntityMyPK
 				for (DataRow mydr : mydt.Rows)
 				{
 					dr = dt.NewRow();
-					dr.set("No", mydr.get("No"));
-					dr.set("Name", mydr.get("Name"));
+					dr.setValue("No", mydr.getValue("No"));
+					dr.setValue("Name", mydr.getValue("Name"));
 					dt.Rows.add(dr);
 				}
 			}

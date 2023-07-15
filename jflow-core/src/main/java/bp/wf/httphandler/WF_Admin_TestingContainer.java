@@ -124,8 +124,8 @@ public class WF_Admin_TestingContainer extends bp.difference.handler.WebContralB
 		{
 			String token = this.GetRequestVal("Token");
 			String userNo = Dev2Interface.Port_LoginByToken(token);
-			//@lyc
-			// Dev2Interface.Port_GenerToken();
+			//这里登录之后要存储token。WF_Comm_Controller.ProcessRequest有处理token的方法
+			WebUser.setToken(token);
 			return userNo;
 		}
 		catch (RuntimeException ex)
@@ -148,13 +148,13 @@ public class WF_Admin_TestingContainer extends bp.difference.handler.WebContralB
 	*/
 	public final String SelectOneUser_ChangUser() throws Exception {
 
-		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
+		if (bp.difference.SystemConfig.getCCBPMRunModel() != CCBPMRunModel.SAAS)
 		{
 			String adminer = this.GetRequestVal("Adminer");
 			String SID = this.GetRequestVal("Token");
 			try
 			{
-				String token = Dev2Interface.Port_GenerToken(this.getFK_Emp(),"PC");
+				String token = Dev2Interface.Port_GenerToken(this.getFK_Emp(),"");
 				bp.wf.Dev2Interface.Port_Login(this.getFK_Emp());
 				return token;
 			}
@@ -166,8 +166,8 @@ public class WF_Admin_TestingContainer extends bp.difference.handler.WebContralB
 
 		try
 		{
-			String token = Dev2Interface.Port_GenerToken(this.getFK_Emp(),"PC");
 			bp.wf.Dev2Interface.Port_Login(this.getFK_Emp(), this.getOrgNo());
+			String token = Dev2Interface.Port_GenerToken(this.getFK_Emp(), this.getOrgNo());
 			return token;
 		}
 		catch (Exception ex)
@@ -195,8 +195,15 @@ public class WF_Admin_TestingContainer extends bp.difference.handler.WebContralB
 		fl.Update();
 
 		//选择的人员登录
-		bp.wf.Dev2Interface.Port_Login(testerNo, orgNo);
-		String token = bp.wf.Dev2Interface.Port_GenerToken(testerNo,"PC");
+		String token="";
+		if(SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS){
+			bp.wf.Dev2Interface.Port_Login(testerNo, orgNo);
+			token = bp.wf.Dev2Interface.Port_GenerToken(testerNo, orgNo);
+		}else{
+			token = bp.wf.Dev2Interface.Port_GenerToken(testerNo, orgNo);
+			bp.wf.Dev2Interface.Port_Login(testerNo, orgNo);
+		}
+
 
 		//@lyc
 		int model = SystemConfig.getCCBPMRunModel().getValue();
@@ -306,7 +313,7 @@ public class WF_Admin_TestingContainer extends bp.difference.handler.WebContralB
 					}
 					else
 					{
-						sql += "  c." + bp.sys.base.Glo.getUserNo() + ", c.Name, B.Name as FK_DeptText FROM Port_DeptEmp A, Port_Dept B, Port_Emp C WHERE A.FK_Dept=B.No  AND A.FK_Emp=C." + bp.sys.base.Glo.getUserNoWhitOutAS() + " ";
+						sql += "  c." + bp.sys.base.Glo.getUserNo() + ", c.Name, B.Name as FK_DeptText FROM Port_DeptEmp A, Port_Dept B, Port_Emp C WHERE A.FK_Dept=B.No  AND A.FK_Emp=C.No ";
 						sql += " AND A.OrgNo='" + WebUser.getOrgNo() + "' ";
 						sql += " AND B.OrgNo='" + WebUser.getOrgNo() + "' ";
 						sql += " AND C.OrgNo='" + WebUser.getOrgNo() + "' ";

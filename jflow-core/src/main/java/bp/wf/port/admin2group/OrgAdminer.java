@@ -74,7 +74,7 @@ public class OrgAdminer extends EntityMyPK
 		}
 		Map map = new Map("Port_OrgAdminer", "组织管理员");
 		map.AddMyPK(true);
-		map.AddTBString(OrgAdminerAttr.OrgNo, null, "组织", true, false, 0, 100, 20);
+		map.AddTBString(OrgAdminerAttr.OrgNo, null, "组织", false, false, 0, 100, 20);
 		map.AddTBString(OrgAdminerAttr.FK_Emp, null, "管理员名称", true, true, 0, 100, 20);
 		map.AddTBString(OrgAdminerAttr.EmpName, null, "管理员名称", true, true, 0, 50, 20);
 		map.AddTBStringDoc("FlowSorts", null, "管理的流程目录", true, true, true, 10);

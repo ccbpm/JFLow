@@ -270,10 +270,15 @@ public class NodeExt extends Entity
 			// map.SetHelperUrl(NodeAttr.NodeID, "http://ccbpm.mydoc.io/?v=5404&t=17901");
 		map.SetHelperUrl(NodeAttr.NodeID, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3576080&doc_id=31094");
 
+		map.AddTBString(NodeAttr.Mark, null, "标识", true, false, 0, 50,10);
+		map.SetHelperAlert(NodeAttr.Mark,"用于访问节点ID,可以支持二次开发使用节点标识,流程内全局唯一.");
+
 			//map.SetHelperAlert(NodeAttr.Step, "它用于节点的排序，正确的设置步骤可以让流程容易读写."); //使用alert的方式显示帮助信息.
 		map.AddTBString(NodeAttr.FK_Flow, null, "流程编号", false, false, 0, 5, 10);
 		map.AddTBString(NodeAttr.FlowName, null, "流程名", false, true, 0, 200, 10);
 
+		map.AddTBString(NodeAttr.Mark, null, "标识", true, false, 0, 50,10);
+		map.SetHelperAlert(NodeAttr.Mark,"用于访问节点ID,可以支持二次开发使用节点标识,流程内全局唯一.");
 
 		map.AddTBString(NodeAttr.Name, null, "名称", true, false, 0, 100, 10, false);
 		map.SetHelperAlert(NodeAttr.Name, "修改节点名称时如果节点表单名称为空着节点表单名称和节点名称相同，否则节点名称和节点表单名称可以不相同");
@@ -341,8 +346,10 @@ public class NodeExt extends Entity
 
 			///#region 运行模式
 		map.AddGroupAttr("运行模式");
-		map.AddGroupAttr("运行模式");
-		map.AddDDLSysEnum(NodeAttr.RunModel, 0, "节点类型", true, false, NodeAttr.RunModel, "@0=普通@1=合流@2=分流@3=分合流@4=同表单子线程@5=异表单子线程");
+		map.AddDDLSysEnum(NodeAttr.NodeType, 0, "节点类型",
+				true, false, NodeAttr.NodeType, "@0=用户节点@1=路由节点");
+		map.AddDDLSysEnum(NodeAttr.RunModel, 0, "运行模式",
+				true, false, NodeAttr.RunModel, "@0=普通@1=合流@2=分流@3=分合流@4=同表单子线程@5=异表单子线程");
 		map.SetHelperUrl(NodeAttr.RunModel, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3661853&doc_id=31094"); //增加帮助.
 
 			//子线程类型.
@@ -1104,8 +1111,14 @@ public class NodeExt extends Entity
 
 		DBAccess.RunSQL("UPDATE   Sys_GroupField SET Lab='" + name + "' WHERE OID=" + oid);
 		Node nd = new Node();
-		nd.setNodeID(nd.getNodeID());
+		nd.setNodeID(this.getNodeID());
 		nd.RetrieveFromDBSources();
+		Cash2019.UpdateRow(nd.toString(), String.valueOf(this.getNodeID()), nd.getRow());
+
+		NodeSimple nodeSimple = new NodeSimple();
+		nodeSimple.setNodeID(this.getNodeID());
+		nodeSimple.RetrieveFromDBSources();
+		Cash2019.UpdateRow(nodeSimple.toString(), String.valueOf(this.getNodeID()), nodeSimple.getRow());
 		return "执行成功";
 	}
 	/** 
@@ -1118,8 +1131,14 @@ public class NodeExt extends Entity
 		//更新节点名称.
 		DBAccess.RunSQL("UPDATE WF_Node SET Name='" + name + "' WHERE NodeID=" + this.getNodeID());
 		Node nd = new Node();
-		nd.setNodeID(nd.getNodeID());
+		nd.setNodeID(this.getNodeID());
 		nd.RetrieveFromDBSources();
+		Cash2019.UpdateRow(nd.toString(), String.valueOf(this.getNodeID()), nd.getRow());
+
+		NodeSimple nodeSimple = new NodeSimple();
+		nodeSimple.setNodeID(this.getNodeID());
+		nodeSimple.RetrieveFromDBSources();
+		Cash2019.UpdateRow(nodeSimple.toString(), String.valueOf(this.getNodeID()), nodeSimple.getRow());
 		return "执行成功";
 	}
 

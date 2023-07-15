@@ -155,6 +155,9 @@ public class WF_MyFlow extends WebContralBase
 		if (_currNode == null)
 		{
 			_currNode = new Node(this.getFK_Node());
+		}else{
+			if(_currNode.getNodeID()!=this.getFK_Node())
+				_currNode = new Node(this.getFK_Node());
 		}
 		return _currNode;
 	}
@@ -166,6 +169,9 @@ public class WF_MyFlow extends WebContralBase
 		if (_currFlow == null)
 		{
 			_currFlow = new Flow(this.getFK_Flow());
+		}else{
+			if(_currFlow.getNo().equals(this.getFK_Flow())==false)
+				_currFlow = new Flow(this.getFK_Flow());
 		}
 		return _currFlow;
 	}
@@ -287,7 +293,7 @@ public class WF_MyFlow extends WebContralBase
 			///#region 判断是否可以否发起流程.
 		try
 		{
-			if (Dev2Interface.Flow_IsCanStartThisFlow(this.getFK_Flow(), WebUser.getNo(), this.getPFlowNo(), this.getPNodeID(), this.getPWorkID()) == false)
+			if (Dev2Interface.Flow_IsCanStartThisFlow(this.getFK_Flow(), WebUser.getUserID(), this.getPFlowNo(), this.getPNodeID(), this.getPWorkID()) == false)
 			{
 				/*是否可以发起流程？ */
 				throw new RuntimeException("err@您(" + WebUser.getNo() + ")没有发起或者处理该流程的权限.");
@@ -323,7 +329,7 @@ public class WF_MyFlow extends WebContralBase
 
 			///#region 判断前置导航.
 		//生成workid.
-		long workid = bp.wf.Dev2Interface.Node_CreateBlankWork(this.getFK_Flow(), null, null, WebUser.getNo(), null, this.getPWorkID(), this.getPFID(), this.getPFlowNo(), this.getPNodeID(), null, 0, null, null, isStartSameLevelFlow);
+		long workid = bp.wf.Dev2Interface.Node_CreateBlankWork(this.getFK_Flow(), null, null, WebUser.getUserID(), null, this.getPWorkID(), this.getPFID(), this.getPFlowNo(), this.getPNodeID(), null, 0, null, null, isStartSameLevelFlow);
 
 		String hostRun = this.getCurrFlow().GetValStrByKey(FlowAttr.HostRun);
 		if (DataType.IsNullOrEmpty(hostRun) == false)
@@ -2795,7 +2801,7 @@ public class WF_MyFlow extends WebContralBase
 				case ByStation: //当前人员包含这个岗位
 					Object tempVar4 = frmNode.getFrmEnableExp();
 					String exp = tempVar4 instanceof String ? (String)tempVar4 : null;
-					String Sql = "SELECT FK_Station FROM Port_DeptEmpStation where FK_Emp='" + WebUser.getNo() + "'";
+					String Sql = "SELECT FK_Station FROM Port_DeptEmpStation where FK_Emp='" + WebUser.getUserID() + "'";
 					String station = DBAccess.RunSQLReturnString(Sql);
 					if (DataType.IsNullOrEmpty(station) == true)
 						continue;
@@ -3287,7 +3293,7 @@ public class WF_MyFlow extends WebContralBase
 
 				case ByStation:
 					String exp = frmNode.getFrmEnableExp();
-					String Sql = "SELECT FK_Station FROM Port_DeptEmpStation where FK_Emp='" + WebUser.getNo() + "'";
+					String Sql = "SELECT FK_Station FROM Port_DeptEmpStation where FK_Emp='" + WebUser.getUserID() + "'";
 					String station = DBAccess.RunSQLReturnString(Sql);
 					if (DataType.IsNullOrEmpty(station) == true)
 					{

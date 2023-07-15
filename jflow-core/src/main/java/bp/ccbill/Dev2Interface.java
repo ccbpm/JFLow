@@ -301,7 +301,7 @@ public class Dev2Interface
 			rpt.Copy(htParas);
 		}
 
-		FrmBill fb = new FrmBill(frmID);
+		FrmDict fb = new FrmDict(frmID);
 
 
 		//更新基础的数据到表单表.

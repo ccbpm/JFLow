@@ -1,15 +1,27 @@
 package bp.port;
 
 import bp.da.DataType;
+import bp.difference.SystemConfig;
 import bp.en.*;
+import bp.sys.CCBPMRunModel;
+import bp.web.WebUser;
 
 /** 
  用户组
 */
 public class Team extends EntityNoName
 {
+	@Override
+	public UAC getHisUAC() {
+		UAC uac=new UAC();
+		if (WebUser.getIsAdmin()==true)
+		{
+			return uac.OpenForAppAdmin();
+		}
+		return super.getHisUAC();
+	}
 
-		///#region 构造方法
+	///#region 构造方法
 	/** 
 	 用户组
 	*/
@@ -53,6 +65,12 @@ public class Team extends EntityNoName
 			//   map.AddTBString(TeamAttr.ParentNo, null, "父亲节编号", true, true, 0, 100, 20);
 		map.AddTBInt(TeamAttr.Idx, 0, "显示顺序", true, false);
 
+		map.AddTBString(TeamAttr.OrgNo, null, "组织编号", true, true, 0, 100, 20);
+
+		//#region 根据组织结构类型不同.
+		if (bp.difference.SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
+			map.AddHidden(StationAttr.OrgNo, "=", "@WebUser.OrgNo"); //加隐藏条件.
+
 		map.AddSearchAttr(TeamAttr.FK_TeamType);
 
 		map.getAttrsOfOneVSM().Add(new TeamEmps(), new Emps(), TeamEmpAttr.FK_Team, TeamEmpAttr.FK_Emp, EmpAttr.Name, EmpAttr.No, "人员(简单)");
@@ -82,6 +100,11 @@ public class Team extends EntityNoName
 
 		if (DataType.IsNullOrEmpty(this.getFKTeamType()) == true)
 			throw new Exception("请选择类型");
+
+		if (DataType.IsNullOrEmpty(this.GetValByKey("OrgNo")) == true
+				&& SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single) {
+			this.SetValByKey("OrgNo", bp.web.WebUser.getOrgNo());
+		}
 
 		return super.beforeUpdateInsertAction();
 	}

@@ -149,6 +149,9 @@ public class WF_MyCC extends WebContralBase
 		if (_currNode == null)
 		{
 			_currNode = new Node(this.getFK_Node());
+		}else{
+			if(_currNode.getNodeID()!=this.getFK_Node())
+				_currNode = new Node(this.getFK_Node());
 		}
 		return _currNode;
 	}
@@ -157,6 +160,9 @@ public class WF_MyCC extends WebContralBase
 		if (_currFlow == null)
 		{
 			_currFlow = new Flow(this.getFK_Flow());
+		}else{
+			if(_currFlow.getNo().equals(this.getFK_Flow())==false)
+				_currFlow = new Flow(this.getFK_Flow());
 		}
 		return _currFlow;
 	}
@@ -930,7 +936,7 @@ public class WF_MyCC extends WebContralBase
 				case ByStation:
 					Object tempVar3 = frmNode.getFrmEnableExp();
 					String exp = tempVar3 instanceof String ? (String)tempVar3 : null;
-					String Sql = "SELECT FK_Station FROM Port_DeptEmpStation where FK_Emp='" + WebUser.getNo() + "'";
+					String Sql = "SELECT FK_Station FROM Port_DeptEmpStation where FK_Emp='" + WebUser.getUserID() + "'";
 					String station = DBAccess.RunSQLReturnString(Sql);
 					if (DataType.IsNullOrEmpty(station) == true)
 					{

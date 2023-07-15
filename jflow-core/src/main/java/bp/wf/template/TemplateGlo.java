@@ -11,10 +11,21 @@ import bp.difference.*;
 import bp.wf.template.sflow.*;
 import bp.wf.template.ccen.*;
 import bp.wf.template.frm.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.NodeList;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.*;
 import java.nio.file.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.CountDownLatch;
 
 /** 
  流程模版的操作
@@ -1579,8 +1590,16 @@ public class TemplateGlo
 		return NewNode(flowNo, x, y, null);
 	}
 
-//ORIGINAL LINE: public static Node NewNode(string flowNo, int x, int y, string icon = null)
 	public static Node NewNode(String flowNo, int x, int y, String icon) throws Exception {
+		return NewNode(flowNo, x, y, icon, RunModel.Ordinary);
+	}
+
+	public static Node NewNode(String flowNo, int x, int y, String icon, RunModel runModel) throws Exception {
+		return NewNode(flowNo, x, y, icon, runModel, NodeType.UserNode);
+	}
+
+//ORIGINAL LINE: public static Node NewNode(string flowNo, int x, int y, string icon = null)
+	public static Node NewNode(String flowNo, int x, int y, String icon, RunModel runModel, NodeType nodeType) throws Exception {
 		Flow flow = new Flow(flowNo);
 
 		Node nd = new Node();
@@ -1725,6 +1744,11 @@ public class TemplateGlo
 
 		//设置审核意见的默认值.
 		nd.SetValByKey(NodeWorkCheckAttr.FWCDefInfo, Glo.getDefValWFNodeFWCDefInfo());
+
+		//设置节点运行模式.
+		nd.setHisRunModel(runModel);
+		//设置节点类型
+		nd.setHisNodeType(nodeType);
 
 		nd.Update(); //执行更新. @sly
 		nd.CreateMap();
@@ -2096,4 +2120,247 @@ public class TemplateGlo
 		Node nd = new Node(nodeid);
 		nd.Delete();
 	}
+
+	public static Document readXml(String filePath) throws Exception {
+		File xmlFile = new File(filePath);
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = dBuilder.parse(xmlFile);
+		doc.getDocumentElement().normalize();
+		return doc;
+	}
+
+	/**
+	 * 创建流程
+	 * @param flowSort
+	 * @param filePath
+	 * @return
+	 * @throws Exception
+	 */
+	public static Flow NewFlowByBPMN(String flowSort, String filePath) throws Exception {
+		Document doc = readXml(filePath);
+		// #region 0. 读取文件.
+		//读取流程属性
+		NodeList dtFlow = doc.getElementsByTagName("process");
+		//读取节点
+		NodeList dtNode = doc.getElementsByTagName("userTask");
+		// 读取结束节点
+		NodeList dtEndNode = doc.getElementsByTagName("endEvent");
+		//将结束节点放入节点中
+		List<NamedNodeMap> dtList = new ArrayList<>();
+		for (int i = 0; i < dtNode.getLength(); i++)
+		{
+			NamedNodeMap dr = dtNode.item(i).getAttributes();
+			dtList.add(dr);
+		}
+		for (int i = 0; i < dtEndNode.getLength(); i++)
+		{
+			NamedNodeMap dr = dtEndNode.item(i).getAttributes();
+			dtList.add(dr);
+		}
+		//读取网关节点
+		NodeList dtGateway = doc.getElementsByTagName("exclusiveGateway");
+		//读取方法条件
+		NodeList dtDirs = doc.getElementsByTagName("sequenceFlow");
+		//图形数据
+		NodeList dtShapes = doc.getElementsByTagName("bpmndi:BPMNShape");
+
+		NamedNodeMap drFlow = dtFlow.item(0).getAttributes();
+		String flowName = drFlow.getNamedItem("name").getTextContent().toString(); //获得流程名称
+		String flowMark = drFlow.getNamedItem("id").getTextContent().toString(); //获得流程标记.
+		Flow fl = new Flow();
+		fl.SetValByKey("FlowMark", flowMark);
+		if (fl.RetrieveFromDBSources() == 1)
+			throw new Exception("err@该流程[" + flowMark + "]已经导入,如果您要导入，请您修改模板的流程标记.");
+		//#endregion 读取文件.
+
+		// #region 1. 创建空白的模板做准备..
+		String sortNo = "001"; //放入的流程目录.
+		String flowNo = bp.wf.template.TemplateGlo.NewFlow(sortNo, flowName, DataStoreModel.ByCCFlow, null, null);
+
+		fl.SetValByKey("No", flowNo);
+		fl.RetrieveFromDBSources();
+		fl.SetValByKey("FlowMark", flowMark);//更新标记.
+		fl.SetValByKey("FK_FlowSort", flowSort);//更新流程目录
+		fl.Update();
+
+		//删除第2个节点信息.
+		Node nd = new Node();
+		nd.SetValByKey("NodeID", Integer.parseInt(flowNo + "02"));
+		nd.Delete(); //删除节点.
+		bp.wf.template.Directions dir = new Directions();
+		dir.Delete(DirectionAttr.FK_Flow, flowNo);
+		ConcurrentHashMap<String, Integer> relations = new ConcurrentHashMap<>(); // 保存节点id 对应 关系
+		ConcurrentHashMap<Integer, String> nodeUserTaskID = new ConcurrentHashMap<>(); // 保存节点id与userTaskID 对应 关系
+		ConcurrentLinkedDeque<Node> flowNodes = new ConcurrentLinkedDeque<>();
+		for (int i = 0; i < dtList.size(); i++)
+		{
+			NamedNodeMap dr = dtList.get(i);
+
+			// #region 获得节点信息.
+			String userTaskID = dr.getNamedItem("id").getTextContent();
+			if (i == 0)
+				nd = new Node(Integer.parseInt(flowNo + "01")); //开始节点.
+			else
+				nd = TemplateGlo.NewNode(flowNo, 100, 100);
+
+			// 找到图形信息
+			boolean hasPostion = false;
+			for (int j = 0; j < dtShapes.getLength(); j++)
+			{
+				org.w3c.dom.Node node = dtShapes.item(j);
+				String bpmnElement = node.getAttributes().getNamedItem("bpmnElement").getTextContent();
+				// 找到坐标
+				if (bpmnElement.equals(userTaskID))
+				{
+					if(DataType.IsNullOrEmpty(dtShapes.item(j).getFirstChild()))
+					{
+						String err = "err@解析BPMN出现异常数据,节点" + node.toString() + "bpmnElement = " + bpmnElement + "没有找到坐标数据";
+						Log.DebugWriteError(err);
+						continue;
+					}
+					NamedNodeMap attrs = node.getFirstChild().getNextSibling().getAttributes();
+					nd.SetValByKey("X", (int)Float.parseFloat(attrs.getNamedItem("x").getTextContent()));
+					nd.SetValByKey("Y", (int)Float.parseFloat(attrs.getNamedItem("y").getTextContent()));
+					hasPostion = true;
+					break;
+				}
+			}
+			if (!hasPostion)
+			{
+				nd.SetValByKey("X", 100);
+				nd.SetValByKey("Y", 100);
+			}
+			List<String> lines = new ArrayList<>();
+			// 找到所有以他为起点的连接线
+			for (int k = 0; k < dtDirs.getLength(); k++)
+			{
+				org.w3c.dom.Node node = dtDirs.item(k);
+				String sourceRef = node.getAttributes().getNamedItem("sourceRef").getTextContent();
+				if (sourceRef.equals(userTaskID))
+				{
+					String targetRef = node.getAttributes().getNamedItem("targetRef").getTextContent();
+					lines.add(targetRef);
+				}
+			}
+			nd.SetValByKey("Name", dr.getNamedItem("name").getTextContent());
+			nd.SetValByKey("Mark", StringHelper.join(",", lines.toArray(new String[0])));
+			nd.Update(); //更新节点信息.
+
+			relations.put(userTaskID, nd.getNodeID());  // 保存关系
+			nodeUserTaskID.put(nd.getNodeID(), userTaskID);  // 保存关系
+			flowNodes.add(nd);  // 保存节点
+			//#endregion 获得节点信息.
+
+		}
+    	// #endregion 2. 生成节点.
+
+		//#region 3. 生成网关节点
+		for (int i = 0; i < dtGateway.getLength(); i++)
+		{
+			NamedNodeMap dr = dtGateway.item(i).getAttributes();
+			String gatewayID = dr.getNamedItem("id").getTextContent();
+			//创建网关节点
+			nd = TemplateGlo.NewNode(flowNo, 100, 100, null, RunModel.Ordinary, NodeType.RouteNode);
+			// 找到图形信息
+			boolean hasPostion = false;
+			for (int j = 0; j < dtShapes.getLength(); j++)
+			{
+				org.w3c.dom.Node node = dtShapes.item(j);
+				String bpmnElement = node.getAttributes().getNamedItem("bpmnElement").getTextContent();
+				// 找到坐标
+				if (bpmnElement.equals(gatewayID))
+				{
+					if(DataType.IsNullOrEmpty(dtShapes.item(j).getFirstChild()))
+					{
+						String err = "err@解析BPMN出现异常数据,节点" + node.toString() + "bpmnElement = " + bpmnElement + "没有找到坐标数据";
+						Log.DebugWriteError(err);
+						continue;
+					}
+					NamedNodeMap attrs = node.getFirstChild().getNextSibling().getAttributes();
+					nd.SetValByKey("X", (int)Float.parseFloat(attrs.getNamedItem("x").getTextContent()));
+					nd.SetValByKey("Y", (int)Float.parseFloat(attrs.getNamedItem("y").getTextContent()));
+					hasPostion = true;
+					break;
+				}
+			}
+			if (!hasPostion)
+			{
+				nd.SetValByKey("X", 100);
+				nd.SetValByKey("Y", 100);
+			}
+			//保存连接线
+			List<String> lines = new ArrayList<>();
+			//保存连接线的描述
+			List<String> docs = new ArrayList<>();
+			// 找到所有以他为起点的连接线
+			for (int k = 0; k < dtDirs.getLength(); k++)
+			{
+				org.w3c.dom.Node node = dtDirs.item(k);
+				String sourceRef = node.getAttributes().getNamedItem("sourceRef").getTextContent();
+				if (sourceRef.equals(gatewayID))
+				{
+					String targetRef = node.getAttributes().getNamedItem("targetRef").getTextContent();
+					lines.add(targetRef);
+					String name = node.getAttributes().getNamedItem("name") == null ? "" : node.getAttributes().getNamedItem("name").getTextContent();
+					docs.add(name);
+				}
+			}
+			nd.Update(); //更新节点信息.
+			nd.SetValByKey("Name", dr.getNamedItem("name").getTextContent());
+			nd.SetValByKey("Mark", StringHelper.join(",", lines.toArray(new String[0])));
+			nd.SetValByKey("Doc", StringHelper.join(",", docs.toArray(new String[0])));
+			nd.Update(); //更新节点信息.
+
+			relations.put(gatewayID, nd.getNodeID());  // 保存关系
+			nodeUserTaskID.put(nd.getNodeID(), gatewayID);  // 保存关系
+			flowNodes.add(nd);  // 保存节点
+		}
+        //#endregion 3. 生成网关节点
+
+    	// #region 4. 生成链接线.
+		// 插入连接线，经过上面的流程后才知道对应关系
+		for(Node node : flowNodes)
+		{
+			try
+			{
+				String[] toUserTasks = node.GetValStrByKey("Mark").split(",");
+				node.SetValByKey("Mark", nodeUserTaskID.get(node.getNodeID()));
+				String[] nodeDoc = new String[0];
+				//判断如果是路由节点
+				if (node.getHisNodeType() == NodeType.RouteNode)
+				{
+					nodeDoc = node.GetValStrByKey("Doc").split(",");
+					node.SetValByKey("Doc", "");//清空临时保存的描述
+				}
+				node.Update();
+				for (int i = 0; i< toUserTasks.length; i++)
+				{
+					String toUserTask = toUserTasks[i];
+					int toNodeId = relations.get(toUserTask);
+					//生成方向.
+					Direction mydir = new Direction();
+					mydir.SetValByKey("FK_Flow", flowNo);
+					mydir.SetValByKey("Node", node.getNodeID());
+					mydir.SetValByKey("ToNode", toNodeId);
+					//判断如果有描述就添加
+					if(nodeDoc.length > 0)
+					{
+						mydir.SetValByKey("Des", nodeDoc[i]);
+					}
+					mydir.Insert(); //自动生成主键.
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.DebugWriteError("解析BPMN-创建连接线失败：nodeId=" + node.getNodeID() + ", Mark = " + node.GetValStrByKey("Mark"));
+			}
+
+		}
+		// #endregion 4. 生成链接线.
+
+		return fl;
+	}
+
+
 }

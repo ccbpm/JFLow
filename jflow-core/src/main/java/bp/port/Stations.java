@@ -31,15 +31,11 @@ public class Stations extends EntitiesNoName
 	@Override
 	public int RetrieveAll(String orderBy) throws Exception {
 		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
-		{
 			return super.RetrieveAll(orderBy);
-		}
 
 		//集团模式下的岗位体系: @0=每套组织都有自己的岗位体系@1=所有的组织共享一套岗则体系.
 		if (SystemConfig.getGroupStationModel() == 1)
-		{
 			return super.RetrieveAll();
-		}
 
 		//按照orgNo查询.
 		return this.Retrieve("OrgNo", bp.web.WebUser.getOrgNo(), orderBy);

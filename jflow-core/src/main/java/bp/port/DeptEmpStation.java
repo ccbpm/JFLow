@@ -1,5 +1,6 @@
 package bp.port;
 
+import bp.da.DataType;
 import bp.en.*;
 
 
@@ -107,7 +108,12 @@ public class DeptEmpStation extends EntityMyPK
 	*/
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception {
-		this.setMyPK(this.getFK_Dept() + "_" + this.getFK_Emp() + "_" + this.getFK_Station());
+		if (bp.difference.SystemConfig.getCCBPMRunModel() != bp.sys.CCBPMRunModel.Single && DataType.IsNullOrEmpty(this.getOrgNo()))
+			this.setOrgNo(bp.web.WebUser.getOrgNo());
+		if(bp.difference.SystemConfig.getCCBPMRunModel() == bp.sys.CCBPMRunModel.SAAS)
+			this.setMyPK(this.getFK_Dept() + "_" + this.getFK_Emp().replace(this.getOrgNo()+"_","") + "_" + this.getFK_Station());
+		else
+			this.setMyPK(this.getFK_Dept() + "_" + this.getFK_Emp() + "_" + this.getFK_Station());
 		return super.beforeUpdateInsertAction();
 	}
 }

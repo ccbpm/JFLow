@@ -170,6 +170,9 @@ public class WF_MyView extends WebContralBase
 		if (_currNode == null)
 		{
 			_currNode = new Node(this.getFK_Node());
+		}else{
+			if(_currNode.getNodeID()!=this.getFK_Node())
+				_currNode = new Node(this.getFK_Node());
 		}
 		return _currNode;
 	}
@@ -178,6 +181,9 @@ public class WF_MyView extends WebContralBase
 		if (_currFlow == null)
 		{
 			_currFlow = new Flow(this.getFK_Flow());
+		}else{
+			if(_currFlow.getNo().equals(this.getFK_Flow())==false)
+				_currFlow = new Flow(this.getFK_Flow());
 		}
 		return _currFlow;
 	}
@@ -713,7 +719,7 @@ public class WF_MyView extends WebContralBase
 			///#endregion 按照部门控制.
 		if (viewEn.getPSpecSta() == true && DataType.IsNullOrEmpty(viewEn.getPSpecStaExt()) == false)
 		{
-			String sql = "Select FK_Station From Port_DeptEmpStation Where FK_Emp='" + WebUser.getNo() + "'";
+			String sql = "Select FK_Station From Port_DeptEmpStation Where FK_Emp='" + WebUser.getUserID() + "'";
 			String stas = DBAccess.RunSQLReturnStringIsNull(sql, "");
 			if (DataType.IsNullOrEmpty(stas) == false)
 			{

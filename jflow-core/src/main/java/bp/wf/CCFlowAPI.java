@@ -649,7 +649,7 @@ public class CCFlowAPI
 						if (tag1.endsWith(","))
 							tag1 = tag1.substring(0, tag1.length() - 1);
 						tag1 = tag1.replace(",", "','") + "'";
-						sq1l = "SELECT count(*) From Port_DeptEmpStation WHERE FK_Station IN(" + tag1 + ") AND FK_Emp='" + WebUser.getNo() + "'";
+						sq1l = "SELECT count(*) From Port_DeptEmpStation WHERE FK_Station IN(" + tag1 + ") AND FK_Emp='" + WebUser.getUserID() + "'";
 						if (DBAccess.RunSQLReturnValInt(sq1l) != 0)
 							oids += ext.getDoc() + ",";
 					}
@@ -658,7 +658,7 @@ public class CCFlowAPI
 						if (tag1.endsWith(","))
 							tag1 = tag1.substring(0, tag1.length() - 1);
 						tag1 = tag1.replace(",", "','") + "'";
-						sq1l = "SELECT count(*) From Port_DeptEmp WHERE FK_Dept IN(" + tag1 + ") AND FK_Emp='" + WebUser.getNo() + "'";
+						sq1l = "SELECT count(*) From Port_DeptEmp WHERE FK_Dept IN(" + tag1 + ") AND FK_Emp='" + WebUser.getUserID() + "'";
 						if (DBAccess.RunSQLReturnValInt(sq1l) != 0)
 							oids += ext.getDoc() + ",";
 					}

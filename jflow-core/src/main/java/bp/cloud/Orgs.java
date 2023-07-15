@@ -1,14 +1,14 @@
-package bp.cloud.port;
+package bp.cloud;
 
 import bp.da.*;
 import bp.en.*;
 import bp.sys.*;
 
 /**
- * 操作员s
+ * 组织s
  * // </summary>
  */
-public class Emps extends EntitiesNoName {
+public class Orgs extends EntitiesNoName {
 
     ///#region 构造方法
 
@@ -17,15 +17,14 @@ public class Emps extends EntitiesNoName {
      */
     @Override
     public Entity getGetNewEntity() {
-        return new Emp();
+        return new Org();
     }
 
     /**
-     * 操作员s
+     * 组织s
      */
-    public Emps() {
+    public Orgs() {
     }
-
 
     ///#endregion 构造方法
 
@@ -37,8 +36,8 @@ public class Emps extends EntitiesNoName {
      *
      * @return List
      */
-    public final java.util.List<Emp> ToJavaList() {
-        return (java.util.List<Emp>) (Object) this;
+    public final java.util.List<Org> ToJavaList() {
+        return (java.util.List<Org>) (Object) this;
     }
 
     /**
@@ -46,10 +45,10 @@ public class Emps extends EntitiesNoName {
      *
      * @return List
      */
-    public final java.util.ArrayList<Emp> Tolist() {
-        java.util.ArrayList<Emp> list = new java.util.ArrayList<Emp>();
+    public final java.util.ArrayList<Org> Tolist() {
+        java.util.ArrayList<Org> list = new java.util.ArrayList<Org>();
         for (int i = 0; i < this.size(); i++) {
-            list.add((Emp) this.get(i));
+            list.add((Org) this.get(i));
         }
         return list;
     }

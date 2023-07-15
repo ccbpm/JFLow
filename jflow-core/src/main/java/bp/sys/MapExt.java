@@ -987,7 +987,7 @@ public class MapExt extends EntityMyPK
 						continue;
 					}
 					String attrKeyOfEn = key.split("[=]", -1)[0];
-					String val = key.split("[=]", -1)[1];
+					String val = key.split("[=]", -1).length==1?"":key.split("[=]", -1)[1];
 					exp = exp.replace("@" + attrKeyOfEn, val);
 					if (exp.contains("@") == false)
 					{

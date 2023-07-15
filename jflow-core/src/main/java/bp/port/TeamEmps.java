@@ -10,7 +10,7 @@ import java.util.*;
 /** 
  用户组人员s
 */
-public class TeamEmps extends EntitiesMM
+public class TeamEmps extends EntitiesMyPK
 {
 
 		///#region 构造

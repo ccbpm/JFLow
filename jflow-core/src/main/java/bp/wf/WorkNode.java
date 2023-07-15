@@ -1189,7 +1189,7 @@ public class WorkNode
 			}
 			else
 			{
-				wl.setSDT(DateUtils.format(dtOfShould, DataType.getSysDateTimeFormat() + ":ss"));
+				wl.setSDT(DateUtils.format(dtOfShould, DataType.getSysDateTimeFormat()));
 			}
 
 			// 警告日期.
@@ -7342,72 +7342,51 @@ public class WorkNode
 				///#region 仅按用户组计算
 			if (node.getHisDeliveryWay() == DeliveryWay.ByTeamOnly)
 			{
-				sql = "SELECT A.FK_Emp No FROM Port_TeamEmp A, WF_NodeTeam B WHERE A.FK_Team=B.FK_Team AND B.FK_Node=" + dbStr + "FK_Node ORDER BY A.FK_Emp";
-				ps = new Paras();
-				ps.Add("FK_Node", node.getNodeID());
-				ps.SQL = sql;
-				dt = DBAccess.RunSQLReturnTable(ps);
+				sql = "SELECT A.FK_Emp No FROM Port_TeamEmp A, WF_NodeTeam B WHERE A.FK_Team=B.FK_Team AND B.FK_Node=”+node.getNodeID()+“ ORDER BY A.FK_Emp";
+				dt = DBAccess.RunSQLReturnTable(sql);
 				if (dt.Rows.size() == 0)
 				{
 					String[] para2 = new String[4];
 					para2[0] = node.getHisDeliveryWay().toString();
 					para2[1] = String.valueOf(node.getNodeID());
 					para2[2] = node.getName();
-					para2[3] = ps.getSQLNoPara();
+					para2[3] = sql;
 					throw new RuntimeException(bp.wf.Glo.multilingual("@节点访问规则{0}错误:节点({1},{2}), 仅按用户组计算，没有找到人员:SQL={3}.", "WorkNode", "error_in_access_rules_setting", para2));
 				}
 			}
-
-				///#endregion
 
 
 				///#region 按用户组计算（本部门）
 			if (node.getHisDeliveryWay() == DeliveryWay.ByTeamDeptOnly)
 			{
-				sql = "SELECT A.FK_Emp No FROM Port_TeamEmp A, WF_NodeTeam B, Port_Emp C WHERE A.FK_Emp=C." + bp.sys.base.Glo.getUserNoWhitOutAS() + " AND A.FK_Team=B.FK_Team AND B.FK_Node=" + dbStr + "FK_Node AND C.FK_Dept=" + dbStr + "FK_Dept ORDER BY A.FK_Emp";
-				ps = new Paras();
-				ps.Add("FK_Node", node.getNodeID());
-				ps.Add("FK_Dept", WebUser.getFK_Dept(), false);
-
-				ps.SQL = sql;
-				dt = DBAccess.RunSQLReturnTable(ps);
+				sql = "SELECT A.FK_Emp No FROM Port_TeamEmp A, WF_NodeTeam B, Port_DeptEmp C WHERE A.FK_Emp=C.FK_Emp AND A.FK_Team=B.FK_Team AND B.FK_Node="+node.getNodeID()+" AND C.FK_Dept='"+WebUser.getFK_Dept()+"'  ";
+				dt = DBAccess.RunSQLReturnTable(sql);
 				if (dt.Rows.size() == 0)
 				{
 					String[] para2 = new String[4];
 					para2[0] = node.getHisDeliveryWay().toString();
 					para2[1] = String.valueOf(node.getNodeID());
 					para2[2] = node.getName();
-					para2[3] = ps.getSQLNoPara();
+					para2[3] = sql;
 					throw new RuntimeException(bp.wf.Glo.multilingual("@节点访问规则{0}错误:节点({1},{2}), 仅按用户组计算，没有找到人员:SQL={3}.", "WorkNode", "error_in_access_rules_setting", para2));
 				}
 			}
-
-				///#endregion
-
 
 				///#region 按用户组计算(本组织)
 			if (node.getHisDeliveryWay() == DeliveryWay.ByTeamOrgOnly)
 			{
-				sql = "SELECT A.FK_Emp No FROM Port_TeamEmp A, WF_NodeTeam B, Port_Emp C WHERE A.FK_Emp=C." + bp.sys.base.Glo.getUserNoWhitOutAS() + " AND A.FK_Team=B.FK_Team AND B.FK_Node=" + dbStr + "FK_Node AND C.OrgNo=" + dbStr + "OrgNo ORDER BY A.FK_Emp";
-				ps = new Paras();
-				ps.Add("FK_Node", node.getNodeID());
-				ps.Add("OrgNo", WebUser.getOrgNo(), false);
-
-				ps.SQL = sql;
-				dt = DBAccess.RunSQLReturnTable(ps);
+				sql = "SELECT A.FK_Emp No FROM Port_TeamEmp A, WF_NodeTeam B WHERE A.FK_Team=B.FK_Team AND B.FK_Node="+ node.getNodeID() ;
+				dt = DBAccess.RunSQLReturnTable(sql);
 				if (dt.Rows.size() == 0)
 				{
 					String[] para2 = new String[4];
 					para2[0] = node.getHisDeliveryWay().toString();
 					para2[1] = String.valueOf(node.getNodeID());
 					para2[2] = node.getName();
-					para2[3] = ps.getSQLNoPara();
+					para2[3] = sql;
 					throw new RuntimeException(bp.wf.Glo.multilingual("@节点访问规则{0}错误:节点({1},{2}), 仅按用户组计算，没有找到人员:SQL={3}.", "WorkNode", "error_in_access_rules_setting", para2));
 				}
 			}
-
-				///#endregion
-
 
 				///#region 按绑定的人计算
 			if (node.getHisDeliveryWay() == DeliveryWay.ByBindEmp)

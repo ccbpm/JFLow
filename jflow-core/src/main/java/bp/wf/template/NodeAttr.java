@@ -148,7 +148,8 @@ public class NodeAttr
 	 OID
 	*/
 	public static final String NodeID = "NodeID";
-	/** 
+	public static final String Mark = "Mark";
+	/**
 	 节点的流程
 	*/
 	public static final String FK_Flow = "FK_Flow";
@@ -244,7 +245,11 @@ public class NodeAttr
 	 运行模式
 	*/
 	public static final String RunModel = "RunModel";
-	/** 
+	/**
+	 * 节点类型
+	 */
+	public static final String NodeType = "NodeType";
+	/**
 	 谁执行它？
 	*/
 	public static final String WhoExeIt = "WhoExeIt";

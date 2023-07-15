@@ -95,7 +95,6 @@ public class StationType extends EntityNoName
 		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
 		{
 			map.AddTBString(StationAttr.OrgNo, null, "隶属组织", true, true, 0, 50, 250);
-
 			if (SystemConfig.getGroupStationModel() == 0)
 			{
 				map.AddHidden(StationAttr.OrgNo, "=", "@WebUser.OrgNo"); //每个组织都有自己的岗责体系的时候. 加隐藏条件.

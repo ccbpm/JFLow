@@ -77,7 +77,7 @@ public class Admin extends WebContralBase {
             }
 
             bp.wf.Dev2Interface.Port_Login("admin", "100");
-            String token = bp.wf.Dev2Interface.Port_GenerToken(userNo);
+            String token = bp.wf.Dev2Interface.Port_GenerToken();
             WebUser.setToken(token);
             Hashtable ht = new Hashtable();
             ht.put("Token", token);
@@ -110,7 +110,7 @@ public class Admin extends WebContralBase {
 
         bp.web.GuestUser.Exit();
         bp.wf.Dev2Interface.Port_Login(emp.getNo());
-        String token = bp.wf.Dev2Interface.Port_GenerToken("PC");
+        String token = bp.wf.Dev2Interface.Port_GenerToken();
 
         //判断当前管理员有多少个企业.
         Depts depts = new Depts();

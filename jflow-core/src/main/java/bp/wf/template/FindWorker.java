@@ -621,7 +621,7 @@ public class FindWorker
 			}
 
 			//判断该字段是否启用了pop返回值？
-			sql = "SELECT  Tag1 AS VAL FROM Sys_FrmEleDB WHERE RefPKVal=" + this.WorkID + " AND EleID='" + specEmpFields + "'";
+			sql = "SELECT  Tag1 AS VAL FROM Sys_FrmEleDB WHERE RefPKVal='" + this.WorkID + "' AND EleID='" + specEmpFields + "'";
 			String emps = "";
 			DataTable dtVals = DBAccess.RunSQLReturnTable(sql);
 
@@ -707,7 +707,7 @@ public class FindWorker
 				throw new RuntimeException("@您设置的接受人规则是按照表单指定的部门字段，决定下一步的接受人员，该字段{" + specEmpFields + "}已经删除或者丢失。");
 
 			//判断该字段是否启用了pop返回值？
-			sql = "SELECT  Tag1 AS VAL FROM Sys_FrmEleDB WHERE RefPKVal=" + this.WorkID + " AND EleID='" + specEmpFields + "'";
+			sql = "SELECT  Tag1 AS VAL FROM Sys_FrmEleDB WHERE RefPKVal='" + this.WorkID + "' AND EleID='" + specEmpFields + "'";
 			String depts = "";
 			DataTable dtVals = DBAccess.RunSQLReturnTable(sql);
 
@@ -759,7 +759,7 @@ public class FindWorker
 			}
 
 			//判断该字段是否启用了pop返回值？
-			sql = "SELECT  Tag1 AS VAL FROM Sys_FrmEleDB WHERE RefPKVal=" + this.WorkID + " AND EleID='" + specEmpFields + "'";
+			sql = "SELECT  Tag1 AS VAL FROM Sys_FrmEleDB WHERE RefPKVal='" + this.WorkID + "' AND EleID='" + specEmpFields + "'";
 			String emps = "";
 			DataTable dtVals = DBAccess.RunSQLReturnTable(sql);
 
@@ -895,7 +895,7 @@ public class FindWorker
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.FindSpecDeptEmpsInStationlist)
 		{
 			sql = "SELECT A.FK_Emp FROM Port_DeptEmpStation A WHERE A.FK_DEPT ='" + WebUser.getFK_Dept()+ "' AND A.FK_Station in(";
-			sql += "select FK_Station from WF_NodeStation where FK_node=" + town.getHisNode().getNodeID() + ")";
+			sql += "SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + town.getHisNode().getNodeID() + ")";
 
 			dt = DBAccess.RunSQLReturnTable(sql);
 
@@ -913,12 +913,8 @@ public class FindWorker
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByDeptAndStation)
 		{
 			//added by liuxc,2015.6.29.
-
 			sql = "SELECT pdes.FK_Emp AS No" + " FROM   Port_DeptEmpStation pdes" + " INNER JOIN WF_NodeDept wnd ON wnd.FK_Dept = pdes.FK_Dept" + " AND wnd.FK_Node = " + town.getHisNode().getNodeID() + " INNER JOIN WF_NodeStation wns ON  wns.FK_Station = pdes.FK_Station" + " AND wns.FK_Node =" + town.getHisNode().getNodeID() + " ORDER BY pdes.FK_Emp";
-
-
 			dt = DBAccess.RunSQLReturnTable(sql);
-
 			if (dt.Rows.size() > 0)
 				return dt;
 			if (this.town.getHisNode().getHisWhenNoWorker() == false)
@@ -926,9 +922,6 @@ public class FindWorker
 			else
 				return dt;
 		}
-
-			///#endregion 按部门与岗位的交集计算.
-
 
 			///#region 判断节点部门里面是否设置了部门，如果设置了就按照它的部门处理。
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByDept)
@@ -944,69 +937,49 @@ public class FindWorker
 					bp.wf.template.BtnLab btnLab = new BtnLab(this.town.getHisNode().getNodeID());
 					throw new Exception("err@按照 [按绑定的部门计算] 计算接收人的时候出现错误，没有找到人，请检查节点["+btnLab.getName()+"]绑定的部门下的人员.");
 				}
-
 			}
 			return dt;
 		}
 
-			///#endregion 判断节点部门里面是否设置了部门，如果设置了，就按照它的部门处理。
-
-
 			///#region 用户组 计算
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByTeamOnly)
 		{
-			ps = new Paras();
-			sql = "SELECT A.FK_Emp FROM Port_TeamEmp A, WF_NodeTeam B WHERE A.FK_Team=B.FK_Team AND B.FK_Node=" + dbStr + "FK_Node ORDER BY A.FK_Emp";
-			ps.Add("FK_Node", town.getHisNode().getNodeID());
-			ps.SQL = sql;
-			dt = DBAccess.RunSQLReturnTable(ps);
+			sql = "SELECT A.FK_Emp FROM Port_TeamEmp A, WF_NodeTeam B WHERE A.FK_Team=B.FK_Team AND B.FK_Node="+town.getHisNode().getNodeID();
+			dt = DBAccess.RunSQLReturnTable(sql);
 			if (dt.Rows.size() > 0)
 				return dt;
 
 			if (this.town.getHisNode().getHisWhenNoWorker() == false)
-				throw new RuntimeException("@节点访问规则错误:节点(" + town.getHisNode().getNodeID() + "," + town.getHisNode().getName() + "), 仅按用户组计算，没有找到人员:SQL=" + ps.getSQLNoPara());
+				throw new RuntimeException("@节点访问规则错误:节点(" + town.getHisNode().getNodeID() + "," + town.getHisNode().getName() + "), 仅按用户组计算，没有找到人员:SQL=" + sql);
 			else
 				return dt; //可能处理跳转,在没有处理人的情况下.
 
 		}
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByTeamOrgOnly)
 		{
-			sql = "SELECT DISTINCT A.FK_Emp FROM Port_TeamEmp A, WF_NodeTeam B, Port_Emp C WHERE A.FK_Emp=C." + bp.sys.base.Glo.getUserNoWhitOutAS() + " AND A.FK_Team=B.FK_Team AND B.FK_Node=" + dbStr + "FK_Node AND C.OrgNo=" + dbStr + "OrgNo  ORDER BY A.FK_Emp";
-			ps = new Paras();
-			ps.Add("FK_Node", town.getHisNode().getNodeID());
-			ps.Add("OrgNo", WebUser.getOrgNo(), false);
-
-			ps.SQL = sql;
-			dt = DBAccess.RunSQLReturnTable(ps);
+			sql = "SELECT DISTINCT A.FK_Emp FROM Port_TeamEmp A, WF_NodeTeam B  WHERE A.FK_Team=B.FK_Team AND B.FK_Node="+toNode.getNodeID();
+			dt = DBAccess.RunSQLReturnTable(sql);
 			if (dt.Rows.size() > 0)
 				return dt;
 
 			if (this.town.getHisNode().getHisWhenNoWorker() == false)
-				throw new RuntimeException("@节点访问规则错误:节点(" + town.getHisNode().getNodeID() + "," + town.getHisNode().getName() + "), 仅按用户组计算，没有找到人员:SQL=" + ps.getSQLNoPara());
+				throw new RuntimeException("@节点访问规则错误:节点(" + town.getHisNode().getNodeID() + "," + town.getHisNode().getName() + "), 仅按用户组计算，没有找到人员:SQL=" + sql);
 
 			return dt; //可能处理跳转,在没有处理人的情况下.
 		}
 
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByTeamDeptOnly)
 		{
-			sql = "SELECT DISTINCT A.FK_Emp FROM Port_TeamEmp A, WF_NodeTeam B, Port_Emp C WHERE A.FK_Emp=C." + bp.sys.base.Glo.getUserNoWhitOutAS() + " AND A.FK_Team=B.FK_Team AND B.FK_Node=" + dbStr + "FK_Node AND C.FK_Dept=" + dbStr + "FK_Dept  ORDER BY A.FK_Emp";
-			ps = new Paras();
-			ps.Add("FK_Node", town.getHisNode().getNodeID());
-			ps.Add("FK_Dept", WebUser.getFK_Dept(), false);
-
-			ps.SQL = sql;
-			dt = DBAccess.RunSQLReturnTable(ps);
+			sql = "SELECT DISTINCT A.FK_Emp FROM Port_TeamEmp A, WF_NodeTeam B, Port_DeptEmp C WHERE A.FK_Emp=C.FK_Emp AND A.FK_Team=B.FK_Team AND B.FK_Node="+ toNode.getNodeID() + " AND C.FK_Dept='" + WebUser.getFK_Dept() + "'";
+			dt = DBAccess.RunSQLReturnTable(sql);
 			if (dt.Rows.size() > 0)
 				return dt;
 
 			if (this.town.getHisNode().getHisWhenNoWorker() == false)
-				throw new RuntimeException("@节点访问规则错误 ByTeamDeptOnly :节点(" + town.getHisNode().getNodeID() + "," + town.getHisNode().getName() + "), 仅按用户组计算，没有找到人员:SQL=" + ps.getSQLNoPara());
+				throw new RuntimeException("@节点访问规则错误 ByTeamDeptOnly :节点(" + town.getHisNode().getNodeID() + "," + town.getHisNode().getName() + "), 仅按用户组计算，没有找到人员:SQL=" + sql);
 
 			return dt; //可能处理跳转,在没有处理人的情况下.
 		}
-
-			///#endregion
-
 
 			///#region 仅按岗位计算
 		if (town.getHisNode().getHisDeliveryWay() == DeliveryWay.ByStationOnly)

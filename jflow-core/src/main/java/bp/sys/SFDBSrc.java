@@ -67,12 +67,24 @@ public class SFDBSrc extends EntityNoName
 	 数据库类型
 	*/
 	public final DBSrcType getDBSrcType() {
-		return DBSrcType.forValue(this.GetValIntByKey(SFDBSrcAttr.DBSrcType));
+		String val=this.GetValStrByKey("DBSrcType");
+		if (val.equals("0") ) {
+			if (  SystemConfig.getAppCenterDBType()== DBType.MySQL)
+				return DBSrcType.MySQL;
+			if (  SystemConfig.getAppCenterDBType()== DBType.PostgreSQL)
+				return DBSrcType.PostgreSQL;
+		}
+		return DBSrcType.MySQL;
+	//		return SystemConfig.getAppCenterDBType();
+		//return DBSrcType.forValue();
 	}
 	public final void setDBSrcType(DBSrcType value)
 	 {
 		this.SetValByKey(SFDBSrcAttr.DBSrcType, value.getValue());
 	}
+//	public final String getDBSrcType(){
+//		return "mysql";
+//	}
 	public final String getDBName()
 	{
 		return this.GetValStringByKey(SFDBSrcAttr.DBName);
@@ -877,10 +889,13 @@ public class SFDBSrc extends EntityNoName
 		map.AddTBString(SFDBSrcAttr.Name, null, "名称", true, false, 0, 30, 20);
 //		String cfg = "@0=应用系统主数据库(默认)@1=SQLServer数据库@2=Oracle数据库@3=MySQL数据库@4=Informix数据库@50=Dubbo服务@100=WebService数据源";
 //		map.AddDDLSysEnum(SFDBSrcAttr.DBSrcType, 0, "数据源类型", true, true, SFDBSrcAttr.DBSrcType, cfg1);
-		String cfg1 = "@local=应用系统数据库(默认)@MSSQL=SQLServer数据库@Oracle=Oracle数据库@MySQL=MySQL数据库@Informix=Informix数据库@KindingBase3=人大金仓库R3@KindingBase6=人大金仓库R6@UX=优漩@Dubbo=Dubbo服务@WS=WebService数据源@URL=url模式@CCFromRef.js";
-		map.AddDDLStringEnum(SFDBSrcAttr.DBSrcType, "local", "类型", cfg1, true, null, false);
+	//	String cfg1 = "@local=应用系统数据库(默认)@MSSQL=SQLServer数据库@Oracle=Oracle数据库@MySQL=MySQL数据库@Informix=Informix数据库@KindingBase3=人大金仓库R3@KindingBase6=人大金仓库R6@UX=优漩@Dubbo=Dubbo服务@WS=WebService数据源@URL=url模式@CCFromRef.js";
+	//	map.AddDDLStringEnum(SFDBSrcAttr.DBSrcType, "local", "类型", cfg1, true, null, false);
+	//	map.AddTBString("DBSrcType", "local", "类型", true, false, 0, 30, 20);
+
 		map.AddTBString(SFDBSrcAttr.DBName, null, "数据库名称/Oracle保持为空", true, false, 0, 30, 20);
 		map.AddTBStringDoc(SFDBSrcAttr.ConnString, null, "连接串", true, false, true);
+		map.AddTBString("IP", null, "IP", true, false, 0, 30, 20);
 
 		map.AddTBAtParas(200);
 
@@ -895,13 +910,13 @@ public class SFDBSrc extends EntityNoName
 			//map.AddDDLSysEnum(SFDBSrcAttr.DBSrcType, 0, "数据源类型", true, true,
 			//    SFDBSrcAttr.DBSrcType, "@0=应用系统主数据库@1=SQLServer@2=Oracle@3=MySQL@4=Infomix");
 
-		RefMethod rm = new RefMethod();
-
-		rm = new RefMethod();
-		rm.Title = "测试连接";
-		rm.ClassMethodName = this.toString() + ".DoConn";
-		rm.refMethodType = RefMethodType.Func; // 仅仅是一个功能.
-		map.AddRefMethod(rm);
+//		RefMethod rm = new RefMethod();
+//
+//		rm = new RefMethod();
+//		rm.Title = "测试连接";
+//		rm.ClassMethodName = this.toString() + ".DoConn";
+//		rm.refMethodType = RefMethodType.Func; // 仅仅是一个功能.
+//		map.AddRefMethod(rm);
 
 		this.set_enMap(map);
 		return this.get_enMap();
@@ -941,6 +956,7 @@ public class SFDBSrc extends EntityNoName
 	 */
 	public final Connection getConnection() throws Exception
 	{
+
 		String url="";//数据库连接的url
 		Connection con=null;
 		switch (this.getDBSrcType())
@@ -990,7 +1006,7 @@ public class SFDBSrc extends EntityNoName
 			default:
 				throw new RuntimeException("@没有判断的类型.");
 		}
-		con = DriverManager.getConnection(url, this.getUserID(), this.getPassword());
+		//con = DriverManager.getConnection(url, this.getUserID(), this.getPassword());
 		return con;
 	}
 	/** 
@@ -999,6 +1015,9 @@ public class SFDBSrc extends EntityNoName
 	 @return 
 	*/
 	public final String DoConn() throws Exception {
+
+		if (1==1)
+		return "本地连接不需要测试是否连接成功.";
 
 		if (this.getNo().equals("local"))
 		{

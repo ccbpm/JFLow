@@ -92,15 +92,38 @@ public class DeptEmp extends EntityMyPK
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
-		///#endregion
+
+	@Override
+	protected void afterDelete() throws Exception {
+		DeptEmpStations des = new DeptEmpStations();
+		des.Delete("FK_Dept", this.GetValByKey("FK_Dept"), "FK_Emp", this.GetValByKey("FK_Emp"));
+		super.afterDelete();
+	}
+
+	///#endregion
 	/**
 	 更新前做的事情
 	 return
 	*/
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception {
+		if (bp.difference.SystemConfig.getCCBPMRunModel() != bp.sys.CCBPMRunModel.Single && DataType.IsNullOrEmpty(this.getOrgNo()))
+			this.setOrgNo(bp.web.WebUser.getOrgNo());
+
 		if (DataType.IsNullOrEmpty(this.getMyPK()) == true)
-			this.setMyPK(this.getFK_Dept() + "_" + this.getFK_Emp());
+		{
+			if (bp.difference.SystemConfig.getCCBPMRunModel() == bp.sys.CCBPMRunModel.SAAS)
+			{
+				this.setMyPK(this.getFK_Dept() + "_" + this.getFK_Emp().replace(this.getOrgNo()+"_",""));
+			}
+			else
+			{
+				this.setMyPK(this.getFK_Dept() + "_" + this.getFK_Emp());
+			}
+
+		}
+
+
 		return super.beforeUpdateInsertAction();
 	}
 }

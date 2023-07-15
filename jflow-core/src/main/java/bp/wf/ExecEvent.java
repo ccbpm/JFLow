@@ -141,7 +141,7 @@ public class ExecEvent
 			if (wn.getHisNode().getHisDeliveryWay() == DeliveryWay.ByStation || wn.getHisNode().getHisDeliveryWay() == DeliveryWay.ByStationOnly || wn.getHisNode().getHisDeliveryWay() == DeliveryWay.ByStationAndEmpDept || wn.getHisNode().getHisDeliveryWay() == DeliveryWay.ByDeptAndStation)
 			{
 				String sql = "SELECT A.FK_Dept, A.FK_Station FROM Port_DeptEmpStation A, WF_NodeStation B ";
-				sql += " WHERE A.FK_Emp='" + WebUser.getNo() + "' AND A.FK_Station=B.FK_Station AND B.FK_Node=" + wn.getHisNode().getNodeID();
+				sql += " WHERE A.FK_Emp='" + WebUser.getUserID() + "' AND A.FK_Station=B.FK_Station AND B.FK_Node=" + wn.getHisNode().getNodeID();
 				DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
 				for (DataRow dr : dt.Rows)

@@ -1,10 +1,10 @@
 package bp.wf;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 
-
-/** 
+/**
  工作发送返回对象集合.
 */
 public class SendReturnObjs extends ArrayList<SendReturnObj>
@@ -308,44 +308,12 @@ public class SendReturnObjs extends ArrayList<SendReturnObj>
 		return msg;
 	}
 	public final String ToJson()  {
-		if (this.OutMessageText != null)
-		{
-			return this.OutMessageText;
-		}
 
-		String msg = "";
+		Hashtable ht=new Hashtable();
 		for (SendReturnObj item : this)
-		{
-			if (item.HisSendReturnMsgType == SendReturnMsgType.SystemMsg)
-			{
-				continue;
-			}
+			ht.put(item.MsgFlag,item.MsgOfText);
 
-			//特殊判断.
-			if (item.MsgFlag.equals(SendReturnMsgFlag.IsStopFlow))
-			{
-				msg += "@" + item.MsgOfHtml;
-				continue;
-			}
-
-
-			if (item.MsgOfText != null)
-			{
-				if (item.MsgOfText.contains("<"))
-				{
-
-///#warning 不应该出现.
-					//  Log.DefaultLogWriteLineWarning("@文本信息里面有html标记:" + item.MsgOfText);
-					continue;
-				}
-				msg += "@" + item.MsgOfText;
-				continue;
-			}
-
-		}
-		msg.replace("@@", "@");
-		return msg;
-
+		return bp.tools.Json.ToJson(ht);
 	}
 	/** 
 	 转化成html方式的消息，以方便html的信息输出.

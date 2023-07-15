@@ -100,9 +100,12 @@ public class FlowSort extends EntityTree
 	 @return 
 	*/
 	public final String DoCreateSameLevelNodeMy(String name) throws Exception {
-		EntityTree en = this.DoCreateSameLevelNode(name);
-		en.setName (name);
-		en.Update();
+//		EntityTree en = this.DoCreateSameLevelNode(name);
+		FlowSort en = new FlowSort();
+		en.Copy(this);
+		en.SetValByKey(FlowSortAttr.No, DBAccess.GenerGUID(10));
+		en.SetValByKey(FlowSortAttr.Name, name);
+		en.Insert();
 		return en.getNo();
 	}
 	/** 
@@ -112,9 +115,13 @@ public class FlowSort extends EntityTree
 	 @return 
 	*/
 	public final String DoCreateSubNodeMy(String name) throws Exception {
-		EntityTree en = this.DoCreateSubNode(name);
-		en.setName(name);
-		en.Update();
+//		EntityTree en = this.DoCreateSubNode(name);
+		FlowSort en = new FlowSort();
+		en.Copy(this);
+		en.SetValByKey(FlowSortAttr.No, DBAccess.GenerGUID(10));
+		en.SetValByKey(FlowSortAttr.ParentNo, this.getNo());
+		en.SetValByKey(FlowSortAttr.Name, name);
+		en.Insert();
 		return en.getNo();
 	}
 

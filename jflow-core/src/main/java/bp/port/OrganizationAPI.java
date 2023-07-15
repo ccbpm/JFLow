@@ -3,6 +3,7 @@ package bp.port;
 import bp.da.AtPara;
 import bp.da.DBAccess;
 import bp.da.DataType;
+import bp.sys.CCBPMRunModel;
 import bp.wf.port.admin2group.OrgAdminer;
 
 public class OrganizationAPI {
@@ -321,4 +322,234 @@ public class OrganizationAPI {
             return "err@" + ex.getMessage();
         }
     }
+
+    public static String Port_Team_Delete(String no)
+    {
+        try
+        {
+            if (bp.web.WebUser.getIsAdmin() == false)
+            {
+                return "err@[" + bp.web.WebUser.getName() + "]不是管理员不能删除岗位信息";
+            }
+            //删除部门.
+            bp.port.Team dept = new bp.port.Team(no);
+            dept.Delete();
+
+            return "删除成功";
+        }
+        catch (RuntimeException ex)
+        {
+            return "err@" + ex.getMessage();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String Port_Team_Save(String orgNo, String no, String name, String keyVals) throws Exception {
+        if (bp.web.WebUser.getIsAdmin() == false)
+        {
+            return "err@[" + bp.web.WebUser.getName() + "]不是管理员不能维护岗位信息";
+        }
+
+        if (bp.difference.SystemConfig.getCCBPMRunModel() != bp.sys.CCBPMRunModel.Single)
+        {
+            if (DataType.IsNullOrEmpty(orgNo) == true)
+            {
+                return "err@组织编号不能为空.";
+            }
+
+            bp.wf.admin.Org org = new bp.wf.admin.Org();
+            org.setNo(orgNo);
+            if (org.RetrieveFromDBSources() == 0)
+            {
+                return "err@组织编号错误:" + orgNo;
+            }
+        }
+
+        try
+        {
+            AtPara ap = new AtPara(keyVals);
+
+            //增加部门.
+            bp.port.Team en = new bp.port.Team();
+            en.setNo(no);
+            if (en.RetrieveFromDBSources() == 0)
+            {
+                en.setName(name);
+                en.SetValByKey("OrgNo",orgNo);
+                en.Insert();
+            }
+            for (String item : ap.getHisHT().keySet())
+            {
+                if (DataType.IsNullOrEmpty(item) == true)
+                {
+                    continue;
+                }
+                en.SetValByKey(item, ap.GetValStrByKey(item));
+            }
+            en.setName(name);
+            en.SetValByKey("OrgNo", orgNo);
+            en.Update();
+
+            DBAccess.RunSQL("UPDATE Port_Team SET OrgNo='" + orgNo + "' WHERE No='" + no + "'");
+            return "[" + name + "]保存成功";
+        }
+        catch (RuntimeException ex)
+        {
+            return "err@" + ex.getMessage();
+        }
+    }
+    public static String Port_TeamType_Delete(String no)
+    {
+        try
+        {
+            if (bp.web.WebUser.getIsAdmin() == false)
+            {
+                return "err@[" + bp.web.WebUser.getName() + "]不是管理员不能删除岗位信息";
+            }
+            //删除部门.
+            bp.port.TeamType dept = new bp.port.TeamType(no);
+            dept.Delete();
+
+            return "删除成功";
+        }
+        catch (Exception ex)
+        {
+            return "err@" + ex.getMessage();
+        }
+    }
+
+    ///#endregion 关于组织的接口.
+    ///#region 岗位类型
+    public static String Port_StationType_Delete(String no)
+    {
+        try
+        {
+            if (bp.web.WebUser.getIsAdmin() == false)
+            {
+                return "err@[" + bp.web.WebUser.getName() + "]不是管理员不能删除岗位信息";
+            }
+            //删除部门.
+            bp.port.StationType dept = new bp.port.StationType(no);
+            dept.Delete();
+
+            return "删除成功";
+        }
+        catch (RuntimeException ex)
+        {
+            return "err@" + ex.getMessage();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static String Port_TeamType_Save(String orgNo, String no, String name, String keyVals) throws Exception {
+        if (bp.web.WebUser.getIsAdmin() == false)
+        {
+            return "err@[" + bp.web.WebUser.getName() + "]不是管理员不能维护岗位信息";
+        }
+
+        if (bp.difference.SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
+        {
+            if (DataType.IsNullOrEmpty(orgNo) == true)
+            {
+                return "err@组织编号不能为空.";
+            }
+
+            bp.wf.admin.Org org = new bp.wf.admin.Org(orgNo);
+            if (org.RetrieveFromDBSources() == 0)
+            {
+                return "err@组织编号错误:" + orgNo;
+            }
+        }
+
+        try
+        {
+            AtPara ap = new AtPara(keyVals);
+
+            //增加部门.
+            bp.port.TeamType en = new bp.port.TeamType();
+            en.setNo(no);
+            if (en.RetrieveFromDBSources() == 0)
+            {
+                en.setName(name);
+                en.SetValByKey("OrgNo", orgNo);
+                en.Insert();
+            }
+            for (String item : ap.getHisHT().keySet())
+            {
+                if (DataType.IsNullOrEmpty(item) == true)
+                {
+                    continue;
+                }
+                en.SetValByKey(item, ap.GetValStrByKey(item));
+            }
+            en.setName(name);
+            en.SetValByKey("OrgNo", orgNo);
+            en.Update();
+
+            DBAccess.RunSQL("UPDATE Port_TeamType SET OrgNo='" + orgNo + "' WHERE No='" + no + "'");
+            return "[" + name + "]保存成功";
+        }
+        catch (RuntimeException ex)
+        {
+            return "err@" + ex.getMessage();
+        }
+    }
+    ///#endregion 关于组织的接口.
+
+    public static String Port_StationType_Save(String orgNo, String no, String name, String keyVals) throws Exception {
+        if (bp.web.WebUser.getIsAdmin() == false)
+        {
+            return "err@[" + bp.web.WebUser.getName() + "]不是管理员不能维护岗位信息";
+        }
+
+        if (bp.difference.SystemConfig.getCCBPMRunModel() != bp.sys.CCBPMRunModel.Single)
+        {
+            if (DataType.IsNullOrEmpty(orgNo) == true)
+            {
+                return "err@组织编号不能为空.";
+            }
+
+            bp.wf.admin.Org org = new bp.wf.admin.Org();
+            org.setNo(orgNo);
+            if (org.RetrieveFromDBSources() == 0)
+            {
+                return "err@组织编号错误:" + orgNo;
+            }
+        }
+
+        try
+        {
+            AtPara ap = new AtPara(keyVals);
+
+            //增加部门.
+            bp.port.StationType en = new bp.port.StationType();
+            en.setNo(no);
+            if (en.RetrieveFromDBSources() == 0)
+            {
+                en.setName(name);
+                en.SetValByKey("OrgNo", orgNo);
+                en.Insert();
+            }
+            for (String item : ap.getHisHT().keySet())
+            {
+                if (DataType.IsNullOrEmpty(item) == true)
+                {
+                    continue;
+                }
+                en.SetValByKey(item, ap.GetValStrByKey(item));
+            }
+            en.setName(name);
+            en.SetValByKey("OrgNo", orgNo);
+            en.Update();
+
+            DBAccess.RunSQL("UPDATE Port_StationType SET OrgNo='" + orgNo + "' WHERE No='" + no + "'");
+            return "[" + name + "]保存成功";
+        }
+        catch (RuntimeException ex)
+        {
+            return "err@" + ex.getMessage();
+        }
+    }
+
 }

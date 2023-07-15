@@ -1,5 +1,6 @@
 package bp.wf;
 
+import bp.difference.SystemConfig;
 import bp.en.*;
 import bp.da.*;
 import bp.port.*;
@@ -86,7 +87,7 @@ public class WorkReturn
 		//如果退回的节点为0,就求出可以退回的唯一节点.
 		if (returnToNodeID == 0)
 		{
-			DataTable dt = bp.wf.Dev2Interface.DB_GenerWillReturnNodes(currNodeID, workID, fid);
+			DataTable dt = bp.wf.Dev2Interface.DB_GenerWillReturnNodes( workID);
 			if (dt.Rows.size() == 0)
 			{
 				throw new RuntimeException("err@当前节点不允许退回，系统根据退回规则没有找到可以退回的到的节点。");
@@ -266,7 +267,10 @@ public class WorkReturn
 		}
 
 		//退回到人.
-		Emp returnToEmp = new Emp(this.ReturnToEmp);
+		String empNo = this.ReturnToEmp;
+		if(SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS && empNo.startsWith(WebUser.getOrgNo()+"_")==false)
+			empNo = WebUser.getOrgNo()+"_"+empNo;
+		Emp returnToEmp = new Emp(empNo);
 
 		// 退回状态。
 		Paras ps = new Paras();
@@ -606,7 +610,7 @@ public class WorkReturn
 		if (isNeedDeleteSpanNodes)
 		{
 			//获得可以退回的节点，这个节点是有顺序的.
-			DataTable dt = bp.wf.Dev2Interface.DB_GenerWillReturnNodes(this.HisNode.getNodeID(), this.WorkID, this.FID);
+			DataTable dt = bp.wf.Dev2Interface.DB_GenerWillReturnNodes(this.WorkID);
 			boolean isDelBegin = false;
 			for (DataRow dr : dt.Rows)
 			{
@@ -1160,7 +1164,10 @@ public class WorkReturn
 		}
 
 		//退回到人.
-		Emp empReturn = new Emp(this.ReturnToEmp);
+		String empNo = this.ReturnToEmp;
+		if(SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS && empNo.startsWith(WebUser.getOrgNo()+"_")==false)
+			empNo = WebUser.getOrgNo()+"_"+empNo;
+		Emp empReturn = new Emp(empNo);
 		gwf.setTodoEmps(empReturn.getUserID() + "," + empReturn.getName() + ";");
 		gwf.setTodoEmpsNum(1);
 		gwf.Update();

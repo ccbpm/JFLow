@@ -12,6 +12,7 @@ import bp.*;
 import bp.wf.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.sound.sampled.Port;
 import java.util.*;
 import java.io.*;
 
@@ -129,7 +130,7 @@ public class WF_Setting extends WebContralBase
 		ht.put("Stations", stas);
 
 
-		bp.wf.port.WFEmp wfemp = new bp.wf.port.WFEmp(WebUser.getNo());
+	//	bp.wf.port.WFEmp wfemp = new bp.wf.port.WFEmp();
 		ht.put("Tel", emp.getTel());
 		ht.put("Email", emp.getEmail());
 
@@ -141,7 +142,10 @@ public class WF_Setting extends WebContralBase
 	 @return json数据
 	*/
 	public final String Author_Init() throws Exception {
-		bp.wf.port.WFEmp emp = new bp.wf.port.WFEmp(WebUser.getNo());
+		bp.wf.port.WFEmp emp = new bp.wf.port.WFEmp();
+		emp.setNo(WebUser.getUserID());
+		emp.Retrieve();
+
 		Hashtable ht = emp.getRow();
 		ht.remove(bp.wf.port.WFEmpAttr.StartFlows); //移除这一列不然无法形成json.
 		return emp.ToJson(true);
@@ -301,10 +305,13 @@ public class WF_Setting extends WebContralBase
 		String deptNo = this.GetRequestVal("DeptNo");
 		Dept dept = new Dept(deptNo);
 
+		DBAccess.RunSQL("UPDATE Port_Emp SET OrgNo='" + dept.getOrgNo() + "', FK_Dept='" + dept.getNo() + "' WHERE No='" + WebUser.getNo() + "'");
+
 		WebUser.setFK_Dept(dept.getNo());
 		WebUser.setFK_DeptName(dept.getName());
 		WebUser.setFK_DeptNameOfFull(dept.getNameOfPath());
-		bp.wf.port.WFEmp emp = new bp.wf.port.WFEmp(WebUser.getNo());
+		WebUser.setOrgNo(dept.getOrgNo());
+		bp.wf.port.WFEmp emp = new bp.wf.port.WFEmp(WebUser.getUserID());
 		emp.setStartFlows("");
 		emp.Update();
 

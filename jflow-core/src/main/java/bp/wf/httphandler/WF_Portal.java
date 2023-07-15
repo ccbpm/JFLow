@@ -28,9 +28,9 @@ import java.util.*;
 import java.io.*;
 import java.util.concurrent.ConcurrentHashMap;
 import bp.tools.AesEncryptUtil;
-/** 
+/**
  页面功能实体
-*/
+ */
 public class WF_Portal extends WebContralBase
 {
 	public final String getPageID()  {
@@ -42,11 +42,11 @@ public class WF_Portal extends WebContralBase
 
 		return pageID;
 	}
-	/** 
+	/**
 	 初始化
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	public final String Home_Init() throws Exception {
 		WindowTemplates ens = new WindowTemplates();
 		ens.Retrieve(WindowTemplateAttr.PageID, this.getPageID(), "Idx");
@@ -79,16 +79,16 @@ public class WF_Portal extends WebContralBase
 		}
 		return "移动成功..";
 	}
-	/** 
+	/**
 	 构造函数
-	*/
+	 */
 	public WF_Portal() throws Exception {
 	}
-	/** 
+	/**
 	 系统信息
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	public final String Login_InitInfo() throws Exception {
 		Hashtable ht = new Hashtable();
 		ht.put("SysNo", SystemConfig.getSysNo());
@@ -96,11 +96,11 @@ public class WF_Portal extends WebContralBase
 		ht.put("OSModel", Integer.valueOf(SystemConfig.getCCBPMRunModel().getValue()));
 		return Json.ToJson(ht);
 	}
-	/** 
+	/**
 	 初始化登录界面.
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	public final String Login_Init() throws Exception {
 		//判断是否已经安装数据库，是否需要更新
 		if (CheckIsDBInstall() == true)
@@ -187,9 +187,9 @@ public class WF_Portal extends WebContralBase
 	}
 	/**
 	 登录.
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	public final String Login_Submit() throws Exception {
 		try
 		{
@@ -321,11 +321,15 @@ public class WF_Portal extends WebContralBase
 				//HttpContextHelper.AddCookie("CCS", this.ToString() + "_Login_Error", this.ToString() + "_Login_Error");
 				return "err@用户名或者密码错误.";
 			}
-
+			//设置他的组织，信息.
+			WebUser.setNo(emp.getUserID()); //登录帐号.
+			WebUser.setFK_Dept(emp.getFK_Dept());
+			WebUser.setFK_DeptName(emp.getFK_DeptText());
+			WebUser.setOrgNo(emp.getOrgNo());
 			if (bp.wf.Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
 			{
 				//调用登录方法.
-				String token = Dev2Interface.Port_GenerToken(emp.getNo(),"PC");
+				String token = Dev2Interface.Port_GenerToken(emp.getUserID(),emp.getOrgNo());
 				Dev2Interface.Port_Login(emp.getUserID());
 				if (DBAccess.IsExitsTableCol("Port_Emp", "EmpSta") == true)
 				{
@@ -341,38 +345,12 @@ public class WF_Portal extends WebContralBase
 			}
 
 			//获得当前管理员管理的组织数量.
-
-			//查询他管理多少组织.
-			OrgAdminers adminers = new OrgAdminers();
-			adminers.Retrieve(OrgAdminerAttr.FK_Emp, emp.getUserID(), null);
-			if (adminers.size() == 0)
-			{
-				//调用登录方法， 普通用户了.
-				String token = Dev2Interface.Port_GenerToken(emp.getNo(),"PC");
-				Dev2Interface.Port_Login(emp.getUserID(), emp.getOrgNo());
-				return "url@Default.htm?Token=" + token+ "&UserNo=" + emp.getUserID() + "&OrgNo=" + emp.getOrgNo();
-			}
-
-
-
 			ClearOldSession();
 			//设置SID.
-			String token = bp.wf.Dev2Interface.Port_GenerToken(emp.getNo(),"PC");
+			String token = bp.wf.Dev2Interface.Port_GenerToken(emp.getUserID(), emp.getOrgNo());
+			Dev2Interface.Port_Login(emp.getUserID(), emp.getOrgNo());
 
-			//设置他的组织，信息.
-			WebUser.setNo(emp.getUserID()); //登录帐号.
-			WebUser.setFK_Dept(emp.getFK_Dept());
-			WebUser.setFK_DeptName(emp.getFK_DeptText());
-
-			//执行登录.
-			bp.wf.Dev2Interface.Port_Login(emp.getUserID(),  emp.getOrgNo(),null);
-
-
-			//判断是否是多个组织的情况.
-			if (adminers.size() == 1)
-				return "url@Default.htm?Token=" + token + "&UserNo=" + emp.getUserID() + "&OrgNo=" + emp.getOrgNo();
 			return "url@Default.htm?Token=" + token + "&UserNo=" + emp.getUserID() + "&OrgNo=" + emp.getOrgNo();
-			//return "url@SelectOneOrg.htm?Token=" + token + "&UserNo=" + emp.getUserID() + "&OrgNo=" + emp.getOrgNo();
 		}
 		catch (RuntimeException ex)
 		{
@@ -401,12 +379,12 @@ public class WF_Portal extends WebContralBase
 	}
 
 
-		///#region Frm.htm 表单.
-	/** 
+	///#region Frm.htm 表单.
+	/**
 	 表单树.
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	public final String Frms_InitSort() throws Exception {
 		//获得数量.
 		String sqlWhere = "";
@@ -444,11 +422,11 @@ public class WF_Portal extends WebContralBase
 		}
 		return Json.ToJson(dtSort);
 	}
-	/** 
+	/**
 	 表单
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	public final String Frms_Init() throws Exception {
 		//获得流程实例的数量.
 		String sqlWhere = "";
@@ -493,11 +471,11 @@ public class WF_Portal extends WebContralBase
 		}
 		return Json.ToJson(dtFlow);
 	}
-	/** 
+	/**
 	 流程移动.
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	public final String Frms_Move() throws Exception {
 		String sortNo = this.GetRequestVal("SortNo");
 		String[] flowNos = this.GetRequestVal("EnNos").split("[,]", -1);
@@ -528,38 +506,38 @@ public class WF_Portal extends WebContralBase
 	}
 
 
-		///#endregion Frm.htm 表单.
-		private void ClearOldSession(){
-			HttpSession session = ContextHolderUtils.getSession();
+	///#endregion Frm.htm 表单.
+	private void ClearOldSession(){
+		HttpSession session = ContextHolderUtils.getSession();
 
-			// 用来存储原sessionde的值
-			ConcurrentHashMap concurrentHashMap = new ConcurrentHashMap();
+		// 用来存储原sessionde的值
+		ConcurrentHashMap concurrentHashMap = new ConcurrentHashMap();
 
-			Enumeration enumeration = session.getAttributeNames();
-			// 遍历enumeration
-			while (enumeration.hasMoreElements()) {
-				// 获取session的属性名称
-				String name = enumeration.nextElement().toString();
-				// 根据键值取session中的值
-				concurrentHashMap.put(name,session.getAttribute(name));
-			}
-
-			// 获取之前旧的session
-			HttpSession oldSession = ContextHolderUtils.getRequest().getSession(false);
-			if (oldSession != null) {
-				//废除掉登陆前的session
-				oldSession.invalidate();
-			}
-			ContextHolderUtils.getRequest().getSession(true);
-			// 获取新session
-			session =  ContextHolderUtils.getRequest().getSession();
-			// 将原先老session的值存入
-			java.util.Iterator<java.util.Map.Entry<String, String>> it = concurrentHashMap.entrySet().iterator();
-			while (it.hasNext()) {
-				java.util.Map.Entry<String, String> entry = it.next();
-				session.setAttribute(entry.getKey(), entry.getValue());
-			}
+		Enumeration enumeration = session.getAttributeNames();
+		// 遍历enumeration
+		while (enumeration.hasMoreElements()) {
+			// 获取session的属性名称
+			String name = enumeration.nextElement().toString();
+			// 根据键值取session中的值
+			concurrentHashMap.put(name,session.getAttribute(name));
 		}
+
+		// 获取之前旧的session
+		HttpSession oldSession = ContextHolderUtils.getRequest().getSession(false);
+		if (oldSession != null) {
+			//废除掉登陆前的session
+			oldSession.invalidate();
+		}
+		ContextHolderUtils.getRequest().getSession(true);
+		// 获取新session
+		session =  ContextHolderUtils.getRequest().getSession();
+		// 将原先老session的值存入
+		java.util.Iterator<java.util.Map.Entry<String, String>> it = concurrentHashMap.entrySet().iterator();
+		while (it.hasNext()) {
+			java.util.Map.Entry<String, String> entry = it.next();
+			session.setAttribute(entry.getKey(), entry.getValue());
+		}
+	}
 
 	/// <summary>
 	/// 初始化
@@ -571,11 +549,11 @@ public class WF_Portal extends WebContralBase
 		return "";
 	}
 	///#region Flows.htm 流程.
-	/** 
+	/**
 	 初始化类别.
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	public final String Flows_InitSort() throws Exception {
 		String sql = "";
 		String dbStr = SystemConfig.getAppCenterDBVarStr();
@@ -629,7 +607,7 @@ public class WF_Portal extends WebContralBase
 
 		sql = "SELECT  FK_FlowSort, WFState, COUNT(*) AS Num FROM WF_GenerWorkFlow WHERE " + sqlWhere + " GROUP BY FK_FlowSort, WFState ";
 		dt = DBAccess.RunSQLReturnTable(sql);
-		//求内容. 
+		//求内容.
 		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
 		{
 			sqlWhere = "   OrgNo='" + WebUser.getOrgNo() + "' AND No!='" + WebUser.getOrgNo() + "'";
@@ -750,11 +728,11 @@ public class WF_Portal extends WebContralBase
 		}
 		return Json.ToJson(dtFlow);
 	}
-	/** 
+	/**
 	 流程移动.
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	public final String Flows_Move() throws Exception {
 		String sourceSortNo = this.GetRequestVal("SourceSortNo");
 		String sourceFlowNos[] = this.GetRequestVal("SourceFlowNos").split("[,]", -1);
@@ -793,16 +771,16 @@ public class WF_Portal extends WebContralBase
 		return "目录移动成功..";
 	}
 
-		///#endregion 流程.
+	///#endregion 流程.
 
 
-		///#region 消息.
+	///#region 消息.
 
-	/** 
+	/**
 	 消息初始化
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	public final String Message_Init() throws Exception {
 		//获得消息分组.
 		String sql = "SELECT MsgType, Count(*) as Num FROM Sys_SMS WHERE SendTo='" + WebUser.getNo() + "'  GROUP BY MsgType";
@@ -827,15 +805,15 @@ public class WF_Portal extends WebContralBase
 		return Json.ToJson(ds);
 	}
 
-		///#endregion 消息.
+	///#endregion 消息.
 
-		///#region 通知公告.
+	///#region 通知公告.
 
-	/** 
+	/**
 	 消息初始化
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	public final String Info_Init() throws Exception {
 
 		//获得消息.
@@ -851,17 +829,17 @@ public class WF_Portal extends WebContralBase
 		return Json.ToJson(ds);
 	}
 
-		///#endregion 通知公告
+	///#endregion 通知公告
 
 
 
-		///#region   加载菜单 .
+	///#region   加载菜单 .
 
-	/** 
+	/**
 	 获得菜单:权限.
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	public final String Default_InitExt() throws Exception {
 		String pkval = WebUser.getNo() + "_Menus";
 		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
@@ -903,7 +881,7 @@ public class WF_Portal extends WebContralBase
 		}
 
 
-			///#region 1.0 首先解决系统权限问题.
+		///#region 1.0 首先解决系统权限问题.
 		//首先解决系统的权限.
 		String ids = "";
 		for (MySystem item : systems.ToJavaList())
@@ -984,10 +962,10 @@ public class WF_Portal extends WebContralBase
 			}
 		}
 
-			///#endregion 首先解决系统权限问题.
+		///#endregion 首先解决系统权限问题.
 
 
-			///#region 2.0 根据求出的系统集合处理权限， 求出模块权限..
+		///#region 2.0 根据求出的系统集合处理权限， 求出模块权限..
 		for (MySystem item : systemsCopy.ToJavaList())
 		{
 			for (Module module : modules.ToJavaList())
@@ -1074,10 +1052,10 @@ public class WF_Portal extends WebContralBase
 			}
 		}
 
-			///#endregion 2.0 根据求出的系统集合处理权限,求出模块权限.
+		///#endregion 2.0 根据求出的系统集合处理权限,求出模块权限.
 
 
-			///#region 3.0 根据求出的模块集合处理权限， 求出菜单权限..
+		///#region 3.0 根据求出的模块集合处理权限， 求出菜单权限..
 		for (Module item : modulesCopy.ToJavaList())
 		{
 			for (Menu menu : menus.ToJavaList())
@@ -1172,10 +1150,10 @@ public class WF_Portal extends WebContralBase
 			}
 		}
 
-			///#endregion 2.0 根据求出的系统集合处理权限,求出模块权限.
+		///#endregion 2.0 根据求出的系统集合处理权限,求出模块权限.
 
 
-			///#region 组装数据.
+		///#region 组装数据.
 		DataSet ds = new DataSet();
 		DataTable dtSystem = systemsCopy.ToDataTableField("System");
 		dtSystem.Columns.Add("IsOpen");
@@ -1206,7 +1184,7 @@ public class WF_Portal extends WebContralBase
 		dtMenu.Columns.get("UrlExt").ColumnName = "Url";
 		ds.Tables.add(dtMenu);
 
-			///#endregion 组装数据.
+		///#endregion 组装数据.
 
 
 		String json = Json.ToJson(ds);
@@ -1225,13 +1203,13 @@ public class WF_Portal extends WebContralBase
 		return json;
 
 	}
-	/** 
+	/**
 	 比较两个字符串是否有交集
-	 
+
 	 param ids1
 	 param ids2
-	 @return 
-	*/
+	 @return
+	 */
 	public final boolean IsHaveIt(String ids1, String ids2)
 	{
 		if (DataType.IsNullOrEmpty(ids1) == true)
@@ -1279,11 +1257,11 @@ public class WF_Portal extends WebContralBase
 
 		return "./Login.htm?DoType=Logout&SystemNo=CCFast";
 	}
-	/** 
+	/**
 	 返回构造的JSON.
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	public final String Default_Init() throws Exception {
 		//如果是admin.
 		if (WebUser.getIsAdmin() == true && this.getIsMobile() == false)
@@ -1297,7 +1275,7 @@ public class WF_Portal extends WebContralBase
 		DataSet myds = new DataSet();
 
 
-			///#region 构造数据容器.
+		///#region 构造数据容器.
 		//系统表.
 		MySystems systems = new MySystems();
 		systems.RetrieveAll();
@@ -1317,22 +1295,22 @@ public class WF_Portal extends WebContralBase
 		DataTable dtMenu = menus.ToDataTableField("Menu");
 		dtMenu.Columns.get("UrlExt").ColumnName = "Url";
 
-			///#endregion 构造数据容器.
+		///#endregion 构造数据容器.
 
 
-			///#region 把数据加入里面去.
+		///#region 把数据加入里面去.
 		myds.Tables.add(dtSys);
 		myds.Tables.add(dtModule);
 		myds.Tables.add(dtMenu);
 
-			///#endregion 把数据加入里面去.
+		///#endregion 把数据加入里面去.
 
 
-			///#region 如果是admin.
-		if (WebUser.getIsAdmin() == true && this.getIsMobile() == false && SystemConfig.getCCBPMRunModel() ==CCBPMRunModel.SAAS)
+		///#region 如果是admin.
+		if (WebUser.getIsAdmin() == true && this.getIsMobile() == false && SystemConfig.getCCBPMRunModel() !=CCBPMRunModel.SAAS)
 		{
 
-				///#region 增加默认的系统.
+			///#region 增加默认的系统.
 			DataRow dr = dtSys.NewRow();
 			dr.setValue("No", "Flows");
 			dr.setValue("Name", "流程设计");
@@ -1351,7 +1329,7 @@ public class WF_Portal extends WebContralBase
 			dr.setValue("Icon", "");
 			dtSys.Rows.add(dr);
 
-				///#endregion 增加默认的系统.
+			///#endregion 增加默认的系统.
 
 			String sqlWhere = "";
 			if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
@@ -1391,7 +1369,7 @@ public class WF_Portal extends WebContralBase
 			}
 		}
 
-			///#endregion 如果是admin.
+		///#endregion 如果是admin.
 
 		//   myds.WriteXml("c:/11.xml");
 
@@ -1423,26 +1401,26 @@ public class WF_Portal extends WebContralBase
 	}
 
 
-		///#endregion   加载菜单.
+	///#endregion   加载菜单.
 
 
-	/** 
+	/**
 	 生成页面
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	public final String LoginGenerQRCodeMobile_Init() throws Exception {
 		String url = SystemConfig.getHostURL() + "/FastMobilePortal/Login.htm";
 		return url;
 	}
 
 
-		///#region 按照流程类别批量导出流程模板
-	/** 
+	///#region 按照流程类别批量导出流程模板
+	/**
 	 批量导出流程模板
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	public final String Flow_BatchExpFlowTemplate() throws Exception {
 		String flowSort = this.GetRequestVal("FK_Sort");
 		String flowSortName = this.GetRequestVal("FlowSortName");
@@ -1491,14 +1469,14 @@ public class WF_Portal extends WebContralBase
 		return "url@DataUser/Temp/" + flowSortName + ".zip";
 	}
 
-		///#endregion 按照流程类别批量导出流程模板
+	///#endregion 按照流程类别批量导出流程模板
 
-		///#region 按照表单类别批量导出表单模板
-	/** 
+	///#region 按照表单类别批量导出表单模板
+	/**
 	 批量导出表单模板
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	public final String Form_BatchExpFrmTemplate() throws Exception {
 		String frmTree = this.GetRequestVal("FK_FrmTree");
 		String frmTreeName = this.GetRequestVal("FrmTreeName");
@@ -1542,7 +1520,7 @@ public class WF_Portal extends WebContralBase
 		return "url@DataUser/Temp/" + frmTreeName + ".zip";
 	}
 
-		///#endregion 按照表单类别批量导出表单模板
+	///#endregion 按照表单类别批量导出表单模板
 
 
 }

@@ -1,7 +1,8 @@
-package bp.cloud.port;
+package bp.cloud;
 
 import bp.da.*;
 import bp.en.*;
+import bp.port.*;
 import bp.port.Station;
 import bp.port.StationType;
 
@@ -417,7 +418,7 @@ public class Org extends EntityNoName {
 
         map.AddTBString(OrgAttr.Adminer, null, "管理员帐号", true, true, 0, 300, 400);
         map.AddTBString(OrgAttr.AdminerName, null, "管理员", true, true, 0, 300, 400);
-
+        map.AddTBInt(OrgAttr.OrgSta, 0, "组织状态", true, false);
         map.AddTBString(OrgAttr.Addr, null, "地址", true, false, 0, 300, 36);
         map.AddTBString(OrgAttr.GUID, null, "GUID", true, false, 0, 32, 36);
 
@@ -648,7 +649,7 @@ public class Org extends EntityNoName {
         myde.setFK_Dept(dept.getNo());
         myde.setFK_Emp(this.getAdminer());
 
-        myde.setEmpNo(this.getNo() + "_" + this.getAdminer());
+       // myde.setEmpNo(this.getNo() + "_" + this.getAdminer());
 
         myde.setOrgNo(this.getNo());
         myde.Insert();

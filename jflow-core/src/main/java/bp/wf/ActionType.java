@@ -139,7 +139,11 @@ public enum ActionType
 	 调整流程
 	*/
 	Adjust(31),
-	/** 
+	/**
+	 * 路由节点
+	 */
+	Route(32),
+	/**
 	 信息
 	*/
 	Info(100);

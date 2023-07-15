@@ -1292,7 +1292,8 @@ public class WF_Admin_FoolFormDesigner extends WebContralBase
 
 		String name = this.GetRequestVal("name");
 		String newNo = DataType.ParseStringForNo(no, 0);
-		String newName = DataType.ParseStringForName(name, 0);
+		//String newName = DataType.ParseStringForName(name, 0);
+		String newName = name;
 		int fType = Integer.parseInt(this.GetRequestVal("FType"));
 		boolean isSupperText = this.GetRequestValBoolen("IsSupperText");
 

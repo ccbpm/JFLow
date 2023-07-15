@@ -392,7 +392,7 @@ public class CCMobile_MyFlow extends WebContralBase
 		{
 			if (fl.getDraftRole() == DraftRole.SaveToDraftList)
 			{
-				Dev2Interface.Node_SetDraft(this.getFK_Flow(), this.getWorkID());
+				Dev2Interface.Node_SetDraft(this.getWorkID());
 			}
 
 			if (fl.getDraftRole() == DraftRole.SaveToTodolist)

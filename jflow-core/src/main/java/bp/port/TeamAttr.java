@@ -8,4 +8,5 @@ import bp.en.*;
 public class TeamAttr extends EntityTreeAttr
 {
 	public static final String FK_TeamType = "FK_TeamType";
+	public static final String OrgNo = "OrgNo";
 }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,6 +30,33 @@ public class CommonFileUtils {
 			MultipartFile multipartFile = mrequest.getFile(fileName);
 			try {
 				multipartFile.transferTo(targetFile);
+			} catch (Exception e) {
+				throw e;
+			}
+		}
+	}
+
+	/**
+	 * 多文件上传根据idx获取单个文件
+	 * @param request
+	 * @param fileName
+	 * @param targetFile
+	 * @param idx 获取第几个文件
+	 * @throws Exception
+	 */
+	public static void upload(HttpServletRequest request,String fileName,File targetFile, Integer idx) throws Exception{
+		String contentType = request.getContentType();
+		if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
+			MultipartHttpServletRequest mrequest = getMultipartHttpServletRequest(request);
+
+			Iterator ifiles =  mrequest.getFileNames();
+			while(ifiles.hasNext()){
+				System.out.println(ifiles.next());
+			}
+
+			List<MultipartFile> multipartFiles = mrequest.getFiles(fileName);
+			try {
+				multipartFiles.get(idx).transferTo(targetFile);
 			} catch (Exception e) {
 				throw e;
 			}

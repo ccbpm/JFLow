@@ -1033,8 +1033,8 @@ public class MapData extends EntityNoName
 			throw new RuntimeException("err@已经存在(" + fk_mapData + ")的表单ID，所以您不能导入。");
 		}
 
-		//执行删除操作.
-		md.Delete();
+		//执行删除操作. 导入时为什么要执行删除？本来就没有这个表单，删除肯定报错，先注释了
+		//md.Delete();
 
 		//导入.
 		return ImpMapData(fk_mapData, ds);

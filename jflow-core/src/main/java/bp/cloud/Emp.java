@@ -1,12 +1,12 @@
-package bp.cloud.port;
+package bp.cloud;
 
 import bp.da.*;
 import bp.en.*;
-import bp.port.DeptEmpStations;
-import bp.port.DeptEmps;
+import bp.port.*;
 import bp.sys.*;
 import bp.tools.Cryptos;
 import bp.tools.Encodes;
+import bp.wf.template.NodeTeamAttr;
 
 /**
  * 操作员 的摘要说明。
@@ -272,7 +272,11 @@ public class Emp extends EntityNoName {
     public UAC getHisUAC() {
         UAC uac = new UAC();
         if (bp.web.WebUser.getIsAdmin() == true) {
-            uac.OpenAll();
+            uac.IsUpdate = true;
+            uac.IsDelete = true;
+            uac.IsInsert = false;
+            uac.IsAdjunct = false;
+            uac.IsView = true;
         } else {
             uac.Readonly();
         }
@@ -283,7 +287,7 @@ public class Emp extends EntityNoName {
      * 重写基类方法
      */
     @Override
-    public Map getEnMap() {
+    public Map getEnMap()  {
         if (this.get_enMap() != null) {
             return this.get_enMap();
         }
@@ -305,10 +309,11 @@ public class Emp extends EntityNoName {
         map.AddTBInt(EmpAttr.EmpSta, 0, "EmpSta", false, false);
         map.AddTBString(EmpAttr.Leader, null, "部门领导", false, false, 0, 100, 10);
         map.AddTBString(EmpAttr.Tel, null, "电话", true, false, 0, 20, 130);
-        map.AddTBString(EmpAttr.Email, null, "邮箱", true, false, 0, 100, 132, true);
+        map.AddTBString(EmpAttr.Email, null, "邮箱", true, false, 0, 100, 132, false);
         map.AddTBString(EmpAttr.PinYin, null, "拼音", false, false, 0, 1000, 132, true);
-        map.AddTBString(EmpAttr.OrgNo, null, "OrgNo", true, true, 0, 500, 132, true);
-
+        map.AddTBString("OrgNo", null, "组织编号", true, true, 0, 1000, 132, false);
+       // map.AddDDLEntities(EmpAttr.OrgNo, null, "组织编号",
+            //    new bp.cloud.Orgs(), false);
         //map.AddDDLEntities(EmpAttr.OrgNo, null, "组织", new bp.cloud.Orgs(), false);
         //map.AddTBString(EmpAttr.OrgNo, null, "OrgNo", false, false, 0, 36, 36);
         //map.AddTBString(EmpAttr.OrgName, null, "OrgName", false, false, 0, 36, 36);
@@ -355,8 +360,16 @@ public class Emp extends EntityNoName {
         map.AddRefMethod(rm);
 
         ///#endregion 相关方法.
+        map.AddGroupMethod("用户组");
+//        ////平铺模式.
+//        map.getAttrsOfOneVSM().AddGroupPanelModel(new TeamEmps(), new Teams(),
+//            "FK_Emp",
+//            bp.wf.template.NodeTeamAttr.FK_Team, "绑定用户组1");
 
-
+        //deptAndEmp列表模式.
+        map.getAttrsOfOneVSM().AddGroupPanelModel(new TeamEmps(), new Teams(),
+                TeamEmpAttr.FK_Emp,
+                TeamEmpAttr.FK_Team, "绑定用户组", TeamAttr.FK_TeamType);
         this.set_enMap(map);
         return this.get_enMap();
     }

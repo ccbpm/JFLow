@@ -1348,7 +1348,7 @@ public class WF_CommEntity extends WebContralBase
 			for(DataRow dr: dt.Rows)
 			{
 				//dr["No"] = dr["UserID"];
-				dr.setValue("No", dr.get("UserID"));
+				dr.setValue("No", dr.getValue("UserID"));
 			}
 		}
 
@@ -1388,21 +1388,6 @@ public class WF_CommEntity extends WebContralBase
 		AttrsOfOneVSM oneVsM = en.getEnMap().getAttrsOfOneVSM();
 		AttrOfOneVSM vsM = null;
 		for (AttrOfOneVSM item : oneVsM) {
-			// if (item.Dot2DotModel != Dot2DotModel.TreeDeptEmp)
-			// continue;
-
-			// if (item.EnsOfMM.ToString().Equals(dot2DotEnsName) == false)
-			// continue;
-
-			// if (item.DefaultGroupAttrKey == null)
-			// continue;
-
-			// if (item.DefaultGroupAttrKey.Equals(dot2DotEnsName) == false)
-			// continue;
-
-			// vsM = item;
-			// break;
-
 			if (item.dot2DotModel == Dot2DotModel.TreeDeptEmp && item.getEnsOfMM().toString().equals(dot2DotEnsName)
 					&& item.DefaultGroupAttrKey.equals(defaultGroupAttrKey)) {
 				vsM = item;
@@ -1511,32 +1496,65 @@ public class WF_CommEntity extends WebContralBase
 		boolean saveType = this.GetRequestValBoolen("SaveType");
 		Entities dot2Dots = ClassFactory.GetEns(dot2DotEnsName);
 		DataTable dtSelected = null;
-		if (saveType == true) {
-			// 选择的值保存在一个字段中
-			String para = this.GetRequestVal("Para");
-			String paraVal = this.GetRequestVal("ParaVal");
+		Entity dot2Dot = dot2Dots.getGetNewEntity();
+		// 选择的值保存在一个字段中
+		String para = this.GetRequestVal("Para");
+		String paraVal = this.GetRequestVal("ParaVal");
 
-			String para1 = this.GetRequestVal("Para1");
-			String paraVal1 = this.GetRequestVal("ParaVal1");
+		String para1 = this.GetRequestVal("Para1");
+		String paraVal1 = this.GetRequestVal("ParaVal1");
 
-			String pkval = this.getPKVal();
+		String pkval = this.getPKVal();
+		//是SAAS版并且Dot2DotEnName含有FK_Emp字段
+		boolean isHaveSAASEmp = bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS && dot2Dot.getEnMap().getAttrs().contains("FK_Emp") == true ? true : false;
+		if (isHaveSAASEmp == true)
+		{
+			String sql = "SELECT A.*,B.Name AS FK_EmpText FROM " + dot2Dot.getEnMap().getPhysicsTable() + " A,Port_Emp B WHERE A.FK_Emp=B.UserID AND B.OrgNo='" + WebUser.getOrgNo() + "'";
+			if (saveType == true)
+			{
+				if (DataType.IsNullOrEmpty(para) == true)
+					sql += " AND A." + vsM.getAttrOfOneInMM()+ "='" +pkval + "'";
+				if (DataType.IsNullOrEmpty(para1) == true)
+				{
+					pkval = pkval.replace("_" + paraVal, "");
+					sql += " AND A." + vsM.getAttrOfOneInMM() + "='" + pkval + "' AND " + para + "='" + paraVal + "'";
+				}
 
-			if (DataType.IsNullOrEmpty(para) == true) {
+				else if (DataType.IsNullOrEmpty(para) == false && DataType.IsNullOrEmpty(para1) == false)
+				{
+					pkval = pkval.replace("_" + paraVal, "");
+					sql += " AND A." + vsM.getAttrOfOneInMM() + "='" + pkval + "' AND " + para + "='" + paraVal + "' AND " + para1 + "='" + paraVal1 + "'";
+				}
+			}
+			else
+			{
+				sql += " AND A." + vsM.getAttrOfOneInMM() + "='" + pkval + "'";
+			}
+			dtSelected = DBAccess.RunSQLReturnTable(sql);
+			dtSelected.TableName = "DBMMs";
+
+		}else{
+			if (saveType == true) {
+
+
+				if (DataType.IsNullOrEmpty(para) == true) {
+					dot2Dots.Retrieve(vsM.getAttrOfOneInMM(), this.getPKVal());
+				} else if (DataType.IsNullOrEmpty(para1) == true) {
+					pkval = pkval.replace("_" + paraVal, "");
+					dot2Dots.Retrieve(vsM.getAttrOfOneInMM(), pkval, para, paraVal);
+				}
+
+				else if (DataType.IsNullOrEmpty(para) == false && DataType.IsNullOrEmpty(para1) == false) {
+					pkval = pkval.replace("_" + paraVal, "");
+					dot2Dots.Retrieve(vsM.getAttrOfOneInMM(), pkval, para, paraVal, para1, paraVal1);
+				}
+
+			} else {
 				dot2Dots.Retrieve(vsM.getAttrOfOneInMM(), this.getPKVal());
-			} else if (DataType.IsNullOrEmpty(para1) == true) {
-				pkval = pkval.replace("_" + paraVal, "");
-				dot2Dots.Retrieve(vsM.getAttrOfOneInMM(), pkval, para, paraVal);
 			}
-
-			else if (DataType.IsNullOrEmpty(para) == false && DataType.IsNullOrEmpty(para1) == false) {
-				pkval = pkval.replace("_" + paraVal, "");
-				dot2Dots.Retrieve(vsM.getAttrOfOneInMM(), pkval, para, paraVal, para1, paraVal1);
-			}
-
-		} else {
-			dot2Dots.Retrieve(vsM.getAttrOfOneInMM(), this.getPKVal());
+			dtSelected = dot2Dots.ToDataTableField("DBMMs");
 		}
-		dtSelected = dot2Dots.ToDataTableField("DBMMs");
+
 
 		String attrOfMInMM = this.GetRequestVal("AttrOfMInMM");
 		String AttrOfOneInMM = this.GetRequestVal("AttrOfOneInMM");

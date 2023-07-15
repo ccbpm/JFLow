@@ -76,6 +76,55 @@ public class Cash {
 		}
 	}
 
+	public static void ClearCash(String enName)
+	{
+		if (_BS_Cash != null)
+		{
+			if (_BS_Cash.containsKey(enName) == true)
+				_BS_Cash.remove(enName);
+		}
+
+		if (_SQL_Cash != null)
+		{
+			if (_SQL_Cash.containsKey(enName) == true)
+				_SQL_Cash.remove(enName);
+		}
+
+
+		if (_EnsData_Cash != null)
+		{
+			if (_EnsData_Cash.containsKey(enName) == true)
+				_EnsData_Cash.remove(enName);
+		}
+
+		if (_Map_Cash != null)
+		{
+			if (_Map_Cash.containsKey(enName) == true)
+				_Map_Cash.remove(enName);
+		}
+
+		if (_EnsData_Cash_Ext != null)
+		{
+			if (_EnsData_Cash_Ext.containsKey(enName) == true)
+				_EnsData_Cash_Ext.remove(enName);
+		}
+
+		if (_Bill_Cash != null)
+		{
+			if (_Bill_Cash.containsKey(enName) == true)
+				_Bill_Cash.remove(enName);
+		}
+
+//		if (_Row_Cash != null)
+//		{
+//			if (_Row_Cash.containsKey(enName) == true)
+//				_Row_Cash.remove(enName);
+//		}
+
+		//清除
+		//  Cash2019.ClearCash();
+	}
+
 	// SQL cash
 	private static String sqlCashKey = SystemConfig.getRedisCacheKey("SQLCash");
 	private static  Hashtable<String, Object> _SQL_Cash = new Hashtable<>();

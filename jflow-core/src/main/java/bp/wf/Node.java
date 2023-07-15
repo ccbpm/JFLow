@@ -1337,6 +1337,16 @@ public class Node extends Entity
 	 {
 		this.SetValByKey(NodeAttr.RunModel, value.getValue());
 	}
+	/**
+	 节点类型
+	 */
+	public final NodeType getHisNodeType()  {
+		return NodeType.forValue(this.GetValIntByKey(NodeAttr.NodeType));
+	}
+	public final void setHisNodeType(NodeType value)
+	{
+		this.SetValByKey(NodeAttr.NodeType, value.getValue());
+	}
 	/** 
 	 操纵提示
 	*/
@@ -2421,6 +2431,7 @@ public class Node extends Entity
 		map.AddTBIntPK(NodeAttr.NodeID, 0, "节点ID", true, true);
 		map.AddTBString(NodeAttr.Name, null, "名称", true, false, 0, 150, 10);
 		map.AddTBString(NodeAttr.Tip, null, "操作提示", true, true, 0, 100, 10, false);
+		map.AddTBString(NodeAttr.Mark, null, "标记", true, true, 0, 100, 10, false);
 
 		map.AddTBInt(NodeAttr.Step, NodeWorkType.Work.getValue(), "流程步骤", true, false);
 
@@ -2555,6 +2566,7 @@ public class Node extends Entity
 		map.AddBoolean(NodeAttr.IsHandOver, false, "是否可以移交", true, true);
 		map.AddTBDecimal(NodeAttr.PassRate, new BigDecimal(100), "通过率", true, true);
 		map.AddTBInt(NodeAttr.RunModel, 0, "运行模式(对普通节点有效)", true, true);
+		map.AddTBInt(NodeAttr.NodeType, 0, "节点类型", true, true); //2023.06.
 		map.AddTBInt(NodeAttr.BlockModel, 0, "阻塞模式", true, true);
 		map.AddTBString(NodeAttr.BlockExp, null, "阻塞表达式", true, false, 0, 200, 10);
 		map.AddTBString(NodeAttr.BlockAlert, null, "被阻塞提示信息", true, false, 0, 100, 10);

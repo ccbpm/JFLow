@@ -1,7 +1,9 @@
 package bp.wf.port.admin2group;
 
 import bp.da.*;
+import bp.difference.SystemConfig;
 import bp.en.*;
+import bp.sys.CCBPMRunModel;
 import bp.wf.template.SysFormTree;
 import bp.wf.template.SysFormTrees;
 import bp.web.*;
@@ -83,12 +85,14 @@ public class Org extends EntityNoName
 		Map map = new Map("Port_Org", "独立组织");
 			// map.EnType = EnType.View; //独立组织是一个视图.
 
-		map.AddTBStringPK(OrgAttr.No, null, "编号(与部门编号相同)", true, false, 1, 50, 40);
-		map.AddTBString(OrgAttr.Name, null, "组织名称", true, false, 0, 60, 200, true);
+		map.AddTBStringPK(OrgAttr.No, null, "编号", true, false, 1, 30, 40);
+		map.AddTBString(OrgAttr.Name, null, "名称", true, false, 0, 60, 200, true);
 
-		map.AddTBString(OrgAttr.Adminer, null, "主要管理员(创始人)", true, true,
+		map.AddTBString(OrgAttr.Adminer, null, "创始人", true, true, 0, 60, 200, false);
+		map.AddTBString(OrgAttr.AdminerName, null, "名称", true, true, 0, 60, 200, false);
+		map.AddTBString(OrgAttr.Adminer, null, "主要管理员(创始人)", true, false,
 				0, 60, 200, true);
-		map.AddTBString(OrgAttr.AdminerName, null, "管理员名称", true, true, 0, 60, 200, true);
+		map.AddTBString(OrgAttr.AdminerName, null, "管理员名称", true, true, 0, 60, 200, false);
 
 		map.AddTBInt("FlowNums", 0, "流程数", true, true);
 		map.AddTBInt("FrmNums", 0, "表单数", true, true);
@@ -97,8 +101,14 @@ public class Org extends EntityNoName
 
 		map.AddTBInt("GWFS", 0, "运行中流程", true, true);
 		map.AddTBInt("GWFSOver", 0, "结束的流程", true, true);
+		map.AddTBString("PrivateKey", null, "PrivateKey", true, false, 0, 100, 200, true);
+		map.SetHelperAlert("PrivateKey", "接口调用密钥.");
 
-		map.AddTBInt(OrgAttr.Idx, 0, "排序", true, false);
+		map.AddTBString("SSOUrl", null, "SSOUrl", true, false, 0, 100, 200, true);
+		map.SetHelperAlert("SSOUrl", "单点登陆的Url:配置格式: http://xxxx.xxx.xxx.xx:9090/XX.do?Token={$Token}");
+
+		map.AddDDLStringEnum("JieMi", "None", "解密方式","@None=不解密@AES=AES解密",true,null,false);
+		map.AddTBString("KeyOfJieMi", null, "盐值", true, false, 0, 100, 200, false);
 
 		RefMethod rm = new RefMethod();
 
@@ -175,7 +185,11 @@ public class Org extends EntityNoName
 	public final String AddAdminer(String adminer) throws Exception {
 
 		bp.port.Emp emp = new bp.port.Emp();
-		emp.setNo(adminer);
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+			emp.setNo(this.getNo() + "_" + adminer);
+		else
+			emp.setNo(adminer);
+
 		if (emp.RetrieveFromDBSources() == 0)
 		{
 			return "err@管理员编号错误.";
@@ -183,7 +197,7 @@ public class Org extends EntityNoName
 
 		//检查超级管理员是否存在？
 		OrgAdminer oa = new OrgAdminer();
-		oa.setFK_Emp(adminer);
+		oa.setFK_Emp(emp.getNo());
 		oa.setEmpName(emp.getName());
 
 		oa.setOrgNo(this.getNo());
@@ -193,18 +207,18 @@ public class Org extends EntityNoName
 		oa.Delete(OrgAdminerAttr.FK_Emp, adminer, OrgAdminerAttr.OrgNo, this.getNo());
 
 		//插入到管理员.
-		oa.setFK_Emp(emp.getUserID());
-		oa.Save();
+		oa.setFK_Emp(emp.getNo());
+		oa.DirectInsert();
 
 		//如果不在同一个组织.就给他一个兼职部门.
 		bp.port.DeptEmps depts = new bp.port.DeptEmps();
-		depts.Retrieve("OrgNo", this.getNo(), "FK_Emp", adminer);
+		depts.Retrieve("OrgNo", this.getNo(), "FK_Emp", emp.getNo());
 		if (depts.size() == 0)
 		{
 			bp.port.DeptEmp de = new bp.port.DeptEmp();
 			de.setFK_Dept(this.getNo());
-			de.setFK_Emp(adminer);
-			de.setMyPK(this.getNo() + "_" + adminer);
+			de.setFK_Emp( emp.getNo());
+			de.setMyPK(this.getNo() + "_" +  emp.getNo());
 			de.setOrgNo(this.getNo());
 			de.Save();
 		}
@@ -240,7 +254,8 @@ public class Org extends EntityNoName
 	}
 	public final String DoCheck() throws Exception {
 		String err = "";
-
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+			return "err@saas版的检查在开发中..";
 			///#region 组织结构信息检查.
 		//检查orgNo的部门是否存在？
 		Dept dept = new Dept();

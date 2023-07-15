@@ -255,7 +255,10 @@ public class Emp extends EntityNoName
 			}
 			else
 			{
-				this.SetValByKey("No", WebUser.getOrgNo() + "_" + userID);
+				if(!userID.contains(WebUser.getOrgNo()+"_"))
+					this.SetValByKey("No", WebUser.getOrgNo() + "_" + userID);
+				else
+					this.SetValByKey("No", userID);
 			}
 		}
 		else

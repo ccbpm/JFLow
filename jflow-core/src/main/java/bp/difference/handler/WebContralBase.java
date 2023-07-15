@@ -521,7 +521,13 @@ public abstract class WebContralBase {
 		}
 		return str;
 	}
-	
+	public final String getDevType() {
+		String str = this.GetRequestVal("DevType");
+		if ( DataType.IsNullOrEmpty(str)) {
+			return null;
+		}
+		return str;
+	}
 	public final String getPFlowNo() {
 		String str = this.GetRequestVal("PFlowNo");
 		if ( DataType.IsNullOrEmpty(str)) {

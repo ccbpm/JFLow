@@ -117,13 +117,15 @@
         $(function () {
 
             var webUser = new WebUser();
-
+            //var en = new Entity("BP.Sys.UserRegedit");
+            //en.MyPK = webUser.UserID;
+            //if (en.Retrieve())
+            var userNo = webUser.No;
             if (webUser.CCBPMRunModel == 2)
-            {
-               // SetHref( "Default.htm");
-                return;
-            }
-
+                userNo = webUser.OrgNo + "_" + userNo;
+            var url = "/WF/Comm/En.htm?EnName=BP.Port.Emp&No=" + userNo;
+            window.location.href = url;
+            return;
 
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Setting");
             var data = handler.DoMethodReturnString("Default_Init");

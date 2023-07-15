@@ -87,11 +87,11 @@ function Save() {
         }
         var webUser = new WebUser();
         var url = "../Designer.htm?FK_Flow=" + data + "&OrgNo=" + webUser.OrgNo + "&Token=" + webUser.Token + "&UserNo=" + webUser.No + "&From=Ver2021";
-        if (window.parent && window.parent.layer)
+        if (window.parent && window.parent.layer) {
             window.parent.layer.close(window.parent.layer.index);
+        }
         WinOpenFull(url, data);
     }, 1000);
-
 }
 
 function GenerName() {

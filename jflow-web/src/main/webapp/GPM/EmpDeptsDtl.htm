@@ -25,11 +25,20 @@
 
             //所有的岗位类别.
             var stationTypes = new Entities("BP.Port.StationTypes");
-            stationTypes.RetrieveAll();
+
+            if (webUser.CCBPMRunModel == 2)
+                stationTypes.Retrieve("OrgNo", emp.OrgNo);
+            else
+                stationTypes.RetrieveAll();
 
             //所有的岗位s
             var stations = new Entities("BP.Port.Stations");
-            stations.RetrieveAll();
+
+            if (webUser.CCBPMRunModel == 2)
+                stations.Retrieve("OrgNo", emp.OrgNo);
+            else
+                stations.RetrieveAll();
+
 
             var html = "<table border=0 style='width:100%;'>";
             html += "<caption >姓名:<font color=green>" + emp.Name + "</font>, <a href='javascript:Back()'>返回</a></caption>";
@@ -141,7 +150,7 @@
 <body>
 
 
-    <div id="Msg"></div>
+    <div id="Msg" style=" padding:10px;"></div>
 
 </body>
 </html>

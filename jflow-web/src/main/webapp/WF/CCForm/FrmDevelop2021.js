@@ -53,8 +53,14 @@ function GenerDevelopFrm(wn, fk_mapData, isComPare) {
     }
     $("#CCForm").html(htmlContent);
 
+    //获取表单中table
+    $.each($("table"), function (idx, table) {
+        var width = table.getAttribute("width") || 0;
+        if (width != 0) {
+            table.style.width = width + 'px';
+        }
+    })
     //解析表单中的数据
-    debugger
     var mapAttrs = frmData.Sys_MapAttr;
     var html = "";
     for (var i = 0; i < mapAttrs.length; i++) {

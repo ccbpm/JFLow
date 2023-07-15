@@ -19,9 +19,9 @@ INSERT INTO Port_Org (No,Name,adminer,adminername) VALUES('ccs','驰骋公司','
 
 -- Port_Org ;
 DELETE FROM Port_OrgAdminer;
-INSERT INTO Port_OrgAdminer (MyPK,OrgNo,FK_Emp,EmpName) VALUES('100_admin','100','admin','admin');
-INSERT INTO Port_OrgAdminer (MyPK,OrgNo,FK_Emp,EmpName) VALUES('ccs_ccs','ccs','ccs','驰骋管理员');
-INSERT INTO Port_OrgAdminer (MyPK,OrgNo,FK_Emp,EmpName) VALUES('ccs_yuwen','ccs','yuwen','钰雯');
+INSERT INTO Port_OrgAdminer (MyPK,OrgNo,FK_Emp,EmpName) VALUES('100_100_admin','100','admin','admin');
+INSERT INTO Port_OrgAdminer (MyPK,OrgNo,FK_Emp,EmpName) VALUES('ccs_ccs_ccs','ccs','ccs_ccs','驰骋管理员');
+INSERT INTO Port_OrgAdminer (MyPK,OrgNo,FK_Emp,EmpName) VALUES('ccs_ccs_yuwen','ccs','ccs_yuwen','钰雯');
 
  
 -- Port_Dept ;
@@ -94,52 +94,52 @@ DELETE FROM Port_DeptEmp;
 INSERT INTO Port_DeptEmp (MyPK,FK_Emp,FK_Dept,DeptName,StationNo,StationNoT,OrgNo) VALUES('100_yuwen','ccs_yuwen','100','集团总部','01','总经理','ccs');
 
 -- 市场部 ;
-INSERT INTO Port_DeptEmp (MyPK,FK_Emp,FK_Dept,DeptName,StationNo,StationNoT,OrgNo) VALUES('1001_zhanghaicheng','ccs_zhanghaicheng','1001','集团市场部','02','市场部经理','ccs') ;
-INSERT INTO Port_DeptEmp (MyPK,FK_Emp,FK_Dept,DeptName,StationNo,StationNoT,OrgNo) VALUES('1001_zhangyifan','ccs_zhangyifan','1001','集团市场部','07','销售人员岗','ccs') ;
-INSERT INTO Port_DeptEmp (MyPK,FK_Emp,FK_Dept,DeptName,StationNo,StationNoT,OrgNo) VALUES('1001_zhoushengyu','ccs_zhoushengyu','1001','集团市场部','07','销售人员岗','ccs') ;
+INSERT INTO Port_DeptEmp (MyPK,FK_Emp,FK_Dept,DeptName,StationNo,StationNoT,OrgNo) VALUES('1001_ccs_zhanghaicheng','ccs_zhanghaicheng','1001','集团市场部','02','市场部经理','ccs') ;
+INSERT INTO Port_DeptEmp (MyPK,FK_Emp,FK_Dept,DeptName,StationNo,StationNoT,OrgNo) VALUES('1001_ccs_zhangyifan','ccs_zhangyifan','1001','集团市场部','07','销售人员岗','ccs') ;
+INSERT INTO Port_DeptEmp (MyPK,FK_Emp,FK_Dept,DeptName,StationNo,StationNoT,OrgNo) VALUES('1001_ccs_zhoushengyu','ccs_zhoushengyu','1001','集团市场部','07','销售人员岗','ccs') ;
 
 -- 研发部 ;
-INSERT INTO Port_DeptEmp (MyPK,FK_Emp,FK_Dept,DeptName,StationNo,StationNoT,OrgNo) VALUES('1002_qifenglin','ccs_qifenglin','1002','集团研发部','03','研发部经理','ccs') ;
-INSERT INTO Port_DeptEmp (MyPK,FK_Emp,FK_Dept,DeptName,StationNo,StationNoT,OrgNo) VALUES('1002_zhoutianjiao','ccs_zhoutianjiao','1002','集团研发部','08','程序员岗','ccs') ;
+INSERT INTO Port_DeptEmp (MyPK,FK_Emp,FK_Dept,DeptName,StationNo,StationNoT,OrgNo) VALUES('1002_ccs_qifenglin','ccs_qifenglin','1002','集团研发部','03','研发部经理','ccs') ;
+INSERT INTO Port_DeptEmp (MyPK,FK_Emp,FK_Dept,DeptName,StationNo,StationNoT,OrgNo) VALUES('1002_ccs_zhoutianjiao','ccs_zhoutianjiao','1002','集团研发部','08','程序员岗','ccs') ;
 
 -- 服务部经理 ;
-INSERT INTO Port_DeptEmp (MyPK,FK_Emp,FK_Dept,DeptName,StationNo,StationNoT,OrgNo) VALUES('1003_guoxiangbin','ccs_guoxiangbin','1003','客服部经理','04','客服部经理','ccs') ;
-INSERT INTO Port_DeptEmp (MyPK,FK_Emp,FK_Dept,DeptName,StationNo,StationNoT,OrgNo) VALUES('1003_fuhui',            'ccs_fuhui','1003','客服部经理','09','技术服务岗','ccs') ;
+INSERT INTO Port_DeptEmp (MyPK,FK_Emp,FK_Dept,DeptName,StationNo,StationNoT,OrgNo) VALUES('1003_ccs_guoxiangbin','ccs_guoxiangbin','1003','客服部经理','04','客服部经理','ccs') ;
+INSERT INTO Port_DeptEmp (MyPK,FK_Emp,FK_Dept,DeptName,StationNo,StationNoT,OrgNo) VALUES('1003_ccs_fuhui',            'ccs_fuhui','1003','客服部经理','09','技术服务岗','ccs') ;
 
 -- 财务部 ;
-INSERT INTO Port_DeptEmp (MyPK,FK_Emp,FK_Dept,DeptName,StationNo,StationNoT,OrgNo) VALUES('1004_yangyilei','ccs_yangyilei','1004','财务部','05','财务部经理','ccs') ;
-INSERT INTO Port_DeptEmp (MyPK,FK_Emp,FK_Dept,DeptName,StationNo,StationNoT,OrgNo) VALUES('1004_guobaogeng','ccs_guobaogeng','1004','财务部','10','出纳岗','ccs') ;
+INSERT INTO Port_DeptEmp (MyPK,FK_Emp,FK_Dept,DeptName,StationNo,StationNoT,OrgNo) VALUES('1004_ccs_yangyilei','ccs_yangyilei','1004','财务部','05','财务部经理','ccs') ;
+INSERT INTO Port_DeptEmp (MyPK,FK_Emp,FK_Dept,DeptName,StationNo,StationNoT,OrgNo) VALUES('1004_ccs_guobaogeng','ccs_guobaogeng','1004','财务部','10','出纳岗','ccs') ;
 
 -- 人力资源部 ;
-INSERT INTO Port_DeptEmp (MyPK,FK_Emp,FK_Dept,DeptName,StationNo,StationNoT,OrgNo) VALUES('1005_liping','ccs_liping','1005','集团总部','06','人力资源部经理','ccs') ;
-INSERT INTO Port_DeptEmp (MyPK,FK_Emp,FK_Dept,DeptName,StationNo,StationNoT,OrgNo) VALUES('1005_liyan','ccs_liyan','1005','集团总部','11','人力资源助理岗','ccs') ;
+INSERT INTO Port_DeptEmp (MyPK,FK_Emp,FK_Dept,DeptName,StationNo,StationNoT,OrgNo) VALUES('1005_ccs_liping','ccs_liping','1005','集团总部','06','人力资源部经理','ccs') ;
+INSERT INTO Port_DeptEmp (MyPK,FK_Emp,FK_Dept,DeptName,StationNo,StationNoT,OrgNo) VALUES('1005_ccs_liyan','ccs_liyan','1005','集团总部','11','人力资源助理岗','ccs') ;
 
 -- Port_DeptEmpStation 人员与岗位的对应 ;
-INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('100_yuwen_01','ccs_100','yuwen','01','ccs')  ;
+INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('100_ccs_yuwen_01','ccs_100','ccs_yuwen','01','ccs')  ;
 
 -- 市场部; 
-INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('1001_zhanghaicheng_02','1001','ccs_zhanghaicheng','02','ccs')  ;
-INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('1001_zhangyifan_07','1001','ccs_zhangyifan','07','ccs')  ;
-INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('1001_zhoushengyu_07','1001','ccs_zhoushengyu','07','ccs')  ;
+INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('1001_ccs_zhanghaicheng_02','1001','ccs_zhanghaicheng','02','ccs')  ;
+INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('1001_ccs_zhangyifan_07','1001','ccs_zhangyifan','07','ccs')  ;
+INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('1001_ccs_zhoushengyu_07','1001','ccs_zhoushengyu','07','ccs')  ;
 
 -- 研发部 ;
-INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('1002_qifenglin_03','1002','ccs_qifenglin','03','ccs')  ;
-INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('1002_zhoutianjiao_08','1002','ccs_zhoutianjiao','08','ccs')  ;
+INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('1002_ccs_qifenglin_03','1002','ccs_qifenglin','03','ccs')  ;
+INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('1002_ccs_zhoutianjiao_08','1002','ccs_zhoutianjiao','08','ccs')  ;
 
 -- 服务部;
-INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('1003_guoxiangbin_04','1003','ccs_guoxiangbin','04','ccs');
-INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('1003_fuhui_09',      '1003','ccs_fuhui','09','ccs') ; 
+INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('1003_ccs_guoxiangbin_04','1003','ccs_guoxiangbin','04','ccs');
+INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('1003_ccs_fuhui_09',      '1003','ccs_fuhui','09','ccs') ; 
 
 -- 财务部;
-INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('1004_yangyilei_05','1004','ccs_yangyilei','05','ccs')   ;
-INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('1004_guobaogeng_10','1004','ccs_guobaogeng','10','ccs')  ;
+INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('1004_ccs_yangyilei_05','1004','ccs_yangyilei','05','ccs')   ;
+INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('1004_ccs_guobaogeng_10','1004','ccs_guobaogeng','10','ccs')  ;
 
 -- 人力资源部;
-INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('1005_liping_06','1005','ccs_liping','06','ccs')  ;
-INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('1005_liyan_11','1005','ccs_liyan','11','ccs')  ;
+INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('1005_ccs_liping_06','1005','ccs_liping','06','ccs')  ;
+INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('1005_ccs_liyan_11','1005','ccs_liyan','11','ccs')  ;
 
 -- 外来单位人员;
-INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('1099_Guest_12','1005','ccs_Guest','12','ccs') ;
+INSERT INTO Port_DeptEmpStation (MyPK,FK_Dept,FK_Emp,FK_Station,OrgNo) VALUES('1099_ccs_Guest_12','1005','ccs_Guest','12','ccs') ;
 
 -- 流程树;
 INSERT INTO WF_FlowSort (No,Name,ParentNo,OrgNo,Idx) VALUES('100','SAAS流程树','0','100',0) ;

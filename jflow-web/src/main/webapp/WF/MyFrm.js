@@ -13,11 +13,39 @@ $(function () {
     //增加css样式
     $('head').append('<link href="../DataUser/Style/GloVarsCSS.css" rel="stylesheet" type="text/css" />');
 
-    //初始化表单参数
-    initPageData();
+    var nodeID = GetQueryString("FK_Node");
+    var workID = GetQueryString("WorkID");
 
-    //初始化表单数据
-    GenerWorkNode();
+    if (nodeID > 1) {
+
+        var nd = new Entity("BP.WF.Node", nodeID);
+        //   var node = new Entity("BP.WF.Node", nodeID);
+        //   node.FormType = FormSlnType.SelfForm;
+        //   node.FormUrl = document.getElementById("TB_CustomURL").value;
+        ////   node.Update();
+
+        var url = "";
+        /** 如果是嵌入模式的表单.*/
+        if (nd.FormType == FormSlnType.SelfForm) {
+            window.location.href = "/WF/MyView.htm?FK_Flow=" + nd.FK_Flow + "&NodeID=" + nd.NodeID + "&WorkID=" + workID;
+            return;
+        }
+
+        /** sdk模式.*/
+        if (nd.FormType == FormSlnType.SDKForm) {
+            url = node.FormUrl;
+            if (url.indexOf('?') == -1)
+                url += "?1=1";
+            url += "&WorkID=" + workID + "&FK_Node=" + nd.NodeID;
+            window.location.href = url;
+            return;
+        }
+    }
+        //初始化表单参数
+        initPageData();
+
+        //初始化表单数据
+        GenerWorkNode();
 })
 
 /**
@@ -46,6 +74,13 @@ function GenerWorkNode() {
         if (node.FormType == 5) {
             SetHref(GetHrefUrl().replace("MyFrm.htm", "MyFrmTree.htm"));
             return;
+        }
+        if (node.FormType == 11) { //绑定单表单
+            var mapData = new Entity("BP.Sys.MapData", node.NodeFrmID);
+            if (mapData.FrmType == 10) {
+                SetHref(GetHrefUrl().replace("MyFrm.htm", "CCForm/ChapterFrmView.htm") + "&FrmID=" + mapData.No);
+                return;
+            }
         }
           
        

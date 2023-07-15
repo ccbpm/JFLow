@@ -109,9 +109,10 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
             }
             $('#TB_' + mapAttr.KeyOfEn).val(val);
 
-            if (mapAttr.Tip != "" && mapAttr.UIIsEnable == "1" && pageData.IsReadonly != "1") {
+            if (!!mapAttr.Tip&& mapAttr.UIIsEnable == "1" && pageData.IsReadonly != "1") {
                 $('#TB_' + mapAttr.KeyOfEn).attr("placeholder", mapAttr.Tip);
                 $('#TB_' + mapAttr.KeyOfEn).on("focus", function () {
+                    debugger
                     var elementId = this.id;
                     layer.tips("<span style='color:black;'>" + $(this).attr("placeholder") + "</span>", '#' + elementId, { tips: [3, "#fff"] });
                     $(".layui-layer-tips").css("box-shadow", "1px 1px 50px rgb(0 0 0 / 30%)");
@@ -866,6 +867,11 @@ function AfterBindEn_DealMapExt(frmData) {
                         }
 
                     })
+                    break;
+                case "StringJoint":
+                    if (mapExt.Doc == undefined || mapExt.Doc == '')
+                        break;
+                    Stringcalculator(mapExt);
                     break;
                 default:
                     layer.alert(mapAttr.Name + "字段扩展属性" + mapExt.ExtType + "该类型还未解析，请反馈给开发人员");
@@ -1918,6 +1924,65 @@ function testExpression(exp) {
         return false;
     }
     return true;
+}
+
+/**
+ * 表单文本字段中自动计算
+ * @param {any} mapExt
+ */
+function Stringcalculator(mapExt) {
+    if (!testExpression(mapExt.Doc)) {
+        console.log("MyPk: " + mapExt.MyPK + ", 表达式: '" + mapExt.Doc + "'格式错误");
+        return false;
+    }
+    var targets = [];
+    var index = -1;
+    for (var i = 0; i < mapExt.Doc.length; i++) {	// 对于复杂表达式需要重点测试
+        var c = mapExt.Doc.charAt(i);
+        if (c == "(") {
+            index++;
+        } else if (c == ")") {
+            targets.push(mapExt.Doc.substring(index + 1, i));
+            i++;
+            index = i;
+        } else if (/[\+\-|*\/]/.test(c)) {
+            targets.push(mapExt.Doc.substring(index + 1, i));
+            index = i;
+        }
+    }
+    if (index + 1 < mapExt.Doc.length) {
+        targets.push(mapExt.Doc.substring(index + 1, mapExt.Doc.length));
+    }
+    //
+    var expression = {
+        "judgement": [],
+        "execute_judgement": [],
+        "calculate": mapExt.Doc
+    };
+    $.each(targets, function (i, o) {
+        if (o.indexOf("@") == -1)
+            return true;
+        mapExt.Doc = mapExt.Doc.replace(o, '"' + o + '"');
+    });
+    (function (targets, resultTarget, expression) {
+        $.each(targets, function (i, o) {
+            if (o.indexOf("@") == -1)
+                return true;
+            var target = o.replace("@", "");
+
+            $(":input[name=TB_" + target + "]").bind("change", function () {
+                var doc = expression;
+                doc = DealExp(doc);
+                var result = eval(doc);
+                $(":input[name=TB_" + resultTarget + "]").val(result);
+              
+            });
+            if (i == 0) {
+                $(":input[name=TB_" + target + "]").trigger("change");
+            }
+        });
+    })(targets, mapExt.AttrOfOper,  mapExt.Doc);
+    $(":input[name=TB_" + mapExt.AttrOfOper + "]").attr("disabled", true);
 }
 
 /**

@@ -535,7 +535,8 @@ function InitMapAttr(frmData, tableCol, groupID) {
             //colWidth = "layui-col-md" + (12 - parseInt(colWidth)) +" layui-col-xs8" ;
             html += "<div class='layui-row FoolFrmFieldRow'>";
             if (attr.MyDataType == 1 && attr.LGType == 0 && (attr.IsSupperText == 1 || attr.UIHeight > 40))
-                html += "<div  class='" + textWidth + " FoolFrmFieldLabel' style='height:" + attr.UIHeight + "px'>" + GetLab(attr, frmData) + "</div>";
+                html += "<div  class='" + textWidth + " FoolFrmFieldLabel' style='height:auto'>" + GetLab(attr, frmData) + "</div>";
+                //html += "<div  class='" + textWidth + " FoolFrmFieldLabel' style='height:" + attr.UIHeight + "px'>" + GetLab(attr, frmData) + "</div>";
             else
                 html += "<div  class='" + textWidth + " FoolFrmFieldLabel'>" + GetLab(attr, frmData) + "</div>";
             if (attr.UIContralType != 12)

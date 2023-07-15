@@ -21,7 +21,6 @@
 
     <script src="../Scripts/layui/layui/layui.js"></script>
     <link href="../Scripts/layui/layui/css/layui.css" rel="stylesheet" />
-
     <script type="text/javascript" src="./js/vue/vue.js"></script>
 
 
@@ -33,7 +32,7 @@
 
         .flow {
             /*width: 75%;*/
-            width: 79%;
+            width: 78.5%;
             margin: 10px 10px 10px 5px;
         }
 
@@ -47,9 +46,10 @@
             }
 
                 .flow .row .item {
+                    padding:0 20px;
                     box-sizing: border-box;
                     flex-shrink: 0;
-                    text-align: center;
+                    /*text-align: center;*/
                     border-right: 1px solid #eee;
                     border-bottom: 1px solid #eee;
                 }
@@ -64,7 +64,7 @@
             padding-left: 30px;
             text-overflow: ellipsis;
             white-space: nowrap;
-            cursor: pointer;
+            /*cursor: pointer;*/
         }
 
         .item-other {
@@ -112,7 +112,7 @@
             height: 50px;
             line-height: 30px;
             font-size: 16px;
-            padding: 10px;
+            padding: 10px 10px 10px 15px;
             box-sizing: border-box;
             border-bottom: 1px solid #f0f2f5;
         }
@@ -130,6 +130,9 @@
             border-top-right-radius: 5px;
             background: #fff;
             border-bottom: 1px solid #f0f2f5;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
         }
 
         .flow-main {
@@ -168,6 +171,43 @@
             font-weight: 700;
             font-size: 15px;
         }
+        .item-omit {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .item-finger {
+            cursor: pointer;
+        }
+
+        .search-inp {
+            margin-left: 10px;
+            margin-right: 10px;
+            display: flex;
+        }
+        .cc-btn-tab {
+            height: 26px;
+            padding: 0 10px;
+            margin-right: auto;
+            margin-left: 10px;
+            line-height: 26px;
+            font-size: 14px;
+            background: #316ee6 !important;
+            border-color: #316ee6 !important;
+            border-radius: 5px;
+            color: #fff !important;
+        }
+            .cc-btn-tab:hover {
+                background: #316ee6 !important;
+            }
+        .left-search{
+            display:flex;
+            align-items:center;
+
+        }
+        .search-font {
+            display: flex;
+        }
     </style>
     <script type="text/javascript">
         var flows;
@@ -202,12 +242,17 @@
                     nameTitle = obj.data.title;
                     //根据id获取流程集合
                     flows = new Entities("BP.WF.Flows");
-                    flows.Retrieve("FK_FlowSort", obj.data.id);
+                    flows.Retrieve("FK_FlowSort", obj.data.id);   
+                    console.log(flows);   
+                    for (var i = 0; i < flows.length; i++) {
+                        
+                        flows[i].FlowDevModel = getFlowDevModelText(flows[i].FlowDevModel)
+                    }
                     baseInfo.flows = flows.GetEns().data;
-                    baseInfo.SortNo = obj.data.id;
+                    baseInfo.SortNo = obj.data.id;        
                     //点击时产生节点产生flowSortNo显示
                     $('#NewSortOne').show();
-
+                   
                     setTimeout(function () {
                         baseInfo.bindMenu();
                         //baseInfo.initSortArea();
@@ -218,13 +263,18 @@
                 }
             });
 
+            //默认选中父节点
+            tree.setChecked('flowSort', data[0].id);
+            var parentNodeElem = $('.layui-tree-set[data-id="' + data[0].id + '"]>.layui-tree-entry>.layui-tree-main>.layui-tree-txt');
+            parentNodeElem.dblclick();
+
             var dropdown = layui.dropdown
             var topNodeItems = [
                 { title: '<i class=icon-plus></i> 新建流程', id: "NewFlow", Icon: "icon-plus" },
                 { title: '<i class=icon-star></i> 目录属性', id: "EditSort", Icon: "icon-options" },
                 { title: '<i class=icon-folder></i> 新建子级目录', id: "NewSort", Icon: "icon-magnifier-add" },
                 { title: '<i class=icon-pencil></i> 修改名称', id: "EditSortName", Icon: "icon-magnifier-add" },
-                { title: '<i class=icon-share-alt ></i> 导入流程模版', id: "ImpFlowTemplate", Icon: "icon-plus" },
+                { title: '<i class=icon-share-alt ></i> 导入模版', id: "ImpFlowTemplate", Icon: "icon-plus" },
                 //{ title: '<i class=icon-share-alt ></i> 批量导出流程模版', id: "BatchExpFlowTemplate", Icon: "icon-plus" },
                 { title: '<i class=icon-close></i> 删除目录', id: "DeleteSort", Icon: "icon-close" }
             ]
@@ -233,17 +283,20 @@
                 trigger: 'contextmenu',
                 data: topNodeItems,
                 click: function (data) {
-                    debugger;
                     topNodeOption(data.id, $(this.elem).parent().parent().parent().data().id, $(this.elem)[0].innerHTML)
                 }
             });
 
             var html = "";
+            html += "<div class='left-search'>"
+            html += "<li class='search-font'><span style='margin-left: 15px;line-height:25px;'>关键字：</span><div style='width: 190px; border-width: 1px; border-style: solid; background-color: #fff; border-color: #eee; '><input id='searchKey' name='searchKey' type='text' style='margin-left: 5px; height: 23px;border:none;outline:none;' /></div></li>";
+            html += "<li class='cc-btn-tab' id='SearchBtn' onclick=\"SearchEmp(flows)\">搜索</li>";
+            html+= "</div>"
             html += "<ul class='top-newflow'>";
             html += "<li id='EditSort' class='flow-menu' onclick=\"topNodeOption(id,flowSortNo,nameTitle)\">属性名称</li>";
             html += "<li id='NewFlow' class='flow-menu' onclick=\"topNodeOption(id,flowSortNo,nameTitle)\">新建流程</li>";
-            html += "<li id='ImpFlowTemplate' class='flow-menu' onclick=\"topNodeOption(id,flowSortNo,nameTitle)\">导入流程模版</li>";
-            html += "<li id='NewSortOne' class='flow-menu'>新建目录</li>";
+            html += "<li id='ImpFlowTemplate' class='flow-menu' onclick=\"topNodeOption(id,flowSortNo,nameTitle)\">导入模版</li>";
+            html += "<li id='NewSortOne' class='flow-menu'>更多操作</li>";
             html += "</ul>";
             $("#top-choose").html(html);
             //一开始隐藏
@@ -257,14 +310,50 @@
                 data: [
                     { title: '<i class=icon-folder></i> 新建同级', id: "NewSame", Icon: "icon-magnifier-add" },
                     { title: '<i class=icon-folder></i> 新建子级', id: "NewSort", Icon: "icon-magnifier-add" },
+                    { title: '<i class=icon-folder></i> 删除目录', id: "DeleteSort", Icon: "icon-magnifier-add" },
                 ],
                 click: function (data) {
                     topNodeOption(data.id, flowSortNo, nameTitle)
                 }
             });
-
+            
 
         })
+        function getFlowDevModelText(model) {
+            switch (model) {
+                case 0:
+                    return "专业模式";
+                case 1:
+                    return "极简模式";
+                case 2:
+                    return "累加模式";
+                case 3:
+                    return "绑定表单库的单表单";
+                case 4:
+                    return "绑定表单库的多表单";
+                case 5:
+                    return "SDK表单";
+                case 6:
+                    return "嵌入式表单";
+                case 7:
+                    return "物联网流程";
+                case 8:
+                    return "决策树流程";
+                default:
+                    return model;
+            }
+        }
+
+
+
+        function SearchEmp(flow){
+            var searchKey = $("#searchKey").val();
+            var flows = flow.data.filter(function (item) {
+                return item.No.includes(searchKey)
+            })
+            baseInfo.flows = flows
+            return flows;
+        }
         function topNodeOption(key, flowSortNo, name, idx) {
             //获取屏幕的宽
             var W = document.body.clientWidth - 250;
@@ -283,10 +372,15 @@
                     layer.msg("修改成功.");
                     break;
                 case "ImpFlowTemplate":
-                    var fk_flowSort = data;
-                    url = basePath + "/WF/Admin/AttrFlow/Imp.htm?FK_FlowSort=" + fk_flowSort + "&Lang=CH";
+                    url = basePath + "/WF/Admin/AttrFlow/Imp.htm?FK_FlowSort=" + flowSortNo + "&Lang=CH";
                     //window.top.vm.openTab("导入流程模板", url);
-                    OpenLayuiDialog(url, "导入流程模板", W, 100, "r", false);
+                    OpenLayuiDialog(url, "导入流程模板", W, 100, "r", false, false, null, null, function () {
+                        //alert(flowSortNo);
+                        //关闭窗口执行选中并点击节点
+                        tree.setChecked('flowSort', flowSortNo);
+                        var nodeElem = $('.layui-tree-set[data-id="' + flowSortNo + '"]>.layui-tree-entry>.layui-tree-main>.layui-tree-txt');
+                        nodeElem.click();
+                    });
                     break;
                 //case "BatchImpFlowTemplate":
                 //    this.BatchImpFlowTemplate(data);
@@ -350,7 +444,13 @@
                     url = basePath + "/WF/Admin/CCBPMDesigner/FlowDevModel/Default.htm?SortNo=" + flowSortNo + "&From=FlowTree.htm&RunModel=1&s=" + Math.random();
                     url += "&UserNo=" + GetQueryString("UserNo");
                     url += "&Token=" + GetQueryString("Token");
-                    OpenLayuiDialog(url, name, W, 100, "r", false);
+                    OpenLayuiDialog(url, name, W, 100, "r", false, false, null, null, function () {
+                        //alert(flowSortNo);
+                        //关闭窗口执行选中并点击节点
+                        tree.setChecked('flowSort', flowSortNo);
+                        var nodeElem = $('.layui-tree-set[data-id="' + flowSortNo + '"]>.layui-tree-entry>.layui-tree-main>.layui-tree-txt');
+                        nodeElem.click();
+                    });
                     //window.open(url);
                     break;
                 default:
@@ -419,7 +519,7 @@
     <div class="layui-row">
         <!--流程类别-->
         <div class="layui-col-sm3 layui-col-md3 layui-col-xs3 flow_layout" style="border:1px solid #f5f5ff ">
-            <div class="menu-treetitle"><i class="fa fa-fw icon-grid" style="vertical-align: -1px;"></i>流程</div>
+            <div class="menu-treetitle"><i class="icon-share" style="vertical-align: -1px; margin-right: 2px;"></i>流程</div>
             <div id="flowSort" class="" style="width: 100%; height: calc(90%); "></div>
         </div>
         <!--流程信息-->
@@ -430,7 +530,6 @@
             <button> xxx</button>
         </div>-->
         <div class="layui-col-sm8 layui-col-md8 layui-col-xs4 flow" id="flow" v-cloak>
-
             <div class="top-choose" id="top-choose"></div>
             <div class="flow-main">
                 <div class="row fixed">
@@ -442,23 +541,17 @@
                     <div class="item item-other item-title">创建人</div>
                 </div>
                 <div ref="child-row" id="s-main">
-                    <div class="row" v-for="(flow,idx) in flows" :key="idx" :data-pid="SortNo" :data-id="flow.No">
-
-                        <div class="item item-name item-name-dp" @click.stop="Designer(flow.No,flow.Name)" style="text-align: center" :data-no="flow.No" :data-name="flow.Name" :data-idx="idx">
+                    <div class="row" v-for="(flow,idx) in flows" :key="idx" :data-pid="SortNo" :data-id="flow.No" @dblclick.stop="Designer(flow.No,flow.Name)">
+                        <!--text-align: center-->
+                        <div class="item item-name item-name-dp item-omit" style="" :data-no="flow.No" :data-name="flow.Name" :data-idx="idx">
                             <i class="icon-heart" style="margin-right: 8px"></i>
-                            <!--<span>{{flow.No}}.{{flow.Name}}</span>-->
                             <span>{{flow.No}}</span>
                         </div>
-                        <div class="item item-other">{{flow.Name}}</div>
-                        <div class="item item-other">{{flow.PTable}}</div>
-                        <div class="item item-other">{{flow.ChartType}}</div>
-                        <div class="item item-other">{{flow.Ver}}</div>
-                        <div class="item item-other">{{flow.Creater}}</div>
-                        <!--<div class="item item-other">
-        <button class="layui-btn layui-btn-primary layui-border-blue layui-btn-xs c-btn" :data-name="flow.Name" :data-no="flow.No" :data-idx="idx">
-            <i class="layui-icon layui-icon-down layui-font-12"></i>流程
-        </button>
-    </div>-->
+                        <div class="item item-other item-omit item-finger" @click.stop="Designer(flow.No,flow.Name)">{{flow.Name}}</div>
+                        <div class="item item-other item-omit">{{flow.PTable}}</div>
+                        <div class="item item-other item-omit">{{flow.FlowDevModel}}</div>
+                        <div class="item item-other item-omit">{{flow.Ver}}</div>
+                        <div class="item item-other item-omit">{{flow.Creater}}</div>
                     </div>
                 </div>
             </div>

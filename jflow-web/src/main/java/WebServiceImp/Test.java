@@ -11,138 +11,180 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.util.HashMap;
 import java.util.Map;
 
+// 此文件用于放到自己的开发后台代码里， 可以直接调用这些静态的方法，ccbpm帮您封装好了.
 public class Test {
-	//服务的地址
-	static String host="http://localhost:8085/WF/API";
+	//bpm服务的地址
+	static String host="http://localhost:8085/RZ_PortOrg";//主数据接口PortOrg，人资接口RZ_PortOrg
 	static String webPath="";
 	//秘钥：用于双方系统登录的通讯, 只有在用户登录的时候用到.
 	static String privateKey= "DiGuaDiGua,IamCCBPM";
 	public static void main(String[] args) throws Exception {
+
 		String flowNo ="001";
-		try {
-			//1.执行登录:
-			String UserNo="admin";
-			JSONObject postData = Port_Login( UserNo);
-			if (postData.toString().startsWith("err@"))
-				System.out.println("登录失败");
-			String Token = postData.get("Token").toString(); //通过token执行相关的操作.
+		 try {
+			 webPath=host+"/Port_Save";
+			 //天宇主数据
+			 //组织
+			// String jsongdata="{\"data\":{\"from\":\"mdm\",\"to\":\"TargetAPP\",\"createTime\":\"1348831860\",\"msgType\":\"2000\",\"content\":[{\"id\":\"79E77BFE-B029-462D-A8BF-3C18E0146B9B\",\"orgCode\":\"HY010501\",\"orgType\":\"UM\",\"orgCompleteName\":\"财务中心/财务管理部\",\"fdsidtree\":\"组织机构ID树\",\"fdnametree\":\"/组织机构/外部人员/财务管理部\",\"parentId\":\"HY0106\",\"parentOrgName\":\"父级名称\",\"grade\":4,\"datasource\":\"UC\",\"orgName\":\"财务管理部\",\"status\":\"状态\",\"orderNO\":\"1\",\"updateTime\":\"1348831860\"}],\"msgId\":\"1234567890123456\"}}";
+			 //组织根节点
+			// String jsongdata="{\"data\":{\"from\":\"mdm\",\"to\":\"TargetAPP\",\"createTime\":\"1348831860\",\"msgType\":\"2000\",\"content\":[{\"id\":\"79E77BFE-B029-462D-A8BF-3C18E0146B9B\",\"orgCode\":\"ROOT\",\"orgType\":\"UM\",\"orgCompleteName\":\"财务中心/财务管理部\",\"fdsidtree\":\"组织机构ID树\",\"fdnametree\":\"/组织机构/外部人员/财务管理部\",\"parentId\":\"NULL\",\"parentOrgName\":\"父级名称\",\"grade\":4,\"datasource\":\"UC\",\"orgName\":\"财务管理部\",\"status\":\"状态\",\"orderNO\":\"1\",\"updateTime\":\"1348831860\"}],\"msgId\":\"1234567890123456\"}}";
 
-			/*列表Start*/
-			//发起列表
-			String startDb = DB_Start(Token,null);
-			//待办列表
-			Integer nodeID=0;//要取得指定节点的待办就传入,默认为0
-			String todoDb = DB_Todolist(Token,flowNo, String.valueOf(nodeID),null);
-			//在途
-			String todoRuning = DB_Runing(Token,null);
-			/*列表End*/
+			// String dtStrat = HttpClientUtil.doPost(webPath,jsongdata,null);
+			// System.out.println(dtStrat);
 
-			/*测试流程Start*/
-			//2. 测试流程: 创建workid。
-			long WorkID=Node_CreateBlankWorkID(Token, flowNo);
+			 //人员
+			 //String jsonEmp ="{ \"data\": { \"msgType\": \"2001\", \"createTime\": \"1687946412049\", \"msgId\": \"885c0fdd-b10c-470a-86fe-33eb138e34d8\", \"from\": \"MDM\", \"to\": \"UC\", \"content\": [{ \"departmentCode\": \"TYZQ-401-02\", \"userCode\": \"admin\", \"entryDivisionAge\": \"0\", \"ownerUnitCode\": \"103\", \"ownerUnit\": \"西安分公司\", \"id\": \"654fb588-b420-45a8-9731-e33f1766cb00\", \"departmentName\": \"西安分公司\", \"sex\": \"女\", \"updateTime\": \"1687946411000\", \"userName\": \"超级管理员\", \"certificateTypeName\": \"2000001\", \"phoneNumber\": \"15888888888\", \"datasource\": \"UC\", \"systemAccount\": \"zhangsan\", \"certificateType\": \"2000001\", \"status\": \"0\" }] } }";
+			// String dtStratEmp = HttpClientUtil.doPost(webPath,jsonEmp,null);
+			// System.out.println(dtStratEmp);
+			 //岗位
+			/* String jsonstation ="{\"data\":{\"from\":\"mdm\",\"to\":\"TargetAPP\",\"createTime\":\"1348831860\",\"msgType\":\"2002\",\"content\":[{\"id\":\"79E77BFE-B029-462D-A8BF-3C18E0146B9B\",\"roleName\":\"客户经理\",\"datasource\":\"UC\",\"status\":\"状态\",\"updateTime\":\"1348831860\"}],\"msgId\":\"1234567890123456\"}}";
+			 String dtStratjsonstation = HttpClientUtil.doPost(webPath,jsonstation,null);
+			 System.out.println(dtStratjsonstation);*/
+			 //人员组织部门关系
+			 /*String jsonEmpDeptStation ="{\"data\":{\"from\":\"mdm\",\"to\":\"TargetAPP\",\"createTime\":\"1348831860\",\"msgType\":\"2003\",\"content\":[{\"userCode\":\"tyzq-zhangsan\",\"userName\":\"张三\",\"datasource\":\"UC\",\"roleOrgList\":[{roleId:\"79E77BFE-B029-462D-A8BF-3C18E0146B9B\",roleName:\"客户经理\",orgCode:\"code-shiyeyibu\",orgName:\"事业一部\"},{roleId:\"79E77BFE-B029-462D-A8BF-3C18E0146B9B\",roleName:\"客户经理\",orgCode:\"code-shiyesibu\",orgName:\"事业二部\"},{roleId:\"79E77BFE-B029-462D-A8BF-3C18E0146B9B\",roleName:\"部门经理\",orgCode:\"code-shiyesanbu\",orgName:\"事业三部\"},{roleId:\"79E77BFE-B029-462D-A8BF-3C18E0146B9B\",roleName:\"部门经理\",orgCode:\"code-shiyeqibu\",orgName:\"事业七部\"}],\"updateTime\":\"1348831860\"}],\"msgId\":\"1234567890123456\"}}";
+			 String dtStratEmpDeptStation = HttpClientUtil.doPost(webPath,jsonEmpDeptStation,null);
+			 System.out.println(dtStratEmpDeptStation);*/
 
-			//执行设置流程标题
-			String Title ="关于深化中国中亚合作 八点建议指明方向的申请";
-			String msg = Flow_SetTitle(Token, String.valueOf(WorkID), Title, flowNo);
-			//执行保存草稿.
-			String msgDra = Node_SetDraft(Token,flowNo,String.valueOf(WorkID));
-			//执行保存参数.
-			String Paras="Tel=18660153393@Addr=山东济南@Age=35";
-			String msgPra =  Node_SaveParas( Token,String.valueOf(WorkID), Paras);
-			//执行发送. 102
-			String ToNodeID ="102";//0时系统自动计算要发送到的节点ID
-			String ToEmps ="zhanghaicheng";//可不传，不传时流程要设定好接收人，系统可自动寻找对应的接收人
-			String msgSend =  Node_SendWork(Token, String.valueOf(WorkID),flowNo, ToNodeID, ToEmps);
+			 //天宇人资数据
+			 //组织：删除时
+			 String jsonPortdataDel="{ \"deleteFlag\":true,\"orgCodeList\":  [199, 200] }";
+			 //新增或者修改
+			 String jsonPortdata ="{ \"dataList\": [{ \"dataCode\": 199, \"parentCode\": 0, \"orgName\": \"山西分公司\", \"dataLevel\": 3, \"orgFullCodePath\": \"1/2/199\", \"orgFullNamePath\": \"天宇集团/天宇正清科技有限公司/山西分公司\", \"sortNum\": 21, \"remark\": \"\", \"useFlag\": 0 },{ \"dataCode\": 200, \"parentCode\": 2, \"orgName\": \"山西分公司\", \"dataLevel\": 3, \"orgFullCodePath\": \"1/2/199\", \"orgFullNamePath\": \"天宇集团/天宇正清科技有限公司/山西分公司\", \"sortNum\": 21, \"remark\": \"\", \"useFlag\": 0 }] }";
+			 /* String dtStrat = HttpClientUtil.doPost(webPath,jsonPortdata,null);
+			 System.out.println(dtStrat);*/
 
-			int nodeID2=102;
-			String nodes = Node_GetNextStepNodesByNodeID(Token,nodeID2) ;
-			String stepemps = Node_GetNextStepEmpsByNodeID(Token,nodeID2, (int) WorkID);
+			 //webPath=host+"/PortStation_Save";
+			 /*String jsonStationdataDel="{ \"deleteFlag\":true,\"roleCodeList\":  [30] }";
+			 String jsonStationdata="{ \"dataList\": [{ \"roleCode\": 30, \"roleName\": \"财务初审\", \"sortNum\": 29, \"useFlag\": 0 }] }";
+			 String dtStrat = HttpClientUtil.doPost(webPath,jsonStationdata,null);
+			 String dtStratDel = HttpClientUtil.doPost(webPath,jsonStationdataDel,null);*/
 
-			//执行发送.到节点103
-			String ToNodeID3 ="103";//0时系统自动计算要发送到的节点ID
-			String ToEmps3 ="zhoupeng";//可不传，不传时流程要设定好接收人，系统可自动寻找对应的接收人
-			String msgSend3 =  Node_SendWork(Token, String.valueOf(WorkID),flowNo, ToNodeID3, ToEmps3);
-			//执行退回到 102
-			Integer FK_Node=103;
-			Integer ReturnToNodeID =102;////为空时系统自动计算上一个节点
-			String ReturnToEmp="zhanghaicheng";//为空时系统自动计算上一个节点的处理人
-			String Msg="请补充说明情况";
-			boolean IsBackToThisNode =false;//是否按原路返回
-			String msgReturn =  Node_ReturnWork(Token, String.valueOf(WorkID), String.valueOf(FK_Node),String.valueOf(ReturnToNodeID), ReturnToEmp, Msg, IsBackToThisNode);
+			 webPath=host+"/PortEmp_Save";
+			 String jsonempdataDel="{ \"deleteFlag\":true,\"userAccountList\":  [tyzq-wangly1] }";
+			 String jsonempdata="{ \"dataList\": [{ \"orgCode\": 193, \"userAccount\": \"tyzq-wangly1\", \"userName\": \"王玲玉\", \"userMobile\": \"18600653219\", \"userEmail\": \"\", \"sortNum\": 179, \"useFlag\": 0, \"userRoleOrgVOList\": [{ \"roleCode\": 102, \"orgCodeList\": [60, 61] }, { \"roleCode\": 104, \"orgCodeList\": [193] }] }] }";
+			 //String dtStrat = HttpClientUtil.doPost(webPath,jsonempdata,null);
+			 String dtStratDel = HttpClientUtil.doPost(webPath,jsonempdataDel,null);
 
-			//执行流程结束.
-			String WorkIDs="142,153";
-			String msgOver = Flow_DoFlowOver(Token, WorkIDs);
-			/*测试流程End*/
+		 } catch (Exception e) {
+			 System.err.println(e.toString());
+		 }
+			/* //1.执行登录:
+			 String UserNo="300";
+			 JSONObject postData = Port_Login( UserNo);
+			 if (postData.toString().startsWith("err@"))
+				 System.out.println("登录失败");
 
-			/*组织结构维护Start*/
-			//人员信息保存
-			String kvs="@Tel=18660153303@Email=123@qq.com";
-			String userNo="cheche";
-			String userName="管理员";
-			String orgNo="";//非集团模式传空
-			String deptNo="1071";
-			String stats="08,09";
-			Port_Emp_Save(Token, orgNo, userNo, userName, deptNo, kvs, stats);
+			 String Token = postData.get("Token").toString(); //通过token执行相关的操作.
 
-			//人员删除
-			Port_Emp_Delete(Token, orgNo, userNo);
+			 *//*列表Start*//*
+			 //发起列表
+			 String startDb = DB_Start(Token,null);
+			 //待办列表
+			 Integer nodeID=0;//要取得指定节点的待办就传入,默认为0
+			 String todoDb = DB_Todolist(Token,flowNo, String.valueOf(nodeID),null);
+			 //在途
+			 String todoRuning = DB_Runing(Token,null);
+			 *//*列表End*//*
 
-			//集团模式下同步组织以及管理员信息
-			String orgNo2="7201";
-			String name="北方分公司";
-			String adminer="zhanghaicheng";
-			String adminerName="张海成";
-			String keyVals="@Leaer=zhangsan@Tel=12233333@Idx=1";
-			Port_Org_Save(Token, orgNo2,name, adminer, adminerName,  keyVals);
+			 *//*测试流程Start*//*
+			 //2. 测试流程: 创建workid。
+			 long WorkID=Node_CreateBlankWorkID(Token, flowNo);
 
-			//保存部门,如果有此数据则修改,无此数据则增加
-			String no="10051";
-			String nameD="开发部";
-			String parentNo="1005";
-			String keyValsD="@Leaer=zhangsan@Idx=1";
-			Port_Dept_Save(Token,orgNo, no, nameD,  parentNo, keyValsD);
-			//删除部门
-			Port_Dept_Delete(Token, no);
-			//保存岗位, 如果有此数据则修改，无此数据则增加
-			String noSta="99";
-			String nameSta="客服";
-			String keyValsSta="@FK_StationType=3";
-			Port_Station_Save(Token,orgNo, noSta, nameSta, keyValsSta);
-			//删除岗位
-			Port_Station_Delete(Token,noSta);
-			/*组织结构维护End*/
+			 //执行设置流程标题
+			 String Title ="关于深化中国中亚合作 八点建议指明方向的申请";
+			 String msg = Flow_SetTitle(Token, String.valueOf(WorkID), Title, flowNo);
+			 //执行保存草稿.
+			 String msgDra = Node_SetDraft(Token,flowNo,String.valueOf(WorkID));
+			 //执行保存参数.
+			 String Paras="Tel=18660153393@Addr=山东济南@Age=35";
+			 String msgPra =  Node_SaveParas( Token,String.valueOf(WorkID), Paras);
+			 //执行发送. 102
+			 String ToNodeID ="102";//0时系统自动计算要发送到的节点ID
+			 String ToEmps ="zhanghaicheng";//可不传，不传时流程要设定好接收人，系统可自动寻找对应的接收人
+			 String msgSend =  Node_SendWork(Token, String.valueOf(WorkID),flowNo, ToNodeID, ToEmps);
+			 //执行发送.到节点103
+			 String ToNodeID3 ="103";//0时系统自动计算要发送到的节点ID
+			 String ToEmps3 ="zhoupeng";//可不传，不传时流程要设定好接收人，系统可自动寻找对应的接收人
+			 String msgSend3 =  Node_SendWork(Token, String.valueOf(WorkID),flowNo, ToNodeID3, ToEmps3);
+			 //执行退回到 102
+			 Integer FK_Node=103;
+			 Integer ReturnToNodeID =102;////为空时系统自动计算上一个节点
+			 String ReturnToEmp="zhanghaicheng";//为空时系统自动计算上一个节点的处理人
+			 String Msg="请补充说明情况";
+			 boolean IsBackToThisNode =false;//是否按原路返回
+			 String msgReturn =  Node_ReturnWork(Token, String.valueOf(WorkID), String.valueOf(FK_Node),String.valueOf(ReturnToNodeID), ReturnToEmp, Msg, IsBackToThisNode);
+
+			 //执行流程结束.
+			 String WorkIDs="142,153";
+			 String msgOver = Flow_DoFlowOver(Token, WorkIDs);
+			 *//*测试流程End*//*
+
+			 *//*组织结构维护Start*//*
+			 //人员信息保存
+			 String kvs="@Tel=18660153303@Email=123@qq.com";
+			 String userNo="cheche";
+			 String userName="管理员";
+			 String orgNo="";//非集团模式传空
+			 String deptNo="1071";
+			 String stats="08,09";
+			 Port_Emp_Save(Token, orgNo, userNo, userName, deptNo, kvs, stats);
+
+			 //人员删除
+			 Port_Emp_Delete(Token, orgNo, userNo);
+
+			 //集团模式下同步组织以及管理员信息
+			 String orgNo2="7201";
+			 String name="北方分公司";
+			 String adminer="zhanghaicheng";
+			 String adminerName="张海成";
+			 String keyVals="@Leaer=zhangsan@Tel=12233333@Idx=1";
+			 Port_Org_Save(Token, orgNo2,name, adminer, adminerName,  keyVals);
+
+			 //保存部门,如果有此数据则修改,无此数据则增加
+			 String no="10051";
+			 String nameD="开发部";
+			 String parentNo="1005";
+			 String keyValsD="@Leaer=zhangsan@Idx=1";
+			 Port_Dept_Save(Token,orgNo, no, nameD,  parentNo, keyValsD);
+			 //删除部门
+			 Port_Dept_Delete(Token, no);
+			 //保存岗位, 如果有此数据则修改，无此数据则增加
+			 String noSta="99";
+			 String nameSta="客服";
+			 String keyValsSta="@FK_StationType=3";
+			 Port_Station_Save(Token,orgNo, noSta, nameSta, keyValsSta);
+			 //删除岗位
+			 Port_Station_Delete(Token,noSta);*/
+			 /*组织结构维护End*/
 	        /*Service service = new Service();
-	        Call call = (Call) service.createCall();
-	        call.setTargetEndpointAddress(webPath);
-	        call.setOperationName(new QName("http://WebServiceImp","SendWork"));// WSDL里面描述的接口名称
-	        call.addParameter("flowNo",
+	        Call call = (Call) service.createCall();  
+	        call.setTargetEndpointAddress(webPath);  
+	        call.setOperationName(new QName("http://WebServiceImp","SendWork"));// WSDL里面描述的接口名称  
+	        call.addParameter("flowNo",  
+	                org.apache.axis.encoding.XMLType.XSD_DATE,  
+	                javax.xml.rpc.ParameterMode.IN);// 接口的参数  
+	        call.addParameter("workid",  
 	                org.apache.axis.encoding.XMLType.XSD_DATE,
-	                javax.xml.rpc.ParameterMode.IN);// 接口的参数
-	        call.addParameter("workid",
-	                org.apache.axis.encoding.XMLType.XSD_DATE,
-	                javax.xml.rpc.ParameterMode.IN);// 接口的参数
-	        call.addParameter("ht",
-	                org.apache.axis.encoding.XMLType.XSD_DATE,
-	                javax.xml.rpc.ParameterMode.IN);// 接口的参数
-	        call.addParameter("toNodeID",
-	                org.apache.axis.encoding.XMLType.XSD_DATE,
-	                javax.xml.rpc.ParameterMode.IN);// 接口的参数
-	        call.addParameter("toEmps",
-	                org.apache.axis.encoding.XMLType.XSD_DATE,
-	                javax.xml.rpc.ParameterMode.IN);// 接口的参数
-	        call.setReturnType(org.apache.axis.encoding.XMLType.XSD_STRING);// 设置返回类型
-	        String temp = "admin";
+	                javax.xml.rpc.ParameterMode.IN);// 接口的参数  
+	        call.addParameter("ht",  
+	                org.apache.axis.encoding.XMLType.XSD_DATE,  
+	                javax.xml.rpc.ParameterMode.IN);// 接口的参数  
+	        call.addParameter("toNodeID",  
+	                org.apache.axis.encoding.XMLType.XSD_DATE,  
+	                javax.xml.rpc.ParameterMode.IN);// 接口的参数  
+	        call.addParameter("toEmps",  
+	                org.apache.axis.encoding.XMLType.XSD_DATE,  
+	                javax.xml.rpc.ParameterMode.IN);// 接口的参数  
+	        call.setReturnType(org.apache.axis.encoding.XMLType.XSD_STRING);// 设置返回类型  
+	        String temp = "admin";  
 	        Hashtable ht = new Hashtable();
 	        ht.put("ZiDuan1", "111");
 	        ht.put("ZiDuan2", "222");
-	        String result = (String) call.invoke(new Object[] { "226",(long)798,ht,22602,"zhangyifan" });
-	        // 给方法传递参数，并且调用方法
+	        String result = (String) call.invoke(new Object[] { "226",(long)798,ht,22602,"zhangyifan" });  
+	        // 给方法传递参数，并且调用方法  
 	        System.out.println("result is " + result);  */
-		} catch (Exception e) {
-			System.err.println(e.toString());
-		}
-	}
+
+    }
 
 	public static JSONObject Port_Login(String UserNo)
 	{
@@ -334,23 +376,6 @@ public class Test {
 		param.put("token",token);
 		param.put("no",no);
 		webPath=host+"/Port_Station_Delete";
-		String dtDel = HttpClientUtil.doPost(webPath,param,null,null);
-		return dtDel;
-	}
-	public static String Node_GetNextStepNodesByNodeID(String token,int nodeID) {
-		Map<String, String> param = new HashMap<String, String>();
-		param.put("Token",token);
-		param.put("nodeID", String.valueOf(nodeID));
-		webPath=host+"/Node_GetNextStepNodesByNodeID";
-		String dtDel = HttpClientUtil.doPost(webPath,param,null,null);
-		return dtDel;
-	}
-	public static String Node_GetNextStepEmpsByNodeID(String Token,int nodeID, int workID) {
-		Map<String, String> param = new HashMap<String, String>();
-		param.put("Token",Token);
-		param.put("nodeID", String.valueOf(nodeID));
-		param.put("workID", String.valueOf(workID));
-		webPath=host+"/Node_GetNextStepEmpsByNodeID";
 		String dtDel = HttpClientUtil.doPost(webPath,param,null,null);
 		return dtDel;
 	}

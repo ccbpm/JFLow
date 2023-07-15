@@ -3225,9 +3225,9 @@ function DealDataTableColName(jsonDT, mapAttrs) {
             }
         }
 
-        if (isHave == false) {
-            alert("数据源字段名[" + colName + "]没有匹配到表单字段.");
-        }
+        //if (isHave == false) {
+         //   alert("数据源字段名[" + colName + "]没有匹配到表单字段.");
+        //}
     }
     return data;
 }

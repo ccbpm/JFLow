@@ -19,7 +19,7 @@ INSERT INTO Port_Org (No,Name,adminer,adminername) VALUES('quanyi','泉亿公司
 DELETE FROM Port_OrgAdminer;
 INSERT INTO Port_OrgAdminer (MyPK,OrgNo,FK_Emp,EmpName) VALUES('100_admin','100','admin','admin');
 INSERT INTO Port_OrgAdminer (MyPK,OrgNo,FK_Emp,EmpName) VALUES('ccs_yuwen','ccs','yuwen','钰雯');
-INSERT INTO Port_OrgAdminer (MyPK,OrgNo,FK_Emp,EmpName) VALUES('quanyi_yuwen','ccs','yuwen','钰雯');
+INSERT INTO Port_OrgAdminer (MyPK,OrgNo,FK_Emp,EmpName) VALUES('quanyi_yuwen','quanyi','yuwen','钰雯');
 
  
 -- Port_Dept ;

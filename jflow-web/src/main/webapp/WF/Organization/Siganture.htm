@@ -92,6 +92,8 @@
         }
 
         function IconImgErr(obj) {
+            //防止陷入死循环
+            obj.onerror = null;
             if (plant == "CCFlow")
                 obj.src = '../../DataUser/Siganture/UnName.jpg';
             else

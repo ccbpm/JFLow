@@ -43,8 +43,7 @@
 
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_CCBPMDesigner");
             var data = handler.DoMethodReturnString("SelectOneOrg_Init");
-            if (data.indexOf('err@') == 0)
-            {
+            if (data.indexOf('err@') == 0) {
                 $("#list").html(data);
                 return;
             }
@@ -54,8 +53,6 @@
             //$("#cc").html("<img src='/Admin/Portal/Img/loading_small.gif' /><font color=blue>ccbpm 正在登录请您稍后.</font>");
             var webUser = new WebUser();
 
-            var html = "您好：" + webUser.No + " - " + webUser.Name + ",共有:<font color=red>" + datas.length + " </font>个. <a href='Login.htm'>切换管理员</a>";
-            $("#title").html(html);
             var orgNo = webUser.OrgNo;
 
             var html = "<ul style='align:left'>";
@@ -96,7 +93,7 @@
         <br />
 
         <center>
-            <h3>请选择要登录的组织 -  <a href="./Admin/Login.htm">超级管理员登陆</a></h3>
+            <h3>请选择要登录的组织 -  <a href="./Admin/Login.htm">超级管理员登陆</a> - <a href="/CCMobilePortal/SaaS/SelectOneOrg.htm">移动端登陆</a></h3>
             <fieldset style="width:50%; text-align:left">
                 <legend id="title">
                 </legend>

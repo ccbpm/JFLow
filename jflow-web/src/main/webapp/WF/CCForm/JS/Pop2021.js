@@ -211,6 +211,7 @@ function OpenPopFunction(mapExt, mapExts, mtagsId, target, targetID, pkval, popt
             break;
         case "PopBranches": //树干简单模式.
             url = baseUrl + "Pop/Branches.htm?MyPK=" + mapExt.MyPK + "&oid=" + pkval + "&m=" + Math.random();
+            url += url + '&BackBtn=' + 0;
             break;
         case "PopTableSearch": //表格查询.
             url = baseUrl + "Pop/TableSearch.htm?MyPK=" + mapExt.MyPK + "&oid=" + pkval + "&m=" + Math.random();

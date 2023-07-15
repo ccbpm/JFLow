@@ -72,7 +72,8 @@ INSERT INTO Sys_GloVar (No,Name,GroupKey) VALUES ('@FK_ND','当前年度','DefVa
 INSERT INTO Sys_GloVar (No,Name,GroupKey) VALUES ('@FK_YF','当前月份','DefVal');
 INSERT INTO Sys_GloVar (No,Name,GroupKey) VALUES ('@WebUser.OrgNo','登录人员组织','DefVal');
 INSERT INTO Sys_GloVar (No,Name,GroupKey) VALUES ('@WebUser.OrgName','登录人员组织名称','DefVal');
-
+INSERT INTO Sys_GloVar (No,Name,GroupKey) VALUES ('@WebUser.EmpLeader','直属领导','DefVal');
+INSERT INTO Sys_GloVar (No,Name,GroupKey) VALUES ('@WebUser.DeptLeader','部门领导','DefVal');
 
  
 -- 升级数据源 2016.;

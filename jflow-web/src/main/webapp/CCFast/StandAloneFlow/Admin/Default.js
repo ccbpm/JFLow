@@ -45,7 +45,7 @@ new Vue({
             var flowNo = GetQueryString("FlowNo");
             var data = ens.DoMethodReturnString("Default_Mover", flowNo, currentNodeArrStr);
 
-  
+
 
         },
         updateSort: function (currentNodeArrStr) {
@@ -87,7 +87,6 @@ new Vue({
         // 是否启用
         changeEnableStatus(myEn, ctrl) {
             // 当前启用状态
-
             var en = new Entity("BP.WF.Template.FlowTab", myEn.MyPK);
             if (en.isEnable == 0)
                 en.isEnable = 1;
@@ -227,8 +226,6 @@ function NewIt() {
 
     var no = GetQueryString("FlowNo");
 
-    //var url = "SelfUrl.htm?FlowNo=" + no + "&MenuNo=" + no + "&SystemNo=" + systemNo;
-    var url = "SelfUrl.htm?FlowNo=" + no;
-
+    var url = "SelfUrl.htm?FlowNo=" + no + "&MenuNo=" + no + "&SystemNo=" + systemNo;
     OpenLayuiDialog(url, '', 900, 80, "auto", true);
 }

@@ -33,7 +33,7 @@
                 // SetHref( '../XAP/Designer.htm';
                 // return;
             }
-
+            debugger;
             //清空token
             localStorage.setItem("Token", "");
             var doType = GetQueryString("DoType");
@@ -60,7 +60,7 @@
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
             var sysInfo = handler.DoMethodReturnJSON("Login_InitInfo");
             if (sysInfo.OSModel == 2) {
-                SetHref("../Saas/SelectOneOrg.htm");
+                SetHref("../SaaS/SelectOneOrg.htm");
                 return;
             }
 

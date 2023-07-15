@@ -682,6 +682,9 @@ function GetColoums(data, thrMultiTitle, secMultiTitle, colorSet, sortColumns, f
            		templet: function (row) {
                     var formatter = "";
                     var val = row[this.field];
+                    if (typeof val == 'undefined') {
+                        val = row[this.field.substring(0, this.field.length-4)];
+                    }
                     var field = this.field.substring(0, this.field.length - 4);
                     if (foramtFunc != "" && foramtFunc.indexOf(field + "@") != -1) {
                         formatter = foramtFunc.substring(foramtFunc.indexOf(field + "@"));

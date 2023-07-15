@@ -821,7 +821,7 @@ function UploadChangeAth(uploadUrl, fk_frmAttachment) {
     }
     var uploadUrl = "";
     if (plant == 'CCFlow')
-        uploadUrl = basePath + '/WF/CCForm/ProcessRequest?DoType=HttpHandler&HttpHandlerName=BP.WF.HttpHandler.WF_CCForm&AttachPK=' + fk_frmAttachment + '&DoMethod=MoreAttach&FK_Flow=' + pageData.FK_Flow + '&PKVal=' + athRefPKVal;
+        uploadUrl = basePath + '/WF/Comm/ProcessRequest?DoType=HttpHandler&HttpHandlerName=BP.WF.HttpHandler.WF_CCForm&AttachPK=' + fk_frmAttachment + '&DoMethod=MoreAttach&FK_Flow=' + pageData.FK_Flow + '&PKVal=' + athRefPKVal;
     else {
         uploadUrl = basePath + "/WF/Ath/AttachmentUploadS.do?FK_FrmAttachment=" + fk_frmAttachment + '&FK_Flow=' + pageData.FK_Flow + "&PKVal=" + athRefPKVal;
     }
@@ -852,6 +852,7 @@ function UploadChangeAth(uploadUrl, fk_frmAttachment) {
         dataType: 'json',
         headers: { "ClientCallMode": "ajax" },
         success: function (data) {
+            debugger
             if (data != null && data.indexOf("err@") != -1) {
                 alert(data.replace("err@", ""));
                 return;
@@ -861,6 +862,7 @@ function UploadChangeAth(uploadUrl, fk_frmAttachment) {
             InitAthPage("Div_" + fk_frmAttachment);
         },
         error: function (xhr, status, err) {
+            debugger
             if (xhr.responseText != null && xhr.responseText.indexOf("err@") != -1) {
                 alert(xhr.responseText);
                 return;

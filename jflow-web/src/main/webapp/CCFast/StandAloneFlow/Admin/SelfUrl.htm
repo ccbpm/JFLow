@@ -38,7 +38,7 @@
 
             var url = document.getElementById("TB_Url").value;
             if (url == "" || url == null) {
-                $("#Msg").html("功能链接不能为空...");
+                $("#Msg").html("名称不能为空...");
                 return;
             }
 
@@ -94,27 +94,28 @@
         </div>
         <fieldset>
 
-            <legend>创建功能页 </legend>
-<!--            <ul>-->
-<!--                <li> 标题</li>-->
-<!--                <li><input type="text" id="TB_Name" name="TB_Name"  placeholder="不能为空" onblur="GenerPinYin()"/> </li>-->
-<!--                <li>-->
-<!--                    <input id="RB_PinYinModel_0" type="radio" name="RB_PinYinModel" value="0" checked="checked" onclick="GenerPinYin()" /><label for="RB_PinYinModel_0" onclick="GenerPinYin()">全拼</label>-->
-<!--                    <input id="RB_PinYinModel_1" type="radio" name="RB_PinYinModel" value="1" onclick="GenerPinYin()" /><label for="RB_PinYinModel_1" onclick="GenerPinYin()">简拼</label>-->
-<!--                </li>-->
-<!--                <li> 编号</li>-->
-<!--                <li><input type="text" id="TB_No" name="TB_No"  placeholder="不能为空" /> </li>-->
-<!--                <li> Url</li>-->
-<!--                <li><input type="text" id="TB_Url" value="http://ccfast.cc" placeholder="不能为空" /> </li>-->
+            <legend>创建标签页 </legend>
+            <!--<ul>
+                <li> 标题</li>
+                <li><input type="text" id="TB_Name" value="我的菜单1" placeholder="不能为空" /> </li>
+                <li> Url</li>
+                <li><input type="text" id="TB_Url" value="http://ccfast.cc" placeholder="不能为空" /> </li>
 
-<!--                <li> <div id="Msg"></div> </li>-->
-<!--            </ul>-->
+                <li> <div id="Msg"></div> </li>
+            </ul>
 
+            <legend>说明</legend>
+            <ul>
+                <li> 数据可以包含变量@WebUser.No </li>
+                <li>创建后，就可以编辑熟悉与权限控制。</li>
+                <li><img src="Html.png" class="HelpImg" /> </li>
+
+            </ul>-->
             <table style="width: 80%;border: white;">
                 <tr>
                     <td>标题</td>
                     <td>
-                        <input type="text" id="TB_Name" name="TB_Name"  placeholder="不能为空" onblur="GenerPinYin()"/>
+                        <input type="text" id="TB_Name" name="TB_Name" placeholder="不能为空" onblur="GenerPinYin()" />
                     </td>
                     <td>
                         <input id="RB_PinYinModel_0" type="radio" name="RB_PinYinModel" value="0" checked="checked" onclick="GenerPinYin()" /><label for="RB_PinYinModel_0" onclick="GenerPinYin()">全拼</label>
@@ -123,7 +124,7 @@
                 </tr>
                 <tr>
                     <td>编号</td>
-                    <td><input type="text" id="TB_No" name="TB_No"  placeholder="不能为空" /></td>
+                    <td><input type="text" id="TB_No" name="TB_No" placeholder="不能为空" /></td>
                 </tr>
                 <tr>
                     <td>功能链接</td>
@@ -133,14 +134,6 @@
                     <div id="Msg"></div>
                 </tr>
             </table>
-
-            <legend>说明</legend>
-            <ul>
-                <li> 数据可以包含变量@WebUser.No </li>
-                <li>创建后，就可以编辑熟悉与权限控制。</li>
-                <li><img src="Html.png" class="HelpImg" /> </li>
-
-            </ul>
         </fieldset>
     </form>
 </body>

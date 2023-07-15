@@ -410,6 +410,7 @@ function DelayedSend(formType) {
     }
 
     if (isSelectEmps == true) {
+        debugger;
         Send(false, formType,1);
         return;
     }
@@ -807,10 +808,11 @@ function initModal(modalType, toNode, url, isDelayedSend) {
                 break;
         }
     }
+    height = 100;
     if (isShowColseBtn == 0)
-        OpenLayuiDialog(modalIframeSrc, title, width, height, "auto", false, false, false, null, null, null, 0);
+        OpenLayuiDialog(modalIframeSrc, title, width, height, "r", false, false, false, null, null, null, 0);
     else
-        OpenLayuiDialog(modalIframeSrc, title, width, height, "auto");
+        OpenLayuiDialog(modalIframeSrc, title, width, height, "r");
     return false;
 }
 

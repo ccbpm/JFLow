@@ -25,7 +25,7 @@
 
         .flow {
             /*width: 75%;*/
-            width: 79%;
+            width: 78.5%;
             margin: 10px 10px 10px 5px;
         }
 
@@ -41,9 +41,10 @@
                 .flow .row .item {
                     box-sizing: border-box;
                     flex-shrink: 0;
-                    text-align: center;
+                    /*text-align: center;*/
                     border-right: 1px solid #eee;
                     border-bottom: 1px solid #eee;
+                    padding:0 20px;
                 }
 
         .item-title {
@@ -55,7 +56,7 @@
             width: 25%;
             text-overflow: ellipsis;
             white-space: nowrap;
-            cursor: pointer;
+            /*cursor: pointer;*/
             padding-left: 30px;
         }
 
@@ -104,7 +105,7 @@
             height: 50px;
             line-height: 30px;
             font-size: 16px;
-            padding: 10px;
+            padding: 10px 10px 10px 15px;
             box-sizing: border-box;
             border-bottom: 1px solid #f0f2f5;
         }
@@ -122,6 +123,9 @@
             border-top-right-radius: 5px;
             background: #fff;
             border-bottom: 1px solid #f0f2f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .flow-main {
@@ -164,6 +168,40 @@
             overflow:hidden;
             text-overflow:ellipsis;
         }
+        .item-finger{
+            cursor:pointer;
+        }
+
+        .search-inp {
+            margin-left: 10px;
+            margin-right: 10px;
+            display: flex;
+        }
+        .cc-btn-tab {
+            height: 26px;
+            padding: 0 10px;
+            margin-right: auto;
+            margin-left: 10px;
+            line-height: 26px;
+            font-size: 14px;
+            background: #316ee6 !important;
+            border-color: #316ee6 !important;
+            border-radius: 5px;
+            color: #fff !important;
+        }
+
+            .cc-btn-tab:hover {
+                background: #316ee6 !important;
+            }
+
+        .left-search {
+            display: flex;
+            align-items: center;
+        }
+
+        .search-font {
+            display: flex;
+        }
     </style>
     <script type="text/javascript">
         var frms;
@@ -179,7 +217,6 @@
 
             var sorts = new Entities("BP.WF.Template.SysFormTrees");
             sorts.RetrieveAll();
-            console.log(sorts);
             var rootNo = "0";
             if (webUser.CCBPMRunModel == 1 || webUser.CCBPMRunModel == 2)
                 rootNo = webUser.OrgNo;
@@ -242,11 +279,19 @@
                 }
             });
 
+
+            //默认选中父节点
+            tree.setChecked('frmSort', data[0].id);
+            var parentNodeElem = $('.layui-tree-set[data-id="' + data[0].id + '"]>.layui-tree-entry>.layui-tree-main>.layui-tree-txt');
+            parentNodeElem.dblclick();
+
+
+
             var dropdown = layui.dropdown
             var topNodeItems = [
                 { title: '<i class=icon-plus></i> 新建表单', id: "NewFrm", Icon: "icon-plus" },
                 { title: '<i class=icon-star></i> 重命名', id: "EditSort", Icon: "icon-options" },
-                { title: '<i class=icon-folder></i> 新建目录', id: "NewSort", Icon: "icon-magnifier-add" },
+                { title: '<i class=icon-folder></i> 新建子级', id: "NewSort", Icon: "icon-magnifier-add" },
                 //{ title: '<i class=icon-share-alt ></i> 导入表单模版', id: "ImpFlowTemplate", Icon: "icon-plus" },
                 //{ title: '<i class=icon-share-alt ></i> 批量导出表单模版', id: "BatchExpFrmTemplate", Icon: "icon-plus" },
                 { title: '<i class=icon-close></i> 删除目录', id: "DeleteSort", Icon: "icon-close" }
@@ -260,12 +305,16 @@
                 }
             });
             var html = "";
+            html += "<div class='left-search'>"
+            html += "<li class='search-font'><span style='margin-left: 15px;line-height:25px;'>关键字：</span><div style='width: 190px; border-width: 1px; border-style: solid; background-color: #fff; border-color: #eee; '><input id='searchKey' name='searchKey' type='text' style='margin-left: 5px; height: 23px;border:none;outline:none;' /></div></li>";
+            html += "<li class='cc-btn-tab' id='SearchBtn' onclick=\"SearchEmp(frms)\">搜索</li>";
+            html += "</div>"
             html += "<ul class='top-newfrm'>";
             html += "<li id='EditSort' class='flow-menu' onclick=\"topNodeOption(id,frmSortNo,nameTitle)\">属性名称</li>";
             html += "<li id='NewFrm' class='flow-menu' onclick=\"topNodeOption(id,frmSortNo,nameTitle)\">新建表单</li>";
-            html += "<li id='NewSortOne' class='flow-menu'>新建目录</li>";
+            html += "<li id='NewSortOne' class='flow-menu'>更多操作</li>";
             html += "</ul>";
-            $("#top-choose").html(html)
+            $("#top-choose").html(html);
 
             //一开始隐藏
             $('#NewSortOne').hide();
@@ -278,6 +327,7 @@
                 data: [
                     { title: '<i class=icon-folder></i> 新建同级', id: "NewSame", Icon: "icon-magnifier-add" },
                     { title: '<i class=icon-folder></i> 新建子级', id: "NewSort", Icon: "icon-magnifier-add" },
+                    { title: '<i class=icon-folder></i> 删除目录', id: "DeleteSort", Icon: "icon-magnifier-add" },
                 ],
                 click: function (data) {
                     topNodeOption(data.id, frmSortNo, nameTitle)
@@ -285,6 +335,14 @@
             });
 
         })
+        function SearchEmp(frms) {
+            var searchKey = $("#searchKey").val();
+            var frms = frms.data.filter(function (item) {
+                return item.No.includes(searchKey)
+            })
+            baseInfo.frms = frms
+            return frms;
+        }
         function topNodeOption(key, frmSortNo, name, idx) {
             //获取屏幕的宽
             var W = document.body.clientWidth - 250;
@@ -323,7 +381,6 @@
                         layer.close(index);
                         var en = new Entity("BP.WF.Template.SysFormTree", frmSortNo);
                         var data = en.DoMethodReturnString("DoCreateSameLevelFormNodeMy", value);
-                        debugger;
                         if (data == undefined || data == '') {
                             return;
                         } else {
@@ -355,7 +412,14 @@
                     url += "&UserNo=" + GetQueryString("UserNo");
                     url += "&Token=" + GetQueryString("Token");
                     /*window.open(url); break;*/
-                    OpenLayuiDialog(url, name, W, 100, "r", false);
+                    OpenLayuiDialog(url, name, W, 100, "r", false, false, null, null, function () {
+                        // alert(frmSortNo); 
+                        //关闭窗口执行选中并点击节点
+                        tree.setChecked('frmSort', frmSortNo); //设置对应 id 的节点选中
+                        var nodeElem = $('.layui-tree-set[data-id="' + frmSortNo + '"]>.layui-tree-entry>.layui-tree-main>.layui-tree-txt');
+                        console.log(nodeElem);
+                        nodeElem.click();
+                    });
                     break;
                 default:
                     layer.alert("没有判断的命令" + key);
@@ -424,7 +488,7 @@
     <div class="layui-row">
         <!--流程类别-->
         <div class="layui-col-sm3 layui-col-md3 layui-col-xs3 flow_layout" style="border:1px solid #f5f5ff ">
-            <div class="menu-treetitle"><i class="fa fa-fw icon-grid" style="vertical-align: -1px;"></i>表单</div>
+            <div class="menu-treetitle"><i class="icon-docs" style="vertical-align: -1px; margin-right: 2px;"></i>表单</div>
             <div id="frmSort" class="" style="width: 100%; height: calc(90%); "></div>
         </div>
 
@@ -443,22 +507,21 @@
                     <div class="item item-other item-title">名称</div>
                     <div class="item item-other item-title">存储表</div>
                     <div class="item item-other item-title">设计类型</div>
-                    <div class="item item-other item-title">创建日期</div>
-                    <div class="item item-other item-title">创建人</div>
+                    <div class="item item-other item-title">创建日期</div>  <!--当前版本-->
+                    <div class="item item-other item-title">创建人</div>    <!--设计人-->
                 </div>
                 <div ref="child-row" id="s-main">
-                    <div class="row" v-for="(flow,idx) in frms" :key="idx" :data-pid="SortNo" :data-id="flow.No">
+                    <div class="row" v-for="(frms,idx) in frms" :key="idx" :data-pid="SortNo" :data-id="frms.No" @dblclick.stop="Designer(frms.No,frms.Name)">
 
-                        <div class="item item-name item-name-dp item-omit" @click.stop="Designer(flow.No,flow.Name)"  :data-no="flow.No" :data-name="flow.Name" :data-idx="idx">
+                        <div class="item item-name item-name-dp item-omit" :data-no="frms.No" :data-name="frms.Name" :data-idx="idx">
                             <i class="icon-heart" style="margin-right: 8px"></i>
-                            <!--<span>{{flow.No}}.{{flow.Name}}</span>-->
-                            <span>{{flow.No}}</span>
+                            <span class="item-omit" >{{frms.No}}</span>
                         </div>
-                        <div class="item item-other item-omit">{{flow.Name}}</div>
-                        <div class="item item-other item-omit">{{flow.PTable}}</div>
-                        <div class="item item-other item-omit">{{flow.ChartType}}</div>
-                        <div class="item item-other item-omit">{{flow.Ver}}</div>
-                        <div class="item item-other item-omit">{{flow.Name}}</div>
+                        <div class="item item-other item-omit  item-finger"  @click.stop="Designer(frms.No,frms.Name)">{{frms.Name}}</div>
+                        <div class="item item-other item-omit">{{frms.PTable}}</div>
+                        <div class="item item-other item-omit">{{frms.FrmTypeText}}</div>
+                        <div class="item item-other item-omit">{{frms.Ver}}</div>
+                        <div class="item item-other item-omit">{{frms.Name}}</div>
                         <!--<div class="item item-other">
         <button class="layui-btn layui-btn-primary layui-border-blue layui-btn-xs c-btn" :data-name="flow.Name" :data-no="flow.No" :data-idx="idx">
             <i class="layui-icon layui-icon-down layui-font-12"></i>表单
@@ -536,7 +599,18 @@
                     var sid = GetQueryString("Token");
                     var webUser = new WebUser();
                     var url = basePath + "/WF/Admin/FoolFormDesigner/GoToFrmDesigner.htm?FK_MapData=" + no + "&FrmID=" + no + "&UserNo=" + webUser.No + "&Token=" + sid + "&OrgNo=" + webUser.OrgNo + "&From=Ver2021";
-                    window.top.vm.openTab(name, url);
+                    //window.top.vm.openTab(name, url);
+                    var self = WinOpenFull(url, "xx");
+                    var loop = setInterval(function () {
+                        if (self.closed) {
+                            //管理员登录
+                            var handler = new HttpHandler("BP.WF.HttpHandler.WF_Admin_TestingContainer");
+                            handler.AddPara("Token", GetQueryString("Token"));
+                            handler.AddPara("UserNo", GetQueryString("UserNo"));
+                            handler.DoMethodReturnString("Default_LetAdminerLogin");
+                            clearInterval(loop)
+                        }
+                    }, 1);
                     ////获取屏幕的宽
                     //var W = document.body.clientWidth - 250;
                     //OpenLayuiDialog(url, name, W, 100, "r", false);

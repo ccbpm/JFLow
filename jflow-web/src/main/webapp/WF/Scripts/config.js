@@ -1,5 +1,5 @@
 ﻿// UI风格配置. UIPlant, 为了适应不同风格的版本需要. 我们增加这个配置, UIPlant=BS,Ele.
- 
+
 var uiPlant = 'BS'; //风格文件.
 
 //  For .net 后台的调用的url ,  java的与.net的不同.
@@ -17,7 +17,7 @@ if (ver == 6 || ver == 7 || ver == 8 || ver == 9)
 function basePath() {
 
     //jflow下常用目录
-    var dirs = ['/WF', '/DataUser', '/GPM', '/App', '/Portal', '/CCMobile', '/CCFast', '/CCMobilePortal', '/FastMobilePortal', '/AdminSys', '/Admin'];
+    var dirs = ['/WF', '/DataUser', '/GPM', '/App', '/Portal', '/CCMobile', '/CCFast', '/CCMobilePortal', '/FastMobilePortal',  '/Admin'];
     //获取当前网址，如： http://localhost:80/jflow-web/index.jsp
 
     var curPath = window.document.location.href;
@@ -50,8 +50,8 @@ function basePath() {
  * 获取项目路径
  * @returns
  */
-function getContextPath(){
-	return basePath.substring(basePath.lastIndexOf("/"));
+function getContextPath() {
+    return basePath.substring(basePath.lastIndexOf("/"));
 }
 
 /**
@@ -85,7 +85,7 @@ function loadScript(url, callback, scriptID) {
     } catch (e) {
         alert(url + "文件不存在");
     }
-    
+
 }
 
 var Skip = {};
@@ -96,41 +96,41 @@ Skip.getXmlHttpRequest = function () {
     else if (window.ActiveXObject) // IE 
         return new ActiveXObject("MsXml2.XmlHttp");
 },
-//导入内容
-Skip.includeJsText = function (rootObject, jsText) {
-    if (rootObject != null) {
-        var oScript = document.createElement("script");
-        oScript.type = "text/javascript";
-        oScript.text = jsText;
-        rootObject.append(oScript);
-    }
-},
-//导入文件
-Skip.includeJsSrc = function (rootObject, fileUrl) {
-    if (rootObject != null) {
-        var oScript = document.createElement("script");
-        oScript.type = "text/javascript";
-        oScript.src = fileUrl;
-        rootObject.appendChild(oScript);
-    }
-},
-//同步加载
-Skip.addJs = function (url, rootObject) {
-    $.ajax({
-        url: url,
-        method: 'GET',
-        async: false
-    }).success(function (result) {
-        if (rootObject == null || rootObject == undefined)
-            rootObject = document.getElementsByTagName('script')[0];
-        Skip.includeJsText(rootObject, result.responseText);
-    }).error(function (result) {
-        if (rootObject == null || rootObject == undefined)
-            rootObject = document.getElementsByTagName('script')[0];
-        Skip.includeJsText(rootObject, result.responseText);
-    });
+    //导入内容
+    Skip.includeJsText = function (rootObject, jsText) {
+        if (rootObject != null) {
+            var oScript = document.createElement("script");
+            oScript.type = "text/javascript";
+            oScript.text = jsText;
+            rootObject.append(oScript);
+        }
+    },
+    //导入文件
+    Skip.includeJsSrc = function (rootObject, fileUrl) {
+        if (rootObject != null) {
+            var oScript = document.createElement("script");
+            oScript.type = "text/javascript";
+            oScript.src = fileUrl;
+            rootObject.appendChild(oScript);
+        }
+    },
+    //同步加载
+    Skip.addJs = function (url, rootObject) {
+        $.ajax({
+            url: url,
+            method: 'GET',
+            async: false
+        }).success(function (result) {
+            if (rootObject == null || rootObject == undefined)
+                rootObject = document.getElementsByTagName('script')[0];
+            Skip.includeJsText(rootObject, result.responseText);
+        }).error(function (result) {
+            if (rootObject == null || rootObject == undefined)
+                rootObject = document.getElementsByTagName('script')[0];
+            Skip.includeJsText(rootObject, result.responseText);
+        });
 
-}
+    }
 
 function Exists(url) {
     var isExists;

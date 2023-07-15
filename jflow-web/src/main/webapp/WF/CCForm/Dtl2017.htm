@@ -98,6 +98,7 @@
         var isHaveFieldAth = false;
         //页面启动函数.
         $(function () {
+            console.log('Dtl2017');
             try {
                 //加载JS文件
                 var s = document.createElement('script');
@@ -335,6 +336,10 @@
             }
 
             newRowParse(insertTr, newRowIndex);
+            var textareas = $("textarea");
+            $.each(textareas, function (idex, item) {
+                autoTextarea(item);
+            });
 
             //setTimeout(doAlignColumns,100);
         }
@@ -363,7 +368,7 @@
                             }
 
                         });
-                        var td = $('<td align="center" style="vertical-align: middle;"></td>');
+                        var td = $('<td align="center" style="vertical-align: middle;" class="My-Handle"></td>');
                         if (o.data().UIVisible == 0)
                             td = $('<td style="display:none"></td>');
                     } else {
@@ -450,7 +455,9 @@
                         tmplate.val(textVal);
                     }
 
-                    var td = $('<td  style="vertical-align: middle;"></td>');
+                    var td = $('<td  style="vertical-align: middle;" class="My-Handle"></td>');
+                    if (mapAttr.MyDataType == 1 && (mapAttr.TextModel == 0 || mapAttr.TextModel == 2))
+                        td = $('<td  style="vertical-align: middle;"></td>');
                     if (o.data().UIVisible == 0)
                         td = $('<td style="display:none"></td>');
                     td.append(tmplate);
@@ -494,7 +501,7 @@
             insertTr.data(trData);
             //insertTr.append($('<td> <a href="#" onclick="deleteRow(this)" >移除</a>|<a href="#" onclick="AddRow(this)" >插入</a></td>'));
             insertTr.append($('<td>'
-                + '<button type="button" class="layui-btn layui-btn-primary layui-btn-sm" onclick="deleteRow(this)"><i class="layui-icon layui-icon-reduce-circle"></i>删除</button>'
+                + '<button type="button" class="layui-btn layui-btn-primary layui-btn-sm" onclick="deleteRow(this)"><i class="layui-icon layui-icon-reduce-circle"></i>移除</button>'
                 + '<button type="button" class="layui-btn layui-btn-primary layui-btn-sm" onclick="AddRow(this)"><i class="layui-icon layui-icon-add-circle"></i>新增</button>'
                 + '</td>'));
 
@@ -830,7 +837,7 @@
                 if ((sys_MapDtl.IsDelete == "1" || sys_MapDtl.IsInsert == "1" || sys_MapDtl.IsUpdate == "1") && sys_MapDtl.IsReadonly == "0" && isReadonly != "1") {
                     isCanSave = true;
                     //imgStr = '<img title="保存" style="width: 30px;padding: 0px 5px;cursor:pointer;" src="../Img/Btn/Save.gif" onclick="SaveAll();" />';
-                    imgStr = '<button title="保存" type="button" class="layui-btn layui-btn-primary layui-btn-sm"><i class="iconfont icon-Save" onclick="SaveAll();"></i>保存</button>';
+                    imgStr = '<button title="保存" type="button" class="layui-btn layui-btn-primary layui-btn-sm"  onclick="SaveAll();"><i class="iconfont icon-Save"></i>保存</button>';
 
                 }
                 if (IsExp == 1) {
@@ -968,6 +975,7 @@
                                     });
                                     $($(tbodyTrObj).children('td')[k]).text('');
                                     $($(tbodyTrObj).children('td')[k]).append(tmplate);
+                                    $($(tbodyTrObj).children('td')[k]).addClass("My-Handle");
                                     //枚举单选按钮
                                 } else if (mapAttr.MyDataType == "2" && mapAttr.UIContralType == "3") {
                                     $.each(tmplate, function (idx, obj) {
@@ -991,6 +999,7 @@
                                     });
                                     $($(tbodyTrObj).children('td')[k]).text('');
                                     $($(tbodyTrObj).children('td')[k]).append(tmplate);
+                                    $($(tbodyTrObj).children('td')[k]).addClass("My-Handle");
 
                                 } else {
                                     if (tmplate.length >= 2) {
@@ -1001,6 +1010,7 @@
                                             //ID 设置为  id+'_1'
                                             //先写出 NAME   单选扭会出问题
                                             $(tmplate[0]).attr('id', $(tmplate[0]).attr('name') + '_' + rowIndex);
+                                            $($(tbodyTrObj).children('td')[k]).addClass("My-Handle");
                                         }
                                         if (tmplate[1].nodeName == "INPUT") {
                                             $(tmplate[0]).data({ KeyOfEn: o.data().KeyOfEn + "T" });
@@ -1029,10 +1039,10 @@
                                         } else {
                                             ckEle[0].checked = false;
                                         }
+                                        $($(tbodyTrObj).children('td')[k]).addClass("My-Handle");
                                     }
                                     else {
                                         // 判断下拉框是否有对应option, 若没有则追加
-
                                         if (o.data().LGType == 2 || o.data().UIContralType == "1") {
                                             if ($("option[value='" + textVal + "']", tmplate).length == 0) {
                                                 try {
@@ -1047,10 +1057,11 @@
                                                 } catch (e) {
                                                 }
                                             }
-
+                                            $($(tbodyTrObj).children('td')[k]).addClass("My-Handle");
                                         }
                                         textVal = GetValByDefVal(textVal, mapAttr);
                                         tmplate.val(textVal);
+                                        
                                     }
                                     //处理单选按钮。。。 还没做
                                     $($(tbodyTrObj).children('td')[k]).text('');
@@ -1197,6 +1208,7 @@
                 sortablejsRef = new Sortable(tbodyEl, {
                     animation: 150,
                     //dataIdAttr: 'data-row-key',
+                    handle:'.My-Handle',
                     onEnd: async (evt) => {
                         const oldIndex = evt.oldIndex || 0;
                         const newIdex = evt.newIndex || 0;
@@ -1280,6 +1292,17 @@
                     }
                 });
             }, 200);
+
+            // 要不然textarea框被排序插件控制, 无法移动光标
+            $('textarea').on('mousedown', function (e) {
+                //子元素的mousedown事件处理
+                e.stopPropagation();
+            });
+            // 要不然input框被排序插件控制, 无法输入
+            $('input').on('mousedown', function (e) {
+                //子元素的mousedown事件处理
+                e.stopPropagation();
+            });
         }
 
         function tableSortChange(newIdx, oldIdx, newOID, oldOID) {
@@ -1950,7 +1973,7 @@
                                 if (("," + defValue + ",").indexOf("," + se.No + ",") != -1)
                                     checked = " checked=true";
 
-                                eleHtml += "<input type=checkbox name='CB_" + mapAttr.KeyOfEn + "' id='CB_" + mapAttr.KeyOfEn + "_" + se.No + "' value='" + se.No + "' " + checked + enableAttr + "/><span>" + se.Name + "&nbsp;</span>" + br;
+                                eleHtml += "<input  type=checkbox  name='CB_" + mapAttr.KeyOfEn + "' id='CB_" + mapAttr.KeyOfEn + "_" + se.No + "' value='" + se.No + "' " + checked + enableAttr + "/><span>" + se.Name + "&nbsp;</span>" + br;
                             }
 
                         }
@@ -1960,11 +1983,11 @@
                             if (mapAttr.UIContralType == "1") {//DDL 下拉列表框
 
                                 eleHtml += "<select name='DDL_" + mapAttr.KeyOfEn + "' value='" + ConvertDefVal(workNodeData, mapAttr.DefVal, mapAttr.KeyOfEn) + "' " + (mapAttr.UIIsEnable ? '' : ' disabled="disabled"') + " onChange='ChangeValue(this)'>" + InitDDLOperation(workNodeData, mapAttr, defValue) + "</select>";
-                                eleHtml += "<input type='hidden'  name='TB_" + mapAttr.KeyOfEn + "' value='" + ConvertDefVal(workNodeData, mapAttr.DefVal, mapAttr.KeyOfEn + "T") + "' />";
-                            } else if (mapAttr.IsSupperText == "1") {
+                                eleHtml += "<input  type='hidden'  name='TB_" + mapAttr.KeyOfEn + "' value='" + ConvertDefVal(workNodeData, mapAttr.DefVal, mapAttr.KeyOfEn + "T") + "' />";
+                            } else if (mapAttr.TextModel == "2") {
                                 eleHtml += "<textarea id='TB_" + mapAttr.KeyOfEn + "' maxlength=" + mapAttr.MaxLen + " style='height:" + mapAttr.UIHeight + "px;' name='TB_" + mapAttr.KeyOfEn + "' type='text' " + (mapAttr.UIIsEnable ? '' : ' disabled="disabled"') + "/>";
                             } else {
-                                eleHtml += "<input maxlength=" + mapAttr.MaxLen + "  name='TB_" + mapAttr.KeyOfEn + "' type='text' " + (mapAttr.UIIsEnable ? '' : ' disabled="disabled"') + "/>";
+                                eleHtml += "<input  maxlength=" + mapAttr.MaxLen + "  name='TB_" + mapAttr.KeyOfEn + "' type='text' " + (mapAttr.UIIsEnable ? '' : ' disabled="disabled"') + "/>";
                             }
 
                         } //AppDate
@@ -2027,7 +2050,7 @@
 
                         if (mapAttr.MyDataType == 2 && mapAttr.LGType == 1) { //AppInt Enum
                             if (mapAttr.UIContralType == 1) {//DDL
-                                eleHtml += "<select name='DDL_" + mapAttr.KeyOfEn + "' " + (mapAttr.UIIsEnable ? '' : 'disabled="disabled"') + ">" + InitDDLOperation(workNodeData, mapAttr, defValue) + "</select>";
+                                eleHtml += "<select  name='DDL_" + mapAttr.KeyOfEn + "' " + (mapAttr.UIIsEnable ? '' : 'disabled="disabled"') + ">" + InitDDLOperation(workNodeData, mapAttr, defValue) + "</select>";
                             }
                             if (mapAttr.UIContralType == 3) {
                                 //横向排列
@@ -2054,7 +2077,7 @@
                                         onclickEvent = "onclick='clickEnable( this ,\"" + mapAttr.FK_MapData + "\",\"" + mapAttr.KeyOfEn + "\",\"" + mapAttr.AtPara + "\")'";
                                     }
                                     if (RBShowModel == 3)
-                                        eleHtml += "<input " + enableAttr + " " + (obj.No == defValue ? "checked='checked' " : "") + " type='radio' name='RB_" + mapAttr.KeyOfEn + "' id='RB_" + mapAttr.KeyOfEn + "_" + obj.No + "' value='" + obj.No + "' " + onclickEvent + " /><label>&nbsp;" + obj.Name + "</label>";
+                                        eleHtml += "<input  " + enableAttr + " " + (obj.No == defValue ? "checked='checked' " : "") + " type='radio' name='RB_" + mapAttr.KeyOfEn + "' id='RB_" + mapAttr.KeyOfEn + "_" + obj.No + "' value='" + obj.No + "' " + onclickEvent + " /><label>&nbsp;" + obj.Name + "</label>";
                                     else
                                         eleHtml += "<input " + enableAttr + " " + (obj.No == defValue ? "checked='checked' " : "") + " type='radio' name='RB_" + mapAttr.KeyOfEn + "' id='RB_" + mapAttr.KeyOfEn + "_" + obj.No + "' value='" + obj.No + "' " + onclickEvent + "/><label>&nbsp;" + obj.Name + "</label><br/>";
                                 });
@@ -2553,6 +2576,10 @@
             //更改表格序号
             updateTableSn(insertTr, "add");
             newRowParse(insertTr, newRowIndex);
+            var textareas = $("textarea");
+            $.each(textareas, function (idex, item) {
+                autoTextarea(item);
+            });
 
         }
         //更新表格序号

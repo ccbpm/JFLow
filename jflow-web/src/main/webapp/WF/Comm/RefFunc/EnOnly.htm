@@ -652,8 +652,10 @@
 
                         if (helpUrl.indexOf('javascr') == 0)
                             name = "<a href=\"" + helpUrl + "\" >" + attr.Name + "<i class='iconfont icon-iconfonticon4'></i></a>";
-                        else
-                            name = "<a href=\"" + helpUrl + "\" target=_blank >" + attr.Name + "<i class='iconfont icon-iconfonticon4'></i></a>";
+                        else 
+                            //弹窗打开帮助页面
+                            name = "<a onClick = openHelpModal(\"" + helpUrl +"\") >" + attr.Name + "<i class='iconfont icon-iconfonticon4'></i></a>";
+                            //name = "<a href=\"" + helpUrl + "\" target=_blank >" + attr.Name + "<i class='iconfont icon-iconfonticon4'></i></a>";
                     }
                 }
 
@@ -1064,12 +1066,22 @@
                         _html += "</div>";
                         return _html;
                     case 4:  //复选框
+                        var helpUrl = GetPara(mapAttr.AtPara, "HelpUrl");
+                        if (helpUrl == null || helpUrl == "" || helpUrl == "null")
+                            helpUrl = ""
+                        if(helpUrl!="")
+                        if (helpUrl.indexOf('javascr') == 0)
+                            helpUrl = "<a href=\"" + helpUrl + "\" ><i class='iconfont icon-iconfonticon4'></i></a>";
+                        else
+                            helpUrl = "<a href=\"" + helpUrl + "\" target=_blank ><i class='iconfont icon-iconfonticon4'></i></a>";
+
+                        
                         if (mapAttr.UIIsEnable == 0) {
                             enableAttr = "disabled='disabled'";
                         } else {
                             enableAttr = "";
                         }
-                        return "<div style='line-height:38px;margin-top:10px;' id='DIV_" + mapAttr.KeyOfEn + "'><label for='CB_" + mapAttr.KeyOfEn + "' ></label><input type='checkbox' name='CB_" + mapAttr.KeyOfEn + "' id='CB_" + mapAttr.KeyOfEn + "'" + (mapAttr.DefVal == 1 ? "checked = 'checked'" : "") + enableAttr + " lay-filter='" + mapAttr.KeyOfEn + "' lay-skin='primary' value='1' title='" + mapAttr.Name + "'></div>";
+                        return "<div style='line-height:38px;margin-top:10px;' id='DIV_" + mapAttr.KeyOfEn + "'><label for='CB_" + mapAttr.KeyOfEn + "' ></label><input type='checkbox' name='CB_" + mapAttr.KeyOfEn + "' id='CB_" + mapAttr.KeyOfEn + "'" + (mapAttr.DefVal == 1 ? "checked = 'checked'" : "") + enableAttr + " lay-filter='" + mapAttr.KeyOfEn + "' lay-skin='primary' value='1' title='" + mapAttr.Name + "'>" + helpUrl+"</div>";
                     case 3://浮点
                     case 5://双精度
                         var _html = "<div id = 'DIV_" + mapAttr.KeyOfEn + "' class='ccbpm-input-group' >";
@@ -1548,6 +1560,16 @@
                     cceval(funcStr);
             }
         }
+
+        //打开帮助弹窗
+        function openHelpModal(url) {
+            var bschitchat = window.open(url, "帮助", 'toolbar=no,menubar=no,scrollbars=auto,resizeable=no,location=no,status=no');
+            bschitchat.moveTo(0, 0);
+            bschitchat.resizeTo(screen.availWidth, screen.availHeight);
+            bschitchat.outerWidth = screen.availWidth;
+            bschitchat.outerHeight = screen.availHeight;
+            //OpenLayuiDialog(url, '帮助', 1000, 100, "auto", true, false, true);
+        }
     </script>
 
 </head>
@@ -1570,7 +1592,6 @@
                 <i class="iconfont icon-jurassic_setup-batch"></i>  设置
             </button>
         </div>
-
         <div class="layui-tab layui-tab-brief" id="CCFormTabs">
 
         </div>

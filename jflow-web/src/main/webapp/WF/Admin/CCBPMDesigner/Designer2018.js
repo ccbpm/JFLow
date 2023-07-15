@@ -592,6 +592,46 @@ $(function () {
                 }
                 $(".mymask").hide();
             },
+            "cmNewCond": function (t) {
+                $(".mymaskContainer").offset({ left: ($(document).innerWidth() - 120) / 2, top: ($(document).innerHeight() - 50) / 2 });
+                $(".mymask").show();
+
+                //获取坐标
+                var mLeft = $("#jqContextMenu").css("left").replace('px', '');
+                var mTop = $("#jqContextMenu").css("top").replace('px', '');
+
+
+                //创建一个节点
+                var hander = new HttpHandler("BP.WF.HttpHandler.WF_Admin_CCBPMDesigner2018");
+                hander.AddPara("X", mLeft);
+                hander.AddPara("Y", mTop);
+                hander.AddPara("FK_Flow", flowNo);
+
+                var data = hander.DoMethodReturnString("CreateCond");
+                if (data.indexOf('err@') == 0) {
+                    alert(data);
+                    return;
+                }
+
+                //添加节点样式与坐标
+                data = JSON.parse(data);
+                var strs = "";
+                strs += "{'id':'" + data.NodeID + "',";
+                strs += "'flow_id':'" + flowNo + "',";
+                strs += "'process_name':'" + data.Name + "',";
+                strs += "'process_to':0,";
+                strs += "'icon':'icon-ok',";
+                strs += "'style':'width:auto;color:#0e76a8;left:" + mLeft + "px;top:" + mTop + "px;'";
+                strs += "}";
+                strs = cceval("(" + strs + ")");
+
+                if (_canvas.addProcess(strs) == false) //添加
+                {
+                    alert("添加失败");
+                    return;
+                }
+                $(".mymask").hide();
+            },
             "cmSave": function (t) {
 
                 var processInfo = _canvas.getProcessInfo(); //连接信息

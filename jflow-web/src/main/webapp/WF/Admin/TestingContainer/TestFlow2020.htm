@@ -15,6 +15,22 @@
     <link href="../../DataUser/Style/ccbpm.css" rel="stylesheet" type="text/html" />
     <link href="../../Scripts/layui/layui/css/layui.css" rel="stylesheet" />
     <style id="theme-data"></style>
+    <style>
+        .top_title {
+            height: 38px;
+            line-height: 38px;
+            border: 1px solid transparent;
+            padding: 0 18px;
+            background: #fff;
+            color: #000;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+    </style>
     <script type="text/javascript">
         //页面启动函数.
         $(function () {
@@ -125,29 +141,28 @@
         <div class="layui-btn-container" style="padding-top:10px">
 
             <!--<button type="button" class="layui-btn  layui-toolbar layui-btn-sm" data-type="MapDataEdit" onclick="Accepter()">
-                <i class="layui-icon">&#xe65a;</i>上一步：设置接收人
-            </button>-->
-
-            
-            <button type="button" class="layui-btn  layui-toolbar layui-btn-sm" data-type="MapDataEdit" onclick="DFlow()">
-                <i class="layui-icon">&#xe65a;</i>返回:设计器
-            </button>
-
+        <i class="layui-icon">&#xe65a;</i>上一步：设置接收人
+    </button>-->
+            <!--<button type="button" class="layui-btn  layui-toolbar layui-btn-sm" data-type="MapDataEdit" onclick="DFlow()">
+        <i class="layui-icon">&#xe65a;</i>返回:设计器
+    </button>-->
             <!--<button type="button" class="layui-btn  layui-toolbar layui-btn-sm" data-type="MapDataEdit" onclick="Help()">
-                <i class="layui-icon">&#xe607;</i>帮助
-            </button>-->
+        <i class="layui-icon">&#xe607;</i>帮助
+    </button>-->
+            <!--<button type="button" class="layui-btn  layui-toolbar layui-btn-sm" data-type="MapDataEdit" onclick="ToParaTest()">
+        <i class="layui-icon">&#xe716;</i>参数测试
+    </button>
 
-            <button type="button" class="layui-btn  layui-toolbar layui-btn-sm" data-type="MapDataEdit" onclick="ToParaTest()">
-                <i class="layui-icon">&#xe716;</i>参数测试
-            </button>
+    <button type="button" class="layui-btn  layui-toolbar layui-btn-sm" data-type="MapDataEdit" onclick="SetTester()">
+        <i class="layui-icon">&#xe609;</i>设置测试发起人
+    </button>
 
-            <button type="button" class="layui-btn  layui-toolbar layui-btn-sm" data-type="MapDataEdit" onclick="SetTester()">
-                <i class="layui-icon">&#xe609;</i>设置测试发起人
-            </button>
-
-            <button type="button" class="layui-btn  layui-toolbar layui-btn-sm" data-type="MapDataEdit" onclick="FlowCheck()">
-                <i class="layui-icon">&#xe65b;</i>检查流程
-            </button>
+    <button type="button" class="layui-btn  layui-toolbar layui-btn-sm" data-type="MapDataEdit" onclick="FlowCheck()">
+        <i class="layui-icon">&#xe65b;</i>检查流程
+    </button>-->
+            <div class="top_title">
+                请选择发起流程的测试人员
+            </div>
 
         </div>
     </div>
@@ -247,7 +262,7 @@
         //发起流程。
         function StartIt(empNo, workID) {
 
-            var token = GetQueryString("Token") || GetQueryString("Token") ;
+            var token = GetQueryString("Token") || GetQueryString("Token");
 
             var webUser = new WebUser();
 
@@ -278,7 +293,8 @@
             //启动测试容器.
             //WinOpenFull(data);
             localStorage.setItem('AdminToken', token)
-            SetHref(data);
+            //SetHref(data)
+            WinOpenFull(data, "xx");    //打开全屏
         }
 
         function ClearTester() {
@@ -322,7 +338,7 @@
                 return;
             theme = JSON.parse(theme);
             var styleScope = document.getElementById("theme-data");
-            var html= "\n .layui-btn{\n background-color:" + theme.selectedMenu + ";\n}\n .layui-laypage .layui-laypage-curr .layui-laypage-em{\n background-color:" + theme.selectedMenu + ";\n}";
+            var html = "\n .layui-btn{\n background-color:" + theme.selectedMenu + ";\n}\n .layui-laypage .layui-laypage-curr .layui-laypage-em{\n background-color:" + theme.selectedMenu + ";\n}";
             html += "\n .layui-laypage input:focus,.layui-laypage select:focus{\n border-color:" + theme.selectedMenu + " !important\n}";
             html += "\n .layui-form-select dl dd.layui-this{\n background-color:" + theme.selectedMenu + " !important;\n}";
 

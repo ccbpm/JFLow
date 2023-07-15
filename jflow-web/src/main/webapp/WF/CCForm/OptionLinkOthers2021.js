@@ -300,6 +300,7 @@ function setEnable(FK_MapData, KeyOfEn, selectVal, frmType) {
             }
 
         }
+        layui.form.render();
     }
     if (!$.isArray(mapAttrs[KeyOfEn])) {
         mapAttrs[KeyOfEn] = [];

@@ -480,7 +480,7 @@ public class RestFulController {
 		
 		GenerWorkFlow gwf=new GenerWorkFlow(workid);
 		
-		DataTable dt=bp.wf.Dev2Interface.DB_GenerWillReturnNodes(gwf.getFK_Node(), workid, gwf.getFID());
+		DataTable dt=bp.wf.Dev2Interface.DB_GenerWillReturnNodes(workid);
         return bp.tools.Json.ToJson(dt);
 		}catch(Exception ex)
 		{
@@ -892,116 +892,13 @@ public class RestFulController {
 			orgNo = emp.getOrgNo();
 		}
 
-		String token = bp.wf.Dev2Interface.Port_GenerToken(userNo);
+		String token = bp.wf.Dev2Interface.Port_GenerToken();
 		//执行登录，返回token.
 		bp.wf.Dev2Interface.Port_Login(userNo,orgNo);
 		return token;
 	}
 
-	/// <summary>
-	/// 保存用户数据, 如果有此数据则修改，无此数据则增加.
-	/// </summary>
-	/// <param name="orgNo">组织编号</param>
-	/// <param name="userNo">用户编号,如果是saas版本就是orgNo_userID</param>
-	/// <param name="userName">用户名称</param>
-	/// <param name="deptNo">部门编号</param>
-	/// <param name="kvs">属性值，比如: @Name=张三@Tel=18778882345@Pass=123, 如果是saas模式：就必须有@UserID=xxxx </param>
-	/// <param name="stats">岗位编号：比如:001,002,003,</param>
-	/// <returns>reutrn 1=成功,  其他的标识异常.</returns>
-	@RequestMapping(value = "/Port_Emp_Save")
-	public String Port_Emp_Save(String token, String orgNo, String userNo, String userName, String deptNo, String kvs, String stats) throws Exception {
-		bp.wf.Dev2Interface.Port_LoginByToken(token);
-		if (bp.web.WebUser.getIsAdmin() == false)
-			return "0";
-		return bp.port.OrganizationAPI.Port_Emp_Save(orgNo, userNo, userName, deptNo, kvs, stats);
-
-	}
-	/// <summary>
-	/// 保存岗位
-	/// </summary>
-	/// <param name="userNo"></param>
-	/// <param name="stas">岗位用逗号分开</param>
-	/// <returns>reutrn 1=成功,  其他的标识异常.</returns>
-	@RequestMapping(value = "/Port_Emp_Delete")
-	public String Port_Emp_Delete(String token,String orgNo, String userNo) throws Exception {
-		bp.wf.Dev2Interface.Port_LoginByToken(token);
-		if (bp.web.WebUser.getIsAdmin() == false)
-			return "0";
-		return bp.port.OrganizationAPI.Port_Emp_Delete(orgNo, userNo);
-
-	}
-	/// <summary>
-	/// 集团模式下同步组织以及管理员信息.
-	/// </summary>
-	/// <param name="orgNo">组织编号</param>
-	/// <param name="name">组织名称</param>
-	/// <param name="adminer">管理员账号</param>
-	/// <param name="adminerName">管理员名字</param>
-	/// <param name="keyval">比如：@Leaer=zhangsan@Tel=12233333@Idx=1</param>
-	/// <returns>return 1 增加成功，其他的增加失败.</returns>
-	@RequestMapping(value = "/Port_Org_Save")
-	public String Port_Org_Save(String token,String orgNo,  String name, String adminer, String adminerName, String keyVals) throws Exception {
-		bp.wf.Dev2Interface.Port_LoginByToken(token);
-		if (bp.web.WebUser.getIsAdmin() == false)
-			return "0";
-		return bp.port.OrganizationAPI.Port_Org_Save(orgNo, name, adminer, adminerName,keyVals);
-	}
-		/// <summary>
-	/// 保存部门, 如果有此数据则修改，无此数据则增加.
-	/// </summary>
-	/// <param name="orgNo">组织编号</param>
-	/// <param name="no">部门编号</param>
-	/// <param name="name">名称</param>
-	/// <param name="parntNo">父节点编号</param>
-	/// <param name="keyval">比如：@Leaer=zhangsan@Tel=12233333@Idx=1</param>
-	/// <returns>return 1 增加成功，其他的增加失败.</returns>
-	@RequestMapping(value = "/Port_Dept_Save")
-	public String Port_Dept_Save(String token,String orgNo, String no, String name, String parntNo, String keyVals) throws Exception {
-		bp.wf.Dev2Interface.Port_LoginByToken(token);
-		if (bp.web.WebUser.getIsAdmin() == false)
-			return "0";
-		return bp.port.OrganizationAPI.Port_Dept_Save(orgNo, no, name, parntNo, keyVals);
-
-	}
-	/// <summary>
-	/// 删除部门.
-	/// </summary>
-	/// <param name="no">删除指定的部门编号</param>
-	/// <returns></returns>
-	@RequestMapping(value = "/Port_Dept_Delete")
-	public String Port_Dept_Delete(String token,String no) throws Exception {
-		bp.wf.Dev2Interface.Port_LoginByToken(token);
-		if (bp.web.WebUser.getIsAdmin() == false)
-			return "0";
-		return bp.port.OrganizationAPI.Port_Dept_Delete(no);
-	}
-	/// <summary>
-	/// 保存岗位, 如果有此数据则修改，无此数据则增加.
-	/// </summary>
-	/// <param name="orgNo">组织编号</param>
-	/// <param name="no">编号</param>
-	/// <param name="name">名称</param>
-	/// <returns>return 1 增加成功，其他的增加失败.</returns>
-	@RequestMapping(value = "/Port_Station_Save")
-	public String Port_Station_Save(String token,String orgNo, String no, String name, String keyVals) throws Exception {
-		bp.wf.Dev2Interface.Port_LoginByToken(token);
-		if (bp.web.WebUser.getIsAdmin() == false)
-			return "0";
-		return bp.port.OrganizationAPI.Port_Station_Save(orgNo, no, name, keyVals);
-
-	}
-	/// <summary>
-	/// 删除部门.
-	/// </summary>
-	/// <param name="no">删除指定的部门编号</param>
-	/// <returns></returns>
-	@RequestMapping(value = "/Port_Station_Delete")
-	public String Port_Station_Delete(String token,String no) throws Exception {
-		bp.wf.Dev2Interface.Port_LoginByToken(token);
-		if (bp.web.WebUser.getIsAdmin() == false)
-			return "0";
-		return bp.port.OrganizationAPI.Port_Station_Delete(no);
-	}
+	
 	///关于组织的接口.
 	@RequestMapping(value="/Flow_DoPress")
 	public String Flow_DoPress(String token, String workids,String msg) throws Exception {
@@ -1328,7 +1225,7 @@ public class RestFulController {
 
 		//执行本地登录.
 		bp.wf.Dev2Interface.Port_Login(userNo);
-		String token = bp.wf.Dev2Interface.Port_GenerToken(userNo);
+		String token = bp.wf.Dev2Interface.Port_GenerToken();
 		return token;
 	}
 }

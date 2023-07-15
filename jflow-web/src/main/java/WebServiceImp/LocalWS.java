@@ -267,7 +267,7 @@ public class LocalWS implements LocalWSI {
 
 			GenerWorkFlow gwf = new GenerWorkFlow(workID);
 
-			DataTable dt = Dev2Interface.DB_GenerWillReturnNodes(gwf.getFK_Node(), workID, gwf.getFID());
+			DataTable dt = Dev2Interface.DB_GenerWillReturnNodes(workID);
 			return Json.ToJson(dt);
 		} catch (Exception ex) {
 			return "err@" + ex.getMessage();

@@ -103,7 +103,8 @@ layui.config({
                                     processData: false,
                                     contentType: false,
                                     success: function (result) {
-                                        result = JSON.parse(result);
+                                        if(typeof result == "string")
+                                             result = JSON.parse(result);
                                         if (result.SourceImage != undefined) {
                                             layer.closeAll('page');
                                             return done(result);

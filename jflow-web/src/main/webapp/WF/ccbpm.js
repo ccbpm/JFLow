@@ -86,7 +86,6 @@ $(window).load(function () {
 
     //审核组件
     if ($("#WorkCheck").length == 1) {
-        debugger
         loadScript(ccbpmPath + "/WF/WorkOpt/WorkCheck.js", function () {
             NodeWorkCheck_Init();
         });  

@@ -17,10 +17,10 @@ $(function () {
 
     for (var i = 0; i < ens.length; i++) {
         var en = ens[i];
-        if(en.isEnable==0)
+        if (en.isEnable == 0)
             continue;
-        if(en.Mark=='Search')
-            continue;
+
+        //console.log(en)
         if (pageId == en.MyPK)
             html += "<a href='" + en.UrlExt + "&PageID=" + en.MyPK + "' class='layui-btn layui-btn-danger layui-btn-sm'>" + en.Name + "</a>  ";
         else
@@ -28,12 +28,17 @@ $(function () {
     }
     html += '</div>';
 
+    //html += "<div  style='padding: 15px 0px 0px 20px; float: right'>";
+    //html += "<a href='javascript:Setting();' class='layui-btn layui-btn-sm'>设置</a>";
+    //html += '</div>';
+
+
     $("#toolbar").html(html);
 });
 
 function Setting() {
     var url = './Admin/Default.htm?FlowNo=' + GetQueryString("FlowNo");
-    window.location.href = url;
+    window.location.href = filterXSS(url);
 }
 
 function GetDBGroup() {
@@ -54,39 +59,38 @@ function GetDBDtl() {
         { "No": "CC", "Name": "抄送", "GroupNo": "A", "Url": "CC.htm" },
         { "No": "Draf", "Name": "草稿", "GroupNo": "A", "Url": "Draft.htm" },
         /* { "No": "Chart", "Name": "图表", "GroupNo": "A", "Url": "Chart.htm" }*/
-         { "No": "Nums", "Name": "统计", "GroupNo": "A", "Url": "Nums.htm" }
+        { "No": "Nums", "Name": "统计", "GroupNo": "A", "Url": "Nums.htm" }
 
-   ];
-   return json;
+    ];
+    return json;
 }
 function GetUrl(optionKey) {
 
-   var json = GetDBDtl();
-   for (var i = 0; i < json.length; i++) {
-       var en = json[i];
-       if (en.No == optionKey)
-           return en.Url;
-   }
-   return "Default.htm";
+    var json = GetDBDtl();
+    for (var i = 0; i < json.length; i++) {
+        var en = json[i];
+        if (en.No == optionKey)
+            return en.Url;
+    }
+    return "Default.htm";
 }
 
 function Start() {
-   var flowNo = GetQueryString("FK_Flow");
-   window.location.href = "../../WF/MyFlow.htm?FK_Flow=" + flowNo;
+    var flowNo = GetQueryString("FK_Flow");
+    window.location.href = "../../WF/MyFlow.htm?FK_Flow=" + flowNo;
 }
 
 
 /**
-* 打开表单， 如果是仅仅传入的是FlowNo就是启动流程.
-* @param {any} flowNo
-* @param {any} nodeID
-* @param {any} workid
-* @param {any} fid
-* @param {any} paras
-*/
+ * 打开表单， 如果是仅仅传入的是FlowNo就是启动流程.
+ * @param {any} flowNo
+ * @param {any} nodeID
+ * @param {any} workid
+ * @param {any} fid
+ * @param {any} paras
+ */
 function OpenForm(flowNo, nodeID, workid, fid, paras) {
-
-    url = basePath + "/WF/MyFlow.htm?FK_Flow=" + flowNo + "&FK_Node=" + nodeID + "&WorkID=" + workid;
+    url = basePath + "/WF/MyView.htm?FK_Flow=" + flowNo + "&FK_Node=" + nodeID + "&WorkID=" + workid;
     window.open(url);
 
     // var url = GenerFrmUrl(flowNo, nodeID, workid, fid, paras);

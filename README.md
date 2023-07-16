@@ -1,6 +1,8 @@
 #### 关于
 - 开发者：济南驰骋信息技术有限公司. WebHost : http://ccflow.org 
-- Addr: 济南市高新区.碧桂园凤凰中心F19.  商务合作(WX):18660153393
+- Address: 济南市高新区.碧桂园凤凰中心F19.  商务合作(WX):18660153393
+- Keyword: java/net双版本, pc+移动端: H5、Vue2、Vue3、React、typescript、javascript、jquery 
+- 支持信创环境、国产数据库.
 
 #### 集成合作伙伴
 - 与Jeesite集成： https://gitee.com/thinkgem/jeesite-jflow

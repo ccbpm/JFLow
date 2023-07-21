@@ -456,7 +456,7 @@ public class CC extends Entity
 			//平铺模式.
 		map.getAttrsOfOneVSM().AddGroupPanelModel(new bp.wf.template.ccen.CCStations(), new Stations(), NodeStationAttr.FK_Node, NodeStationAttr.FK_Station, "抄送岗位(分组模式)", StationAttr.FK_StationType, "Name", "No");
 
-		map.getAttrsOfOneVSM().AddGroupListModel(new bp.wf.template.ccen.CCStations(), new Stations(), NodeStationAttr.FK_Node, NodeStationAttr.FK_Station, "抄送岗位(分组列表模式)", StationAttr.FK_StationType, "Name", "No");
+		//map.getAttrsOfOneVSM().AddGroupListModel(new bp.wf.template.ccen.CCStations(), new Stations(), NodeStationAttr.FK_Node, NodeStationAttr.FK_Station, "抄送岗位(分组列表模式)", StationAttr.FK_StationType, "Name", "No");
 
 
 			//节点绑定人员. 使用树杆与叶子的模式绑定.
@@ -464,7 +464,10 @@ public class CC extends Entity
 
 
 			//节点绑定人员. 使用树杆与叶子的模式绑定.
-		map.getAttrsOfOneVSM().AddBranchesAndLeaf(new bp.wf.template.ccen.CCEmps(), new Emps(), NodeEmpAttr.FK_Node, NodeEmpAttr.FK_Emp, "抄送接受人(树干叶子模式)", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept", null);
+		map.getAttrsOfOneVSM().AddBranchesAndLeaf(new bp.wf.template.ccen.CCEmps(),
+				new Emps(), NodeEmpAttr.FK_Node, NodeEmpAttr.FK_Emp,
+				"抄送接受人(树干叶子模式)", EmpAttr.FK_Dept, EmpAttr.Name,
+				EmpAttr.No, "@WebUser.FK_Dept", null);
 
 
 			///#endregion 对应关系

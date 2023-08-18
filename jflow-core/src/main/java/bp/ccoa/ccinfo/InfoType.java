@@ -1,9 +1,10 @@
 package bp.ccoa.ccinfo;
 
 import bp.en.*;
+import bp.en.Map;
 
 /** 
- 信息
+ 类型
 */
 public class InfoType extends EntityNoName
 {
@@ -18,18 +19,21 @@ public class InfoType extends EntityNoName
 	 权限控制
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.IsUpdate = true;
 		uac.IsInsert = true;
 		return uac;
 	}
 	/** 
-	 信息
+	 类型
 	*/
-	public InfoType() {
+	public InfoType()
+	{
 	}
-	public InfoType(String no) throws Exception {
+	public InfoType(String no) throws Exception
+	{
 		this.setNo(no);
 		this.Retrieve();
 	}
@@ -37,13 +41,13 @@ public class InfoType extends EntityNoName
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
 		}
 
-		Map map = new Map("OA_InfoType", "信息类型");
+		Map map = new Map("OA_InfoType", "类型类型");
 		map.setCodeStruct("3");
 		map.AddTBStringPK(InfoTypeAttr.No, null, "编号", false, true, 3, 3, 3);
 		map.AddTBString(InfoTypeAttr.Name, null, "名称", true, false, 0, 100, 10, true);

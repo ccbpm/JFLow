@@ -1,6 +1,11 @@
 package bp.wf.template.frm;
 
-import bp.en.*;
+import bp.sys.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.wf.*;
+import bp.wf.template.*;
+import java.util.*;
 
 /** 
  CCFrm属性

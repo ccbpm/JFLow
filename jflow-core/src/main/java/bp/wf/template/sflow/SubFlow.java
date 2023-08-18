@@ -1,8 +1,10 @@
 package bp.wf.template.sflow;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
 import bp.wf.*;
 import bp.wf.template.*;
+import java.util.*;
 
 /** 
  子流程.
@@ -15,7 +17,8 @@ public class SubFlow extends EntityMyPK
 	 UI界面上的访问控制
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		uac.IsInsert = false;
@@ -24,77 +27,77 @@ public class SubFlow extends EntityMyPK
 	/** 
 	 子流程编号
 	*/
-	public final String getSubFlowNo() throws Exception
-	{
+	public final String getSubFlowNo()  {
 		return this.GetValStringByKey(SubFlowYanXuAttr.SubFlowNo);
 	}
-	public final void setSubFlowNo(String value)throws Exception
-	{SetValByKey(SubFlowYanXuAttr.SubFlowNo, value);
+	public final void setSubFlowNo(String value) throws Exception
+	{
+		SetValByKey(SubFlowYanXuAttr.SubFlowNo, value);
 	}
 	/** 
 	 流程名称
 	*/
-	public final String getSubFlowName() throws Exception
-	{
+	public final String getSubFlowName()  {
 		return this.GetValStringByKey(SubFlowYanXuAttr.SubFlowName);
 	}
 	/** 
 	 条件表达式.
 	*/
-	public final String getCondExp() throws Exception
-	{
+	public final String getCondExp()  {
 		return this.GetValStringByKey(SubFlowYanXuAttr.CondExp);
 	}
-	public final void setCondExp(String value)throws Exception
-	{SetValByKey(SubFlowYanXuAttr.CondExp, value);
+	public final void setCondExp(String value) throws Exception
+	{
+		SetValByKey(SubFlowYanXuAttr.CondExp, value);
 	}
 	/** 
 	 表达式类型
 	*/
-	public final ConnDataFrom getExpType() throws Exception {
+	public final ConnDataFrom getExpType() {
 		return ConnDataFrom.forValue(this.GetValIntByKey(SubFlowYanXuAttr.ExpType));
 	}
-	public final void setExpType(ConnDataFrom value)throws Exception
-	{SetValByKey(SubFlowYanXuAttr.ExpType, value.getValue());
+	public final void setExpType(ConnDataFrom value) throws Exception
+	{
+		SetValByKey(SubFlowYanXuAttr.ExpType, value.getValue());
 	}
 	/** 
 	 主流程编号
 	*/
-	public final String getFK_Flow() throws Exception
-	{
+	public final String getFlowNo()  {
 		return this.GetValStringByKey(SubFlowYanXuAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)throws Exception
-	{SetValByKey(SubFlowYanXuAttr.FK_Flow, value);
+	public final void setFlowNo(String value) throws Exception
+	{
+		SetValByKey(SubFlowYanXuAttr.FK_Flow, value);
 	}
 	/** 
 	 主流程NodeID
 	*/
-	public final int getFK_Node() throws Exception
-	{
+	public final int getNodeID()  {
 		return this.GetValIntByKey(SubFlowYanXuAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)throws Exception
-	{SetValByKey(SubFlowYanXuAttr.FK_Node, value);
+	public final void setNodeID(int value) throws Exception
+	{
+		SetValByKey(SubFlowYanXuAttr.FK_Node, value);
 	}
 	/** 
 	 发送成功后是否隐藏父流程的待办.
 	*/
-	public final boolean getSubFlowHidTodolist() throws Exception
-	{
+	public final boolean getSubFlowHidTodolist()  {
 		return this.GetValBooleanByKey(SubFlowYanXuAttr.SubFlowHidTodolist);
 	}
-	public final void setSubFlowHidTodolist(boolean value)throws Exception
-	{SetValByKey(SubFlowYanXuAttr.SubFlowHidTodolist, value);
+	public final void setSubFlowHidTodolist(boolean value) throws Exception
+	{
+		SetValByKey(SubFlowYanXuAttr.SubFlowHidTodolist, value);
 	}
-	public final SubFlowType getSubFlowType() throws Exception {
+	public final SubFlowType getSubFlowType() {
 		return SubFlowType.forValue(this.GetValIntByKey(SubFlowYanXuAttr.SubFlowType));
 	}
 	/** 
 	 指定的流程启动后,才能启动该子流程(请在文本框配置子流程).
 	*/
-	public final boolean isEnableSpecFlowStart() throws Exception {
-		boolean val = this.GetValBooleanByKey(SubFlowAutoAttr.IsEnableSpecFlowStart);
+	public final boolean getItIsEnableSpecFlowStart() throws Exception {
+		Boolean val = this.GetValBooleanByKey(SubFlowAutoAttr.IsEnableSpecFlowStart);
 		if (val == false)
 		{
 			return false;
@@ -109,15 +112,14 @@ public class SubFlow extends EntityMyPK
 	/** 
 	 仅仅可以启动一次?
 	*/
-	public final boolean getStartOnceOnly() throws Exception
-	{
+	public final boolean getStartOnceOnly()  {
 		return this.GetValBooleanByKey(SubFlowYanXuAttr.StartOnceOnly);
 	}
 
 	/** 
 	 指定的流程结束后,才能启动该子流程(请在文本框配置子流程).
 	*/
-	public final boolean isEnableSpecFlowOver() throws Exception {
+	public final boolean getItIsEnableSpecFlowOver() throws Exception {
 		boolean val = this.GetValBooleanByKey(SubFlowAutoAttr.IsEnableSpecFlowOver);
 		if (val == false)
 		{
@@ -130,58 +132,51 @@ public class SubFlow extends EntityMyPK
 		}
 		return false;
 	}
-	public final String getSpecFlowOver() throws Exception
-	{
+	public final String getSpecFlowOver()  {
 		return this.GetValStringByKey(SubFlowYanXuAttr.SpecFlowOver);
 	}
-	public final String getSpecFlowStart() throws Exception
-	{
+	public final String getSpecFlowStart()  {
 		return this.GetValStringByKey(SubFlowYanXuAttr.SpecFlowStart);
 	}
 	/** 
 	 自动发起的子流程发送方式
 	*/
-	public final int getSendModel() throws Exception
-	{
+	public final int getSendModel()  {
 		return this.GetValIntByKey(SubFlowAutoAttr.SendModel);
 	}
 
 	/** 
 	 父流程运行到下一步的规则
 	*/
-	public final SubFlowRunModel getParentFlowSendNextStepRole() throws Exception {
+	public final SubFlowRunModel getParentFlowSendNextStepRole() {
 		return SubFlowRunModel.forValue(this.GetValIntByKey(SubFlowAttr.ParentFlowSendNextStepRole));
 	}
 	/** 
 	 父流程结束的规则
 	*/
-	public final SubFlowRunModel getParentFlowOverRole() throws Exception {
+	public final SubFlowRunModel getParentFlowOverRole() {
 		return SubFlowRunModel.forValue(this.GetValIntByKey(SubFlowAttr.ParentFlowOverRole));
 	}
 
 	/** 
 	 同级子流程结束规则
 	*/
-	public final int isAutoSendSLSubFlowOver() throws Exception
-	{
+	public final int isAutoSendSLSubFlowOver()  {
 		return this.GetValIntByKey(SubFlowAutoAttr.IsAutoSendSLSubFlowOver);
 	}
 
-	public final String getSubFlowCopyFields() throws Exception
-	{
+	public final String getSubFlowCopyFields()  {
 		return this.GetValStringByKey(SubFlowAttr.SubFlowCopyFields);
 	}
-	public final BackCopyRole getBackCopyRole() throws Exception {
+	public final BackCopyRole getBackCopyRole() {
 		return BackCopyRole.forValue(this.GetValIntByKey(SubFlowAttr.BackCopyRole));
 	}
 
-	public final String getParentFlowCopyFields() throws Exception
-	{
+	public final String getParentFlowCopyFields()  {
 		return this.GetValStringByKey(SubFlowAttr.ParentFlowCopyFields);
 	}
 
-	public final int getSubFlowNodeID() throws Exception
-	{
+	public final int getSubFlowNodeID()  {
 		return this.GetValIntByKey(SubFlowAttr.SubFlowNodeID);
 	}
 
@@ -192,13 +187,14 @@ public class SubFlow extends EntityMyPK
 	/** 
 	 子流程
 	*/
-	public SubFlow() {
+	public SubFlow()
+	{
 	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap()  {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -220,19 +216,18 @@ public class SubFlow extends EntityMyPK
 		map.AddTBInt(SubFlowAutoAttr.SubFlowNodeID, 0, "指定子流程节点ID", false, true);
 		map.AddTBInt(SubFlowAutoAttr.IsAutoSendSLSubFlowOver, 0, "同级子流程结束规则", false, true);
 
-
 		map.AddTBString(SubFlowAttr.SubFlowNo, null, "子流程编号", true, true, 0, 10, 150, false);
 		map.AddTBString(SubFlowAttr.SubFlowName, null, "子流程名称", true, true, 0, 200, 150, false);
 
-			//启动限制规则0.
+		//启动限制规则0.
 		map.AddTBInt(SubFlowAttr.StartOnceOnly, 0, "仅能被调用1次", false, true);
 
-			//启动限制规则1.
+		//启动限制规则1.
 		map.AddTBInt(SubFlowAttr.IsEnableSpecFlowStart, 0, "指定的流程启动后,才能启动该子流程(请在文本框配置子流程).", false, true);
 		map.AddTBString(SubFlowHandAttr.SpecFlowStart, null, "子流程编号", true, false, 0, 200, 150, true);
 		map.AddTBString(SubFlowHandAttr.SpecFlowStartNote, null, "备注", true, false, 0, 500, 150, true);
 
-			//启动限制规则2.
+		//启动限制规则2.
 		map.AddTBInt(SubFlowHandAttr.IsEnableSpecFlowOver, 0, "指定的流程结束后,才能启动该子流程(请在文本框配置子流程).", true, true);
 		map.AddTBString(SubFlowHandAttr.SpecFlowOver, null, "子流程编号", true, false, 0, 200, 150, true);
 		map.AddTBString(SubFlowHandAttr.SpecFlowOverNote, null, "备注", true, false, 0, 500, 150, true);
@@ -255,12 +250,14 @@ public class SubFlow extends EntityMyPK
 
 		map.AddDDLSysEnum(SubFlowYanXuAttr.SubFlowSta, 1, "状态", true, true, SubFlowYanXuAttr.SubFlowSta, "@0=禁用@1=启用@2=只读");
 
-
 		map.AddTBInt(SubFlowAttr.Idx, 0, "顺序", true, false);
+
+
 		map.AddTBInt(SubFlowAttr.X, 0, "X", true, false);
 		map.AddTBInt(SubFlowAttr.Y, 0, "Y", true, false);
 
-			//为中科软增加. 批量发送后，需要隐藏父流程的待办.
+
+		//为中科软增加. 批量发送后，需要隐藏父流程的待办.
 		map.AddTBInt(SubFlowAttr.SubFlowHidTodolist, 0, "批量发送后是否隐藏父流程待办", true, false);
 
 
@@ -276,8 +273,9 @@ public class SubFlow extends EntityMyPK
 	 @return 
 	*/
 	@Override
-	protected boolean beforeInsert() throws Exception {
-		this.setMyPK(this.getFK_Node() + "_" + this.getSubFlowNo() + "_" + this.getSubFlowType().getValue());
+	protected boolean beforeInsert() throws Exception
+	{
+		this.setMyPK(this.getNodeID() + "_" + this.getSubFlowNo() + "_" + this.getSubFlowType().getValue());
 		return super.beforeInsert();
 	}
 }

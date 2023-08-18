@@ -1,8 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
 
 /** 
  文件管理属性

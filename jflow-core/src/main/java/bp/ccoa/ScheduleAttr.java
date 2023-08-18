@@ -1,7 +1,6 @@
 package bp.ccoa;
 
 import bp.en.*;
-
 /** 
  日程 属性
 */

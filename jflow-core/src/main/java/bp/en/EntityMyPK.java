@@ -19,12 +19,10 @@ public abstract class EntityMyPK extends Entity
 	/** 
 	 集合类名称
 	*/
-	public String getMyPK()
-	{
+	public String getMyPK()  {
 		return this.GetValStringByKey(EntityMyPKAttr.MyPK);
 	}
-	public void setMyPK(String value)
-	{
+	public void setMyPK(String value){
 		this.SetValByKey(EntityMyPKAttr.MyPK, value);
 	}
 	/** 
@@ -32,8 +30,7 @@ public abstract class EntityMyPK extends Entity
 	 
 	 @return 
 	*/
-	public String InitMyPKVals()
-	{
+	public String InitMyPKVals() throws Exception {
 	   return this.getMyPK();
 	}
 
@@ -63,10 +60,7 @@ public abstract class EntityMyPK extends Entity
 	@Override
 	protected boolean beforeInsert() throws Exception {
 		if (DataType.IsNullOrEmpty(this.getMyPK()) == true)
-		{
 			this.setMyPK(DBAccess.GenerGUID());
-		}
-
 		return super.beforeInsert();
 	}
 

@@ -3,7 +3,7 @@ package bp.wf.httphandler;
 import bp.da.*;
 import bp.sys.*;
 import bp.port.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.wf.Glo;
 import bp.wf.template.*;
 import bp.*;
@@ -12,19 +12,21 @@ import bp.wf.*;
 /** 
  页面功能实体
 */
-public class WF_WorkOpt_Selecter extends bp.difference.handler.WebContralBase
+public class WF_WorkOpt_Selecter extends bp.difference.handler.DirectoryPageBase
 {
 	/** 
 	 构造函数
 	*/
-	public WF_WorkOpt_Selecter() throws Exception {
+	public WF_WorkOpt_Selecter()
+	{
 
 	}
 
-	public final String ByStation_ShowEmps() throws Exception {
+	public final String ByStation_ShowEmps()
+	{
 		String staNo = this.GetRequestVal("StaNo");
 		String sql = "";
-		if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
+		if (bp.wf.Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
 		{
 			sql = "SELECT A.No, A.Name,A.FK_Dept FROM Port_Emp A, Port_DeptEmpStation B WHERE A.No=B.FK_Emp AND B.FK_Station='" + staNo + "'";
 		}
@@ -40,10 +42,11 @@ public class WF_WorkOpt_Selecter extends bp.difference.handler.WebContralBase
 
 
 		///#region  界面 .
-	public final String SelectEmpsByTeamStation_Init() throws Exception {
+	public final String SelectEmpsByTeamStation_Init()
+	{
 		String TeamNo = this.GetRequestVal("TeamNo");
 		String sql = "";
-		if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
+		if (bp.wf.Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
 		{
 			sql = "SELECT A.No, A.Name,A.FK_Dept FROM Port_Emp A, Port_TeamEmp B WHERE A.No=B.FK_Emp AND B.FK_Team='" + TeamNo + "'";
 		}
@@ -71,9 +74,9 @@ public class WF_WorkOpt_Selecter extends bp.difference.handler.WebContralBase
 		selectAccper.setMyPK(FK_Node + "_" + WorkID + "_" + FK_Emp);
 		if (selectAccper.RetrieveFromDBSources() == 0)
 		{
-			selectAccper.setFK_Node(Integer.parseInt(FK_Node));
+			selectAccper.setNodeID(Integer.parseInt(FK_Node));
 			selectAccper.setWorkID(Long.parseLong(WorkID));
-			selectAccper.setFK_Emp(FK_Emp);
+			selectAccper.setEmpNo(FK_Emp);
 			selectAccper.setEmpName(EmpName);
 			selectAccper.setDeptName(DeptName);
 			selectAccper.Insert();

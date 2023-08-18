@@ -1,6 +1,9 @@
 package bp.ccfast.portal.windowext;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.ccfast.*;
+import bp.ccfast.portal.*;
 import java.util.*;
 
 /** 
@@ -13,13 +16,15 @@ public class ChartChinas extends EntitiesNoName
 	/** 
 	 柱状图s
 	*/
-	public ChartChinas() throws Exception {
+	public ChartChinas()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new ChartChina();
 	}
 
@@ -32,7 +37,8 @@ public class ChartChinas extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<ChartChina> ToJavaList() {
+	public final java.util.List<ChartChina> ToJavaList()
+	{
 		return (java.util.List<ChartChina>)(Object)this;
 	}
 	/** 
@@ -40,7 +46,8 @@ public class ChartChinas extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<ChartChina> Tolist()  {
+	public final ArrayList<ChartChina> Tolist()
+	{
 		ArrayList<ChartChina> list = new ArrayList<ChartChina>();
 		for (int i = 0; i < this.size(); i++)
 		{

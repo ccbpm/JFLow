@@ -1,11 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.port.*;
-import bp.sys.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -18,7 +13,8 @@ public class FrmNodeFieldRemoves extends EntitiesMyPK
 	/** 
 	 表单节点排除规则
 	*/
-	public FrmNodeFieldRemoves() throws Exception {
+	public FrmNodeFieldRemoves()
+	{
 	}
 
 		///#endregion 构造方法..
@@ -29,7 +25,8 @@ public class FrmNodeFieldRemoves extends EntitiesMyPK
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FrmNodeFieldRemove();
 	}
 
@@ -42,7 +39,8 @@ public class FrmNodeFieldRemoves extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmNodeFieldRemove> ToJavaList() {
+	public final java.util.List<FrmNodeFieldRemove> ToJavaList()
+	{
 		return (java.util.List<FrmNodeFieldRemove>)(Object)this;
 	}
 	/** 
@@ -50,7 +48,8 @@ public class FrmNodeFieldRemoves extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmNodeFieldRemove> Tolist()  {
+	public final ArrayList<FrmNodeFieldRemove> Tolist()
+	{
 		ArrayList<FrmNodeFieldRemove> list = new ArrayList<FrmNodeFieldRemove>();
 		for (int i = 0; i < this.size(); i++)
 		{

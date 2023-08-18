@@ -1,7 +1,6 @@
 package bp.wf.data.admin2group;
 
 import bp.en.*;
-
 import java.util.ArrayList;
 
 /** 
@@ -25,7 +24,7 @@ public class CHExts extends Entities
 	 时效考核
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()  {
 		return new CHExt();
 	}
 

@@ -1,7 +1,5 @@
 package bp.sys;
-
 import bp.en.*;
-
 import java.util.*;
 
 /** 
@@ -12,14 +10,14 @@ public class CFields extends EntitiesMyPK
 	/** 
 	 列选择s
 	*/
-	public CFields()throws Exception
+	public CFields()
 	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new CField();
 	}
@@ -31,7 +29,7 @@ public class CFields extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<CField> ToJavaList()throws Exception
+	public final java.util.List<CField> ToJavaList()
 	{
 		return (java.util.List<CField>)(Object)this;
 	}
@@ -40,7 +38,7 @@ public class CFields extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<CField> Tolist()throws Exception
+	public final ArrayList<CField> Tolist()
 	{
 		ArrayList<CField> list = new ArrayList<CField>();
 		for (int i = 0; i < this.size(); i++)

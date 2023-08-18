@@ -3,10 +3,13 @@ package bp.sys;
 import bp.da.*;
 import bp.difference.SystemConfig;
 import bp.en.*;
+import bp.en.Map;
 import bp.tools.StringUtils;
 
+import java.math.BigDecimal;
 import java.sql.*;
-import java.util.List;
+import java.util.*;
+import static bp.sys.DBSrcType.Oracle;
 
 /** 
  数据源
@@ -20,108 +23,91 @@ public class SFDBSrc extends EntityNoName
 		{
 			case Oracle:
 				return FieldCaseModel.UpperCase;
-			case PostgreSQL:
-			case UX:
-			case HGDB:
+			case bp.sys.DBSrcType.PostgreSQL:
+			case bp.sys.DBSrcType.UX:
+			case bp.sys.DBSrcType.HGDB:
 				return FieldCaseModel.Lowercase;
+			case bp.sys.DBSrcType.KingBaseR6:
+				return FieldCaseModel.UpperCase;
+			case bp.sys.DBSrcType.KingBaseR3:
+				String sql = "show case_sensitive;";
+				String caseSen = "";
+				try
+				{
+					caseSen = this.RunSQLReturnString(sql);
+				}
+				catch (RuntimeException ex)
+				{
+					sql = "show enable_ci;";
+					caseSen = this.RunSQLReturnString(sql);
+					if ("on".equals(caseSen))
+					{
+						return FieldCaseModel.None;
+					}
+					else
+					{
+						return FieldCaseModel.UpperCase;
+					}
+				}
+				if ("on".equals(caseSen))
+				{
+					return FieldCaseModel.UpperCase;
+				}
+				else
+				{
+					return FieldCaseModel.None;
+				}
 			default:
 				return FieldCaseModel.None;
 		}
 	}
 	/** 
-	 标签
-	*/
-	public final String getIcon() throws Exception {
-		switch (this.getDBSrcType())
-		{
-			case Localhost:
-				return "<img src='/WF/Img/DB.gif' />";
-			default:
-				return "";
-		}
-	}
-
-	public final String getUserID() throws Exception
-	{
-		return this.GetValStringByKey(SFDBSrcAttr.UserID);
-	}
-	public final void setUserID(String value) throws Exception
-	{
-		this.SetValByKey(SFDBSrcAttr.UserID, value);
-	}
-	/**
-	 密码
-	 */
-	public final String getPassword() throws Exception
-	{
-		return this.GetValStringByKey(SFDBSrcAttr.Password);
-	}
-	public final void setIsPassword(String value) throws Exception
-	{
-		this.SetValByKey(SFDBSrcAttr.Password, value);
-	}
-
-
-
-	/** 
 	 数据库类型
 	*/
-	public final DBSrcType getDBSrcType() {
-		String val=this.GetValStrByKey("DBSrcType");
-		if (val.equals("0") ) {
-			if (  SystemConfig.getAppCenterDBType()== DBType.MySQL)
-				return DBSrcType.MySQL;
-			if (  SystemConfig.getAppCenterDBType()== DBType.PostgreSQL)
-				return DBSrcType.PostgreSQL;
-		}
-		return DBSrcType.MySQL;
-	//		return SystemConfig.getAppCenterDBType();
-		//return DBSrcType.forValue();
+	public final String getDBSrcType()  {
+		return this.GetValStringByKey(SFDBSrcAttr.DBSrcType);
 	}
-	public final void setDBSrcType(DBSrcType value)
-	 {
-		this.SetValByKey(SFDBSrcAttr.DBSrcType, value.getValue());
+	public final void setDBSrcType(String value){
+		this.SetValByKey(SFDBSrcAttr.DBSrcType, value);
 	}
-//	public final String getDBSrcType(){
-//		return "mysql";
-//	}
-	public final String getDBName()
-	{
+
+	public final String getDBName()  {
 		return this.GetValStringByKey(SFDBSrcAttr.DBName);
 	}
-	public final void setDBName(String value)
-	 {
+	public final void setDBName(String value){
 		this.SetValByKey(SFDBSrcAttr.DBName, value);
 	}
-	public final String getIP()
-	{
+	public final String getIP()  {
 		return this.GetValStringByKey(SFDBSrcAttr.IP);
 	}
-	public final void setIP(String value)
-	 {
+	public final void setIP(String value){
 		this.SetValByKey(SFDBSrcAttr.IP, value);
 	}
 
 	/** 
 	 数据库类型
 	*/
-	public final DBType getHisDBType() {
+	public final DBType getHisDBType()  {
 		switch (this.getDBSrcType())
 		{
-			case Localhost:
+			case bp.sys.DBSrcType.local:
 				return bp.difference.SystemConfig.getAppCenterDBType();
-			case SQLServer:
+			case bp.sys.DBSrcType.MSSQL:
 				return DBType.MSSQL;
 			case Oracle:
 				return DBType.Oracle;
-			case MySQL:
-				return DBType.MySQL;
-			case Informix:
-				return DBType.Informix;
-			case KingBaseR3:
+			case bp.sys.DBSrcType.KingBaseR3:
 				return DBType.KingBaseR3;
-			case KingBaseR6:
+			case bp.sys.DBSrcType.KingBaseR6:
 				return DBType.KingBaseR6;
+			case bp.sys.DBSrcType.MySQL:
+				return DBType.MySQL;
+			case bp.sys.DBSrcType.Informix:
+				return DBType.Informix;
+			case bp.sys.DBSrcType.PostgreSQL:
+				return DBType.PostgreSQL;
+			case bp.sys.DBSrcType.HGDB:
+				return DBType.HGDB;
 			default:
 				throw new RuntimeException("err@HisDBType没有判断的数据库类型.");
 		}
@@ -134,12 +120,11 @@ public class SFDBSrc extends EntityNoName
 	/** 
 	 运行SQL返回数值
 	 
-	 param sql 一行一列的SQL
-	 param isNullAsVal 如果为空，就返回制定的值.
+	 @param sql 一行一列的SQL
+	 @param isNullAsVal 如果为空，就返回制定的值.
 	 @return 要返回的值
 	*/
-	public final int RunSQLReturnInt(String sql, int isNullAsVal)
-	{
+	public final int RunSQLReturnInt(String sql, int isNullAsVal) throws Exception {
 		DataTable dt = this.RunSQLReturnTable(sql);
 		if (dt.Rows.size() == 0)
 		{
@@ -153,8 +138,7 @@ public class SFDBSrc extends EntityNoName
 		return DoQuery(ens, sql, expPageSize, pk, attrs, count, pageSize, pageIdx, orderBy, false);
 	}
 
-	public final Entities DoQuery(Entities ens, String sql, String expPageSize, String pk, Attrs attrs, int count, int pageSize, int pageIdx, String orderBy, boolean isDesc)throws Exception
-	{
+	public final Entities DoQuery(Entities ens, String sql, String expPageSize, String pk, Attrs attrs, int count, int pageSize, int pageIdx, String orderBy, boolean isDesc) throws Exception {
 		DataTable dt = new DataTable();
 		if (count == 0)
 		{
@@ -191,22 +175,25 @@ public class SFDBSrc extends EntityNoName
 			switch (this.getDBSrcType())
 			{
 				case Oracle:
+				case bp.sys.DBSrcType.KingBaseR3:
+				case bp.sys.DBSrcType.KingBaseR6:
 					mysql = "SELECT * FROM (" + sql + " AND ROWNUM<=" + max + ") temp WHERE temp.rn>=" + top;
 					break;
-				case MySQL:
-				case PostgreSQL:
-				case HGDB:
+				case bp.sys.DBSrcType.MySQL:
 					mysql = sql + " LIMIT " + pageSize * (pageIdx - 1) + "," + pageSize;
 					break;
-				case UX:
-				case SQLServer:
+				case bp.sys.DBSrcType.PostgreSQL:
+				case bp.sys.DBSrcType.HGDB:
+				case bp.sys.DBSrcType.UX:
+				case bp.sys.DBSrcType.MSSQL:
 				default:
 					//获取主键的类型
 					Attr attr = attrs.GetAttrByKeyOfEn(pk);
+
 					//mysql = countSql;
 					//mysql = mysql.Substring(mysql.ToUpper().IndexOf("FROM "));
 					// mysql = "SELECT  "+ mainTable+pk + " "  + mysql;
-					String pks = this.GenerPKsByTableWithPara(pk, attr.getIsNum(), expPageSize, pageSize * (pageIdx - 1), max, null);
+					String pks = this.GenerPKsByTableWithPara(pk, attr.getItIsNum(), expPageSize, pageSize * (pageIdx - 1), max, null);
 
 					if (pks == null)
 					{
@@ -214,17 +201,12 @@ public class SFDBSrc extends EntityNoName
 					}
 					else
 					{
-						if((SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) && sql.contains("\""))
-							mysql = sql + " AND \""+pk+"\" in(" + pks + ")";
-						else
-							mysql = sql + " AND "+pk+" in(" + pks + ")";
+						mysql = sql + " AND OID in(" + pks + ")";
 					}
 					break;
 			}
 			dt = this.RunSQLReturnTable(mysql);
-			if((SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) && mysql.contains("\""))
-				return InitEntitiesByDataTable(ens, dt, null,false);
-			return InitEntitiesByDataTable(ens, dt, null,true);
+			return InitEntitiesByDataTable(ens, dt, null);
 
 		}
 		catch (RuntimeException ex)
@@ -233,24 +215,24 @@ public class SFDBSrc extends EntityNoName
 		}
 	}
 
-	public final Entities InitEntitiesByDataTable(Entities ens, DataTable dt, String[] fullAttrs,boolean isUpperOrLower) throws Exception {
+	public final Entities InitEntitiesByDataTable(Entities ens, DataTable dt, String[] fullAttrs) throws Exception {
 		if (fullAttrs == null)
 		{
-			Map enMap = ens.getGetNewEntity().getEnMap();
+			Map enMap = ens.getNewEntity().getEnMap();
 			Attrs attrs = enMap.getAttrs();
 			try
 			{
 
 				for (DataRow dr : dt.Rows)
 				{
-					Entity en = ens.getGetNewEntity();
-					for (Attr attr : attrs.ToJavaList())
+					Entity en = ens.getNewEntity();
+					for (Attr attr : attrs)
 					{
 						if (dt.Columns.contains(attr.getKey()) == false && dt.Columns.contains(attr.getKey().toUpperCase()) == false)
 						{
 							continue;
 						}
-						if (bp.difference.SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase && isUpperOrLower)
+						if (bp.difference.SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 						{
 							if (attr.getMyFieldType() == FieldType.RefText)
 							{
@@ -261,7 +243,7 @@ public class SFDBSrc extends EntityNoName
 								en.SetValByKey(attr.getKey(), dr.getValue(attr.getKey().toUpperCase()));
 							}
 						}
-						else if (bp.difference.SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase && isUpperOrLower)
+						else if (bp.difference.SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
 						{
 							if (attr.getMyFieldType() == FieldType.RefText)
 							{
@@ -296,14 +278,14 @@ public class SFDBSrc extends EntityNoName
 
 		for (DataRow dr : dt.Rows)
 		{
-			Entity en = ens.getGetNewEntity();
+			Entity en = ens.getNewEntity();
 			for (String str : fullAttrs)
 			{
 				if (dt.Columns.contains(str) == false && dt.Columns.contains(str.toUpperCase()) == false)
 				{
 					continue;
 				}
-				if (bp.difference.SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase && isUpperOrLower)
+				if (bp.difference.SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 				{
 					if (dt.Columns.contains(str) == true)
 					{
@@ -314,7 +296,7 @@ public class SFDBSrc extends EntityNoName
 						en.SetValByKey(str, dr.getValue(str.toUpperCase()));
 					}
 				}
-				else if (bp.difference.SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase && isUpperOrLower)
+				else if (bp.difference.SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
 				{
 					if (dt.Columns.contains(str) == true)
 					{
@@ -339,8 +321,7 @@ public class SFDBSrc extends EntityNoName
 
 	}
 
-	public final String GenerPKsByTableWithPara(String pk, boolean isNum, String sql, int from, int to, Paras paras)
-	{
+	public final String GenerPKsByTableWithPara(String pk, boolean isNum, String sql, int from, int to, Paras paras) throws Exception {
 		DataTable dt = this.RunSQLReturnTable(sql, paras);
 		String pks = "";
 		int i = 0;
@@ -368,7 +349,7 @@ public class SFDBSrc extends EntityNoName
 				}
 			}
 		}
-		if (pks.equals(""))
+		if (Objects.equals(pks, ""))
 		{
 			return null;
 		}
@@ -377,20 +358,21 @@ public class SFDBSrc extends EntityNoName
 	/** 
 	 运行SQL
 	 
-	 param sql
+	 @param sql
 	 @return 
 	*/
-	public final int RunSQL(String sql) throws Exception {int i =0;
+	public final int RunSQL(String sql) throws Exception {
+		int i =0;
 		Connection conn = null;
 		Statement stmt = null;
 		switch(this.getDBSrcType()){
-			case Localhost:
+			case bp.sys.DBSrcType.local:
 				return DBAccess.RunSQL(sql);
 			case Oracle:
-			case KingBaseR3:
-			case KingBaseR6:
-			case MySQL:
-			case SQLServer:
+			case bp.sys.DBSrcType.KingBaseR3:
+			case bp.sys.DBSrcType.KingBaseR6:
+			case bp.sys.DBSrcType.MySQL:
+			case bp.sys.DBSrcType.MSSQL:
 				conn =this.getConnection();
 				try{
 					stmt = conn.createStatement();// 创建用于执行静态sql语句的Statement对象，st属局部变量
@@ -407,8 +389,93 @@ public class SFDBSrc extends EntityNoName
 				throw new Exception("err@没有处理数据库"+this.getDBSrcType()+"类型");
 		}
 	}
+	/**
+	 连接字符串.
+	 * @throws Exception
+	 */
+	public final Connection getConnection() throws Exception
+	{
+		String connString = this.getConnString();
+		if(DataType.IsNullOrEmpty(connString) == true)
+			throw new Exception("err@请配置连接的字符串");
+		//字符串格式 IP=101.43.55.81;Port=3306;DBName=jflow;Username=root;Password=.ccflow@123.;
+		connString = "@"+connString.replace(";","@");
+		AtPara atPara = new AtPara(connString);
+		String ip = atPara.GetValStrByKey("IP");
+		String port = atPara.GetValStrByKey("Port");
+		String dbname = atPara.GetValStrByKey("DBName");
+		String username = atPara.GetValStrByKey("Username");
+		String password = atPara.GetValStrByKey("Password");
+		String url="";//数据库连接的url
+		Connection con=null;
+		switch (this.getDBSrcType())
+		{
+			case bp.sys.DBSrcType.MSSQL:
+				try{
+					//加载MySql的驱动类
+					Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver") ;
+				}catch(ClassNotFoundException e){
+					System.out.println("找不到驱动程序类 ，加载驱动失败！");
+					e.printStackTrace() ;
+				}
+				url="jdbc:sqlserver://" + ip+":"+port+"/"+dbname+";useLOBs=false";
+				break;
+			case bp.sys.DBSrcType.Oracle:
+				try{
+					//加载MySql的驱动类
+					Class.forName("oracle.jdbc.driver.OracleDriver") ;
+				}catch(ClassNotFoundException e){
+					System.out.println("找不到驱动程序类 ，加载驱动失败！");
+					e.printStackTrace() ;
+				}
+				url="jdbc:oracle:thin:@" + ip+":"+port+"/"+dbname;
+				break;
+			case bp.sys.DBSrcType.MySQL:
+				try{
+					//加载MySql的驱动类
+					Class.forName("com.mysql.jdbc.Driver") ;
+				}catch(ClassNotFoundException e){
+					System.out.println("找不到驱动程序类 ，加载驱动失败！");
+					e.printStackTrace() ;
+				}
+				url="jdbc:mysql://"+ip+":"+port+"/"+dbname+"?useUnicode=true&characterEncoding=utf-8&useOldAliasMetadataBehavior=true&allowMultiQueries=true";
+				break;
+			case bp.sys.DBSrcType.KingBaseR3:
+			case bp.sys.DBSrcType.KingBaseR6:
+				try{
+					//加载MySql的驱动类
+					Class.forName("com.kingbase8.Driver") ;
+				}catch(ClassNotFoundException e){
+					System.out.println("找不到驱动程序类 ，加载驱动失败！");
+					e.printStackTrace() ;
+				}
+				url="jdbc:kingbase8://"+ip+":"+port+"/"+dbname;
+				break;
 
-
+			case DBSrcType.HGDB:
+				try{
+					Class.forName("com.highgo.jdbc.Driver") ;
+				}catch(ClassNotFoundException e){
+					System.out.println("找不到驱动程序类 ，加载驱动失败！");
+					e.printStackTrace() ;
+				}
+				url="jdbc:highgo://"+ip+":"+port+"/"+dbname;
+				break;
+			case DBSrcType.PostgreSQL:
+				try{
+					Class.forName("org.postgresql.Driver") ;
+				}catch(ClassNotFoundException e){
+					System.out.println("找不到驱动程序类 ，加载驱动失败！");
+					e.printStackTrace() ;
+				}
+				url="jdbc:postgresql://"+ip+":"+port+"/"+dbname+"?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&characterSetResults=utf8&useSSL=false&allowMultiQueries=true";
+				break;
+			default:
+				throw new RuntimeException("@没有判断的类型.");
+		}
+		con = DriverManager.getConnection(url,username,password);
+		return con;
+	}
 	private  void closeAll(Connection conn, Statement st, ResultSet rs){
 		if(conn!=null){
 			try {
@@ -468,23 +535,27 @@ public class SFDBSrc extends EntityNoName
 			RunSQL(str);
 		}
 	}
+
+	private static final Object _lock = new Object();
 	/** 
 	 运行SQL
 	 
-	 param runObj
+	 @param runObj
 	 @return 
 	*/
+	public final DataTable RunSQLReturnTable(String runObj) throws Exception {
+		DataTable dt = RunSQLReturnTable(runObj, new Paras());
+		return dt;
+
+	}
 
 
-
-	public final String RunSQLReturnString(String runObj)
-	{
+	public final String RunSQLReturnString(String runObj) throws Exception {
 		return RunSQLReturnString(runObj, null);
 	}
 
-//ORIGINAL LINE: public string RunSQLReturnString(string runObj, string isNullasVal = null)
-	public final String RunSQLReturnString(String runObj, String isNullasVal)
-	{
+	public final String RunSQLReturnString(String runObj, String isNullasVal) throws Exception {
+
 		DataTable dt = RunSQLReturnTable(runObj);
 		if (dt.Rows.size() == 0)
 		{
@@ -493,309 +564,240 @@ public class SFDBSrc extends EntityNoName
 
 		return dt.Rows.get(0).getValue(0).toString();
 	}
+
+
 	/** 
 	 运行SQL返回datatable
 	 
-	 param sql
+	 @param runObj
 	 @return 
 	*/
-//	public final DataTable RunSQLReturnTable(String runObj, Paras ps)
-//	{
-//		try
-//		{
-//			switch (this.getDBSrcType())
-//			{
-//				case Localhost: //如果是本机，直接在本机上执行.
-//					return DBAccess.RunSQLReturnTable(runObj, ps);
-//				case SQLServer: //如果是SQLServer.
-//					SqlConnection connSQL = new SqlConnection(this.getConnString());
-//					SqlDataAdapter ada = null;
-//					SqlParameter myParameter = null;
-//
-//					try
-//					{
-//						connSQL.Open(); //打开.
-//						ada = new SqlDataAdapter(runObj, connSQL);
-//						ada.SelectCommand.CommandType = CommandType.Text;
-//
-//						// 加入参数
-//						if (ps != null)
-//						{
-//							for (Para para : ps)
-//							{
-//								myParameter = new SqlParameter(para.ParaName, para.val);
-//								myParameter.Size = para.Size;
-//								ada.SelectCommand.Parameters.Add(myParameter);
-//							}
-//						}
-//
-//						DataTable oratb = new DataTable("otb");
-//						ada.Fill(oratb);
-//						ada.Dispose();
-//						connSQL.Close();
-//						return oratb;
-//					}
-//					catch (RuntimeException ex)
-//					{
-//						if (ada != null)
-//						{
-//							ada.Dispose();
-//						}
-//						if (connSQL.State == ConnectionState.Open)
-//						{
-//							connSQL.Close();
-//						}
-//						throw new RuntimeException("SQL=" + runObj + " Exception=" + ex.getMessage());
-//					}
-//				case Oracle:
-//					OracleConnection oracleConn = new OracleConnection(getConnString());
-//					OracleDataAdapter oracleAda = null;
-//					OracleParameter myParameterOrcl = null;
-//
-//					try
-//					{
-//						oracleConn.Open();
-//						oracleAda = new OracleDataAdapter(runObj, oracleConn);
-//						oracleAda.SelectCommand.CommandType = CommandType.Text;
-//
-//						if (ps != null)
-//						{
-//							// 加入参数
-//							for (Para para : ps)
-//							{
-//								myParameterOrcl = new OracleParameter(para.ParaName, para.val);
-//								myParameterOrcl.Size = para.Size;
-//								oracleAda.SelectCommand.Parameters.add(myParameterOrcl);
-//							}
-//						}
-//
-//						DataTable oracleTb = new DataTable("otb");
-//						oracleAda.Fill(oracleTb);
-//						oracleAda.close();
-//						oracleConn.Close();
-//						return oracleTb;
-//					}
-//					catch (RuntimeException ex)
-//					{
-//						if (oracleAda != null)
-//						{
-//							oracleAda.close();
-//						}
-//						if (oracleConn.State == ConnectionState.Open)
-//						{
-//							oracleConn.Close();
-//						}
-//						throw new RuntimeException("SQL=" + runObj + " Exception=" + ex.getMessage());
-//					}
-//				case MySQL:
-//					MySqlConnection mysqlConn = new MySqlConnection(getConnString());
-//					MySqlDataAdapter mysqlAda = null;
-//					MySqlParameter myParameterMysql = null;
-//
-//					try
-//					{
-//						mysqlConn.Open();
-//						mysqlAda = new MySqlDataAdapter(runObj, mysqlConn);
-//						mysqlAda.SelectCommand.CommandType = CommandType.Text;
-//
-//						if (ps != null)
-//						{
-//							// 加入参数
-//							for (Para para : ps)
-//							{
-//								myParameterMysql = new MySqlParameter(para.ParaName, para.val);
-//								myParameterMysql.Size = para.Size;
-//								mysqlAda.SelectCommand.Parameters.Add(myParameterMysql);
-//							}
-//						}
-//
-//						DataTable mysqlTb = new DataTable("otb");
-//						mysqlAda.Fill(mysqlTb);
-//						mysqlAda.Dispose();
-//						mysqlConn.Close();
-//						return mysqlTb;
-//					}
-//					catch (RuntimeException ex)
-//					{
-//						if (mysqlAda != null)
-//						{
-//							mysqlAda.Dispose();
-//						}
-//						if (mysqlConn.State == ConnectionState.Open)
-//						{
-//							mysqlConn.Close();
-//						}
-//						throw new RuntimeException("SQL=" + runObj + " Exception=" + ex.getMessage());
-//					}
-//
-//				default:
-//					break;
-//			}
-//			return null;
-//		}
-//		catch (RuntimeException ex)
-//		{
-//			throw new RuntimeException("err@从自定义数据源中获取数据失败，" + this.getNo() + " , " + this.getName() + " 异常信息:" + ex.getMessage());
-//			Log.DebugWriteError(ex.getMessage());
-//		}
-//
-//	}
-//
-//	public final DataTable RunSQLReturnTable(String sql, int startRecord, int recordCount)
-//	{
-//		switch (this.getDBSrcType())
-//		{
-//			case Localhost: //如果是本机，直接在本机上执行.
-//				return DBAccess.RunSQLReturnTable(sql);
-//			case SQLServer: //如果是SQLServer.
-//				SqlConnection connSQL = new SqlConnection(this.getConnString());
-//				SqlDataAdapter ada = null;
-//				try
-//				{
-//					connSQL.Open(); //打开.
-//					ada = new SqlDataAdapter(sql, connSQL);
-//					ada.SelectCommand.CommandType = CommandType.Text;
-//					DataTable oratb = new DataTable("otb");
-//					ada.Fill(startRecord, recordCount, oratb);
-//					ada.Dispose();
-//					connSQL.Close();
-//					return oratb;
-//				}
-//				catch (RuntimeException ex)
-//				{
-//					if (ada != null)
-//					{
-//						ada.Dispose();
-//					}
-//					if (connSQL.State == ConnectionState.Open)
-//					{
-//						connSQL.Close();
-//					}
-//					throw new RuntimeException("SQL=" + sql + " Exception=" + ex.getMessage());
-//				}
-//			case Oracle:
-//				OracleConnection oracleConn = new OracleConnection(getConnString());
-//				OracleDataAdapter oracleAda = null;
-//
-//				try
-//				{
-//					oracleConn.Open();
-//					oracleAda = new OracleDataAdapter(sql, oracleConn);
-//					oracleAda.SelectCommand.CommandType = CommandType.Text;
-//					DataTable oracleTb = new DataTable("otb");
-//					oracleAda.Fill(startRecord, recordCount, oracleTb);
-//					oracleAda.close();
-//					oracleConn.Close();
-//					return oracleTb;
-//				}
-//				catch (RuntimeException ex)
-//				{
-//					if (oracleAda != null)
-//					{
-//						oracleAda.close();
-//					}
-//					if (oracleConn.State == ConnectionState.Open)
-//					{
-//						oracleConn.Close();
-//					}
-//					throw new RuntimeException("SQL=" + sql + " Exception=" + ex.getMessage());
-//				}
-//			case MySQL:
-//				MySqlConnection mysqlConn = new MySqlConnection(getConnString());
-//				MySqlDataAdapter mysqlAda = null;
-//
-//				try
-//				{
-//					mysqlConn.Open();
-//					mysqlAda = new MySqlDataAdapter(sql, mysqlConn);
-//					mysqlAda.SelectCommand.CommandType = CommandType.Text;
-//					DataTable mysqlTb = new DataTable("otb");
-//					mysqlAda.Fill(startRecord, recordCount, mysqlTb);
-//					mysqlAda.Dispose();
-//					mysqlConn.Close();
-//					return mysqlTb;
-//				}
-//				catch (RuntimeException ex)
-//				{
-//					if (mysqlAda != null)
-//					{
-//						mysqlAda.Dispose();
-//					}
-//					if (mysqlConn.State == ConnectionState.Open)
-//					{
-//						mysqlConn.Close();
-//					}
-//					throw new RuntimeException("SQL=" + sql + " Exception=" + ex.getMessage());
-//				}
-//			//
-//			//case Sys.DBSrcType.Informix:
-//			//    IfxConnection ifxConn = new IfxConnection(ConnString);
-//			//    IfxDataAdapter ifxAda = null;
-//
-//			//    try
-//			//    {
-//			//        ifxConn.Open();
-//			//        ifxAda = new IfxDataAdapter(sql, ifxConn);
-//			//        ifxAda.SelectCommand.CommandType = CommandType.Text;
-//			//        DataTable ifxTb = new DataTable("otb");
-//			//        ifxAda.Fill(startRecord, recordCount, ifxTb);
-//			//        ifxAda.Dispose();
-//			//        ifxConn.Close();
-//			//        return ifxTb;
-//			//    }
-//			//    catch (Exception ex)
-//			//    {
-//			//        if (ifxAda != null)
-//			//            ifxAda.Dispose();
-//			//        if (ifxConn.State == ConnectionState.Open)
-//			//            ifxConn.Close();
-//			//        throw new Exception("SQL=" + sql + " Exception=" + ex.Message);
-//			//    }
-//			default:
-//				break;
-//		}
-//		return null;
-//	}
+	public final DataTable RunSQLReturnTable(String runObj, Paras ps) throws Exception {
+		ResultSet rs = null;
+		Connection conn = null;
+		Statement stmt = null;
+		NamedParameterStatement pstmt = null;
+		switch(this.getDBSrcType()){
+			case DBSrcType.local:
+				return DBAccess.RunSQLReturnTable(runObj,ps);
+			case DBSrcType.Oracle:
+			case DBSrcType.KingBaseR3:
+			case DBSrcType.KingBaseR6:
+			case DBSrcType.MySQL:
+			case DBSrcType.MSSQL:
+				conn =this.getConnection();
+				try{
+					DataTable oratb = new DataTable("otb");
+					if (null != ps && ps.size() > 0) {
+						pstmt = new NamedParameterStatement(conn, runObj);
+						PrepareCommand(pstmt, ps);
+						// pstmt.setString(1, "李思");
+						rs = pstmt.executeQuery();
+						ResultSetMetaData rsmd = rs.getMetaData();
+						int size = rsmd.getColumnCount();
+						for (int i = 0; i < size; i++) {
+							oratb.Columns.Add(rsmd.getColumnName(i + 1), Para.getDAType(rsmd.getColumnType(i + 1)));
+						}
+						while (rs.next()) {
+							DataRow dr = oratb.NewRow();// 產生一列DataRow
+							for (int i = 0; i < size; i++) {
+								Object val = rs.getObject(i + 1);
+								if (dr != null && dr.columns.size() > 0 && dr.columns.get(i).DataType != null) {
+									if (dr.columns.get(i).DataType.toString().contains("Integer")
+											|| dr.columns.get(i).DataType.toString().contains("Double")) {
+										if (val == null) {
+											dr.setValue(i, 0);
+										} else {
+											dr.setValue(i, val);
+										}
 
-	/**
-	 运行SQL
+									} else {
+										dr.setValue(i, val);
+									}
+								} else {
+									dr.setValue(i, val);
+								}
+								// dr.setDataType(i, Para.getDAType(val));
+							}
+							oratb.Rows.add(dr);// DataTable加入此DataRow
+						}
+					} else {
+						stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+						rs = stmt.executeQuery(runObj);
+						ResultSetMetaData rsmd = rs.getMetaData();
+						int size = rsmd.getColumnCount();
+						for (int i = 0; i < size; i++) {
+							oratb.Columns.Add(rsmd.getColumnName(i + 1), Para.getDAType(rsmd.getColumnType(i + 1)));
+						}
+						while (rs.next()) {
+							DataRow dr = oratb.NewRow();// 產生一列DataRow
+							for (int i = 0; i < size; i++) {
+								Object val = rs.getObject(i + 1);
+								if (dr != null && dr.columns.size() > 0 && dr.columns.get(i).DataType != null) {
+									if (dr.columns.get(i).DataType.toString().contains("Integer")
+											|| dr.columns.get(i).DataType.toString().contains("Double")) {
+										if (val == null) {
+											dr.setValue(i, 0);
+										} else {
+											dr.setValue(i, val);
+										}
 
-	 @param runObj
-	 @return
-	 */
-	public final DataTable RunSQLReturnTable(String runObj)
-	{
-		return RunSQLReturnTable(runObj, new Paras());
+									} else {
+										dr.setValue(i, val);
+									}
+								} else {
+									dr.setValue(i, val);
+								}
+							}
+							oratb.Rows.add(dr);// DataTable加入此DataRow
+						}
+					}
+					if (Log.isLoggerDebugEnabled()) {
+						Log.DefaultLogWriteLineDebug("SQL: " + runObj);
+						Log.DefaultLogWriteLineDebug("Param: " + ps.getDebugInfo() + ", Result: Rows=" + oratb.Rows.size());
+					}
+					return oratb;
+				}catch (Exception ex) {
+					String msg = "@运行外部数据"+this.getDBName()+"SQL报错。\n  @SQL: " + runObj + "\n  @异常信息: " + StringUtils.replace(ex.getMessage(), "\n", " ");
+					Log.DefaultLogWriteLineError(msg);
+					throw new RuntimeException(msg, ex);
+				}finally {
+					closeAll(conn,stmt,null);
+				}
+			default:
+				throw new Exception("err@没有处理数据库"+this.getDBSrcType()+"类型");
+		}
+
 	}
-	/**
-	 运行SQL返回datatable
-	 @param runObj
-	 @param ps
-	 @return
-	 */
-	public final DataTable RunSQLReturnTable(String runObj, Paras ps)
-	{
-		return DBAccess.RunSQLReturnTable(runObj,ps);
+	private static void PrepareCommand(NamedParameterStatement ps, Paras params) throws Exception {
+		if (null == params || params.size() <= 0) {
+			return;
+		}
+		try {
+			for (Para para : params) {
+				if (para.DAType == String.class) {
+					try {
+						if (para.val != null && !para.val.equals("")) {
+							ps.setString(para.ParaName, String.valueOf(para.val));
+						} else {
+							ps.setString(para.ParaName, "");
+						}
+					} catch (Exception e) {
+						ps.setString(para.ParaName, "");
+					}
+				} else if (para.DAType == Long.class) {
+					ps.setLong(para.ParaName, (Long) para.val);
+				} else if (para.DAType == Integer.class) {
+					// if ("".equals(para.val))
+					// para.val = "0";
+					ps.setInt(para.ParaName,
+							para.val instanceof String ? Integer.parseInt("" + para.val) : (Integer) para.val);
+				} else if (para.DAType == Float.class) {
+					ps.setFloat(para.ParaName, (Float) para.val);
+				} else if (para.DAType == Double.class) {
+					ps.setDouble(para.ParaName, (Double) para.val);
+				} else if (para.DAType == BigDecimal.class) {
+					ps.setBigDecimal(para.ParaName, (BigDecimal) para.val);
+				} else if (para.DAType == java.util.Date.class) {
+					java.util.Date date = (java.util.Date) para.val;
+					if (date == null) {
+						ps.setDate(para.ParaName, null);
+					} else {
+						ps.setDate(para.ParaName, new java.sql.Date(date.getTime()));
+					}
+				} else if (para.DAType == Boolean.class) {
+					ps.setBoolean(para.ParaName, (Boolean) para.val);
+				}
+			}
+		} catch (SQLException ex) {
+			String msg = "@运行查询在(PrepareCommand)出错  @异常信息：" + StringUtils.replace(ex.getMessage(), "\n", " ");
+			Log.DefaultLogWriteLineError(msg, ex);
+		}
 	}
+	public final DataTable RunSQLReturnTable(String sql, int startRecord, int recordCount) throws Exception {
+		ResultSet rs = null;
+		Connection conn = null;
+		Statement stmt = null;
+		NamedParameterStatement pstmt = null;
+		switch(this.getDBSrcType()){
+			case DBSrcType.local:
+				return DBAccess.RunSQLReturnTable(sql);
+			case DBSrcType.Oracle:
+			case DBSrcType.KingBaseR3:
+			case DBSrcType.KingBaseR6:
+			case DBSrcType.MySQL:
+			case DBSrcType.MSSQL:
+				conn =this.getConnection();
+				try{
+					DataTable oratb = new DataTable("otb");
+					stmt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+					rs = stmt.executeQuery(sql);
+					ResultSetMetaData rsmd = rs.getMetaData();
+					int size = rsmd.getColumnCount();
+					for (int i = 0; i < size; i++) {
+						oratb.Columns.Add(rsmd.getColumnName(i + 1), Para.getDAType(rsmd.getColumnType(i + 1)));
+					}
+					int count = 1;
+					while (rs.next()) {
+						if(count<startRecord)
+							continue;
+						if(count>recordCount)
+							continue;
+						count++;
+						DataRow dr = oratb.NewRow();// 產生一列DataRow
+						for (int i = 0; i < size; i++) {
+							Object val = rs.getObject(i + 1);
+							if (dr != null && dr.columns.size() > 0 && dr.columns.get(i).DataType != null) {
+								if (dr.columns.get(i).DataType.toString().contains("Integer")
+										|| dr.columns.get(i).DataType.toString().contains("Double")) {
+									if (val == null) {
+										dr.setValue(i, 0);
+									} else {
+										dr.setValue(i, val);
+									}
 
+								} else {
+									dr.setValue(i, val);
+								}
+							} else {
+								dr.setValue(i, val);
+							}
+						}
+						oratb.Rows.add(dr);// DataTable加入此DataRow
+					}
+
+					if (Log.isLoggerDebugEnabled()) {
+						Log.DefaultLogWriteLineDebug("SQL: " + sql);
+					}
+					return oratb;
+				}catch (Exception ex) {
+					String msg = "@运行外部数据"+this.getDBName()+"SQL报错。\n  @SQL: " + sql + "\n  @异常信息: " + StringUtils.replace(ex.getMessage(), "\n", " ");
+					Log.DefaultLogWriteLineError(msg);
+					throw new RuntimeException(msg, ex);
+				}finally {
+					closeAll(conn,stmt,null);
+				}
+			default:
+				throw new Exception("err@没有处理数据库"+this.getDBSrcType()+"类型");
+		}
+	}
 	/** 
 	 判断数据源所在库中是否已经存在指定名称的对象【表/视图】
 	 
-	 param objName 表/视图 名称
+	 @param objName 表/视图 名称
 	 @return 如果不存在，返回null，否则返回对象的类型：TABLE(表)、VIEW(视图)、PROCEDURE(存储过程，判断不完善)、OTHER(其他类型)
 	*/
-	public final String IsExistsObj(String objName)
-	{
+	public final String IsExistsObj(String objName) throws Exception {
 		String sql = "";
 		DataTable dt = null;
 
 		switch (this.getDBSrcType())
 		{
-			case Localhost:
-				sql = GetIsExitsSQL(DBAccess.getAppCenterDBType(), objName, DBAccess.getAppCenterDBType().toString());
+			case bp.sys.DBSrcType.local:
+				sql = GetIsExitsSQL(DBAccess.getAppCenterDBType(), objName, SystemConfig.getAppCenterDBDatabase() .toString());
 				dt = DBAccess.RunSQLReturnTable(sql);
 				break;
-			case SQLServer:
+			case bp.sys.DBSrcType.MSSQL:
 				sql = GetIsExitsSQL(DBType.MSSQL, objName, this.getDBName());
 				dt = RunSQLReturnTable(sql);
 				break;
@@ -803,11 +805,16 @@ public class SFDBSrc extends EntityNoName
 				sql = GetIsExitsSQL(DBType.Oracle, objName, this.getDBName());
 				dt = RunSQLReturnTable(sql);
 				break;
-			case MySQL:
+			case bp.sys.DBSrcType.KingBaseR3:
+			case bp.sys.DBSrcType.KingBaseR6:
+				sql = GetIsExitsSQL(DBType.KingBaseR3, objName, this.getDBName());
+				dt = RunSQLReturnTable(sql);
+				break;
+			case bp.sys.DBSrcType.MySQL:
 				sql = GetIsExitsSQL(DBType.MySQL, objName, this.getDBName());
 				dt = RunSQLReturnTable(sql);
 				break;
-			case Informix:
+			case bp.sys.DBSrcType.Informix:
 				sql = GetIsExitsSQL(DBType.Informix, objName, this.getDBName());
 				dt = RunSQLReturnTable(sql);
 				break;
@@ -821,9 +828,9 @@ public class SFDBSrc extends EntityNoName
 	/** 
 	 获取判断数据库中是否存在指定名称的表/视图SQL语句
 	 
-	 param dbType 数据库类型
-	 param objName 表/视图名称
-	 param dbName 数据库名称
+	 @param dbType 数据库类型
+	 @param objName 表/视图名称
+	 @param dbName 数据库名称
 	 @return 
 	*/
 	public final String GetIsExitsSQL(DBType dbType, String objName, String dbName)
@@ -836,6 +843,8 @@ public class SFDBSrc extends EntityNoName
 			case HGDB:
 				return String.format("SELECT (CASE s.xtype WHEN 'U' THEN 'TABLE' WHEN 'V' THEN 'VIEW' WHEN 'P' THEN 'PROCEDURE' ELSE 'OTHER' END) OTYPE FROM sysobjects s WHERE s.name = '%1$s'", objName);
 			case Oracle:
+			case KingBaseR3:
+			case KingBaseR6:
 				return String.format("SELECT uo.OBJECT_TYPE OTYPE FROM user_objects uo WHERE uo.OBJECT_NAME = '%1$s'", objName.toUpperCase());
 			case MySQL:
 				return String.format("SELECT (CASE t.TABLE_TYPE WHEN 'BASE TABLE' THEN 'TABLE' ELSE 'VIEW' END) OTYPE FROM information_schema.tables t WHERE t.TABLE_SCHEMA = '%2$s' AND t.TABLE_NAME = '%1$s'", objName, dbName);
@@ -855,29 +864,45 @@ public class SFDBSrc extends EntityNoName
 
 		///#region 构造方法
 	/** 
+	 编辑类型
+	*/
+	public final int getEditType() {
+		return this.GetParaInt("EditType", 0);
+	}
+	public final void setEditType(int value)  {
+		this.SetPara("EditType", value);
+	}
+	/** 
 	 数据源
 	*/
-	public SFDBSrc() {
+	public SFDBSrc()
+	{
 	}
-	public SFDBSrc(String mypk) throws Exception{
-		this.setNo(mypk);
-		try{
+	public SFDBSrc(String no) throws Exception {
+		this.setNo(no);
+		try
+		{
 			this.Retrieve();
-		}catch (Exception e){
-			if(mypk.equals("local") == true){
-				this.setName(mypk);
-				this.setDBSrcType(DBSrcType.Localhost);
-				this.setDBName(mypk);
-				this.Insert();
-			}
 		}
-
+		catch (Exception ex)
+		{
+			this.CheckPhysicsTable();
+			if (no.equals("local") == true)
+			{
+				this.setName(no);
+				this.setDBSrcType(no);
+				this.setDBName(no);
+				this.Insert();
+				return;
+			}
+			throw ex;
+		}
 	}
 	/** 
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap()  {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -887,36 +912,24 @@ public class SFDBSrc extends EntityNoName
 
 		map.AddTBStringPK(SFDBSrcAttr.No, null, "编号", true, false, 1, 20, 20);
 		map.AddTBString(SFDBSrcAttr.Name, null, "名称", true, false, 0, 30, 20);
-//		String cfg = "@0=应用系统主数据库(默认)@1=SQLServer数据库@2=Oracle数据库@3=MySQL数据库@4=Informix数据库@50=Dubbo服务@100=WebService数据源";
-//		map.AddDDLSysEnum(SFDBSrcAttr.DBSrcType, 0, "数据源类型", true, true, SFDBSrcAttr.DBSrcType, cfg1);
-	//	String cfg1 = "@local=应用系统数据库(默认)@MSSQL=SQLServer数据库@Oracle=Oracle数据库@MySQL=MySQL数据库@Informix=Informix数据库@KindingBase3=人大金仓库R3@KindingBase6=人大金仓库R6@UX=优漩@Dubbo=Dubbo服务@WS=WebService数据源@URL=url模式@CCFromRef.js";
-	//	map.AddDDLStringEnum(SFDBSrcAttr.DBSrcType, "local", "类型", cfg1, true, null, false);
-	//	map.AddTBString("DBSrcType", "local", "类型", true, false, 0, 30, 20);
+		//String cfg = "@0=应用系统主数据库(默认)@1=SQLServer数据库@2=Oracle数据库@3=MySQL数据库@4=Informix数据库@50=Dubbo服务@100=WebService数据源";
+		//map.AddDDLSysEnum(SFDBSrcAttr.DBSrcType, 0, "数据源类型", true, true,
+		//  SFDBSrcAttr.DBSrcType,cfg);
 
+		String cfg1 = "@local=应用系统数据库(默认)@MSSQL=SQLServer数据库@Oracle=Oracle数据库@MySQL=MySQL数据库@Informix=Informix数据库@KindingBase3=人大金仓库R3@KindingBase6=人大金仓库R6@UX=优漩@Dubbo=Dubbo服务@WS=WebService数据源@WebApi=WebApi@CCFromRef.js";
+
+		map.AddDDLStringEnum(SFDBSrcAttr.DBSrcType, "local", "类型", cfg1, true, null, false);
 		map.AddTBString(SFDBSrcAttr.DBName, null, "数据库名称/Oracle保持为空", true, false, 0, 30, 20);
-		map.AddTBStringDoc(SFDBSrcAttr.ConnString, null, "连接串", true, false, true);
-		map.AddTBString("IP", null, "IP", true, false, 0, 30, 20);
-
+		map.AddTBString(SFDBSrcAttr.ConnString, null, "连接串/URL", true, false, 0, 200, 20, true);
 		map.AddTBAtParas(200);
 
-//		String runPlant = bp.difference.SystemConfig.getRunOnPlant();
-//		if (runPlant.equals("CCFlow") == false && runPlant.equals("bp")==false)
-//		{
-//		   map.AddTBString(SFDBSrcAttr.UserID, null, "数据库登录用户ID", true, false, 0, 30, 20);
-//			map.AddTBString(SFDBSrcAttr.Password, null, "密码", true, false, 0, 30, 20);
-//			map.AddTBString(SFDBSrcAttr.IP, null, "IP地址/数据库实例名", true, false, 0, 500, 20);
-//		}
+		RefMethod rm = new RefMethod();
 
-			//map.AddDDLSysEnum(SFDBSrcAttr.DBSrcType, 0, "数据源类型", true, true,
-			//    SFDBSrcAttr.DBSrcType, "@0=应用系统主数据库@1=SQLServer@2=Oracle@3=MySQL@4=Infomix");
-
-//		RefMethod rm = new RefMethod();
-//
-//		rm = new RefMethod();
-//		rm.Title = "测试连接";
-//		rm.ClassMethodName = this.toString() + ".DoConn";
-//		rm.refMethodType = RefMethodType.Func; // 仅仅是一个功能.
-//		map.AddRefMethod(rm);
+		rm = new RefMethod();
+		rm.Title = "测试连接";
+		rm.ClassMethodName = this.toString() + ".DoConn";
+		rm.refMethodType = RefMethodType.Func; // 仅仅是一个功能.
+		map.AddRefMethod(rm);
 
 		this.set_enMap(map);
 		return this.get_enMap();
@@ -932,82 +945,11 @@ public class SFDBSrc extends EntityNoName
 	public final String getConnString() throws Exception {
 		switch (this.getDBSrcType())
 		{
-			case Localhost:
+			case bp.sys.DBSrcType.local:
 				return bp.difference.SystemConfig.getAppCenterDSN();
 			default:
 				return this.GetValStringByKey(SFDBSrcAttr.ConnString);
-					//case Sys.DBSrcType.SQLServer:
-					//    return "password=" + this.Password + ";persist security info=true;user id=" + this.UserID + ";initial catalog=" + this.DBName + ";data source=" + this.IP + ";timeout=999;multipleactiveresultsets=true";
-					//case Sys.DBSrcType.Oracle:
-					//    return "user id=" + this.UserID + ";data source=" + this.IP + ";password=" + this.Password + ";Max Pool Size=200";
-					//case Sys.DBSrcType.MySQL:
-					//    return "Data Source=" + this.IP + ";Persist Security info=True;Initial Catalog=" + this.DBName + ";User ID=" + this.UserID + ";Password=" + this.Password + ";";
-					//case Sys.DBSrcType.Informix:
-					//    return "Host=" + this.IP + "; Service=; Server=; Database=" + this.DBName + "; User id=" + this.UserID + "; Password=" + this.Password + "; ";  //Service为监听客户端连接的服务名，Server为数据库实例名，这两项没提供
-					//case Sys.DBSrcType.PostgreSQL:
-					//    return "Server=" + this.IP + ";Port=5432;Database=" + this.DBName + ";UserId=" + this.UserID + ";Password=" + this.Password + ";;Pooling=False;";
-					//default:
-					//    throw new Exception("@没有判断的类型.");
 		}
-	}
-	/**
-	 连接字符串.
-	 * @throws Exception
-	 */
-	public final Connection getConnection() throws Exception
-	{
-
-		String url="";//数据库连接的url
-		Connection con=null;
-		switch (this.getDBSrcType())
-		{
-
-			case SQLServer:
-				try{
-					//加载MySql的驱动类
-					Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver") ;
-				}catch(ClassNotFoundException e){
-					System.out.println("找不到驱动程序类 ，加载驱动失败！");
-					e.printStackTrace() ;
-				}
-				url="jdbc:sqlserver://" + this.getIP()+"/"+this.getDBName()+";useLOBs=false";
-				break;
-			case Oracle:
-				try{
-					//加载MySql的驱动类
-					Class.forName("oracle.jdbc.driver.OracleDriver") ;
-				}catch(ClassNotFoundException e){
-					System.out.println("找不到驱动程序类 ，加载驱动失败！");
-					e.printStackTrace() ;
-				}
-				url="jdbc:oracle:thin:@" + this.getIP();
-				break;
-			case MySQL:
-				try{
-					//加载MySql的驱动类
-					Class.forName("com.mysql.jdbc.Driver") ;
-				}catch(ClassNotFoundException e){
-					System.out.println("找不到驱动程序类 ，加载驱动失败！");
-					e.printStackTrace() ;
-				}
-				url="jdbc:mysql://"+this.getIP()+"/"+this.getDBName()+"?useUnicode=true&characterEncoding=utf-8&useOldAliasMetadataBehavior=true&allowMultiQueries=true";
-				break;
-			case KingBaseR3:
-			case KingBaseR6:
-				try{
-					//加载MySql的驱动类
-					Class.forName("com.kingbase8.Driver") ;
-				}catch(ClassNotFoundException e){
-					System.out.println("找不到驱动程序类 ，加载驱动失败！");
-					e.printStackTrace() ;
-				}
-				url="jdbc:kingbase8://"+this.getIP()+"/"+this.getDBName();
-				break;
-			default:
-				throw new RuntimeException("@没有判断的类型.");
-		}
-		//con = DriverManager.getConnection(url, this.getUserID(), this.getPassword());
-		return con;
 	}
 	/** 
 	 执行连接
@@ -1015,81 +957,15 @@ public class SFDBSrc extends EntityNoName
 	 @return 
 	*/
 	public final String DoConn() throws Exception {
-
-		if (1==1)
-		return "本地连接不需要测试是否连接成功.";
-
 		if (this.getNo().equals("local"))
-		{
-			return "本地连接不需要测试是否连接成功.";
-		}
-
-		if (this.getDBSrcType() == DBSrcType.Localhost)
-		{
-			//throw new Exception("@在该系统中只能有一个本地连接.");
+			return "本地连接不需要测试.";
+		if (this.getDBSrcType().equals(bp.sys.DBSrcType.local))
 			return "@在该系统中只能有一个本地连接.";
-		}
+		Connection conn = getConnection();
+		Statement stmt = conn.createStatement();
+		closeAll(conn,stmt,null);
+		return "恭喜您，该(" + this.getName() + ")连接配置成功。";
 
-		String dsn = "";
-		if (this.getDBSrcType() == DBSrcType.SQLServer)
-		{
-			try
-			{
-				//删除应用.
-				try
-				{
-					DBAccess.RunSQL("Exec sp_droplinkedsrvlogin " + this.getNo() + ",Null ");
-					DBAccess.RunSQL("Exec sp_dropserver " + this.getNo());
-				}
-				catch (java.lang.Exception e)
-				{
-				}
-
-				//创建应用.
-				String sql = "";
-				sql += "sp_addlinkedserver @server='" + this.getNo() + "', @srvproduct='', @provider='SQLOLEDB', @datasrc='" + this.getIP() + "'";
-				DBAccess.RunSQL(sql);
-
-				//执行登录.
-				sql = "";
-				sql += " EXEC sp_addlinkedsrvlogin '" + this.getNo() + "','false', NULL, '" + this.getUserID() + "', '" + this.getPassword() + "'";
-				DBAccess.RunSQL(sql);
-
-				return "恭喜您，该(" + this.getName() + ")连接配置成功。";
-			}
-			catch (RuntimeException ex)
-			{
-				return ex.getMessage();
-			}
-		}
-
-		if (this.getDBSrcType() == DBSrcType.Oracle)
-		{
-			try
-			{
-
-				return "恭喜您，该(" + this.getName() + ")连接配置成功。";
-			}
-			catch (RuntimeException ex)
-			{
-				return ex.getMessage();
-			}
-		}
-
-		if (this.getDBSrcType() == DBSrcType.MySQL)
-		{
-			try
-			{
-
-				return "恭喜您，该(" + this.getName() + ")连接配置成功。";
-			}
-			catch (RuntimeException ex)
-			{
-				return ex.getMessage();
-			}
-		}
-
-		return "没有涉及到的连接测试类型...";
 	}
 	/** 
 	 获取所有数据表，不包括视图
@@ -1098,16 +974,16 @@ public class SFDBSrc extends EntityNoName
 	*/
 	public final DataTable GetAllTablesWithoutViews() throws Exception {
 		StringBuilder sql = new StringBuilder();
-		DBSrcType dbType = this.getDBSrcType();
-		if (dbType == bp.sys.DBSrcType.Localhost)
+		String dbType = this.getDBSrcType();
+		if (Objects.equals(dbType, bp.sys.DBSrcType.local))
 		{
 			switch (bp.difference.SystemConfig.getAppCenterDBType())
 			{
 				case MSSQL:
-					dbType = bp.sys.DBSrcType.SQLServer;
+					dbType = bp.sys.DBSrcType.MSSQL;
 					break;
 				case Oracle:
-					dbType = bp.sys.DBSrcType.Oracle;
+					dbType = Oracle;
 					break;
 				case MySQL:
 					dbType = bp.sys.DBSrcType.MySQL;
@@ -1121,6 +997,12 @@ public class SFDBSrc extends EntityNoName
 				case UX:
 					dbType = bp.sys.DBSrcType.UX;
 					break;
+				case KingBaseR3:
+					dbType = bp.sys.DBSrcType.KingBaseR3;
+					break;
+				case KingBaseR6:
+					dbType = bp.sys.DBSrcType.KingBaseR6;
+					break;
 				case HGDB:
 					dbType = bp.sys.DBSrcType.HGDB;
 					break;
@@ -1131,7 +1013,7 @@ public class SFDBSrc extends EntityNoName
 
 		switch (dbType)
 		{
-			case SQLServer:
+			case bp.sys.DBSrcType.MSSQL:
 				sql.append("SELECT NAME AS No," + "\r\n");
 				sql.append("       NAME" + "\r\n");
 				sql.append("FROM   sysobjects" + "\r\n");
@@ -1140,36 +1022,38 @@ public class SFDBSrc extends EntityNoName
 				sql.append("       Name" + "\r\n");
 				break;
 			case Oracle:
+			case bp.sys.DBSrcType.KingBaseR3:
+			case bp.sys.DBSrcType.KingBaseR6:
 				sql.append("SELECT uo.OBJECT_NAME No," + "\r\n");
 				sql.append("       uo.OBJECT_NAME Name" + "\r\n");
 				sql.append("  FROM user_objects uo" + "\r\n");
 				sql.append(" WHERE uo.OBJECT_TYPE = 'TABLE'" + "\r\n");
 				sql.append(" ORDER BY uo.OBJECT_NAME" + "\r\n");
 				break;
-			case MySQL:
+			case bp.sys.DBSrcType.MySQL:
 				sql.append("SELECT " + "\r\n");
 				sql.append("    table_name No," + "\r\n");
 				sql.append("    table_name Name" + "\r\n");
 				sql.append("FROM" + "\r\n");
 				sql.append("    information_schema.tables" + "\r\n");
 				sql.append("WHERE" + "\r\n");
-				sql.append(String.format("    table_schema = '%1$s'", this.getDBSrcType() == bp.sys.DBSrcType.Localhost ? SystemConfig.getAppCenterDBDatabase() :this.getDBName()) + "\r\n");
+				sql.append(String.format("    table_schema = '%1$s'", Objects.equals(this.getDBSrcType(), bp.sys.DBSrcType.local) ? SystemConfig.getAppCenterDBDatabase()  :this.getDBName()) + "\r\n");
 				sql.append("        AND table_type = 'BASE TABLE'" + "\r\n");
 				sql.append("ORDER BY table_name;" + "\r\n");
 				break;
-			case Informix:
+			case bp.sys.DBSrcType.Informix:
 				sql.append("" + "\r\n");
 				break;
-			case PostgreSQL:
-			case UX:
-			case HGDB:
+			case bp.sys.DBSrcType.PostgreSQL:
+			case bp.sys.DBSrcType.UX:
+			case bp.sys.DBSrcType.HGDB:
 				sql.append("SELECT " + "\r\n");
 				sql.append("    table_name No," + "\r\n");
 				sql.append("    table_name Name" + "\r\n");
 				sql.append("FROM" + "\r\n");
 				sql.append("    information_schema.tables" + "\r\n");
 				sql.append("WHERE" + "\r\n");
-				sql.append(String.format("    table_schema = '%1$s'", this.getDBSrcType() == bp.sys.DBSrcType.Localhost ? SystemConfig.getAppCenterDBDatabase() :this.getDBName()) + "\r\n");
+				sql.append(String.format("    table_schema = '%1$s'", Objects.equals(this.getDBSrcType(), bp.sys.DBSrcType.local) ? SystemConfig.getAppCenterDBDatabase()  :this.getDBName()) + "\r\n");
 				sql.append("        AND table_type = 'BASE TABLE'" + "\r\n");
 				sql.append("ORDER BY table_name;" + "\r\n");
 				break;
@@ -1178,20 +1062,13 @@ public class SFDBSrc extends EntityNoName
 		}
 
 		DataTable allTables = null;
-		if (this.getNo().equals("local"))
+		if (Objects.equals(this.getNo(), "local"))
 		{
 			allTables = DBAccess.RunSQLReturnTable(sql.toString());
 		}
 		else
 		{
-			try
-			{
-				allTables = DBAccess.RunSQLReturnTable(sql.toString());
-			}
-			catch (RuntimeException ex)
-			{
-				throw new RuntimeException("@失败:" + ex.getMessage() );
-			}
+			allTables = RunSQLReturnTable(sql.toString());
 		}
 
 		return allTables;
@@ -1206,8 +1083,7 @@ public class SFDBSrc extends EntityNoName
 		return GetTables(false);
 	}
 
-	public final DataTable GetTables(boolean isCutFlowTables)
-	{
+	public final DataTable GetTables(boolean isCutFlowTables) throws Exception {
 		StringBuilder sql = new StringBuilder();
 		sql.append(String.format("SELECT ss.SrcTable FROM Sys_SFTable ss WHERE ss.FK_SFDBSrc = '%1$s'", this.getNo()));
 
@@ -1215,34 +1091,37 @@ public class SFDBSrc extends EntityNoName
 
 		sql.setLength(0);
 
-		DBSrcType dbType = this.getDBSrcType();
-		if (dbType == DBSrcType.Localhost)
+		String dbType = this.getDBSrcType();
+		if (Objects.equals(dbType, bp.sys.DBSrcType.local))
 		{
-			switch (SystemConfig.getAppCenterDBType())
+			switch (bp.difference.SystemConfig.getAppCenterDBType())
 			{
 				case MSSQL:
-					dbType = DBSrcType.SQLServer;
+					dbType = bp.sys.DBSrcType.MSSQL;
 					break;
 				case Oracle:
-					dbType = DBSrcType.Oracle;
+					dbType = Oracle;
 					break;
 				case MySQL:
-					dbType = DBSrcType.MySQL;
+					dbType = bp.sys.DBSrcType.MySQL;
 					break;
 				case Informix:
-					dbType = DBSrcType.Informix;
+					dbType = bp.sys.DBSrcType.Informix;
 					break;
 				case PostgreSQL:
-					dbType = DBSrcType.PostgreSQL;
+					dbType = bp.sys.DBSrcType.PostgreSQL;
+					break;
+				case UX:
+					dbType = bp.sys.DBSrcType.UX;
 					break;
 				case KingBaseR3:
-					dbType = DBSrcType.KingBaseR3;
+					dbType = bp.sys.DBSrcType.KingBaseR3;
 					break;
 				case KingBaseR6:
-					dbType = DBSrcType.KingBaseR6;
+					dbType = bp.sys.DBSrcType.KingBaseR6;
 					break;
 				case HGDB:
-					dbType = DBSrcType.HGDB;
+					dbType = bp.sys.DBSrcType.HGDB;
 					break;
 				default:
 					throw new RuntimeException("没有涉及到的连接测试类型...");
@@ -1251,7 +1130,7 @@ public class SFDBSrc extends EntityNoName
 
 		switch (dbType)
 		{
-			case SQLServer:
+			case bp.sys.DBSrcType.MSSQL:
 				sql.append("SELECT NAME AS No," + "\r\n");
 				sql.append("       [Name] = '[' + (CASE xtype WHEN 'U' THEN '表' ELSE '视图' END) + '] ' + " + "\r\n");
 				sql.append("       NAME," + "\r\n");
@@ -1268,15 +1147,15 @@ public class SFDBSrc extends EntityNoName
 				sql.append("       NAME" + "\r\n");
 				break;
 			case Oracle:
-			case KingBaseR3:
-			case KingBaseR6:
-				sql.append("SELECT uo.OBJECT_NAME AS \"No\"," + "\r\n");
+			case bp.sys.DBSrcType.KingBaseR3:
+			case bp.sys.DBSrcType.KingBaseR6:
+				sql.append("SELECT uo.OBJECT_NAME AS No," + "\r\n");
 				sql.append("       '[' || (CASE uo.OBJECT_TYPE" + "\r\n");
 				sql.append("         WHEN 'TABLE' THEN" + "\r\n");
 				sql.append("          '表'" + "\r\n");
 				sql.append("         ELSE" + "\r\n");
 				sql.append("          '视图'" + "\r\n");
-				sql.append("       END) || '] ' || uo.OBJECT_NAME AS \"Name\"," + "\r\n");
+				sql.append("       END) || '] ' || uo.OBJECT_NAME AS Name," + "\r\n");
 				sql.append("       CASE uo.OBJECT_TYPE" + "\r\n");
 				sql.append("         WHEN 'TABLE' THEN" + "\r\n");
 				sql.append("          'U'" + "\r\n");
@@ -1285,12 +1164,14 @@ public class SFDBSrc extends EntityNoName
 				sql.append("       END AS xtype" + "\r\n");
 				sql.append("  FROM user_objects uo" + "\r\n");
 				sql.append(" WHERE (uo.OBJECT_TYPE = 'TABLE' OR uo.OBJECT_TYPE = 'VIEW')" + "\r\n");
-
+				//sql.AppendLine("   AND uo.OBJECT_NAME NOT LIKE 'ND%'");
+				//sql.AppendLine("   AND uo.OBJECT_NAME NOT LIKE 'Demo_%'");
+				//sql.AppendLine("   AND uo.OBJECT_NAME NOT LIKE 'Sys_%'");
+				//sql.AppendLine("   AND uo.OBJECT_NAME NOT LIKE 'WF_%'");
+				//sql.AppendLine("   AND uo.OBJECT_NAME NOT LIKE 'GPM_%'");
 				sql.append(" ORDER BY uo.OBJECT_TYPE, uo.OBJECT_NAME" + "\r\n");
 				break;
-			case MySQL:
-			case PostgreSQL:
-			case HGDB:
+			case bp.sys.DBSrcType.MySQL:
 				sql.append("SELECT " + "\r\n");
 				sql.append("    table_name AS No," + "\r\n");
 				sql.append("    CONCAT('['," + "\r\n");
@@ -1307,7 +1188,7 @@ public class SFDBSrc extends EntityNoName
 				sql.append("FROM" + "\r\n");
 				sql.append("    information_schema.tables" + "\r\n");
 				sql.append("WHERE" + "\r\n");
-				sql.append(String.format("    table_schema = '%1$s'", this.getDBSrcType() == DBSrcType.Localhost ? SystemConfig.getAppCenterDBDatabase() :this.getDBName()) + "\r\n");
+				sql.append(String.format("    table_schema = '%1$s'", Objects.equals(this.getDBSrcType(), bp.sys.DBSrcType.local) ? SystemConfig.getAppCenterDBDatabase()  :this.getDBName()) + "\r\n");
 				sql.append("        AND (table_type = 'BASE TABLE'" + "\r\n");
 				sql.append("        OR table_type = 'VIEW')" + "\r\n");
 				//   sql.AppendLine("       AND (table_name NOT LIKE 'ND%'");
@@ -1317,20 +1198,49 @@ public class SFDBSrc extends EntityNoName
 				sql.append("        AND table_name NOT LIKE 'GPM_%'" + "\r\n");
 				sql.append("ORDER BY table_type , table_name;" + "\r\n");
 				break;
-			case Informix:
+			case bp.sys.DBSrcType.Informix:
 				sql.append("" + "\r\n");
+				break;
+			case bp.sys.DBSrcType.PostgreSQL:
+			case bp.sys.DBSrcType.UX:
+			case bp.sys.DBSrcType.HGDB:
+				sql.append("SELECT " + "\r\n");
+				sql.append("    table_name AS No," + "\r\n");
+				sql.append("    CONCAT('['," + "\r\n");
+				sql.append("            CASE table_type" + "\r\n");
+				sql.append("                WHEN 'BASE TABLE' THEN '表'" + "\r\n");
+				sql.append("                ELSE '视图'" + "\r\n");
+				sql.append("            END," + "\r\n");
+				sql.append("            '] '," + "\r\n");
+				sql.append("            table_name) AS Name," + "\r\n");
+				sql.append("    CASE table_type" + "\r\n");
+				sql.append("        WHEN 'BASE TABLE' THEN 'U'" + "\r\n");
+				sql.append("        ELSE 'V'" + "\r\n");
+				sql.append("    END AS xtype" + "\r\n");
+				sql.append("FROM" + "\r\n");
+				sql.append("    information_schema.tables" + "\r\n");
+				sql.append("WHERE" + "\r\n");
+				sql.append(String.format("    table_schema = '%1$s'", Objects.equals(this.getDBSrcType(), bp.sys.DBSrcType.local) ? SystemConfig.getAppCenterDBDatabase()  :this.getDBName()) + "\r\n");
+				sql.append("        AND (table_type = 'BASE TABLE'" + "\r\n");
+				sql.append("        OR table_type = 'VIEW')" + "\r\n");
+				//   sql.AppendLine("       AND (table_name NOT LIKE 'ND%'");
+				sql.append("        AND table_name NOT LIKE 'Demo_%'" + "\r\n");
+				sql.append("        AND table_name NOT LIKE 'Sys_%'" + "\r\n");
+				sql.append("        AND table_name NOT LIKE 'WF_%'" + "\r\n");
+				sql.append("        AND table_name NOT LIKE 'GPM_%'" + "\r\n");
+				sql.append("ORDER BY table_type , table_name;" + "\r\n");
 				break;
 			default:
 				break;
 		}
 
 		DataTable allTables = null;
-		if (this.getNo().equals("local"))
+		if (Objects.equals(this.getNo(), "local"))
 		{
 			allTables = DBAccess.RunSQLReturnTable(sql.toString());
 
 
-			///把tables 的英文名称替换为中文.
+				///#region 把tables 的英文名称替换为中文.
 			//把tables 的英文名称替换为中文.
 			String mapDT = "SELECT PTable,Name FROM Sys_MapData ";
 			DataTable myDT = DBAccess.RunSQLReturnTable(mapDT);
@@ -1356,20 +1266,13 @@ public class SFDBSrc extends EntityNoName
 				}
 			}
 
-			/// 把tables 的英文名称替换为中文.
+				///#endregion 把tables 的英文名称替换为中文.
 
 
 		}
 		else
 		{
-			try
-			{
-				allTables = DBAccess.RunSQLReturnTable(sql.toString());
-			}
-			catch (RuntimeException ex)
-			{
-				throw new RuntimeException("@失败:" + ex.getMessage() );
-			}
+			allTables = RunSQLReturnTable(sql.toString());
 		}
 
 		//去除已经使用的表
@@ -1379,7 +1282,7 @@ public class SFDBSrc extends EntityNoName
 			filter += String.format("No='%1$s' OR ", dr.getValue(0));
 		}
 
-		if (!filter.equals(""))
+		if (!Objects.equals(filter, ""))
 		{
 			List<DataRow>  deletedRows = allTables.select(rtrim(filter," OR "));
 			for (DataRow dr : deletedRows)
@@ -1415,129 +1318,42 @@ public class SFDBSrc extends EntityNoName
 
 		return allTables;
 	}
-	/** 
-	 获取数据库连接
-	 
-	 param dsn 连接字符串
-	 @return 
-	*/
-//	private System.Data.Common.DbConnection GetConnection(String dsn)
-//	{
-//		System.Data.Common.DbConnection conn = null;
-//
-//		var dbType = this.getDBSrcType();
-//		if (dbType == bp.sys.DBSrcType.Localhost)
-//		{
-//			switch (bp.difference.SystemConfig.getAppCenterDBType())
-//			{
-//				case MSSQL:
-//					dbType = bp.sys.DBSrcType.SQLServer;
-//					break;
-//				case Oracle:
-//					dbType = bp.sys.DBSrcType.Oracle;
-//					break;
-//				case MySQL:
-//					dbType = bp.sys.DBSrcType.MySQL;
-//					break;
-//				case Informix:
-//					dbType = bp.sys.DBSrcType.Informix;
-//					break;
-//				default:
-//					throw new RuntimeException("没有涉及到的连接测试类型...");
-//			}
-//		}
-//		this.setDBSrcType(dbType);
-//		switch (dbType)
-//		{
-//			case SQLServer:
-//				conn = new System.Data.SqlClient.SqlConnection(dsn);
-//				break;
-//			case Oracle:
-//				//conn = new System.Data.OracleClient.OracleConnection(dsn);
-//				conn = new OracleConnection(dsn);
-//				break;
-//			case MySQL:
-//				conn = new MySql.Data.MySqlClient.MySqlConnection(dsn);
-//				break;
-//				// from Zhou 删除IBM
-//				//case Sys.DBSrcType.Informix:
-//				//    conn = new System.Data.OleDb.OleDbConnection(dsn);
-//				//    break;
-//		}
-//		return conn;
-//	}
+	public static String rtrim(String str,String substr){
+		int j=str.length()-1;
+		for(;j>-1;j--){
+			if(substr.indexOf(str.charAt(j))==-1){
+				break;
+			}
+		}
+		return str.substring(0, j+1);
+	}
 
-//	private DataTable RunSQLReturnTable(String sql, System.Data.Common.DbConnection conn, String dsn, CommandType cmdType)
-//	{
-//		if (conn instanceof System.Data.SqlClient.SqlConnection)
-//		{
-//			return DBAccess.RunSQLReturnTable(sql, (System.Data.SqlClient.SqlConnection)conn, dsn, cmdType, null);
-//		}
-//
-//		//if (conn is System.Data.OracleClient.OracleConnection)
-//		//    return DBAccess.RunSQLReturnTable(sql, (System.Data.OracleClient.OracleConnection)conn, cmdType, dsn);
-//		if (conn instanceof OracleConnection)
-//		{
-//			return DBAccess.RunSQLReturnTable(sql, (OracleConnection)conn, cmdType, dsn);
-//		}
-//
-//		if (conn instanceof MySqlConnection)
-//		{
-//			var mySqlConn = (MySqlConnection)conn;
-//			if (mySqlConn.State != ConnectionState.Open)
-//			{
-//				mySqlConn.Open();
-//			}
-//
-//			var ada = new MySqlDataAdapter(sql, mySqlConn);
-//			ada.SelectCommand.CommandType = CommandType.Text;
-//			try
-//			{
-//				DataTable oratb = new DataTable("otb");
-//				ada.Fill(oratb);
-//				ada.Dispose();
-//
-//				conn.Close();
-//				conn.Dispose();
-//				return oratb;
-//			}
-//			catch (RuntimeException ex)
-//			{
-//				ada.Dispose();
-//				conn.Close();
-//				throw new RuntimeException("SQL=" + sql + " Exception=" + ex.getMessage());
-//			}
-//		}
-//
-//		throw new RuntimeException("没有涉及到的连接测试类型...");
-//		return null;
-//	}
+	public final String GetTablesJSON() throws Exception {
+		DataTable dt = this.GetTables(true);
+		return bp.tools.Json.ToJson(dt);
+	}
 
 	/** 
 	 修改表/视图/列名称（不完善）
 	 
-	 param objType 修改对象的类型，TABLE(表)、VIEW(视图)、COLUMN(列)
-	 param oldName 旧名称
-	 param newName 新名称
-	 param tableName 修改列名称时，列所属的表名称
+	 @param objType 修改对象的类型，TABLE(表)、VIEW(视图)、COLUMN(列)
+	 @param oldName 旧名称
+	 @param newName 新名称
 	*/
-
 	public final void Rename(String objType, String oldName, String newName) throws Exception {
 		Rename(objType, oldName, newName, null);
 	}
-
-
 	public final void Rename(String objType, String oldName, String newName, String tableName) throws Exception {
-		DBSrcType dbType = this.getDBSrcType();
-		if (dbType == bp.sys.DBSrcType.Localhost)
+		String dbType = this.getDBSrcType();
+		if (Objects.equals(dbType, bp.sys.DBSrcType.local))
 		{
 			switch (bp.difference.SystemConfig.getAppCenterDBType())
 			{
 				case MSSQL:
-					dbType = bp.sys.DBSrcType.SQLServer;
+					dbType = bp.sys.DBSrcType.MSSQL;
 					break;
 				case Oracle:
-					dbType = bp.sys.DBSrcType.Oracle;
+					dbType = Oracle;
 					break;
 				case MySQL:
 					dbType = bp.sys.DBSrcType.MySQL;
@@ -1558,8 +1374,8 @@ public class SFDBSrc extends EntityNoName
 
 		switch (dbType)
 		{
-			case SQLServer:
-				if (objType.toLowerCase().equals("column"))
+			case bp.sys.DBSrcType.MSSQL:
+				if (Objects.equals(objType.toLowerCase(), "column"))
 				{
 					RunSQL(String.format("EXEC SP_RENAME '%1$s', '%2$s', 'COLUMN'", oldName, newName));
 				}
@@ -1569,17 +1385,17 @@ public class SFDBSrc extends EntityNoName
 				}
 				break;
 			case Oracle:
-			case KingBaseR3:
-			case KingBaseR6:
-				if (objType.toLowerCase().equals("column"))
+			case bp.sys.DBSrcType.KingBaseR3:
+			case bp.sys.DBSrcType.KingBaseR6:
+				if (Objects.equals(objType.toLowerCase(), "column"))
 				{
 					RunSQL(String.format("ALTER TABLE %1$s RENAME COLUMN %2$s TO %3$s", tableName, oldName, newName));
 				}
-				else if (objType.toLowerCase().equals("table"))
+				else if (Objects.equals(objType.toLowerCase(), "table"))
 				{
 					RunSQL(String.format("ALTER TABLE %1$s RENAME TO %2$s", oldName, newName));
 				}
-				else if (objType.toLowerCase().equals("view"))
+				else if (Objects.equals(objType.toLowerCase(), "view"))
 				{
 					RunSQL(String.format("RENAME %1$s TO %2$s", oldName, newName));
 				}
@@ -1588,8 +1404,8 @@ public class SFDBSrc extends EntityNoName
 					throw new RuntimeException("@未涉及到的Oracle数据库改名逻辑。");
 				}
 				break;
-			case MySQL:
-				if (objType.toLowerCase().equals("column"))
+			case bp.sys.DBSrcType.MySQL:
+				if (Objects.equals(objType.toLowerCase(), "column"))
 				{
 					String sql = String.format("SELECT c.COLUMN_TYPE FROM information_schema.columns c WHERE c.TABLE_SCHEMA = '%1$s' AND c.TABLE_NAME = '%2$s' AND c.COLUMN_NAME = '%3$s'", this.getDBName(), tableName, oldName);
 
@@ -1599,11 +1415,11 @@ public class SFDBSrc extends EntityNoName
 						RunSQL(String.format("ALTER TABLE %1$s CHANGE COLUMN %2$s %3$s %4$s", tableName, oldName, newName, dt.Rows.get(0).getValue(0)));
 					}
 				}
-				else if (objType.toLowerCase().equals("table"))
+				else if (Objects.equals(objType.toLowerCase(), "table"))
 				{
 					RunSQL(String.format("ALTER TABLE `%1$s`.`%2$s` RENAME `%1$s`.`%3$s`", this.getDBName(), oldName, newName));
 				}
-				else if (objType.toLowerCase().equals("view"))
+				else if (Objects.equals(objType.toLowerCase(), "view"))
 				{
 					String sql = String.format("SELECT t.VIEW_DEFINITION FROM information_schema.views t WHERE t.TABLE_SCHEMA = '%1$s' AND t.TABLE_NAME = '%2$s'", this.getDBName(), oldName);
 
@@ -1623,7 +1439,7 @@ public class SFDBSrc extends EntityNoName
 					throw new RuntimeException("@未涉及到的Oracle数据库改名逻辑。");
 				}
 				break;
-			case Informix:
+			case bp.sys.DBSrcType.Informix:
 
 				break;
 			default:
@@ -1635,40 +1451,33 @@ public class SFDBSrc extends EntityNoName
 	 <p>注：目前只对MSSQL/ORACLE/MYSQL三种数据库做兼容</p>
 	 <p>added by liuxc,2017-03-07</p>
 	 
-	 param expression 要判断的表达式，在SQL中的写法
-	 param isNullBack 判断的表达式为NULL，返回值的表达式，在SQL中的写法
+	 @param expression 要判断的表达式，在SQL中的写法
+	 @param isNullBack 判断的表达式为NULL，返回值的表达式，在SQL中的写法
 	 @return 
 	*/
-	public final String GetIsNullInSQL(String expression, String isNullBack)
-	{
-		DBSrcType dbType = this.getDBSrcType();
-		if (dbType == DBSrcType.Localhost)
+	public final String GetIsNullInSQL(String expression, String isNullBack) throws Exception {
+		String dbType = this.getDBSrcType();
+		if (Objects.equals(dbType, bp.sys.DBSrcType.local))
 		{
-			switch (SystemConfig.getAppCenterDBType())
+			switch (bp.difference.SystemConfig.getAppCenterDBType())
 			{
 				case MSSQL:
-					dbType = DBSrcType.SQLServer;
+					dbType = bp.sys.DBSrcType.MSSQL;
 					break;
 				case Oracle:
-					dbType = DBSrcType.Oracle;
+					dbType = Oracle;
 					break;
 				case MySQL:
-					dbType = DBSrcType.MySQL;
+					dbType = bp.sys.DBSrcType.MySQL;
 					break;
 				case Informix:
-					dbType = DBSrcType.Informix;
+					dbType = bp.sys.DBSrcType.Informix;
 					break;
 				case KingBaseR3:
-					dbType = DBSrcType.KingBaseR3;
+					dbType = bp.sys.DBSrcType.KingBaseR3;
 					break;
 				case KingBaseR6:
-					dbType = DBSrcType.KingBaseR6;
-					break;
-				case PostgreSQL:
-					dbType = DBSrcType.PostgreSQL;
-					break;
-				case HGDB:
-					dbType = DBSrcType.HGDB;
+					dbType = bp.sys.DBSrcType.KingBaseR6;
 					break;
 				default:
 					throw new RuntimeException("没有涉及到的连接测试类型...");
@@ -1676,16 +1485,18 @@ public class SFDBSrc extends EntityNoName
 		}
 		switch (dbType)
 		{
-			case SQLServer:
+			case bp.sys.DBSrcType.MSSQL:
 				return " ISNULL(" + expression + "," + isNullBack + ")";
 			case Oracle:
 				return " NVL(" + expression + "," + isNullBack + ")";
-			case MySQL:
+			case bp.sys.DBSrcType.MySQL:
 				return " IFNULL(" + expression + "," + isNullBack + ")";
-			case PostgreSQL:
+			case bp.sys.DBSrcType.PostgreSQL:
+			case bp.sys.DBSrcType.UX:
+			case bp.sys.DBSrcType.HGDB:
 				return " COALESCE(" + expression + "," + isNullBack + ")";
-			case KingBaseR3:
-			case KingBaseR6:
+			case bp.sys.DBSrcType.KingBaseR3:
+			case bp.sys.DBSrcType.KingBaseR6:
 				return " ISNULL(" + expression + "," + isNullBack + ")";
 			default:
 				throw new RuntimeException("GetIsNullInSQL未涉及的数据库类型");
@@ -1695,51 +1506,46 @@ public class SFDBSrc extends EntityNoName
 	/** 
 	 获取表的字段信息
 	 
-	 param tableName 表/视图名称
+	 @param tableName 表/视图名称
 	 @return 有四个列 No,Name,DBType,DBLength 分别标识  列的字段名，列描述，类型，长度。
 	*/
-	public final DataTable GetColumns(String tableName)
-	{
+	public final DataTable GetColumns(String tableName) throws Exception {
 		//SqlServer数据库
 		StringBuilder sql = new StringBuilder();
 
-		DBSrcType dbType = this.getDBSrcType();
-		if (dbType ==DBSrcType.Localhost)
+		String dbType = this.getDBSrcType();
+		if (Objects.equals(dbType, bp.sys.DBSrcType.local))
 		{
-			switch (SystemConfig.getAppCenterDBType())
+			switch (bp.difference.SystemConfig.getAppCenterDBType())
 			{
 				case MSSQL:
-					dbType = DBSrcType.SQLServer;
+					dbType = bp.sys.DBSrcType.MSSQL;
 					break;
 				case Oracle:
-					dbType = DBSrcType.Oracle;
+					dbType = Oracle;
 					break;
 				case MySQL:
-					dbType = DBSrcType.MySQL;
+					dbType = bp.sys.DBSrcType.MySQL;
 					break;
 				case Informix:
-					dbType = DBSrcType.Informix;
+					dbType = bp.sys.DBSrcType.Informix;
 					break;
 				case KingBaseR3:
-					dbType = DBSrcType.KingBaseR3;
+					dbType = bp.sys.DBSrcType.KingBaseR3;
 					break;
 				case KingBaseR6:
-					dbType = DBSrcType.KingBaseR6;
-					break;
-				case PostgreSQL:
-					dbType = DBSrcType.PostgreSQL;
-					break;
-				case HGDB:
-					dbType = DBSrcType.HGDB;
+					dbType = bp.sys.DBSrcType.KingBaseR6;
 					break;
 				default:
 					throw new RuntimeException("没有涉及到的连接测试类型...");
 			}
 		}
 
+		this.setDBSrcType(dbType);
+
 		switch (dbType)
 		{
-			case SQLServer:
+			case bp.sys.DBSrcType.MSSQL:
 				sql.append("SELECT sc.name as No," + "\r\n");
 				sql.append("       st.name AS [DBType]," + "\r\n");
 				sql.append("       (" + "\r\n");
@@ -1760,13 +1566,13 @@ public class SFDBSrc extends EntityNoName
 				sql.append(String.format("WHERE  sc.id = OBJECT_ID('dbo.%1$s')", tableName) + "\r\n");
 				break;
 			case Oracle:
-			case KingBaseR3:
-			case KingBaseR6:
-				sql.append("SELECT utc.COLUMN_NAME AS \"No\"," + "\r\n");
-				sql.append("       utc.DATA_TYPE   AS \"DBType\"," + "\r\n");
-				sql.append("       utc.CHAR_LENGTH AS \"DBLength\"," + "\r\n");
-				sql.append("       utc.COLUMN_ID   AS \"colid\"," + "\r\n");
-				sql.append( GetIsNullInSQL("ucc.comments", "''") +" AS \"Name\"" + "\r\n");
+			case bp.sys.DBSrcType.KingBaseR3:
+			case bp.sys.DBSrcType.KingBaseR6:
+				sql.append("SELECT utc.COLUMN_NAME AS No," + "\r\n");
+				sql.append("       utc.DATA_TYPE   AS DBType," + "\r\n");
+				sql.append("       utc.CHAR_LENGTH AS DBLength," + "\r\n");
+				sql.append("       utc.COLUMN_ID   AS colid," + "\r\n");
+				sql.append(String.format("       %1$s    AS Name", GetIsNullInSQL("ucc.comments", "''")) + "\r\n");
 				sql.append("  FROM user_tab_cols utc" + "\r\n");
 				sql.append("  LEFT JOIN user_col_comments ucc" + "\r\n");
 				sql.append("    ON ucc.table_name = utc.TABLE_NAME" + "\r\n");
@@ -1775,9 +1581,8 @@ public class SFDBSrc extends EntityNoName
 				sql.append(" ORDER BY utc.COLUMN_ID ASC" + "\r\n");
 
 				break;
-			case MySQL:
-			case HGDB:
-			case PostgreSQL:
+			case bp.sys.DBSrcType.MySQL:
+				//分别代表字段名,类型，描述，类型加长度（char（11））
 				sql.append("SELECT " + "\r\n");
 				sql.append("    column_name AS 'No'," + "\r\n");
 				sql.append("    data_type AS 'DBType'," + "\r\n");
@@ -1787,11 +1592,10 @@ public class SFDBSrc extends EntityNoName
 				sql.append("FROM" + "\r\n");
 				sql.append("    information_schema.columns" + "\r\n");
 				sql.append("WHERE" + "\r\n");
-				sql.append(String.format("    table_schema = '%1$s'", this.getDBSrcType() == DBSrcType.Localhost ?  SystemConfig.getAppCenterDBDatabase() :this.getDBName()) + "\r\n");
+				sql.append(String.format("    table_schema = '%1$s'", SystemConfig.getAppCenterDBDatabase()  + "\r\n"));
 				sql.append(String.format("        AND table_name = '%1$s';", tableName) + "\r\n");
 				break;
-
-			case Informix:
+			case bp.sys.DBSrcType.Informix:
 				break;
 			default:
 				throw new RuntimeException("没有涉及到的连接测试类型...");
@@ -1803,13 +1607,14 @@ public class SFDBSrc extends EntityNoName
 			dt = DBAccess.RunSQLReturnTable(sql.toString());
 			return dt;
 		}
+		return RunSQLReturnTable(sql.toString());
 
-		return null;
 	}
 
 	@Override
-	protected boolean beforeDelete() throws Exception {
-		if (this.getNo().equals("local"))
+	protected boolean beforeDelete() throws Exception
+	{
+		if (Objects.equals(this.getNo(), "local"))
 		{
 			throw new RuntimeException("@默认连接(local)不允许删除、更新.");
 		}
@@ -1817,7 +1622,7 @@ public class SFDBSrc extends EntityNoName
 		String str = "";
 		MapDatas mds = new MapDatas();
 		mds.Retrieve(MapDataAttr.DBSrc, this.getNo());
-		if (mds.size() != 0)
+		if (mds.size()!= 0)
 		{
 			str += "如下表单使用了该数据源，您不能删除它。";
 			for (MapData md : mds.ToJavaList())
@@ -1828,7 +1633,7 @@ public class SFDBSrc extends EntityNoName
 
 		SFTables tabs = new SFTables();
 		tabs.Retrieve(SFTableAttr.FK_SFDBSrc, this.getNo());
-		if (tabs.size() != 0)
+		if (tabs.size()!= 0)
 		{
 			str += "如下 table 使用了该数据源，您不能删除它。";
 			for (SFTable tab : tabs.ToJavaList())
@@ -1837,7 +1642,7 @@ public class SFDBSrc extends EntityNoName
 			}
 		}
 
-		if (!str.equals(""))
+		if (!Objects.equals(str, ""))
 		{
 			throw new RuntimeException("@删除数据源的时候检查，是否有引用，出现错误：" + str);
 		}
@@ -1845,8 +1650,9 @@ public class SFDBSrc extends EntityNoName
 		return super.beforeDelete();
 	}
 	@Override
-	protected boolean beforeUpdate() throws Exception {
-		if (this.getNo().equals("local"))
+	protected boolean beforeUpdate() throws Exception
+	{
+		if (Objects.equals(this.getNo(), "local"))
 		{
 			throw new RuntimeException("@默认连接(local)不允许删除、更新.");
 		}
@@ -1854,8 +1660,9 @@ public class SFDBSrc extends EntityNoName
 	}
 	//added by liuxc,2015-11-10,新建修改时，判断只能加一个本地主库数据源
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception {
-		if (!this.getNo().equals("local") && this.getDBSrcType() == bp.sys.DBSrcType.Localhost)
+	protected boolean beforeUpdateInsertAction() throws Exception
+	{
+		if (!Objects.equals(this.getNo(), "local") && Objects.equals(this.getDBSrcType(), bp.sys.DBSrcType.local))
 		{
 			throw new RuntimeException("@在该系统中只能有一个本地连接，请选择其他数据源类型。");
 		}
@@ -1864,15 +1671,6 @@ public class SFDBSrc extends EntityNoName
 		DoConn();
 
 		return super.beforeUpdateInsertAction();
-	}
-	public static String rtrim(String str,String substr){
-		int j=str.length()-1;
-		for(;j>-1;j--){
-			if(substr.indexOf(str.charAt(j))==-1){
-				break;
-			}
-		}
-		return str.substring(0, j+1);
 	}
 
 		///#endregion 方法.

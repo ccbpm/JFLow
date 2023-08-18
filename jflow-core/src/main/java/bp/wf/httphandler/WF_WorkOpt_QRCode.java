@@ -1,36 +1,35 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
-import bp.en.QueryObject;
-import bp.port.Emp;
-import bp.sys.CCBPMRunModel;
-import bp.sys.GEEntity;
-import bp.sys.MapAttr;
-import bp.sys.MapAttrs;
+import bp.sys.*;
 import bp.tools.QrCodeUtil;
-import bp.web.GuestUser;
-import bp.web.WebUser;
-import bp.wf.*;
+import bp.web.*;
+import bp.port.*;
+import bp.wf.Glo;
 import bp.wf.template.*;
+import bp.wf.*;
+import java.time.*;
 
 /** 
- 页面功能实体
+ 二维码
 */
-public class WF_WorkOpt_QRCode extends bp.difference.handler.WebContralBase
+public class WF_WorkOpt_QRCode extends bp.difference.handler.DirectoryPageBase
 {
-	/**
+	/** 
 	 构造函数
 	*/
-	public WF_WorkOpt_QRCode() throws Exception {
-	}
-	/**
-	 执行登录
+	public WF_WorkOpt_QRCode()
+	{
 
-	 @return
-	 */
+	}
+
+	/** 
+	 执行登录
+	 
+	 @return 
+	*/
 	public final String Login_Submit() throws Exception {
-		NodeExt ne = new NodeExt(this.getFK_Node());
+		NodeExt ne = new NodeExt(this.getNodeID());
 		int val = ne.GetValIntByKey(BtnAttr.QRCodeRole);
 		if (val == 0)
 		{
@@ -42,10 +41,10 @@ public class WF_WorkOpt_QRCode extends bp.difference.handler.WebContralBase
 		{
 			if (WebUser.getNo() == null)
 			{
-				bp.wf.Dev2Interface.Port_Login("Guest");
+				Dev2Interface.Port_Login("Guest");
 			}
 
-			return "../../MyView.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
+			return "../../MyView.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFlowNo() + "&FK_Node=" + this.getNodeID();
 		}
 
 
@@ -53,7 +52,7 @@ public class WF_WorkOpt_QRCode extends bp.difference.handler.WebContralBase
 		if (val == 2)
 		{
 			//使用内部用户登录.
-			bp.port.Emp emp = new Emp();
+			Emp emp = new Emp();
 			emp.setNo(this.getNo());
 			if (emp.RetrieveFromDBSources() == 0)
 			{
@@ -65,23 +64,23 @@ public class WF_WorkOpt_QRCode extends bp.difference.handler.WebContralBase
 				return "err@用户名或者密码错误.";
 			}
 
-			if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
+			if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
 			{
-				bp.wf.Dev2Interface.Port_Login(emp.getNo());
+				Dev2Interface.Port_Login(emp.getNo());
 			}
 			else
 			{
-				bp.wf.Dev2Interface.Port_Login(emp.getNo(), emp.getOrgNo());
+				Dev2Interface.Port_Login(emp.getNo(), emp.getOrgNo());
 			}
 
-			return "../../MyFlowView.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
+			return "../../MyFlowView.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFlowNo() + "&FK_Node=" + this.getNodeID();
 		}
 
 		//如果是：外部用户？.
 		if (val == 3)
 		{
 			GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
-			if (gwf.getFK_Node() != this.getFK_Node())
+			if (gwf.getNodeID() != this.getNodeID())
 			{
 				return "err@二维码过期";
 			}
@@ -100,21 +99,21 @@ public class WF_WorkOpt_QRCode extends bp.difference.handler.WebContralBase
 			}
 
 			//执行登录.
-			bp.wf.Dev2InterfaceGuest.Port_Login(user.getNo(), user.getName());
+			Dev2InterfaceGuest.Port_Login(user.getNo(), user.getName());
 
-			HuiQian_AddGuest(this.getWorkID(), this.getFK_Node());
+			HuiQian_AddGuest(this.getWorkID(), this.getNodeID());
 
-			return "../../MyFlow.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
+			return "../../MyFlow.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFlowNo() + "&FK_Node=" + this.getNodeID();
 		}
 
 		return "err@系统错误.";
 	}
 
-	/**
+	/** 
 	 生成二维码
-
-	 @return
-	 */
+	 
+	 @return 
+	*/
 	public final String GenerCode_Init()
 	{
 		String url = "";
@@ -122,25 +121,27 @@ public class WF_WorkOpt_QRCode extends bp.difference.handler.WebContralBase
 
 		if (this.getWorkID() == 0) //开始节点的时候.
 		{
-			url = SystemConfig.getHostURL() + "/WF/WorkOpt/QRCode/ScanGuide.htm?WorkID=" + this.getWorkID() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow();
+			url = bp.difference.SystemConfig.getHostURL() + "/WF/WorkOpt/QRCode/ScanGuide.htm?WorkID=" + this.getWorkID() + "&FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFlowNo();
 		}
 		else
 		{
-			url = SystemConfig.getHostURL() + "/WF/WorkOpt/QRCode/ScanGuide.htm?WorkID=" + this.getWorkID() + "&FK_Node=" + this.getFK_Node() + "&FK_Flow=" + this.getFK_Flow();
+			url = bp.difference.SystemConfig.getHostURL() + "/WF/WorkOpt/QRCode/ScanGuide.htm?WorkID=" + this.getWorkID() + "&FK_Node=" + this.getNodeID() + "&FK_Flow=" + this.getFlowNo();
 		}
 		String tempPath = "";
+
+		if (this.getWorkID() == 0)
+			tempPath = bp.difference.SystemConfig.getPathOfTemp() + this.getFlowNo() + ".png";
+		else
+			tempPath = bp.difference.SystemConfig.getPathOfTemp() + this.getWorkID() + ".png";
 		String fileName =  this.getFK_Flow() + ".png";
 		if(this.getWorkID()!=0)
 			fileName = this.getWorkID()+".png";
-
-		tempPath = SystemConfig.getPathOfTemp();
-
 		QrCodeUtil.createQrCode(url,tempPath,fileName,"png");
 		//返回url.
 		return url;
 	}
 	public final String ScanGuide_Init() throws Exception {
-		NodeExt ne = new NodeExt(this.getFK_Node());
+		NodeExt ne = new NodeExt(this.getNodeID());
 		int val = ne.GetValIntByKey(BtnAttr.QRCodeRole);
 
 		if (val == 0)
@@ -153,10 +154,10 @@ public class WF_WorkOpt_QRCode extends bp.difference.handler.WebContralBase
 		{
 			if (WebUser.getNo() == null)
 			{
-				bp.wf.Dev2Interface.Port_Login("Guest");
+				Dev2Interface.Port_Login("Guest");
 			}
 
-			return "/CCMobile/MyView.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
+			return "/CCMobile/MyView.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFlowNo() + "&FK_Node=" + this.getNodeID();
 		}
 
 		// 如果需要权限才能查看表单.
@@ -165,10 +166,10 @@ public class WF_WorkOpt_QRCode extends bp.difference.handler.WebContralBase
 			//判断是否登录?
 			if (WebUser.getNo() == null)
 			{
-				return "Login.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node() + "&QRCodeRole=2";
+				return "Login.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFlowNo() + "&FK_Node=" + this.getNodeID() + "&QRCodeRole=2";
 			}
 
-			return "/CCMobile/MyView.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
+			return "/CCMobile/MyView.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFlowNo() + "&FK_Node=" + this.getNodeID();
 		}
 
 		//外部账户协作模式处理工作.
@@ -176,19 +177,19 @@ public class WF_WorkOpt_QRCode extends bp.difference.handler.WebContralBase
 		{
 			if (GuestUser.getNo() == null)
 			{
-				return "Login.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node() + "&QRCodeRole=2";
+				return "Login.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFlowNo() + "&FK_Node=" + this.getNodeID() + "&QRCodeRole=2";
 			}
 
 			GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
-			if (gwf.getFK_Node() != this.getFK_Node())
+			if (gwf.getNodeID() != this.getNodeID())
 			{
 				return "err@二维码过期";
 			}
 
-			HuiQian_AddGuest(this.getWorkID(), this.getFK_Node());
+			HuiQian_AddGuest(this.getWorkID(), this.getNodeID());
 
 
-			return "/CCMobile/MyFlowView.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
+			return "/CCMobile/MyFlowView.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFlowNo() + "&FK_Node=" + this.getNodeID();
 		}
 
 		return "err@没有判断的模式.";
@@ -198,8 +199,8 @@ public class WF_WorkOpt_QRCode extends bp.difference.handler.WebContralBase
 	private void HuiQian_AddGuest(long workid, int fk_node) throws Exception {
 		//判断是否存在该节点的待办
 		GenerWorkerList gwl = new GenerWorkerList();
-		gwl.setFK_Node(fk_node);
-		gwl.setFK_Emp(GuestUser.getNo());
+		gwl.setNodeID(fk_node);
+		gwl.setEmpNo(GuestUser.getNo());
 		gwl.setWorkID(workid);
 		int num = gwl.RetrieveFromDBSources();
 		//还没有待办，增加会签人信息
@@ -223,20 +224,21 @@ public class WF_WorkOpt_QRCode extends bp.difference.handler.WebContralBase
 			{
 				throw new RuntimeException("err@发生不可预测的问题,组长协作模式下找不到组长信息");
 			}
-			gwf.setHuiQianZhuChiRen(gwlZCR.getFK_Emp());
-			gwf.setHuiQianZhuChiRenName(gwlZCR.getFK_EmpText());
+			gwf.setHuiQianZhuChiRen(gwlZCR.getEmpNo());
+			gwf.setHuiQianZhuChiRenName(gwlZCR.getEmpName());
 			gwlZCR.SetPara("HuiQianType", "");
-			gwlZCR.setFK_Emp(GuestUser.getNo());
-			gwlZCR.setFK_EmpText(GuestUser.getName());
-			gwlZCR.setIsPassInt(0); //设置不可以用.
-			gwlZCR.setFK_Dept("");
-			gwlZCR.setFK_DeptT(""); //部门名称.
-			gwlZCR.setIsRead(false);
+			gwlZCR.setEmpNo(GuestUser.getNo());
+			gwlZCR.setEmpName(GuestUser.getName());
+			gwlZCR.setPassInt(0); //设置不可以用.
+			gwlZCR.setDeptNo("");
+			gwlZCR.setDeptName(""); //部门名称.
+			gwlZCR.setItIsRead(false);
 			gwlZCR.setGuestNo(GuestUser.getNo());
 			gwlZCR.setGuestName(GuestUser.getName());
-			gwlZCR.SetPara("HuiQianZhuChiRen", gwlZCR.getFK_Emp());
+			gwlZCR.SetPara("HuiQianZhuChiRen", gwlZCR.getEmpNo());
 
-			///#region 计算会签时间.
+
+				///#region 计算会签时间.
 			if (nd.getHisCHWay() == CHWay.None)
 			{
 				gwlZCR.setSDT("无");
@@ -259,24 +261,26 @@ public class WF_WorkOpt_QRCode extends bp.difference.handler.WebContralBase
 			}
 
 			gwlZCR.setDTOfWarning(DataType.getDateByFormart(dtOfWarning,DataType.getSysDateTimeFormat()));
-			///#endregion 计算会签时间.
 
-			gwlZCR.setSender(gwlZCR.getFK_Emp() + "," + gwlZCR.getFK_EmpText()); //发送人为当前人.
-			gwlZCR.setHuiQian(true);
+				///#endregion 计算会签时间.
+
+			gwlZCR.setSender(gwlZCR.getEmpNo() + "," + gwlZCR.getEmpName()); //发送人为当前人.
+			gwlZCR.setItIsHuiQian(true);
 			gwlZCR.Insert(); //插入作为待办.
 
 			//修改GenerWorkFlow的信息
-			//gwf.TodoEmps += GuestUser.No + "," + GuestUser.Name + ";";
+			//gwf.TodoEmps += GuestUser.getNo() + "," + GuestUser.getName() +";";
 			gwf.setHuiQianTaskSta(HuiQianTaskSta.HuiQianing);
 			gwf.Update();
 			//给组长发送消息
-			bp.wf.Dev2Interface.Port_SendMsg(gwlZCR.getFK_Emp(), "bpm会签工作参与", "HuiQian" + gwf.getWorkID() + "_" + gwf.getFK_Node() + "_" + GuestUser.getNo(), GuestUser.getName() + "参与了您对工作的｛" + gwf.getTitle() + "｝邀请,请您及时关注工作进度.", "HuiQian", gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getWorkID(), gwf.getFID());
+			Dev2Interface.Port_SendMsg(gwlZCR.getEmpNo(), "bpm会签工作参与", "HuiQian" + gwf.getWorkID() + "_" + gwf.getNodeID() + "_" + GuestUser.getNo(), GuestUser.getName() +"参与了您对工作的｛" + gwf.getTitle() + "｝邀请,请您及时关注工作进度.", "HuiQian", gwf.getFlowNo(), gwf.getNodeID(), gwf.getWorkID(), gwf.getFID());
 
 			//执行会签,写入日志.
-			bp.wf.Dev2Interface.WriteTrack(gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getNodeName(), gwf.getWorkID(), gwf.getFID(), GuestUser.getNo() + "," + GuestUser.getName(), ActionType.HuiQian, "执行会签", null, null, null, GuestUser.getNo(), GuestUser.getName(), gwlZCR.getFK_Emp(), gwlZCR.getFK_EmpText());
+			Dev2Interface.WriteTrack(gwf.getFlowNo(), gwf.getNodeID(), gwf.getNodeName(), gwf.getWorkID(), gwf.getFID(), GuestUser.getNo() + "," + GuestUser.getName(), ActionType.HuiQian, "执行会签", null, null, null, GuestUser.getNo(), GuestUser.getName(), gwlZCR.getEmpNo(), gwlZCR.getEmpName());
 			return;
 		}
 
 
 	}
+
 }

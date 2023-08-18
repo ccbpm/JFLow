@@ -1,7 +1,4 @@
 package bp.wf;
-
-import bp.*;
-
 /** 
  方向条件控制规则
 */
@@ -28,7 +25,8 @@ public enum DirCondModel
 
 	private int intValue;
 	private static java.util.HashMap<Integer, DirCondModel> mappings;
-	private static java.util.HashMap<Integer, DirCondModel> getMappings() {
+	private static java.util.HashMap<Integer, DirCondModel> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (DirCondModel.class)
@@ -43,15 +41,18 @@ public enum DirCondModel
 	}
 
 	private DirCondModel(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return intValue;
 	}
 
 	public static DirCondModel forValue(int value)
-	{return getMappings().get(value);
+	{
+		return getMappings().get(value);
 	}
 }

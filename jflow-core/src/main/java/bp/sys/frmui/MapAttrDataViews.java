@@ -1,7 +1,12 @@
 package bp.sys.frmui;
 
-import bp.en.*;
+import bp.da.*;
+import bp.en.*; import bp.en.Map;
+import bp.sys.*;
+import bp.*;
+import bp.sys.*;
 import java.util.*;
+import java.time.*;
 
 /** 
  实体属性s
@@ -13,13 +18,15 @@ public class MapAttrDataViews extends EntitiesMyPK
 	/** 
 	 实体属性s
 	*/
-	public MapAttrDataViews() {
+	public MapAttrDataViews()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new MapAttrDataView();
 	}
 
@@ -32,7 +39,8 @@ public class MapAttrDataViews extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<MapAttrDataView> ToJavaList() {
+	public final java.util.List<MapAttrDataView> ToJavaList()
+	{
 		return (java.util.List<MapAttrDataView>)(Object)this;
 	}
 	/** 
@@ -40,7 +48,8 @@ public class MapAttrDataViews extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<MapAttrDataView> Tolist()  {
+	public final ArrayList<MapAttrDataView> Tolist()
+	{
 		ArrayList<MapAttrDataView> list = new ArrayList<MapAttrDataView>();
 		for (int i = 0; i < this.size(); i++)
 		{

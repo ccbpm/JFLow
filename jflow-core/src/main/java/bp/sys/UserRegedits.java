@@ -1,12 +1,7 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
-import bp.web.*;
-import bp.*;
 import java.util.*;
-import java.time.*;
 
 /** 
  用户注册表s
@@ -15,12 +10,13 @@ public class UserRegedits extends EntitiesMyPK
 {
 
 		///#region 构造
-	public UserRegedits()  {
+	public UserRegedits()
+	{
 	}
 	/** 
 	 
 	 
-	 param emp
+	 @param emp
 	*/
 	public UserRegedits(String emp) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -36,7 +32,8 @@ public class UserRegedits extends EntitiesMyPK
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new UserRegedit();
 	}
 
@@ -49,7 +46,8 @@ public class UserRegedits extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<UserRegedit> ToJavaList() {
+	public final java.util.List<UserRegedit> ToJavaList()
+	{
 		return (java.util.List<UserRegedit>)(Object)this;
 	}
 	/** 
@@ -57,7 +55,8 @@ public class UserRegedits extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<UserRegedit> Tolist()  {
+	public final ArrayList<UserRegedit> Tolist()
+	{
 		ArrayList<UserRegedit> list = new ArrayList<UserRegedit>();
 		for (int i = 0; i < this.size(); i++)
 		{

@@ -1,5 +1,10 @@
 package bp.wf.template.sflow;
 
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.wf.*;
+import bp.wf.template.*;
+import java.util.*;
 
 /** 
  子流程属性
@@ -24,8 +29,6 @@ public class SubFlowAttr extends bp.en.EntityOIDNameAttr
 	 顺序号
 	*/
 	public static final String Idx = "Idx";
-	public static final String X="X";
-	public static final String Y="Y";
 	/** 
 	 批量发送后是否隐藏父流程的待办.
 	*/
@@ -127,6 +130,10 @@ public class SubFlowAttr extends bp.en.EntityOIDNameAttr
 	 平级子流程节点
 	*/
 	public static final String SameLevelNode = "SameLevelNode";
+
+	public static final String DBSrcDoc = "DBSrcDoc";
+	public static final String DBSrcType = "DBSrcType";
+
 	/** 
 	 启动模式
 	*/
@@ -166,5 +173,12 @@ public class SubFlowAttr extends bp.en.EntityOIDNameAttr
 	 指定的子流程节点
 	*/
 	public static final String SubFlowNodeID = "SubFlowNodeID";
-
+	/** 
+	 位置x
+	*/
+	public static final String X = "X";
+	/** 
+	 位置y
+	*/
+	public static final String Y = "Y";
 }

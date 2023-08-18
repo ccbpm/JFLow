@@ -1,24 +1,27 @@
 package bp.ccbill.template;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.ccbill.*;
 import java.util.*;
 
 /** 
- 单据可创建的工作岗位
+ 单据可创建的工作角色
 */
 public class StationCreates extends EntitiesMM
 {
 
 		///#region 构造函数.
 	/** 
-	 单据可创建的工作岗位
+	 单据可创建的工作角色
 	*/
-	public StationCreates() {
+	public StationCreates()
+	{
 	}
 	/** 
-	 单据可创建的工作岗位
+	 单据可创建的工作角色
 	 
-	 param nodeID 单据ID
+	 @param nodeID 单据ID
 	*/
 	public StationCreates(int nodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -26,9 +29,9 @@ public class StationCreates extends EntitiesMM
 		qo.DoQuery();
 	}
 	/** 
-	 单据可创建的工作岗位
+	 单据可创建的工作角色
 	 
-	 param StationNo StationNo
+	 @param StationNo StationNo 
 	*/
 	public StationCreates(String StationNo) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -39,7 +42,8 @@ public class StationCreates extends EntitiesMM
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		return new StationCreate();
 	}
 
@@ -52,7 +56,8 @@ public class StationCreates extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final java.util.List<StationCreate> ToJavaList() {
+	public final java.util.List<StationCreate> ToJavaList()
+	{
 		return (java.util.List<StationCreate>)(Object)this;
 	}
 	/** 
@@ -60,7 +65,8 @@ public class StationCreates extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final ArrayList<StationCreate> Tolist()  {
+	public final ArrayList<StationCreate> Tolist()
+	{
 		ArrayList<StationCreate> list = new ArrayList<StationCreate>();
 		for (int i = 0; i < this.size(); i++)
 		{

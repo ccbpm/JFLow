@@ -1,8 +1,9 @@
 package bp.wf.dts;
 
-import bp.da.*;
+import bp.da.DataTable;
 import bp.port.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
 import bp.wf.*;
 
 /** 
@@ -13,7 +14,7 @@ public class GenerAllEmpsStartFlows extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public GenerAllEmpsStartFlows()throws Exception
+	public GenerAllEmpsStartFlows()
 	{
 		this.Title = "为每个人重置发起流程列表";
 		this.Help = "一个操作员能发起那些流程是自动计算出来的，计算的成本有些高.";
@@ -43,8 +44,7 @@ public class GenerAllEmpsStartFlows extends Method
 	 @return 返回执行结果
 	*/
 	@Override
-	public Object Do()throws Exception
-	{
+	public Object Do() throws Exception {
 
 		Emps ens = new Emps();
 		ens.RetrieveAll(99999);
@@ -52,7 +52,7 @@ public class GenerAllEmpsStartFlows extends Method
 		for (Emp en : ens.ToJavaList())
 		{
 			Dev2Interface.Port_Login(en.getNo());
-			DataTable dt = Dev2Interface.DB_GenerCanStartFlowsOfDataTable(en.getNo());
+			DataTable dt = Dev2Interface.DB_Start(en.getNo());
 		}
 
 		return "调度完成..";

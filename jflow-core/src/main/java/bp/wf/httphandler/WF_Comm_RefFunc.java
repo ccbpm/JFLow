@@ -1,21 +1,24 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
-import bp.difference.handler.WebContralBase;
 import bp.port.*;
 import bp.*;
+import bp.tools.StringHelper;
 import bp.wf.*;
+import bp.wf.Glo;
+import bp.wf.template.*;
+
 import java.util.*;
 
-public class WF_Comm_RefFunc extends WebContralBase
+public class WF_Comm_RefFunc extends bp.difference.handler.DirectoryPageBase
 {
 
 
 	/** 
 	 构造函数
 	*/
-	public WF_Comm_RefFunc() throws Exception {
+	public WF_Comm_RefFunc()
+	{
 	}
 
 
@@ -26,7 +29,8 @@ public class WF_Comm_RefFunc extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String Dot2DotTreeDeptEmpModel_SaveNodeEmps() throws Exception {
+	public final String Dot2DotTreeDeptEmpModel_SaveNodeEmps()throws Exception
+	{
 		JsonResultInnerData jr = new JsonResultInnerData();
 		String nodeid = this.GetRequestVal("nodeid");
 		String data = this.GetRequestVal("data");
@@ -36,8 +40,8 @@ public class WF_Comm_RefFunc extends WebContralBase
 		int partcount = 0;
 		int nid = 0;
 		String msg = "";
-
-		if (DataType.IsNullOrEmpty(nodeid)) throw new RuntimeException("参数nodeid不正确");
+		if (StringHelper.isNullOrEmpty(nodeid))
+			throw new RuntimeException("参数nodeid不正确");
 		nid = Integer.parseInt(nodeid);
 
 		if (DataType.IsNullOrEmpty(data))
@@ -45,12 +49,13 @@ public class WF_Comm_RefFunc extends WebContralBase
 			data = "";
 		}
 
-		bp.wf.template.NodeEmps nemps = new bp.wf.template.NodeEmps();
+		NodeEmps nemps = new NodeEmps();
 		String[] empNos = data.split(",");
+
 		//提交内容过长时，采用分段式提交
 		if (DataType.IsNullOrEmpty(partno))
 		{
-			nemps.Delete(bp.wf.template.NodeEmpAttr.FK_Node, nid);
+			nemps.Delete(NodeEmpAttr.FK_Node, nid);
 		}
 		else
 		{
@@ -68,14 +73,14 @@ public class WF_Comm_RefFunc extends WebContralBase
 
 			if (partidx == 1)
 			{
-				nemps.Delete(bp.wf.template.NodeEmpAttr.FK_Node, nid);
+				nemps.Delete(NodeEmpAttr.FK_Node, nid);
 			}
 
 			lastpart = partidx == partcount;
 		}
 
 		DataTable dtEmps = DBAccess.RunSQLReturnTable("SELECT No FROM Port_Emp");
-		bp.wf.template.NodeEmp nemp = null;
+		NodeEmp nemp = null;
 
 		for (String empNo : empNos)
 		{
@@ -84,15 +89,15 @@ public class WF_Comm_RefFunc extends WebContralBase
 				continue;
 			}
 
-			nemp = new bp.wf.template.NodeEmp();
-			nemp.setFK_Node(nid);
-			nemp.setFK_Emp(empNo);
+			nemp = new NodeEmp();
+			nemp.setNodeID(nid);
+			nemp.setEmpNo(empNo);
 			nemp.Insert();
 		}
 
 		if (DataType.IsNullOrEmpty(partno))
 		{
-			jr.setMsg("保存成功");
+			msg = "保存成功";
 		}
 		else
 		{
@@ -113,17 +118,19 @@ public class WF_Comm_RefFunc extends WebContralBase
 
 			if (lastpart)
 			{
-				jr.setMsg("保存成功");
+				msg = "保存成功";
 			}
 			else
 			{
-				jr.setMsg(String.format("第%d/%d段保存成功", partidx, partcount));
+				msg = String.format("第{0}/{1}段保存成功", partidx, partcount);
 			}
 		}
 
-		return bp.tools.Json.ToJson(jr);
+		return transction(bp.tools.Json.ToJson(jr),msg);
 	}
-
+	public String transction(String innerData,String msg){
+		return "{\"innerData\": "+innerData+",\"msg\":\""+msg+"\"}";
+	}
 
 
 	/** 
@@ -131,7 +138,8 @@ public class WF_Comm_RefFunc extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String Dot2DotTreeDeptModel_SaveNodeDepts() throws Exception {
+	public final String Dot2DotTreeDeptModel_SaveNodeDepts()throws Exception
+	{
 		JsonResultInnerData jr = new JsonResultInnerData();
 		String nodeid = this.GetRequestVal("nodeid");
 		String data = this.GetRequestVal("data");
@@ -141,24 +149,26 @@ public class WF_Comm_RefFunc extends WebContralBase
 		int partcount = 0;
 		int nid = 0;
 
-		
-		if (DataType.IsNullOrEmpty(nodeid))
+		try {
+			nid = Integer.parseInt(nodeid);
+		} catch (Exception e) {
 			throw new RuntimeException("参数nodeid不正确");
-
-		nid = Integer.parseInt(nodeid);
-
+		}
+		if (StringHelper.isNullOrEmpty(nodeid))// ||  int.TryParse(nodeid, out nid) == false
+			throw new RuntimeException("参数nodeid不正确");
 
 		if (DataType.IsNullOrEmpty(data))
 		{
 			data = "";
 		}
 
-		bp.wf.template.NodeDepts ndepts = new bp.wf.template.NodeDepts();
-		String[] deptNos = data.split("\\|");
+		NodeDepts ndepts = new NodeDepts();
+		String[] deptNos = data.split("\\|");;
+
 		//提交内容过长时，采用分段式提交
 		if (DataType.IsNullOrEmpty(partno))
 		{
-			ndepts.Delete(bp.wf.template.NodeDeptAttr.FK_Node, nid);
+			ndepts.Delete(NodeDeptAttr.FK_Node, nid);
 		}
 		else
 		{
@@ -176,14 +186,14 @@ public class WF_Comm_RefFunc extends WebContralBase
 
 			if (partidx == 1)
 			{
-				ndepts.Delete(bp.wf.template.NodeDeptAttr.FK_Node, nid);
+				ndepts.Delete(NodeDeptAttr.FK_Node, nid);
 			}
 
 			lastpart = partidx == partcount;
 		}
 
 		DataTable dtDepts = DBAccess.RunSQLReturnTable("SELECT No FROM Port_Dept");
-		bp.wf.template.NodeDept nemp = null;
+		NodeDept nemp = null;
 
 		for (String deptNo : deptNos)
 		{
@@ -192,9 +202,9 @@ public class WF_Comm_RefFunc extends WebContralBase
 				continue;
 			}
 
-			nemp = new bp.wf.template.NodeDept();
-			nemp.setFK_Node(nid);
-			nemp.setFK_Dept(deptNo);
+			nemp = new NodeDept();
+			nemp.setNodeID(nid);
+			nemp.setDeptNo(deptNo);
 			nemp.Insert();
 		}
 
@@ -238,43 +248,66 @@ public class WF_Comm_RefFunc extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String Dot2DotTreeDeptModel_GetNodeDepts() throws Exception {
+	public final String Dot2DotTreeDeptModel_GetNodeDepts()
+	{
+		JsonResultInnerData jr = new JsonResultInnerData();
 
+		DataTable dt = null;
 		String nid = this.GetRequestVal("nodeid");
-		String sql = "SELECT pd.No,pd.Name,pd1.No DeptNo,pd1.Name DeptName FROM WF_NodeDept wnd " + "  INNER JOIN Port_Dept pd ON pd.No=wnd.FK_Dept " + "  LEFT JOIN Port_Dept pd1 ON pd1.No=pd.ParentNo " + "WHERE wnd.FK_Node = " + nid + " ORDER BY pd1.Idx, pd.Name";
+		String sql = "SELECT pd.No,pd.Name,pd1.No DeptNo,pd1.Name DeptName FROM WF_NodeDept wnd " + "  INNER JOIN Port_Dept pd ON pd.No=wnd.FK_Dept " + "  LEFT JOIN Port_Dept pd1 ON pd1.No=pd.ParentNo " + "WHERE wnd.getNodeID() = " + nid + " ORDER BY pd1.Idx, pd.Name";
 
-		DataTable dt = DBAccess.RunSQLReturnTable(sql); //, pagesize, pageidx, "No", "Name", "ASC"
+		dt = DBAccess.RunSQLReturnTable(sql); //, pagesize, pageidx, "No", "Name", "ASC"
 		dt.Columns.Add("Code", String.class);
 		dt.Columns.Add("Checked", Boolean.class);
 
 		for (DataRow row : dt.Rows)
 		{
-			row.setValue("Code", bp.tools.chs2py.ConvertStr2Code(row.getValue("Name") instanceof String ? (String)row.getValue("Name") : null));
+			row.setValue("Code", bp.tools.chs2py.ConvertStr2Code(row.get("Name") instanceof String ? (String)row.get("Name") : null));
 			row.setValue("Checked", true);
 		}
 
-		if(SystemConfig.AppCenterDBFieldCaseModel()!=FieldCaseModel.None){
-			dt.Columns.get(0).setColumnName("No");
-			dt.Columns.get(1).setColumnName("Name");
-			dt.Columns.get(2).setColumnName("DeptNo");
-			dt.Columns.get(3).setColumnName("DeptName");
+		//对Oracle数据库做兼容性处理
+		for (DataColumn col : dt.Columns)
+		{
+			switch (col.ColumnName.toUpperCase())
+			{
+				case "NO":
+					col.ColumnName = "No";
+					break;
+				case "NAME":
+					col.ColumnName = "Name";
+					break;
+				case "DEPTNO":
+					col.ColumnName = "DeptNo";
+					break;
+				case "DEPTNAME":
+					col.ColumnName = "DeptName";
+					break;
+			}
 		}
 
-		return bp.tools.Json.ToJson(dt);
 
+		jr.setInnerData(dt);
+		String re = bp.tools.Json.ToJson(jr);
+		if (Objects.equals(bp.sys.Glo.Plant, Plant.JFlow))
+		{
+			re = re.replace("\"NO\"", "\"No\"").replace("\"NAME\"", "\"Name\"").replace("\"DEPTNO\"", "\"DeptNo\"").replace("\"DEPTNAME\"", "\"DeptName\"");
+		}
+		return re;
 	}
 
 		///#endregion Dot2DotTreeDeptModel.htm（部门选择）
 
 
-		///#region Dot2DotStationModel.htm（岗位选择）
+		///#region Dot2DotStationModel.htm（角色选择）
 
 	/** 
-	 保存节点绑定岗位信息
+	 保存节点绑定角色信息
 	 
 	 @return 
 	*/
-	public final String Dot2DotStationModel_SaveNodeStations() throws Exception {
+	public final String Dot2DotStationModel_SaveNodeStations()throws Exception
+	{
 		JsonResultInnerData jr = new JsonResultInnerData();
 		String nodeid = this.GetRequestVal("nodeid");
 		String data = this.GetRequestVal("data");
@@ -284,21 +317,26 @@ public class WF_Comm_RefFunc extends WebContralBase
 		int partcount = 0;
 		int nid = 0;
 
-		
-		if (DataType.IsNullOrEmpty(nodeid))
+		try {
+			nid = Integer.parseInt(nodeid);
+		} catch (Exception e) {
 			throw new RuntimeException("参数nodeid不正确");
+		}
+		if (StringHelper.isNullOrEmpty(nodeid))
+			throw new RuntimeException("参数nodeid不正确");
+
 		if (DataType.IsNullOrEmpty(data))
 		{
 			data = "";
 		}
 
-		bp.wf.template.NodeStations nsts = new bp.wf.template.NodeStations();
+		NodeStations nsts = new NodeStations();
 		String[] stNos = data.split("\\|");
 
 		//提交内容过长时，采用分段式提交
 		if (DataType.IsNullOrEmpty(partno))
 		{
-			nsts.Delete(bp.wf.template.NodeStationAttr.FK_Node, nid);
+			nsts.Delete(NodeStationAttr.FK_Node, nid);
 		}
 		else
 		{
@@ -316,14 +354,14 @@ public class WF_Comm_RefFunc extends WebContralBase
 
 			if (partidx == 1)
 			{
-				nsts.Delete(bp.wf.template.NodeStationAttr.FK_Node, nid);
+				nsts.Delete(NodeStationAttr.FK_Node, nid);
 			}
 
 			lastpart = partidx == partcount;
 		}
 
 		DataTable dtSts = DBAccess.RunSQLReturnTable("SELECT No FROM Port_Station");
-		bp.wf.template.NodeStation nst = null;
+		NodeStation nst = null;
 
 		for (String stNo : stNos)
 		{
@@ -332,9 +370,9 @@ public class WF_Comm_RefFunc extends WebContralBase
 				continue;
 			}
 
-			nst = new bp.wf.template.NodeStation();
-			nst.setFK_Node(nid);
-			nst.setFK_Station(stNo);
+			nst = new NodeStation();
+			nst.setNodeID(nid);
+			nst.setStationNo(stNo);
 			nst.Insert();
 		}
 
@@ -371,7 +409,6 @@ public class WF_Comm_RefFunc extends WebContralBase
 
 		return bp.tools.Json.ToJson(jr);
 	}
-
 	/** 
 	 获取部门树根结点
 	 
@@ -386,7 +423,7 @@ public class WF_Comm_RefFunc extends WebContralBase
 		String sql = null;
 		DataTable dt = null;
 
-		if (DataType.IsNullOrEmpty(parentrootid))
+		if (parentrootid == null || parentrootid.isEmpty())
 		{
 			throw new RuntimeException("参数parentrootid不能为空");
 		}
@@ -420,12 +457,12 @@ public class WF_Comm_RefFunc extends WebContralBase
 			node.setIconCls("icon-department");
 			node.setAttributes(new EasyuiTreeNodeAttributes());
 			node.getAttributes().setNo(dt.Rows.get(0).getValue("No") instanceof String ? (String)dt.Rows.get(0).getValue("No") : null);
-			node.getAttributes().setName(dt.Rows.get(0).getValue("Name") instanceof String ? (String)dt.Rows.get(0).getValue("Name") : null);
+			node.getAttributes().setName(dt.Rows.get(0).getValue("Name") instanceof String ? (String)dt.Rows.get(0).getValue("Name"): null);
 			node.getAttributes().setParentNo(parentrootid);
 			node.getAttributes().setTType("UNITROOT");
 			node.setState("closed");
 
-			if (!node.getText().equals("无单位数据"))
+			if (!Objects.equals(node.getText(), "无单位数据"))
 			{
 				node.setChildren(new ArrayList<EasyuiTreeNode>());
 				node.getChildren().add(new EasyuiTreeNode());
@@ -441,11 +478,11 @@ public class WF_Comm_RefFunc extends WebContralBase
 
 			node = new EasyuiTreeNode();
 			node.setId("STROOT_-1");
-			node.setText("岗位类型");
+			node.setText("角色类型");
 			node.setIconCls("icon-department");
 			node.setAttributes(new EasyuiTreeNodeAttributes());
 			node.getAttributes().setNo("-1");
-			node.getAttributes().setName("岗位类型");
+			node.getAttributes().setName("角色类型");
 			node.getAttributes().setParentNo(parentrootid);
 			node.getAttributes().setTType("STROOT");
 			node.setState("closed");
@@ -463,7 +500,7 @@ public class WF_Comm_RefFunc extends WebContralBase
 		jr.setInnerData(d);
 		jr.setMsg(String.valueOf(isUnitModel).toLowerCase());
 
-		return bp.tools.Json.ToJson(jr);
+		return  bp.tools.Json.ToJson(jr);
 	}
 
 	/** 
@@ -477,11 +514,11 @@ public class WF_Comm_RefFunc extends WebContralBase
 		String tp = this.GetRequestVal("stype"); //ST,UNIT
 		String ttype = this.GetRequestVal("ttype"); //STROOT,UNITROOT,ST,CST,S
 
-		if (DataType.IsNullOrEmpty(parentid))
+		if (parentid == null || parentid.isEmpty())
 		{
 			throw new RuntimeException("参数parentid不能为空");
 		}
-		if (DataType.IsNullOrEmpty(nid))
+		if (nid == null || nid.isEmpty())
 		{
 			throw new RuntimeException("参数nodeid不能为空");
 		}
@@ -495,9 +532,9 @@ public class WF_Comm_RefFunc extends WebContralBase
 
 		sts.Retrieve(bp.wf.template.NodeStationAttr.FK_Node, Integer.parseInt(nid), null);
 
-		if (tp.equals("ST"))
+		if (Objects.equals(tp, "ST"))
 		{
-			if (ttype.equals("STROOT"))
+			if (Objects.equals(ttype, "STROOT"))
 			{
 				sql = "SELECT No,Name FROM Port_StationType ORDER BY " + sortField + " ASC";
 				dt = DBAccess.RunSQLReturnTable(sql);
@@ -505,12 +542,12 @@ public class WF_Comm_RefFunc extends WebContralBase
 				for (DataRow row : dt.Rows)
 				{
 					node = new EasyuiTreeNode();
-					node.setId("ST_" + row.getValue("No"));
-					node.setText(row.getValue("Name") instanceof String ? (String)row.getValue("Name") : null);
+					node.setId("ST_" + row.get("No"));
+					node.setText(row.get("Name") instanceof String ? (String)row.get("Name") : null);
 					node.setIconCls("icon-department");
 					node.setAttributes(new EasyuiTreeNodeAttributes());
-					node.getAttributes().setNo(row.getValue("No") instanceof String ? (String)row.getValue("No") : null);
-					node.getAttributes().setName(row.getValue("Name") instanceof String ? (String)row.getValue("Name") : null);
+					node.getAttributes().setNo(row.get("No") instanceof String ? (String)row.get("No") : null);
+					node.getAttributes().setName(row.get("Name") instanceof String ? (String)row.get("Name") : null);
 					node.getAttributes().setParentNo("-1");
 					node.getAttributes().setTType("ST");
 					node.setState("closed");
@@ -523,23 +560,23 @@ public class WF_Comm_RefFunc extends WebContralBase
 			}
 			else
 			{
-				sql = String.format("SELECT ps.No,ps.Name,ps.FK_StationType,pst.Name FK_StationTypeName FROM Port_Station ps" + " INNER JOIN Port_StationType pst ON pst.No = ps.FK_StationType" + " WHERE ps.FK_StationType = '%1$s' ORDER BY ps.Name ASC", parentid);
+				sql = String.format("SELECT ps.No,ps.Name,ps.FK_StationType,pst.Name FK_StationTypeName FROM Port_Station ps" + " INNER JOIN Port_StationType pst ON pst.setNo(ps.FK_StationType" + " WHERE ps.FK_StationType = '%1$s' ORDER BY ps.Name ASC", parentid);
 				dt = DBAccess.RunSQLReturnTable(sql);
 
 				for (DataRow row : dt.Rows)
 				{
 					node = new EasyuiTreeNode();
-					node.setId("S_" + parentid + "_" + row.getValue("No"));
-					node.setText(row.getValue("Name") instanceof String ? (String)row.getValue("Name") : null);
+					node.setId("S_" + parentid + "_" + row.get("No"));
+					node.setText(row.get("Name") instanceof String ? (String)row.get("Name") : null);
 					node.setIconCls("icon-user");
-					node.setChecked(sts.GetEntityByKey(bp.wf.template.NodeStationAttr.FK_Station, row.getValue("No")) != null);
+					node.setChecked(sts.GetEntityByKey(bp.wf.template.NodeStationAttr.FK_Station, row.get("No")) != null);
 					node.setAttributes(new EasyuiTreeNodeAttributes());
-					node.getAttributes().setNo(row.getValue("No") instanceof String ? (String)row.getValue("No") : null);
-					node.getAttributes().setName(row.getValue("Name") instanceof String ? (String)row.getValue("Name") : null);
-					node.getAttributes().setParentNo(row.getValue("FK_StationType") instanceof String ? (String)row.getValue("FK_StationType") : null);
-					node.getAttributes().setParentName(row.getValue("FK_StationTypeName") instanceof String ? (String)row.getValue("FK_StationTypeName") : null);
+					node.getAttributes().setNo(row.get("No") instanceof String ? (String)row.get("No") : null);
+					node.getAttributes().setName(row.get("Name") instanceof String ? (String)row.get("Name") : null);
+					node.getAttributes().setParentNo(row.get("FK_StationType") instanceof String ? (String)row.get("FK_StationType") : null);
+					node.getAttributes().setParentName(row.get("FK_StationTypeName") instanceof String ? (String)row.get("FK_StationTypeName") : null);
 					node.getAttributes().setTType("S");
-					node.getAttributes().setCode(bp.tools.chs2py.ConvertStr2Code(row.getValue("Name") instanceof String ? (String)row.getValue("Name") : null));
+					node.getAttributes().setCode(bp.tools.chs2py.ConvertStr2Code(row.get("Name") instanceof String ? (String)row.get("Name") : null));
 
 					d.add(node);
 				}
@@ -547,7 +584,7 @@ public class WF_Comm_RefFunc extends WebContralBase
 		}
 		else
 		{
-			//岗位所属单位UNIT
+			//角色所属单位UNIT
 			dt = DBAccess.RunSQLReturnTable(String.format("SELECT * FROM Port_Dept WHERE IsUnit = 1 AND ParentNo='%1$s' ORDER BY Name ASC", parentid));
 
 			for (DataRow dept : dt.Rows)
@@ -570,9 +607,9 @@ public class WF_Comm_RefFunc extends WebContralBase
 				d.add(node);
 			}
 
-			dt = DBAccess.RunSQLReturnTable(String.format("SELECT ps.No,ps.Name,pst.No FK_StationType, pst.Name FK_StationTypeName,ps.FK_Unit,pd.Name FK_UnitName FROM Port_Station ps" + " INNER JOIN Port_StationType pst ON pst.No = ps.FK_StationType" + " INNER JOIN Port_Dept pd ON pd.No=ps.FK_Unit" + " WHERE ps.FK_Unit = '%1$s' ORDER BY pst.%2$s ASC,ps.Name ASC", parentid, sortField));
+			dt = DBAccess.RunSQLReturnTable(String.format("SELECT ps.No,ps.Name,pst.No FK_StationType, pst.Name FK_StationTypeName,ps.FK_Unit,pd.Name FK_UnitName FROM Port_Station ps" + " INNER JOIN Port_StationType pst ON pst.setNo(ps.FK_StationType" + " INNER JOIN Port_Dept pd ON pd.No=ps.FK_Unit" + " WHERE ps.FK_Unit = '%1$s' ORDER BY pst.%2$s ASC,ps.Name ASC", parentid, sortField));
 
-			//增加岗位
+			//增加角色
 			for (DataRow st : dt.Rows)
 			{
 				node = new EasyuiTreeNode();
@@ -592,7 +629,7 @@ public class WF_Comm_RefFunc extends WebContralBase
 			}
 		}
 
-		return bp.tools.Json.ToJson(d);
+		return  bp.tools.Json.ToJson(d);
 	}
 
 	/** 
@@ -600,7 +637,7 @@ public class WF_Comm_RefFunc extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String Dot2DotStationModel_GetNodeStations() throws Exception {
+	public final String Dot2DotStationModel_GetNodeStations()throws Exception {
 		JsonResultInnerData jr = new JsonResultInnerData();
 
 		DataTable dt = null;
@@ -611,39 +648,51 @@ public class WF_Comm_RefFunc extends WebContralBase
 		String sql = "";
 		String sortField = CheckStationTypeIdxExists() ? "Idx" : "No";
 
-		if (st.equals("UNIT"))
-		{
-			sql = "SELECT ps.No,ps.Name,pd.No UnitNo,pd.Name UnitName FROM WF_NodeStation wns " + "  INNER JOIN Port_Station ps ON ps.No=wns.FK_Station " + "  INNER JOIN Port_Dept pd ON pd.No=ps.FK_Unit " + "WHERE wns.FK_Node = " + nid + " ORDER BY ps.Name ASC";
-		}
-		else
-		{
-			sql = "SELECT ps.No,ps.Name,pst.No UnitNo,pst.Name UnitName FROM WF_NodeStation wns " + "  INNER JOIN Port_Station ps ON ps.No=wns.FK_Station " + "  INNER JOIN Port_StationType pst ON pst.No=ps.FK_StationType " + "WHERE wns.FK_Node = " + nid + " ORDER BY pst." + sortField + " ASC,ps.Name ASC";
+		if (st.equals("UNIT")) {
+			sql = "SELECT ps.No,ps.Name,pd.No UnitNo,pd.Name UnitName FROM WF_NodeStation wns " + "  INNER JOIN Port_Station ps ON ps.setNo(wns.FK_Station " + "  INNER JOIN Port_Dept pd ON pd.setNo(ps.FK_Unit " + "WHERE wns.FK_Node = " + nid + " ORDER BY ps.Name ASC";
+		} else {
+			sql = "SELECT ps.No,ps.Name,pst.No UnitNo,pst.Name UnitName FROM WF_NodeStation wns " + "  INNER JOIN Port_Station ps ON ps.setNo(wns.FK_Station " + "  INNER JOIN Port_StationType pst ON pst.setNo(ps.FK_StationType " + "WHERE wns.FK_Node = " + nid + " ORDER BY pst." + sortField + " ASC,ps.Name ASC";
 		}
 
 		dt = DBAccess.RunSQLReturnTable(sql); //, pagesize, pageidx, "No", "Name", "ASC"
 		dt.Columns.Add("Code", String.class);
 		dt.Columns.Add("Checked", Boolean.class);
 
-		for (DataRow row : dt.Rows)
-		{
-			row.setValue("Code", bp.tools.chs2py.ConvertStr2Code(row.getValue("Name") instanceof String ? (String)row.getValue("Name") : null));
+		for (DataRow row : dt.Rows) {
+			row.setValue("Code", bp.tools.chs2py.ConvertStr2Code(row.getValue("Name") instanceof String ? (String) row.getValue("Name") : null));
 			row.setValue("Checked", true);
 		}
 
-		if(SystemConfig.AppCenterDBFieldCaseModel()!=FieldCaseModel.None){
-			dt.Columns.get(0).setColumnName("No");
-			dt.Columns.get(1).setColumnName("Name");
-			dt.Columns.get(2).setColumnName("DeptNo");
-			dt.Columns.get(3).setColumnName("DeptName");
+		//对Oracle数据库做兼容性处理
+		if (DBAccess.getAppCenterDBType() == DBType.Oracle) {
+			for (DataColumn col : dt.Columns) {
+				switch (col.ColumnName) {
+					case "NO":
+						col.ColumnName = "No";
+						break;
+					case "NAME":
+						col.ColumnName = "Name";
+						break;
+					case "UNITNO":
+						col.ColumnName = "DeptNo";
+						break;
+					case "UNITNAME":
+						col.ColumnName = "DeptName";
+						break;
+				}
+			}
 		}
+
 		jr.setInnerData(dt);
 		jr.setMsg("");
 		String re = bp.tools.Json.ToJson(jr);
-
+		if (Glo.Plant.equals(Plant.JFlow)) {
+			re = re.replace("\"NO\"", "\"No\"").replace("\"NAME\"", "\"Name\"").replace("\"UNITNO\"", "\"UnitNo\"").replace("\"UNITNAME\"", "\"UnitName\"");
+		}
 		return bp.tools.Json.ToJson(re);
 	}
 
-		///#endregion Dot2DotStationModel.htm（岗位选择）
+		///#endregion Dot2DotStationModel.htm（角色选择）
 
 
 		///#region Methods
@@ -655,7 +704,7 @@ public class WF_Comm_RefFunc extends WebContralBase
 	public final boolean CheckStationTypeIdxExists() throws Exception {
 		if (DBAccess.IsExitsTableCol("Port_StationType", "Idx") == false)
 		{
-			if (DBAccess.IsView("Port_StationType", bp.difference.SystemConfig.getAppCenterDBType( )) == false)
+			if (DBAccess.IsView("Port_StationType", bp.difference.SystemConfig.getAppCenterDBType()) == false)
 			{
 				StationType st = new StationType();
 				st.CheckPhysicsTable();
@@ -682,99 +731,125 @@ public class WF_Comm_RefFunc extends WebContralBase
 	public static class EasyuiTreeNode
 	{
 		private String id;
-		public final String getId() throws Exception {
+		public final String getId()
+		{
 			return id;
 		}
-		public final void setId(String value)throws Exception
-	{id = value;
+		public final void setId(String value)
+		{
+			id = value;
 		}
 		private String text;
-		public final String getText() throws Exception {
+		public final String getText()
+		{
 			return text;
 		}
-		public final void setText(String value)throws Exception
-	{text = value;
+		public final void setText(String value)
+		{
+			text = value;
 		}
 		private String state;
-		public final String getState() throws Exception {
+		public final String getState()
+		{
 			return state;
 		}
-		public final void setState(String value)throws Exception
-	{state = value;
+		public final void setState(String value)
+		{
+			state = value;
 		}
 		private boolean checked;
-		public final boolean getChecked() throws Exception {
+		public final boolean getChecked()
+		{
 			return checked;
 		}
-		public final void setChecked(boolean value)throws Exception
-	{checked = value;
+		public final void setChecked(boolean value)
+		{
+			checked = value;
 		}
 		private String iconCls;
-		public final String getIconCls() throws Exception {
+		public final String getIconCls()
+		{
 			return iconCls;
 		}
-		public final void setIconCls(String value)throws Exception
-	{iconCls = value;
+		public final void setIconCls(String value)
+		{
+			iconCls = value;
 		}
 		private EasyuiTreeNodeAttributes attributes;
-		public final EasyuiTreeNodeAttributes getAttributes() throws Exception {
+		public final EasyuiTreeNodeAttributes getAttributes()
+		{
 			return attributes;
 		}
-		public final void setAttributes(EasyuiTreeNodeAttributes value)throws Exception
-	{attributes = value;
+		public final void setAttributes(EasyuiTreeNodeAttributes value)
+		{
+			attributes = value;
 		}
 		private ArrayList<EasyuiTreeNode> children;
-		public final ArrayList<EasyuiTreeNode> getChildren() throws Exception {
+		public final ArrayList<EasyuiTreeNode> getChildren()
+		{
 			return children;
 		}
-		public final void setChildren(ArrayList<EasyuiTreeNode> value)throws Exception
-	{children = value;
+		public final void setChildren(ArrayList<EasyuiTreeNode> value)
+		{
+			children = value;
 		}
 	}
 
 	public static class EasyuiTreeNodeAttributes
 	{
 		private String No;
-		public final String getNo() throws Exception {
+		public final String getNo()
+		{
 			return No;
 		}
-		public final void setNo(String value)throws Exception
-	{No = value;
+		public final void setNo(String value)
+		{
+			No = value;
 		}
 		private String Name;
-		public final String getName() throws Exception {
+		public final String getName()
+		{
 			return Name;
 		}
-		public final void setName(String value)throws Exception
-	{Name = value;
+		public final void setName(String value)
+		{
+			Name = value;
 		}
 		private String ParentNo;
-		public final String getParentNo() throws Exception {
+		public final String getParentNo()
+		{
 			return ParentNo;
 		}
-		public final void setParentNo(String value)throws Exception
-	{ParentNo = value;
+		public final void setParentNo(String value)
+		{
+			ParentNo = value;
 		}
 		private String ParentName;
-		public final String getParentName() throws Exception {
+		public final String getParentName()
+		{
 			return ParentName;
 		}
-		public final void setParentName(String value)throws Exception
-	{ParentName = value;
+		public final void setParentName(String value)
+		{
+			ParentName = value;
 		}
 		private String TType;
-		public final String getTType() throws Exception {
+		public final String getTType()
+		{
 			return TType;
 		}
-		public final void setTType(String value)throws Exception
-	{TType = value;
+		public final void setTType(String value)
+		{
+			TType = value;
 		}
 		private String Code;
-		public final String getCode() throws Exception {
+		public final String getCode()
+		{
 			return Code;
 		}
-		public final void setCode(String value)throws Exception
-	{Code = value;
+		public final void setCode(String value)
+		{
+			Code = value;
 		}
 	}
 

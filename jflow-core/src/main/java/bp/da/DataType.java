@@ -2,11 +2,14 @@ package bp.da;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
@@ -20,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import net.sf.json.JSONObject;
 import net.sf.json.util.JSONUtils;
+import net.sourceforge.jtds.jdbc.DateTime;
 import org.apache.commons.io.FileUtils;
 import bp.wf.Glo;
 import bp.web.*;
@@ -27,20 +31,67 @@ import org.springframework.core.io.ClassPathResource;
 
 public class DataType {
 
+
+    /**
+     获得两个日期之间的天数
+
+     @param dtoffrom
+     @param dtofto
+     @return
+     */
+    public static float GeTimeLimits(String dtoffrom, String dtofto)
+    {
+        if (dtoffrom == null || dtoffrom.length() <= 7)
+        {
+            return 0;
+        }
+
+        if (dtofto == null || dtofto.length() <= 7)
+        {
+            return 0;
+        }
+
+        Date dtfrom = DataType.ParseSysDate2DateTime(dtoffrom);
+        Date dtto = DataType.ParseSysDate2DateTime(dtofto);
+        long diff = dtto.getTime() - dtfrom.getTime();
+        float day = (float)diff / (1000 * 60 * 60 * 24);
+        day = Float.parseFloat(String.format("%.2f", day));
+        return day;
+    }
+    /**
+     获得两个时间的参数
+
+     @param dtoffrom 时间从
+     @return
+     */
+    public static float GeTimeLimits(String dtoffrom)
+    {
+        return GeTimeLimits(dtoffrom, DataType.getCurrentDateTime());
+    }
+    public static float GetSpanMinute(String fromdatetim, String toDateTime)
+    {
+        java.util.Date dtfrom = DataType.ParseSysDateTime2DateTime(fromdatetim);
+        java.util.Date dtto = new java.util.Date();
+        long diff = dtto.getTime() - dtfrom.getTime();
+        long day = diff / (24 * 60 * 60 * 1000);
+        long hour = (diff / (60 * 60 * 1000) - day * 24);
+        long min = ((diff / (60 * 1000)) - day * 24 * 60 - hour * 60);
+        int mn = (int) min;
+        int hu = (int) hour;
+        return mn + hu * 60;
+    }
+
+
     public static boolean IsNullOrEmpty(Object object) {
         if (object == null || object.equals("") == true || object.equals("null") == true)
             return true;
         return false;
     }
 
-    public static String ParseStringForNo() {
-        return null;
 
-    }
-
-    public static final String RegEx_Replace_FirstXZ = "^(_|[0-9])+";
-    public static final String RegEx_Replace_OnlySZX = "[\\u4e00-\\u9fa5]|[^0-9a-zA-Z_]";
-    public static final String RegEx_Replace_OnlyHSZX = "[^0-9a-zA-Z_\\u4e00-\\u9fa5]";
+    public static final String RegEx_replace_FirstXZ = "^(_|[0-9])+";
+    public static final String RegEx_replace_OnlySZX = "[\\u4e00-\\u9fa5]|[^0-9a-zA-Z_]";
+    public static final String RegEx_replace_OnlyHSZX = "[^0-9a-zA-Z_\\u4e00-\\u9fa5]";
 
     // / <summary>
     // / 获取两个时间之间的字符串表示形式，如：1天2时34分
@@ -274,7 +325,7 @@ public class DataType {
         }
         String yf = dt.substring(5, 7);
 
-        // string member and was converted to Java 'if-else' logic:
+        // String member and was converted to Java 'if-else' logic:
         // switch (yf)
         if (yf.equals("01") || yf.equals("02") || yf.equals("03")) {
             return dt.substring(0, 4) + "-03";
@@ -629,7 +680,7 @@ public class DataType {
                 filePath.indexOf("DataUser/FlowDesc/") != -1 || filePath.indexOf("DataUser/Temp/") != -1
                 || filePath.indexOf("DataUser/JSLibData/") != -1 || filePath.indexOf("DataUser/InstancePacketOfData/") != -1) ? false : true;
         try {
-            if (SystemConfig.getIsJarRun() && isRunJar) {
+            if (SystemConfig.isJarRun() && isRunJar) {
                 ClassPathResource classPathResource = new ClassPathResource(filePath);
                 InputStream inputStream = classPathResource.getInputStream();
                 StringBuilder stringBuilder = new StringBuilder();
@@ -1200,7 +1251,7 @@ public class DataType {
         }
     }
 
-    public static String ParseFloatToCash(float money) throws Exception {
+    public static String ParseFloatToCache(float money) throws Exception {
         if (money == 0) {
             return "零圆零角零分";
         }
@@ -1260,8 +1311,14 @@ public class DataType {
     /**
      * 系统定义的时间格式 yyyy-MM-dd .
      */
-    public static String getSysDataFormat() {
+    public static String getSysDateFormat() {
         return "yyyy-MM-dd";
+    }
+
+    public static String SysDateFormat(Date dt) {
+
+        SimpleDateFormat matter = new SimpleDateFormat("yyyy-MM-dd");
+        return matter.format(dt);
     }
 
     /**
@@ -1555,7 +1612,9 @@ public class DataType {
     }
 
     public static void main(String[] args) {
-        System.out.println(getCurrentDateTimeCN());
+        long ts =new Date().getTime() -new Date("2023-08-02 14:00:00").getTime();
+        java.time.Duration.ofSeconds(ts).toHours();
+        System.out.println( java.time.Duration.ofSeconds(ts).toHours());
     }
 
     /**
@@ -1659,17 +1718,23 @@ public class DataType {
         return ds;
     }
 
-    public static int GetSpanMinute(String fromdatetim, String toDateTime) throws ParseException {
+
+    public static int GetSpanHours(String fromdatetim, String toDateTime) throws ParseException {
         java.util.Date dtfrom = DataType.ParseSysDateTime2DateTime(fromdatetim);
         java.util.Date dtto = DataType.ParseSysDateTime2DateTime(toDateTime);
         long diff = dtto.getTime() - dtfrom.getTime();
         long day = diff / (24 * 60 * 60 * 1000);
         long hour = (diff / (60 * 60 * 1000) - day * 24);
-        long min = ((diff / (60 * 1000)) - day * 24 * 60 - hour * 60);
-        int mn = (int) min;
-        return mn;
+        return (int)hour;
     }
 
+    public static float GetSpanHours(Date fromdatetim, Date toDateTime) throws ParseException {
+        long diff = toDateTime.getTime() - fromdatetim.getTime();
+        float day = diff / (24 * 60 * 60 * 1000);
+        float hour = (diff / (60 * 60 * 1000) - day * 24);
+        hour = Float.parseFloat(String.format("%.2f", hour));
+        return hour;
+    }
     /**
      * 到现在的时间
      * <p>
@@ -1695,6 +1760,14 @@ public class DataType {
     public static String getSysDateTimeFormat() {
         return "yyyy-MM-dd HH:mm";
     }
+
+    public static String SysDateTimeFormat(Date dt) {
+
+        SimpleDateFormat matter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+         return  matter.format(dt);
+
+    }
+
 
     /**
      * 系统定义日期时间格式 yyyy-MM-dd hh:mm
@@ -1884,6 +1957,18 @@ public class DataType {
 
     }
 
+    /**
+     * 根据一个日期，获得该日期属于一年的第几周.
+     * @param dataTimeStr
+     * @return
+     */
+    public static int getCurrentWeekGetWeekByDay(String dataTimeStr) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(ParseSysDate2DateTime(dataTimeStr));
+        int weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR);
+        return  weekOfYear;
+    }
+
     public static String GenerBR(int spaceNum) {
         String strs = "";
         while (spaceNum != 0) {
@@ -2038,7 +2123,7 @@ public class DataType {
             return "";
         }
 
-        String nStr = nameStr.replaceAll(RegEx_Replace_OnlyHSZX, "");
+        String nStr = nameStr.replaceAll(RegEx_replace_OnlyHSZX, "");
 
         if (maxLen > 0 && nStr.length() > maxLen) {
             return nStr.substring(0, maxLen);
@@ -2062,7 +2147,7 @@ public class DataType {
             return "";
         }
 
-        String nStr = noStr.replaceAll(RegEx_Replace_OnlySZX, "").replaceAll(RegEx_Replace_FirstXZ, "");
+        String nStr = noStr.replaceAll(RegEx_replace_OnlySZX, "").replaceAll(RegEx_replace_FirstXZ, "");
 
         if (maxLen > 0 && nStr.length() > maxLen) {
             return nStr.substring(0, maxLen);
@@ -2147,5 +2232,57 @@ public class DataType {
             Log.DebugWriteError("err@转换JSON时出现异常." + e.getMessage());
         }
         return hashtable;
+    }
+    public static Hashtable ParseParasToHT(String paras)
+    {
+        Hashtable ht = new Hashtable();
+        if (paras != null)
+        {
+            paras = paras.replace("；", ";");
+            paras = paras.replace(" ", "");
+            paras = paras.replace("@", ";");
+
+            String[] args = paras.split(";");
+            for(String arg : args)
+            {
+                String[] kv = arg.split("=");
+                if (kv.length > 1)
+                {
+                    String key = kv[0];
+                    if (ht.contains(key) == true)
+                        continue;
+                    ht.put(key, kv[1]);
+                }
+            }
+        }
+        return ht;
+    }
+    public static String HttpDownloadFile(String url, String path) throws Exception {
+        URL httpUrl = new URL(url);
+        HttpURLConnection conn = (HttpURLConnection) httpUrl.openConnection();
+        conn.setRequestMethod("POST");
+        conn.connect();
+        BufferedInputStream bis = new BufferedInputStream(conn.getInputStream());
+        String content_disposition = conn.getHeaderField("content-disposition");
+        //微信服务器生成的文件名称
+        String fileName ="";
+        String[] content_arr = content_disposition.split(";");
+        if(content_arr.length  == 2){
+            String tmp = content_arr[1];
+            int index = tmp.indexOf("\"");
+            fileName =tmp.substring(index+1, tmp.length()-1);
+        }
+        //生成不同文件名称
+        File file = new File(path);
+        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+        byte[] buf = new byte[2048];
+        int length = bis.read(buf);
+        while(length != -1){
+            bos.write(buf, 0, length);
+            length = bis.read(buf);
+        }
+        bos.close();
+        bis.close();
+        return path;
     }
 }

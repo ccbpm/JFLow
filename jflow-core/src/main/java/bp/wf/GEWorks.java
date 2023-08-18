@@ -1,10 +1,6 @@
 package bp.wf;
 
-import bp.da.*;
-import bp.wf.*;
 import bp.en.*;
-import bp.*;
-
 /** 
  普通工作s
 */
@@ -25,7 +21,8 @@ public class GEWorks extends Works
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		if (this.NodeID == 0)
 		{
 			return new GEWork();
@@ -35,14 +32,15 @@ public class GEWorks extends Works
 	/** 
 	 普通工作ID
 	*/
-	public GEWorks() throws Exception {
+	public GEWorks()
+	{
 	}
 	/** 
 	 普通工作ID
 	 
-	 param nodeid
+	 @param nodeid
 	*/
-	public GEWorks(int nodeid, String nodeFrmID) throws Exception
+	public GEWorks(int nodeid, String nodeFrmID)
 	{
 		this.NodeID = nodeid;
 		this.NodeFrmID = nodeFrmID;

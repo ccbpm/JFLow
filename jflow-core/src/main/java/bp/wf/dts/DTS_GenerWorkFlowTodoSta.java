@@ -1,11 +1,11 @@
 package bp.wf.dts;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
 import bp.wf.*;
-
-import java.util.Date;
-
+import java.util.*;
+import java.time.*;
 
 /** 
  更新WF_GenerWorkerFlow.TodoSta状态. 
@@ -15,7 +15,7 @@ public class DTS_GenerWorkFlowTodoSta extends Method
 	/** 
 	 更新WF_GenerWorkerFlow.TodoSta状态.
 	*/
-	public DTS_GenerWorkFlowTodoSta()throws Exception
+	public DTS_GenerWorkFlowTodoSta()
 	{
 		this.Title = "更新WF_GenerWorkerFlow.TodoSta状态.";
 		this.Help = "该方法每天的8点自动执行";
@@ -52,8 +52,7 @@ public class DTS_GenerWorkFlowTodoSta extends Method
 	 @return 返回执行结果
 	*/
 	@Override
-	public Object Do()throws Exception
-	{
+	public Object Do() throws Exception {
 		//系统期望的是，每一个人仅发一条信息.  "您有xx个预警工作，yy个预期工作，请及时处理。”
 
 		DataTable dtEmps = new DataTable();
@@ -61,8 +60,13 @@ public class DTS_GenerWorkFlowTodoSta extends Method
 		dtEmps.Columns.Add("WarningNum", Integer.class);
 		dtEmps.Columns.Add("OverTimeNum", Integer.class);
 
-		String timeDT = DataType.getCurrentDateByFormart("yyyy-MM-dd");
+		String timeDT = DataType.getCurrentDate();// DataType.getCurrentDate();
 		String sql = "";
+
+		//查询出预警的工作.
+		//sql = " SELECT DISTINCT FK_Emp,COUNT(FK_Emp) as Num , 0 as DBType FROM WF_GenerWorkerlist A WHERE a.DTOfWarning =< '" + timeDT + "' AND a.SDT <= '" + timeDT + "' AND A.IsPass=0  ";
+		//sql += "  UNION ";
+		//sql += "SELECT DISTINCT FK_Emp,COUNT(FK_Emp) as Num , 1 as DBType FROM WF_GenerWorkerlist A WHERE  a.SDT >'" + timeDT + "' AND A.IsPass=0 ";
 
 		sql = "SELECT * FROM WF_GenerWorkerlist A WHERE a.DTOfWarning >'" + timeDT + "' AND a.SDT <'" + timeDT + "' AND A.IsPass=0 ORDER BY FK_Node,FK_Emp ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
@@ -95,7 +99,7 @@ public class DTS_GenerWorkFlowTodoSta extends Method
 			}
 
 			//如果仅仅提醒一次.
-		   // if (nd.WAlertRole == CHAlertRole.OneDayOneTime && isPM == true)
+		   // if (nd.getWAlertRole() == CHAlertRole.OneDayOneTime && isPM == true)
 			if (nd.getWAlertRole() == CHAlertRole.OneDayOneTime && 1 == 1)
 			{
 
@@ -105,7 +109,7 @@ public class DTS_GenerWorkFlowTodoSta extends Method
 				continue;
 			}
 
-			if (!emp.getNo().equals(fk_emp))
+			if (!Objects.equals(emp.getNo(), fk_emp))
 			{
 				emp.setNo(fk_emp);
 				emp.Retrieve();

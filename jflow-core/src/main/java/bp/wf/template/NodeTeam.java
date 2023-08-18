@@ -1,12 +1,7 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.en.*;
-import bp.en.Map;
-import bp.wf.port.*;
-import bp.*;
+import bp.en.*; import bp.en.Map;
 import bp.wf.*;
-import java.util.*;
 
 /** 
  节点用户组
@@ -22,7 +17,8 @@ public class NodeTeam extends EntityMyPK
 	 UI界面上的访问控制
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.OpenAll();
 		return uac;
@@ -30,27 +26,22 @@ public class NodeTeam extends EntityMyPK
 	/** 
 	节点
 	*/
-	public final int getFK_Node() throws Exception
-	{
+	public final int getNodeID()  {
 		return this.GetValIntByKey(NodeTeamAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)  throws Exception
-	 {
+	public final void setNodeID(int value){
 		this.SetValByKey(NodeTeamAttr.FK_Node, value);
 	}
-	public final String getFKTeamT() throws Exception
-	{
+	public final String getFKTeamT()  {
 		return this.GetValRefTextByKey(NodeTeamAttr.FK_Team);
 	}
 	/** 
 	 用户组
 	*/
-	public final String getFK_Team() throws Exception
-	{
+	public final String getFKTeam()  {
 		return this.GetValStringByKey(NodeTeamAttr.FK_Team);
 	}
-	public final void setFK_Team(String value)  throws Exception
-	 {
+	public final void setFKTeam(String value){
 		this.SetValByKey(NodeTeamAttr.FK_Team, value);
 	}
 
@@ -61,43 +52,49 @@ public class NodeTeam extends EntityMyPK
 	/** 
 	 节点用户组
 	*/
-	public NodeTeam()  {
+	public NodeTeam()
+	{
 	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
 		}
 
-		Map map = new Map("WF_NodeTeam", "节点岗位");
-		map.AddMyPK();
-		map.AddTBInt(NodeTeamAttr.FK_Node, 0, "节点", false, false);
+		Map map = new Map("WF_NodeTeam", "节点权限组");
 
-			// #warning ,这里为了方便用户选择，让分组都统一采用了枚举类型. edit zhoupeng. 2015.04.28. 注意jflow也要修改.
+
+		map.AddMyPK(true);
+
+		map.AddTBInt(NodeTeamAttr.FK_Node, 0, "节点", false, false);
 		map.AddDDLEntities(NodeTeamAttr.FK_Team, null, "用户组", new bp.port.Teams(), true);
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+
 	@Override
-	protected  boolean beforeUpdateInsertAction() throws Exception
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
-		this.setMyPK(this.getFK_Node() + "_" + this.getFK_Team());
+		this.setMyPK(this.getNodeID() + "_" + this.getFKTeam());
 		return super.beforeUpdateInsertAction();
 	}
+
 	/** 
-	 节点岗位发生变化，删除该节点记忆的接收人员。
+	 节点权限组发生变化，删除该节点记忆的接收人员。
 	 
 	 @return 
 	*/
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		RememberMe remeberMe = new RememberMe();
-		remeberMe.Delete(RememberMeAttr.FK_Node, this.getFK_Node());
+		remeberMe.Delete(RememberMeAttr.FK_Node, this.getNodeID());
 		return super.beforeInsert();
 	}
 

@@ -1,10 +1,6 @@
 package bp.wf;
 
-import bp.da.*;
 import bp.en.*;
-import bp.wf.*;
-import bp.port.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -18,13 +14,15 @@ public class RememberMes extends Entities
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new RememberMe();
 	}
 	/** 
 	 RememberMe
 	*/
-	public RememberMes() throws Exception {
+	public RememberMes()
+	{
 	}
 
 		///#endregion
@@ -36,7 +34,8 @@ public class RememberMes extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.List<RememberMe> ToJavaList() {
+	public final java.util.List<RememberMe> ToJavaList()
+	{
 		return (java.util.List<RememberMe>)(Object)this;
 	}
 	/** 
@@ -44,7 +43,8 @@ public class RememberMes extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<RememberMe> Tolist()  {
+	public final ArrayList<RememberMe> Tolist()
+	{
 		ArrayList<RememberMe> list = new ArrayList<RememberMe>();
 		for (int i = 0; i < this.size(); i++)
 		{

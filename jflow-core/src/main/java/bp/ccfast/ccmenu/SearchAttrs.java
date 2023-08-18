@@ -1,10 +1,8 @@
 package bp.ccfast.ccmenu;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
-import bp.ccfast.*;
-import java.util.*;
+
+import java.util.ArrayList;
 
 /** 
  查询条件s
@@ -16,13 +14,15 @@ public class SearchAttrs extends EntitiesNoName
 	/** 
 	 查询条件s
 	*/
-	public SearchAttrs()  {
+	public SearchAttrs()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new SearchAttr();
 	}
 
@@ -35,7 +35,8 @@ public class SearchAttrs extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<SearchAttr> ToJavaList() {
+	public final java.util.List<SearchAttr> ToJavaList()
+	{
 		return (java.util.List<SearchAttr>)(Object)this;
 	}
 	/** 
@@ -43,7 +44,8 @@ public class SearchAttrs extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<SearchAttr> Tolist() {
+	public final ArrayList<SearchAttr> Tolist()
+	{
 		ArrayList<SearchAttr> list = new ArrayList<SearchAttr>();
 		for (int i = 0; i < this.size(); i++)
 		{

@@ -1,7 +1,8 @@
 package bp.ccfast.portal.windowext;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.ccfast.portal.*;
+import bp.en.Map;
 
 /** 
  柱状图
@@ -14,7 +15,8 @@ public class ChartChina extends EntityNoName
 	 控制权限
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (bp.web.WebUser.getIsAdmin() == true)
 		{
@@ -41,27 +43,23 @@ public class ChartChina extends EntityNoName
 	/** 
 	 柱状图
 	*/
-	public ChartChina()  {
+	public ChartChina()
+	{
 	}
 	/** 
 	 柱状图
 	 
-	 param no
+	 @param no
 	*/
-	public ChartChina(String no)
-	{
+	public ChartChina(String no) throws Exception  {
 		this.setNo(no);
-		try {
-			this.Retrieve();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.Retrieve();
 	}
-	/** 
-	 EnMap
-	*/
+	/**
+	 * EnMap
+	 */
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -87,7 +85,7 @@ public class ChartChina extends EntityNoName
 		map.AddBoolean("IsLine", false, "折线图?", true, true);
 		map.AddBoolean("IsZZT", false, "柱状图?", true, true);
 		map.AddBoolean("IsRing", false, "显示环形图?", true, true);
-		 //   map.AddBoolean("IsRate", false, "百分比扇形图?", true, true);
+	 //   map.AddBoolean("IsRate", false, "百分比扇形图?", true, true);
 
 		map.AddDDLSysEnum(WindowTemplateAttr.DefaultChart, 0, "默认显示图形", true, true, WindowTemplateAttr.DefaultChart, "@0=饼图@1=折线图@2=柱状图@3=环形图");
 
@@ -96,9 +94,9 @@ public class ChartChina extends EntityNoName
 		map.AddDDLSysEnum(WindowTemplateAttr.DBType, 0, "数据源类型", true, true, "WindowsDBType", "@0=数据库查询SQL@1=执行Url返回Json@2=执行\\DataUser\\JSLab\\Windows.js的函数.");
 		map.AddTBStringDoc(WindowTemplateAttr.Docs, null, "SQL内容表达式", true, false, true, 10);
 
-			//map.AddTBStringDoc(WindowTemplateAttr.C1Ens, null, "列1外键数据(可选)", true, false, true);
-			//map.AddTBStringDoc(WindowTemplateAttr.C2Ens, null, "列2外键数据(可选)", true, false, true);
-			//map.AddTBStringDoc(WindowTemplateAttr.C3Ens, null, "列3外键数据(可选)", true, false, true);
+		//map.AddTBStringDoc(WindowTemplateAttr.C1Ens, null, "列1外键数据(可选)", true, false, true);
+		//map.AddTBStringDoc(WindowTemplateAttr.C2Ens, null, "列2外键数据(可选)", true, false, true);
+		//map.AddTBStringDoc(WindowTemplateAttr.C3Ens, null, "列3外键数据(可选)", true, false, true);
 
 		map.AddDDLEntities(WindowTemplateAttr.DBSrc, null, "数据源", new bp.sys.SFDBSrcs(), true);
 

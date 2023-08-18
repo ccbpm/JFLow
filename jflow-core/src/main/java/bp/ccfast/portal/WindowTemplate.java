@@ -2,9 +2,11 @@ package bp.ccfast.portal;
 
 import bp.da.*;
 import bp.en.*;
+import bp.en.Map;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 /** 
  信息块
@@ -17,7 +19,8 @@ public class WindowTemplate extends EntityNoName
 	 控制权限
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (bp.web.WebUser.getIsAdmin() == true)
 		{
@@ -37,67 +40,54 @@ public class WindowTemplate extends EntityNoName
 	/** 
 	 窗口模式
 	*/
-	public final String getWinDocModel()
-	{
-		return this.GetValStringByKey(WindowTemplateAttr.WinDocModel);
+	public final String getWinDocModel() {
+		return
+				this.GetValStringByKey(WindowTemplateAttr.WinDocModel);
 	}
-	public final void setWinDocModel(String value)
-	 {
+	public final void setWinDocModel(String value)  {
 		this.SetValByKey(WindowTemplateAttr.WinDocModel, value);
 	}
 
 	/** 
 	 更多的URL
 	*/
-	public final String getMoreUrl()
-	{
+	public final String getMoreUrl()  {
 		return this.GetValStrByKey(WindowTemplateAttr.MoreUrl);
 	}
-	public final void setMoreUrl(String value)
-	 {
+	public final void setMoreUrl(String value)  {
 		this.SetValByKey(WindowTemplateAttr.MoreUrl, value);
 	}
 	/** 
 	 更多标签
 	*/
-	public final String getMoreLab()
-	{
+	public final String getMoreLab()  {
 		return this.GetValStrByKey(WindowTemplateAttr.MoreLab);
 	}
-	public final void setMoreLab(String value)
-	 {
+	public final void setMoreLab(String value)  {
 		this.SetValByKey(WindowTemplateAttr.MoreLab, value);
 	}
-	public final int getPopW()
-	{
+	public final int getPopW() {
 		return this.GetValIntByKey(WindowTemplateAttr.PopW);
 	}
-	public final void setPopW(int value)
-	 {
+	public final void setPopW(int value)  {
 		this.SetValByKey(WindowTemplateAttr.PopW, value);
 	}
-	public final int getPopH()
-	{
+	public final int getPopH() {
 		return this.GetValIntByKey(WindowTemplateAttr.PopH);
 	}
-	public final void setPopH(int value)
-	 {
+	public final void setPopH(int value)  {
 		this.SetValByKey(WindowTemplateAttr.PopH, value);
 	}
-	public final int getColSpan()
-	{
+	public final int getColSpan() {
 		return this.GetValIntByKey(WindowTemplateAttr.ColSpan);
 	}
-	public final void setColSpan(int value)
-	 {
+	public final void setColSpan(int value)  {
 		this.SetValByKey(WindowTemplateAttr.ColSpan, value);
 	}
-	public final int getMoreLinkModel()
-	{
+	public final int getMoreLinkModel() {
 		return this.GetValIntByKey(WindowTemplateAttr.MoreLinkModel);
 	}
-	public final void setMoreLinkModel(int value)
-	 {
+	public final void setMoreLinkModel(int value)  {
 		this.SetValByKey(WindowTemplateAttr.MoreLinkModel, value);
 	}
 	/** 
@@ -107,77 +97,63 @@ public class WindowTemplate extends EntityNoName
 	/** 
 	 用户是否可以删除
 	*/
-	public final boolean isDel()
-	{
+	public final boolean getItIsDel() {
 		return this.GetValBooleanByKey(WindowTemplateAttr.IsDel);
 	}
-	public final void setDel(boolean value)
-	 {
+	public final void setItIsDel(boolean value)  {
 		this.SetValByKey(WindowTemplateAttr.IsDel, value);
 	}
 	/** 
 	 是否禁用?
 	*/
-	public final boolean isEnable()
-	{
+	public final boolean getItIsEnable() {
 		return this.GetValBooleanByKey(WindowTemplateAttr.IsEnable);
 	}
-	public final void setEnable(boolean value)
-	 {
+	public final void setItIsEnable(boolean value)  {
 		this.SetValByKey(WindowTemplateAttr.IsEnable, value);
 	}
 
 	/** 
 	 打开方式
 	*/
-	public final int getOpenWay()
-	{
+	public final int getOpenWay() {
 		return this.GetValIntByKey(WindowTemplateAttr.OpenWay);
 	}
-	public final void setOpenWay(int value)
-	 {
+	public final void setOpenWay(int value)  {
 		this.SetValByKey(WindowTemplateAttr.OpenWay, value);
 	}
 	/** 
 	 顺序号
 	*/
-	public final int getIdx()
-	{
+	public final int getIdx() {
 		return this.GetValIntByKey(WindowTemplateAttr.Idx);
 	}
-	public final void setIdx(int value)
-	 {
+	public final void setIdx(int value)  {
 		this.SetValByKey(WindowTemplateAttr.Idx, value);
 	}
-	public final String getDocGenerRDT()
-	{
+	public final String getDocGenerRDT()  {
 		return this.GetValStrByKey(WindowTemplateAttr.DocGenerRDT);
 	}
-	public final void setDocGenerRDT(String value)
-	 {
+	public final void setDocGenerRDT(String value)  {
 		this.SetValByKey(WindowTemplateAttr.DocGenerRDT, value);
 	}
-	public final String getPageID()
-	{
+	public final String getPageID()  {
 		return this.GetValStrByKey(WindowTemplateAttr.PageID);
 	}
-	public final void setPageID(String value)
-	 {
+	public final void setPageID(String value)  {
 		this.SetValByKey(WindowTemplateAttr.PageID, value);
 	}
-	public final String getDocs()
-	{
+	public final String getDocs()  {
 		return this.GetValStrByKey(WindowTemplateAttr.Docs);
 	}
-	public final void setDocs(String value)
-	 {
+	public final void setDocs(String value)  {
 		this.SetValByKey(WindowTemplateAttr.Docs, value);
 	}
 	/** 
 	 获取参数化的字符串
 	 
-	 param stringInput
-	 param dr
+	 @param stringInput
+	 @param dr
 	 @return 
 	*/
 	private String GetParameteredString(String stringInput, DataRow dr)
@@ -204,27 +180,24 @@ public class WindowTemplate extends EntityNoName
 	/** 
 	 信息块
 	*/
-	public WindowTemplate()  {
+	public WindowTemplate()
+	{
 	}
 	/** 
 	 信息块
 	 
-	 param no
+	 @param no
 	*/
-	public WindowTemplate(String no)
+	public WindowTemplate(String no) throws Exception
 	{
 		this.setNo(no);
-		try {
-			this.Retrieve();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.Retrieve();
 	}
 	/** 
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -247,8 +220,8 @@ public class WindowTemplate extends EntityNoName
 
 			///#endregion 基本信息.
 
-			// map.AddDDLSysEnum(WindowTemplateAttr.ColSpan, 1, "占的列数", true, true, WindowTemplateAttr.ColSpan,
-			//  "@1=1列@2=2列@3=覆盖新窗口");
+		// map.AddDDLSysEnum(WindowTemplateAttr.ColSpan, 1, "占的列数", true, true, WindowTemplateAttr.ColSpan,
+		//  "@1=1列@2=2列@3=覆盖新窗口");
 
 
 			///#region 更多的信息定义.
@@ -269,9 +242,9 @@ public class WindowTemplate extends EntityNoName
 
 
 			///#region 权限定义.
-			// 0=Html , 1=SQL列表
-			//  map.AddTBInt(WindowTemplateAttr.WinDocModel, 0, "内容类型", false, true);
-			// map.AddTBString(WindowTemplateAttr.Docs, null, "内容", true, false, 0, 4000, 20);
+		// 0=Html , 1=SQL列表
+		//  map.AddTBInt(WindowTemplateAttr.WinDocModel, 0, "内容类型", false, true);
+		// map.AddTBString(WindowTemplateAttr.Docs, null, "内容", true, false, 0, 4000, 20);
 
 			///#endregion 权限定义.
 
@@ -304,7 +277,7 @@ public class WindowTemplate extends EntityNoName
 		map.AddBoolean("IsLine", false, "折线图?", true, true);
 		map.AddBoolean("IsZZT", false, "柱状图?", true, true);
 		map.AddBoolean("IsRing", false, "显示环形图?", true, true);
-	  //      map.AddBoolean("IsRate", false, "百分比扇形图?", true, true);
+		map.AddBoolean("IsRate", false, "百分比扇形图?", true, true);
 
 		map.AddDDLSysEnum(WindowTemplateAttr.DefaultChart, 0, "默认显示图形", true, true, WindowTemplateAttr.DefaultChart, "@0=饼图@1=折线图@2=柱状图@3=显示环形图");
 
@@ -320,7 +293,8 @@ public class WindowTemplate extends EntityNoName
 		///#endregion
 
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		this.setNo(DBAccess.GenerGUID(0, null, null));
 		if (DataType.IsNullOrEmpty(this.getPageID()) == true)
 		{
@@ -330,7 +304,8 @@ public class WindowTemplate extends EntityNoName
 	}
 
 	@Override
-	protected void afterDelete() throws Exception {
+	protected void afterDelete() throws Exception
+	{
 		//删除它的实例.
 		Windows ens = new Windows();
 		ens.Delete(WindowAttr.WindowTemplateNo, this.getNo());

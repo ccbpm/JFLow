@@ -14,8 +14,8 @@ public class GloVars extends EntitiesNoName
 	/** 
 	 设置配置文件
 	 
-	 param key key
-	 param val val
+	 @param key key
+	 @param val val
 	*/
 	public static int SetValByKey(String key, Object val) throws Exception {
 		GloVar en = new GloVar(key, val);
@@ -25,7 +25,7 @@ public class GloVars extends EntitiesNoName
 	/** 
 	 获取html数据
 	 
-	 param key
+	 @param key
 	 @return 
 	*/
 	public static String GetValByKeyHtml(String key) throws Exception {
@@ -34,7 +34,7 @@ public class GloVars extends EntitiesNoName
 	public static String GetValByKey(String key) throws Exception {
 		for (GloVar cfg : GloVars.getMyGloVars().ToJavaList())
 		{
-			if (cfg.getNo().equals(key))
+			if (Objects.equals(cfg.getNo(), key))
 			{
 				return cfg.getVal();
 			}
@@ -45,13 +45,13 @@ public class GloVars extends EntitiesNoName
 	/** 
 	 得到，一个key.
 	 
-	 param key
+	 @param key
 	 @return 
 	*/
 	public static String GetValByKey(String key, String isNullAs) throws Exception {
 		for (GloVar cfg : GloVars.getMyGloVars().ToJavaList())
 		{
-			if (cfg.getNo().equals(key))
+			if (Objects.equals(cfg.getNo(), key))
 			{
 				return cfg.getVal();
 			}
@@ -64,19 +64,20 @@ public class GloVars extends EntitiesNoName
 	public static int GetValByKeyInt(String key, int isNullAs) throws Exception {
 		for (GloVar cfg : GloVars.getMyGloVars().ToJavaList())
 		{
-			if (cfg.getNo().equals(key))
+			if (Objects.equals(cfg.getNo(), key))
 			{
 				return cfg.getValOfInt();
 			}
 		}
 
 		GloVar en = new GloVar(key, isNullAs);
+		//GloVar en = new GloVar(key);
 		return en.getValOfInt();
 	}
 	public static int GetValByKeyDecimal(String key, int isNullAs) throws Exception {
 		for (GloVar cfg : GloVars.getMyGloVars().ToJavaList())
 		{
-			if (cfg.getNo().equals(key))
+			if (Objects.equals(cfg.getNo(), key))
 			{
 				return cfg.getValOfInt();
 			}
@@ -90,7 +91,7 @@ public class GloVars extends EntitiesNoName
 
 		for (GloVar cfg : GloVars.getMyGloVars().ToJavaList())
 		{
-			if (cfg.getNo().equals(key))
+			if (Objects.equals(cfg.getNo(), key))
 			{
 				return cfg.getValOfBoolen();
 			}
@@ -110,7 +111,7 @@ public class GloVars extends EntitiesNoName
 	public static float GetValByKeyFloat(String key, float isNullAs) throws Exception {
 		for (GloVar cfg : GloVars.getMyGloVars().ToJavaList())
 		{
-			if (cfg.getNo().equals(key))
+			if (Objects.equals(cfg.getNo(), key))
 			{
 				return cfg.getValOfFloat();
 			}
@@ -120,8 +121,7 @@ public class GloVars extends EntitiesNoName
 		return en.getValOfFloat();
 	}
 	private static GloVars _MyGloVars = null;
-	public static GloVars getMyGloVars()throws Exception
-	{
+	public static GloVars getMyGloVars() throws Exception {
 		if (_MyGloVars == null)
 		{
 			_MyGloVars = new GloVars();
@@ -129,7 +129,7 @@ public class GloVars extends EntitiesNoName
 		}
 		return _MyGloVars;
 	}
-	public static void ReSetVal()throws Exception
+	public static void ReSetVal()
 	{
 		_MyGloVars = null;
 	}
@@ -148,29 +148,29 @@ public class GloVars extends EntitiesNoName
 	/** 
 	 全局变量s
 	*/
-	public GloVars()throws Exception
+	public GloVars()
 	{
 	}
 	/** 
 	 全局变量s
 	 
-	 param fk_mapdata s
+	 @param fk_mapdata s
 	*/
 	public GloVars(String fk_mapdata) throws Exception {
-		if (bp.difference.SystemConfig.getIsDebug())
+		if (bp.difference.SystemConfig.isDebug())
 		{
 			this.Retrieve(MapAttrAttr.FK_MapData, fk_mapdata);
 		}
 		else
 		{
-			this.RetrieveFromCash(MapAttrAttr.FK_MapData, (Object)fk_mapdata);
+			this.RetrieveFromCache(MapAttrAttr.FK_MapData, (Object)fk_mapdata);
 		}
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new GloVar();
 	}
@@ -184,7 +184,7 @@ public class GloVars extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<GloVar> ToJavaList()throws Exception
+	public final java.util.List<GloVar> ToJavaList()
 	{
 		return (java.util.List<GloVar>)(Object)this;
 	}
@@ -193,7 +193,7 @@ public class GloVars extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<GloVar> Tolist()throws Exception
+	public final ArrayList<GloVar> Tolist()
 	{
 		ArrayList<GloVar> list = new ArrayList<GloVar>();
 		for (int i = 0; i < this.size(); i++)

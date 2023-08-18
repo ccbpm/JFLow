@@ -1,6 +1,6 @@
 package bp.tools;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.da.*;
 import bp.*;
 
@@ -15,7 +15,7 @@ public class MethodReturnMessage<T>
 	 是否运行成功
 	*/
 	private boolean Success;
-	public final boolean getSuccess() throws Exception {
+	public final boolean getSuccess() {
 		return Success;
 	}
 	public final void setSuccess(boolean value)throws Exception
@@ -25,7 +25,7 @@ public class MethodReturnMessage<T>
 	 信息    
 	*/
 	private String Message;
-	public final String getMessage() throws Exception {
+	public final String getMessage() {
 		return Message;
 	}
 	public final void setMessage(String value)throws Exception
@@ -35,7 +35,7 @@ public class MethodReturnMessage<T>
 	 返回的数据
 	*/
 	private T Data;
-	public final T getData() throws Exception {
+	public final T getData() {
 		return Data;
 	}
 	public final void setData(T value)throws Exception

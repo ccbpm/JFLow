@@ -19,7 +19,7 @@ public class PushMsgs extends EntitiesMyPK
 	 param flowNo 流程编号
 	*/
 	public PushMsgs(String flowNo) throws Exception {
-		//this.RetrieveFromCash(PushMsgAttr.FK_Flow, flowNo);
+		//this.RetrieveFromCache(PushMsgAttr.FK_Flow, flowNo);
 		this.Retrieve(PushMsgAttr.FK_Flow, flowNo, null);
 	}
 	/** 
@@ -28,14 +28,14 @@ public class PushMsgs extends EntitiesMyPK
 	 param nodeid 节点ID
 	*/
 	public PushMsgs(int nodeid) throws Exception {
-		// this.RetrieveFromCash(PushMsgAttr.FK_Node, nodeid);
+		// this.RetrieveFromCache(PushMsgAttr.FK_Node, nodeid);
 		this.Retrieve(PushMsgAttr.FK_Node, nodeid, null);
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity() {
 		return new PushMsg();
 	}
 

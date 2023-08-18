@@ -1,10 +1,6 @@
 package bp.wf.admin;
 
-import bp.da.*;
 import bp.en.*;
-import bp.web.*;
-import bp.wf.port.admin2group.*;
-import java.util.*;
 
 /** 
  独立组织属性

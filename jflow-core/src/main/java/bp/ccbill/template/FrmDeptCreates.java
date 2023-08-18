@@ -1,6 +1,8 @@
 package bp.ccbill.template;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.ccbill.*;
 import java.util.*;
 
 /** 
@@ -13,12 +15,13 @@ public class FrmDeptCreates extends EntitiesMM
 	/** 
 	 单据可创建的部门
 	*/
-	public FrmDeptCreates()  {
+	public FrmDeptCreates()
+	{
 	}
 	/** 
 	 单据可创建的部门
 	 
-	 param nodeID 单据ID
+	 @param nodeID 单据ID
 	*/
 	public FrmDeptCreates(int nodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -28,7 +31,7 @@ public class FrmDeptCreates extends EntitiesMM
 	/** 
 	 单据可创建的部门
 	 
-	 param StationNo StationNo
+	 @param StationNo StationNo 
 	*/
 	public FrmDeptCreates(String StationNo) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -39,7 +42,8 @@ public class FrmDeptCreates extends EntitiesMM
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		return new FrmDeptCreate();
 	}
 
@@ -52,7 +56,8 @@ public class FrmDeptCreates extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmDeptCreate> ToJavaList()  {
+	public final java.util.List<FrmDeptCreate> ToJavaList()
+	{
 		return (java.util.List<FrmDeptCreate>)(Object)this;
 	}
 	/** 
@@ -60,7 +65,8 @@ public class FrmDeptCreates extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmDeptCreate> Tolist()  {
+	public final ArrayList<FrmDeptCreate> Tolist()
+	{
 		ArrayList<FrmDeptCreate> list = new ArrayList<FrmDeptCreate>();
 		for (int i = 0; i < this.size(); i++)
 		{

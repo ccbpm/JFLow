@@ -1,6 +1,10 @@
 package bp.ccbill.template;
 
-import bp.en.*;
+import bp.da.*;
+import bp.web.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.ccbill.*;
 import java.util.*;
 
 /** 
@@ -11,13 +15,15 @@ public class MethodQRCodes extends EntitiesNoName
 	/** 
 	 二维码
 	*/
-	public MethodQRCodes() {
+	public MethodQRCodes()
+	{
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new MethodQRCode();
 	}
 
@@ -27,7 +33,8 @@ public class MethodQRCodes extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<MethodQRCode> ToJavaList() {
+	public final java.util.List<MethodQRCode> ToJavaList()
+	{
 		return (java.util.List<MethodQRCode>)(Object)this;
 	}
 	/** 
@@ -35,7 +42,8 @@ public class MethodQRCodes extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<MethodQRCode> Tolist()  {
+	public final ArrayList<MethodQRCode> Tolist()
+	{
 		ArrayList<MethodQRCode> list = new ArrayList<MethodQRCode>();
 		for (int i = 0; i < this.size(); i++)
 		{

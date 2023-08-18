@@ -1,9 +1,8 @@
 package bp.wf.template;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.wf.*;
-
 
 /** 
  这里存放每个节点的信息.	 
@@ -15,65 +14,51 @@ public class NodeSimple extends Entity
 	/** 
 	 节点编号
 	*/
-	public final int getNodeID()
-	{
+	public final int getNodeID()  {
 		return this.GetValIntByKey(NodeAttr.NodeID);
 	}
-	public final void setNodeID(int value)
-	 {
+	public final void setNodeID(int value){
 		this.SetValByKey(NodeAttr.NodeID, value);
 	}
-	public final DeliveryWay getHisDeliveryWay()  {
+	public final DeliveryWay getHisDeliveryWay() {
 		return DeliveryWay.forValue(this.GetValIntByKey(NodeAttr.DeliveryWay));
 	}
-	public final void setHisDeliveryWay(DeliveryWay value)
-	 {
+	public final void setHisDeliveryWay(DeliveryWay value){
 		this.SetValByKey(NodeAttr.DeliveryWay, value);
 	}
-	public final String getDeliveryParas() throws Exception
-	{
+	public final String getDeliveryParas()  {
 		return this.GetValStringByKey(NodeAttr.DeliveryParas);
 	}
-	public final String getName() throws Exception
-	{
+	public final String getName()  {
 		return this.GetValStringByKey(NodeAttr.Name);
 	}
-	public final void setName(String value)  throws Exception
-	 {
+	public final void setName(String value){
 		this.SetValByKey(NodeAttr.Name, value);
 	}
-	public final float getX() throws Exception
-	{
+	public final float getX()  {
 		return this.GetValFloatByKey(NodeAttr.X);
 	}
-	public final void setX(float value)  throws Exception
-	 {
+	public final void setX(float value){
 		this.SetValByKey(NodeAttr.X, value);
 	}
-	public final String getHisToNDs()
-	{
-		return this.GetValStrByKey(NodeAttr.HisToNDs);
-	}
-	public final void setHisToNDs(String value)
-	{
-		this.SetValByKey(NodeAttr.HisToNDs, value);
-	}
-
-	public final boolean getIsResetAccepter()
-	{
-		return this.GetValBooleanByKey(NodeAttr.IsResetAccepter);
-	}
-
 	/** 
 	 y
 	*/
-	public final float getY() throws Exception
-	{
+	public final float getY()  {
 		return this.GetValFloatByKey(NodeAttr.Y);
 	}
-	public final void setY(float value)  throws Exception
-	 {
+	public final void setY(float value){
 		this.SetValByKey(NodeAttr.Y, value);
+	}
+
+	public final String getHisToNDs()  {
+		return this.GetValStrByKey(NodeAttr.HisToNDs);
+	}
+	public final void setHisToNDs(String value){
+		this.SetValByKey(NodeAttr.HisToNDs, value);
+	}
+	public final boolean getItIsResetAccepter()  {
+		return this.GetValBooleanByKey(NodeAttr.IsResetAccepter);
 	}
 
 		///#endregion 节点属性.
@@ -83,12 +68,13 @@ public class NodeSimple extends Entity
 	/** 
 	 节点
 	*/
-	public NodeSimple()  {
+	public NodeSimple()
+	{
 	}
 	/** 
 	 节点
 	 
-	 //param _oid 节点ID
+	 @param nodeID 节点ID
 	*/
 	public NodeSimple(int nodeID) throws Exception {
 		this.setNodeID(nodeID);
@@ -98,7 +84,7 @@ public class NodeSimple extends Entity
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap()  {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -106,8 +92,8 @@ public class NodeSimple extends Entity
 
 		Map map = new Map("WF_Node", "节点");
 
-		map.setDepositaryOfEntity( Depositary.Application);
-		map.setDepositaryOfMap( Depositary.Application);
+		map.setDepositaryOfEntity(Depositary.Application);
+		map.setDepositaryOfMap(Depositary.Application);
 
 
 			///#region 基本属性.
@@ -118,9 +104,11 @@ public class NodeSimple extends Entity
 
 		map.AddTBInt(NodeAttr.DeliveryWay, 0, "运行模式", true, true);
 		map.AddTBString(NodeAttr.DeliveryParas, null, "参数", true, false, 0, 300, 10);
-
-		map.AddTBInt(NodeAttr.Step, 0, "步骤", true, true);
+		map.AddTBString(NodeAttr.HisToNDs, null, "转到的节点", false, false, 0, 50, 10);
 		map.AddBoolean(NodeAttr.IsResetAccepter, false, "可逆节点时重新计算接收人?", true, true, true);
+		map.AddTBInt(NodeAttr.NodeType, 0, "节点类型", true, true);
+		map.AddTBInt(NodeAttr.CondModel, 0, "方向条件控制规则", true, true);
+		map.AddTBInt(NodeAttr.Step, 0, "步骤", true, true);
 
 			///#endregion 基本属性.
 

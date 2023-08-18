@@ -2,7 +2,7 @@ package bp.ccoa.worklog;
 
 import bp.da.*;
 import bp.web.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 
 /** 
  日志审核
@@ -14,36 +14,28 @@ public class WorkChecker extends EntityMyPK
 	/** 
 	 组织编号
 	*/
-	public final String getOrgNo()
-	{
+	public final String getOrgNo()  {
 		return this.GetValStrByKey(WorkCheckerAttr.OrgNo);
 	}
-	public final void setOrgNo(String value)
-	 {
+	public final void setOrgNo(String value)  {
 		this.SetValByKey(WorkCheckerAttr.OrgNo, value);
 	}
-	public final String getRec()
-	{
+	public final String getRec()  {
 		return this.GetValStrByKey(WorkCheckerAttr.Rec);
 	}
-	public final void setRec(String value)
-	 {
+	public final void setRec(String value)  {
 		this.SetValByKey(WorkCheckerAttr.Rec, value);
 	}
-	public final String getRDT()
-	{
+	public final String getRDT()  {
 		return this.GetValStrByKey(WorkCheckerAttr.RDT);
 	}
-	public final void setRDT(String value)
-	 {
+	public final void setRDT(String value)  {
 		this.SetValByKey(WorkCheckerAttr.RDT, value);
 	}
-	public final String getRecName()
-	{
+	public final String getRecName()  {
 		return this.GetValStrByKey(WorkCheckerAttr.RecName);
 	}
-	public final void setRecName(String value)
-	 {
+	public final void setRecName(String value)  {
 		this.SetValByKey(WorkCheckerAttr.RecName, value);
 	}
 
@@ -55,7 +47,8 @@ public class WorkChecker extends EntityMyPK
 	 权限控制
 	*/
 	@Override
-	public UAC getHisUAC() {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (WebUser.getIsAdmin())
 		{
@@ -67,9 +60,10 @@ public class WorkChecker extends EntityMyPK
 	/** 
 	 日志审核
 	*/
-	public WorkChecker()  {
+	public WorkChecker()
+	{
 	}
-	public WorkChecker(String mypk)throws Exception
+	public WorkChecker(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -78,7 +72,8 @@ public class WorkChecker extends EntityMyPK
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -107,7 +102,8 @@ public class WorkChecker extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		this.setMyPK(DBAccess.GenerGUID(0, null, null));
 		this.setRec(WebUser.getNo());
 		this.setRecName(WebUser.getName());

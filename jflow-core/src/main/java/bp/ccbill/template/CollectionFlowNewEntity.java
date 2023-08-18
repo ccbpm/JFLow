@@ -1,8 +1,9 @@
 package bp.ccbill.template;
 
 import bp.da.*;
+import bp.en.Map;
 import bp.web.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 
 /** 
  新建实体流程
@@ -14,50 +15,40 @@ public class CollectionFlowNewEntity extends EntityNoName
 	/** 
 	 表单ID
 	*/
-	public final String getFrmID()
-	{
+	public final String getFrmID() {
 		return this.GetValStringByKey(MethodAttr.FrmID);
 	}
-	public final void setFrmID(String value)
-	 {
+	public final void setFrmID(String value)  {
 		this.SetValByKey(MethodAttr.FrmID, value);
 	}
-	public final String getFlowNo()
-	{
+	public final String getFlowNo() {
 		return this.GetValStringByKey(MethodAttr.FlowNo);
 	}
-	public final void setFlowNo(String value)
-	 {
+	public final void setFlowNo(String value)  {
 		this.SetValByKey(MethodAttr.FlowNo, value);
 	}
-	public final String getUrlExt()
-	{
+	public final String getUrlExt() {
 		return this.GetValStringByKey("UrlExt");
 	}
-	public final void setUrlExt(String value)
-	 {
+	public final void setUrlExt(String value)  {
 		this.SetValByKey("UrlExt", value);
 	}
 	/** 
 	 是否在流程结束后同步？
 	*/
-	public final boolean getDTSWhenFlowOver()
-	{
+	public final boolean getDTSWhenFlowOver() {
 		return this.GetValBooleanByKey(MethodAttr.DTSWhenFlowOver);
 	}
-	public final void setDTSWhenFlowOver(boolean value)
-	 {
+	public final void setDTSWhenFlowOver(boolean value)  {
 		this.SetValByKey(MethodAttr.DTSWhenFlowOver, value);
 	}
 	/** 
 	 同步的方式
 	*/
-	public final int getDTSDataWay()
-	{
+	public final int getDTSDataWay() {
 		return this.GetValIntByKey(MethodAttr.DTSDataWay);
 	}
-	public final void setDTSDataWay(int value)
-	 {
+	public final void setDTSDataWay(int value)  {
 		this.SetValByKey(MethodAttr.DTSDataWay, value);
 	}
 
@@ -69,7 +60,8 @@ public class CollectionFlowNewEntity extends EntityNoName
 	 权限控制
 	*/
 	@Override
-	public UAC getHisUAC() {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (WebUser.getIsAdmin())
 		{
@@ -81,17 +73,18 @@ public class CollectionFlowNewEntity extends EntityNoName
 	/** 
 	 新建实体流程
 	*/
-	public CollectionFlowNewEntity()  {
+	public CollectionFlowNewEntity()
+	{
 	}
-	public CollectionFlowNewEntity(String no) throws Exception {
+	public CollectionFlowNewEntity(String no) throws Exception  {
 		this.setNo(no);
 		this.Retrieve();
 	}
-	/** 
-	 重写基类方法
-	*/
+	/**
+	 * 重写基类方法
+	 */
 	@Override
-	public bp.en.Map getEnMap()  {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -99,12 +92,12 @@ public class CollectionFlowNewEntity extends EntityNoName
 
 		Map map = new Map("Frm_Collection", "新建实体");
 
-			//主键.
+		//主键.
 		map.AddTBStringPK(CollectionAttr.No, null, "编号", true, true, 0, 50, 10);
 		map.AddTBString(CollectionAttr.Name, null, "方法名称", true, false, 0, 300, 10);
 		map.AddTBString(CollectionAttr.MethodID, null, "方法ID", true, true, 0, 300, 10);
 
-			//功能标记. 
+		//功能标记. 
 		map.AddTBString(CollectionAttr.MethodModel, null, "方法模式", true, true, 0, 300, 10);
 		map.AddTBString(CollectionAttr.Tag1, null, "Tag1", true, true, 0, 300, 10);
 		map.AddTBString(CollectionAttr.Mark, null, "Mark", true, true, 0, 300, 10);
@@ -142,7 +135,8 @@ public class CollectionFlowNewEntity extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoAlert()  {
+	public final String DoAlert()
+	{
 		return "您需要转入流程设计器去设计流程.";
 		// return "../../CCBill/Admin/MethodParas.htm?No=" + this.MyPK;
 	}

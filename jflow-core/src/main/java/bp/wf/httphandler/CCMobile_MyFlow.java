@@ -1,28 +1,26 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
-import bp.difference.handler.WebContralBase;
 import bp.sys.*;
 import bp.web.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.wf.template.*;
 import bp.difference.*;
 import bp.wf.template.sflow.*;
 import bp.*;
 import bp.wf.*;
-
-import java.util.Enumeration;
+import java.util.*;
 
 /** 
  页面功能实体
 */
-public class CCMobile_MyFlow extends WebContralBase
+public class CCMobile_MyFlow extends bp.difference.handler.DirectoryPageBase
 {
 	/** 
 	 构造函数
 	*/
 	public CCMobile_MyFlow() throws Exception {
-		WebUser.setSheBei( "Mobile");
+		WebUser.setSheBei("Mobile");
 	}
 	/** 
 	 获得工作节点
@@ -40,19 +38,19 @@ public class CCMobile_MyFlow extends WebContralBase
 	 @return 
 	*/
 	public final String GetNoteValue() throws Exception {
-		int fk_node = this.getFK_Node();
+		int fk_node = this.getNodeID();
 		if (fk_node == 0)
 		{
-			fk_node = Integer.parseInt(this.getFK_Flow() + "01");
+			fk_node = Integer.parseInt(this.getFlowNo() + "01");
 		}
 		Node nd = new Node(fk_node);
 
-		/// 获取节点表单的数据
+			///#region  获取节点表单的数据
 		Work wk = nd.getHisWork();
 		wk.setOID(this.getWorkID());
 		wk.RetrieveFromDBSources();
-		wk.ResetDefaultVal();
-		if (SystemConfig.getIsBSsystem() == true)
+		wk.ResetDefaultVal(null, null, 0);
+		if (SystemConfig.isBSsystem() == true)
 		{
 			// 处理传递过来的参数。
 			Enumeration enu = ContextHolderUtils.getRequest().getParameterNames();
@@ -61,20 +59,29 @@ public class CCMobile_MyFlow extends WebContralBase
 				wk.SetValByKey(k, ContextHolderUtils.getRequest().getParameter(k));
 			}
 
+			// 处理传递过来的frm参数。
+			for (String k : ContextHolderUtils.getRequest().getParameterMap().keySet())
+			{
+				if (DataType.IsNullOrEmpty(k) == true)
+				{
+					continue;
+				}
 
+				wk.SetValByKey(k, ContextHolderUtils.getRequest().getParameter(k));
+			}
 		}
 
-		/// 获取节点表单的数据
+			///#endregion 获取节点表单的数据
 		//节点表单字段
 		MapData md = new MapData(nd.getNodeFrmID());
-		MapAttrs attrs = md.getMapAttrs();
+		MapAttrs mattrs = md.getMapAttrs();
 		DataTable dt = new DataTable();
 		dt.TableName = "Node_Note";
 		dt.Columns.Add("KeyOfEn", String.class);
 		dt.Columns.Add("NoteVal", String.class);
 		String nodeNote = nd.GetParaString("NodeNote");
 
-		for (MapAttr attr : attrs.ToJavaList())
+		for (MapAttr attr : mattrs.ToJavaList())
 		{
 			if (nodeNote.contains("," + attr.getKeyOfEn() + ",") == false)
 			{
@@ -84,16 +91,16 @@ public class CCMobile_MyFlow extends WebContralBase
 			switch (attr.getLGType())
 			{
 				case Normal: // 输出普通类型字段.
-					if (attr.getMyDataType() == 1 && attr.getUIContralType().getValue()== DataType.AppString)
+					if (attr.getMyDataType() == 1 && attr.getUIContralType().getValue() == DataType.AppString)
 					{
 
-						if (attrs.contains(attr.getKeyOfEn() + "Text") == true)
+						if (mattrs.contains(attr.getKeyOfEn() + "Text") == true)
 						{
 							text = wk.GetValRefTextByKey(attr.getKeyOfEn());
 						}
 						if (DataType.IsNullOrEmpty(text))
 						{
-							if (attrs.contains(attr.getKeyOfEn() + "T") == true)
+							if (mattrs.contains(attr.getKeyOfEn() + "T") == true)
 							{
 								text = wk.GetValStrByKey(attr.getKeyOfEn() + "T");
 							}
@@ -134,21 +141,21 @@ public class CCMobile_MyFlow extends WebContralBase
 		DataSet ds = new DataSet();
 
 		//节点信息
-		Node nd = new Node(this.getFK_Node());
+		Node nd = new Node(this.getNodeID());
 		ds.Tables.add(nd.ToDataTableField("WF_Node"));
 
 		//流程信息
-		Flow flow = new Flow(this.getFK_Flow());
+		Flow flow = new Flow(this.getFlowNo());
 		ds.Tables.add(flow.ToDataTableField("WF_Flow"));
 
 		//操作按钮信息
-		BtnLab btnLab = new BtnLab(this.getFK_Node());
+		BtnLab btnLab = new BtnLab(this.getNodeID());
 		ds.Tables.add(btnLab.ToDataTableField("WF_BtnLab"));
 
 
 			///#region  加载自定义的button.
 		NodeToolbars bars = new NodeToolbars();
-		bars.Retrieve(NodeToolbarAttr.FK_Node, this.getFK_Node(), NodeToolbarAttr.ShowWhere, ShowWhere.Toolbar.getValue(), null);
+		bars.Retrieve(NodeToolbarAttr.FK_Node, this.getNodeID(), NodeToolbarAttr.IsMyFlow, 1, NodeToolbarAttr.Idx);
 		ds.Tables.add(bars.ToDataTableField("WF_NodeToolbar"));
 
 			///#endregion //加载自定义的button.
@@ -159,7 +166,7 @@ public class CCMobile_MyFlow extends WebContralBase
 		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
 		ds.Tables.add(gwf.ToDataTableField("WF_GenerWorkFlow"));
 
-		if (String.valueOf(this.getFK_Node()).endsWith("01") == false)
+		if (String.valueOf(this.getNodeID()).endsWith("01") == false)
 		{
 			if (gwf.getWFState() == WFState.Askfor)
 			{
@@ -182,7 +189,7 @@ public class CCMobile_MyFlow extends WebContralBase
 				//执行会签后的状态
 				if (btnLab.getHuiQianRole() == HuiQianRole.TeamupGroupLeader && btnLab.getHuiQianLeaderRole() == HuiQianLeaderRole.OnlyOne)
 				{
-					if (!gwf.getHuiQianZhuChiRen().equals(WebUser.getNo()) && gwf.GetParaString("AddLeader").contains(WebUser.getNo() + ",") == false)
+					if (!Objects.equals(gwf.getHuiQianZhuChiRen(), WebUser.getNo()) && gwf.GetParaString("AddLeader").contains(WebUser.getNo() + ",") == false)
 					{
 						isAskForOrHuiQian = true;
 					}
@@ -218,7 +225,7 @@ public class CCMobile_MyFlow extends WebContralBase
 			///#region 按钮旁的下拉框
 		if (nd.getCondModel() != DirCondModel.ByLineCond)
 		{
-			if (nd.isStartNode() == true || gwf.getTodoEmps().contains(WebUser.getNo() + ",") == true)
+			if (nd.getItIsStartNode() == true || gwf.getTodoEmps().contains(WebUser.getNo() + ",") == true)
 			{
 				/*如果当前不是主持人,如果不是主持人，就不让他显示下拉框了.*/
 
@@ -236,7 +243,7 @@ public class CCMobile_MyFlow extends WebContralBase
 					///#region 增加到达延续子流程节点。
 				if (nd.getSubFlowYanXuNum() >= 0)
 				{
-					SubFlowYanXus ygflows = new SubFlowYanXus(this.getFK_Node());
+					SubFlowYanXus ygflows = new SubFlowYanXus(this.getNodeID());
 					for (SubFlowYanXu item : ygflows.ToJavaList())
 					{
 						DataRow dr = dtToNDs.NewRow();
@@ -258,21 +265,21 @@ public class CCMobile_MyFlow extends WebContralBase
 				{
 					String mysql = "";
 					// 找出来上次发送选择的节点.
-					if (SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
+					if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
 					{
-						mysql = "SELECT  top 1 NDTo FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + this.getFK_Node() + " AND ActionType=1 ORDER BY WorkID DESC";
+						mysql = "SELECT  top 1 NDTo FROM ND" + Integer.parseInt(nd.getFlowNo()) + "Track A WHERE A.NDFrom=" + this.getNodeID() + " AND ActionType=1 ORDER BY WorkID DESC";
 					}
-					else if (SystemConfig.getAppCenterDBType( ) == DBType.Oracle ||SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR3 || SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR6)
+					else if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 || SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 					{
-						mysql = "SELECT * FROM ( SELECT  NDTo FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + this.getFK_Node() + " AND ActionType=1 ORDER BY WorkID DESC ) WHERE ROWNUM =1";
+						mysql = "SELECT * FROM ( SELECT  NDTo FROM ND" + Integer.parseInt(nd.getFlowNo()) + "Track A WHERE A.NDFrom=" + this.getNodeID() + " AND ActionType=1 ORDER BY WorkID DESC ) WHERE ROWNUM =1";
 					}
-					else if (SystemConfig.getAppCenterDBType( ) == DBType.MySQL)
+					else if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 					{
-						mysql = "SELECT  NDTo FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + this.getFK_Node() + " AND ActionType=1 ORDER BY WorkID  DESC limit 1,1";
+						mysql = "SELECT  NDTo FROM ND" + Integer.parseInt(nd.getFlowNo()) + "Track A WHERE A.NDFrom=" + this.getNodeID() + " AND ActionType=1 ORDER BY WorkID  DESC limit 1,1";
 					}
-					else if (SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.HGDB)
+					else if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.UX)
 					{
-						mysql = "SELECT  NDTo FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "Track A WHERE A.NDFrom=" + this.getFK_Node() + " AND ActionType=1 ORDER BY WorkID  DESC limit 1";
+						mysql = "SELECT  NDTo FROM ND" + Integer.parseInt(nd.getFlowNo()) + "Track A WHERE A.NDFrom=" + this.getNodeID() + " AND ActionType=1 ORDER BY WorkID  DESC limit 1";
 					}
 
 					//获得上一次发送到的节点.
@@ -281,7 +288,7 @@ public class CCMobile_MyFlow extends WebContralBase
 
 
 					///#region 为天业集团做一个特殊的判断.
-				if (SystemConfig.getCustomerNo().equals("TianYe") && nd.getName().contains("董事长") == true)
+				if (Objects.equals(SystemConfig.getCustomerNo(), "TianYe") && nd.getName().contains("董事长") == true)
 				{
 					/*如果是董事长节点, 如果是下一个节点默认的是备案. */
 					for (Node item : nds.ToJavaList())
@@ -342,7 +349,8 @@ public class CCMobile_MyFlow extends WebContralBase
 		WF_MyFlow en = new WF_MyFlow();
 		return en.MyFlow_Init();
 	}
-	public final String MyFlow_StopFlow() throws Exception {
+	public final String MyFlow_StopFlow()
+	{
 		WF_MyFlow en = new WF_MyFlow();
 		return en.MyFlow_StopFlow();
 	}
@@ -354,7 +362,8 @@ public class CCMobile_MyFlow extends WebContralBase
 		WF_MyFlow en = new WF_MyFlow();
 		return en.Send();
 	}
-	public final String StartGuide_Init() throws Exception {
+	public final String StartGuide_Init()
+	{
 		WF_MyFlow en = new WF_MyFlow();
 		return en.StartGuide_Init();
 	}
@@ -366,8 +375,8 @@ public class CCMobile_MyFlow extends WebContralBase
 		WF_CCForm ccfrm = new WF_CCForm();
 		String str = ccfrm.FrmGener_Save();
 
-		Flow fl = new Flow(this.getFK_Flow());
-		Node nd = new Node(this.getFK_Node());
+		Flow fl = new Flow(this.getFlowNo());
+		Node nd = new Node(this.getNodeID());
 		Work wk = nd.getHisWork();
 		if (this.getWorkID() != 0)
 		{
@@ -375,7 +384,7 @@ public class CCMobile_MyFlow extends WebContralBase
 			wk.RetrieveFromDBSources();
 		}
 		wk.ResetDefaultVal(null, null, 0);
-		String title = bp.wf.WorkFlowBuessRole.GenerTitle(fl, wk);
+		String title = WorkFlowBuessRole.GenerTitle(fl, wk);
 		//修改RPT表的标题
 		wk.SetValByKey(GERptAttr.Title, title);
 		wk.Update();
@@ -386,8 +395,9 @@ public class CCMobile_MyFlow extends WebContralBase
 		gwf.setTitle(title); //标题.
 		gwf.Update();
 
+
 		// 这里保存的时候，需要保存到草稿,没有看到PC端对应的方法。
-		String nodeIDStr = String.valueOf(this.getFK_Node());
+		String nodeIDStr = String.valueOf(this.getNodeID());
 		if (nodeIDStr.endsWith("01") == true)
 		{
 			if (fl.getDraftRole() == DraftRole.SaveToDraftList)
@@ -397,14 +407,14 @@ public class CCMobile_MyFlow extends WebContralBase
 
 			if (fl.getDraftRole() == DraftRole.SaveToTodolist)
 			{
-				Dev2Interface.Node_SetDraft2Todolist(this.getFK_Flow(), this.getWorkID());
+				Dev2Interface.Node_SetDraft2Todolist(this.getWorkID());
 			}
 		}
 		return str;
 	}
 
 	public final String MyFlowGener_Delete() throws Exception {
-		Dev2Interface.Flow_DoDeleteFlowByWriteLog(this.getFK_Flow(), this.getWorkID(), WebUser.getName() + "用户删除", true);
+		Dev2Interface.Flow_DoDeleteFlowByWriteLog(this.getFlowNo(), this.getWorkID(), WebUser.getName() + "用户删除", true);
 		return "删除成功...";
 	}
 
@@ -414,8 +424,6 @@ public class CCMobile_MyFlow extends WebContralBase
 	}
 	/** 
 	 查询
-	 
-	 param enName
 	 @return 
 	*/
 	public final String RetrieveFieldGroup() throws Exception {
@@ -423,8 +431,6 @@ public class CCMobile_MyFlow extends WebContralBase
 		GroupFields gfs = new GroupFields();
 		QueryObject qo = new QueryObject(gfs);
 		qo.AddWhere(GroupFieldAttr.FrmID, FrmID);
-		//qo.addAnd();
-		//qo.AddWhereIsNull(GroupFieldAttr.CtrlID);
 		int num = qo.DoQuery();
 
 		if (num == 0)

@@ -1,7 +1,8 @@
 package bp.ccfast.ccmenu;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.en.Map;
 
 /** 
  模块
@@ -13,47 +14,37 @@ public class Module extends EntityNoName
 	/** 
 	 组织编号
 	*/
-	public final String getOrgNo()
-	{
+	public final String getOrgNo()  {
 		return this.GetValStrByKey(ModuleAttr.OrgNo);
 	}
-	public final void setOrgNo(String value)
-	 {
+	public final void setOrgNo(String value)  {
 		this.SetValByKey(ModuleAttr.OrgNo, value);
 	}
 	/** 
 	 系统编号
 	*/
-	public final String getSystemNo()
-	{
+	public final String getSystemNo()  {
 		return this.GetValStrByKey(ModuleAttr.SystemNo);
 	}
-	public final void setSystemNo(String value)
-	 {
+	public final void setSystemNo(String value)  {
 		this.SetValByKey(ModuleAttr.SystemNo, value);
 	}
-	public final String getIcon()
-	{
+	public final String getIcon()  {
 		return this.GetValStrByKey(ModuleAttr.Icon);
 	}
-	public final void setIcon(String value)
-	 {
+	public final void setIcon(String value)  {
 		this.SetValByKey(ModuleAttr.Icon, value);
 	}
-	public final int getIdx()
-	{
+	public final int getIdx() {
 		return this.GetValIntByKey(ModuleAttr.Idx);
 	}
-	public final void setIdx(int value)
-	 {
+	public final void setIdx(int value)  {
 		this.SetValByKey(ModuleAttr.Idx, value);
 	}
-	public final boolean isEnable()
-	{
+	public final boolean getItIsEnable() {
 		return this.GetValBooleanByKey(ModuleAttr.IsEnable);
 	}
-	public final void setEnable(boolean value)
-	 {
+	public final void setItIsEnable(boolean value)  {
 		this.SetValByKey(ModuleAttr.IsEnable, value);
 	}
 
@@ -63,7 +54,8 @@ public class Module extends EntityNoName
 
 		///#region 按钮权限控制
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (bp.web.WebUser.getIsAdmin() == true)
 		{
@@ -86,45 +78,43 @@ public class Module extends EntityNoName
 	/** 
 	 模块
 	*/
-	public Module() {
+	public Module()
+	{
 	}
 
 	/** 
 	 模块
 	 
-	 param no
+	 @param no
 	*/
-	public Module(String no)
+	public Module(String no) throws Exception
 	{
 		this.setNo(no);
-		try {
-			this.Retrieve();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.Retrieve();
 	}
 
-	/** 
-	 EnMap
-	*/
+	/**
+	 * EnMap
+	 */
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
 		}
 		Map map = new Map("GPM_Module", "模块");
 		map.setEnType(EnType.App);
-		map.setIsAutoGenerNo(false);
+		map.setItIsAutoGenerNo(false);
 
 		map.AddTBStringPK(ModuleAttr.No, null, "编号", true, true, 1, 200, 20);
 		map.AddTBString(ModuleAttr.Name, null, "名称", true, false, 0, 300, 20);
 		map.AddDDLEntities(ModuleAttr.SystemNo, null, "隶属系统", new MySystems(), true);
 		map.AddTBString(MenuAttr.Icon, null, "Icon", true, false, 0, 500, 50, true);
-		map.AddTBInt(ModuleAttr.Idx, 0, "显示顺序", true, false);
+		map.AddTBInt(ModuleAttr.Idx, 0, "顺序", true, false);
 		map.AddTBInt(ModuleAttr.IsEnable, 1, "IsEnable", true, false);
-
 		map.AddTBString(ModuleAttr.OrgNo, null, "组织编号", true, false, 0, 50, 20);
+
+		map.AddTBInt("ChildDisplayModel", 0, "ChildDisplayModel", true, false);
 
 		this.set_enMap(map);
 		return this.get_enMap();
@@ -137,13 +127,14 @@ public class Module extends EntityNoName
 	/** 
 	 向上移动
 	*/
-	public final void DoUp()  {
+	public final void DoUp() throws Exception {
 		this.DoOrderUp(ModuleAttr.SystemNo, this.getSystemNo(), ModuleAttr.Idx);
 	}
 	/** 
 	 向下移动
 	*/
-	public final void DoDown()  {
+	public final void DoDown() throws Exception
+	{
 		this.DoOrderDown(ModuleAttr.SystemNo, this.getSystemNo(), ModuleAttr.Idx);
 	}
 
@@ -155,7 +146,8 @@ public class Module extends EntityNoName
 	 @return 
 	*/
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		if (DataType.IsNullOrEmpty(this.getNo()) == true)
 		{
 			this.setNo(DBAccess.GenerGUID(0, null, null));
@@ -164,7 +156,8 @@ public class Module extends EntityNoName
 		return super.beforeInsert();
 	}
 	@Override
-	protected boolean beforeDelete() throws Exception {
+	protected boolean beforeDelete() throws Exception
+	{
 		Menus ens = new Menus();
 		ens.Retrieve(MenuAttr.ModuleNo, this.getNo(), null);
 		if (ens.size() != 0)

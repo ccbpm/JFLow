@@ -5,14 +5,11 @@ import bp.difference.handler.CommonUtils;
 import bp.sys.*;
 import bp.web.*;
 import bp.en.*;
-import bp.wf.*;
-import bp.wf.data.*;
 import bp.wf.template.*;
 import bp.wf.template.sflow.*;
-import bp.port.*;
-import bp.tools.*;
 import bp.difference.*;
-import bp.*;
+import java.util.*;
+import java.time.*;
 
 /** 
  流程的API.
@@ -22,11 +19,11 @@ public class CCFlowAPI
 	/** 
 	 产生一个 WorkNode
 	 
-	 param fk_flow 流程编号
-	 param Node 节点
-	 param workID 工作ID
-	 param fid FID
-	 param userNo 用户编号
+	 @param fk_flow 流程编号
+	 @param nd 节点
+	 @param workID 工作ID
+	 @param fid FID
+	 @param userNo 用户编号
 	 @return 返回dataset
 	*/
 
@@ -38,10 +35,8 @@ public class CCFlowAPI
 		return GenerWorkNode(fk_flow, nd, workID, fid, userNo, realWorkID, "0", false);
 	}
 
-//ORIGINAL LINE: public static DataSet GenerWorkNode(string fk_flow, Node nd, Int64 workID, Int64 fid, string userNo, Int64 realWorkID, string fromWorkOpt = "0", bool isView = false)
-	public static DataSet GenerWorkNode(String fk_flow, Node nd, long workID, long fid, String userNo, long realWorkID, String fromWorkOpt, boolean isView)throws Exception
-
-	{
+	public static DataSet GenerWorkNode(String fk_flow, Node nd, long workID, long fid, String userNo, long realWorkID, String fromWorkOpt, boolean isView) throws Exception {
+		DBAccess.RunSQL("DELETE FROM Sys_MapExt WHERE DoWay='0' or DoWay='None'");
 
 		try
 		{
@@ -66,17 +61,12 @@ public class CCFlowAPI
 						wk.setOID(workID);
 						wk.RetrieveFromDBSources();
 					}
-
 				}
 			}
-
 			MapData md = new MapData(frmID);
-
-
 			//定义变量，为绑定独立表单设置单据编号.
 			String billNo = null; //定义单据编号.
 			String billNoField = null; //定义单据编号字段.
-
 
 			// 第1.2: 调用,处理用户定义的业务逻辑.
 			String sendWhen = ExecEvent.DoNode(EventListNode.FrmLoadBefore, nd, wk, null);
@@ -87,7 +77,7 @@ public class CCFlowAPI
 			if (frmID.equals(nd.getNodeFrmID()) == false)
 			{
 				DataTable mddt = myds.GetTableByName("Sys_MapData");
-				mddt.Rows.get(0).setValue("AtPara", mddt.Rows.get(0).getValue("AtPara") + "@MainFrmID=" + nd.getNodeFrmID());
+				mddt.Rows.get(0).setValue("AtPara",mddt.Rows.get(0).getValue("AtPara") + "@MainFrmID=" + nd.getNodeFrmID());
 
 				DataTable athdt = myds.GetTableByName("Sys_FrmAttachment");
 				if (frmVer != 0 && athdt.Rows.size() != 0)
@@ -109,7 +99,7 @@ public class CCFlowAPI
 
 
 			//更换表单的名字.
-			if (DataType.IsNullOrEmpty(nd.getNodeFrmID()) == false && (nd.getHisFormType() == NodeFormType.FoolForm || nd.getHisFormType() == NodeFormType.Develop))
+			if (DataType.IsNullOrEmpty(nd.getNodeFrmID()) == false && (nd.getItIsNodeFrm()))
 			{
 				String realName = myds.GetTableByName("Sys_MapData").Rows.get(0).getValue("Name") instanceof String ? (String)myds.GetTableByName("Sys_MapData").Rows.get(0).getValue("Name") : null;
 				if (DataType.IsNullOrEmpty(realName) == true)
@@ -123,19 +113,21 @@ public class CCFlowAPI
 			/*处理表单权限控制方案: 如果是绑定单个表单的时候. */
 
 			//这两个变量在累加表单用到.
-			FrmNode frmNode = new FrmNode();
+		   FrmNode frmNode = new FrmNode();
 			Flow flow = new Flow(fk_flow);
 			myds.Tables.add(flow.ToDataTableField("WF_Flow"));
 
 			if (nd.getHisFormType() == NodeFormType.RefOneFrmTree || nd.getHisFormType() == NodeFormType.FoolTruck || flow.getFlowDevModel() == FlowDevModel.JiJian)
 			{
 
-				int count = frmNode.Retrieve(FrmNodeAttr.FK_Frm, nd.getNodeFrmID(), FrmNodeAttr.FK_Node, nd.getNodeID());
+				 int count = frmNode.Retrieve(FrmNodeAttr.FK_Frm, nd.getNodeFrmID(), FrmNodeAttr.FK_Node, nd.getNodeID());
 				if (count == 0)
-					frmNode.setEnableLoadData(true);
-				if (count!=0 && frmNode.getFrmSln().getValue() !=0)
 				{
-					FrmFields fls = new FrmFields(nd.getNodeFrmID(), frmNode.getFK_Node());
+					frmNode.setItIsEnableLoadData(true);
+				}
+				if (count != 0 && frmNode.getFrmSln().getValue() != 0)
+				{
+					FrmFields fls = new FrmFields(nd.getNodeFrmID(), frmNode.getNodeID());
 					for (FrmField item : fls.ToJavaList())
 					{
 						for (DataRow dr : myds.GetTableByName("Sys_MapAttr").Rows)
@@ -146,7 +138,7 @@ public class CCFlowAPI
 								continue;
 							}
 
-							if (item.isSigan() == true)
+							if (item.getItIsSigan() == true)
 							{
 								item.setUIIsEnable(false);
 							}
@@ -160,7 +152,7 @@ public class CCFlowAPI
 								dr.setValue("UIIsEnable", 0);
 							}
 
-							if (item.isNotNull() == true)
+							if (item.getItIsNotNull() == true)
 							{
 								dr.setValue("UIIsInput", 1);
 							}
@@ -178,7 +170,7 @@ public class CCFlowAPI
 								dr.setValue("UIVisible", 0);
 							}
 
-							if (item.isSigan() == true)
+							if (item.getItIsSigan() == true)
 							{
 								dr.setValue("IsSigan", 1);
 							}
@@ -193,15 +185,15 @@ public class CCFlowAPI
 
 					//从表权限的设置
 					MapDtls mapdtls = new MapDtls();
-					mapdtls.Retrieve(MapDtlAttr.FK_MapData, nd.getNodeFrmID() + "_" + frmNode.getFK_Node(), null);
+					mapdtls.Retrieve(MapDtlAttr.FK_MapData, nd.getNodeFrmID() + "_" + frmNode.getNodeID(), null);
 					for (DataRow dr : myds.GetTableByName("Sys_MapDtl").Rows)
 					{
 						for (MapDtl mapDtl : mapdtls.ToJavaList())
 						{
-							String no = dr.getValue("No").toString() + "_" + frmNode.getFK_Node();
+							String no = dr.getValue("No").toString() + "_" + frmNode.getNodeID();
 							if (no.equals(mapDtl.getNo()) == true)
 							{
-								dr.setValue("IsView", mapDtl.isView() == true ? 1 : 0);
+								dr.setValue("IsView", mapDtl.getItIsView() == true ? 1 : 0);
 								break;
 							}
 
@@ -211,7 +203,7 @@ public class CCFlowAPI
 			}
 			else
 			{
-				frmNode.setEnableLoadData(true);
+				frmNode.setItIsEnableLoadData(true);
 			}
 
 				///#endregion 处理表单权限控制方案: 如果是绑定单个表单的时候.
@@ -291,6 +283,7 @@ public class CCFlowAPI
 
 				///#endregion 没有审核组件分组就增加上审核组件分组.
 
+
 				///#region 增加父子流程组件
 			if (nd.getHisFormType() == NodeFormType.RefOneFrmTree && DataType.IsNullOrEmpty(frmNode.getMyPK()) == false && frmNode.getSFSta() != FrmSubFlowSta.Disable)
 			{
@@ -330,7 +323,7 @@ public class CCFlowAPI
 
 
 				///#region 处理累加表单增加 groupfields
-			if (nd.getFormType() == NodeFormType.FoolTruck && nd.isStartNode() == false && DataType.IsNullOrEmpty(wk.HisPassedFrmIDs) == false)
+			if (nd.getFormType() == NodeFormType.FoolTruck && nd.getItIsStartNode() == false && DataType.IsNullOrEmpty(wk.HisPassedFrmIDs) == false)
 			{
 
 
@@ -354,33 +347,31 @@ public class CCFlowAPI
 				}
 
 				GroupFields gfs = new GroupFields();
-				gfs.RetrieveIn(GroupFieldAttr.FrmID, "(" + myFrmIDs + ")");
+				gfs.RetrieveIn(GroupFieldAttr.FrmID, "(" + myFrmIDs + ")", null);
 
 				//按照时间的顺序查找出来 ids .
 				String sqlOrder = "SELECT OID FROM  Sys_GroupField WHERE   FrmID IN (" + myFrmIDs + ")";
 				String orderMyFrmIDs = myFrmIDs.replace("'", "");
-				if (SystemConfig.getAppCenterDBType( ) == DBType.Oracle
-					||SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR3
-					||SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR6)
+				if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 || SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 				{
 					sqlOrder += " ORDER BY INSTR('" + orderMyFrmIDs + "',FrmID) , Idx";
 				}
 
-				if (SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
+				if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
 				{
 					sqlOrder += " ORDER BY CHARINDEX(FrmID, '" + orderMyFrmIDs + "'), Idx";
 				}
 
-				if (SystemConfig.getAppCenterDBType( ) == DBType.MySQL)
+				if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 				{
 					sqlOrder += " ORDER BY INSTR('" + orderMyFrmIDs + "', FrmID ), Idx";
 				}
-				if (SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX || SystemConfig.getAppCenterDBType( ) == DBType.HGDB)
+				if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.HGDB)
 				{
 					sqlOrder += " ORDER BY POSITION(FrmID  IN '" + orderMyFrmIDs + "'), Idx";
 				}
 
-				if (SystemConfig.getAppCenterDBType( ) == DBType.DM)
+				if (SystemConfig.getAppCenterDBType() == DBType.DM)
 				{
 					sqlOrder += " ORDER BY POSITION(FrmID  IN '" + orderMyFrmIDs + "'), Idx";
 				}
@@ -510,7 +501,7 @@ public class CCFlowAPI
 					//获取累加表单的权限
 					FrmFields fls = new FrmFields();
 					qo = new QueryObject(fls);
-					qo.AddWhere(FrmFieldAttr.FK_MapData, " IN ", "(" + nodes + ")");
+					qo.AddWhere(FrmFieldAttr.FrmID, " IN ", "(" + nodes + ")");
 					qo.addAnd();
 					qo.AddWhere(FrmFieldAttr.EleType, "Field");
 					qo.addAnd();
@@ -527,7 +518,7 @@ public class CCFlowAPI
 						FrmField frmField = null;
 						for (FrmField item : fls.ToJavaList())
 						{
-							if (item.getKeyOfEn().equals(attr.getKeyOfEn()))
+							if (Objects.equals(attr.getKeyOfEn(), item.getKeyOfEn()))
 							{
 								frmField = item;
 								break;
@@ -535,14 +526,14 @@ public class CCFlowAPI
 						}
 						if (frmField != null)
 						{
-							if (frmField.isSigan())
+							if (frmField.getItIsSigan())
 							{
 								attr.setUIIsEnable(false);
 							}
 
 							attr.setUIIsEnable(frmField.getUIIsEnable());
 							attr.setUIVisible(frmField.getUIVisible());
-							attr.setIsSigan(frmField.isSigan());
+							attr.setItIsSigan(frmField.getItIsSigan());
 							attr.setDefValReal(frmField.getDefVal());
 						}
 						mattrs.AddEntity(attr);
@@ -626,11 +617,12 @@ public class CCFlowAPI
 
 				///#endregion 增加 groupfields
 
- 			//#region 处理节点表单是傻瓜表单的特定用户特定权限
+
+				///#region 处理节点表单是傻瓜表单的特定用户特定权限
 			MapExts nexts = (MapExts)md.getMapExts().GetEntitiesByKey(MapExtAttr.ExtType, "SepcFieldsSepcUsers");
 			GroupFields groupFields = md.getGroupFields();
 			//加入分组表.
-			if (nexts != null && nexts.size() != 0)
+			if (nexts != null && !nexts.isEmpty())
 			{
 				String oids = ",";
 				String sq1l = "";
@@ -640,55 +632,70 @@ public class CCFlowAPI
 					tag1 = ext.getTag1();
 					tag1 = tag1.replace("，", ",");
 					if (ext.getTag().equals("Emps"))
+					{
 						tag1 = "," + tag1 + ",";
+					}
 
 					if (ext.getTag().equals("Emps") && tag1.contains("," + WebUser.getNo() + ",") == true)
+					{
 						oids += ext.getDoc() + ",";
+					}
 					if (ext.getTag().equals("Stas") == true)
 					{
 						if (tag1.endsWith(","))
+						{
 							tag1 = tag1.substring(0, tag1.length() - 1);
+						}
 						tag1 = tag1.replace(",", "','") + "'";
-						sq1l = "SELECT count(*) From Port_DeptEmpStation WHERE FK_Station IN(" + tag1 + ") AND FK_Emp='" + WebUser.getUserID() + "'";
+						sq1l = "SELECT count(*) From Port_DeptEmpStation WHERE FK_Station IN(" + tag1 + ") AND FK_Emp='" + WebUser.getNo() + "'";
 						if (DBAccess.RunSQLReturnValInt(sq1l) != 0)
+						{
 							oids += ext.getDoc() + ",";
+						}
 					}
 					if (ext.getTag().equals("Depts") == true)
 					{
 						if (tag1.endsWith(","))
+						{
 							tag1 = tag1.substring(0, tag1.length() - 1);
+						}
 						tag1 = tag1.replace(",", "','") + "'";
-						sq1l = "SELECT count(*) From Port_DeptEmp WHERE FK_Dept IN(" + tag1 + ") AND FK_Emp='" + WebUser.getUserID() + "'";
+						sq1l = "SELECT count(*) From Port_DeptEmp WHERE FK_Dept IN(" + tag1 + ") AND FK_Emp='" + WebUser.getNo() + "'";
 						if (DBAccess.RunSQLReturnValInt(sq1l) != 0)
+						{
 							oids += ext.getDoc() + ",";
+						}
 					}
 					if (ext.getTag().equals("SQL") == true)
 					{
 						tag1 = bp.wf.Glo.DealExp(tag1, wk);
 						if (DBAccess.RunSQLReturnValInt(tag1) != 0)
+						{
 							oids += ext.getDoc() + ",";
+						}
 					}
 				}
-
 				DataTable gfdt = myds.GetTableByName("Sys_GroupField");
 				for (DataRow dr : gfdt.Rows)
 				{
-					if (oids.contains(dr.getValue("OID").toString() + ","))
-						dr.setValue(GroupFieldAttr.ShowType, 2);
-
-
+					if (oids.contains(dr.getValue("OID") + ","))
+					{
+						dr.setValue("ShowType", 2);
+					}
 
 				}
 			}
-                //#endregion 处理节点表单是傻瓜表单的特定用户特定权限
+
+				///#endregion 处理节点表单是傻瓜表单的特定用户特定权限
 
 
 
-			///#region 流程设置信息.
+
+				///#region 流程设置信息.
 			if (isView == false)
 			{
 				Dev2Interface.Node_SetWorkRead(nd.getNodeID(), realWorkID);
-				if (nd.isStartNode() == false)
+				if (nd.getItIsStartNode() == false)
 				{
 					if (gwf.getTodoEmps().contains(WebUser.getNo() + ",") == false)
 					{
@@ -711,27 +718,28 @@ public class CCFlowAPI
 			}
 
 			//URL参数替换
-			if (SystemConfig.getIsBSsystem() == true && isView == false)
+			if (SystemConfig.isBSsystem() == true && isView == false)
 			{
 				// 处理传递过来的参数。
-				for (String k : CommonUtils.getRequest().getParameterMap().keySet())
+//				for (String k : HttpContextHelper.RequestQueryStringKeys)
+					for (String k : CommonUtils.getRequest().getParameterMap().keySet())
 				{
 					if (DataType.IsNullOrEmpty(k) == true)
 					{
 						continue;
 					}
 
-					wk.SetValByKey(k, bp.sys.Glo.getRequest().getParameter(k));
+					wk.SetValByKey(k, ContextHolderUtils.getRequest().getParameter(k));
 				}
 
-				for (String k : CommonUtils.getRequest().getParameterMap().keySet())
+				for (String k : ContextHolderUtils.getRequest().getParameterMap().keySet())
 				{
 					if (DataType.IsNullOrEmpty(k) == true)
 					{
 						continue;
 					}
 
-					wk.SetValByKey(k, bp.sys.Glo.getRequest().getParameter(k));
+					wk.SetValByKey(k, ContextHolderUtils.getRequest().getParameter(k));
 				}
 
 				//更新到数据库里.
@@ -751,23 +759,24 @@ public class CCFlowAPI
 				}
 
 				//执行装载填充.
-				String mypk = MapExtXmlList.PageLoadFull + "_" + md.getNo();
-				if (frmNode.isEnableLoadData() == true && md.isPageLoadFull() == true)
+				String mypk = MapExtXmlList.PageLoadFull + "_" +md.getNo();
+				if (frmNode.getItIsEnableLoadData() == true && md.getItIsPageLoadFull() == true)
 				{
 					Object tempVar2 = mes.GetEntityByKey("MyPK", mypk);
 					me = tempVar2 instanceof MapExt ? (MapExt)tempVar2 : null;
+
 					//执行通用的装载方法.
 					MapAttrs attrs = md.getMapAttrs();
 					MapDtls dtls = md.getMapDtls();
-					Entity tempVar3 = Glo.DealPageLoadFull(wk, me, attrs, dtls);
+					Entity tempVar3 = CCFormAPI.DealPageLoadFull(wk, me, attrs, dtls);
 					wk = tempVar3 instanceof Work ? (Work)tempVar3 : null;
 				}
 			}
 
 			//如果是累加表单，就把整个rpt数据都放入里面去.
-			if (nd.getFormType() == NodeFormType.FoolTruck && nd.isStartNode() == false && DataType.IsNullOrEmpty(wk.HisPassedFrmIDs) == false)
+			if (nd.getFormType() == NodeFormType.FoolTruck && nd.getItIsStartNode() == false && DataType.IsNullOrEmpty(wk.HisPassedFrmIDs) == false)
 			{
-				GERpt rpt = new GERpt("ND" + Integer.parseInt(nd.getFK_Flow()) + "Rpt", workID);
+				GERpt rpt = new GERpt("ND" + Integer.parseInt(nd.getFlowNo()) + "Rpt", workID);
 				rpt.Copy(wk);
 
 				DataTable rptdt = rpt.ToDataTableField("MainTable");
@@ -835,7 +844,7 @@ public class CCFlowAPI
 					}
 
 					fullSQL = fullSQL.replace("~", "'");
-					fullSQL = Glo.DealExp(fullSQL, wk, null);
+					fullSQL = bp.wf.Glo.DealExp(fullSQL, wk, null);
 					dt = DBAccess.RunSQLReturnTable(fullSQL);
 					//重构新表
 					DataTable dt_FK_Dll = new DataTable();
@@ -845,8 +854,8 @@ public class CCFlowAPI
 					for (DataRow dllRow : dt.Rows)
 					{
 						DataRow drDll = dt_FK_Dll.NewRow();
-						drDll.setValue("No", dllRow.getValue("No"));
-						drDll.setValue("Name", dllRow.getValue("Name"));
+						drDll.setValue("No", dllRow.get("No"));
+						drDll.setValue("Name", dllRow.get("Name"));
 						dt_FK_Dll.Rows.add(drDll);
 					}
 					myds.Tables.add(dt_FK_Dll);
@@ -886,223 +895,7 @@ public class CCFlowAPI
 			}
 			else
 			{
-				DataTable dtAlert = new DataTable();
-				dtAlert.TableName = "AlertMsg";
-				dtAlert.Columns.Add("Title", String.class);
-				dtAlert.Columns.Add("Msg", String.class);
-				dtAlert.Columns.Add("URL", String.class);
-				DataRow drMsg = null;
-				int sta = gwf.GetParaInt("HungupSta", 0);
-				switch (gwf.getWFState())
-				{
-					case Runing:
-						drMsg = dtAlert.NewRow();
-						drMsg.setValue("Title", "挂起信息");
-						if (sta == 2 && gwf.getFK_Node() == gwf.GetParaInt("HungupNodeID", 0))
-						{
-							drMsg.setValue("Msg", "您的工作挂起被拒绝，拒绝原因:" + gwf.GetParaString("HungupCheckMsg"));
-							dtAlert.Rows.add(drMsg);
-						}
-						break;
-					case HungUp:
-						if (sta == -1)
-						{
-							break;
-						}
-						drMsg = dtAlert.NewRow();
-						drMsg.setValue("Title", "挂起信息");
-						if (sta == 0)
-						{
-							drMsg.setValue("Msg", "您的工作在挂起状态，等待审批，挂起原因：" + gwf.GetParaString("HungupNote"));
-						}
-
-						if (sta == 1)
-						{
-							drMsg.setValue("Msg", "您的工作在挂起获得同意.");
-						}
-
-						if (sta == 2)
-						{
-							drMsg.setValue("Msg", "您的工作在挂起被拒绝，拒绝原因:" + gwf.GetParaString("HungupCheckMsg"));
-						}
-
-						dtAlert.Rows.add(drMsg);
-						break;
-					case AskForReplay: // 返回加签的信息.
-						String mysql = "SELECT Msg,EmpFrom,EmpFromT,RDT FROM ND" + Integer.parseInt(fk_flow) + "Track WHERE WorkID=" + realWorkID + " AND " + TrackAttr.ActionType + "=" + ActionType.ForwardAskfor.getValue();
-						DataTable mydt = DBAccess.RunSQLReturnTable(mysql);
-
-						for (DataRow dr : mydt.Rows)
-						{
-							String msgAskFor = dr.getValue(0).toString();
-							String worker = dr.getValue(1).toString();
-							String workerName = dr.getValue(2).toString();
-							String rdt = dr.getValue(3).toString();
-
-							drMsg = dtAlert.NewRow();
-							drMsg.setValue("Title", worker + "," + workerName + "回复信息:");
-							drMsg.setValue("Msg", DataType.ParseText2Html(msgAskFor) + "<br>" + rdt);
-							dtAlert.Rows.add(drMsg);
-						}
-						break;
-					case Askfor: //加签.
-
-						sql = "SELECT * FROM ND" + Integer.parseInt(fk_flow) + "Track WHERE WorkID=" + realWorkID + " AND " + TrackAttr.ActionType + "=" + ActionType.AskforHelp.getValue();
-						dt = DBAccess.RunSQLReturnTable(sql);
-						for (DataRow dr : dt.Rows)
-						{
-							String msgAskFor = dr.getValue(TrackAttr.Msg).toString();
-							String worker = dr.getValue(TrackAttr.EmpFrom).toString();
-							String workerName = dr.getValue(TrackAttr.EmpFromT).toString();
-							String rdt = dr.getValue(TrackAttr.RDT).toString();
-
-							drMsg = dtAlert.NewRow();
-							drMsg.setValue("Title", worker + "," + workerName + "请求加签:");
-							drMsg.setValue("Msg", DataType.ParseText2Html(msgAskFor) + "<br>" + rdt + "<a href='./WorkOpt/AskForRe.htm?FK_Flow=" + fk_flow + "&FK_Node=" + nd.getNodeID() + "&WorkID=" + realWorkID + "&FID=" + fid + "' >回复加签意见</a> --");
-							dtAlert.Rows.add(drMsg);
-
-						}
-						// isAskFor = true;
-						break;
-					case ReturnSta:
-						/* 如果工作节点退回了*/
-
-						ReturnWorks ens = new ReturnWorks();
-						if (nd.getHisRunModel() == RunModel.FL || nd.getHisRunModel() == RunModel.FHL)
-						{
-							QueryObject qo = new QueryObject(ens);
-							qo.addLeftBracket();
-							qo.AddWhere(ReturnWorkAttr.WorkID, realWorkID);
-							qo.addOr();
-							qo.AddWhere(ReturnWorkAttr.FID, realWorkID);
-							qo.addRightBracket();
-							qo.addAnd();
-							qo.AddWhere(ReturnWorkAttr.ReturnToNode,nd.getNodeID());
-							qo.addOrderBy("RDT");
-							qo.DoQuery();
-						}
-						else
-						{
-							ens.Retrieve(ReturnWorkAttr.WorkID, realWorkID, ReturnWorkAttr.ReturnToNode, nd.getNodeID(), "RDT");
-						}
-
-
-						String msgInfo = "";
-						for (ReturnWork rw : ens.ToJavaList())
-						{
-							if (rw.getReturnToEmp().contains(WebUser.getNo()) == true)
-							{
-								msgInfo += "来自节点：" + rw.getReturnNodeName() + "@退回人：" + rw.getReturnerName() + "@退回日期：" + rw.getRDT();
-								msgInfo += "@退回原因：" + rw.getBeiZhu();
-								msgInfo += "<hr/>";
-							}
-						}
-
-						msgInfo = msgInfo.replace("@", "<br>");
-						if (DataType.IsNullOrEmpty(msgInfo) == false)
-						{
-							String str = nd.getReturnAlert();
-							if (!str.equals(""))
-							{
-								str = str.replace("~", "'");
-								str = str.replace("@PWorkID", String.valueOf(realWorkID));
-								str = str.replace("@PNodeID", String.valueOf(nd.getNodeID()));
-								str = str.replace("@FK_Node", String.valueOf(nd.getNodeID()));
-
-								str = str.replace("@PFlowNo", fk_flow);
-								str = str.replace("@FK_Flow", fk_flow);
-								str = str.replace("@PWorkID", String.valueOf(workID));
-
-								str = str.replace("@WorkID", String.valueOf(workID));
-								str = str.replace("@OID", String.valueOf(workID));
-
-								drMsg = dtAlert.NewRow();
-								drMsg.setValue("Title", "退回信息");
-								drMsg.setValue("Msg", msgInfo + "\t\n" + str);
-								dtAlert.Rows.add(drMsg);
-							}
-							else
-							{
-								drMsg = dtAlert.NewRow();
-								drMsg.setValue("Title", "退回信息");
-								drMsg.setValue("Msg", msgInfo + "\t\n" + str);
-								dtAlert.Rows.add(drMsg);
-							}
-						}
-						break;
-					case Shift:
-						/* 判断移交过来的。 */
-						String sqlshift = "SELECT * FROM ND" + Integer.parseInt(fk_flow) + "Track WHERE ACTIONTYPE=3 AND WorkID=" + realWorkID + " AND NDFrom='" + gwf.getFK_Node() + "' ORDER BY RDT DESC ";
-						DataTable dtshift = DBAccess.RunSQLReturnTable(sqlshift);
-
-						if (dtshift.Rows.size() >= 1)
-						{
-							msg = "";
-							drMsg = dtAlert.NewRow();
-							drMsg.setValue("Title", "移交信息");
-							//  msg = "<h3>移交信息 </h3><hr/>";
-							for (DataRow dr : dtshift.Rows)
-							{
-								if (dr.getValue(TrackAttr.EmpTo).toString().equals(WebUser.getNo()))
-								{
-									String empFromT = dr.getValue(TrackAttr.EmpFromT).toString();
-									String empToT = dr.getValue(TrackAttr.EmpToT).toString();
-									String msgShift = dr.getValue(TrackAttr.Msg).toString();
-									String rdt = dr.getValue(TrackAttr.RDT).toString();
-									if (msgShift.equals("undefined"))
-									{
-										msgShift = "无";
-									}
-
-									msg += "移交人：" + empFromT + "@接受人：" + empToT + "@移交日期：" + rdt;
-									msg += "@移交原因：" + msgShift;
-									msg += "<hr/>";
-								}
-							}
-
-							msg = msg.replace("@", "<br>");
-
-							drMsg.setValue("Msg", msg);
-							if (!DataType.IsNullOrEmpty(msg))
-							{
-								dtAlert.Rows.add(drMsg);
-							}
-						}
-						break;
-					default:
-						break;
-				}
-				//获取催办信息
-				PushMsgs pms = new PushMsgs();
-				if (pms.Retrieve(PushMsgAttr.FK_Node, gwf.getFK_Node(), PushMsgAttr.FK_Event, EventListNode.PressAfter, null) > 0)
-				{
-					String sqlPress = "SELECT MobileInfo FROM Sys_SMS WHERE MsgType='DoPress' AND WorkID=" + gwf.getWorkID() + "  AND IsAlert=0 Order By RDT DESC";
-					DataTable dtPress = DBAccess.RunSQLReturnTable(sqlPress);
-					if (dtPress.Rows.size() > 0)
-					{
-						drMsg = dtAlert.NewRow();
-						drMsg.setValue("Title", "催办信息");
-						drMsg.setValue("Msg", dtPress.Rows.get(0).getValue(0).toString());
-						dtAlert.Rows.add(drMsg);
-					}
-					DBAccess.RunSQL("UPDATE Sys_SMS SET IsAlert=1  WHERE MsgType='DoPress' AND WorkID=" + gwf.getWorkID() + "  AND IsAlert=0");
-				}
-				//拒绝挂起
-				String sqlRejectHungup = "SELECT MobileInfo FROM Sys_SMS WHERE MsgType='RejectHungup' and WorkID=" + gwf.getWorkID() + "  AND IsAlert=0";
-				DataTable dtRejectHungup = DBAccess.RunSQLReturnTable(sqlRejectHungup);
-				if (dtRejectHungup.Rows.size() > 0)
-				{
-					drMsg = dtAlert.NewRow();
-					drMsg.setValue("Title", "拒绝挂起信息");
-					for (DataRow item : dtRejectHungup.Rows)
-					{
-						drMsg.setValue("Msg", drMsg.get("Msg") + "<hr/> " + item.get(0).toString());
-					}
-					dtAlert.Rows.add(drMsg);
-				}
-				DBAccess.RunSQL("UPDATE Sys_SMS SET IsAlert=1  WHERE MsgType='RejectHungup' AND WorkID=" + gwf.getWorkID() + "  AND IsAlert=0");
-
-				myds.Tables.add(dtAlert);
+				myds.Tables.add(GetFlowAlertMsg(gwf, nd, fk_flow, realWorkID, fid));
 			}
 
 				///#endregion
@@ -1116,12 +909,12 @@ public class CCFlowAPI
 				nd.WorkID = workID; //为获取表单ID ( NodeFrmID )提供参数.
 
 				//设置单据编号,对于绑定的表单.
-				if (nd.isStartNode() == true && DataType.IsNullOrEmpty(frmNode.getBillNoField()) == false)
+				if (nd.getItIsStartNode() == true && DataType.IsNullOrEmpty(frmNode.getBillNoField()) == false)
 				{
 					DataTable dtMain = myds.GetTableByName("MainTable");
 					if (dtMain.Columns.contains(frmNode.getBillNoField()) == true)
 					{
-						dtMain.Rows.get(0).setValue(frmNode.getBillNoField(), wk.GetValStringByKey("BillNo"));
+						dtMain.Rows.get(0).setValue(frmNode.getBillNoField(),wk.GetValStringByKey("BillNo"));
 					}
 				}
 
@@ -1140,8 +933,527 @@ public class CCFlowAPI
 		}
 		catch (RuntimeException ex)
 		{
-			Log.DebugWriteError(String.valueOf(ex.getStackTrace()));
+			Log.DebugWriteError(Arrays.toString(ex.getStackTrace()));
 			throw new RuntimeException("generoWorkNode@" + ex.getMessage());
+		} catch (CloneNotSupportedException e) {
+			throw new RuntimeException(e);
+		} 
+	}
+
+
+	public static DataTable GetFlowAlertMsg(GenerWorkFlow gwf, Node nd, String fk_flow, long workID, long fid) throws Exception {
+		String sql = "";
+		DataTable dt = null;
+		DataTable dtAlert = new DataTable();
+		dtAlert.TableName = "AlertMsg";
+		dtAlert.Columns.Add("Title", String.class);
+		dtAlert.Columns.Add("Msg", String.class);
+		dtAlert.Columns.Add("URL", String.class);
+		DataRow drMsg = null;
+		int sta = gwf.GetParaInt("HungupSta", 0);
+		switch (gwf.getWFState())
+		{
+			case Runing:
+				drMsg = dtAlert.NewRow();
+				drMsg.setValue("Title", "挂起信息");
+				if (sta == 2 && gwf.getNodeID() == gwf.GetParaInt("HungupNodeID", 0))
+				{
+					drMsg.setValue("Msg", "您的工作挂起被拒绝，拒绝原因:" + gwf.GetParaString("HungupCheckMsg"));
+					dtAlert.Rows.add(drMsg);
+				}
+				break;
+			case Hungup:
+				if (sta == -1)
+				{
+					break;
+				}
+				drMsg = dtAlert.NewRow();
+				drMsg.setValue("Title", "挂起信息");
+				if (sta == 0)
+				{
+					String msg1 = "您的工单在挂起状态，等待审批，挂起原因：" + gwf.GetParaString("HungupNote");
+					if (gwf.GetParaInt("HungupWay", 0) == 1)
+					{
+						msg1 += "指定时间解除:" + gwf.GetParaString("1@HungupRelDate");
+					}
+					else
+					{
+						msg1 += "无解除时间.";
+					}
+					drMsg.setValue("Msg", msg1);
+
+					drMsg.setValue("Msg", msg1); //  "您的工作在挂起状态，等待审批，挂起原因：" + gwf.GetParaString("HungupNote");
+				}
+
+				if (sta == 1)
+				{
+					drMsg.setValue("Msg", "您的工作在挂起获得同意.");
+				}
+
+				if (sta == 2)
+				{
+					drMsg.setValue("Msg", "您的工作在挂起被拒绝，拒绝原因:" + gwf.GetParaString("HungupCheckMsg"));
+				}
+
+				dtAlert.Rows.add(drMsg);
+				break;
+			case AskForReplay: // 返回加签的信息.
+				String mysql = "SELECT Msg,EmpFrom,EmpFromT,RDT FROM ND" + Integer.parseInt(fk_flow) + "Track WHERE WorkID=" + workID + " AND " + TrackAttr.ActionType + "=" + ActionType.ForwardAskfor.getValue();
+				DataTable mydt = DBAccess.RunSQLReturnTable(mysql);
+
+				for (DataRow dr : mydt.Rows)
+				{
+					String msgAskFor = dr.getValue(0).toString();
+					String worker = dr.getValue(1).toString();
+					String workerName = dr.getValue(2).toString();
+					String rdt = dr.getValue(3).toString();
+
+					drMsg = dtAlert.NewRow();
+					drMsg.setValue("Title", worker + "," + workerName + "回复信息:");
+					drMsg.setValue("Msg", DataType.ParseText2Html(msgAskFor) + "<br>" + rdt);
+					dtAlert.Rows.add(drMsg);
+				}
+				break;
+			case Askfor: //加签.
+
+				sql = "SELECT * FROM ND" + Integer.parseInt(fk_flow) + "Track WHERE WorkID=" + workID + " AND " + TrackAttr.ActionType + "=" + ActionType.AskforHelp.getValue();
+				dt = DBAccess.RunSQLReturnTable(sql);
+				for (DataRow dr : dt.Rows)
+				{
+					String msgAskFor = dr.getValue(TrackAttr.Msg).toString();
+					String worker = dr.getValue(TrackAttr.EmpFrom).toString();
+					String workerName = dr.getValue(TrackAttr.EmpFromT).toString();
+					String rdt = dr.getValue(TrackAttr.RDT).toString();
+
+					drMsg = dtAlert.NewRow();
+					drMsg.setValue("Title", worker + "," + workerName + "请求加签:");
+					drMsg.setValue("Msg", DataType.ParseText2Html(msgAskFor) + "<br>" + rdt + "<a href='./WorkOpt/AskForRe.htm?FK_Flow=" + fk_flow + "&FK_Node=" + nd.getNodeID() + "&WorkID=" + workID + "&FID=" + fid + "' >回复加签意见</a> --");
+					dtAlert.Rows.add(drMsg);
+
+				}
+				// isAskFor = true;
+				break;
+			case ReturnSta:
+				/* 如果工作节点退回了*/
+
+				String trackTable = "ND" + Integer.parseInt(nd.getFlowNo()) + "Track";
+				sql = "SELECT NDFrom,NDFromT,EmpFrom,EmpFromT,EmpTo,Msg,RDT FROM " + trackTable + " WHERE ActionType IN(2,201) ";
+
+				//ReturnWorks ens = new ReturnWorks();
+				if (nd.getHisRunModel() == RunModel.FL || nd.getHisRunModel() == RunModel.FHL)
+				{
+					sql += " AND (WorkID=" + workID + " OR FID=" + workID + ") AND NDTo=" + nd.getNodeID() + "  ORDER BY RDT ";
+					/*QueryObject qo = new QueryObject(ens);
+					qo.addLeftBracket();
+					qo.AddWhere(ReturnWorkAttr.WorkID, realWorkID);
+					qo.addOr();
+					qo.AddWhere(ReturnWorkAttr.FID, realWorkID);
+					qo.addRightBracket();
+					qo.addAnd();
+					qo.AddWhere(ReturnWorkAttr.ReturnToNode,nd.getNodeID());
+					qo.addOrderBy("RDT");
+					qo.DoQuery();*/
+				}
+				else
+				{
+					sql += " AND WorkID=" + workID + "  AND NDTo=" + nd.getNodeID() + "  ORDER BY RDT ";
+					//ens.Retrieve(ReturnWorkAttr.WorkID, realWorkID, ReturnWorkAttr.ReturnToNode, nd.getNodeID(), "RDT");
+				}
+				DataTable dtt = DBAccess.RunSQLReturnTable(sql);
+
+				String msgInfo = "";
+				for (DataRow dr : dtt.Rows)
+				{
+					if (dr.getValue(4).toString().contains(WebUser.getNo()) == true)
+					{
+						msgInfo += "来自节点：" + dr.getValue(1).toString() + "@退回人：" + dr.getValue(3).toString() + "@退回日期：" + dr.getValue(6).toString();
+						msgInfo += "@退回原因：" + dr.getValue(5).toString();
+						msgInfo += "<hr/>";
+					}
+				}
+
+				msgInfo = msgInfo.replace("@", "<br>");
+				if (DataType.IsNullOrEmpty(msgInfo) == false)
+				{
+					String str = nd.getReturnAlert();
+					if (!Objects.equals(str, ""))
+					{
+						str = str.replace("~", "'");
+						str = str.replace("@PWorkID", String.valueOf(workID));
+						str = str.replace("@PNodeID",String.valueOf(nd.getNodeID()));
+						str = str.replace("@FK_Node", String.valueOf(nd.getNodeID()));
+
+						str = str.replace("@PFlowNo", fk_flow);
+						str = str.replace("@FK_Flow", fk_flow);
+						str = str.replace("@PWorkID", String.valueOf(workID));
+
+						str = str.replace("@WorkID", String.valueOf(workID));
+						str = str.replace("@OID", String.valueOf(workID));
+
+						drMsg = dtAlert.NewRow();
+						drMsg.setValue("Title", "退回信息");
+						drMsg.setValue("Msg", msgInfo + "\t\n" + str);
+						dtAlert.Rows.add(drMsg);
+					}
+					else
+					{
+						drMsg = dtAlert.NewRow();
+						drMsg.setValue("Title", "退回信息");
+						drMsg.setValue("Msg", msgInfo + "\t\n" + str);
+						dtAlert.Rows.add(drMsg);
+					}
+				}
+				break;
+			case Shift:
+				/* 判断移交过来的。 */
+				String sqlshift = "SELECT * FROM ND" + Integer.parseInt(fk_flow) + "Track WHERE ACTIONTYPE=3 AND WorkID=" + workID + " AND NDFrom='" + gwf.getNodeID() + "' ORDER BY RDT DESC ";
+				DataTable dtshift = DBAccess.RunSQLReturnTable(sqlshift);
+				String msg = "";
+				if (dtshift.Rows.size() >= 1)
+				{
+					msg = "";
+					drMsg = dtAlert.NewRow();
+					drMsg.setValue("Title", "移交信息");
+					//  msg = "<h3>移交信息 </h3><hr/>";
+					for (DataRow dr : dtshift.Rows)
+					{
+						if (Objects.equals(WebUser.getNo(), dr.getValue(TrackAttr.EmpTo).toString()))
+						{
+							String empFromT = dr.getValue(TrackAttr.EmpFromT).toString();
+							String empToT = dr.getValue(TrackAttr.EmpToT).toString();
+							String msgShift = dr.getValue(TrackAttr.Msg).toString();
+							String rdt = dr.getValue(TrackAttr.RDT).toString();
+							if (Objects.equals(msgShift, "undefined"))
+							{
+								msgShift = "无";
+							}
+
+							msg += "移交人：" + empFromT + "@接受人：" + empToT + "@移交日期：" + rdt;
+							msg += "@移交原因：" + msgShift;
+							msg += "<hr/>";
+						}
+					}
+
+					msg = msg.replace("@", "<br>");
+
+					drMsg.setValue("Msg", msg);
+					if (!DataType.IsNullOrEmpty(msg))
+					{
+						dtAlert.Rows.add(drMsg);
+					}
+				}
+				break;
+			default:
+				break;
+		}
+		//获取催办信息
+		PushMsgs pms = new PushMsgs();
+		if (pms.Retrieve(PushMsgAttr.FK_Node, gwf.getNodeID(), PushMsgAttr.FK_Event, EventListNode.PressAfter, null) > 0)
+		{
+			String sqlPress = "SELECT MobileInfo FROM Sys_SMS WHERE MsgType='DoPress' AND WorkID=" + gwf.getWorkID() + "  AND IsAlert=0 Order By RDT DESC";
+			DataTable dtPress = DBAccess.RunSQLReturnTable(sqlPress);
+			if (dtPress.Rows.size() > 0)
+			{
+				drMsg = dtAlert.NewRow();
+				drMsg.setValue("Title", "催办信息");
+				drMsg.setValue("Msg", dtPress.Rows.get(0).getValue(0).toString());
+				dtAlert.Rows.add(drMsg);
+			}
+			DBAccess.RunSQL("UPDATE Sys_SMS SET IsAlert=1  WHERE MsgType='DoPress' AND WorkID=" + gwf.getWorkID() + "  AND IsAlert=0");
+		}
+		//拒绝挂起
+		String sqlRejectHungup = "SELECT MobileInfo FROM Sys_SMS WHERE MsgType='RejectHungup' and WorkID=" + gwf.getWorkID() + "  AND IsAlert=0";
+		DataTable dtRejectHungup = DBAccess.RunSQLReturnTable(sqlRejectHungup);
+		if (dtRejectHungup.Rows.size() > 0)
+		{
+			drMsg = dtAlert.NewRow();
+			drMsg.setValue("Title", "拒绝挂起信息");
+			for (DataRow item : dtRejectHungup.Rows)
+			{
+				drMsg.setValue("Msg", drMsg.get("Msg") + "<hr/> " + item.get(0).toString());
+			}
+			dtAlert.Rows.add(drMsg);
+		}
+		DBAccess.RunSQL("UPDATE Sys_SMS SET IsAlert=1  WHERE MsgType='RejectHungup' AND WorkID=" + gwf.getWorkID() + "  AND IsAlert=0");
+
+		return dtAlert;
+	}
+
+	/** 
+	 检查流程发起限制
+	 
+	 @param flow 流程
+	 @return
+	*/
+	public static boolean CheckIsCanStartFlow_InitStartFlow(Flow flow) throws Exception {
+		StartLimitRole role = flow.getStartLimitRole();
+		if (role == StartLimitRole.None)
+			return true;
+
+		String sql = "";
+		String ptable = flow.getPTable();
+		try
+		{
+				///#region 按照时间的必须是，在表单加载后判断, 不管用户设置是否正确.
+			Date dtNow = new Date();
+			if (role == StartLimitRole.Day)
+			{
+				/* 仅允许一天发起一次 */
+				sql = "SELECT COUNT(*) as Num FROM " + ptable + " WHERE RDT LIKE '" + DataType.getCurrentDate() + "%' AND WFState NOT IN(0,1) AND FlowStarter='" + WebUser.getNo() + "'";
+				if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
+				{
+					if (DataType.IsNullOrEmpty(flow.getStartLimitPara()))
+					{
+						return true;
+					}
+
+					//判断时间是否在设置的发起范围内. 配置的格式为 @11:00-12:00@15:00-13:45
+					String[] strs = flow.getStartLimitPara().split("[@]", -1);
+					for (String str : strs)
+					{
+						if (DataType.IsNullOrEmpty(str))
+						{
+							continue;
+						}
+						String[] timeStrs = str.split("[-]", -1);
+						String tFrom = DataType.getCurrentDate() + " " + timeStrs[0].trim();
+						String tTo = DataType.getCurrentDate() + " " + timeStrs[1].trim();
+						if (DataType.ParseSysDateTime2DateTime(tFrom).compareTo(dtNow) <= 0 && DataType.ParseSysDateTime2DateTime(tTo).compareTo(dtNow) >= 0)
+						{
+							return true;
+						}
+					}
+					return false;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			if (role == StartLimitRole.Week)
+			{
+				/*
+				 * 1, 找出周1 与周日分别是第几日.
+				 * 2, 按照这个范围去查询,如果查询到结果，就说明已经启动了。
+				 */
+				sql = "SELECT COUNT(*) as Num FROM " + ptable + " WHERE RDT >= '" + DataType.WeekOfMonday(dtNow) + "' AND WFState NOT IN(0,1) AND FlowStarter='" + WebUser.getNo() + "'";
+				if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
+				{
+					if (DataType.IsNullOrEmpty(flow.getStartLimitPara()))
+					{
+						return true; //如果没有时间的限制.
+					}
+
+					//判断时间是否在设置的发起范围内. 
+					// 配置的格式为 @Sunday,11:00-12:00@Monday,15:00-13:45, 意思是.周日，周一的指定的时间点范围内可以启动流程.
+
+					String[] strs = flow.getStartLimitPara().split("[@]", -1);
+					for (String str : strs)
+					{
+						if (DataType.IsNullOrEmpty(str))
+						{
+							continue;
+						}
+
+						String weekStr = LocalDateTime.now().getDayOfWeek().toString().toLowerCase();
+						if (str.toLowerCase().contains(weekStr) == false)
+						{
+							continue; // 判断是否当前的周.
+						}
+
+						String[] timeStrs = str.split("[,]", -1);
+						String tFrom = DataType.getCurrentDate() + " " + timeStrs[0].trim();
+						String tTo = DataType.getCurrentDate() + " " + timeStrs[1].trim();
+						if (DataType.ParseSysDateTime2DateTime(tFrom).compareTo(dtNow) <= 0 && dtNow.compareTo(DataType.ParseSysDateTime2DateTime(tTo)) >= 0)
+						{
+							return true;
+						}
+					}
+					return false;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			// #warning 没有考虑到周的如何处理.
+
+			if (role == StartLimitRole.Month)
+			{
+				sql = "SELECT COUNT(*) as Num FROM " + ptable + " WHERE FK_NY = '" + DataType.getCurrentYearMonth() + "' AND WFState NOT IN(0,1) AND FlowStarter='" + WebUser.getNo() + "'";
+				if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
+				{
+					if (DataType.IsNullOrEmpty(flow.getStartLimitPara()))
+					{
+						return true;
+					}
+
+					//判断时间是否在设置的发起范围内. 配置格式: @-01 12:00-13:11@-15 12:00-13:11 , 意思是：在每月的1号,15号 12:00-13:11可以启动流程.
+					String[] strs = flow.getStartLimitPara().split("[@]", -1);
+					for (String str : strs)
+					{
+						if (DataType.IsNullOrEmpty(str))
+						{
+							continue;
+						}
+						String[] timeStrs = str.split("[-]", -1);
+						String tFrom =DataType.getCurrentDateByFormart("yyyy-MM-") + " " + timeStrs[0].trim();
+						String tTo =DataType.getCurrentDateByFormart("yyyy-MM-") + " " + timeStrs[1].trim();
+						if (DataType.ParseSysDateTime2DateTime(tFrom).compareTo(dtNow) <= 0 && dtNow.compareTo(DataType.ParseSysDateTime2DateTime(tTo)) >= 0)
+						{
+							return true;
+						}
+					}
+					return false;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			if (role == StartLimitRole.JD)
+			{
+				sql = "SELECT COUNT(*) as Num FROM " + ptable + " WHERE FK_NY = '" + DataType.getCurrentAPOfJD() + "' AND WFState NOT IN(0,1) AND FlowStarter='" + WebUser.getNo() + "'";
+				if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
+				{
+					if (DataType.IsNullOrEmpty(flow.getStartLimitPara()))
+					{
+						return true;
+					}
+
+					//判断时间是否在设置的发起范围内.
+					String[] strs = flow.getStartLimitPara().split("[@]", -1);
+					for (String str : strs)
+					{
+						if (DataType.IsNullOrEmpty(str))
+						{
+							continue;
+						}
+						String[] timeStrs = str.split("[-]", -1);
+						String tFrom = DataType.getCurrentDateByFormart("yyyy-") + " " + timeStrs[0].trim();
+						String tTo = DataType.getCurrentDateByFormart("yyyy-") + " " + timeStrs[1].trim();
+						if (DataType.ParseSysDateTime2DateTime(tFrom).compareTo(dtNow) <= 0 && dtNow.compareTo(DataType.ParseSysDateTime2DateTime(tTo)) >= 0)
+						{
+							return true;
+						}
+					}
+					return false;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			if (role == StartLimitRole.Year)
+			{
+				sql = "SELECT COUNT(*) as Num FROM " + ptable + " WHERE FK_NY LIKE '" + DataType.getCurrentYear() + "%' AND WFState NOT IN(0,1) AND FlowStarter='" + WebUser.getNo() + "'";
+				if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
+				{
+					if (DataType.IsNullOrEmpty(flow.getStartLimitPara()))
+					{
+						return true;
+					}
+
+					//判断时间是否在设置的发起范围内.
+					String[] strs = flow.getStartLimitPara().split("[@]", -1);
+					for (String str : strs)
+					{
+						if (DataType.IsNullOrEmpty(str))
+						{
+							continue;
+						}
+						String[] timeStrs = str.split("[-]", -1);
+						String tFrom = DataType.getCurrentDateByFormart("yyyy-") + " " + timeStrs[0].trim();
+						String tTo =DataType.getCurrentDateByFormart("yyyy-") + " " + timeStrs[1].trim();
+						if (DataType.ParseSysDateTime2DateTime(tFrom).compareTo(dtNow) <= 0 && dtNow.compareTo(DataType.ParseSysDateTime2DateTime(tTo)) >= 0)
+						{
+							return true;
+						}
+					}
+					return false;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+				///#endregion 按照时间的必须是，在表单加载后判断, 不管用户设置是否正确.
+
+
+			//为子流程的时候，该子流程只能被调用一次.
+			if (role == StartLimitRole.OnlyOneSubFlow)
+			{
+
+				if (SystemConfig.isBSsystem() == true)
+				{
+
+					String pflowNo = ContextHolderUtils.getRequest().getParameter("PFlowNo");
+					String pworkid = ContextHolderUtils.getRequest().getParameter("PWorkID");
+
+					if (pworkid == null)
+					{
+						return true;
+					}
+
+					sql = "SELECT Starter, RDT FROM WF_GenerWorkFlow WHERE PWorkID=" + pworkid + " AND FK_Flow='" + flow.getNo() + "'";
+					DataTable dt = DBAccess.RunSQLReturnTable(sql);
+					if (dt.Rows.size() == 0 || dt.Rows.size() == 1)
+					{
+						return true;
+					}
+
+					//  String title = dt.Rows.get(0).getValue("Title").toString();
+					String starter = dt.Rows.get(0).getValue("Starter").toString();
+					String rdt = dt.Rows.get(0).getValue("RDT").toString();
+					return false;
+					//throw new Exception(flow.StartLimitAlert + "@该子流程已经被[" + starter + "], 在[" + rdt + "]发起，系统只允许发起一次。");
+				}
+			}
+
+			// 配置的sql,执行后,返回结果是 0 .
+			if (role == StartLimitRole.ResultIsZero)
+			{
+				sql = bp.wf.Glo.DealExp(flow.getStartLimitPara(), null);
+				if (DBAccess.RunSQLReturnValInt(sql, 0) == 0)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			// 配置的sql,执行后,返回结果是 <> 0 .
+			if (role == StartLimitRole.ResultIsNotZero)
+			{
+				if (DataType.IsNullOrEmpty(flow.getStartLimitPara()) == true)
+				{
+					return true;
+				}
+
+				sql = bp.wf.Glo.DealExp(flow.getStartLimitPara(), null);
+				if (DBAccess.RunSQLReturnValInt(sql, 0) != 0)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+		catch (RuntimeException ex)
+		{
+			throw new RuntimeException("err@发起限制规则[" + role.toString() + "]出现错误:" + ex.getMessage());
 		}
 	}
+
 }

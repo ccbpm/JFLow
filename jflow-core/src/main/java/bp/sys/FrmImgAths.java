@@ -1,8 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -15,12 +13,13 @@ public class FrmImgAths extends EntitiesMyPK
 	/** 
 	 图片附件s
 	*/
-	public FrmImgAths()  {
+	public FrmImgAths()
+	{
 	}
 	/** 
 	 图片附件s
 	 
-	 param fk_mapdata s
+	 @param fk_mapdata s
 	*/
 	public FrmImgAths(String fk_mapdata) throws Exception {
 		this.Retrieve(MapAttrAttr.FK_MapData, fk_mapdata);
@@ -29,7 +28,8 @@ public class FrmImgAths extends EntitiesMyPK
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		return new FrmImgAth();
 	}
 
@@ -42,7 +42,8 @@ public class FrmImgAths extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmImgAth> ToJavaList() {
+	public final java.util.List<FrmImgAth> ToJavaList()
+	{
 		return (java.util.List<FrmImgAth>)(Object)this;
 	}
 	/** 
@@ -50,7 +51,8 @@ public class FrmImgAths extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmImgAth> Tolist()  {
+	public final ArrayList<FrmImgAth> Tolist()
+	{
 		ArrayList<FrmImgAth> list = new ArrayList<FrmImgAth>();
 		for (int i = 0; i < this.size(); i++)
 		{

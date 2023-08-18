@@ -1,21 +1,24 @@
 package bp.ccfast.ccmenu;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
-import bp.difference.handler.WebContralBase;
+import bp.difference.StringHelper;
 import bp.web.*;
+import bp.wf.httphandler.*;
+import bp.*;
+import bp.ccfast.*;
 
 /** 
  页面功能实体
 */
-public class PortPage extends WebContralBase
+public class PortPage extends bp.difference.handler.DirectoryPageBase
 {
 
 		///#region 构造函数
 	/** 
 	 构造函数
 	*/
-	public PortPage()  {
+	public PortPage()
+	{
 	}
 
 		///#endregion 构造函数
@@ -27,7 +30,8 @@ public class PortPage extends WebContralBase
 	 
 	 @return         
 	*/
-	public final String LoadDatagridDeptEmp_Init()  {
+	public final String LoadDatagridDeptEmp_Init()
+	{
 		String deptNo = this.GetRequestVal("deptNo");
 		if (DataType.IsNullOrEmpty(deptNo))
 		{
@@ -53,7 +57,7 @@ public class PortPage extends WebContralBase
 		String pageSize = this.GetRequestVal("pageSize");
 		int iPageSize = DataType.IsNullOrEmpty(pageSize) ? 9999 : Integer.parseInt(pageSize);
 
-		String sql = "(select pe.*,pd.name FK_DutyText from port_emp pe left join port_duty pd on pd.no = pe.fk_duty where pe.no in (select fk_emp from Port_DeptEmp where fk_dept='" + deptNo + "') " + addQue + " ) dbSo ";
+		String sql = "(select pe.*,pd.name FK_DutyText from Port_Emp pe left join port_duty pd on pd.no = pe.fk_duty where pe.no in (select fk_emp from Port_DeptEmp where fk_dept='" + deptNo + "') " + addQue + " ) dbSo ";
 
 
 		return DBPaging(sql, iPageNumber, iPageSize, "No", orderBy);
@@ -63,11 +67,11 @@ public class PortPage extends WebContralBase
 	/** 
 	 以下算法只包含 oracle mysql sqlserver 三种类型的数据库 qin
 	 
-	 param dataSource 表名
-	 param pageNumber 当前页
-	 param pageSize 当前页数据条数
-	 param key 计算总行数需要
-	 param orderKey 排序字段
+	 @param dataSource 表名
+	 @param pageNumber 当前页
+	 @param pageSize 当前页数据条数
+	 @param key 计算总行数需要
+	 @param orderKey 排序字段
 	 @return 
 	*/
 	public final String DBPaging(String dataSource, int pageNumber, int pageSize, String key, String orderKey)
@@ -131,7 +135,7 @@ public class PortPage extends WebContralBase
 		sql1 += " AND MenuType = '3' ";
 		sql1 += " AND FK_App = '" + appNo + "' ORDER BY Idx ";
 		DataTable dirs = DBAccess.RunSQLReturnTable(sql1);
-		dirs.TableName = "Dirs"; //获得目录.
+		dirs.setTableName("Dirs"); //获得目录.
 
 		String sql2 = "SELECT No,Name,FK_Menu,ParentNo,UrlExt,Icon,Idx ";
 		sql2 += " FROM V_GPM_EmpMenu ";
@@ -146,17 +150,7 @@ public class PortPage extends WebContralBase
 		sql2 += " AND FK_App = '" + appNo + "' ORDER BY Idx ";
 
 		DataTable menus = DBAccess.RunSQLReturnTable(sql2);
-		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
-		{
-			menus.Columns.get(0).ColumnName = "No";
-			menus.Columns.get(1).ColumnName = "Name";
-			menus.Columns.get(2).ColumnName = "FK_Menu";
-			menus.Columns.get(3).ColumnName = "ParentNo";
-			menus.Columns.get(4).ColumnName = "UrlExt";
-			menus.Columns.get(5).ColumnName = "Icon";
-			menus.Columns.get(6).ColumnName = "Idx";
-		}
-		menus.TableName = "Menus"; //获得菜单.
+		menus.setTableName("Menus"); //获得菜单.
 
 		//组装数据.
 		DataSet ds = new DataSet();
@@ -198,7 +192,7 @@ public class PortPage extends WebContralBase
 		sql1 += " AND ParentNo = '" + ParentNo + "' ";
 		sql1 += " AND FK_App = '" + appNo + "' ORDER BY Idx ";
 		DataTable dirs = DBAccess.RunSQLReturnTable(sql1);
-		dirs.TableName = "Dirs"; //获得目录.
+		dirs.setTableName("Dirs"); //获得目录.
 
 		String sql2 = "SELECT No,Name,FK_Menu,MenuType,ParentNo,Url,UrlExt,Tag1,Tag2,Tag3,WebPath,Icon,Idx,openway ";
 		sql2 += " FROM v_gpm_empmenu ";
@@ -213,7 +207,7 @@ public class PortPage extends WebContralBase
 		sql2 += " AND FK_App = '" + appNo + "' ORDER BY Idx ";
 
 		DataTable menus = DBAccess.RunSQLReturnTable(sql2);
-		menus.TableName = "Menus"; //获得菜单.
+		menus.setTableName("Menus"); //获得菜单.
 
 		//组装数据.
 		DataSet ds = new DataSet();
@@ -227,7 +221,8 @@ public class PortPage extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String GPM_IsCanExecuteFunction() throws Exception {
+	public final String GPM_IsCanExecuteFunction()
+	{
 		DataTable dt = GPM_GenerFlagDB(); //获得所有的标记.
 		String funcNo = this.GetRequestVal("FuncFlag");
 		for (DataRow dr : dt.Rows)
@@ -244,7 +239,8 @@ public class PortPage extends WebContralBase
 	 
 	 @return 
 	*/
-	public final DataTable GPM_GenerFlagDB() throws Exception {
+	public final DataTable GPM_GenerFlagDB()
+	{
 		String appNo = this.GetRequestVal("AppNo");
 		String sql2 = "SELECT Flag,Idx";
 		sql2 += " FROM V_GPM_EmpMenu ";
@@ -265,7 +261,8 @@ public class PortPage extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String GPM_AutoHidShowPageElement() throws Exception {
+	public final String GPM_AutoHidShowPageElement()
+	{
 		DataTable dt = GPM_GenerFlagDB(); //获得所有的标记.
 		return bp.tools.Json.ToJson(dt);
 	}
@@ -274,7 +271,8 @@ public class PortPage extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String GPM_Search() throws Exception {
+	public final String GPM_Search()
+	{
 		String searchKey = this.GetRequestVal("searchKey");
 		//var SearchDept = this.GetRequestVal("SearchDept");
 		//var SearchEmp = this.GetRequestVal("SearchEmp");

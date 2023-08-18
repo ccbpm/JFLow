@@ -1,6 +1,9 @@
 package bp.wf.template.sflow;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.wf.*;
+import bp.wf.template.*;
 import java.util.*;
 
 /** 
@@ -14,7 +17,8 @@ public class SubFlows extends EntitiesMyPK
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new SubFlow();
 	}
 
@@ -25,12 +29,13 @@ public class SubFlows extends EntitiesMyPK
 	/** 
 	 子流程集合
 	*/
-	public SubFlows() throws Exception {
+	public SubFlows()
+	{
 	}
 	 /** 
 	 子流程集合.
 	 
-	 param fk_node 节点
+	 @param fk_node 节点
 	 */
 	public SubFlows(int fk_node) throws Exception {
 		this.Retrieve(SubFlowYanXuAttr.FK_Node, fk_node, null);
@@ -39,7 +44,7 @@ public class SubFlows extends EntitiesMyPK
 	/** 
 	 根据主流程编号获取该流程启动的子流程数据
 	 
-	 param fk_flow
+	 @param fk_flow
 	*/
 	public SubFlows(String fk_flow) throws Exception {
 		this.Retrieve(SubFlowYanXuAttr.FK_Flow, fk_flow, null);
@@ -54,7 +59,8 @@ public class SubFlows extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<SubFlow> ToJavaList() {
+	public final java.util.List<SubFlow> ToJavaList()
+	{
 		return (java.util.List<SubFlow>)(Object)this;
 	}
 	/** 
@@ -62,7 +68,8 @@ public class SubFlows extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<SubFlow> Tolist()  {
+	public final ArrayList<SubFlow> Tolist()
+	{
 		ArrayList<SubFlow> list = new ArrayList<SubFlow>();
 		for (int i = 0; i < this.size(); i++)
 		{

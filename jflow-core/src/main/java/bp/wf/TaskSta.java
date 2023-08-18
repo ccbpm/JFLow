@@ -1,7 +1,5 @@
 package bp.wf;
 
-import bp.*;
-
 /** 
  任务状态
 */
@@ -22,11 +20,13 @@ public enum TaskSta
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
 	public static TaskSta forValue(int value)
-	{return values()[value];
+	{
+		return values()[value];
 	}
 }

@@ -1,25 +1,25 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
 import java.util.*;
 
 /** 
- 纳税人集合 
+ 枚举注册 s
 */
 public class SysEnumMains extends EntitiesNoName
 {
 	/** 
 	 SysEnumMains
 	*/
-	public SysEnumMains() throws Exception {
+	public SysEnumMains()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new SysEnumMain();
 	}
 	/** 
@@ -37,7 +37,7 @@ public class SysEnumMains extends EntitiesNoName
 		}
 
 		// 返回他组织下的数据.
-		return this.Retrieve(SysEnumMainAttr.OrgNo, bp.web.WebUser.getFK_Dept());
+		return this.Retrieve(SysEnumMainAttr.OrgNo, bp.web.WebUser.getDeptNo());
 	}
 
 
@@ -47,7 +47,8 @@ public class SysEnumMains extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<SysEnumMain> ToJavaList() {
+	public final java.util.List<SysEnumMain> ToJavaList()
+	{
 		return (java.util.List<SysEnumMain>)(Object)this;
 	}
 
@@ -56,7 +57,8 @@ public class SysEnumMains extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<SysEnumMain> Tolist()  {
+	public final ArrayList<SysEnumMain> Tolist()
+	{
 		ArrayList<SysEnumMain> list = new ArrayList<SysEnumMain>();
 		for (int i = 0; i < this.size(); i++)
 		{

@@ -1,10 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.port.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -15,7 +11,8 @@ public class FlowFormTrees extends EntitiesTree
 	/** 
 	 独立表单树s
 	*/
-	public FlowFormTrees() throws Exception {
+	public FlowFormTrees()
+	{
 	}
 	/** 
 	 独立表单树
@@ -26,7 +23,7 @@ public class FlowFormTrees extends EntitiesTree
 	   {
 		   FlowFormTree tree = new FlowFormTree();
 		   tree.setNo("100");
-		   tree.setFK_Flow(flowNo);
+		   tree.setFlowNo(flowNo);
 		   tree.setName("根目录");
 		  // tree.IsDir = false;
 		   tree.setParentNo("0");
@@ -40,7 +37,8 @@ public class FlowFormTrees extends EntitiesTree
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FlowFormTree();
 	}
 
@@ -52,7 +50,8 @@ public class FlowFormTrees extends EntitiesTree
 	 
 	 @return List
 	*/
-	public final java.util.List<FlowFormTree> ToJavaList() {
+	public final java.util.List<FlowFormTree> ToJavaList()
+	{
 		return (java.util.List<FlowFormTree>)(Object)this;
 	}
 	/** 
@@ -60,7 +59,8 @@ public class FlowFormTrees extends EntitiesTree
 	 
 	 @return List
 	*/
-	public final ArrayList<FlowFormTree> Tolist()  {
+	public final ArrayList<FlowFormTree> Tolist()
+	{
 		ArrayList<FlowFormTree> list = new ArrayList<FlowFormTree>();
 		for (int i = 0; i < this.size(); i++)
 		{

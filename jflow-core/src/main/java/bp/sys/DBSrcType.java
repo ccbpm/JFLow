@@ -1,85 +1,28 @@
 package bp.sys;
 
-import bp.*;
-
 /** 
  数据源类型
 */
-public enum DBSrcType
+public class DBSrcType
 {
 	/** 
 	 本机数据库
 	*/
-	Localhost(0),
-	/** 
-	 SQL
-	*/
-	SQLServer(1),
-	/** 
-	 Oracle
-	*/
-	Oracle(2),
-	/** 
-	 MySQL
-	*/
-	MySQL(3),
-	/** 
-	 Informix
-	*/
-	Informix(4),
-	/** 
-	 PGSQL
-	*/
-	PostgreSQL(5),
-	/** 
-	 人大金仓
-	*/
-	KingBaseR3(6),
-	KingBaseR6(7),
-	/** 
-	 WebService数据源
-	*/
-	WebServices(100),
-	/** 
-	 海尔的Dubbo服务.
-	*/
-	Dubbo(50),
-	/// <summary>
-	/// 优炫
-	/// </summary>
-	UX(9),
-	HGDB(11);
+	public static final String local = "local";
+	public static final String MSSQL = "MSSQL";
+	public static final String Oracle = "Oracle";
+	public static final String MySQL = "MySQL";
+	public static final String Informix = "Informix";
+	public static final String PostgreSQL = "PostgreSQL";
+	public static final String KingBaseR3 = "KingBaseR3";
+	public static final String KingBaseR6 = "KingBaseR6";
+	public static final String UX = "UX";
+	public static final String HGDB = "HGDB";
+	public static final String WebServices = "WebServices";
+	public static final String Dubbo = "Dubbo";
+	public static final String CCFromRef = "CCFromRef";
+	public static final String LocalWS = "LocalWS";
+	public static final String LocalHandler = "LocalHandler";
+	public static final String WebApi = "WebApi";
 
-	public static final int SIZE = java.lang.Integer.SIZE;
-
-	private int intValue;
-	private static java.util.HashMap<Integer, DBSrcType> mappings;
-	private static java.util.HashMap<Integer, DBSrcType> getMappings()  {
-		if (mappings == null)
-		{
-			synchronized (DBSrcType.class)
-			{
-				if (mappings == null)
-				{
-					mappings = new java.util.HashMap<Integer, DBSrcType>();
-				}
-			}
-		}
-		return mappings;
-	}
-
-	private DBSrcType(int value)
-	{intValue = value;
-		getMappings().put(value, this);
-	}
-
-	public int getValue()
-	{
-		return intValue;
-	}
-
-	public static DBSrcType forValue(int value)
-	{
-		return getMappings().get(value);
-	}
 }

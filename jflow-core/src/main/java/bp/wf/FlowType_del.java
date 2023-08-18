@@ -1,6 +1,5 @@
 package bp.wf;
 
-import bp.*;
 
 /** 
  流程类型
@@ -18,11 +17,13 @@ public enum FlowType_del
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue() {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
-	public static FlowType_del forValue(int value) 
-	{return values()[value];
+	public static FlowType_del forValue(int value)
+	{
+		return values()[value];
 	}
 }

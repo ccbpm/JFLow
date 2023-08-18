@@ -1,7 +1,13 @@
 package bp.port;
 
-import bp.en.*;
+import bp.da.*;
+import bp.difference.*;
+import bp.en.*; import bp.en.Map;
+import bp.sys.*;
+import bp.web.*;
+import bp.*;
 import java.util.*;
+import java.io.*;
 
 /** 
  操作员
@@ -15,13 +21,15 @@ public class Emps extends EntitiesNoName
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		return new Emp();
 	}
 	/** 
 	 操作员s
 	*/
-	public Emps() {
+	public Emps()
+	{
 	}
 	/** 
 	 操作员s
@@ -34,7 +42,8 @@ public class Emps extends EntitiesNoName
 
 		///#endregion 构造方法
 
-	public final String reseet()  {
+	public final String reseet()
+	{
 		return "ceshi";
 	}
 
@@ -49,10 +58,12 @@ public class Emps extends EntitiesNoName
 	public int RetrieveAll() throws Exception {
 		//if (bp.web.WebUser.getNo() != "admin")
 		//    throw new Exception("@您没有查询的权限.");
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
+		{
+			return super.RetrieveAll();
+		}
 
-
-		return super.RetrieveAll();
-
+		return this.Retrieve("OrgNo", WebUser.getOrgNo());
 	}
 	/** 
 	 重写重数据源查询全部适应从WS取数据需要
@@ -62,8 +73,12 @@ public class Emps extends EntitiesNoName
 	@Override
 	public int RetrieveAllFromDBSource() throws Exception {
 
-		return super.RetrieveAllFromDBSource();
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
+		{
+			return super.RetrieveAllFromDBSource();
+		}
 
+		return this.Retrieve("OrgNo", WebUser.getOrgNo());
 	}
 
 		///#endregion 重写查询.
@@ -75,7 +90,8 @@ public class Emps extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<Emp> ToJavaList() {
+	public final java.util.List<Emp> ToJavaList()
+	{
 		return (java.util.List<Emp>)(Object)this;
 	}
 	/** 
@@ -83,7 +99,8 @@ public class Emps extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<Emp> Tolist()  {
+	public final ArrayList<Emp> Tolist()
+	{
 		ArrayList<Emp> list = new ArrayList<Emp>();
 		for (int i = 0; i < this.size(); i++)
 		{

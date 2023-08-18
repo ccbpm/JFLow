@@ -1,8 +1,7 @@
 package bp.sys;
+import bp.en.EntitiesMyPK;
+import bp.en.Entity;
 
-import bp.da.*;
-import bp.en.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -15,21 +14,23 @@ public class FrmAttachments extends EntitiesMyPK
 	/** 
 	 附件s
 	*/
-	public FrmAttachments()  {
+	public FrmAttachments()
+	{
 	}
 	/** 
 	 附件s
 	 
-	 param fk_mapdata s
+	 @param frmID s
 	*/
-	public FrmAttachments(String fk_mapdata) throws Exception {
-		this.Retrieve(FrmAttachmentAttr.FK_MapData, fk_mapdata, FrmAttachmentAttr.FK_Node, 0);
+	public FrmAttachments(String frmID) throws Exception {
+		this.Retrieve(FrmAttachmentAttr.FK_MapData, frmID, FrmAttachmentAttr.FK_Node, 0);
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		return new FrmAttachment();
 	}
 
@@ -42,7 +43,8 @@ public class FrmAttachments extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmAttachment> ToJavaList() {
+	public final java.util.List<FrmAttachment> ToJavaList()
+	{
 		return (java.util.List<FrmAttachment>)(Object)this;
 	}
 	/** 
@@ -50,7 +52,8 @@ public class FrmAttachments extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmAttachment> Tolist()  {
+	public final ArrayList<FrmAttachment> Tolist()
+	{
 		ArrayList<FrmAttachment> list = new ArrayList<FrmAttachment>();
 		for (int i = 0; i < this.size(); i++)
 		{

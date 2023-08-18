@@ -74,7 +74,7 @@ public class DataTableConvertJson
 		{
 			jsonBuilder.deleteCharAt(jsonBuilder.length() - 1);
 		}
-		// jsonBuilder.remove(jsonBuilder.Length - 1, 1);
+		// jsonBuilder.remove(jsonBuilder.length() - 1, 1);
 		if (totalRows == 0)
 		{
 			jsonBuilder.append("],total:0");

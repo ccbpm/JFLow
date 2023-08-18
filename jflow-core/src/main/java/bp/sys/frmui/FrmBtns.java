@@ -1,6 +1,6 @@
 package bp.sys.frmui;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import java.util.*;
 
 /** 
@@ -13,13 +13,15 @@ public class FrmBtns extends EntitiesMyPK
 	/** 
 	 按钮s
 	*/
-	public FrmBtns()  {
+	public FrmBtns()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FrmBtn();
 	}
 
@@ -32,7 +34,8 @@ public class FrmBtns extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmBtn> ToJavaList() {
+	public final java.util.List<FrmBtn> ToJavaList()
+	{
 		return (java.util.List<FrmBtn>)(Object)this;
 	}
 	/** 
@@ -40,7 +43,8 @@ public class FrmBtns extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmBtn> Tolist()  {
+	public final ArrayList<FrmBtn> Tolist()
+	{
 		ArrayList<FrmBtn> list = new ArrayList<FrmBtn>();
 		for (int i = 0; i < this.size(); i++)
 		{

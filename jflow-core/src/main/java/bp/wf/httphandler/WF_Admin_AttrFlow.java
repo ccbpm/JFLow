@@ -1,14 +1,11 @@
 package bp.wf.httphandler;
 
 import bp.difference.handler.CommonFileUtils;
-import bp.difference.handler.CommonUtils;
-import bp.difference.handler.WebContralBase;
 import bp.sys.*;
 import bp.da.*;
 import bp.wf.Glo;
 import bp.wf.template.*;
 import bp.difference.*;
-import bp.*;
 import bp.wf.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,29 +13,32 @@ import java.util.*;
 import java.io.*;
 import java.time.*;
 
-public class WF_Admin_AttrFlow extends WebContralBase
+public class WF_Admin_AttrFlow extends bp.difference.handler.DirectoryPageBase
 {
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_AttrFlow() throws Exception {
+	public WF_Admin_AttrFlow()
+	{
 	}
 
 
 		///#region 修改轨迹.
 	public final String EditTrackDtl_Init() throws Exception {
-		Track tk = new Track(this.getFK_Flow(), this.getMyPK());
+		Track tk = new Track(this.getFlowNo(), this.getMyPK());
 		return tk.getMsg();
 	}
-	public final String EditTrackDtl_Save() throws Exception {
+	public final String EditTrackDtl_Save()
+	{
 		String msg = this.GetRequestVal("Msg");
-		String tackTable = "ND" + Integer.parseInt(this.getFK_Flow()) + "Track";
+		String tackTable = "ND" + Integer.parseInt(this.getFlowNo()) + "Track";
 		String sql = "UPDATE " + tackTable + " SET Msg='" + msg + "' WHERE MyPK='" + this.getMyPK() + "'";
 		DBAccess.RunSQL(sql);
 		return "修改成功";
 	}
-	public final String EditTrackDtl_Delete() throws Exception {
-		String tackTable = "ND" + Integer.parseInt(this.getFK_Flow()) + "Track";
+	public final String EditTrackDtl_Delete()
+	{
+		String tackTable = "ND" + Integer.parseInt(this.getFlowNo()) + "Track";
 		String sql = "DELETE FROM  " + tackTable + " WHERE MyPK='" + this.getMyPK() + "'";
 		DBAccess.RunSQL(sql);
 		return "删除成功.";
@@ -55,12 +55,12 @@ public class WF_Admin_AttrFlow extends WebContralBase
 	 @return 
 	*/
 	public final String APICodeFEE_Init() throws Exception {
-		if (DataType.IsNullOrEmpty(getFK_Flow()))
+		if (this.getFlowNo() == null || this.getFlowNo().isEmpty())
 		{
 			return "err@FK_Flow参数不能为空！";
 		}
 
-		Flow flow = new Flow(this.getFK_Flow());
+		Flow flow = new Flow(this.getFlowNo());
 
 		String tmpPath = "";
 
@@ -79,12 +79,12 @@ public class WF_Admin_AttrFlow extends WebContralBase
 		}
 
 		String Title = flow.getName() + "[" + flow.getNo() + "]";
-		String code = DataType.ReadTextFile(tmpPath);
+		String code = DataType.ReadTextFile(tmpPath); //, System.Text.Encoding.UTF8).replace("F001Templepte", string.Format("FEE{0}", flow.getNo())).replace("@FlowName", flow.Name).replace("@FlowNo", flow.getNo());
 		code = code.replace("F001Templepte", String.format("FEE%1$s", flow.getNo())).replace("@FlowName", flow.getName()).replace("@FlowNo", flow.getNo());
 
 
 		//此处将重要行标示出来，根据下面的数组中的项来检索重要行号
-		String[] lineStrings = new String[] {"namespace BP.FlowEvent", ": BP.WF.FlowEventBase", "public override string FlowMark", "public override string SendWhen()", "public override string SendSuccess()", "public override string SendError()", "public override string FlowOnCreateWorkID()", "public override string FlowOverBefore()", "public override string FlowOverAfter()", "public override string BeforeFlowDel()", "public override string AfterFlowDel()", "public override string SaveAfter()", "public override string SaveBefore()", "public override string UndoneBefore()", "public override string UndoneAfter()", "public override string ReturnBefore()", "public override string ReturnAfter()", "public override string AskerAfter()", "public override string AskerReAfter()"};
+		String[] lineStrings = new String[] {"namespace BP.FlowEvent", ": BP.WF.FlowEventBase", "public override String FlowMark", "public override String SendWhen()", "public override String SendSuccess()", "public override String SendError()", "public override String FlowOnCreateWorkID()", "public override String FlowOverBefore()", "public override String FlowOverAfter()", "public override String BeforeFlowDel()", "public override String AfterFlowDel()", "public override String SaveAfter()", "public override String SaveBefore()", "public override String UndoneBefore()", "public override String UndoneAfter()", "public override String ReturnBefore()", "public override String ReturnAfter()", "public override String AskerAfter()", "public override String AskerReAfter()"};
 
 
 
@@ -98,8 +98,8 @@ public class WF_Admin_AttrFlow extends WebContralBase
 	/** 
 	 获取重要行的标号连接字符串，如3,6,8
 	 
-	 param lineInStrings 重要行中包含的字符串数组，只要行中包含其中的一项字符串，则这行就是重要行
-	 param str 要检索的字符串，使用Environment.NewLine分行
+	 @param lineInStrings 重要行中包含的字符串数组，只要行中包含其中的一项字符串，则这行就是重要行
+	 @param str 要检索的字符串，使用Environment.NewLine分行
 	 @return 
 	*/
 	private String APICodeFEE_Init_GetImportantLinesNumbers(String[] lineInStrings, String str)
@@ -178,7 +178,7 @@ public class WF_Admin_AttrFlow extends WebContralBase
 			if (node.getHisDeliveryWay() == DeliveryWay.ByStation)
 			{
 				dr.setValue("HisDeliveryWayJsFnPara", "ByStation");
-				dr.setValue("HisDeliveryWayCountLabel", "岗位");
+				dr.setValue("HisDeliveryWayCountLabel", "角色");
 				NodeStations nss = new NodeStations();
 				intHisDeliveryWayCount = nss.Retrieve(NodeStationAttr.FK_Node, node.getNodeID(), null);
 			}
@@ -194,7 +194,7 @@ public class WF_Admin_AttrFlow extends WebContralBase
 				dr.setValue("HisDeliveryWayJsFnPara", "ByDept");
 				dr.setValue("HisDeliveryWayCountLabel", "人员");
 				NodeEmps nes = new NodeEmps();
-				intHisDeliveryWayCount = nes.Retrieve(NodeStationAttr.FK_Node, node.getNodeID(), null);
+				intHisDeliveryWayCount = nes.Retrieve(NodeStationAttr.FK_Node,  node.getNodeID(), null);
 			}
 			dr.setValue("HisDeliveryWayCount", intHisDeliveryWayCount);
 
@@ -204,7 +204,7 @@ public class WF_Admin_AttrFlow extends WebContralBase
 
 			//消息&事件Count
 			FrmEvents fes = new FrmEvents();
-			dr.setValue("HisFrmEventsCount", fes.Retrieve(FrmEventAttr.FK_MapData, "ND" + node.getNodeID(), null));
+			dr.setValue("HisFrmEventsCount", fes.Retrieve(FrmEventAttr.FrmID, "ND" + node.getNodeID(), null));
 
 			//流程完成条件Count
 			Conds conds = new Conds(CondType.Flow, node.getNodeID());
@@ -223,7 +223,7 @@ public class WF_Admin_AttrFlow extends WebContralBase
 		DataSet ds = new DataSet();
 
 		// 把流程信息放入.
-		Flow fl = new Flow(this.getFK_Flow());
+		Flow fl = new Flow(this.getFlowNo());
 		DataTable dtFlow = fl.ToDataTableField("Flow");
 		ds.Tables.add(dtFlow);
 
@@ -247,10 +247,9 @@ public class WF_Admin_AttrFlow extends WebContralBase
 
 
 		//把节点信息放入.
-		Nodes nds = new Nodes(this.getFK_Flow());
+		Nodes nds = new Nodes(this.getFlowNo());
 		DataTable dtNode = nds.ToDataTableField("Nodes");
 		ds.Tables.add(dtNode);
-
 
 
 
@@ -264,7 +263,7 @@ public class WF_Admin_AttrFlow extends WebContralBase
 	*/
 	public final String DTSBTable_Save() throws Exception {
 		//获取流程属性
-		Flow flow = new Flow(this.getFK_Flow());
+		Flow flow = new Flow(this.getFlowNo());
 		//获取主键方式
 		DataDTSWay dtsWay = DataDTSWay.forValue(this.GetRequestValInt("RB_DTSWay"));
 
@@ -281,15 +280,15 @@ public class WF_Admin_AttrFlow extends WebContralBase
 
 		//保存配置信息
 		flow.setDTSDBSrc(this.GetRequestVal("DDL_DBSrc"));
-		flow.setDTSBTable(this.GetRequestVal("DDL_Table"));
+		flow.setDTSBTable( this.GetRequestVal("DDL_Table"));
 		flow.setDTSSpecNodes(StringHelper.trimEnd(this.GetRequestVal("CheckBoxIDs"), ','));
 
 		flow.DirectUpdate();
 		return "保存成功";
 	}
 
-
 		///#endregion
+
 
 		///#region 数据同步数据源变化时，关联表的列表发生变化
 	public final String DTSBTable_DBSrcChange() throws Exception {
@@ -337,12 +336,12 @@ public class WF_Admin_AttrFlow extends WebContralBase
 		ds.Tables.add(dtColms); //列名.
 
 		//属性列表.
-		MapAttrs attrs = new MapAttrs("ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt");
+		MapAttrs attrs = new MapAttrs("ND" + Integer.parseInt(this.getFlowNo()) + "Rpt");
 		DataTable dtAttrs = attrs.ToDataTableStringField("Sys_MapAttr");
 		ds.Tables.add(dtAttrs);
 
 		//加入流程配置信息
-		Flow flow = new Flow(this.getFK_Flow());
+		Flow flow = new Flow(this.getFlowNo());
 		DataTable dtFlow = flow.ToDataTableField("Flow");
 		ds.Tables.add(dtFlow);
 
@@ -350,8 +349,8 @@ public class WF_Admin_AttrFlow extends WebContralBase
 		return bp.tools.Json.ToJson(ds);
 	}
 	public final String DTSBTableExt_Save() throws Exception {
-		String rpt = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt";
-		Flow fl = new Flow(this.getFK_Flow());
+		String rpt = "ND" + Integer.parseInt(this.getFlowNo()) + "Rpt";
+		Flow fl = new Flow(this.getFlowNo());
 		MapAttrs mattrs = new MapAttrs(rpt);
 
 		String pk = this.GetRequestVal("DDL_OID");
@@ -366,7 +365,7 @@ public class WF_Admin_AttrFlow extends WebContralBase
 		String err = "";
 		for (MapAttr attr : mattrs.ToJavaList())
 		{
-			int val = this.GetRequestValInt("CB_" + attr.getKeyOfEn());
+			int val = this.GetRequestValChecked("CB_" + attr.getKeyOfEn());
 			if (val == 0)
 			{
 				continue;
@@ -377,7 +376,7 @@ public class WF_Admin_AttrFlow extends WebContralBase
 			//如果选中的业务字段重复，抛出异常
 			if (ywStr.contains("@" + refField + "@"))
 			{
-				err += "@配置【" + attr.getKeyOfEn() + " - " + attr.getName() + "】错误, 请确保选中业务字段的唯一性，该业务字段已经被其他字段所使用。";
+				err += "@配置【" + attr.getKeyOfEn() + " - " + attr.getName() +"】错误, 请确保选中业务字段的唯一性，该业务字段已经被其他字段所使用。";
 			}
 			lcStr += "" + attr.getKeyOfEn() + "=" + refField + "@";
 			ywStr += "@" + refField + "@,";
@@ -407,12 +406,12 @@ public class WF_Admin_AttrFlow extends WebContralBase
 			ywStr = "@" + ddl_key + "@," + ywStr;
 		}
 
-		if (!err.equals(""))
+		if (!Objects.equals(err, ""))
 		{
 			return "err@" + err;
 		}
 
-		//lcStr = lcStr.Replace("@", "");
+		//lcStr = lcStr.replace("@", "");
 		ywStr = ywStr.replace("@", "");
 
 
@@ -442,11 +441,12 @@ public class WF_Admin_AttrFlow extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String StartGuide_Save() throws Exception {
+	public final String StartGuide_Save()
+	{
 		try
 		{
 			//Flow en = new Flow();
-			//en.No = this.FK_Flow;
+			//en.setNo(this.FlowNo;
 			//en.Retrieve();
 
 			//int val = this.GetRequestValInt("RB_StartGuideWay");
@@ -497,8 +497,8 @@ public class WF_Admin_AttrFlow extends WebContralBase
 			//    en.StartGuideWay = BP.WF.Template.StartGuideWay.SubFlowGuide;
 			//}
 
-			//BP.WF.Template.FrmNodes fns = new BP.WF.Template.FrmNodes(int.Parse(this.FK_Flow + "01"));
-			//if (fns.size() >= 2)
+			//BP.WF.Template.FrmNodes fns = new BP.WF.Template.FrmNodes(int.Parse(this.FlowNo + "01"));
+			//if (fns.size()>= 2)
 			//{
 			//    if (en.StartGuideWay == StartGuideWay.ByFrms)
 			//        en.StartGuideWay = BP.WF.Template.StartGuideWay.ByFrms;
@@ -508,7 +508,7 @@ public class WF_Admin_AttrFlow extends WebContralBase
 			//en.StartGuideLink = this.GetRequestVal("TB_GuideLink");
 			//en.StartGuideLab = this.GetRequestVal("TB_GuideLab");
 
-		   // en.Update();
+			// en.Update();
 			return "保存成功";
 		}
 		catch (RuntimeException ex)
@@ -526,10 +526,11 @@ public class WF_Admin_AttrFlow extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String TruckViewPower_Save() throws Exception {
+	public final String TruckViewPower_Save()
+	{
 		try
 		{
-			TruckViewPower en = new TruckViewPower(getFK_Flow());
+			TruckViewPower en = new TruckViewPower(this.getFlowNo());
 			en.Retrieve();
 
 			Object tempVar = bp.pub.PubClass.CopyFromRequestByPost(en);
@@ -548,12 +549,13 @@ public class WF_Admin_AttrFlow extends WebContralBase
 
 
 		///#region 数据导入.
-
-	/**
-	 * 导入bpmn2.0
-	 * @return
-	 */
+	/** 
+	 导入bpmn2.0 @hongyan. 这个方法翻译过去.
+	 
+	 @return 
+	*/
 	public final String Imp_DoneBPMN() throws Exception {
+
 		File xmlFile = null;
 		String fileName = UUID.randomUUID().toString();
 		try {
@@ -569,15 +571,16 @@ public class WF_Admin_AttrFlow extends WebContralBase
 			e.printStackTrace();
 			return "err@执行失败";
 		}
+		String filePath = xmlFile.getAbsolutePath();
 
-		String flowNo = this.getFK_Flow();
+		String flowNo = this.getFlowNo();
 		String FK_FlowSort = this.GetRequestVal("FK_Sort");
 
 		//检查流程编号
 		if (DataType.IsNullOrEmpty(flowNo) == false)
 		{
 			Flow fl = new Flow(flowNo);
-			FK_FlowSort = fl.getFK_FlowSort();
+			FK_FlowSort = fl.getFlowSortNo();
 		}
 
 		//检查流程类别编号
@@ -594,13 +597,13 @@ public class WF_Admin_AttrFlow extends WebContralBase
 		}
 
 		//执行导入
-		Flow flow = TemplateGlo.NewFlowByBPMN(FK_FlowSort, xmlFile.getAbsolutePath());
+		Flow flow = TemplateGlo.NewFlowByBPMN(FK_FlowSort, filePath);
 		flow.DoCheck(); //要执行一次检查.
 
 		Hashtable ht = new Hashtable();
 		ht.put("FK_Flow", flow.getNo());
 		ht.put("FlowName", flow.getName());
-		ht.put("FK_FlowSort", flow.getFK_FlowSort());
+		ht.put("FK_FlowSort", flow.getFlowSortNo());
 		ht.put("Msg", "导入成功,流程编号为:" + flow.getNo() + "名称为:" + flow.getName());
 		return bp.tools.Json.ToJson(ht);
 	}
@@ -626,14 +629,14 @@ public class WF_Admin_AttrFlow extends WebContralBase
 			return "err@执行失败";
 		}
 
-		String flowNo = this.getFK_Flow();
+		String flowNo = this.getFlowNo();
 		String FK_FlowSort = this.GetRequestVal("FK_Sort");
 
 		//检查流程编号
 		if (DataType.IsNullOrEmpty(flowNo) == false)
 		{
 			Flow fl = new Flow(flowNo);
-			FK_FlowSort = fl.getFK_FlowSort();
+			FK_FlowSort = fl.getFlowSortNo();
 		}
 
 		//检查流程类别编号
@@ -663,7 +666,7 @@ public class WF_Admin_AttrFlow extends WebContralBase
 		Hashtable ht = new Hashtable();
 		ht.put("FK_Flow", flow.getNo());
 		ht.put("FlowName", flow.getName());
-		ht.put("FK_FlowSort", flow.getFK_FlowSort());
+		ht.put("FK_FlowSort", flow.getFlowSortNo());
 		ht.put("Msg", "导入成功,流程编号为:" + flow.getNo() + "名称为:" + flow.getName());
 		return bp.tools.Json.ToJson(ht);
 	}
@@ -679,14 +682,13 @@ public class WF_Admin_AttrFlow extends WebContralBase
 	*/
 	public final String NodesIcon_Init() throws Exception {
 		DataSet ds = new DataSet();
-		Nodes nds = new Nodes(this.getFK_Flow());
+		Nodes nds = new Nodes(this.getFlowNo());
 		DataTable dt = nds.ToDataTableField("Nodes");
 		ds.Tables.add(dt);
 
 		//把文件放入ds.
 		String path = SystemConfig.getPathOfWebApp() + "WF/Admin/ClientBin/NodeIcon/";
 		String[] strs = bp.tools.BaseFileUtils.getFiles(path);
-		//String[] strs = (new File(path)).listFiles();
 		DataTable dtIcon = new DataTable();
 		dtIcon.Columns.Add("No");
 		dtIcon.Columns.Add("Name");
@@ -719,11 +721,11 @@ public class WF_Admin_AttrFlow extends WebContralBase
 
 		//流程上的字段
 		MapAttrs attrs = new MapAttrs();
-		attrs.Retrieve(MapAttrAttr.FK_MapData, "ND" + Integer.parseInt(this.getFK_Flow()) + "rpt", "LGType", 0, "MyDataType", 1, null);
+		attrs.Retrieve(MapAttrAttr.FK_MapData, "ND" + Integer.parseInt(this.getFlowNo()) + "rpt", "LGType", 0, "MyDataType", 1, null);
 		ds.Tables.add(attrs.ToDataTableField("FrmFields"));
 
 		//节点 
-		Nodes nds = new Nodes(this.getFK_Flow());
+		Nodes nds = new Nodes(this.getFlowNo());
 		ds.Tables.add(nds.ToDataTableField("Nodes"));
 
 		//mypk
@@ -746,18 +748,17 @@ public class WF_Admin_AttrFlow extends WebContralBase
 		msg.RetrieveFromDBSources();
 
 		msg.setFKEvent(this.getFK_Event()); //流程时限规则
-		msg.setFK_Flow(this.getFK_Flow());
+		msg.setFK_Flow(this.getFlowNo());
 
-		Nodes nds = new Nodes(this.getFK_Flow());
-
+		Nodes nds = new Nodes(this.getFlowNo());
 
 			///#region 其他节点的处理人方式（求选择的节点）
 		String nodesOfSMS = "";
 		for (Node mynd : nds.ToJavaList())
 		{
-			for (Object key : CommonUtils.getRequest().getParameterMap().keySet())
+			for (String key : ContextHolderUtils.getRequest().getParameterMap().keySet())
 			{
-				if (key.toString().contains("CB_SMS_" + mynd.getNodeID()) && nodesOfSMS.contains(mynd.getNodeID() + "") == false)
+				if (key.contains("CB_SMS_" + mynd.getNodeID()) && nodesOfSMS.contains(mynd.getNodeID() + "") == false)
 				{
 					nodesOfSMS += mynd.getNodeID() + ",";
 				}
@@ -770,16 +771,16 @@ public class WF_Admin_AttrFlow extends WebContralBase
 			///#endregion 其他节点的处理人方式（求选择的节点）
 
 		//发给指定的人员
-		msg.setByEmps(this.GetRequestVal("TB_Emps"));
+		msg.setByEmps(ContextHolderUtils.getRequest().getParameter("TB_Emps"));
 
 		//短消息发送设备
 		msg.setSMSPushModel(this.GetRequestVal("PushModel"));
 
 		//邮件标题
-		msg.setMailTitleReal(this.GetRequestVal("TB_title"));
+		msg.setMailTitleReal(ContextHolderUtils.getRequest().getParameter("TB_title"));
 
 		//短信内容模版.
-		msg.setSMSDocReal(this.GetRequestVal("TB_SMS"));
+		msg.setSMSDocReal(ContextHolderUtils.getRequest().getParameter("TB_SMS"));
 
 		//保存.
 		if (DataType.IsNullOrEmpty(msg.getMyPK()) == true)
@@ -802,7 +803,8 @@ public class WF_Admin_AttrFlow extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String GraphicalAnalysis_Init() throws Exception {
+	public final String GraphicalAnalysis_Init()
+	{
 		Hashtable ht = new Hashtable();
 		String fk_flow = GetRequestVal("FK_Flow");
 		//所有的实例数量.
@@ -818,12 +820,12 @@ public class WF_Admin_AttrFlow extends WebContralBase
 		ht.put("ReturnNum", DBAccess.RunSQLReturnValInt("SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE WFState=5 AND Fk_flow = '" + fk_flow + "'"));
 
 		//说有逾期的数量.
-		if (SystemConfig.getAppCenterDBType( ) == DBType.MySQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 		{
 			ht.put("OverTimeNum", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM WF_EMPWORKS where STR_TO_DATE(SDT,'%Y-%m-%d %H:%i') < now() AND Fk_flow = '" + fk_flow + "'"));
 
 		}
-		else if (SystemConfig.getAppCenterDBType( ) == DBType.Oracle|| SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR3 ||SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR6)
+		else if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 || SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
 			String sql = "SELECT COUNT(*) from (SELECT *  FROM WF_EMPWORKS WHERE  REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}') AND(sysdate - TO_DATE(SDT, 'yyyy-mm-dd hh24:mi:ss')) > 0 AND Fk_flow = '" + fk_flow + "'";
 
@@ -831,7 +833,8 @@ public class WF_Admin_AttrFlow extends WebContralBase
 
 			ht.put("OverTimeNum", DBAccess.RunSQLReturnValInt(sql));
 		}
-		else if(SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB){
+		else if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB)
+		{
 			ht.put("OverTimeNum", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM WF_EMPWORKS where to_timestamp(CASE WHEN SDT='无' THEN '' ELSE SDT END, 'yyyy-mm-dd hh24:MI:SS') < NOW() AND Fk_flow = '" + fk_flow + "'"));
 		}
 		else
@@ -855,7 +858,7 @@ public class WF_Admin_AttrFlow extends WebContralBase
 		String sql = "SELECT FK_NY, count(WorkID) as Num FROM WF_GenerWorkFlow WHERE WFState >1 AND Fk_flow = '" + fk_flow + "' GROUP BY FK_NY";
 		DataTable FlowsByNY = DBAccess.RunSQLReturnTable(sql);
 		FlowsByNY.TableName = "FlowsByNY";
-		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		if (SystemConfig.getAppCenterDBFieldCaseModel() != FieldCaseModel.None)
 		{
 			FlowsByNY.Columns.get(0).ColumnName = "FK_NY";
 			FlowsByNY.Columns.get(1).ColumnName = "Num";
@@ -866,7 +869,7 @@ public class WF_Admin_AttrFlow extends WebContralBase
 		sql = "SELECT DeptName, count(WorkID) as Num FROM WF_GenerWorkFlow WHERE WFState >1 AND Fk_flow = '" + fk_flow + "' GROUP BY DeptName ";
 		DataTable FlowsByDept = DBAccess.RunSQLReturnTable(sql);
 		FlowsByDept.TableName = "FlowsByDept";
-		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		if (SystemConfig.getAppCenterDBFieldCaseModel() != FieldCaseModel.None)
 		{
 			FlowsByDept.Columns.get(0).ColumnName = "DeptName";
 			FlowsByDept.Columns.get(1).ColumnName = "Num";
@@ -882,7 +885,7 @@ public class WF_Admin_AttrFlow extends WebContralBase
 		sql = "SELECT DeptName, count(WorkID) as Num FROM WF_EmpWorks WHERE WFState >1 AND Fk_flow = '" + fk_flow + "' GROUP BY DeptName";
 		DataTable TodolistByDept = DBAccess.RunSQLReturnTable(sql);
 		TodolistByDept.TableName = "TodolistByDept";
-		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		if (SystemConfig.getAppCenterDBFieldCaseModel() != FieldCaseModel.None)
 		{
 			TodolistByDept.Columns.get(0).ColumnName = "DeptName";
 			TodolistByDept.Columns.get(1).ColumnName = "Num";
@@ -890,19 +893,19 @@ public class WF_Admin_AttrFlow extends WebContralBase
 		ds.Tables.add(TodolistByDept);
 
 		//逾期的 - 人员分组.
-		if (SystemConfig.getAppCenterDBType( ) == DBType.MySQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 		{
 			sql = "SELECT  p.name,COUNT (w.WorkID) AS Num from Port_Emp p,WF_EmpWorks w  WHERE p. NO = w.FK_Emp AND WFState >1 and STR_TO_DATE(SDT,'%Y-%m-%d %H:%i') < now() AND Fk_flow = '" + fk_flow + "' GROUP BY p.name,w.FK_Emp";
 
 		}
-		else if (SystemConfig.getAppCenterDBType( ) == DBType.Oracle || SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR3 ||SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR6)
+		else if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 || SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
 			sql = "SELECT  p.name,COUNT (w.WorkID) AS Num from Port_Emp p,WF_EmpWorks w  WHERE p. NO = w.FK_Emp AND WFState >1 and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}') AND(sysdate - TO_DATE(SDT, 'yyyy-mm-dd hh24:mi:ss')) > 0 AND Fk_flow = '" + fk_flow + "' GROUP BY p.name,w.FK_Emp ";
 			sql += "UNION SELECT  p.name,COUNT (w.WorkID) AS Num from Port_Emp p,WF_EmpWorks w  WHERE p. NO = w.FK_Emp AND WFState >1 and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$') AND (sysdate - TO_DATE(SDT, 'yyyy-mm-dd')) > 0 AND Fk_flow = '" + fk_flow + "' GROUP BY p.name,w.FK_Emp";
 		}
-		else if(SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB){
-			sql = "SELECT  p.name,COUNT (w.WorkID) AS Num from Port_Emp p,WF_EmpWorks w  WHERE p. NO = w.FK_Emp AND WFState >1 and to_timestamp(CASE WHEN SDT='无' THEN '' ELSE SDT END, 'yyyy-mm-dd hh24:MI:SS') < MOW() AND Fk_flow = '" + fk_flow + "' GROUP BY p.name,w.FK_Emp";
-
+		else if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB)
+		{
+			sql = "SELECT  p.name,COUNT (w.WorkID) AS Num from Port_Emp p,WF_EmpWorks w  WHERE p. NO = w.FK_Emp AND WFState >1 to_timestamp(CASE WHEN SDT='无' THEN '' ELSE SDT END, 'yyyy-mm-dd hh24:MI:SS') < NOW() AND Fk_flow = '" + fk_flow + "' GROUP BY p.name,w.FK_Emp";
 		}
 		else
 		{
@@ -910,25 +913,26 @@ public class WF_Admin_AttrFlow extends WebContralBase
 		}
 		DataTable OverTimeByEmp = DBAccess.RunSQLReturnTable(sql);
 		OverTimeByEmp.TableName = "OverTimeByEmp";
-		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		if (SystemConfig.getAppCenterDBFieldCaseModel() != FieldCaseModel.None)
 		{
 			OverTimeByEmp.Columns.get(0).ColumnName = "Name";
 			OverTimeByEmp.Columns.get(1).ColumnName = "Num";
 		}
 		ds.Tables.add(OverTimeByEmp);
 		//逾期的 - 部门分组.
-		if (SystemConfig.getAppCenterDBType( ) == DBType.MySQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 		{
 			sql = "SELECT DeptName, count(WorkID) as Num FROM WF_EmpWorks WHERE WFState >1 and STR_TO_DATE(SDT,'%Y-%m-%d %H:%i') < now() AND Fk_flow = '" + fk_flow + "' GROUP BY DeptName";
 
 		}
-		else if (SystemConfig.getAppCenterDBType( ) == DBType.Oracle|| SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR3 ||SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR6)
+		else if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 || SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
 			sql = "SELECT DeptName, count(WorkID) as Num FROM WF_EmpWorks WHERE WFState >1 and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}') AND(sysdate - TO_DATE(SDT, 'yyyy-mm-dd hh24:mi:ss')) > 0 AND Fk_flow = '" + fk_flow + "' GROUP BY DeptName ";
 			sql += "UNION SELECT DeptName, count(WorkID) as Num FROM WF_EmpWorks WHERE WFState >1 and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$') AND (sysdate - TO_DATE(SDT, 'yyyy-mm-dd')) > 0 AND Fk_flow = '" + fk_flow + "' GROUP BY DeptName";
 		}
-		else if(SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB){
-			sql = "SELECT DeptName, count(WorkID) as Num FROM WF_EmpWorks WHERE WFState >1 and to_timestamp(CASE WHEN SDT='无' THEN '' ELSE SDT END, 'yyyy-mm-dd hh24:MI:SS') < NOW() AND Fk_flow = '" + fk_flow + "' GROUP BY DeptName";
+		else if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB)
+		{
+			sql = "SELECT DeptName, count(WorkID) as Num FROM WF_EmpWorks WHERE WFState >1 and to_timestamp(CASE WHEN SDT='无' THEN '' ELSE SDT END, 'yyyy-mm-dd hh24:MI:SS') < NOW(), GETDATE(), 120) AND Fk_flow = '" + fk_flow + "' GROUP BY DeptName";
 		}
 		else
 		{
@@ -936,24 +940,25 @@ public class WF_Admin_AttrFlow extends WebContralBase
 		}
 		DataTable OverTimeByDept = DBAccess.RunSQLReturnTable(sql);
 		OverTimeByDept.TableName = "OverTimeByDept";
-		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		if (SystemConfig.getAppCenterDBFieldCaseModel() != FieldCaseModel.None)
 		{
 			OverTimeByDept.Columns.get(0).ColumnName = "DeptName";
 			OverTimeByDept.Columns.get(1).ColumnName = "Num";
 		}
 		ds.Tables.add(OverTimeByDept);
 		//逾期的 - 节点分组.
-		if (SystemConfig.getAppCenterDBType( ) == DBType.MySQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 		{
 			sql = "Select NodeName,count(*) as Num from WF_EmpWorks WHERE WFState >1 and STR_TO_DATE(SDT,'%Y-%m-%d %H:%i') < now() AND Fk_flow = '" + fk_flow + "' GROUP BY NodeName";
 
 		}
-		else if (SystemConfig.getAppCenterDBType( ) == DBType.Oracle || SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR3 ||SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR6)
+		else if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 || SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
 			sql = "Select NodeName,count(*) as Num from WF_EmpWorks WHERE WFState >1 and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}') AND(sysdate - TO_DATE(SDT, 'yyyy-mm-dd hh24:mi:ss')) > 0 AND Fk_flow = '" + fk_flow + "' GROUP BY NodeName ";
 			sql += "UNION Select NodeName,count(*) as Num from WF_EmpWorks WHERE WFState >1 and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$') AND (sysdate - TO_DATE(SDT, 'yyyy-mm-dd')) > 0 AND Fk_flow = '" + fk_flow + "' GROUP BY NodeName";
 		}
-		else if(SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB){
+		else if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB)
+		{
 			sql = "Select NodeName,count(*) as Num from WF_EmpWorks WHERE WFState >1 and to_timestamp(CASE WHEN SDT='无' THEN '' ELSE SDT END, 'yyyy-mm-dd hh24:MI:SS') < NOW() AND Fk_flow = '" + fk_flow + "' GROUP BY NodeName";
 		}
 		else
@@ -962,7 +967,7 @@ public class WF_Admin_AttrFlow extends WebContralBase
 		}
 		DataTable OverTimeByNode = DBAccess.RunSQLReturnTable(sql);
 		OverTimeByNode.TableName = "OverTimeByNode";
-		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		if (SystemConfig.getAppCenterDBFieldCaseModel() != FieldCaseModel.None)
 		{
 			OverTimeByNode.Columns.get(0).ColumnName = "NodeName";
 			OverTimeByNode.Columns.get(1).ColumnName = "Num";

@@ -8,19 +8,16 @@ public class SQLList extends XmlEn
 {
 
 		///#region 属性
-	public final String getNo()  throws Exception
-	{
+	public final String getNo()  {
 		return this.GetValStringByKey(SQLListAttr.No);
 	}
-	public final String getSQL()  throws Exception
-	{
+	public final String getSQL()  {
 		return this.GetValStringByKey(SQLListAttr.SQL);
 	}
 	/** 
 	 备注
 	*/
-	public final String getNote()  throws Exception
-	{
+	public final String getNote()  {
 		return this.GetValStringByKey(SQLListAttr.Note);
 	}
 
@@ -37,9 +34,9 @@ public class SQLList extends XmlEn
 	/** 
 	 按照SQL来查询
 	 
-	 param no
+	 @param no
 	*/
-	public SQLList(String no) throws Exception 
+	public SQLList(String no) throws Exception
 	{
 		this.RetrieveByPK("No", no);
 	}
@@ -47,7 +44,7 @@ public class SQLList extends XmlEn
 	 获取一个实例
 	*/
 	@Override
-	public XmlEns getGetNewEntities()throws Exception
+	public XmlEns getNewEntities()
 	{
 		return new SQLLists();
 	}

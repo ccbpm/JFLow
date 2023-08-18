@@ -31,7 +31,7 @@ public class EntityDBAccess
 		switch (en.getEnMap().getEnDBUrl().getDBUrlType())
 		{
 			case AppCenterDSN :
-				return DBAccess.RunSQL(en.getSQLCash().Delete, SqlBuilder.GenerParasPK(en));
+				return DBAccess.RunSQL(en.getSQLCache().Delete, SqlBuilder.GenerParasPK(en));
 			default :
 				throw new RuntimeException("@没有设置类型。");
 		}
@@ -52,7 +52,7 @@ public class EntityDBAccess
 		}
 
 		bp.da.Paras paras = SqlBuilder.GenerParas(en, keys);
-		String sql = en.getSQLCash().GetUpdateSQL(en, keys);
+		String sql = en.getSQLCache().GetUpdateSQL(en, keys);
 		try
 		{
 			switch (en.getEnMap().getEnDBUrl().getDBUrlType())
@@ -69,11 +69,11 @@ public class EntityDBAccess
 						case HGDB:
 							return DBAccess.RunSQL(sql, paras);
 						case Informix:
-							return DBAccess.RunSQL(en.getSQLCash().GetUpdateSQL(en, keys), SqlBuilder.GenerParas_Update_Informix(en, keys));
+							return DBAccess.RunSQL(en.getSQLCache().GetUpdateSQL(en, keys), SqlBuilder.GenerParas_Update_Informix(en, keys));
 						case Access:
 							return DBAccess.RunSQL(SqlBuilder.UpdateOfMSAccess(en, keys));
 						default:
-							//return DBAccess.RunSQL(en.SQLCash.GetUpdateSQL(en, keys),
+							//return DBAccess.RunSQL(en.SQLCache.GetUpdateSQL(en, keys),
 							//    SqlBuilder.GenerParas(en, keys));
 							if (keys != null)
 							{
@@ -90,11 +90,11 @@ public class EntityDBAccess
 										}
 									}
 								}
-								return DBAccess.RunSQL(en.getSQLCash().GetUpdateSQL(en, keys), ps);
+								return DBAccess.RunSQL(en.getSQLCache().GetUpdateSQL(en, keys), ps);
 							}
 							else
 							{
-								return DBAccess.RunSQL(en.getSQLCash().GetUpdateSQL(en, keys), SqlBuilder.GenerParas(en, keys));
+								return DBAccess.RunSQL(en.getSQLCache().GetUpdateSQL(en, keys), SqlBuilder.GenerParas(en, keys));
 							}
 
 					}
@@ -105,7 +105,7 @@ public class EntityDBAccess
 		}
 		catch (RuntimeException ex)
 		{
-			if (SystemConfig.getIsDebug())
+			if (SystemConfig.isDebug())
 			{
 				en.CheckPhysicsTable();
 			}
@@ -176,7 +176,7 @@ public class EntityDBAccess
 	private static void fullDate(DataTable dt, Entity en, Attrs attrs)throws Exception
 	{
 		Row row = en.getRow();
-		for (Attr attr : attrs.ToJavaList())
+		for (Attr attr : attrs)
 		{
 			row.SetValByKey(attr.getKey(), dt.Rows.get(0).getValue(attr.getKey()));
 		}
@@ -187,7 +187,7 @@ public class EntityDBAccess
 		try
 		{
 			DataTable dt = new DataTable();
-			switch (ens.getGetNewEntity().getEnMap().getEnDBUrl().getDBUrlType())
+			switch (ens.getNewEntity().getEnMap().getEnDBUrl().getDBUrlType())
 			{
 				case AppCenterDSN:
 					dt = DBAccess.RunSQLReturnTable(sql);
@@ -202,15 +202,15 @@ public class EntityDBAccess
 				return 0;
 			}
 
-			Map enMap = ens.getGetNewEntity().getEnMap();
+			Map enMap = ens.getNewEntity().getEnMap();
 			Attrs attrs = enMap.getAttrs();
 
-			//Entity  en1 = ens.getGetNewEntity();
+			//Entity  en1 = ens.getNewEntity();
 			for (DataRow dr : dt.Rows)
 			{
-				Entity en = ens.getGetNewEntity();
+				Entity en = ens.getNewEntity();
 				//Entity  en = en1.CreateInstance();
-				for (Attr attr : attrs.ToJavaList())
+				for (Attr attr : attrs)
 				{
 					en.getRow().SetValByKey(attr.getKey(), dr.getValue(attr.getKey()));
 				}
@@ -222,13 +222,13 @@ public class EntityDBAccess
 		}
 		catch (RuntimeException ex)
 		{
-			throw new RuntimeException("@在[" + ens.getGetNewEntity().getEnDesc() + "]查询时出现错误:" + ex.getMessage());
+			throw new RuntimeException("@在[" + ens.getNewEntity().getEnDesc() + "]查询时出现错误:" + ex.getMessage());
 		}
 	}
 	public static int Retrieve(Entities ens, String sql, Paras paras, String[] fullAttrs)throws Exception
 	{
 		DataTable dt = null;
-		switch (ens.getGetNewEntity().getEnMap().getEnDBUrl().getDBUrlType())
+		switch (ens.getNewEntity().getEnMap().getEnDBUrl().getDBUrlType())
 		{
 			case AppCenterDSN:
 				dt = DBAccess.RunSQLReturnTable(sql, paras);

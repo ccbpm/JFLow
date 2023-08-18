@@ -2,7 +2,7 @@ package bp.ccbill.template;
 
 import bp.da.*;
 import bp.web.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
 import bp.*;
 import bp.ccbill.*;
@@ -16,13 +16,15 @@ public class MethodFlowBaseDatas extends EntitiesNoName
 	/** 
 	 基础数据变更
 	*/
-	public MethodFlowBaseDatas() throws Exception {
+	public MethodFlowBaseDatas()
+	{
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		return new MethodFlowBaseData();
 	}
 
@@ -33,7 +35,8 @@ public class MethodFlowBaseDatas extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<MethodFlowBaseData> ToJavaList() {
+	public final java.util.List<MethodFlowBaseData> ToJavaList()
+	{
 		return (java.util.List<MethodFlowBaseData>)(Object)this;
 	}
 	/** 
@@ -41,7 +44,8 @@ public class MethodFlowBaseDatas extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<MethodFlowBaseData> Tolist()  {
+	public final ArrayList<MethodFlowBaseData> Tolist()
+	{
 		ArrayList<MethodFlowBaseData> list = new ArrayList<MethodFlowBaseData>();
 		for (int i = 0; i < this.size(); i++)
 		{

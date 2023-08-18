@@ -2,7 +2,6 @@ package bp.sys;
 
 import bp.da.*;
 import bp.en.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -15,13 +14,14 @@ public class FrmEleDBs extends EntitiesMyPK
 	/** 
 	 表单元素扩展DBs
 	*/
-	public FrmEleDBs() throws Exception {
+	public FrmEleDBs()
+	{
 	}
 	/** 
 	 表单元素扩展DBs
 	 
-	 param fk_mapdata
-	 param pkval
+	 @param fk_mapdata
+	 @param pkval
 	*/
 	public FrmEleDBs(String fk_mapdata, String pkval) throws Exception {
 		this.Retrieve(FrmEleDBAttr.FK_MapData, fk_mapdata, FrmEleDBAttr.EleID, pkval);
@@ -29,16 +29,16 @@ public class FrmEleDBs extends EntitiesMyPK
 	/** 
 	 表单元素扩展DBs
 	 
-	 param fk_mapdata s
+	 @param fk_mapdata s
 	*/
 	public FrmEleDBs(String fk_mapdata) throws Exception {
-		if (bp.difference.SystemConfig.getIsDebug())
+		if (bp.difference.SystemConfig.isDebug())
 		{
 			this.Retrieve(MapAttrAttr.FK_MapData, fk_mapdata);
 		}
 		else
 		{
-			this.RetrieveFromCash(MapAttrAttr.FK_MapData, (Object)fk_mapdata);
+			this.RetrieveFromCache(MapAttrAttr.FK_MapData, (Object)fk_mapdata);
 		}
 	}
 
@@ -54,7 +54,7 @@ public class FrmEleDBs extends EntitiesMyPK
 			String[] vals = str.split("[,]", -1);
 			frmEleDB = new FrmEleDB();
 			frmEleDB.setMyPK(eleID + "_" + refPKVal + "_" + vals[0]);
-			frmEleDB.setFK_MapData(fk_mapdata);
+			frmEleDB.setFrmID(fk_mapdata);
 			frmEleDB.setEleID(eleID);
 			frmEleDB.setRefPKVal(refPKVal);
 			frmEleDB.setTag1(vals[0]);
@@ -77,7 +77,8 @@ public class FrmEleDBs extends EntitiesMyPK
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FrmEleDB();
 	}
 
@@ -90,7 +91,8 @@ public class FrmEleDBs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmEleDB> ToJavaList() {
+	public final java.util.List<FrmEleDB> ToJavaList()
+	{
 		return (java.util.List<FrmEleDB>)(Object)this;
 	}
 	/** 
@@ -98,7 +100,8 @@ public class FrmEleDBs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmEleDB> Tolist()  {
+	public final ArrayList<FrmEleDB> Tolist()
+	{
 		ArrayList<FrmEleDB> list = new ArrayList<FrmEleDB>();
 		for (int i = 0; i < this.size(); i++)
 		{

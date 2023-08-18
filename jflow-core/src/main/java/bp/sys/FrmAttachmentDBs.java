@@ -1,11 +1,7 @@
 package bp.sys;
 
-import bp.da.*;
-import bp.difference.*;
 import bp.en.*;
-import bp.*;
 import java.util.*;
-import java.io.*;
 
 /** 
  附件数据存储s
@@ -17,12 +13,13 @@ public class FrmAttachmentDBs extends EntitiesMyPK
 	/** 
 	 附件数据存储s
 	*/
-	public FrmAttachmentDBs() throws Exception {
+	public FrmAttachmentDBs()
+	{
 	}
 	/** 
 	 附件数据存储s
 	 
-	 param fk_mapdata s
+	 @param fk_mapdata s
 	*/
 	public FrmAttachmentDBs(String fk_mapdata, String pkval) throws Exception {
 		this.Retrieve(FrmAttachmentDBAttr.FK_MapData, fk_mapdata, FrmAttachmentDBAttr.RefPKVal, pkval);
@@ -31,7 +28,8 @@ public class FrmAttachmentDBs extends EntitiesMyPK
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FrmAttachmentDB();
 	}
 
@@ -44,7 +42,8 @@ public class FrmAttachmentDBs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmAttachmentDB> ToJavaList() {
+	public final java.util.List<FrmAttachmentDB> ToJavaList()
+	{
 		return (java.util.List<FrmAttachmentDB>)(Object)this;
 	}
 	/** 
@@ -52,7 +51,8 @@ public class FrmAttachmentDBs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmAttachmentDB> Tolist()  {
+	public final ArrayList<FrmAttachmentDB> Tolist()
+	{
 		ArrayList<FrmAttachmentDB> list = new ArrayList<FrmAttachmentDB>();
 		for (int i = 0; i < this.size(); i++)
 		{

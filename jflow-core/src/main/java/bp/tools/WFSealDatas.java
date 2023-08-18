@@ -1,10 +1,10 @@
 package bp.tools;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.en.Map;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.en.Map;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.en.Map;
 
 /**
@@ -34,7 +34,7 @@ public class WFSealDatas extends EntitiesMyPK
 	 * 得到它的 Entity
 	 */
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()  {
 		return new bp.tools.WFSealData();
 	}
 

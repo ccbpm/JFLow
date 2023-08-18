@@ -13,13 +13,15 @@ public class Windows extends EntitiesMyPK
 	/** 
 	 信息块s
 	*/
-	public Windows()  {
+	public Windows()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new Window();
 	}
 
@@ -32,7 +34,8 @@ public class Windows extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<Window> ToJavaList() {
+	public final java.util.List<Window> ToJavaList()
+	{
 		return (java.util.List<Window>)(Object)this;
 	}
 	/** 
@@ -40,7 +43,8 @@ public class Windows extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<Window> Tolist()  {
+	public final ArrayList<Window> Tolist()
+	{
 		ArrayList<Window> list = new ArrayList<Window>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -63,7 +67,7 @@ public class Windows extends EntitiesMyPK
 		//检查是否有新增的？
 		for (WindowTemplate en : templates.ToJavaList())
 		{
-			if (en.isEnable() == false)
+			if (en.getItIsEnable() == false)
 			{
 				continue; //如果是不启用的.
 			}
@@ -78,19 +82,19 @@ public class Windows extends EntitiesMyPK
 				window.setMyPK(en.getNo() + "_" + bp.web.WebUser.getNo());
 				window.setEmpNo(bp.web.WebUser.getNo());
 				window.setWindowTemplateNo(en.getNo());
-				window.setEnable(true);
+				window.setItIsEnable(true);
 				window.Insert();
 				continue;
 			}
 
 			//如果 个人设置 他是启用的.
-			if (window.isEnable() == true)
+			if (window.getItIsEnable() == true)
 			{
 				en.setIdx(window.getIdx()); //就给他顺序号.
 			}
 			else
 			{
-				en.setEnable(false);
+				en.setItIsEnable(false);
 			}
 		}
 

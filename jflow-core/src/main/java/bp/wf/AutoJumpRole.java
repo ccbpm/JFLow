@@ -1,7 +1,5 @@
 package bp.wf;
 
-import bp.*;
-
 /** 
  自动跳转规则
 */
@@ -22,11 +20,13 @@ public enum AutoJumpRole
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue() {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
-	public static AutoJumpRole forValue(int value) 
-	{return values()[value];
+	public static AutoJumpRole forValue(int value)
+	{
+		return values()[value];
 	}
 }

@@ -2,7 +2,6 @@ package bp.ccbill;
 
 import bp.ccbill.template.Method;
 import bp.da.*;
-import bp.difference.handler.WebContralBase;
 import bp.sys.*;
 import bp.en.*;
 import bp.wf.*;
@@ -13,31 +12,30 @@ import bp.ccbill.template.*;
 /** 
  实体集合的处理
 */
-public class WF_CCBill_Admin_Collection extends WebContralBase
+public class WF_CCBill_Admin_Collection extends bp.difference.handler.DirectoryPageBase
 {
 
 		///#region 属性.
 	/** 
 	 模块编号
 	*/
-	public final String getModuleNo()  {
+	public final String getModuleNo()
+	{
 		String str = this.GetRequestVal("ModuleNo");
 		return str;
 	}
 	/** 
 	 菜单ID.
 	*/
-	public final String getMenuNo()  {
+	public final String getMenuNo()
+	{
 		String str = this.GetRequestVal("MenuNo");
 		return str;
 	}
 
-	public final String getGroupID()  {
+	public final String getGroupID()
+	{
 		String str = this.GetRequestVal("GroupID");
-		return str;
-	}
-	public final String getName()  {
-		String str = this.GetRequestVal("Name");
 		return str;
 	}
 
@@ -46,7 +44,8 @@ public class WF_CCBill_Admin_Collection extends WebContralBase
 	/** 
 	 构造函数
 	*/
-	public WF_CCBill_Admin_Collection()  {
+	public WF_CCBill_Admin_Collection()
+	{
 
 	}
 	/** 
@@ -65,7 +64,7 @@ public class WF_CCBill_Admin_Collection extends WebContralBase
 
 		//执行更新. 设置为不能独立启动.
 		Flow fl = new Flow(flowNo);
-		fl.setCanStart(false);
+		fl.setItIsCanStart(false);
 		fl.setTitleRole("@WebUser.No 在@RDT 发起【@DictName】");
 		fl.Update();
 
@@ -101,7 +100,7 @@ public class WF_CCBill_Admin_Collection extends WebContralBase
 		attr.setKeyOfEn("DictName");
 		attr.setName("名称");
 		attr.setUIVisible(true);
-		attr.setMyPK(attr.getFK_MapData() + "_" + attr.getKeyOfEn());
+		attr.setMyPK(attr.getFrmID() + "_" + attr.getKeyOfEn());
 		attr.DirectInsert();
 
 
@@ -130,7 +129,7 @@ public class WF_CCBill_Admin_Collection extends WebContralBase
 		en.setFrmID(this.getFrmID());
 		en.setDTSWhenFlowOver(true); // 是否在流程结束后同步?
 		en.setDTSDataWay(1); // 同步所有相同的字段.
-		en.setUrlExt("../CCBill/Opt/StartFlowByNewEntity.htm?FlowNo=" + en.getFlowNo() + "&FrmID=" + this.getFrmID() + "&MenuNo=" + menu.getNo());
+		en.setUrlExt("/WF/CCBill/Opt/StartFlowByNewEntity.htm?FlowNo=" + en.getFlowNo() + "&FrmID=" + this.getFrmID() + "&MenuNo=" + menu.getNo());
 		en.Update();
 
 		//增加一个集合链接.
@@ -144,8 +143,10 @@ public class WF_CCBill_Admin_Collection extends WebContralBase
 		enColl.setTag1(flowNo);
 
 		enColl.setMethodModel(MethodModelClass.FlowNewEntity); //方法模式.
-		//   enColl.UrlExt = "../CCBill/Opt/StartFlowByNewEntity.htm?FlowNo=" + en.FlowNo + "&FrmID=" + this.FrmID + "&MenuNo=" + menu.No;
+		//   enColl.UrlExt = "../CCBill/Opt/StartFlowByNewEntity.htm?FlowNo=" + en.FlowNo + "&FrmID=" + this.getFrmID() + "&MenuNo=" + menu.No;
 		enColl.setIcon("icon-drop");
+		enColl.setIdx(100);
+		enColl.SetPara("EnName", "TS.CCBill.CollectionFlowNewEntity");
 		enColl.Insert();
 
 		return menu.getNo(); //返回的方法ID;
@@ -161,10 +162,10 @@ public class WF_CCBill_Admin_Collection extends WebContralBase
 
 		//创建从表
 		MapDtl mapDtl = new MapDtl();
-		mapDtl.setFK_MapData(toFrmID);
+		mapDtl.setFrmID(toFrmID);
 		mapDtl.setNo(toFrmID + "Dtl1");
-		mapDtl.setFK_Node(0);
-		mapDtl.setName ("从表");
+		mapDtl.setNodeID(0);
+		mapDtl.setName("从表");
 		mapDtl.setPTable(mapDtl.getNo());
 		mapDtl.setH(300);
 		mapDtl.Insert();
@@ -185,13 +186,13 @@ public class WF_CCBill_Admin_Collection extends WebContralBase
 				continue;
 			}
 
-			attr.setFK_MapData(mapDtl.getNo());
-			attr.setMyPK(attr.getFK_MapData() + "_" + attr.getKeyOfEn());
+			attr.setFrmID( mapDtl.getNo());
+			attr.setMyPK(attr.getFrmID() + "_" + attr.getKeyOfEn());
 			attr.Insert();
 		}
 		//增加一个关联的实体字段的OID
 		MapAttr mapAttr = new MapAttr();
-		mapAttr.setFK_MapData(mapDtl.getNo());
+		mapAttr.setFrmID(mapDtl.getNo());
 		mapAttr.setEditType(EditType.Readonly);
 		mapAttr.setKeyOfEn("DictOID");
 		mapAttr.setName("关联实体的OID");
@@ -221,7 +222,7 @@ public class WF_CCBill_Admin_Collection extends WebContralBase
 
 		//执行更新. 设置为不能独立启动.
 		Flow fl = new bp.wf.Flow(flowNo);
-		fl.setCanStart(false);
+		fl.setItIsCanStart(false);
 		fl.Update();
 
 			///#endregion 创建一个流程.
@@ -231,9 +232,9 @@ public class WF_CCBill_Admin_Collection extends WebContralBase
 		//如果是发起流程的方法，就要表单的字段复制到，流程的表单上去.
 		String frmID = "ND" + Integer.parseInt(fl.getNo()) + "01";
 		MapDtl mapDtl = new MapDtl();
-		mapDtl.setFK_MapData(frmID);
+		mapDtl.setFrmID(frmID);
 		mapDtl.setNo(frmID + "Dtl1");
-		mapDtl.setFK_Node(0);
+		mapDtl.setNodeID(0);
 		mapDtl.setName("从表");
 		mapDtl.setPTable(mapDtl.getNo());
 		mapDtl.setH(300);
@@ -246,7 +247,7 @@ public class WF_CCBill_Admin_Collection extends WebContralBase
 		for (MapAttr attr : attrsFrom.ToJavaList())
 		{
 			//是否包含，系统字段？
-			if (Glo.getFlowFields().contains("," + attr.getKeyOfEn() + ",") == true)
+			if (bp.wf.Glo.getFlowFields().contains("," + attr.getKeyOfEn() + ",") == true)
 			{
 				continue;
 			}
@@ -256,13 +257,13 @@ public class WF_CCBill_Admin_Collection extends WebContralBase
 				continue;
 			}
 
-			attr.setFK_MapData(mapDtl.getNo());
-			attr.setMyPK(attr.getFK_MapData() + "_" + attr.getKeyOfEn());
+			attr.setFrmID( mapDtl.getNo());
+			attr.setMyPK(attr.getFrmID() + "_" + attr.getKeyOfEn());
 			attr.Insert();
 		}
 		//增加一个关联的实体字段的OID
 		MapAttr mapAttr = new MapAttr();
-		mapAttr.setFK_MapData(mapDtl.getNo());
+		mapAttr.setFrmID(mapDtl.getNo());
 		mapAttr.setEditType(EditType.Readonly);
 		mapAttr.setKeyOfEn("DictOID");
 		mapAttr.setName("关联实体的OID");

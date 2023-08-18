@@ -289,8 +289,7 @@ public class MyDeptTodolist extends Entity
 	{
 		return this.GetValStrByKey(MyDeptTodolistAttr.StarterName);
 	}
-	public final void setStarterName(String value) throws Exception
-	{
+	public final void setStarterName(String value){
 		this.SetValByKey(MyDeptTodolistAttr.StarterName, value);
 	}
 	/** 
@@ -300,8 +299,7 @@ public class MyDeptTodolist extends Entity
 	{
 		return this.GetValStrByKey(MyDeptTodolistAttr.DeptName);
 	}
-	public final void setDeptName(String value) throws Exception
-	{
+	public final void setDeptName(String value){
 		this.SetValByKey(MyDeptTodolistAttr.DeptName, value);
 	}
 	/** 
@@ -311,8 +309,7 @@ public class MyDeptTodolist extends Entity
 	{
 		return this.GetValStrByKey(MyDeptTodolistAttr.NodeName);
 	}
-	public final void setNodeName(String value) throws Exception
-	{
+	public final void setNodeName(String value){
 		this.SetValByKey(MyDeptTodolistAttr.NodeName, value);
 	}
 	/** 
@@ -322,7 +319,7 @@ public class MyDeptTodolist extends Entity
 	{
 		return this.GetValIntByKey(MyDeptTodolistAttr.FK_Node);
 	}
-	public final void setFK_Node(int value) throws Exception
+	public final void setNodeID(int value) throws Exception
 	{
 		SetValByKey(MyDeptTodolistAttr.FK_Node, value);
 	}
@@ -369,7 +366,7 @@ public class MyDeptTodolist extends Entity
 				return "已完成";
 			case Runing:
 				return "在运行";
-			case HungUp:
+			case Hungup:
 				return "挂起";
 			case Askfor:
 				return "加签";
@@ -480,7 +477,7 @@ public class MyDeptTodolist extends Entity
 		rm = new RefMethod();
 		rm.Icon = "../../WF/Img/Btn/Back.png";
 		rm.Title = "回滚";
-		rm.IsForEns = false;
+		rm.ItIsForEns = false;
 		rm.ClassMethodName = this + ".DoComeBack";
 		rm.getHisAttrs().AddTBInt("NodeID", 0, "回滚到节点", true, false);
 		rm.getHisAttrs().AddTBString("Note", null, "回滚原因", true, false, 0, 300, 100);

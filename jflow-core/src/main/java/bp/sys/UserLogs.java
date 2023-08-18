@@ -10,12 +10,13 @@ public class UserLogs extends EntitiesMyPK
 {
 
 		///#region 构造
-	public UserLogs()  {
+	public UserLogs()
+	{
 	}
 	/** 
 	 
 	 
-	 param emp
+	 @param emp
 	*/
 	public UserLogs(String emp) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -31,7 +32,8 @@ public class UserLogs extends EntitiesMyPK
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new UserLog();
 	}
 
@@ -44,7 +46,8 @@ public class UserLogs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<UserLog> Tolist()  {
+	public final ArrayList<UserLog> Tolist()
+	{
 		ArrayList<UserLog> list = new ArrayList<UserLog>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -62,7 +65,8 @@ public class UserLogs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<UserLog> ToJavaList() {
+	public final java.util.List<UserLog> ToJavaList()
+	{
 		return (java.util.List<UserLog>)(Object)this;
 	}
 

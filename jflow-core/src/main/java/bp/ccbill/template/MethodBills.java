@@ -2,7 +2,7 @@ package bp.ccbill.template;
 
 import bp.da.*;
 import bp.web.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
 import bp.*;
 import bp.ccbill.*;
@@ -16,13 +16,15 @@ public class MethodBills extends EntitiesNoName
 	/** 
 	 方法单据
 	*/
-	public MethodBills() throws Exception {
+	public MethodBills()
+	{
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new MethodBill();
 	}
 
@@ -32,7 +34,8 @@ public class MethodBills extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<MethodBill> ToJavaList() {
+	public final java.util.List<MethodBill> ToJavaList()
+	{
 		return (java.util.List<MethodBill>)(Object)this;
 	}
 	/** 
@@ -40,7 +43,8 @@ public class MethodBills extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<MethodBill> Tolist()  {
+	public final ArrayList<MethodBill> Tolist()
+	{
 		ArrayList<MethodBill> list = new ArrayList<MethodBill>();
 		for (int i = 0; i < this.size(); i++)
 		{

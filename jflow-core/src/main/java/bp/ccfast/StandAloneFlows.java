@@ -1,5 +1,4 @@
 package bp.ccfast;
-
 import bp.en.*;
 import java.util.*;
 
@@ -11,13 +10,15 @@ public class StandAloneFlows extends EntitiesNoName
 	/** 
 	 独立运行流程设置
 	*/
-	public StandAloneFlows() {
+	public StandAloneFlows()
+	{
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new StandAloneFlow();
 	}
 
@@ -27,7 +28,8 @@ public class StandAloneFlows extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<StandAloneFlow> ToJavaList() {
+	public final java.util.List<StandAloneFlow> ToJavaList()
+	{
 		return (java.util.List<StandAloneFlow>)(Object)this;
 	}
 	/** 
@@ -35,7 +37,8 @@ public class StandAloneFlows extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<StandAloneFlow> Tolist()  {
+	public final ArrayList<StandAloneFlow> Tolist()
+	{
 		ArrayList<StandAloneFlow> list = new ArrayList<StandAloneFlow>();
 		for (int i = 0; i < this.size(); i++)
 		{

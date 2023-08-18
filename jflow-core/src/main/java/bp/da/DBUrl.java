@@ -64,8 +64,7 @@ public class DBUrl
 	public final void setDBUrlType(DBUrlType value)
 	{_DBUrlType = value;
 	}
-	public final String getDBVarStr()
-	{
+	public final String getDBVarStr() throws Exception {
 		switch (this.getDBType()) {
 			case MSSQL:
 			case Oracle:
@@ -87,8 +86,7 @@ public class DBUrl
 	 数据库类型
 	 * @throws Exception 
 	*/
-	public final DBType getDBType()
-	{
+	public final DBType getDBType()  {
 		switch (this.getDBUrlType())
 		{
 			case AppCenterDSN:

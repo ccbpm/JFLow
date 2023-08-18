@@ -49,7 +49,7 @@ public class RefMethod
 	/**
 	 * 是否显示在Ens中?
 	 */
-	public boolean IsForEns = false;
+	public boolean ItIsForEns = false;
 	
 	/**
 	 * 相关功能
@@ -90,7 +90,7 @@ public class RefMethod
 	/**
 	 * 是否可以批处理
 	 */
-	public boolean IsCanBatch = false;
+	public boolean ItIsCanBatch = false;
 	/**
 	 * 标题
 	 */

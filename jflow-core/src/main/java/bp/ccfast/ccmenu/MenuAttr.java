@@ -1,7 +1,7 @@
 package bp.ccfast.ccmenu;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
 import bp.*;
 import bp.ccfast.*;
@@ -93,10 +93,7 @@ public class MenuAttr extends EntityTreeAttr
 	 风格:比如Tab,的风格.
 	*/
 	public static final String Style = "Style";
-
-
 	public static final String TagInt1 = "TagInt1";
 	public static final String TagInt2 = "TagInt2";
 	public static final String TagInt3 = "TagInt3";
-
 }

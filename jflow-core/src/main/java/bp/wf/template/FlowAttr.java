@@ -1,8 +1,5 @@
 package bp.wf.template;
 
-import bp.*;
-import bp.wf.*;
-
 /** 
  流程属性
 */
@@ -34,9 +31,9 @@ public class FlowAttr
 	 建立的日期。
 	*/
 	public static final String CreateDate = "CreateDate";
-	/// <summary>
-	/// 创建人
-	/// </summary>
+	/** 
+	 创建人
+	*/
 	public static final String Creater = "Creater";
 	/** 
 	 BillTable
@@ -107,15 +104,10 @@ public class FlowAttr
 	 类型
 	*/
 	public static final String FlowAppType = "FlowAppType";
-
 	/** 
 	 图像类型
 	*/
 	public static final String ChartType = "ChartType";
-	/** 
-	 运行在的主机上
-	*/
-	public static final String HostRun = "HostRun";
 	/** 
 	 流程计划完成日期设置规则
 	*/
@@ -142,13 +134,9 @@ public class FlowAttr
 	*/
 	public static final String FrmUrl = "FrmUrl";
 	/** 
-	 流程表单类型
+	 表单URL
 	*/
-	public static final String FlowFrmModel = "FlowFrmModel";
-	/** 
-	 流程数据存储模式
-	*/
-	public static final String DataStoreModel = "DataStoreModel";
+	public static final String FlowDevModel = "FlowDevModel";
 	/** 
 	 流程标记
 	*/
@@ -157,22 +145,6 @@ public class FlowAttr
 	 流程事件实体
 	*/
 	public static final String FlowEventEntity = "FlowEventEntity";
-	/** 
-	 流程设计者编号
-	*/
-	public static final String DesignerNo = "DesignerNo";
-	/** 
-	 流程设计者名称
-	*/
-	public static final String DesignerName = "DesignerName";
-	/** 
-	 流程设计时间
-	*/
-	public static final String DesignTime = "DesignTime";
-	/** 
-	 历史发起查看字段
-	*/
-	public static final String HistoryFields = "HistoryFields";
 	/** 
 	 外部客户参与流程规则
 	*/
@@ -185,14 +157,10 @@ public class FlowAttr
 	 待办字段s
 	*/
 	public static final String BuessFields = "BuessFields";
-	/// <summary>
-	/// 高级查询人员字段
-	/// </summary>
-	public static final String AdvEmps = "AdvEmps";
 	/** 
-	 流程备注的表达式
+	 高级查询人员字段
 	*/
-	public static final String FlowNoteExp = "FlowNoteExp";
+	public static final String AdvEmps = "AdvEmps";
 	/** 
 	 数据权限控制方式
 	*/
@@ -213,6 +181,11 @@ public class FlowAttr
 	 是否是数据加密
 	*/
 	public static final String IsJM = "IsJM";
+	/** 
+	 是否启用数据版本控制
+	*/
+	public static final String IsEnableDBVer = "IsEnableDBVer";
+
 	public static final String CCStas = "CCStas";
 	public static final String Note = "Note";
 	/** 
@@ -223,19 +196,19 @@ public class FlowAttr
 	/** 
 	 流程轨迹中显示的Tab标签页的控制
 	*/
-	public static final String IsFrmEnable = "IsFrmEnable";
+	//public const String IsFrmEnable = "IsFrmEnable";
 	public static final String IsTruckEnable = "IsTruckEnable";
 	public static final String IsTimeBaseEnable = "IsTimeBaseEnable";
 	public static final String IsTableEnable = "IsTableEnable";
-	public static final String IsOPEnable = "IsOPEnable";
+	//public const String IsOPEnable = "IsOPEnable";
 	/** 
 	 排序方式
 	*/
 	public static final String TrackOrderBy = "TrackOrderBy";
-	/**
-	 * 子流程在轨迹图中的展示模式
-	 */
-	public static final String SubFlowShowType="SubFlowShowType";
+	/** 
+	 子流程轨迹图中的显示
+	*/
+	public static final String SubFlowShowType = "SubFlowShowType";
 
 		///#endregion 基本属性
 
@@ -311,15 +284,10 @@ public class FlowAttr
 
 
 		///#region 父子流程
-
 	/** 
 	 版本号
 	*/
 	public static final String Ver = "Ver";
-	/** 
-	 删除规则
-	*/
-	public static final String FlowDeleteRole = "FlowDeleteRole";
 	/** 
 	 子流程结束时，让父流程自动运行到下一步
 	*/
@@ -376,8 +344,6 @@ public class FlowAttr
 	 发起人可看
 	*/
 	public static final String PStarter = "PStarter";
-	/// 是否启用数据版本控制
-	public static final String IsEnableDBVer = "IsEnableDBVer";
 	/** 
 	 参与人可看
 	*/
@@ -407,7 +373,7 @@ public class FlowAttr
 	*/
 	public static final String PSpecDept = "PSpecDept";
 	/** 
-	 指定的岗位可看
+	 指定的角色可看
 	*/
 	public static final String PSpecSta = "PSpecSta";
 	/** 
@@ -420,11 +386,11 @@ public class FlowAttr
 	public static final String PSpecEmp = "PSpecEmp";
 
 		///#endregion 权限组.
-
 	/** 
 	 流程发起测试人
 	*/
 	public static final String Tester = "Tester";
+
 	public static final String DevModelType = "DevModelType";
 	public static final String DevModelPara = "DevModelPara";
 }

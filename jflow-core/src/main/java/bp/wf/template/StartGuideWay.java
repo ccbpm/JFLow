@@ -1,7 +1,5 @@
 package bp.wf.template;
 
-import bp.*;
-import bp.wf.*;
 
 /** 
  流程发起导航方式
@@ -53,7 +51,8 @@ public enum StartGuideWay
 
 	private int intValue;
 	private static java.util.HashMap<Integer, StartGuideWay> mappings;
-	private static java.util.HashMap<Integer, StartGuideWay> getMappings() {
+	private static java.util.HashMap<Integer, StartGuideWay> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (StartGuideWay.class)
@@ -68,15 +67,18 @@ public enum StartGuideWay
 	}
 
 	private StartGuideWay(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return intValue;
 	}
 
 	public static StartGuideWay forValue(int value)
-	{return getMappings().get(value);
+	{
+		return getMappings().get(value);
 	}
 }

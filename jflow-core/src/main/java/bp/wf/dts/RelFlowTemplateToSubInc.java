@@ -1,7 +1,8 @@
 package bp.wf.dts;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
 import bp.wf.*;
 
 /** 
@@ -12,7 +13,7 @@ public class RelFlowTemplateToSubInc extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public RelFlowTemplateToSubInc()throws Exception
+	public RelFlowTemplateToSubInc()
 	{
 		this.Title = "发布流程模版到子公司";
 		this.Help = "集团公司的流程模版发布到子公司里面去.";
@@ -47,8 +48,7 @@ public class RelFlowTemplateToSubInc extends Method
 	 @return 返回执行结果
 	*/
 	@Override
-	public Object Do()throws Exception
-	{
+	public Object Do() throws Exception {
 		//找到根目录.
 		String sql = "SELECT No FROM WF_FlowSort where ParentNo='0'";
 		String rootNo = DBAccess.RunSQLReturnString(sql, null);

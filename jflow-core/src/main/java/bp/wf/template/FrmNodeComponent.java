@@ -2,7 +2,7 @@ package bp.wf.template;
 
 import bp.da.*;
 import bp.sys.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.wf.*;
 import bp.wf.template.sflow.*;
 
@@ -16,32 +16,29 @@ public class FrmNodeComponent extends Entity
 	/** 
 	 审核组件状态
 	*/
-	public final FrmWorkCheckSta getFWCSta()  {
+	public final FrmWorkCheckSta getFWCSta() {
 		return FrmWorkCheckSta.forValue(this.GetValIntByKey(NodeWorkCheckAttr.FWCSta, 0));
 	}
-	public final void setFWCSta(FrmWorkCheckSta value)
-	 {
+	public final void setFWCSta(FrmWorkCheckSta value){
 		this.SetValByKey(NodeWorkCheckAttr.FWCSta, value.getValue());
 	}
 	/** 
 	 节点属性.
 	*/
-	public final String getNo() throws Exception {
+	public final String getNo() {
 		return "ND" + this.getNodeID();
 	}
-	public final void setNo(String value)throws Exception
-	{String nodeID = value.replace("ND", "");
+	public final void setNo(String value) throws Exception {
+		String nodeID = value.replace("ND", "");
 		this.setNodeID(Integer.parseInt(nodeID));
 	}
 	/** 
 	 节点ID
 	*/
-	public final int getNodeID() throws Exception
-	{
+	public final int getNodeID()  {
 		return this.GetValIntByKey(NodeAttr.NodeID);
 	}
-	public final void setNodeID(int value)
-	 {
+	public final void setNodeID(int value){
 		this.SetValByKey(NodeAttr.NodeID, value);
 	}
 
@@ -53,7 +50,8 @@ public class FrmNodeComponent extends Entity
 	 控制
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.OpenAll();
 		uac.IsDelete = false;
@@ -64,24 +62,25 @@ public class FrmNodeComponent extends Entity
 	 重写主键
 	*/
 	@Override
-	public String getPK()  {
+	public String getPK()
+	{
 		return "NodeID";
 	}
 	/** 
 	 节点表单组件
 	*/
-	public FrmNodeComponent()  {
+	public FrmNodeComponent()
+	{
 	}
 	/** 
 	 节点表单组件
-	 
-	 param no
+	 @param mapData
 	*/
 	public FrmNodeComponent(String mapData) throws Exception {
 		String mapdata = mapData.replace("ND", "");
 		if (DataType.IsNumStr(mapdata) == false)
 		{
-		  //  this.HisFrmNodeComponentSta = FrmNodeComponentSta.Disable;
+			//  this.HisFrmNodeComponentSta = FrmNodeComponentSta.Disable;
 			return;
 		}
 
@@ -97,8 +96,7 @@ public class FrmNodeComponent extends Entity
 	}
 	/** 
 	 节点表单组件
-	 
-	 param no
+	 @param nodeID
 	*/
 	public FrmNodeComponent(int nodeID) throws Exception {
 		this.setNodeID(nodeID);
@@ -108,7 +106,7 @@ public class FrmNodeComponent extends Entity
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()  {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -116,30 +114,32 @@ public class FrmNodeComponent extends Entity
 
 		Map map = new Map("WF_Node", "节点表单组件");
 
-		map.setDepositaryOfEntity( Depositary.None);
-		map.setDepositaryOfMap( Depositary.Application);
-		map.AddGroupAttr("基本属性");
+		map.setDepositaryOfEntity(Depositary.None);
+		map.setDepositaryOfMap(Depositary.Application);
+
+		map.AddGroupAttr("基本属性", "");
 		map.AddTBIntPK(NodeAttr.NodeID, 0, "节点ID", true, true);
-		map.AddTBString(NodeAttr.Name, null, "节点名称", true,true, 0, 100, 10);
+		map.AddTBString(NodeAttr.Name, null, "节点名称", true, true, 0, 100, 10);
 
-		map.AddGroupAttr("审核组件");
+		map.AddGroupAttr("审核组件", "");
+		//审核组件.
 		NodeWorkCheck fwc = new NodeWorkCheck();
-		map.AddAttrs(fwc.getEnMap().getAttrs());
+		map.AddAttrs(fwc.getEnMap().getAttrs(), false);
 
-		map.AddGroupAttr("父子流程");
+		//父子流程.
+		map.AddGroupAttr("父子流程", "");
 		FrmSubFlow subflow = new FrmSubFlow();
-		map.AddAttrs(subflow.getEnMap().getAttrs());
+		map.AddAttrs(subflow.getEnMap().getAttrs(), false);
 
-
-			//轨迹组件.
-		map.AddGroupAttr("轨迹组件");
+		//轨迹组件.
+		map.AddGroupAttr("轨迹组件", "");
 		FrmTrack track = new FrmTrack();
-		map.AddAttrs(track.getEnMap().getAttrs());
+		map.AddAttrs(track.getEnMap().getAttrs(), false);
 
-			//流转自定义组件.
-		map.AddGroupAttr("流转自定义组件");
+		//流转自定义组件.
+		map.AddGroupAttr("流转自定义组件", "");
 		FrmTransferCustom ftt = new FrmTransferCustom();
-		map.AddAttrs(ftt.getEnMap().getAttrs());
+		map.AddAttrs(ftt.getEnMap().getAttrs(), false);
 
 		this.set_enMap(map);
 		return this.get_enMap();
@@ -253,7 +253,8 @@ public class FrmNodeComponent extends Entity
 	}
 
 	@Override
-	protected boolean beforeUpdate() throws Exception {
+	protected boolean beforeUpdate() throws Exception
+	{
 
 		this.InitGroupField();
 
@@ -263,7 +264,8 @@ public class FrmNodeComponent extends Entity
 		///#endregion
 
 	@Override
-	protected void afterInsertUpdateAction() throws Exception {
+	protected void afterInsertUpdateAction() throws Exception
+	{
 		Node fl = new Node();
 		fl.setNodeID(this.getNodeID());
 		fl.RetrieveFromDBSources();

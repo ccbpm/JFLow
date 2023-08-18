@@ -1,10 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.port.*;
-import bp.wf.template.*;
-import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -16,12 +12,13 @@ public class Directions extends Entities
 	/** 
 	 节点方向
 	*/
-	public Directions()  {
+	public Directions()
+	{
 	}
 	/** 
 	 方向
 	 
-	 param flowNo
+	 @param flowNo
 	*/
 	public Directions(String flowNo) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -33,11 +30,14 @@ public class Directions extends Entities
 	/** 
 	 节点方向
 	 
-	 param NodeID 节点ID
+	 @param NodeID 节点ID
 	*/
 	public Directions(int NodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(DirectionAttr.Node, NodeID);
+		qo.addAnd();
+		qo.AddWhereIn(DirectionAttr.NodeType, "(0,1)"); //普通节点+路由节点
+
 		qo.addOrderBy(DirectionAttr.Idx); //方向条件的优先级.
 		qo.DoQuery();
 	}
@@ -45,27 +45,28 @@ public class Directions extends Entities
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new Direction();
 	}
 	/** 
 	 此节点的转向方向集合
 	 
-	 param nodeID 此节点的ID
-	 param isLifecyle 是不是判断在节点的生存期内
+	 @param nodeID 此节点的ID
+	 @param isLifecyle 是不是判断在节点的生存期内		 
 	 @return 转向方向集合(ToNodes) 
 	*/
 	public final Nodes GetHisToNodes(int nodeID, boolean isLifecyle) throws Exception {
 		Nodes nds = new Nodes();
 		QueryObject qo = new QueryObject(nds);
-		qo.AddWhereInSQL(NodeAttr.NodeID, "SELECT ToNode FROM WF_Direction WHERE Node=" + nodeID);
+		qo.AddWhereInSQL(NodeAttr.NodeID, "SELECT ToNode FROM WF_Direction WHERE Node=" + nodeID + " AND (NodeType=0 OR NodeType=1) ");
 		qo.DoQuery();
 		return nds;
 	}
 	/** 
 	 转向此节点的集合的Nodes
 	 
-	 param nodeID 此节点的ID
+	 @param nodeID 此节点的ID
 	 @return 转向此节点的集合的Nodes (FromNodes) 
 	*/
 	public final Nodes GetHisFromNodes(int nodeID) throws Exception {
@@ -87,7 +88,8 @@ public class Directions extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.List<Direction> ToJavaList() {
+	public final java.util.List<Direction> ToJavaList()
+	{
 		return (java.util.List<Direction>)(Object)this;
 	}
 	/** 
@@ -95,7 +97,8 @@ public class Directions extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<Direction> Tolist()  {
+	public final ArrayList<Direction> Tolist()
+	{
 		ArrayList<Direction> list = new ArrayList<Direction>();
 		for (int i = 0; i < this.size(); i++)
 		{

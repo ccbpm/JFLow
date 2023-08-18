@@ -13,6 +13,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import bp.da.DBAccess;
 import bp.da.LogType;
 import bp.tools.OSSUploadFileUtils;
 import bp.pub.PubClass;
@@ -89,10 +90,10 @@ public class AttachmentUploadController extends BaseController {
 
 		// 获取初始化信息
 		FrmAttachment athDesc = new FrmAttachment(this.getFK_FrmAttachment());
-		GEEntity en = new GEEntity(athDesc.getFK_MapData());
+		GEEntity en = new GEEntity(athDesc.getFrmID());
 		en.setPKVal(this.getPKVal());
 		en.RetrieveFromDBSources();
-		MapData mapData = new MapData(athDesc.getFK_MapData());
+		MapData mapData = new MapData(athDesc.getFrmID());
 		String msg = null;
 
 		uploadFile(item, athDesc, en, msg, mapData, this.getFK_FrmAttachment(), parasData);
@@ -111,7 +112,7 @@ public class AttachmentUploadController extends BaseController {
 
 		// 获取初始化信息
 		FrmAttachment athDesc = new FrmAttachment(this.getFK_FrmAttachment());
-		GEEntity en = new GEEntity(athDesc.getFK_MapData());
+		GEEntity en = new GEEntity(athDesc.getFrmID());
 		en.setPKVal(this.getPKVal());
 		if (en.RetrieveFromDBSources() == 0)
 		{
@@ -122,7 +123,7 @@ public class AttachmentUploadController extends BaseController {
 				en.RetrieveFromDBSources();
 			}
 		}
-		MapData mapData = new MapData(athDesc.getFK_MapData());
+		MapData mapData = new MapData(athDesc.getFrmID());
 		String msg = null;
 		for(MultipartFile item : items)
 			uploadFile(item, athDesc, en, msg, mapData, this.getFK_FrmAttachment(), getParasData());
@@ -139,10 +140,10 @@ public class AttachmentUploadController extends BaseController {
 			downDB.setMyPK(this.getDelPKVal() == null ? this.getMyPK() : this.getDelPKVal());
 			downDB.Retrieve();
 			FrmAttachment dbAtt = new FrmAttachment();
-			dbAtt.setMyPK(downDB.getFK_FrmAttachment());
+			dbAtt.setMyPK(downDB.getFKFrmAttachment());
 			dbAtt.Retrieve();
 			//获取文件是否加密
-			boolean fileEncrypt = SystemConfig.getIsEnableAthEncrypt();
+			boolean fileEncrypt = SystemConfig.isEnableAthEncrypt();
 			boolean isEncrypt = downDB.GetParaBoolen("IsEncrypt");
 
 			if (dbAtt.getAthSaveWay() == AthSaveWay.IISServer) {
@@ -220,18 +221,21 @@ public class AttachmentUploadController extends BaseController {
 			}
 
 			if (dbAtt.getAthSaveWay() == AthSaveWay.DB) {
-				PubClass.DownloadFile(downDB.getFileFullName(), downDB.getFileName());
+				String guid = bp.da.DBAccess.GenerGUID();
+				// 把文件临时保存到一个位置.
+				String temp = SystemConfig.getPathOfTemp() + "" + guid + ".tmp";
+				DBAccess.GetFileFromDB(temp,"Sys_FrmAttachmentDB","MyPK",downDB.getMyPK(),"FileDB");
+				PubClass.DownloadFile(temp, downDB.getFileName());
 			}
 
 			//OSS下载
 			if (dbAtt.getAthSaveWay() == AthSaveWay.OSS) {
-				OSSUploadFileUtils ossUploadFileUtils = new OSSUploadFileUtils();
 				String guid = bp.da.DBAccess.GenerGUID();
 				// 文件保存的路径
-				String tempFile = SystemConfig.getPathOfTemp() +"/" + "" + guid + downDB.getFileExts();
+				String tempFile = SystemConfig.getPathOfTemp() + guid + "." + downDB.getFileExts();
 
 				// 下载文件到本地
-				ossUploadFileUtils.downloadFile( downDB.getFileName(), tempFile);
+				OSSUploadFileUtils.downloadFile( downDB.getFileFullName(), tempFile);
 
 				// #region 文件下载
 				tempFile = PubClass.toUtf8String(request, tempFile);
@@ -269,7 +273,7 @@ public class AttachmentUploadController extends BaseController {
 
 		//根据EnsName获取Entity
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
-		Entity en = ens.getGetNewEntity();
+		Entity en = ens.getNewEntity();
 		en.setPKVal(this.getDelPKVal());
 		int i = en.RetrieveFromDBSources();
 		if (i == 0)
@@ -317,7 +321,7 @@ public class AttachmentUploadController extends BaseController {
 		String filePath = fileManager.getMyFilePath();
 		String fileName = fileManager.getMyFileName();
 		//获取使用的客户 TianYe集团保存在FTP服务器上
-		if (bp.difference.SystemConfig.getCustomerNo().equals("TianYe") || bp.difference.SystemConfig.getIsUploadFileToFTP() == true)
+		if (bp.difference.SystemConfig.getCustomerNo().equals("TianYe") || bp.difference.SystemConfig.isUploadFileToFTP() == true)
 		{
 
 			//临时存储位置
@@ -393,7 +397,7 @@ public class AttachmentUploadController extends BaseController {
 		if (this.getFK_Node() != 0 && this.getFK_Node()!=999999 && !(athDesc.getNoOfObj().contains("AthMDtl") == true || athDesc.GetParaBoolen("IsDtlAth")== true))
 		{
 			//判断表单方案。
-			FrmNode fn = new FrmNode(this.getFK_Node(), athDesc.getFK_MapData());
+			FrmNode fn = new FrmNode(this.getFK_Node(), athDesc.getFrmID());
 			if (fn.getFrmSln() == FrmSln.Readonly)
 				throw new Exception("err@不允许上传附件.");
 
@@ -466,7 +470,7 @@ public class AttachmentUploadController extends BaseController {
 			}
 		}
 		//获取上传文件是否需要加密
-		boolean fileEncrypt = SystemConfig.getIsEnableAthEncrypt();
+		boolean fileEncrypt = SystemConfig.isEnableAthEncrypt();
 
 		// 获取文件名
 		String fileName = item.getOriginalFilename();
@@ -491,7 +495,7 @@ public class AttachmentUploadController extends BaseController {
 				if (savePath.contains("@") && this.getFK_Node() != 0) {
 					/* 如果包含 @ */
 					bp.wf.Flow flow = new bp.wf.Flow(this.getFK_Flow());
-					bp.wf.data.GERpt myen = flow.getHisGERpt();
+					bp.wf.GERpt myen = flow.getHisGERpt();
 					myen.setOID(this.getWorkID());
 					myen.RetrieveFromDBSources();
 					savePath = bp.wf.Glo.DealExp(savePath, myen, null);
@@ -506,7 +510,7 @@ public class AttachmentUploadController extends BaseController {
 			// 替换关键的字串.
 			savePath = savePath.replace("\\\\", "/");
 			try {
-				if (savePath.indexOf(":") == -1 && SystemConfig.getIsJarRun() == false)
+				if (savePath.indexOf(":") == -1 && SystemConfig.isJarRun() == false)
 					savePath = ContextHolderUtils.getRequest().getSession().getServletContext().getRealPath(savePath);
 
 
@@ -574,18 +578,17 @@ public class AttachmentUploadController extends BaseController {
 
 			FrmAttachmentDB dbUpload = new FrmAttachmentDB();
 			dbUpload.setMyPK(guid); // athDesc.getFK_MapData() + oid.ToString();
-			dbUpload.setFK_MapData(athDesc.getFK_MapData());
-			dbUpload.setFK_FrmAttachment(attachPk);
+			dbUpload.setFrmID(athDesc.getFrmID());
+			dbUpload.setFKFrmAttachment(attachPk);
 			dbUpload.setSort(this.getSort());
 
-			dbUpload.setFK_FrmAttachment(attachPk);
 			dbUpload.setFileExts(exts);
 			dbUpload.setFID(this.getFID());
 			dbUpload.setNodeID( this.getFK_Node());
 			if (fileEncrypt == true)
 				dbUpload.SetPara("IsEncrypt", 1);
 
-			if (athDesc.getIsExpCol() == true) {
+			if (athDesc.getItIsExpCol() == true) {
 				if (parasData != null && parasData.length() > 0) {
 					for (String para : parasData.split("@")) {
 						if (para.split("=").length == 2)
@@ -624,7 +627,7 @@ public class AttachmentUploadController extends BaseController {
 			}
 
 			// 执行附件上传后事件，added by liuxc,2017-7-15
-			msg = ExecEvent.DoFrm(mapData,EventListFrm.AthUploadeAfter, en, "@FK_FrmAttachment=" + dbUpload.getFK_FrmAttachment() + "@FK_FrmAttachmentDB=" + dbUpload.getMyPK()
+			msg = ExecEvent.DoFrm(mapData,EventListFrm.AthUploadeAfter, en, "@FK_FrmAttachment=" + dbUpload.getFKFrmAttachment() + "@FK_FrmAttachmentDB=" + dbUpload.getMyPK()
 					+ "@FileFullName=" + dbUpload.getFileFullName());
 
 			if (!DataType.IsNullOrEmpty(msg))
@@ -689,17 +692,19 @@ public class AttachmentUploadController extends BaseController {
 			dbUpload.setRefPKVal(pkVal);
 
 			fileName = fileName.substring(0, fileName.lastIndexOf('.'));
-			dbUpload.setFK_MapData(athDesc.getFK_MapData());
-			dbUpload.setFK_FrmAttachment(athDesc.getMyPK());
+			dbUpload.setFrmID(athDesc.getFrmID());
+			dbUpload.setFKFrmAttachment(athDesc.getMyPK());
 			dbUpload.setFileName(fileName + "." + exts);
 			dbUpload.setFileExts(exts);
 			dbUpload.setFileSize((float) info.length());
 			dbUpload.setRDT(DataType.getCurrentDataTime());
 			dbUpload.setRec(WebUser.getNo());
 			dbUpload.setRecName(WebUser.getName());
+			dbUpload.setDeptNo(WebUser.getDeptNo());
+			dbUpload.setDeptName(WebUser.getDeptName());
 			if (fileEncrypt == true)
 				dbUpload.SetPara("IsEncrypt", 1);
-			if (athDesc.getIsExpCol() == true) {
+			if (athDesc.getItIsExpCol() == true) {
 				if (parasData != null && parasData.length() > 0) {
 					for (String para : parasData.split("@")) {
 						if (para.split("=").length == 2)
@@ -717,12 +722,12 @@ public class AttachmentUploadController extends BaseController {
 			}
 
 
-			if (athDesc.getAthSaveWay() == AthSaveWay.FTPServer || athDesc.getAthSaveWay() == AthSaveWay.OSS) {
+			if (athDesc.getAthSaveWay() == AthSaveWay.FTPServer) {
 
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM");
 				String ny = sdf.format(new Date());
 
-				String workDir = ny + "/" + athDesc.getFK_MapData() + "/";
+				String workDir = ny + "/" + athDesc.getFrmID() + "/";
 
 				//特殊处理文件路径.
 				if (SystemConfig.getCustomerNo().equals("BWDA") ) {
@@ -761,26 +766,7 @@ public class AttachmentUploadController extends BaseController {
 				}
 				// 设置路径.
 				dbUpload.setFileFullName( workDir  + guid + "." + dbUpload.getFileExts());
-				//start 保存到OSS
-				if (athDesc.getAthSaveWay() == AthSaveWay.OSS ) {
-					try {
-						// 构造临时对象
-						InputStream inputStream = item.getInputStream();
 
-						OSSUploadFileUtils ossUploadFileUtils = new OSSUploadFileUtils();
-
-						String fileNameU = guid+fileName;
-
-						String filepath = ossUploadFileUtils.uploadFile(workDir+fileNameU, inputStream);
-
-						dbUpload.setFileFullName(filepath);
-
-					}catch(Exception ex){
-						System.out.println("err@上传附件错误:" + ex.getMessage());
-						throw new Exception("err@上传附件错误：" + ex.getMessage());
-					}
-				}
-				//end 保存到OSS
 				// 删除临时文件
 				tempFile.delete();
 				new File(SystemConfig.getPathOfTemp() + "" + guid + "_Desc" + ".tmp").delete();
@@ -792,8 +778,40 @@ public class AttachmentUploadController extends BaseController {
 
 			}
 
+			//#region 文件上传到OSS服务器上
+			if (athDesc.getAthSaveWay() == AthSaveWay.OSS ) {
+				String subDir = "";
+				//判断是否有子目录路径
+				if (DataType.IsNullOrEmpty(bp.difference.SystemConfig.getBucketSubPath()) == false && "/".equals(bp.difference.SystemConfig.getBucketSubPath()) == false)
+				{
+					subDir = bp.difference.SystemConfig.getBucketSubPath() + "/";
+				}
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM");
+				String ny = sdf.format(new Date());
+
+				String workDir = subDir + ny + File.separator + athDesc.getFrmID() + File.separator;
+				// 构造临时对象
+				InputStream inputStream = item.getInputStream();
+
+				String fileNameU = workDir + guid + "." + dbUpload.getFileExts();
+
+				OSSUploadFileUtils.uploadFile(fileNameU, inputStream);
+
+				dbUpload.setFileFullName(fileNameU);
+
+				// 设置路径.
+				dbUpload.setFileFullName( workDir  + guid + "." + dbUpload.getFileExts());
+
+				// 删除临时文件
+				tempFile.delete();
+				new File(SystemConfig.getPathOfTemp() + guid + "_Desc" + ".tmp").delete();
+
+				dbUpload.Insert();
+			}
+			//#endregion 文件上传到OSS服务器上
+
 			// 执行附件上传后事件，added by liuxc,2017-7-15
-			msg = ExecEvent.DoFrm(mapData,EventListFrm.AthUploadeAfter, en, "@FK_FrmAttachment=" + dbUpload.getFK_FrmAttachment() + "@FK_FrmAttachmentDB=" + dbUpload.getMyPK()
+			msg = ExecEvent.DoFrm(mapData,EventListFrm.AthUploadeAfter, en, "@FK_FrmAttachment=" + dbUpload.getFKFrmAttachment() + "@FK_FrmAttachmentDB=" + dbUpload.getMyPK()
 					+ "@FileFullName=" + temp);
 
 			if (DataType.IsNullOrEmpty(msg)==false)

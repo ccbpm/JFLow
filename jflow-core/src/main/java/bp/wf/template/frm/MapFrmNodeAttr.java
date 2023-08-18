@@ -1,6 +1,12 @@
 package bp.wf.template.frm;
 
+import bp.da.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
+import bp.*;
+import bp.wf.*;
+import bp.wf.template.*;
+import java.util.*;
 
 /** 
  自由表单属性 attr

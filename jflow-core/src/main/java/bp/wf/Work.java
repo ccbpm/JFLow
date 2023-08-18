@@ -3,6 +3,7 @@ package bp.wf;
 import bp.da.*;
 import bp.en.*;
 import bp.sys.*;
+import java.util.*;
 
 /** 
  WorkBase 的摘要说明。
@@ -15,10 +16,10 @@ public abstract class Work extends Entity
 	 
 	 @return true/false
 	*/
-	public final boolean IsPassCheckMD5() throws Exception {
+	public final boolean ItIsPassCheckMD5() throws Exception {
 		String md51 = this.GetValStringByKey(WorkAttr.MD5);
 		String md52 = Glo.GenerMD5(this);
-		if (!md51.equals(md52))
+		if (!Objects.equals(md51, md52))
 		{
 			return false;
 		}
@@ -31,21 +32,22 @@ public abstract class Work extends Entity
 	 主键
 	*/
 	@Override
-	public String getPK()  {
+	public String getPK()
+	{
 		return "OID";
 	}
 	/** 
 	 classID
 	*/
 	@Override
-	public String getClassID()  {
+	public String getClassID(){
 		return "ND" + this.getHisNode().getNodeID();
 	}
 	/** 
 	 流程ID
 	*/
 	public long getFID() throws Exception {
-		if (this.getHisNode().getIsSubThread()== false)
+		if (this.getHisNode().getItIsSubThread() == false)
 		{
 			return 0;
 		}
@@ -53,8 +55,8 @@ public abstract class Work extends Entity
 		return this.GetValInt64ByKey(WorkAttr.FID);
 
 	}
-	public void setFID(long value)throws Exception
-	{if (this.getHisNode().getIsSubThread()== false)
+	public void setFID(long value) throws Exception {
+		if (this.getHisNode().getItIsSubThread() == false)
 		{
 			this.SetValByKey(WorkAttr.FID, 0);
 		}
@@ -66,23 +68,19 @@ public abstract class Work extends Entity
 	/** 
 	 workid,如果是空的就返回 0 . 
 	*/
-	public long getOID()
-	{
+	public long getOID() {
 		return this.GetValInt64ByKey(WorkAttr.OID);
 	}
-	public void setOID(long value)  throws Exception
-	 {
+	public void setOID(long value)  {
 		this.SetValByKey(WorkAttr.OID, value);
 	}
 	/** 
 	 人员emps
 	*/
-	public final String getEmps() throws Exception
-	{
+	public final String getEmps() {
 		return this.GetValStringByKey(WorkAttr.Emps);
 	}
-	public final void setEmps(String value)  throws Exception
-	 {
+	public final void setEmps(String value)  {
 		this.SetValByKey(WorkAttr.Emps, value);
 	}
 	public final int RetrieveFID() throws Exception {
@@ -91,7 +89,7 @@ public abstract class Work extends Entity
 		int i = qo.DoQuery();
 		if (i == 0)
 		{
-			if (!bp.difference.SystemConfig.getIsDebug())
+			if (!bp.difference.SystemConfig.isDebug())
 			{
 				this.CheckPhysicsTable();
 				throw new RuntimeException("@节点[" + this.getEnDesc() + "]数据丢失：WorkID=" + this.getOID() + " FID=" + this.getFID() + " sql=" + qo.getSQL());
@@ -102,28 +100,27 @@ public abstract class Work extends Entity
 	/** 
 	 记录人
 	*/
-	public final String getRec()  {
+	public final String getRec() throws Exception {
 		String str = this.GetValStringByKey(WorkAttr.Rec);
-		if (str.equals(""))
+		if (Objects.equals(str, ""))
 		{
 			this.SetValByKey(WorkAttr.Rec, bp.web.WebUser.getNo());
 		}
 
 		return this.GetValStringByKey(WorkAttr.Rec);
 	}
-	public final void setRec(String value)
-	 {
+	public final void setRec(String value)  {
 		this.SetValByKey(WorkAttr.Rec, value);
 	}
 
-	public final int getFrmVer()  {
+	public final int getFrmVer() {
 		return this.GetParaInt("FrmVer", 0);
 	}
 	private Node _HisNode = null;
 	/** 
 	 工作的节点.
 	*/
-	public final Node getHisNode()  {
+	public final Node getHisNode(){
 		if (this._HisNode == null)
 		{
 			try {
@@ -135,7 +132,8 @@ public abstract class Work extends Entity
 		return _HisNode;
 	}
 	public final void setHisNode(Node value)
-	{_HisNode = value;
+	{
+		_HisNode = value;
 	}
 	/** 
 	 从表.
@@ -159,15 +157,15 @@ public abstract class Work extends Entity
 	/** 
 	 工作
 	*/
-	protected Work()  {
+	protected Work()
+	{
 	}
 	/** 
 	 工作
 	 
-	 param oid WFOID
+	 @param oid WFOID		 
 	*/
-	protected Work(long oid)  throws Exception
-	 {
+	protected Work(long oid) throws Exception {
 		this.SetValByKey(EntityOIDAttr.OID, oid);
 		this.Retrieve();
 	}
@@ -179,20 +177,18 @@ public abstract class Work extends Entity
 	/** 
 	 按照指定的OID Insert.
 	*/
-	public final void InsertAsOID(long oid)  throws Exception
-	 {
+	public final void InsertAsOID(long oid) throws Exception {
 		this.SetValByKey("OID", oid);
 		this.RunSQL(SqlBuilder.Insert(this));
 	}
 	/** 
 	 按照指定的OID 保存
 	 
-	 param oid
+	 @param oid
 	*/
-	public final void SaveAsOID(long oid)  throws Exception
-	 {
+	public final void SaveAsOID(long oid) throws Exception {
 		this.SetValByKey("OID", oid);
-		if (this.RetrieveNotSetValues().Rows.size() == 0)
+		if (this.IsExits() == false)
 		{
 			this.InsertAsOID(oid);
 		}
@@ -201,6 +197,8 @@ public abstract class Work extends Entity
 	/** 
 	 保存实体信息
 	*/
+//C# TO JAVA CONVERTER WARNING: There is no Java equivalent to C#'s shadowing via the 'new' keyword:
+//ORIGINAL LINE: public new int Save()
 	public final int Save() throws Exception {
 		if (this.getOID() <= 10)
 		{
@@ -217,9 +215,10 @@ public abstract class Work extends Entity
 	public void Copy(DataRow dr) throws Exception {
 		for (Attr attr : this.getEnMap().getAttrs())
 		{
-			if (attr.getKey().equals(WorkAttr.Rec) || attr.getKey().equals(WorkAttr.FID) || attr.getKey().equals(WorkAttr.OID)
-					|| attr.getKey().equals("BillNo") || attr.getKey().equals("No") || attr.getKey().equals("Name"))
+			if (Objects.equals(attr.getKey(), WorkAttr.Rec) || Objects.equals(attr.getKey(), WorkAttr.FID) || Objects.equals(attr.getKey(), WorkAttr.OID) || Objects.equals(attr.getKey(), "No") || Objects.equals(attr.getKey(), "Name"))
+			{
 				continue;
+			}
 
 			try
 			{
@@ -237,9 +236,9 @@ public abstract class Work extends Entity
 			return;
 		}
 		Attrs attrs = fromEn.getEnMap().getAttrs();
-		for (Attr attr : attrs.ToJavaList())
+		for (Attr attr : attrs)
 		{
-			if (attr.getKey().equals(WorkAttr.Rec) || attr.getKey().equals(WorkAttr.FID) || attr.getKey().equals(WorkAttr.OID) || attr.getKey().equals(WorkAttr.Emps) || attr.getKey().equals("No") || attr.getKey().equals("Name"))
+			if (Objects.equals(attr.getKey(), WorkAttr.Rec) || Objects.equals(attr.getKey(), WorkAttr.FID) || Objects.equals(attr.getKey(), WorkAttr.OID) || Objects.equals(attr.getKey(), WorkAttr.Emps) || Objects.equals(attr.getKey(), "No") || Objects.equals(attr.getKey(), "Name"))
 			{
 				continue;
 			}
@@ -254,6 +253,8 @@ public abstract class Work extends Entity
 	/** 
 	 直接的保存
 	*/
+//C# TO JAVA CONVERTER WARNING: There is no Java equivalent to C#'s shadowing via the 'new' keyword:
+//ORIGINAL LINE: public new void DirectSave()
 	public final void DirectSave() throws Exception {
 		this.beforeUpdateInsertAction();
 		if (this.DirectUpdate() == 0)
@@ -263,7 +264,8 @@ public abstract class Work extends Entity
 	}
 	public String NodeFrmID = "";
 	protected int _nodeID = 0;
-	public final int getNodeID()  {
+	public final int getNodeID()
+	{
 		if (_nodeID == 0)
 		{
 			throw new RuntimeException("您没有给_Node给值。");
@@ -271,8 +273,10 @@ public abstract class Work extends Entity
 		return this._nodeID;
 	}
 	public final void setNodeID(int value)
-	{if (this._nodeID != value)
-	{this._nodeID = value;
+	{
+		if (this._nodeID != value)
+		{
+			this._nodeID = value;
 			this.set_enMap(null);
 		}
 		this._nodeID = value;
@@ -282,6 +286,5 @@ public abstract class Work extends Entity
 	*/
 	public String HisPassedFrmIDs = "";
 
-
-	///#endregion
+		///#endregion
 }

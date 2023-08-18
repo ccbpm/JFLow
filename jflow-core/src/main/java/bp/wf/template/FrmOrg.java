@@ -1,6 +1,7 @@
 package bp.wf.template;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+
 
 /** 
  表单对应组织
@@ -12,27 +13,22 @@ public class FrmOrg extends EntityMM
 	/** 
 	表单
 	*/
-	public final String getFrmID() throws Exception
-	{
+	public final String getFrmID()  {
 		return this.GetValStringByKey(FrmOrgAttr.FrmID);
 	}
-	public final void setFrmID(String value)  throws Exception
-	 {
+	public final void setFrmID(String value){
 		this.SetValByKey(FrmOrgAttr.FrmID, value);
 	}
 	/** 
 	 组织
 	*/
-	public final String getOrgNo() throws Exception
-	{
+	public final String getOrgNo()  {
 		return this.GetValStringByKey(FrmOrgAttr.OrgNo);
 	}
-	public final void setOrgNo(String value)  throws Exception
-	 {
+	public final void setOrgNo(String value){
 		this.SetValByKey(FrmOrgAttr.OrgNo, value);
 	}
-	public final String getOrgNoT() throws Exception
-	{
+	public final String getOrgNoT()  {
 		return this.GetValRefTextByKey(FrmOrgAttr.OrgNo);
 	}
 
@@ -43,13 +39,15 @@ public class FrmOrg extends EntityMM
 	/** 
 	 表单对应组织
 	*/
-	public FrmOrg()  {
+	public FrmOrg()
+	{
 	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();

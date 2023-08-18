@@ -287,8 +287,7 @@ public class Monitor extends Entity
 	{
 		return this.GetValStrByKey(MonitorAttr.StarterName);
 	}
-	public final void setStarterName(String value) throws Exception
-	{
+	public final void setStarterName(String value){
 		this.SetValByKey(MonitorAttr.StarterName, value);
 	}
 	/** 
@@ -298,8 +297,7 @@ public class Monitor extends Entity
 	{
 		return this.GetValStrByKey(MonitorAttr.DeptName);
 	}
-	public final void setDeptName(String value) throws Exception
-	{
+	public final void setDeptName(String value){
 		this.SetValByKey(MonitorAttr.DeptName, value);
 	}
 	/** 
@@ -309,8 +307,7 @@ public class Monitor extends Entity
 	{
 		return this.GetValStrByKey(MonitorAttr.NodeName);
 	}
-	public final void setNodeName(String value) throws Exception
-	{
+	public final void setNodeName(String value){
 		this.SetValByKey(MonitorAttr.NodeName, value);
 	}
 	/** 
@@ -320,7 +317,7 @@ public class Monitor extends Entity
 	{
 		return this.GetValIntByKey(MonitorAttr.FK_Node);
 	}
-	public final void setFK_Node(int value) throws Exception
+	public final void setNodeID(int value) throws Exception
 	{
 		SetValByKey(MonitorAttr.FK_Node, value);
 	}
@@ -367,8 +364,7 @@ public class Monitor extends Entity
 				return "已完成";
 			case Runing:
 				return "在运行";
-			case HungUp:
-				return "挂起";
+
 			case Askfor:
 				return "加签";
 			default:
@@ -454,7 +450,7 @@ public class Monitor extends Entity
 
 			////增加隐藏的查询条件.
 			//SearchNormal search = new SearchNormal(MonitorAttr.WorkerDept, "部门",
-			//    MonitorAttr.WorkerDept, "=", bp.web.WebUser.getFK_Dept(), 0, true);
+			//    MonitorAttr.WorkerDept, "=", bp.web.WebUser.getDeptNo(), 0, true);
 			//map.AttrsOfSearch.Add(search);
 
 		RefMethod rm = new RefMethod();
@@ -482,7 +478,7 @@ public class Monitor extends Entity
 		rm.Icon = "../../WF/Img/Btn/Back.png";
 
 		rm.Title = "回滚";
-		rm.IsForEns = false;
+
 		rm.ClassMethodName = this.toString() + ".DoComeBack";
 		rm.getHisAttrs().AddTBInt("NodeID", 0, "回滚到节点", true, false);
 		rm.getHisAttrs().AddTBString("Note", null, "回滚原因", true, false, 0, 300, 100);

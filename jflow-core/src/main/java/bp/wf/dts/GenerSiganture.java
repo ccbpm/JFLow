@@ -68,18 +68,7 @@ public class GenerSiganture extends Method
 			String empErrs = "";
 			for (Emp emp : emps.ToJavaList())
 			{
-				String pathMe = SystemConfig.getPathOfDataUser() + "/Siganture/" + emp.getNo() + ".jpg";
-				if ((new File(pathMe)).isFile())
-				{
-					continue;
-				}
-
-				Files.copy(Paths.get(SystemConfig.getPathOfDataUser() + "/Siganture/Templete.jpg"), Paths.get(path), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
-
-				paintWaterMarkPhoto(pathMe,emp.getName(),path);
-
-
-				Files.copy(Paths.get(pathMe), Paths.get(SystemConfig.getPathOfDataUser() + "/Siganture/" + emp.getName() + ".jpg"), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
+				GenerIt(emp.getNo(),emp.getName());
 			}
 			return "执行成功...";
 		}
@@ -89,6 +78,22 @@ public class GenerSiganture extends Method
 		}
 	}
 
+	public static void GenerIt(String empID, String empName) throws IOException {
+		String dataUserPath =  SystemConfig.getPathOfDataUser();
+		if(SystemConfig.isJarRun())
+			dataUserPath = SystemConfig.getPhysicalPath()+"DataUser";
+		String path = dataUserPath + "/Siganture/T.jpg";
+		String pathMe = dataUserPath + "/Siganture/" + empID + ".jpg";
+		if ((new File(pathMe)).isFile())
+			return;
+
+		Files.copy(Paths.get(dataUserPath + "/Siganture/Templete.jpg"), Paths.get(path), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
+
+		paintWaterMarkPhoto(pathMe,empName,path);
+
+
+		Files.copy(Paths.get(pathMe), Paths.get(dataUserPath + "/Siganture/" +empName + ".jpg"), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
+	}
 	private static void paintWaterMarkPhoto(String targerImagePath,String words,String srcImagePath) {
 		Integer degree = -15;
 		OutputStream os = null;

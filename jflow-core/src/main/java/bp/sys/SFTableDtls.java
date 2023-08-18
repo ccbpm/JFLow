@@ -1,7 +1,6 @@
 package bp.sys;
 
 import bp.en.*;
-
 import java.util.*;
 
 /** 
@@ -14,7 +13,7 @@ public class SFTableDtls extends EntitiesMyPK
 	/** 
 	 系统字典表s
 	*/
-	public SFTableDtls()throws Exception
+	public SFTableDtls()
 	{
 	}
 
@@ -27,7 +26,7 @@ public class SFTableDtls extends EntitiesMyPK
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new SFTableDtl();
 	}
@@ -41,7 +40,7 @@ public class SFTableDtls extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<SFTableDtl> ToJavaList()throws Exception
+	public final java.util.List<SFTableDtl> ToJavaList()
 	{
 		return (java.util.List<SFTableDtl>)(Object)this;
 	}
@@ -50,7 +49,7 @@ public class SFTableDtls extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<SFTableDtl> Tolist()throws Exception
+	public final ArrayList<SFTableDtl> Tolist()
 	{
 		ArrayList<SFTableDtl> list = new ArrayList<SFTableDtl>();
 		for (int i = 0; i < this.size(); i++)

@@ -1,9 +1,14 @@
 package bp.wf.port;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.sys.*;
+import bp.wf.template.*;
+import bp.*;
+import bp.wf.*;
+import java.util.*;
 
 /** 
- 部门属性
+ 部门属性(即将弃用)
 */
 public class DeptAttr extends EntityNoNameAttr
 {
@@ -18,5 +23,4 @@ public class DeptAttr extends EntityNoNameAttr
 	public static final String Leader = "Leader";
 	public static final String LeaderName = "LeaderName";
 	public static final String Idx = "Idx";
-
 }

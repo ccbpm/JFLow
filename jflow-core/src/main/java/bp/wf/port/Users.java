@@ -1,9 +1,6 @@
 package bp.wf.port;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -18,13 +15,15 @@ public class Users extends EntitiesNoName
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		return new User();
 	}
 	/** 
 	 操作员s
 	*/
-	public Users() throws Exception {
+	public Users()
+	{
 	}
 
 
@@ -37,7 +36,8 @@ public class Users extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<User> ToJavaList() {
+	public final java.util.List<User> ToJavaList()
+	{
 		return (java.util.List<User>)(Object)this;
 	}
 	/** 
@@ -45,7 +45,8 @@ public class Users extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<User> Tolist()  {
+	public final ArrayList<User> Tolist()
+	{
 		ArrayList<User> list = new ArrayList<User>();
 		for (int i = 0; i < this.size(); i++)
 		{

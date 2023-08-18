@@ -2,7 +2,7 @@ package bp.port;
 
 import bp.da.*;
 import bp.web.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.port.*;
 import bp.*;
 import java.util.*;
@@ -10,20 +10,22 @@ import java.util.*;
 /** 
  用户组人员s
 */
-public class TeamEmps extends EntitiesMyPK
+public class TeamEmps extends EntitiesMM
 {
 
 		///#region 构造
 	/** 
 	 用户组s
 	*/
-	public TeamEmps()  {
+	public TeamEmps()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		return new TeamEmp();
 	}
 
@@ -36,7 +38,8 @@ public class TeamEmps extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<TeamEmp> ToJavaList() {
+	public final java.util.List<TeamEmp> ToJavaList()
+	{
 		return (java.util.List<TeamEmp>)(Object)this;
 	}
 	/** 
@@ -44,7 +47,8 @@ public class TeamEmps extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<TeamEmp> Tolist()  {
+	public final ArrayList<TeamEmp> Tolist()
+	{
 		ArrayList<TeamEmp> list = new ArrayList<TeamEmp>();
 		for (int i = 0; i < this.size(); i++)
 		{

@@ -1,13 +1,5 @@
 package bp.pub;
 
-import bp.da.*;
-import bp.en.*;
-import bp.en.Map;
-import bp.web.*;
-import bp.sys.*;
-import bp.difference.*;
-import bp.*;
-
 /** 
  报表基类
 */

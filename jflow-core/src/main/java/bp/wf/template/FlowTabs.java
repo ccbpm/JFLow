@@ -1,7 +1,6 @@
 package bp.wf.template;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.en.*;
 import bp.wf.*;
 import bp.sys.*;
@@ -34,7 +33,7 @@ public class FlowTabs extends EntitiesMyPK
 	/** 
 	 给主页初始化数据.
 	 
-	 param flowNo
+	 @param flowNo
 	 @return 
 	*/
 	public final String Default_Init_bak(String flowNo) throws Exception {
@@ -45,7 +44,7 @@ public class FlowTabs extends EntitiesMyPK
 
 		GERpts rpts = new GERpts();
 
-	//    GEEntitys ens = new GEEntitys(rptNo);
+		//    GEEntitys ens = new GEEntitys(rptNo);
 
 		GenerWorkFlows ens = new GenerWorkFlows();
 		QueryObject qo = new QueryObject(ens);
@@ -71,7 +70,7 @@ public class FlowTabs extends EntitiesMyPK
 		String rptNo = "ND" + Integer.parseInt(flowNo) + "Rpt";
 		GEEntitys ens = new GEEntitys(rptNo);
 		QueryObject qo = new QueryObject(ens);
-		qo.AddWhere(GERptAttr.WFState,">",1);
+		qo.AddWhere(GERptAttr.WFState, ">", 1);
 		qo.addAnd();
 		qo.addLeftBracket();
 		qo.AddWhere(GERptAttr.FlowEmps, " LIKE ", "%" + bp.web.WebUser.getNo() + "%");
@@ -82,7 +81,6 @@ public class FlowTabs extends EntitiesMyPK
 		qo.Top = 100;
 		qo.DoQuery();
 		ds.Tables.add(ens.ToDataTableField("DT"));
-
 
 
 		//表单的ID
@@ -110,9 +108,10 @@ public class FlowTabs extends EntitiesMyPK
 		MapAttrs mattrsOfSystem = new MapAttrs();
 		mattrsOfSystem.AddEntity(attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, GERptAttr.Title));
 		mattrsOfSystem.AddEntity(attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, GERptAttr.FlowStarter));
-		mattrsOfSystem.AddEntity(attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, GERptAttr.FK_Dept));
+		// mattrsOfSystem.AddEntity(attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, BP.WF.GERptAttr.fk)); @hongyan. 去掉.
 		mattrsOfSystem.AddEntity(attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, GERptAttr.WFState));
 		mattrsOfSystem.AddEntity(attrs.GetEntityByKey(MapAttrAttr.KeyOfEn, GERptAttr.FlowEmps));
+
 		ds.Tables.add(mattrsOfSystem.ToDataTableField("Sys_MapAttrOfSystem"));
 
 		ds.Tables.add(attrs.ToDataTableField("Sys_MapAttr"));
@@ -167,7 +166,7 @@ public class FlowTabs extends EntitiesMyPK
 	}
 
 
-	public final String Search_SearchData(String flowNo, String pageIdx, String pageSize) throws Exception {
+	public final String Search_SearchData(String flowNo, int pageIdx, int pageSize) throws Exception {
 		//表单编号
 		String rptNo = "ND" + Integer.parseInt(flowNo) + "Rpt";
 
@@ -193,12 +192,12 @@ public class FlowTabs extends EntitiesMyPK
 
 			///#region 关键字查询
 		String searchKey = ""; //关键字查询
-		if (mapData.isSearchKey())
+		if (mapData.getItIsSearchKey())
 		{
 			searchKey = ur.getSearchKey();
 		}
 
-		if (mapData.isSearchKey() && DataType.IsNullOrEmpty(searchKey) == false && searchKey.length() >= 1)
+		if (mapData.getItIsSearchKey() && DataType.IsNullOrEmpty(searchKey) == false && searchKey.length() >= 1)
 		{
 			int i = 0;
 
@@ -225,7 +224,7 @@ public class FlowTabs extends EntitiesMyPK
 					continue;
 				}
 
-				if (attr.getKey().equals("FK_Dept"))
+				if (Objects.equals(attr.getKey(), "FK_Dept"))
 				{
 					continue;
 				}
@@ -235,26 +234,26 @@ public class FlowTabs extends EntitiesMyPK
 				if (i == 1)
 				{
 					qo.addLeftBracket();
-					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
+					if (Objects.equals(bp.difference.SystemConfig.getAppCenterDBVarStr(), "@") || Objects.equals(bp.difference.SystemConfig.getAppCenterDBVarStr(), "?"))
 					{
-						qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+						qo.AddWhere(attr.getKey(), " LIKE ", bp.difference.SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 					}
 					else
 					{
-						qo.AddWhere(attr.getKey(), " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+						qo.AddWhere(attr.getKey(), " LIKE ", " '%'||" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 					}
 					continue;
 				}
 
 				qo.addOr();
 
-				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
+				if (Objects.equals(bp.difference.SystemConfig.getAppCenterDBVarStr(), "@") || Objects.equals(bp.difference.SystemConfig.getAppCenterDBVarStr(), "?"))
 				{
-					qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+					qo.AddWhere(attr.getKey(), " LIKE ", bp.difference.SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 				}
 				else
 				{
-					qo.AddWhere(attr.getKey(), " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+					qo.AddWhere(attr.getKey(), " LIKE ", "'%'||" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 				}
 			}
 
@@ -294,26 +293,26 @@ public class FlowTabs extends EntitiesMyPK
 				{
 					/* 第一次进来。 */
 					qo.addLeftBracket();
-					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
+					if (Objects.equals(bp.difference.SystemConfig.getAppCenterDBVarStr(), "@") || Objects.equals(bp.difference.SystemConfig.getAppCenterDBVarStr(), "?"))
 					{
-						qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + ",'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + field + "+'%'"));
+						qo.AddWhere(field, " LIKE ", bp.difference.SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + bp.difference.SystemConfig.getAppCenterDBVarStr() + field + ",'%')") : (" '%'+" + bp.difference.SystemConfig.getAppCenterDBVarStr() + field + "+'%'"));
 					}
 					else
 					{
-						qo.AddWhere(field, " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + field + "||'%'");
+						qo.AddWhere(field, " LIKE ", " '%'||" + bp.difference.SystemConfig.getAppCenterDBVarStr() + field + "||'%'");
 					}
 					qo.getMyParas().Add(field, fieldValue, false);
 					continue;
 				}
 				qo.addAnd();
 
-				if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
+				if (Objects.equals(bp.difference.SystemConfig.getAppCenterDBVarStr(), "@") || Objects.equals(bp.difference.SystemConfig.getAppCenterDBVarStr(), "?"))
 				{
-					qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + ",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + field + "+'%'"));
+					qo.AddWhere(field, " LIKE ", bp.difference.SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + bp.difference.SystemConfig.getAppCenterDBVarStr() + field + ",'%')") : ("'%'+" + bp.difference.SystemConfig.getAppCenterDBVarStr() + field + "+'%'"));
 				}
 				else
 				{
-					qo.AddWhere(field, " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + field + "||'%'");
+					qo.AddWhere(field, " LIKE ", "'%'||" + bp.difference.SystemConfig.getAppCenterDBVarStr() + field + "||'%'");
 				}
 				qo.getMyParas().Add(field, fieldValue, false);
 
@@ -353,15 +352,15 @@ public class FlowTabs extends EntitiesMyPK
 
 
 			///#region 日期处理
-		if (mapData.getDTSearchWay() != DTSearchWay.None)
+		if (mapData.getDTSearchWay()!= DTSearchWay.None)
 		{
-			DTSearchWay dtKey = mapData.getDTSearchWay();
+			String dtKey = mapData.getDTSearchKey();
 			String dtFrom = ur.GetValStringByKey(UserRegeditAttr.DTFrom).trim();
 			String dtTo = ur.GetValStringByKey(UserRegeditAttr.DTTo).trim();
 
 			if (DataType.IsNullOrEmpty(dtFrom) == true)
 			{
-				if (mapData.getDTSearchWay() == DTSearchWay.ByDate)
+				if (mapData.getDTSearchWay()== DTSearchWay.ByDate)
 				{
 					dtFrom = "1900-01-01";
 				}
@@ -373,7 +372,7 @@ public class FlowTabs extends EntitiesMyPK
 
 			if (DataType.IsNullOrEmpty(dtTo) == true)
 			{
-				if (mapData.getDTSearchWay() == DTSearchWay.ByDate)
+				if (mapData.getDTSearchWay()== DTSearchWay.ByDate)
 				{
 					dtTo = "2999-01-01";
 				}
@@ -383,7 +382,7 @@ public class FlowTabs extends EntitiesMyPK
 				}
 			}
 
-			if (mapData.getDTSearchWay() == DTSearchWay.ByDate)
+			if (mapData.getDTSearchWay()== DTSearchWay.ByDate)
 			{
 
 				qo.addAnd();
@@ -394,7 +393,7 @@ public class FlowTabs extends EntitiesMyPK
 				qo.addRightBracket();
 			}
 
-			if (mapData.getDTSearchWay() == DTSearchWay.ByDateTime)
+			if (mapData.getDTSearchWay()== DTSearchWay.ByDateTime)
 			{
 
 				qo.addAnd();
@@ -423,7 +422,7 @@ public class FlowTabs extends EntitiesMyPK
 		}
 		ur.SetPara("Count", qo.GetCount());
 		ur.Update();
-		qo.DoQuery("OID", Integer.parseInt(pageSize), Integer.parseInt(pageIdx));
+		qo.DoQuery("OID", pageSize, pageIdx);
 
 		return bp.tools.Json.ToJson(ens.ToDataTableField("Search_Data"));
 
@@ -441,13 +440,15 @@ public class FlowTabs extends EntitiesMyPK
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FlowTab();
 	}
 	/** 
 	 抄送
 	*/
-	public FlowTabs() throws Exception {
+	public FlowTabs()
+	{
 	}
 
 		///#endregion
@@ -459,7 +460,8 @@ public class FlowTabs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<FlowTab> ToJavaList() {
+	public final java.util.List<FlowTab> ToJavaList()
+	{
 		return (java.util.List<FlowTab>)(Object)this;
 	}
 	/** 
@@ -467,7 +469,8 @@ public class FlowTabs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<FlowTab> Tolist()  {
+	public final ArrayList<FlowTab> Tolist()
+	{
 		ArrayList<FlowTab> list = new ArrayList<FlowTab>();
 		for (int i = 0; i < this.size(); i++)
 		{

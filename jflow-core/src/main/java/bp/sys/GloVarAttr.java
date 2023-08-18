@@ -2,7 +2,6 @@ package bp.sys;
 
 import bp.en.*;
 
-
 /** 
  全局变量
 */

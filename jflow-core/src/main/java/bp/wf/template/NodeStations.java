@@ -1,28 +1,25 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.wf.port.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
- 节点工作岗位s
+ 节点工作角色s
 */
 public class NodeStations extends EntitiesMyPK
 {
 
 		///#region 构造函数.
 	/** 
-	 节点工作岗位
+	 节点工作角色
 	*/
-	public NodeStations()  {
+	public NodeStations()
+	{
 	}
 	/** 
-	 节点工作岗位
+	 节点工作角色
 	 
-	 param nodeID 节点ID
+	 @param nodeID 节点ID
 	*/
 	public NodeStations(int nodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -30,20 +27,11 @@ public class NodeStations extends EntitiesMyPK
 		qo.DoQuery();
 	}
 	/** 
-	 节点工作岗位
-	 
-	 param StationNo StationNo
-	*/
-	public NodeStations(String StationNo) throws Exception {
-		QueryObject qo = new QueryObject(this);
-		qo.AddWhere(NodeStationAttr.FK_Station, StationNo);
-		qo.DoQuery();
-	}
-	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new NodeStation();
 	}
 
@@ -56,7 +44,8 @@ public class NodeStations extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<NodeStation> ToJavaList() {
+	public final java.util.List<NodeStation> ToJavaList()
+	{
 		return (java.util.List<NodeStation>)(Object)this;
 	}
 	/** 
@@ -64,7 +53,8 @@ public class NodeStations extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<NodeStation> Tolist()  {
+	public final ArrayList<NodeStation> Tolist()
+	{
 		ArrayList<NodeStation> list = new ArrayList<NodeStation>();
 		for (int i = 0; i < this.size(); i++)
 		{

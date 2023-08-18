@@ -1,15 +1,11 @@
 package bp.wf.template;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
-import bp.en.Map;
 import bp.sys.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.port.*;
 import bp.web.*;
 import bp.wf.*;
-import bp.wf.Glo;
-
 import java.util.*;
 
 /** 
@@ -20,17 +16,17 @@ public class Selector extends Entity
 
 		///#region 基本属性
 	@Override
-	public String getPK()  {
+	public String getPK()
+	{
 		return "NodeID";
 	}
 	/** 
 	 选择模式
 	*/
-	public final SelectorModel getSelectorModel() throws Exception {
+	public final SelectorModel getSelectorModel() {
 		return SelectorModel.forValue(this.GetValIntByKey(SelectorAttr.SelectorModel));
 	}
-	public final void setSelectorModel(SelectorModel value)  throws Exception
-	 {
+	public final void setSelectorModel(SelectorModel value){
 		this.SetValByKey(SelectorAttr.SelectorModel, value.getValue());
 	}
 	/** 
@@ -41,8 +37,7 @@ public class Selector extends Entity
 		s = s.replace("~", "'");
 		return s;
 	}
-	public final void setSelectorP1(String value)  throws Exception
-	 {
+	public final void setSelectorP1(String value){
 		this.SetValByKey(SelectorAttr.SelectorP1, value);
 	}
 	/** 
@@ -53,8 +48,7 @@ public class Selector extends Entity
 		s = s.replace("~", "'");
 		return s;
 	}
-	public final void setSelectorP2(String value)  throws Exception
-	 {
+	public final void setSelectorP2(String value){
 		this.SetValByKey(SelectorAttr.SelectorP2, value);
 	}
 	/** 
@@ -65,8 +59,7 @@ public class Selector extends Entity
 		s = s.replace("~", "'");
 		return s;
 	}
-	public final void setSelectorP3(String value)  throws Exception
-	 {
+	public final void setSelectorP3(String value){
 		this.SetValByKey(SelectorAttr.SelectorP3, value);
 	}
 	/** 
@@ -77,70 +70,60 @@ public class Selector extends Entity
 		s = s.replace("~", "'");
 		return s;
 	}
-	public final void setSelectorP4(String value)  throws Exception
-	 {
+	public final void setSelectorP4(String value){
 		this.SetValByKey(SelectorAttr.SelectorP3, value);
 	}
 	/** 
 	 是否自动装载上一笔加载的数据
 	*/
-	public final boolean isAutoLoadEmps() throws Exception
-	{
+	public final boolean getItIsAutoLoadEmps()  {
 		return this.GetValBooleanByKey(SelectorAttr.IsAutoLoadEmps);
 	}
-	public final void setAutoLoadEmps(boolean value)  throws Exception
-	 {
+	public final void setItIsAutoLoadEmps(boolean value){
 		this.SetValByKey(SelectorAttr.IsAutoLoadEmps, value);
 	}
 	/** 
 	 是否单选？
 	*/
-	public final boolean isSimpleSelector() throws Exception
-	{
+	public final boolean getItIsSimpleSelector()  {
 		return this.GetValBooleanByKey(SelectorAttr.IsSimpleSelector);
 	}
-	public final void setSimpleSelector(boolean value)  throws Exception
-	 {
+	public final void setItIsSimpleSelector(boolean value){
 		this.SetValByKey(SelectorAttr.IsSimpleSelector, value);
 	}
 	/** 
 	 是否启用部门搜索范围限定
 	*/
-	public final boolean isEnableDeptRange() throws Exception
-	{
+	public final boolean getItIsEnableDeptRange()  {
 		return this.GetValBooleanByKey(SelectorAttr.IsEnableDeptRange);
 	}
-	public final void setEnableDeptRange(boolean value)  throws Exception
-	 {
+	public final void setItIsEnableDeptRange(boolean value){
 		this.SetValByKey(SelectorAttr.IsEnableDeptRange, value);
 	}
 	/** 
-	 是否启用岗位搜索范围限定
+	 是否启用角色搜索范围限定
 	*/
-	public final boolean isEnableStaRange() throws Exception
-	{
+	public final boolean getItIsEnableStaRange()  {
 		return this.GetValBooleanByKey(SelectorAttr.IsEnableStaRange);
 	}
-	public final void setEnableStaRange(boolean value)  throws Exception
-	 {
+	public final void setItIsEnableStaRange(boolean value){
 		this.SetValByKey(SelectorAttr.IsEnableStaRange, value);
 	}
 	/** 
 	 节点ID
 	*/
-	public final int getNodeID() throws Exception
-	{
+	public final int getNodeID()  {
 		return this.GetValIntByKey(SelectorAttr.NodeID);
 	}
-	public final void setNodeID(int value)  throws Exception
-	 {
+	public final void setNodeID(int value){
 		this.SetValByKey(SelectorAttr.NodeID, value);
 	}
 	/** 
 	 UI界面上的访问控制
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.IsDelete = false;
 		uac.IsInsert = false;
@@ -162,12 +145,13 @@ public class Selector extends Entity
 	/** 
 	 接受人选择器
 	*/
-	public Selector()  {
+	public Selector()
+	{
 	}
 	/** 
 	 接受人选择器
 	 
-	 param nodeid
+	 @param nodeid
 	*/
 	public Selector(int nodeid) throws Exception {
 		this.setNodeID(nodeid);
@@ -177,7 +161,7 @@ public class Selector extends Entity
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -187,23 +171,25 @@ public class Selector extends Entity
 			///#region 字段.
 		Map map = new Map("WF_Node", "选择器");
 
-		map.setDepositaryOfEntity( Depositary.Application);
+		map.setDepositaryOfEntity(Depositary.Application);
 
 		map.AddTBIntPK(SelectorAttr.NodeID, 0, "NodeID", true, true);
 		map.AddTBString(SelectorAttr.Name, null, "节点名称", true, true, 0, 100, 100);
 
-		map.AddDDLSysEnum(SelectorAttr.SelectorModel, 5, "显示方式", true, true, SelectorAttr.SelectorModel, "@0=按岗位@1=按部门@2=按人员@3=按SQL@4=按SQL模版计算@5=使用通用人员选择器@6=部门与岗位的交集@7=自定义Url@8=使用通用部门岗位人员选择器@9=按岗位智能计算(操作员所在部门)");
+		map.AddTBInt(SelectorAttr.SelectorModel, 0, "显示方式", true, true);
+		//map.AddDDLSysEnum(SelectorAttr.SelectorModel, 5, "显示方式", true, true, SelectorAttr.SelectorModel,
+		//    "@0=按角色@1=按部门@2=按人员@3=按SQL@4=按SQL模版计算@5=使用通用人员选择器@6=部门与角色的交集@7=自定义Url@8=使用通用部门角色人员选择器@9=按角色智能计算(操作员所在部门)");
 
 		map.AddDDLSQL(SelectorAttr.FK_SQLTemplate, null, "SQL模版", "SELECT No,Name FROM WF_SQLTemplate WHERE SQLType=5", true);
 
 		map.AddBoolean(SelectorAttr.IsAutoLoadEmps, true, "是否自动加载上一次选择的人员？", true, true);
 		map.AddBoolean(SelectorAttr.IsSimpleSelector, false, "是否单项选择(只能选择一个人)？", true, true);
 		map.AddBoolean(SelectorAttr.IsEnableDeptRange, false, "是否启用部门搜索范围限定(对使用通用人员选择器有效)？", true, true, true);
-		map.AddBoolean(SelectorAttr.IsEnableStaRange, false, "是否启用岗位搜索范围限定(对使用通用人员选择器有效)？", true, true, true);
+		map.AddBoolean(SelectorAttr.IsEnableStaRange, false, "是否启用角色搜索范围限定(对使用通用人员选择器有效)？", true, true, true);
 
 
-			// map.AddDDLSysEnum(SelectorAttr.IsMinuesAutoLoadEmps, 5, "接收人选择方式", true, true, SelectorAttr.SelectorModel,
-			// "@0=按岗位@1=按部门@2=按人员@3=按SQL@4=按SQL模版计算@5=使用通用人员选择器@6=部门与岗位的交集@7=自定义Url");
+		// map.AddDDLSysEnum(SelectorAttr.IsMinuesAutoLoadEmps, 5, "接收人选择方式", true, true, SelectorAttr.SelectorModel,
+		// "@0=按角色@1=按部门@2=按人员@3=按SQL@4=按SQL模版计算@5=使用通用人员选择器@6=部门与角色的交集@7=自定义Url");
 
 		map.AddTBStringDoc(SelectorAttr.SelectorP1, null, "分组参数:可以为空,比如:SELECT No,Name,ParentNo FROM  Port_Dept", true, false, 0, 300, 3);
 		map.AddTBStringDoc(SelectorAttr.SelectorP2, null, "操作员数据源:比如:SELECT No,Name,FK_Dept FROM  Port_Emp", true, false, 0, 300, 3);
@@ -216,15 +202,15 @@ public class Selector extends Entity
 
 
 			///#region 对应关系
-			//平铺模式.
-		map.getAttrsOfOneVSM().AddGroupPanelModel(new bp.wf.template.NodeStations(), new Stations(), bp.wf.template.NodeStationAttr.FK_Node, bp.wf.template.NodeStationAttr.FK_Station, "绑定岗位(平铺)", StationAttr.FK_StationType, "Name", "No");
+		//平铺模式.
+		map.getAttrsOfOneVSM().AddGroupPanelModel(new bp.wf.template.NodeStations(), new Stations(), bp.wf.template.NodeStationAttr.FK_Node, bp.wf.template.NodeStationAttr.FK_Station, "绑定角色(平铺)", StationAttr.FK_StationType, "Name", "No");
 
-		map.getAttrsOfOneVSM().AddGroupListModel(new bp.wf.template.NodeStations(), new Stations(), bp.wf.template.NodeStationAttr.FK_Node, bp.wf.template.NodeStationAttr.FK_Station, "绑定岗位(树)", StationAttr.FK_StationType, "Name", "No");
+		map.getAttrsOfOneVSM().AddGroupListModel(new bp.wf.template.NodeStations(), new Stations(), bp.wf.template.NodeStationAttr.FK_Node, bp.wf.template.NodeStationAttr.FK_Station, "绑定角色(树)", StationAttr.FK_StationType, "Name", "No");
 
-			//节点绑定部门. 节点绑定部门.
+		//节点绑定部门. 节点绑定部门.
 		map.getAttrsOfOneVSM().AddBranches(new bp.wf.template.NodeDepts(), new Depts(), bp.wf.template.NodeDeptAttr.FK_Node, bp.wf.template.NodeDeptAttr.FK_Dept, "绑定部门", EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept", null);
 
-			//节点绑定人员. 使用树杆与叶子的模式绑定.
+		//节点绑定人员. 使用树杆与叶子的模式绑定.
 		map.getAttrsOfOneVSM().AddBranchesAndLeaf(new bp.wf.template.NodeEmps(), new Emps(), bp.wf.template.NodeEmpAttr.FK_Node, bp.wf.template.NodeEmpAttr.FK_Emp, "绑定接受人", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept", null);
 
 			///#endregion
@@ -279,7 +265,7 @@ public class Selector extends Entity
 			case GenerUserSelecter:
 				ds = ByGenerUserSelecter();
 				break;
-			case AccepterOfDeptStationOfCurrentOper: //按岗位智能计算.
+			case AccepterOfDeptStationOfCurrentOper: //按角色智能计算.
 				ds = AccepterOfDeptStationOfCurrentOper(nodeid, en);
 				break;
 			case ByWebAPI:
@@ -290,30 +276,31 @@ public class Selector extends Entity
 				break;
 			default:
 				throw new RuntimeException("@错误:没有判断的选择类型:" + this.getSelectorModel());
+				//break;
 		}
 
-		if (bp.difference.SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		if (bp.difference.SystemConfig.getAppCenterDBFieldCaseModel() != FieldCaseModel.None)
 		{
 			for (DataTable dt : ds.Tables)
 			{
 				for (int i = 0; i < dt.Columns.size(); i++)
 				{
-					if (dt.Columns.get(i).ColumnName.toUpperCase().equals("NO"))
+					if (Objects.equals(dt.Columns.get(i).ColumnName.toUpperCase(), "NO"))
 					{
 						dt.Columns.get(i).ColumnName = "No";
 					}
 
-					if (dt.Columns.get(i).ColumnName.toUpperCase().equals("NAME"))
+					if (Objects.equals(dt.Columns.get(i).ColumnName.toUpperCase(), "NAME"))
 					{
 						dt.Columns.get(i).ColumnName = "Name";
 					}
 
-					if (dt.Columns.get(i).ColumnName.toUpperCase().equals("PARENTNO"))
+					if (Objects.equals(dt.Columns.get(i).ColumnName.toUpperCase(), "PARENTNO"))
 					{
 						dt.Columns.get(i).ColumnName = "ParentNo";
 					}
 
-					if (dt.Columns.get(i).ColumnName.toUpperCase().equals("FK_DEPT"))
+					if (Objects.equals(dt.Columns.get(i).ColumnName.toUpperCase(), "FK_DEPT"))
 					{
 						dt.Columns.get(i).ColumnName = "FK_Dept";
 					}
@@ -330,28 +317,29 @@ public class Selector extends Entity
 	 
 	 @return 
 	*/
-	private DataSet ByGenerUserSelecter() throws Exception {
+	private DataSet ByGenerUserSelecter()
+	{
 		DataSet ds = new DataSet();
 
 		////排序.
-		//string orderByDept = "";
+		//String orderByDept = "";
 		//if (DBAccess.IsExitsTableCol("Port_Dept", "Idx"))
 		//    orderByDept = " ORDER BY Port_Dept.Idx";
 
-		//string orderByEmp = "";
+		//String orderByEmp = "";
 		//if (DBAccess.IsExitsTableCol("Port_Emp", "Idx"))
-		//    orderByDept = " ORDER BY Port_Emp.FK_Dept, Port_Emp.Idx";
+		//    orderByDept = " ORDER BY Port_Emp.Dept, Port_Emp.Idx";
 
 		//部门
 		String sql = "SELECT distinct No,Name, ParentNo FROM Port_Dept  ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		dt.TableName = "Depts";
+		dt.setTableName("Depts");
 		ds.Tables.add(dt);
 
 		//人员.
 		sql = "SELECT  No, Name, FK_Dept FROM Port_Emp ";
 		DataTable dtEmp = DBAccess.RunSQLReturnTable(sql);
-		dtEmp.TableName = "Emps";
+		dtEmp.setTableName("Emps");
 		ds.Tables.add(dtEmp);
 
 		return ds;
@@ -359,8 +347,8 @@ public class Selector extends Entity
 	/** 
 	 按照模版
 	 
-	 param nodeID 节点ID
-	 param en
+	 @param nodeID 节点ID
+	 @param en
 	 @return 
 	*/
 	private DataSet SQLTemplate(int nodeID, Entity en) throws Exception {
@@ -376,7 +364,7 @@ public class Selector extends Entity
 	/** 
 	 按照SQL计算.
 	 
-	 param nodeID 节点ID
+	 @param nodeID 节点ID
 	 @return 返回值
 	*/
 	private DataSet BySQL(int nodeID, Entity en) throws Exception {
@@ -387,9 +375,9 @@ public class Selector extends Entity
 		String sqlGroup = this.getSelectorP1(); // @sly
 		if (DataType.IsNullOrEmpty(sqlGroup) == false && sqlGroup.length() > 6)
 		{
-			sqlGroup = Glo.DealExp(sqlGroup, en, null); //@祝梦娟
+			sqlGroup = bp.wf.Glo.DealExp(sqlGroup, en, null); //@祝梦娟
 			DataTable dt = DBAccess.RunSQLReturnTable(sqlGroup);
-			dt.TableName = "Depts";
+			dt.setTableName("Depts");
 			//转换大小写
 			for (DataColumn col : dt.Columns)
 			{
@@ -411,10 +399,10 @@ public class Selector extends Entity
 
 		//求人员范围.
 		String sqlDB = this.getSelectorP2();
-		sqlDB = Glo.DealExp(sqlDB, en, null); //@祝梦娟
+		sqlDB = bp.wf.Glo.DealExp(sqlDB, en, null); //@祝梦娟
 
 		DataTable dtEmp = DBAccess.RunSQLReturnTable(sqlDB);
-		dtEmp.TableName = "Emps";
+		dtEmp.setTableName("Emps");
 		//转换大小写
 		for (DataColumn col : dtEmp.Columns)
 		{
@@ -437,13 +425,13 @@ public class Selector extends Entity
 		ds.Tables.add(dtEmp);
 
 		//求默认选择的数据.
-		if (!this.getSelectorP3().equals(""))
+		if (!Objects.equals(this.getSelectorP3(), ""))
 		{
 			sqlDB = this.getSelectorP3();
-			sqlDB = Glo.DealExp(sqlDB, en, null); //@祝梦娟
+			sqlDB = bp.wf.Glo.DealExp(sqlDB, en, null); //@祝梦娟
 
 			DataTable dtDef = DBAccess.RunSQLReturnTable(sqlDB);
-			dtDef.TableName = "DefaultSelected";
+			dtDef.setTableName("DefaultSelected");
 			for (DataColumn col : dtDef.Columns)
 			{
 				String colName = col.ColumnName.toLowerCase();
@@ -465,20 +453,20 @@ public class Selector extends Entity
 
 
 		//求强制选择的数据源.
-		if (!this.getSelectorP4().equals(""))
+		if (!Objects.equals(this.getSelectorP4(), ""))
 		{
 			sqlDB = this.getSelectorP4();
 
 			sqlDB = sqlDB.replace("@WebUser.No", WebUser.getNo());
 			sqlDB = sqlDB.replace("@WebUser.Name", WebUser.getName());
-			sqlDB = sqlDB.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
+			sqlDB = sqlDB.replace("@WebUser.FK_Dept", WebUser.getDeptNo());
 
 			sqlDB = sqlDB.replace("@WorkID", en.GetValStringByKey("OID"));
 			sqlDB = sqlDB.replace("@OID", en.GetValStringByKey("OID"));
 
 			if (sqlDB.contains("@"))
 			{
-				sqlDB = Glo.DealExp(sqlDB, en, null);
+				sqlDB = bp.wf.Glo.DealExp(sqlDB, en, null);
 			}
 
 			DataTable dtForce = DBAccess.RunSQLReturnTable(sqlDB);
@@ -497,7 +485,7 @@ public class Selector extends Entity
 						break;
 				}
 			}
-			dtForce.TableName = "ForceSelected";
+			dtForce.setTableName("ForceSelected");
 			ds.Tables.add(dtForce);
 		}
 
@@ -507,7 +495,7 @@ public class Selector extends Entity
 	/** 
 	 按照部门获取部门人员树.
 	 
-	 param nodeID 节点ID
+	 @param nodeID 节点ID
 	 @return 返回数据源dataset
 	*/
 	private DataSet ByDept(int nodeID, Entity en) throws Exception {
@@ -526,14 +514,14 @@ public class Selector extends Entity
 
 
 			dt = DBAccess.RunSQLReturnTable(sql);
-			dt.TableName = "Depts";
+			dt.setTableName("Depts");
 			ds.Tables.add(dt);
 
 			//人员.
 			sql = "SELECT distinct a." + bp.sys.base.Glo.getUserNo() + ", a.Name, a.FK_Dept FROM Port_Emp a, WF_NodeDept b, WF_PrjEmp C WHERE a.FK_Dept=b.FK_Dept  AND A." + bp.sys.base.Glo.getUserNoWhitOutAS() + "=C.FK_Emp  AND B.FK_Node=" + nodeID + " AND C.FK_Prj='" + en.GetValStrByKey("PrjNo") + "'  ORDER BY a.Idx ";
 			dtEmp = DBAccess.RunSQLReturnTable(sql);
 			ds.Tables.add(dtEmp);
-			dtEmp.TableName = "Emps";
+			dtEmp.setTableName("Emps");
 			return ds;
 		}
 
@@ -541,20 +529,20 @@ public class Selector extends Entity
 		//部门.
 		sql = "SELECT distinct a.No,a.Name, a.ParentNo,a.Idx FROM Port_Dept a,WF_NodeDept b WHERE a.No=b.FK_Dept AND B.FK_Node=" + nodeID + "   ORDER BY a.Idx ";
 		dt = DBAccess.RunSQLReturnTable(sql);
-		dt.TableName = "Depts";
+		dt.setTableName("Depts");
 		ds.Tables.add(dt);
 
 		//人员.
 		sql = "SELECT distinct a." + bp.sys.base.Glo.getUserNo() + ", a.Name, d.FK_Dept ,a.Idx FROM Port_Emp a, WF_NodeDept b,Port_DeptEmp d WHERE d.FK_Dept=b.FK_Dept AND a." + bp.sys.base.Glo.getUserNoWhitOutAS() + "=d.FK_Emp AND B.FK_Node=" + nodeID + "  ORDER BY a.Idx";
 		dtEmp = DBAccess.RunSQLReturnTable(sql);
 		ds.Tables.add(dtEmp);
-		dtEmp.TableName = "Emps";
+		dtEmp.setTableName("Emps");
 		return ds;
 	}
 	/** 
 	 按照Emp获取部门人员树.
 	 
-	 param nodeID 节点ID
+	 @param nodeID 节点ID
 	 @return 返回数据源dataset
 	*/
 	private DataSet ByEmp(int nodeID)
@@ -566,47 +554,46 @@ public class Selector extends Entity
 		//部门.
 		String sql = "SELECT distinct a.No,a.Name, a.ParentNo FROM Port_Dept a, WF_NodeEmp b, Port_Emp c WHERE b.FK_Emp=c." + bp.sys.base.Glo.getUserNoWhitOutAS() + " AND a.No=c.FK_Dept AND B.FK_Node=" + nodeID + " ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		dt.TableName = "Depts";
+		dt.setTableName("Depts");
 		ds.Tables.add(dt);
 
 		//人员.
 		sql = "SELECT distinct a." + bp.sys.base.Glo.getUserNo() + ",a.Name, a.FK_Dept FROM Port_Emp a, WF_NodeEmp b WHERE a." + bp.sys.base.Glo.getUserNoWhitOutAS() + "=b.FK_Emp AND b.FK_Node=" + nodeID;
 
 		DataTable dtEmp = DBAccess.RunSQLReturnTable(sql);
-		dtEmp.TableName = "Emps";
+		dtEmp.setTableName("Emps");
 		ds.Tables.add(dtEmp);
 		return ds;
 	}
 	/** 
 	 按照Emp获取部门人员树.
-	 
-	 param nodeID 节点ID
 	 @return 返回数据源dataset
 	*/
-	private DataSet ByMyDeptEmps() throws Exception {
+	private DataSet ByMyDeptEmps()
+	{
 		// 定义数据容器.
 		DataSet ds = new DataSet();
 
 
 		//部门.
-		String sql = "SELECT No,Name FROM Port_Dept  WHERE No='" + WebUser.getFK_Dept()+ "' ";
+		String sql = "SELECT No,Name FROM Port_Dept  WHERE No='" + WebUser.getDeptNo() + "' ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		dt.TableName = "Depts";
+		dt.setTableName("Depts");
 		ds.Tables.add(dt);
 
 		//人员.
-		sql = " SELECT No,Name,FK_Dept FROM Port_Emp  WHERE FK_Dept='" + WebUser.getFK_Dept()+ "'";
+		sql = " SELECT No,Name,FK_Dept FROM Port_Emp  WHERE FK_Dept='" + WebUser.getDeptNo() + "'";
 
 		DataTable dtEmp = DBAccess.RunSQLReturnTable(sql);
-		dtEmp.TableName = "Emps";
+		dtEmp.setTableName("Emps");
 		ds.Tables.add(dtEmp);
 		return ds;
 	}
 	/** 
 	 
 	 
-	 param nodeID
-	 param en
+	 @param nodeID
+	 @param en
 	 @return 
 	*/
 	private DataSet AccepterOfDeptStationOfCurrentOper(int nodeID, Entity en) throws Exception {
@@ -615,28 +602,26 @@ public class Selector extends Entity
 
 		//部门.
 		String sql = "";
-		sql = "SELECT d.No,d.Name,d.ParentNo  FROM  Port_DeptEmp  de, Port_Dept as d WHERE de.FK_Dept = d.No and de.FK_Emp = '" + WebUser.getNo() + "'";
+		sql = "SELECT d.No,d.Name,d.ParentNo  FROM  Port_DeptEmp  de, Port_Dept as d WHERE de.FK_Dept = d.No and de.setEmpNo('" + WebUser.getNo() + "'";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
 		//人员.
-		if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.Oracle
-			|| bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR3
-			|| bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR6)
+		if (bp.difference.SystemConfig.getAppCenterDBType() == DBType.Oracle || bp.difference.SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 || bp.difference.SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
-			sql = "SELECT * FROM (SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND C.FK_Dept='" + WebUser.getFK_Dept()+ "' AND b.FK_Node=" + nodeID + ")  ORDER BY A.Idx ";
+			sql = "SELECT * FROM (SELECT distinct a.No,a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND C.FK_Dept='" + WebUser.getDeptNo() + "' AND b.FK_Node=" + nodeID + ")  ORDER BY A.Idx ";
 		}
 		else
 		{
-			sql = "SELECT distinct a." + bp.sys.base.Glo.getUserNo() + ",a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND C.FK_Dept='" + WebUser.getFK_Dept()+ "' AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID + "  ORDER BY A.Idx";
+			sql = "SELECT distinct a." + bp.sys.base.Glo.getUserNo() + ",a.Name, a.FK_Dept FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a." + bp.sys.base.Glo.getUserNo() + "=c.FK_Emp AND C.FK_Dept='" + WebUser.getDeptNo() + "' AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID + "  ORDER BY A.Idx";
 		}
 
 		DataTable dtEmp = DBAccess.RunSQLReturnTable(sql);
 		if (dtEmp.Rows.size() > 0)
 		{
-			dt.TableName = "Depts";
+			dt.setTableName("Depts");
 			ds.Tables.add(dt);
 
-			dtEmp.TableName = "Emps";
+			dtEmp.setTableName("Emps");
 			ds.Tables.add(dtEmp);
 		}
 		else //如果没人，就查询父级
@@ -647,7 +632,7 @@ public class Selector extends Entity
 
 			sql = " SELECT No,Name, ParentNo FROM Port_Dept WHERE no  in (  SELECT  ParentNo FROM Port_Dept WHERE No  IN " + "( SELECT FK_Dept FROM WF_GenerWorkerlist WHERE WorkID ='" + workID + "' ))";
 			dt = DBAccess.RunSQLReturnTable(sql);
-			dt.TableName = "Depts";
+			dt.setTableName("Depts");
 			ds.Tables.add(dt);
 
 			// 如果当前的节点不是开始节点， 从轨迹里面查询。
@@ -655,15 +640,15 @@ public class Selector extends Entity
 			sql += " ORDER BY b.No ";
 
 			dtEmp = DBAccess.RunSQLReturnTable(sql);
-			dtEmp.TableName = "Emps";
+			dtEmp.setTableName("Emps");
 			ds.Tables.add(dtEmp);
 		}
 		return ds;
 	}
 	/** 
-	 部门于岗位的交集 @zkr. 
+	 部门于角色的交集 @zkr. 
 	 
-	 param nodeID
+	 @param nodeID
 	 @return 
 	*/
 	private DataSet DeptAndStation(int nodeID)
@@ -676,13 +661,13 @@ public class Selector extends Entity
 
 		sql = "SELECT B.No,B.Name,B.ParentNo FROM WF_NodeDept A, Port_Dept B WHERE A.FK_Dept=B.No AND FK_Node=" + nodeID;
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		dt.TableName = "Depts";
+		dt.setTableName("Depts");
 		ds.Tables.add(dt);
 
 		//@zkr.
-		sql = "SELECT distinct a." + bp.sys.base.Glo.getUserNo() + ",a.Name, a.FK_Dept,a.Idx FROM Port_Emp A,  WF_NodeStation b, Port_DeptEmpStation c,WF_NodeDept D WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID + " AND D.FK_Dept=A.FK_Dept AND D.FK_Node=" + nodeID + "  ORDER BY A.Idx ";
+		sql = "SELECT distinct a." + bp.sys.base.Glo.getUserNo() + ",a.Name, a.FK_Dept,a.Idx FROM Port_Emp A,  WF_NodeStation b, Port_DeptEmpStation c,WF_NodeDept D WHERE a." + bp.sys.base.Glo.getUserNo() + "=c.FK_Emp AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID + " AND D.FK_Dept=A.FK_Dept AND D.FK_Node=" + nodeID + "  ORDER BY A.Idx ";
 		DataTable dtEmp = DBAccess.RunSQLReturnTable(sql);
-		dtEmp.TableName = "Emps";
+		dtEmp.setTableName("Emps");
 		ds.Tables.add(dtEmp);
 		return ds;
 	}
@@ -690,8 +675,8 @@ public class Selector extends Entity
 	/** 
 	 按用户组计算
 	 
-	 param nodeID
-	 param en
+	 @param nodeID
+	 @param en
 	 @return 
 	*/
 	private DataSet ByTeam(int nodeID, Entity en, SelectorModel sm) throws Exception {
@@ -703,7 +688,7 @@ public class Selector extends Entity
 		Node nd = new Node(nodeID);
 		if (sm == SelectorModel.TeamDeptOnly)
 		{
-			sql = "SELECT  No,Name FROM Port_Dept WHERE No='" + WebUser.getFK_Dept()+ "'";
+			sql = "SELECT  No,Name FROM Port_Dept WHERE No='" + WebUser.getDeptNo() + "'";
 		}
 		if (sm == SelectorModel.TeamOnly)
 		{
@@ -715,15 +700,15 @@ public class Selector extends Entity
 		}
 
 		dt = DBAccess.RunSQLReturnTable(sql);
-		dt.TableName = "Depts";
+		dt.setTableName("Depts");
 		ds.Tables.add(dt);
 
 		//人员.
-		if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.Oracle || bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || DBAccess.getAppCenterDBType() == DBType.UX || DBAccess.getAppCenterDBType() == DBType.KingBaseR3 ||DBAccess.getAppCenterDBType() == DBType.KingBaseR6	|| SystemConfig.getAppCenterDBType() == DBType.HGDB)
+		if (bp.difference.SystemConfig.getAppCenterDBType() == DBType.Oracle || bp.difference.SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 || bp.difference.SystemConfig.getAppCenterDBType() == DBType.KingBaseR6 || bp.difference.SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || bp.difference.SystemConfig.getAppCenterDBType() == DBType.HGDB || DBAccess.getAppCenterDBType() == DBType.UX)
 		{
 			if (sm == SelectorModel.TeamDeptOnly)
 			{
-				sql = "SELECT * FROM (SELECT DISTINCT a.No,a.Name, a.FK_Dept,a.Idx FROM Port_Emp a,  WF_NodeTeam b, Port_TeamEmp c WHERE a.No=c.FK_Emp AND B.FK_Team=C.FK_Team AND B.FK_Node=" + nodeID + " AND A.FK_Dept='" + WebUser.getFK_Dept()+ "') ORDER BY FK_Dept,Idx,No";
+				sql = "SELECT * FROM (SELECT DISTINCT a.No,a.Name, a.FK_Dept,a.Idx FROM Port_Emp a,  WF_NodeTeam b, Port_TeamEmp c WHERE a.No=c.FK_Emp AND B.FK_Team=C.FK_Team AND B.FK_Node=" + nodeID + " AND A.FK_Dept='" + WebUser.getDeptNo() + "') ORDER BY FK_Dept,Idx,No";
 			}
 			if (sm == SelectorModel.TeamOrgOnly)
 			{
@@ -738,7 +723,7 @@ public class Selector extends Entity
 		{
 			if (sm == SelectorModel.TeamDeptOnly)
 			{
-				sql = "SELECT DISTINCT a." + bp.sys.base.Glo.getUserNo() + ",a.Name, a.FK_Dept,a.Idx FROM Port_Emp A,  WF_NodeTeam B, Port_TeamEmp C WHERE a." + bp.sys.base.Glo.getUserNoWhitOutAS() + "=c.FK_Emp AND B.FK_Team=C.FK_Team AND B.FK_Node=" + nodeID + " AND A.FK_Dept='" + WebUser.getFK_Dept()+ "'  ORDER BY A.Idx";
+				sql = "SELECT DISTINCT a." + bp.sys.base.Glo.getUserNo() + ",a.Name, a.FK_Dept,a.Idx FROM Port_Emp A,  WF_NodeTeam B, Port_TeamEmp C WHERE a." + bp.sys.base.Glo.getUserNoWhitOutAS() + "=c.FK_Emp AND B.FK_Team=C.FK_Team AND B.FK_Node=" + nodeID + " AND A.FK_Dept='" + WebUser.getDeptNo() + "'  ORDER BY A.Idx";
 			}
 			if (sm == SelectorModel.TeamOrgOnly)
 			{
@@ -751,7 +736,7 @@ public class Selector extends Entity
 		}
 
 		dtEmp = DBAccess.RunSQLReturnTable(sql);
-		dtEmp.TableName = "Emps";
+		dtEmp.setTableName("Emps");
 		ds.Tables.add(dtEmp);
 		return ds;
 	}
@@ -767,11 +752,11 @@ public class Selector extends Entity
 		//部门.
 		sql = "SELECT distinct a.No, a.Name, a.ParentNo,a.Idx FROM Port_Dept a, WF_NodeTeam b, Port_TeamEmp c, Port_Emp d WHERE a.No=d.FK_Dept AND b.FK_Group=c.FK_Group AND C.FK_Emp=D.No AND B.FK_Node=" + nodeID + " ORDER BY A.No,A.Idx";
 		dt = DBAccess.RunSQLReturnTable(sql);
-		dt.TableName = "Depts";
+		dt.setTableName("Depts");
 		ds.Tables.add(dt);
 
 		//人员.
-		if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.Oracle || bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || DBAccess.getAppCenterDBType() == DBType.UX || DBAccess.getAppCenterDBType() == DBType.KingBaseR3 || DBAccess.getAppCenterDBType() == DBType.KingBaseR6 || SystemConfig.getAppCenterDBType() == DBType.HGDB)
+		if (bp.difference.SystemConfig.getAppCenterDBType() == DBType.Oracle || bp.difference.SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 || bp.difference.SystemConfig.getAppCenterDBType() == DBType.KingBaseR6 || bp.difference.SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || bp.difference.SystemConfig.getAppCenterDBType() == DBType.HGDB || DBAccess.getAppCenterDBType() == DBType.UX)
 		{
 			if (DBAccess.IsExitsTableCol("Port_Emp", "Idx") == true)
 			{
@@ -788,7 +773,7 @@ public class Selector extends Entity
 		}
 
 		dtEmp = DBAccess.RunSQLReturnTable(sql);
-		dtEmp.TableName = "Emps";
+		dtEmp.setTableName("Emps");
 		ds.Tables.add(dtEmp);
 		return ds;
 	}
@@ -801,7 +786,7 @@ public class Selector extends Entity
 		//如果按照上一个节点的操作员身份计算.
 		if (ShenFenModel == 0)
 		{
-			return ByStationAI(en, WebUser.getFK_Dept(), WebUser.getNo());
+			return ByStationAI(en, WebUser.getDeptNo(), WebUser.getNo());
 		}
 
 		//如果按照指定节点的操作员身份计算.
@@ -817,12 +802,12 @@ public class Selector extends Entity
 			if (dt.Rows.size() == 0)
 			{
 				Node ndSpec = new Node(specNodeID);
-				if (ndSpec.isStartNode() == false)
+				if (ndSpec.getItIsStartNode() == false)
 				{
 					throw new RuntimeException("err@没有找到上一步节点，参数信息: NodeID=" + specNodeID + ",WorkID=" + workID + ", 不应该出现的异常，请联系管理员, 有可能您配置了没有路过的节点，作为指定节点的身份计算了。");
 				}
 				empNo = WebUser.getNo();
-				deptNo = WebUser.getFK_Dept();
+				deptNo = WebUser.getDeptNo();
 			}
 			else
 			{
@@ -839,7 +824,7 @@ public class Selector extends Entity
 		{
 			String empNo = nd.GetParaString("ShenFenVal");
 			Emp emp = new Emp(empNo);
-			return ByStationAI(en, emp.getFK_Dept(), emp.getNo());
+			return ByStationAI(en, emp.getDeptNo(), emp.getNo());
 		}
 
 		throw new RuntimeException("err@没有判断的身份模式." + ShenFenModel);
@@ -886,7 +871,7 @@ public class Selector extends Entity
 			}
 		}
 
-		//如果实在找不到了，就仅按岗位计算.
+		//如果实在找不到了，就仅按角色计算.
 		if (ds.Tables.get(1).Rows.size() == 0)
 		{
 			ds = ByStation(this.getNodeID(), en);
@@ -901,19 +886,17 @@ public class Selector extends Entity
 
 		//    //首先扫描平级部门.
 		//    bp.port.Depts depts = new GPM.Depts();
-		//    depts.Retrieve(bp.port.DeptAttr.ParentNo, mydept.ParentNo);
-		//    bp.port.Dept dept = new bp.port.Dept(WebUser.getFK_Dept());
+		//    depts.Retrieve(bp.port.DeptAttr.ParentNo, mydept.getParentNo());
+		//    bp.port.Dept dept = new bp.port.Dept(WebUser.getDeptNo());
 		//    ds = ByStationAI_Ext(nodeID, en, dept.ParentNo, bp.web.WebUser.getNo());
 		//}
 		//return ds;
 	}
 	/** 
-	 指定部门下的，岗位人员的数据。
-	 
-	 param nodeID
-	 param en
-	 param deptNo
-	 param userNo
+	 指定部门下的，角色人员的数据。
+	 @param en
+	 @param deptNo
+	 @param userNo
 	 @return 
 	*/
 	private DataSet ByStationAI_Ext(Entity en, String deptNo, String userNo) throws Exception {
@@ -927,23 +910,23 @@ public class Selector extends Entity
 		sql = "";
 		sql += "SELECT No, Name FROM Port_Dept WHERE No = '" + deptNo + "'";
 		sql += " UNION ";
-		sql += "SELECT  No, Name FROM Port_Dept A, Port_DeptEmp B WHERE A.No = B.FK_Dept AND B.FK_Emp = '" + userNo + "'";
+		sql += "SELECT  No, Name FROM Port_Dept A, Port_DeptEmp B WHERE A.setNo(B.FK_Dept AND B.FK_Emp = '" + userNo + "'";
 
 		dt = DBAccess.RunSQLReturnTable(sql);
-		dt.TableName = "Depts";
+		dt.setTableName("Depts");
 		ds.Tables.add(dt);
 
 		//查询人员.
-		sql = "SELECT A.No,A.Name, A.FK_Dept FROM Port_Emp A, Port_DeptEmpStation B, WF_NodeStation C WHERE C.FK_Node = " + this.getNodeID() + " AND B.FK_Dept = '" + deptNo + "' AND A.FK_Dept = B.FK_Dept AND B.FK_Station=C.FK_Station AND A.No=b.FK_Emp  ORDER BY A.Idx";
+		sql = "SELECT A.No,A.Name, A.FK_Dept FROM Port_Emp A, Port_DeptEmpStation B, WF_NodeStation C WHERE C.NodeID = " + this.getNodeID() + " AND B.FK_Dept = '" + deptNo + "' AND A.setDeptNo(B.FK_Dept AND B.FK_Station=C.FK_Station AND A.No=b.FK_Emp  ORDER BY A.Idx";
 		dtEmp = DBAccess.RunSQLReturnTable(sql);
-		dtEmp.TableName = "Emps";
+		dtEmp.setTableName("Emps");
 		ds.Tables.add(dtEmp);
 		return ds;
 	}
 	/** 
 	 按照Station获取部门人员树.
 	 
-	 param nodeID 节点ID
+	 @param nodeID 节点ID
 	 @return 返回数据源dataset
 	*/
 	private DataSet ByStation(int nodeID, Entity en) throws Exception {
@@ -957,13 +940,13 @@ public class Selector extends Entity
 		if (nd.getHisDeliveryWay() == DeliveryWay.BySelectedForPrj)
 		{
 			//部门.
-			sql = "SELECT distinct a.No, a.Name, a.ParentNo,a.Idx FROM Port_Dept a, WF_NodeStation b, Port_DeptEmpStation c, Port_Emp d, WF_PrjEmp E WHERE a.No=d.FK_Dept AND b.FK_Station=c.FK_Station AND C.FK_Emp=D.No AND d.No=e.FK_Emp And C.FK_Emp=E.FK_Emp  AND B.FK_Node=" + nodeID + " AND E.FK_Prj='" + en.GetValStrByKey("PrjNo") + "' ORDER BY A.No,A.Idx";
+			sql = "SELECT distinct a.No, a.Name, a.ParentNo,a.Idx FROM Port_Dept a, WF_NodeStation b, Port_DeptEmpStation c, Port_Emp d, WF_PrjEmp E WHERE a.No=d.FK_Dept AND b.FK_Station=c.FK_Station AND C.FK_Emp=D." + bp.sys.base.Glo.getUserNoWhitOutAS() + " AND d." + bp.sys.base.Glo.getUserNoWhitOutAS() + "=e.FK_Emp And C.FK_Emp=E.FK_Emp  AND B.FK_Node=" + nodeID + " AND E.FK_Prj='" + en.GetValStrByKey("PrjNo") + "' ORDER BY A.No,A.Idx";
 			dt = DBAccess.RunSQLReturnTable(sql);
-			dt.TableName = "Depts";
+			dt.setTableName("Depts");
 			ds.Tables.add(dt);
 
 			//人员.
-			if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.Oracle || bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || DBAccess.getAppCenterDBType() == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.HGDB)
+			if (bp.difference.SystemConfig.getAppCenterDBType() == DBType.Oracle || bp.difference.SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 || bp.difference.SystemConfig.getAppCenterDBType() == DBType.KingBaseR6 || bp.difference.SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || bp.difference.SystemConfig.getAppCenterDBType() == DBType.HGDB || DBAccess.getAppCenterDBType() == DBType.UX)
 			{
 				if (DBAccess.IsExitsTableCol("Port_Emp", "Idx") == true)
 				{
@@ -976,24 +959,24 @@ public class Selector extends Entity
 			}
 			else
 			{
-				sql = "SELECT distinct a." + bp.sys.base.Glo.getUserNo() + ",a.Name, a.FK_Dept,A.Idx FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c, WF_PrjEmp d WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station And a." + bp.sys.base.Glo.getUserNoWhitOutAS() + "=d.FK_Emp And C.FK_Emp=d.FK_Emp AND b.FK_Node=" + nodeID + " AND D.FK_Prj='" + en.GetValStrByKey("PrjNo") + "'  ORDER BY A.Idx ";
+				sql = "SELECT distinct a." + bp.sys.base.Glo.getUserNo() + ",a.Name, a.FK_Dept,A.Idx FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c, WF_PrjEmp d WHERE a." + bp.sys.base.Glo.getUserNoWhitOutAS() + "=c.FK_Emp AND B.FK_Station=C.FK_Station And a." + bp.sys.base.Glo.getUserNoWhitOutAS() + "=d.FK_Emp And C.FK_Emp=d.FK_Emp AND b.FK_Node=" + nodeID + " AND D.FK_Prj='" + en.GetValStrByKey("PrjNo") + "'  ORDER BY A.Idx ";
 			}
 
 			dtEmp = DBAccess.RunSQLReturnTable(sql);
 			ds.Tables.add(dtEmp);
-			dtEmp.TableName = "Emps";
+			dtEmp.setTableName("Emps");
 			return ds;
 		}
 
 
 		//部门.
-		sql = "SELECT distinct a.No, a.Name, a.ParentNo,a.Idx FROM Port_Dept a, WF_NodeStation b, Port_DeptEmpStation c, Port_Emp d WHERE a.No=d.FK_Dept AND b.FK_Station=c.FK_Station AND C.FK_Emp=D.No AND B.FK_Node=" + nodeID + " ORDER BY A.No,A.Idx";
+		sql = "SELECT distinct a.No, a.Name, a.ParentNo,a.Idx FROM Port_Dept a, WF_NodeStation b, Port_DeptEmpStation c, Port_Emp d WHERE a.No=d.FK_Dept AND b.FK_Station=c.FK_Station AND C.FK_Emp=D." + bp.sys.base.Glo.getUserNoWhitOutAS() + " AND B.FK_Node=" + nodeID + " ORDER BY A.No,A.Idx";
 		dt = DBAccess.RunSQLReturnTable(sql);
-		dt.TableName = "Depts";
+		dt.setTableName("Depts");
 		ds.Tables.add(dt);
 
 		//人员.
-		if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.Oracle || bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || DBAccess.getAppCenterDBType() == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.HGDB)
+		if (bp.difference.SystemConfig.getAppCenterDBType() == DBType.Oracle || bp.difference.SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 || bp.difference.SystemConfig.getAppCenterDBType() == DBType.KingBaseR6 || bp.difference.SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || bp.difference.SystemConfig.getAppCenterDBType() == DBType.HGDB || DBAccess.getAppCenterDBType() == DBType.UX)
 		{
 			if (DBAccess.IsExitsTableCol("Port_Emp", "Idx") == true)
 			{
@@ -1006,11 +989,11 @@ public class Selector extends Entity
 		}
 		else
 		{
-			sql = "SELECT distinct a." + bp.sys.base.Glo.getUserNo() + ",a.Name, a.FK_Dept,a.Idx FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a.No=c.FK_Emp AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID + "  ORDER BY A.Idx";
+			sql = "SELECT distinct a." + bp.sys.base.Glo.getUserNo() + ",a.Name, a.FK_Dept,a.Idx FROM Port_Emp a,  WF_NodeStation b, Port_DeptEmpStation c WHERE a." + bp.sys.base.Glo.getUserNo() + "=c.FK_Emp AND B.FK_Station=C.FK_Station AND b.FK_Node=" + nodeID + "  ORDER BY A.Idx";
 		}
 
 		dtEmp = DBAccess.RunSQLReturnTable(sql);
-		dtEmp.TableName = "Emps";
+		dtEmp.setTableName("Emps");
 		ds.Tables.add(dtEmp);
 
 		return ds;
@@ -1034,7 +1017,7 @@ public class Selector extends Entity
 		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 		{
 			//获取系统编号
-			//string systemNo = bp.da.DBAccess.RunSQLReturnStringIsNull("select No from port_domain where No=(select domain from port_org where No=(select orgNo from port_emp where No='" + WebUser.getNo() + "'))", "");
+			//String systemNo = BP.DA.DBAccess.RunSQLReturnStringIsNull("select No from port_domain where No=(select domain from port_org where No=(select orgNo from port_emp where No='" + WebUser.getNo() + "'))", "");
 			//headerMap.Add("systemNo", systemNo);
 			//headerMap.Add("orgNo", WebUser.getOrgNo());
 		}
@@ -1051,18 +1034,18 @@ public class Selector extends Entity
 
 
 
-		apiUrl = Glo.DealExp(apiUrl, en, null);
+		apiUrl = bp.wf.Glo.DealExp(apiUrl, en, null);
 		//执行POST
-		//postData = HttpClientUtil.doPost(apiUrl, headerMap, "");
+		postData = bp.tools.PubGlo.HttpPostConnect(apiUrl, headerMap, "");
 
 		DataTable dt = bp.tools.Json.ToDataTable(postData);
-		dt.TableName = "Emps";
+		dt.setTableName("Emps");
 		ds.Tables.add(dt);
 
 		//部门
-		//string sql = "SELECT distinct No,Name, ParentNo FROM Port_Dept where No='null'";
+		//String sql = "SELECT distinct No,Name, ParentNo FROM Port_Dept where No='null'";
 		//DataTable dtDept = DBAccess.RunSQLReturnTable(sql);
-		//dtDept.TableName = "Depts";
+		//dtDept.setTableName("Depts";
 		//ds.Tables.add(dtDept);
 
 		return ds;

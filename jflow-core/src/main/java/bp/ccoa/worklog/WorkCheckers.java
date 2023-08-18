@@ -11,13 +11,15 @@ public class WorkCheckers extends EntitiesMyPK
 	/** 
 	 日志审核
 	*/
-	public WorkCheckers() {
+	public WorkCheckers()
+	{
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new WorkChecker();
 	}
 
@@ -27,7 +29,8 @@ public class WorkCheckers extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<WorkChecker> ToJavaList() {
+	public final java.util.List<WorkChecker> ToJavaList()
+	{
 		return (java.util.List<WorkChecker>)(Object)this;
 	}
 	/** 
@@ -35,7 +38,8 @@ public class WorkCheckers extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<WorkChecker> Tolist()  {
+	public final ArrayList<WorkChecker> Tolist()
+	{
 		ArrayList<WorkChecker> list = new ArrayList<WorkChecker>();
 		for (int i = 0; i < this.size(); i++)
 		{

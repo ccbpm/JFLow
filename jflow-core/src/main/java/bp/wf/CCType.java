@@ -1,6 +1,5 @@
 package bp.wf;
 
-import bp.*;
 
 /** 
  抄送类型
@@ -16,7 +15,7 @@ public enum CCType
 	*/
 	AsEmps,
 	/** 
-	 按岗位
+	 按角色
 	*/
 	AsStation,
 	/** 
@@ -28,17 +27,19 @@ public enum CCType
 	*/
 	AsDept,
 	/** 
-	 按照部门与岗位
+	 按照部门与角色
 	*/
 	AsDeptAndStation;
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue() {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
-	public static CCType forValue(int value) 
-	{return values()[value];
+	public static CCType forValue(int value)
+	{
+		return values()[value];
 	}
 }

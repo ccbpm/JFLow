@@ -6,9 +6,11 @@ package bp.wf.template;
 */
 public class CondAttr
 {
-	/// <summary>
-	/// 关联的从表-vue版本的数据格式.
-	/// </summary>
+
+		///#region 属性.
+	/** 
+	 关联的从表-vue版本的数据格式.
+	*/
 	public static final String RefPKVal = "RefPKVal";
 	/** 
 	 关联的流程编号
@@ -75,6 +77,10 @@ public class CondAttr
 	 数据源
 	*/
 	public static final String FK_DBSrc = "FK_DBSrc";
+	public static final String Tag1 = "Tag1";
+	public static final String JSFX = "JSFX";
+
+		///#endregion 属性.
 
 
 		///#region 属性。

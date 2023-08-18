@@ -15,8 +15,7 @@ public class MyDeptEmp extends bp.en.EntityNoName
 	}
 
 	@Override
-	public bp.en.Map getEnMap()
-	{
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();

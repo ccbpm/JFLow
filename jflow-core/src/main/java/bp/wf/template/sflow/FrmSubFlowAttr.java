@@ -1,11 +1,17 @@
 package bp.wf.template.sflow;
 
-import bp.en.*;
+import bp.da.*;
+import bp.en.*; import bp.en.Map;
+import bp.sys.*;
+import bp.*;
+import bp.wf.*;
+import bp.wf.template.*;
+import java.util.*;
 
 /** 
  父子流程
 */
-public class FrmSubFlowAttr extends EntityNoAttr
+public class FrmSubFlowAttr extends EntityNoNameAttr
 {
 	/** 
 	 标签
@@ -15,10 +21,9 @@ public class FrmSubFlowAttr extends EntityNoAttr
 	 状态
 	*/
 	public static final String SFSta = "SFSta";
-
-	/**
+	/** 
 	 H
-	 */
+	*/
 	public static final String SF_H = "SF_H";
 
 	/** 
@@ -82,8 +87,4 @@ public class FrmSubFlowAttr extends EntityNoAttr
 	 所有子流程完成后父流程自动发送
 	*/
 	public static final String AllSubFlowOverRole = "AllSubFlowOverRole";
-	/**
-	 * 所有子流程结束后父流程运行到的节点
-	 */
-	public static final String SkipNodeID ="SkipNodeID";
 }

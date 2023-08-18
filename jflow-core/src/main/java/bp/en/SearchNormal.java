@@ -22,11 +22,11 @@ public class SearchNormal {
     /**
      * 是否隐藏
      */
-    public final boolean getIsHidden() {
+    public final boolean getItIsHidden() {
         return _IsHidden;
     }
 
-    public final void setIsHidden(boolean value) {
+    public final void setItIsHidden(boolean value) {
         _IsHidden = value;
     }
 
@@ -98,7 +98,7 @@ public class SearchNormal {
             }
 
             if (_DefaultVal.contains("@WebUser.FK_Dept")) {
-                return _DefaultVal.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
+                return _DefaultVal.replace("@WebUser.FK_Dept", WebUser.getDeptNo());
             }
 
             if (_DefaultVal.contains("@WebUser.DeptParentNo")) {
@@ -106,7 +106,7 @@ public class SearchNormal {
             }
 
             if (_DefaultVal.contains("@WebUser.FK_DeptName")) {
-                return _DefaultVal.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
+                return _DefaultVal.replace("@WebUser.FK_DeptName", WebUser.getDeptName());
             }
 
             if (_DefaultVal.contains("@WebUser.OrgNo")) {
@@ -115,7 +115,7 @@ public class SearchNormal {
 
 
             if (_DefaultVal.contains("@WebUser.FK_DeptNameOfFull")) {
-                return _DefaultVal.replace("@WebUser.FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
+                return _DefaultVal.replace("@WebUser.FK_DeptNameOfFull", WebUser.getDeptNameOfFull());
             }
 
             // 处理传递过来的参数。
@@ -202,7 +202,9 @@ public class SearchNormal {
 
 
     ///构造方法
-
+    public SearchNormal()
+    {
+    }
     /**
      * 构造一个普通的查询属性
      *
@@ -215,7 +217,7 @@ public class SearchNormal {
         this.setDefaultSymbol(DefaultSymbol);
         this.setDefaultVal(defaultValue);
         this.setTBWidth(tbwidth);
-        this.setIsHidden(isHidden);
+        this.setItIsHidden(isHidden);
     }
 
     ///

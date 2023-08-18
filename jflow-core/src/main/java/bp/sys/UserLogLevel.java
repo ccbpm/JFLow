@@ -1,54 +1,56 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.difference.*;
+import bp.en.Map;
 
-/**
- * 级别
- */
-public class UserLogLevel extends EntityNoName {
-    ///#region 构造方法
+/** 
+  级别
+*/
+public class UserLogLevel extends EntityNoName
+{
 
-    /**
-     * 级别
-     */
-    public UserLogLevel() {
-    }
+		///#region 构造方法
+	/** 
+	 级别
+	*/
+	public UserLogLevel()
+	{
+	}
+	/** 
+	 表单目录
+	 
+	 @param _No
+	*/
+	public UserLogLevel(String _No) throws Exception {
+		super(_No);
+	}
+	@Override
+	public UAC getHisUAC()
+	{
+		UAC uac = new UAC();
+		uac.Readonly();
 
-    /**
-     * 表单目录
-     *
-     * @param _No
-     */
-    public UserLogLevel(String _No) {
-        super(_No);
-    }
+		return uac;
+	}
 
-    @Override
-    public UAC getHisUAC() {
-        UAC uac = new UAC();
-        uac.Readonly();
+		///#endregion
 
-        return uac;
-    }
-    ///#endregion
+	/** 
+	 级别
+	*/
+	@Override
+	public Map getEnMap() {
+		if (this.get_enMap() != null)
+		{
+			return this.get_enMap();
+		}
 
-    /**
-     * 级别
-     */
-    @Override
-    public Map getEnMap() {
-        if (this.get_enMap() != null) {
-            return this.get_enMap();
-        }
+		Map map = new Map("Sys_UserLogLevel", "级别");
 
-        Map map = new Map("Sys_UserLogLevel", "级别");
+		map.AddTBStringPK("No", null, "编号", true, true, 1, 100, 300);
+		map.AddTBString("Name", null, "名称", true, false, 0, 100, 600);
 
-        map.AddTBStringPK("No", null, "编号", true, true, 1, 100, 20);
-        map.AddTBString("Name", null, "名称", true, false, 0, 100, 300);
-
-        this.set_enMap(map);
-        return this.get_enMap();
-    }
+		this.set_enMap(map);
+		return this.get_enMap();
+	}
 }

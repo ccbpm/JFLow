@@ -6,19 +6,17 @@ import bp.sys.*;
 import bp.da.*;
 import bp.en.*;
 import bp.ccbill.*;
-import bp.*;
-import bp.wf.*;
+import java.util.*;
 
-import java.net.URLDecoder;
-
-public class WF_Admin_CCFormDesigner extends bp.difference.handler.WebContralBase
+public class WF_Admin_CCFormDesigner extends bp.difference.handler.DirectoryPageBase
 {
 
 		///#region 执行父类的重写方法.
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_CCFormDesigner() throws Exception {
+	public WF_Admin_CCFormDesigner()
+	{
 	}
 
 	/** 
@@ -29,7 +27,7 @@ public class WF_Admin_CCFormDesigner extends bp.difference.handler.WebContralBas
 	public final String FrmEnumeration_NewEnumField() throws Exception {
 		UIContralType ctrl = UIContralType.RadioBtn;
 		String ctrlDoType = GetRequestVal("ctrlDoType");
-		if (ctrlDoType.equals("DDL"))
+		if (Objects.equals(ctrlDoType, "DDL"))
 		{
 			ctrl = UIContralType.DDL;
 		}
@@ -42,10 +40,8 @@ public class WF_Admin_CCFormDesigner extends bp.difference.handler.WebContralBas
 		String keyOfEn = this.GetRequestVal("KeyOfEn");
 		String fieldDesc = this.GetRequestVal("Name");
 		String enumKeyOfBind = this.GetRequestVal("UIBindKey"); //要绑定的enumKey.
-		float x = this.GetRequestValFloat("x");
-		float y = this.GetRequestValFloat("y");
 
-		bp.sys.CCFormAPI.NewEnumField(fk_mapdata, keyOfEn, fieldDesc, enumKeyOfBind, ctrl, x, y);
+		CCFormAPI.NewEnumField(fk_mapdata, keyOfEn, fieldDesc, enumKeyOfBind, ctrl, 1);
 		return "绑定成功.";
 	}
 	/** 
@@ -78,11 +74,12 @@ public class WF_Admin_CCFormDesigner extends bp.difference.handler.WebContralBas
 	 
 	 @return 
 	*/
-	public final String ParseStringToPinyin() throws Exception {
+	public final String ParseStringToPinyin()
+	{
 		String name = GetRequestVal("name");
 		String flag = GetRequestVal("flag");
 		//暂时没发现此方法在哪里有调用，edited by liuxc,2017-9-25
-		return CCFormAPI.ParseStringToPinyinField(name, flag.equals("true")==true?true:false, true, 20);
+		return CCFormAPI.ParseStringToPinyinField(name, Objects.equals(flag, "true"), true, 20);
 	}
 
 	/** 
@@ -92,8 +89,8 @@ public class WF_Admin_CCFormDesigner extends bp.difference.handler.WebContralBas
 	*/
 	public final String NewHidF() throws Exception {
 		MapAttr mdHid = new MapAttr();
-		mdHid.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn());
-		mdHid.setFK_MapData(this.getFK_MapData());
+		mdHid.setMyPK(this.getFrmID() + "_" + this.getKeyOfEn());
+		mdHid.setFrmID(this.getFrmID());
 		mdHid.setKeyOfEn(this.getKeyOfEn());
 		mdHid.setName(this.getName());
 		mdHid.setMyDataType(Integer.parseInt(this.GetRequestVal("FieldType")));
@@ -113,7 +110,8 @@ public class WF_Admin_CCFormDesigner extends bp.difference.handler.WebContralBas
 	 @return 
 	*/
 	@Override
-	protected String DoDefaultMethod() throws Exception {
+	protected String DoDefaultMethod()
+	{
 		String sql = "";
 		//返回值
 		try
@@ -137,10 +135,10 @@ public class WF_Admin_CCFormDesigner extends bp.difference.handler.WebContralBas
 	public final String NewFrmGuide_GenerPinYin() throws Exception {
 		String isQuanPin = this.GetRequestVal("IsQuanPin");
 		String name = this.GetRequestVal("TB_Name");
-		name = URLDecoder.decode(name, "UTF-8");
+
 
 		//表单No长度最大100，因有前缀CCFrm_，因此此处设置最大94，added by liuxc,2017-9-25
-		String str = bp.sys.CCFormAPI.ParseStringToPinyinField(name, isQuanPin.equals("1")== true?true:false, true, 94);
+		String str = CCFormAPI.ParseStringToPinyinField(name, Objects.equals(isQuanPin, "1"), true, 94);
 
 		MapData md = new MapData();
 		md.setNo(str);
@@ -179,7 +177,7 @@ public class WF_Admin_CCFormDesigner extends bp.difference.handler.WebContralBas
 	*/
 	public final String NewFrmGuide_Create_DBList() throws Exception {
 		MapData md = new MapData();
-		md.setName( this.GetRequestVal("TB_Name"));
+		md.setName(this.GetRequestVal("TB_Name"));
 
 		md.setNo(DataType.ParseStringForNo(this.GetRequestVal("TB_No"), 100));
 		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
@@ -196,18 +194,18 @@ public class WF_Admin_CCFormDesigner extends bp.difference.handler.WebContralBas
 			sort = this.GetRequestVal("DDL_FrmTree");
 		}
 
-		md.setFK_FormTree(sort);
+		md.setFormTreeNo(sort);
 
 		//类型.
-		md.setAppType ("100"); //独立表单.
-		md.setDBSrc (this.GetRequestVal("DDL_DBSrc"));
+		md.setAppType("100"); //独立表单.
+		md.setDBSrc(this.GetRequestVal("DDL_DBSrc"));
 		if (md.getIsExits() == true)
 		{
-			return "err@表单ID:" + md.getNo() + "已经存在.";
+			return "err@表单ID:" +md.getNo() + "已经存在.";
 		}
 
 		//没有设置表，保存不上.
-		md.setPTable ( this.getNo());
+		md.setPTable(this.getNo());
 		md.Insert();
 
 		//增加上OID字段.
@@ -257,15 +255,18 @@ public class WF_Admin_CCFormDesigner extends bp.difference.handler.WebContralBas
 	public final String NewFrmGuide_Create() throws Exception {
 		MapData md = new MapData();
 
+		String no = this.GetRequestVal("TB_No");
+		String name = this.GetRequestVal("TB_Name");
+
 		try
 		{
-			md.setName( this.GetRequestVal("TB_Name"));
-			md.setNo(DataType.ParseStringForNo(this.GetRequestVal("TB_No"), 100));
-			md.setHisFrmTypeInt(this.GetRequestValInt("DDL_FrmType"));
+			md.setName(name);
+			md.setNo(DataType.ParseStringForNo(no, 100));
+			md.setHisFrmTypeInt( this.GetRequestValInt("DDL_FrmType"));
 			String ptable = this.GetRequestVal("TB_PTable");
 
-			md.setPTable ( ptable);
-			//   md.setPTable ( DataType.ParseStringForNo(this.GetRequestVal("TB_PTable"), 100);
+			md.setPTable(ptable);
+			//   md.setPTable(DataType.ParseStringForNo(this.GetRequestVal("TB_PTable"), 100);
 			//数据表模式。  需要翻译.
 			md.setPTableModel(this.GetRequestValInt("DDL_PTableModel"));
 
@@ -275,15 +276,20 @@ public class WF_Admin_CCFormDesigner extends bp.difference.handler.WebContralBas
 				sort = this.GetRequestVal("DDL_FrmTree");
 			}
 
+			if (DataType.IsNullOrEmpty(sort) == true)
+			{
+				return "err@没有采集到表单存放目录.";
+			}
+
 			//    md.FK_FrmSort = sort;
-			md.setFK_FrmSort(sort);
-			md.setFK_FormTree(sort);
+			md.setFormTreeNo(sort);
+			md.SetValByKey("Ver", DataType.getCurrentDateTime()); //创建日期.
 
 			md.setAppType("0"); //独立表单
 			md.setDBSrc(this.GetRequestVal("DDL_DBSrc"));
 			if (md.getIsExits() == true)
 			{
-				return "err@表单ID:" + md.getNo() + "已经存在.";
+				return "err@表单ID:" +md.getNo() + "已经存在.";
 			}
 
 			switch (md.getHisFrmType())
@@ -296,7 +302,7 @@ public class WF_Admin_CCFormDesigner extends bp.difference.handler.WebContralBas
 				case Url:
 				case Entity:
 					md.setUrlExt(md.getPTable());
-					md.setPTable ( "");
+					md.setPTable("");
 					break;
 				//如果是以下情况，导入模式
 				case WordFrm:
@@ -366,7 +372,7 @@ public class WF_Admin_CCFormDesigner extends bp.difference.handler.WebContralBas
 			if (md.getHisFrmType() == FrmType.WPSFrm || md.getHisFrmType() == FrmType.WordFrm || md.getHisFrmType() == FrmType.ExcelFrm)
 			{
 				/*把表单模版存储到数据库里 */
-				return "url@../../Comm/RefFunc/En.htm?EnName=BP.WF.Template.Frm.MapFrmExcel&PKVal=" + md.getNo();
+				return "url@../../Comm/RefFunc/En.htm?EnName=BP.WF.Template.Frm.MapFrmExcel&PKVal=" +md.getNo();
 			}
 
 			if (md.getHisFrmType() == FrmType.Entity)
@@ -376,10 +382,10 @@ public class WF_Admin_CCFormDesigner extends bp.difference.handler.WebContralBas
 
 			if (md.getHisFrmType() == FrmType.Develop)
 			{
-				return "url@../DevelopDesigner/Designer.htm?FK_MapData=" + md.getNo() + "&FrmID=" + md.getNo() + "&EntityType=" + this.GetRequestVal("EntityType");
+				return "url@../DevelopDesigner/Designer.htm?FK_MapData=" +md.getNo() + "&FrmID=" +md.getNo() + "&EntityType=" + this.GetRequestVal("EntityType");
 			}
 
-			return "url@../FoolFormDesigner/Designer.htm?IsFirst=1&FK_MapData=" + md.getNo() + "&EntityType=" + this.GetRequestVal("EntityType");
+			return "url@../FoolFormDesigner/Designer.htm?IsFirst=1&FK_MapData=" +md.getNo() + "&EntityType=" + this.GetRequestVal("EntityType");
 		}
 		catch (RuntimeException ex)
 		{
@@ -467,7 +473,7 @@ public class WF_Admin_CCFormDesigner extends bp.difference.handler.WebContralBas
 		//清空缓存
 
 		toMapData.RepairMap();
-		bp.difference.SystemConfig.DoClearCash();
+		bp.difference.SystemConfig.DoClearCache();
 
 
 	}

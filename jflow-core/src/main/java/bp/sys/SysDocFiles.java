@@ -1,17 +1,15 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
 import java.util.*;
-import java.io.*;
 
 /** 
  文件管理者 
 */
 public class SysDocFiles extends Entities
 {
-	public SysDocFiles() throws Exception {
+	public SysDocFiles()
+	{
 	}
 	public SysDocFiles(String _tableName, String _key) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -24,7 +22,8 @@ public class SysDocFiles extends Entities
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new SysDocFile();
 	}
 
@@ -35,7 +34,8 @@ public class SysDocFiles extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.List<SysDocFile> ToJavaList() {
+	public final java.util.List<SysDocFile> ToJavaList()
+	{
 		return (java.util.List<SysDocFile>)(Object)this;
 	}
 	/** 
@@ -43,7 +43,8 @@ public class SysDocFiles extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<SysDocFile> Tolist()  {
+	public final ArrayList<SysDocFile> Tolist()
+	{
 		ArrayList<SysDocFile> list = new ArrayList<SysDocFile>();
 		for (int i = 0; i < this.size(); i++)
 		{

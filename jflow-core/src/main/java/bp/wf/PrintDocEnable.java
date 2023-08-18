@@ -1,7 +1,4 @@
 package bp.wf;
-
-import bp.*;
-
 /** 
  打印方式
  @0=不打印@1=打印网页@2=打印RTF模板
@@ -27,11 +24,13 @@ public enum PrintDocEnable
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue() {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
-	public static PrintDocEnable forValue(int value) 
-	{return values()[value];
+	public static PrintDocEnable forValue(int value)
+	{
+		return values()[value];
 	}
 }

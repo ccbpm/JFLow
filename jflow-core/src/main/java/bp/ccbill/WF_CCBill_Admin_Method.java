@@ -2,41 +2,43 @@ package bp.ccbill;
 
 import bp.ccbill.template.Method;
 import bp.da.*;
-import bp.difference.handler.WebContralBase;
 import bp.sys.*;
 import bp.en.*;
 import bp.wf.*;
-import bp.wf.Glo;
 import bp.wf.httphandler.*;
 import bp.ccbill.template.*;
 
 /** 
  页面功能实体
 */
-public class WF_CCBill_Admin_Method extends WebContralBase
+public class WF_CCBill_Admin_Method extends bp.difference.handler.DirectoryPageBase
 {
 
 		///#region 属性.
 	/** 
 	 模块编号
 	*/
-	public final String getModuleNo()  {
+	public final String getModuleNo()
+	{
 		String str = this.GetRequestVal("ModuleNo");
 		return str;
 	}
 	/** 
 	 菜单ID.
 	*/
-	public final String getMenuNo()  {
+	public final String getMenuNo()
+	{
 		String str = this.GetRequestVal("MenuNo");
 		return str;
 	}
 
-	public final String getGroupID()  {
+	public final String getGroupID()
+	{
 		String str = this.GetRequestVal("GroupID");
 		return str;
 	}
-	public final String getName()  {
+	public final String getName()
+	{
 		String str = this.GetRequestVal("Name");
 		return str;
 	}
@@ -59,8 +61,8 @@ public class WF_CCBill_Admin_Method extends WebContralBase
 				continue;
 			}
 
-			attr.setFK_MapData(toFrmID);
-			attr.setMyPK(attr.getFK_MapData() + "_" + attr.getKeyOfEn());
+			attr.setFrmID( toFrmID);
+			attr.setMyPK(attr.getFrmID() + "_" + attr.getKeyOfEn());
 			attr.Insert();
 		}
 		return "复制成功.";
@@ -76,7 +78,8 @@ public class WF_CCBill_Admin_Method extends WebContralBase
 	/** 
 	 构造函数
 	*/
-	public WF_CCBill_Admin_Method()  {
+	public WF_CCBill_Admin_Method()
+	{
 
 	}
 	/** 
@@ -88,6 +91,7 @@ public class WF_CCBill_Admin_Method extends WebContralBase
 		//当前表单的信息
 		MapData mapData = new MapData(this.getFrmID());
 
+
 			///#region 第1步: 创建一个流程.
 		//首先创建流程. 参数都通过 httrp传入了。
 		WF_Admin_CCBPMDesigner_FlowDevModel handler = new WF_Admin_CCBPMDesigner_FlowDevModel();
@@ -95,7 +99,7 @@ public class WF_CCBill_Admin_Method extends WebContralBase
 
 		//执行更新. 设置为不能独立启动.
 		Flow fl = new Flow(flowNo);
-		fl.setCanStart(false);
+		fl.setItIsCanStart(false);
 		fl.Update();
 
 		//更新开始节点.
@@ -139,20 +143,21 @@ public class WF_CCBill_Admin_Method extends WebContralBase
 		en.setTag1(flowNo); //标记为空.
 		en.setMethodID(flowNo); // 就是流程编号.
 		en.setFlowNo(flowNo);
+		en.SetPara("EnName", "TS.CCBill.MethodFlowEtc"); //新增.
 		en.Insert();
 
 
 	 //   //创建查询菜单.放入到与该实体平行的位置.
 	 //   BP.CCFast.CCMenu.Menu menu = new BP.CCFast.CCMenu.Menu();
 	 //   menu.ModuleNo = this.ModuleNo; //隶属与实体一个模块.
-	 //   menu.Name = this.Name;
-	 //   menu.Idx = 0;
+	 //   menu.setName(this.Name;
+	 //   menu.setIdx(0;
 	 ////   menu.MenuModel = "FlowEtc"; //
 	 //   menu.MenuModel = MethodModelClass.FlowEtc; //其他类型的业务流程..
 
 	 //   menu.Mark = "Search"; //流程查询.
-	 //   menu.Tag1 = flowNo; //流程编号.
-	 //   menu.No = this.FrmID + "_" + flowNo;
+	 //   menu.setTag1(flowNo; //流程编号.
+	 //   menu.setNo(this.getFrmID() + "_" + flowNo;
 	 //   menu.Icon = "icon-paper-plane";
 	 //   menu.Insert();
 
@@ -166,7 +171,7 @@ public class WF_CCBill_Admin_Method extends WebContralBase
 		////创建流程目录与流程菜单.
 		//CrateFlow_5_Module(MethodModelClass.FlowEtc, flowNo);
 
-		//return this.FrmID + "_" + flowNo; //返回的方法ID;
+		//return this.getFrmID() + "_" + flowNo; //返回的方法ID;
 	}
 	/** 
 	 创建基础信息变更流程
@@ -183,7 +188,7 @@ public class WF_CCBill_Admin_Method extends WebContralBase
 
 		//执行更新. 设置为不能独立启动.
 		Flow fl = new bp.wf.Flow(flowNo);
-		fl.setCanStart(false);
+		fl.setItIsCanStart(false);
 		fl.Update();
 
 		//更新开始节点.
@@ -191,6 +196,8 @@ public class WF_CCBill_Admin_Method extends WebContralBase
 		nd.setName(this.getName());
 
 		nd.Update();
+
+
 			///#endregion 创建一个流程.
 
 
@@ -199,41 +206,25 @@ public class WF_CCBill_Admin_Method extends WebContralBase
 		WF_Admin_FoolFormDesigner_ImpExp handlerFrm = new WF_Admin_FoolFormDesigner_ImpExp();
 
 		handlerFrm.Imp_CopyFrm("ND" + Integer.parseInt(flowNo + "01"), this.getFrmID());
-		///#endregion 把表单导入到流程上去.
 
 
-		///#region 第3步： 处理流程的业务表单 - 字段增加一个影子字段.
+
+			///#endregion 把表单导入到流程上去.
+
+
+			///#region 第3步： 处理流程的业务表单 - 字段增加一个影子字段.
 		//处理字段数据.增加一个列.
 		String frmID = "ND" + Integer.parseInt(fl.getNo() + "01");
 		MapData md = new MapData(frmID);
 		if (md.getTableCol() != 0)
 		{
-			md.setTableCol(0); //设置为4列.
+			md.setTableCol( 0); //设置为4列.
 			md.Update();
 		}
 
-		//查询出来主表数据.
+		//查询出来数据.
 		MapAttrs mattrs = new MapAttrs(md.getNo());
 		GroupFields gfs = new GroupFields(md.getNo());
-
-		//查询出来从表数据.
-		String frmIDs=  "ND" + Integer.parseInt(fl.getNo() + "01");
-		MapDtls mdtls = new MapDtls(md.getNo());
-		for (MapDtl item : mdtls.ToJavaList())
-		{
-			frmIDs += ",'" + item.getNo() + "'";
-		}
-		MapAttrs attrs = new MapAttrs(frmIDs);
-
-		//查出附件数据
-		String oldMapID = "";
-		MapData mdFrom = new MapData(this.getFrmID());
-		DataTable sysMapData = md.ToDataTableField("Sys_MapData");
-		if (sysMapData.Rows.size() == 1)
-		{
-			oldMapID = sysMapData.Rows.get(0).getValue("No").toString();
-		}
-		DataTable sysFrmAttachment = mdFrom.getFrmAttachments().ToDataTableField("Sys_FrmAttachment");
 
 		//遍历分组.
 		for (GroupField gs : gfs.ToJavaList())
@@ -248,7 +239,7 @@ public class WF_CCBill_Admin_Method extends WebContralBase
 				}
 
 				//是否包含，系统字段？
-				if (Glo.getFlowFields().contains("," + mapAttr.getKeyOfEn()  + ",") == true)
+				if (bp.wf.Glo.getFlowFields().contains("," + mapAttr.getKeyOfEn() + ",") == true)
 				{
 					continue;
 				}
@@ -271,80 +262,14 @@ public class WF_CCBill_Admin_Method extends WebContralBase
 				//  DBAccess.RunSQL("UP")
 
 				//复制一个影子字段.
-				mapAttr.setKeyOfEn("bak" + mapAttr.getKeyOfEn() );
-				mapAttr.setName("(原)" + mapAttr.getName() );
+				mapAttr.setKeyOfEn("bak" + mapAttr.getKeyOfEn());
+				mapAttr.setName("(原)" + mapAttr.getName());
 
-				mapAttr.setMyPK(mapAttr.getFK_MapData() + "_" + mapAttr.getKeyOfEn() );
+				mapAttr.setMyPK(mapAttr.getFrmID() + "_" + mapAttr.getKeyOfEn());
 				mapAttr.setUIIsEnable(false);
 				mapAttr.setIdx(idx - 1);
 				mapAttr.DirectInsert();
 			}
-
-			//遍历从表字段
-			for (MapAttr attr : attrs.ToJavaList())
-			{
-				if (gs.getCtrlType() != "Dtl")
-				{
-					continue;
-				}
-				if (gs.getOID() != attr.getGroupID())
-				{
-					continue;
-				}
-				//是否包含，系统字段？
-				if (Glo.getFlowFields().contains("," + attr.getKeyOfEn()  + ",") == true)
-				{
-					continue;
-				}
-
-				//其他类型的控件，就排除.
-				if (attr.getUIContralType().getValue() >= 5)
-				{
-					continue;
-				}
-
-				if (attr.getUIVisible() == false)
-				{
-					continue;
-				}
-
-				idx++;
-				idx++;
-				attr.setIdx(idx);
-				attr.Update();
-				//  DBAccess.RunSQL("UP")
-
-			}
-
-			//插入附件
-			if(gs.getCtrlType() == "Ath"){
-				for (DataRow dr : sysFrmAttachment.Rows)
-				{
-					idx++;
-					FrmAttachment en = new FrmAttachment();
-					for (DataColumn dc : sysFrmAttachment.Columns)
-					{
-						Object val = dr.getValue(dc.ColumnName) instanceof Object ? (Object)dr.getValue(dc.ColumnName) : null;
-						if (val == null)
-						{
-							continue;
-						}
-
-						en.SetValByKey(dc.ColumnName, val.toString().replace(oldMapID, frmID));
-					}
-					en.setMyPK(frmID + "_" + en.GetValByKey("NoOfObj"));
-
-
-					try
-					{
-						en.Insert();
-					}
-					catch (java.lang.Exception e2)
-					{
-					}
-				}
-			}
-
 		}
 
 			///#endregion 处理流程的业务表单 - 字段增加一个影子字段..
@@ -364,18 +289,18 @@ public class WF_CCBill_Admin_Method extends WebContralBase
 		en.setMethodID(flowNo); // 就是流程编号.
 
 		en.setFlowNo(flowNo);
+		en.SetPara("EnName", "TS.CCBill.MethodFlowBaseData");
 		en.Insert();
-
 
 		////创建查询菜单.放入到与该实体平行的位置.
 		//BP.CCFast.CCMenu.Menu menu = new BP.CCFast.CCMenu.Menu();
 		//menu.ModuleNo = this.ModuleNo; //隶属与实体一个模块.
-		//menu.Name = this.Name;
-		//menu.Idx = 0;
+		//menu.setName(this.Name;
+		//menu.setIdx(0;
 		//menu.MenuModel = "FlowBaseData"; //修改基础数据流程.
 		//menu.Mark = "Search"; //流程查询.
-		//menu.Tag1 = flowNo; //流程编号.
-		//menu.No = this.FrmID + "_" + flowNo;
+		//menu.setTag1(flowNo; //流程编号.
+		//menu.setNo(this.getFrmID() + "_" + flowNo;
 		//menu.Icon = "icon-paper-plane";
 		//menu.Insert();
 
@@ -391,8 +316,8 @@ public class WF_CCBill_Admin_Method extends WebContralBase
 	/** 
 	 创建方法分组.
 	 
-	 param menuModel
-	 param flowNo
+	 @param menuModel
+	 @param flowNo
 	*/
 	private void CrateFlowMenu_4_GroupMethod(String menuModel, String flowNo) throws Exception {
 
@@ -437,14 +362,14 @@ public class WF_CCBill_Admin_Method extends WebContralBase
 
 
 		//// 增加内置流程方法:流程分析.
-		//en.Name = "流程分析";
+		//en.setName("流程分析";
 		//en.Icon = "icon-chart";
 		//en.MethodModel = menuModel; //类型.
 		//en.Mark = "Group"; //流程分析.
-		//en.Tag1 = flowNo; //标记为空.
+		//en.setTag1(flowNo; //标记为空.
 		//en.MethodID = flowNo; // 就是流程编号.
-		//en.FlowNo = flowNo;
-		//en.No = DBAccess.GenerGUID();
+		//en.setFlowNo(flowNo);
+		//en.setNo(DBAccess.GenerGUID();
 		//en.Insert();
 
 			///#endregion 第4步 创建方法.
@@ -452,8 +377,8 @@ public class WF_CCBill_Admin_Method extends WebContralBase
 	/** 
 	 创建菜单分组
 	 
-	 param menuModel
-	 param flowNo
+	 @param menuModel
+	 @param flowNo
 	*/
 	private void CrateFlow_5_Module(String menuModel, String flowNo) throws Exception {
 
@@ -461,7 +386,7 @@ public class WF_CCBill_Admin_Method extends WebContralBase
 		//创建该模块下的 菜单:分组.
 		bp.ccfast.ccmenu.Module mmodule = new bp.ccfast.ccmenu.Module();
 		mmodule.setName(this.getName());
-		mmodule.setSystemNo(this.GetRequestVal("SortNo")); // md.FK_FormTree; //设置类别.
+		mmodule.setSystemNo(this.GetRequestVal("SortNo")); // md.getFormTreeNo(); //设置类别.
 		mmodule.setIdx(100);
 		mmodule.Insert();
 

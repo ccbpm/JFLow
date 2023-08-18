@@ -1,6 +1,5 @@
 package bp.sys;
 
-import bp.*;
 
 /** 
  表单类型 @0=傻瓜表单@1=自由表单@3=嵌入式表单@4=Word表单@5=Excel表单@6=VSTOForExcel@7=Entity
@@ -11,10 +10,6 @@ public enum FrmType
 	 傻瓜表单
 	*/
 	FoolForm(0),
-	/**
-	 自由表单
-	 */
-	FreeFrm(1),
 	/** 
 	 URL表单(自定义)
 	*/
@@ -56,7 +51,8 @@ public enum FrmType
 
 	private int intValue;
 	private static java.util.HashMap<Integer, FrmType> mappings;
-	private static java.util.HashMap<Integer, FrmType> getMappings() {
+	private static java.util.HashMap<Integer, FrmType> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (FrmType.class)
@@ -71,15 +67,18 @@ public enum FrmType
 	}
 
 	private FrmType(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return intValue;
 	}
 
 	public static FrmType forValue(int value)
-	{return getMappings().get(value);
+	{
+		return getMappings().get(value);
 	}
 }

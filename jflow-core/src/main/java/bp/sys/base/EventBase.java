@@ -1,7 +1,10 @@
 package bp.sys.base;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.web.*;
+import bp.*;
+import bp.sys.*;
 import java.time.*;
 import java.util.Date;
 
@@ -17,7 +20,8 @@ public abstract class EventBase
 	/** 
 	 参数
 	*/
-	public final Row getSysPara()  {
+	public final Row getSysPara()
+	{
 		if (_SysPara == null)
 		{
 			_SysPara = new Row();
@@ -25,7 +29,8 @@ public abstract class EventBase
 		return _SysPara;
 	}
 	public final void setSysPara(Row value)
-	{_SysPara = value;
+	{
+		_SysPara = value;
 	}
 	/** 
 	 成功信息
@@ -35,7 +40,8 @@ public abstract class EventBase
 	/** 
 	 标题
 	*/
-	public final String getTitle()  {
+	public final String getTitle()
+	{
 		if (_title == null)
 		{
 			_title = "未命名";
@@ -43,7 +49,8 @@ public abstract class EventBase
 		return _title;
 	}
 	public final void setTitle(String value)
-	{_title = value;
+	{
+		_title = value;
 	}
 
 		///#endregion 属性.
@@ -53,15 +60,13 @@ public abstract class EventBase
 	/** 
 	 表单ID
 	*/
-	public final String getFKMapdata()
-	{
+	public final String getFKMapdata()  {
 		return this.GetValStr("FK_MapData");
 	}
 	/** 
 	 事件类型
 	*/
-	public final String getEventSource()
-	{
+	public final String getEventSource()  {
 		return this.GetValStr("EventSource");
 	}
 
@@ -73,14 +78,13 @@ public abstract class EventBase
 	/** 
 	 工作ID
 	*/
-	public final int getOID()
-	{
+	public final int getOID()  {
 		return this.GetValInt("OID");
 	}
 	/** 
 	 工作ID
 	*/
-	public final long getWorkID()  {
+	public final long getWorkID() throws Exception {
 		if (this.getOID() == 0)
 		{
 			return this.GetValInt64("WorkID"); //有可能开始节点的WorkID=0
@@ -90,21 +94,20 @@ public abstract class EventBase
 	/** 
 	 FID
 	*/
-	public final long getFID()
-	{
+	public final long getFID()  {
 		return this.GetValInt64("FID");
 	}
 	/** 
 	 流程编号
 	*/
-	public final String getFKFlow()
-	{
+	public final String getFlowNo()  {
 		return this.GetValStr("FK_Flow");
 	}
 	/** 
 	 节点编号
 	*/
-	public final int getFKNode() throws Exception {
+	public final int getNodeID()
+	{
 		try
 		{
 			return this.GetValInt("FK_Node");
@@ -117,15 +120,13 @@ public abstract class EventBase
 	/** 
 	 传过来的WorkIDs集合，子流程.
 	*/
-	public final String getWorkIDs() throws Exception
-	{
+	public final String getWorkIDs()  {
 		return this.GetValStr("WorkIDs");
 	}
 	/** 
 	 编号集合s
 	*/
-	public final String getNos() throws Exception
-	{
+	public final String getNos()  {
 		return this.GetValStr("Nos");
 	}
 
@@ -133,32 +134,35 @@ public abstract class EventBase
 
 
 		///#region 获取参数方法
-public final Date GetValDateTime(String key) throws Exception {
-	String str = this.getSysPara().GetValByKey(key).toString();
-	return DataType.ParseSysDateTime2DateTime(str);
-}
+	public final Date GetValDateTime(String key)
+	{
+		String str = this.getSysPara().GetValByKey(key).toString();
+		return DataType.ParseSysDateTime2DateTime(str);
+	}
 	/** 
 	 获取字符串参数
 	 
-	 param key key
+	 @param key key
 	 @return 如果为Nul,或者不存在就抛出异常
 	*/
-	public final String GetValStr(String key) {
+	public final String GetValStr(String key)
+	{
 		return this.getSysPara().GetValByKey(key).toString();
 	}
 	/** 
 	 获取Int64的数值
 	 
-	 param key 键值
+	 @param key 键值
 	 @return 如果为Nul,或者不存在就抛出异常
 	*/
-	public final long GetValInt64(String key) {
+	public final long GetValInt64(String key)
+	{
 		return Long.parseLong(this.GetValStr(key));
 	}
 	/** 
 	 获取int的数值
 	 
-	 param key 键值
+	 @param key 键值
 	 @return 如果为Nul,或者不存在就抛出异常
 	*/
 	public final int GetValInt(String key)
@@ -171,7 +175,8 @@ public final Date GetValDateTime(String key) throws Exception {
 	/** 
 	 事件基类
 	*/
-	public EventBase()  {
+	public EventBase()
+	{
 	}
 	/** 
 	 执行事件
@@ -186,7 +191,7 @@ public final Date GetValDateTime(String key) throws Exception {
 	 @return 
 	*/
 	public final String GetLastActionTrackID() throws Exception {
-		String sql = "SELECT  MyPK FROM ND" + Integer.parseInt(this.getFKFlow()) + "Track WHERE WorkID=" + this.getWorkID() + " AND NDFrom=" + this.getFKNode() + " ORDER BY RDT ";
+		String sql = "SELECT  MyPK FROM ND" + Integer.parseInt(this.getFlowNo()) + "Track WHERE WorkID=" + this.getWorkID() + " AND NDFrom=" + this.getNodeID() + " ORDER BY RDT ";
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		if (dt.Rows.size() == 0)

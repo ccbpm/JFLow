@@ -1,7 +1,6 @@
 package bp.wf.template;
 
-import bp.*;
-import bp.wf.*;
+
 
 /** 
  流程部门权限控制类型(与报表查询相关)
@@ -27,11 +26,13 @@ public enum FlowDeptDataRightCtrlType
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
 	public static FlowDeptDataRightCtrlType forValue(int value)
-	{return values()[value];
+	{
+		return values()[value];
 	}
 }

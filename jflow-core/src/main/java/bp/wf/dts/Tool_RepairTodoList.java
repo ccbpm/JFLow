@@ -1,8 +1,10 @@
 package bp.wf.dts;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
 import bp.wf.*;
+import java.util.*;
 
 /** 
  升级ccflow6 要执行的调度
@@ -12,7 +14,7 @@ public class Tool_RepairTodoList extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public Tool_RepairTodoList()throws Exception
+	public Tool_RepairTodoList()
 	{
 		this.Title = "修改撤销不存在待办的问题.";
 		this.Help = "如果仍然出现，请反馈给开发人员，属于系统错误..";
@@ -47,9 +49,8 @@ public class Tool_RepairTodoList extends Method
 	 @return 返回执行结果
 	*/
 	@Override
-	public Object Do()throws Exception
-	{
-		String sql = "SELECT WORKID FROM WF_GenerWorkFlow A WHERE WFSta <>1 AND WFState =2  AND WorkID Not IN (Select WorkID From WF_GENERWORKERLIST) ORDER BY RDT desc";
+	public Object Do() throws Exception {
+		String sql = "SELECT WORKID FROM WF_GenerWorkFlow A WHERE WFSta <>1 AND WFState =2  AND WorkID Not IN (Select WorkID From WF_GenerWorkerlist) ORDER BY RDT desc";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
 		String msg = "";
@@ -59,7 +60,7 @@ public class Tool_RepairTodoList extends Method
 			GenerWorkFlow gwf = new GenerWorkFlow(workid);
 			String todoEmps = gwf.getTodoEmps();
 			// 如果不存在待办，则增加待办
-			sql = "SELECT *  From WF_GENERWORKERLIST WHERE WORKID=" + workid + " AND instr('" + todoEmps + "',FK_Emp)>0  AND IsPass=0";
+			sql = "SELECT *  From WF_GenerWorkerlist WHERE WORKID=" + workid + " AND instr('" + todoEmps + "',FK_Emp)>0  AND IsPass=0";
 			if (DBAccess.RunSQLReturnCOUNT(sql) > 0)
 			{
 				continue;
@@ -78,20 +79,20 @@ public class Tool_RepairTodoList extends Method
 
 				GenerWorkerList gwl = new GenerWorkerList();
 				gwl.setWorkID(workid);
-				String[] emps = str.split("[,]", -1);
+				String[] empStrs = str.split("[,]", -1);
 
-				gwl.setFK_Emp(emps[0]);
-				gwl.setFK_Node(gwf.getFK_Node());
-				if (emps.length == 2)
+				gwl.setEmpNo(empStrs[0]);
+				gwl.setNodeID(gwf.getNodeID());
+				if (empStrs.length == 2)
 				{
-					gwl.setFK_EmpText(emps[1]);
+					gwl.setEmpName(empStrs[1]);
 				}
-				gwl.setFK_Flow(gwf.getFK_Flow());
+				gwl.setFlowNo(gwf.getFlowNo());
 				gwl.setRDT(gwf.getSDTOfNode());
 				gwl.setCDT(gwf.getSDTOfNode());
-				gwl.setIsEnable(true);
-				gwl.setIsRead(false);
-				gwl.setIsPass(false);
+				gwl.setItIsEnable(true);
+				gwl.setItIsRead(false);
+				gwl.setItIsPass(false);
 				gwl.setWhoExeIt(0);
 				gwl.Save();
 			}
@@ -100,8 +101,7 @@ public class Tool_RepairTodoList extends Method
 		return "执行成功.";
 	}
 
-	public final String ss()throws Exception
-	{
+	public final String ss() throws Exception {
 		String sql = "SELECT AtPara,WorkID FROM WF_GENERWORKFLOW WHERE WFState !=3 AND atpara like '%@HuiQianTaskSta=1%' ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
@@ -113,7 +113,7 @@ public class Tool_RepairTodoList extends Method
 
 			GenerWorkFlow gwf = new GenerWorkFlow(workid);
 			GenerWorkerLists gwls = new GenerWorkerLists(workid);
-			gwls.Retrieve(GenerWorkerListAttr.WorkID, workid, GenerWorkerListAttr.FK_Node, gwf.getFK_Node(), null);
+			gwls.Retrieve(GenerWorkerListAttr.WorkID, workid, GenerWorkerListAttr.FK_Node, gwf.getNodeID(), null);
 			if (gwls.size() == 1)
 			{
 				if (gwf.getHuiQianTaskSta() == HuiQianTaskSta.HuiQianing)
@@ -138,7 +138,7 @@ public class Tool_RepairTodoList extends Method
 				para += "@" + item + "=" + ap.GetValStrByKey(item);
 			}
 
-			if (para.equals(""))
+			if (Objects.equals(para, ""))
 			{
 				continue;
 			}

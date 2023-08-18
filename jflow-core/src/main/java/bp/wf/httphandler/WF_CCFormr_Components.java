@@ -1,22 +1,22 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
-import bp.en.Entity;
 import bp.sys.*;
 import bp.web.*;
 import bp.*;
 import bp.wf.*;
-import bp.wf.Glo;
+import java.util.*;
 
 /** 
  页面功能实体
 */
-public class WF_CCFormr_Components extends bp.difference.handler.WebContralBase
+public class WF_CCFormr_Components extends bp.difference.handler.DirectoryPageBase
 {
 	/** 
 	 构造函数
 	*/
-	public WF_CCFormr_Components() throws Exception {
+	public WF_CCFormr_Components()
+	{
 
 	}
 	/** 
@@ -25,11 +25,11 @@ public class WF_CCFormr_Components extends bp.difference.handler.WebContralBase
 	 @return 
 	*/
 	public final String DataView_Init() throws Exception {
-		Entity en = new bp.sys.frmui.MapAttrDataView(this.getMyPK());
+		bp.sys.frmui.MapAttrDataView en = new bp.sys.frmui.MapAttrDataView(this.getMyPK());
 
 		String sql = en.GetValStringByKey(MapAttrAttr.DefaultVal);
 
-		sql = Glo.DealExp(sql, null, null);
+		sql = bp.wf.Glo.DealExp(sql, null, null);
 
 		if (this.getWorkID() != 0)
 		{
@@ -107,13 +107,13 @@ public class WF_CCFormr_Components extends bp.difference.handler.WebContralBase
 		}
 
 		//处理大小写.
-		if (bp.difference.SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		if (bp.difference.SystemConfig.getAppCenterDBFieldCaseModel() != FieldCaseModel.None)
 		{
-			dt.Columns.get(0).setColumnName("DocWordKey");
-			dt.Columns.get(1).setColumnName("DocWordName");
-			dt.Columns.get(2).setColumnName("DocWordYear");
-			dt.Columns.get(3).setColumnName("DocWordLSH");
-			dt.Columns.get(4).setColumnName("DocWord");
+			dt.Columns.get(0).ColumnName = "DocWordKey";
+			dt.Columns.get(1).ColumnName = "DocWordName";
+			dt.Columns.get(2).ColumnName = "DocWordYear";
+			dt.Columns.get(3).ColumnName = "DocWordLSH";
+			dt.Columns.get(4).ColumnName = "DocWord";
 		}
 
 		// 判断流水号是否未空.
@@ -148,12 +148,12 @@ public class WF_CCFormr_Components extends bp.difference.handler.WebContralBase
 		sql = "UPDATE " + ptable + " SET DocWordLSH='" + lsh + "', DocWordYear='" + year + "' WHERE OID=" + this.getOID();
 		DBAccess.RunSQL(sql);
 		//为了计算机中心做个性化处理为一下两个表名跟新orgno和orgname
-		if (ptable.equals("gov_receivefile"))
+		if (Objects.equals(ptable, "gov_receivefile"))
 		{
 			String sql1 = "UPDATE gov_receivefile set OrgNo='" + WebUser.getOrgNo() + "',OrgName='" + WebUser.getOrgName() + "' where oid=" + this.getOID();
 			DBAccess.RunSQL(sql1);
 		}
-		if (ptable.equals("gov_sendfilecopy"))
+		if (Objects.equals(ptable, "gov_sendfilecopy"))
 		{
 			String sql1 = "UPDATE gov_sendfilecopy set OrgNo='" + WebUser.getOrgNo() + "',OrgName='" + WebUser.getOrgName() + "' where oid=" + this.getOID();
 			DBAccess.RunSQL(sql1);
@@ -279,13 +279,13 @@ public class WF_CCFormr_Components extends bp.difference.handler.WebContralBase
 					isHave = true;
 					break;
 				}
-				if (isHave == true || lshNum <= i || num.contains(String.valueOf(i)) == true || lshNum == 0)
+				if (isHave == true || lshNum <= i || num.contains(String.valueOf(i)) == true)
 				{
 					continue;
 				}
 
 				//请严格按照000格式不够位数补0不然会影响其他地方 不允许使用000编号
-				  num += (new Integer(i)).toString(Integer.parseInt("000")) + ",";
+				num += (new Integer(i)).toString(Integer.parseInt("000")) + ",";
 			}
 		}
 

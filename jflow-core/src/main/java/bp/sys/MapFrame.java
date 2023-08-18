@@ -2,10 +2,7 @@ package bp.sys;
 
 import bp.da.*;
 import bp.en.*;
-import bp.*;
 import bp.en.Map;
-
-import java.util.*;
 
 /** 
  框架
@@ -15,7 +12,8 @@ public class MapFrame extends EntityMyPK
 
 		///#region 属性
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (bp.web.WebUser.getNo().equals("admin") == true)
 		{
@@ -27,45 +25,19 @@ public class MapFrame extends EntityMyPK
 	/** 
 	 是否自适应大小
 	*/
-	public final boolean isAutoSize() throws Exception
-	{
+	public final boolean getItIsAutoSize()  {
 		return this.GetValBooleanByKey(MapFrameAttr.IsAutoSize);
 	}
-	public final void setAutoSize(boolean value)  throws Exception
-	 {
+	public final void setItIsAutoSize(boolean value){
 		this.SetValByKey(MapFrameAttr.IsAutoSize, value);
-	}
-	/** 
-	 名称
-	*/
-	public final String getName() throws Exception
-	{
-		return this.GetValStrByKey(MapFrameAttr.Name);
-	}
-	public final void setName(String val)  throws Exception
-	 {
-		this.SetValByKey(MapFrameAttr.Name, val);
-	}
-	/** 
-	 EleID
-	*/
-	public final String getFrmID() throws Exception
-	{
-		return this.GetValStrByKey(MapFrameAttr.FrmID);
-	}
-	public final void setFrmID(String val)  throws Exception
-	 {
-		this.SetValByKey(MapFrameAttr.FrmID, val);
 	}
 	/** 
 	 EleType
 	*/
-	public final String getEleType() throws Exception
-	{
+	public final String getEleType()  {
 		return this.GetValStrByKey(MapFrameAttr.EleType);
 	}
-	public final void setEleType(String val)  throws Exception
-	 {
+	public final void setEleType(String val){
 		this.SetValByKey(MapFrameAttr.EleType, val);
 	}
 	/** 
@@ -75,65 +47,43 @@ public class MapFrame extends EntityMyPK
 		String s = this.GetValStrByKey(MapFrameAttr.FrameURL);
 		if (DataType.IsNullOrEmpty(s))
 		{
-			return "http://ccflow.org";
+			return "http://ccbpm.cn";
 		}
 		return s;
 	}
-	public final void setURL(String value)  throws Exception
-	 {
+	public final void setURL(String value){
 		this.SetValByKey(MapFrameAttr.FrameURL, value);
 	}
 	/** 
 	 高度
 	*/
-	public final float getH() throws Exception
-	{
-		return this.GetValFloatByKey(MapFrameAttr.H, 700);
-
+	public final float getH()  {
+		return this.GetValFloatByKey(MapFrameAttr.H);
 	}
-	public final void setH(float value)  throws Exception
-	 {
+	public final void setH(float value){
 		this.SetValByKey(MapFrameAttr.H, value);
 	}
 	/** 
 	 宽度
 	*/
-	public final float getW() throws Exception
-	{
+	public final float getW()  {
 		return this.GetValFloatByKey(MapFrameAttr.W);
 	}
-	public final void setW(float value)  throws Exception
-	 {
+	public final void setW(float value){
 		this.SetValByKey(MapFrameAttr.W, value);
 	}
-	public boolean IsUse = false;
-	public final String getFK_MapData() throws Exception
-	{
+	public boolean ItIsUse = false;
+	public final String getFrmID()  {
 		return this.GetValStrByKey(MapFrameAttr.FK_MapData);
 	}
-	public final void setFKMapData(String value)  throws Exception
-	 {
+	public final void setFrmID(String value){
 		this.SetValByKey(MapFrameAttr.FK_MapData, value);
 	}
-	public final void setFK_MapData(String val)  throws Exception
-	 {
-		this.SetValByKey(MapFrameAttr.FK_MapData, val);
+	public final String getName()  {
+		return this.GetValStrByKey(MapFrameAttr.Name);
 	}
-	public final float getX() throws Exception
-	{
-		return this.GetValFloatByKey(MapFrameAttr.X);
-	}
-	public final void setX(float value) throws Exception
-	{
-		this.SetValByKey(MapFrameAttr.X, value);
-	}
-	public final float getY() throws Exception
-	{
-		return this.GetValFloatByKey(MapFrameAttr.Y);
-	}
-	public final void setY(float value) throws Exception
-	{
-		this.SetValByKey(MapFrameAttr.Y, value);
+	public final void setName(String value){
+		this.SetValByKey(MapFrameAttr.Name, value);
 	}
 
 		///#endregion
@@ -143,15 +93,15 @@ public class MapFrame extends EntityMyPK
 	/** 
 	 框架
 	*/
-	public MapFrame()  {
+	public MapFrame()
+	{
 	}
 	/** 
 	 框架
 	 
-	 param no
+	 @param mypk
 	*/
-	public MapFrame(String mypk)throws Exception
-	{
+	public MapFrame(String mypk) throws Exception {
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
@@ -159,7 +109,7 @@ public class MapFrame extends EntityMyPK
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -170,14 +120,14 @@ public class MapFrame extends EntityMyPK
 		map.AddTBString(MapFrameAttr.FK_MapData, null, "表单ID", true, true, 0, 100, 20);
 		map.AddTBString(MapFrameAttr.Name, null, "名称", true, false, 0, 200, 20, true);
 
-			//@0=自定义@1=地图@2=流程轨迹表@3=流程轨迹图.
+		//@0=自定义@1=地图@2=流程轨迹表@3=流程轨迹图.
 		map.AddTBInt(MapFrameAttr.UrlSrcType, 0, "URL来源", false, false);
 
 		map.AddTBString(MapFrameAttr.FrameURL, null, "FrameURL", true, false, 0, 3000, 20, true);
 		map.AddTBString(MapFrameAttr.URL, null, "URL", false, false, 0, 3000, 20, true);
 
-			//map.AddDDLSysEnum(MapFrameAttr.UrlSrcType, 0, "URL来源", true, true, MapFrameAttr.UrlSrcType,
-			//"@0=自定义@1=地图@2=流程轨迹表@3=流程轨迹图");
+		//map.AddDDLSysEnum(MapFrameAttr.UrlSrcType, 0, "URL来源", true, true, MapFrameAttr.UrlSrcType,
+		//"@0=自定义@1=地图@2=流程轨迹表@3=流程轨迹图");
 
 		map.AddTBString(MapFrameAttr.W, null, "宽度", true, false, 0, 20, 20);
 		map.AddTBString(MapFrameAttr.H, null, "高度", true, false, 0, 20, 20);
@@ -186,8 +136,8 @@ public class MapFrame extends EntityMyPK
 
 		map.AddTBString(MapFrameAttr.EleType, null, "类型", false, false, 0, 50, 20, true);
 
-		   // map.AddTBInt(MapFrameAttr.RowIdx, 99, "位置", false, false);
-		   // map.AddTBInt(MapFrameAttr.GroupID, 0, "GroupID", false, false);
+	   // map.AddTBInt(MapFrameAttr.RowIdx, 99, "位置", false, false);
+	   // map.AddTBInt(MapFrameAttr.GroupID, 0, "GroupID", false, false);
 
 		map.AddTBString(MapFrameAttr.GUID, null, "GUID", false, false, 0, 128, 20);
 
@@ -199,9 +149,10 @@ public class MapFrame extends EntityMyPK
 	 插入之后增加一个分组.
 	*/
 	@Override
-	protected void afterInsert() throws Exception {
+	protected void afterInsert() throws Exception
+	{
 		GroupField gf = new GroupField();
-		gf.setFrmID(this.getFK_MapData());
+		gf.setFrmID(this.getFrmID());
 		gf.setCtrlID(this.getMyPK());
 		gf.setCtrlType("Frame");
 		gf.setLab(this.getName());
@@ -215,21 +166,24 @@ public class MapFrame extends EntityMyPK
 	 删除之后的操作
 	*/
 	@Override
-	protected void afterDelete() throws Exception {
+	protected void afterDelete() throws Exception
+	{
 		GroupField gf = new GroupField();
 		gf.Delete(GroupFieldAttr.CtrlID, this.getMyPK());
 
 		super.afterDelete();
 	}
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		//在属性实体集合插入前，clear父实体的缓存.
-		bp.sys.base.Glo.ClearMapDataAutoNum(this.getFK_MapData());
+		bp.sys.base.Glo.ClearMapDataAutoNum(this.getFrmID());
 
 		return super.beforeInsert();
 	}
 	@Override
-	protected boolean beforeUpdate() throws Exception {
+	protected boolean beforeUpdate() throws Exception
+	{
 		GroupField gf = new GroupField();
 		gf.Retrieve(GroupFieldAttr.CtrlID, this.getMyPK());
 		gf.setLab(this.getName());

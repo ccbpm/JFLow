@@ -1,7 +1,5 @@
 package bp.wf;
 
-import bp.*;
-
 /** 
  挂起方式
 */
@@ -18,11 +16,13 @@ public enum HungupWay
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue() {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
-	public static HungupWay forValue(int value) 
-	{return values()[value];
+	public static HungupWay forValue(int value)
+	{
+		return values()[value];
 	}
 }

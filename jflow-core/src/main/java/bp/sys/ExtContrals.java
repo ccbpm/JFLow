@@ -1,8 +1,5 @@
 package bp.sys;
-
-import bp.da.*;
 import bp.en.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -15,13 +12,15 @@ public class ExtContrals extends EntitiesMyPK
 	/** 
 	 扩展控件s
 	*/
-	public ExtContrals() throws Exception {
+	public ExtContrals()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new ExtContral();
 	}
 
@@ -34,7 +33,8 @@ public class ExtContrals extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<ExtContral> ToJavaList() {
+	public final java.util.List<ExtContral> ToJavaList()
+	{
 		return (java.util.List<ExtContral>)(Object)this;
 	}
 	/** 
@@ -42,7 +42,8 @@ public class ExtContrals extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<ExtContral> Tolist()  {
+	public final ArrayList<ExtContral> Tolist()
+	{
 		ArrayList<ExtContral> list = new ArrayList<ExtContral>();
 		for (int i = 0; i < this.size(); i++)
 		{

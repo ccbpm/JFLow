@@ -1,5 +1,6 @@
 package bp.wf.template;
 
+
 /** 
  节点属性
 */
@@ -31,10 +32,6 @@ public class NodeAttr
 	 待办处理模式
 	*/
 	public static final String TodolistModel = "TodolistModel";
-	/// <summary>
-	/// 可逆节点时是否重新计算接收人
-	/// </summary>
-	public static final String IsResetAccepter = "IsResetAccepter";
 	/** 
 	 组长确认规则
 	*/
@@ -47,10 +44,6 @@ public class NodeAttr
 	 当没有找到处理人时处理方式
 	*/
 	public static final String WhenNoWorker = "WhenNoWorker";
-	/** 
-	 子线程类型
-	*/
-	public static final String SubThreadType = "SubThreadType";
 	/** 
 	 是否可以隐性退回
 	*/
@@ -68,11 +61,7 @@ public class NodeAttr
 	public static final String GroupStaNDs = "GroupStaNDs";
 	public static final String IsHandOver = "IsHandOver";
 	public static final String IsCanDelFlow = "IsCanDelFlow";
-
 	public static final String USSWorkIDRole = "USSWorkIDRole";
-
-
-
 	/** 
 	 是否可以原路返回
 	*/
@@ -149,7 +138,7 @@ public class NodeAttr
 	*/
 	public static final String NodeID = "NodeID";
 	public static final String Mark = "Mark";
-	/**
+	/** 
 	 节点的流程
 	*/
 	public static final String FK_Flow = "FK_Flow";
@@ -169,6 +158,11 @@ public class NodeAttr
 	 流程名
 	*/
 	public static final String FlowName = "FlowName";
+
+	/**
+	 流程编号
+	 */
+	public static final String FlowNo = "FlowNo";
 	/** 
 	 是否分配工作
 	*/
@@ -245,11 +239,11 @@ public class NodeAttr
 	 运行模式
 	*/
 	public static final String RunModel = "RunModel";
-	/**
-	 * 节点类型
-	 */
+	/** 
+	 节点类型
+	*/
 	public static final String NodeType = "NodeType";
-	/**
+	/** 
 	 谁执行它？
 	*/
 	public static final String WhoExeIt = "WhoExeIt";
@@ -269,14 +263,7 @@ public class NodeAttr
 	 执行超时的条件
 	*/
 	public static final String DoOutTimeCond = "DoOutTimeCond";
-	/** 
-	 是否启动自动运行？
-	*/
-	public static final String AutoRunEnable = "AutoRunEnable";
-	/** 
-	 自动运行参数
-	*/
-	public static final String AutoRunParas = "AutoRunParas";
+
 	/** 
 	 属性
 	*/
@@ -330,14 +317,6 @@ public class NodeAttr
 	*/
 	public static final String QiangBanSendAfterRole = "QiangBanSendAfterRole";
 	/** 
-	 子流程启动方式
-	*/
-	public static final String SubFlowStartWay = "SubFlowStartWay";
-	/** 
-	 子流程启动参数
-	*/
-	public static final String SubFlowStartParas = "SubFlowStartParas";
-	/** 
 	 是否工作质量考核点
 	*/
 	public static final String IsEval = "IsEval";
@@ -360,11 +339,11 @@ public class NodeAttr
 	///// <summary>
 	///// 批处理参数 
 	///// </summary>
-	//public const string BatchParas = "BatchParas";
+	//public const String BatchParas = "BatchParas";
 	///// <summary>
 	///// 批处理总数
 	///// </summary>
-	//public const string BatchListCount = "BatchListCount";
+	//public const String BatchListCount = "BatchListCount";
 	/** 
 	 自动跳转规则-1
 	*/
@@ -396,7 +375,7 @@ public class NodeAttr
 	/** 
 	 icon头像
 	*/
-	public static final String ICON = "ICON";
+	public static final String Icon = "Icon";
 	/** 
 	 自定义参数字段
 	*/
@@ -409,6 +388,10 @@ public class NodeAttr
 	 是否发送草稿子流程？
 	*/
 	public static final String IsSendDraftSubFlow = "IsSendDraftSubFlow";
+	/** 
+	 可逆节点时是否重新计算接收人
+	*/
+	public static final String IsResetAccepter = "IsResetAccepter";
 	/** 
 	 该节点是否是游离状态
 	*/
@@ -451,7 +434,6 @@ public class NodeAttr
 		///#endregion 移动设置.
 
 
-
 		///#region 未来处理人.
 	/** 
 	 是否计算未来处理人
@@ -468,8 +450,26 @@ public class NodeAttr
 
 	public static final String RefOneFrmTreeType = "RefOneFrmTreeType";
 
-	public static final String SubFlowX="SubFlowX";
-	public static final String SubFlowY="SubFlowY";
 		///#endregion 未来处理人.
+
+	public static final String SubFlowX = "SubFlowX";
+	public static final String SubFlowY = "SubFlowY";
+
+
+		///#region 对应关系 2022.12
+	public static final String NodeStations = "NodeStations";
+	public static final String NodeStationsT = "NodeStationsT";
+
+	public static final String NodeDepts = "NodeDepts";
+	public static final String NodeDeptsT = "NodeDeptsT";
+
+	public static final String NodeEmps = "NodeEmps";
+	public static final String NodeEmpsT = "NodeEmpsT";
+	public static final String UIWidth = "UIWidth";
+	public static final String UIHeight = "UIHeight";
+	public static final String UIAngle = "UIAngle";
+	///#endregion 对应关系
+
+
 
 }

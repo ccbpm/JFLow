@@ -1,6 +1,10 @@
 package bp.wf.template.frm;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.sys.*;
+import bp.*;
+import bp.wf.*;
+import bp.wf.template.*;
 import java.util.*;
 
 /** 
@@ -13,13 +17,15 @@ public class MapFrmReferencePanels extends EntitiesNoName
 	/** 
 	 Word表单属性s
 	*/
-	public MapFrmReferencePanels() throws Exception {
+	public MapFrmReferencePanels()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new MapFrmReferencePanel();
 	}
 
@@ -32,7 +38,8 @@ public class MapFrmReferencePanels extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<MapFrmReferencePanel> ToJavaList() {
+	public final java.util.List<MapFrmReferencePanel> ToJavaList()
+	{
 		return (java.util.List<MapFrmReferencePanel>)(Object)this;
 	}
 	/** 
@@ -40,7 +47,8 @@ public class MapFrmReferencePanels extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<MapFrmReferencePanel> Tolist()  {
+	public final ArrayList<MapFrmReferencePanel> Tolist()
+	{
 		ArrayList<MapFrmReferencePanel> list = new ArrayList<MapFrmReferencePanel>();
 		for (int i = 0; i < this.size(); i++)
 		{

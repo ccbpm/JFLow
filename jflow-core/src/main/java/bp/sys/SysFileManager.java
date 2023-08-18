@@ -2,8 +2,8 @@ package bp.sys;
 
 import bp.da.*;
 import bp.en.*;
-import bp.web.WebUser;
-import bp.wf.template.SQLTemplateAttr;
+import bp.en.Map;
+import java.util.*;
 
 /** 
  文件管理者
@@ -15,133 +15,105 @@ public class SysFileManager extends EntityOID
 	/** 
 	 
 	*/
-	public final String getWebPath() throws Exception
-	{
+	public final String getWebPath()  {
 		return this.GetValStringByKey(SysFileManagerAttr.WebPath);
 	}
-	public final void setWebPath(String value)  throws Exception
-	 {
+	public final void setWebPath(String value){
 		this.SetValByKey(SysFileManagerAttr.WebPath, value);
 	}
-	public final String getAttrFileNo() throws Exception
-	{
+	public final String getAttrFileNo()  {
 		return this.GetValStringByKey(SysFileManagerAttr.AttrFileNo);
 	}
-	public final void setAttrFileNo(String value)  throws Exception
-	 {
+	public final void setAttrFileNo(String value){
 		this.SetValByKey(SysFileManagerAttr.AttrFileNo, value);
 	}
 
-	public final String getAttrFileName() throws Exception
-	{
+	public final String getAttrFileName()  {
 		return this.GetValStringByKey(SysFileManagerAttr.AttrFileName);
 	}
-	public final void setAttrFileName(String value)  throws Exception
-	 {
+	public final void setAttrFileName(String value){
 		this.SetValByKey(SysFileManagerAttr.AttrFileName, value);
 	}
 
-	public final String getMyFileName() throws Exception
-	{
+	public final String getMyFileName()  {
 		return this.GetValStringByKey(SysFileManagerAttr.MyFileName);
 	}
-	public final void setMyFileName(String value)  throws Exception
-	 {
+	public final void setMyFileName(String value){
 		this.SetValByKey(SysFileManagerAttr.MyFileName, value);
 	}
-	public final String getMyFileWebUrl() throws Exception {
+	public final String getMyFileWebUrl() {
 		return this.getWebPath();
 	}
 
-	public final String getMyFileExt() throws Exception
-	{
+	public final String getMyFileExt()  {
 		return this.GetValStringByKey(SysFileManagerAttr.MyFileExt);
 	}
-	public final void setMyFileExt(String value)  throws Exception
-	 {
+	public final void setMyFileExt(String value){
 		this.SetValByKey(SysFileManagerAttr.MyFileExt, value);
 	}
 
 
 	public final String getRec() throws Exception {
 		String s = this.GetValStringByKey(SysFileManagerAttr.Rec);
-		if (s == null || s.equals(""))
+		if (s == null || Objects.equals(s, ""))
 		{
 			return null;
 		}
 		return s;
 	}
-	public final void setRec(String value)  throws Exception
-	 {
+	public final void setRec(String value){
 		this.SetValByKey(SysFileManagerAttr.Rec, value);
 	}
 
-	public final String getRecText() throws Exception
-	{
+	public final String getRecText()  {
 		return this.GetValRefTextByKey(SysFileManagerAttr.Rec);
 	}
-	public final String getEnName() throws Exception
-	{
+	public final String getEnName()  {
 		return this.GetValStringByKey(SysFileManagerAttr.EnName);
 	}
-	public final void setEnName(String value)  throws Exception
-	 {
+	public final void setEnName(String value){
 		this.SetValByKey(SysFileManagerAttr.EnName, value);
 	}
-	public final Object getRefVal() throws Exception
-	{
+	public final Object getRefVal()  {
 		return this.GetValByKey(SysFileManagerAttr.RefVal);
 	}
-	public final void setRefVal(Object value)  throws Exception
-	 {
+	public final void setRefVal(Object value){
 		this.SetValByKey(SysFileManagerAttr.RefVal, value);
 	}
-	public final String getMyFilePath() throws Exception
-	{
+	public final String getMyFilePath()  {
 		return this.GetValStringByKey(SysFileManagerAttr.MyFilePath);
 	}
-	public final void setMyFilePath(String value)  throws Exception
-	 {
+	public final void setMyFilePath(String value){
 		this.SetValByKey(SysFileManagerAttr.MyFilePath, value);
 	}
-	public final int getMyFileH() throws Exception
-	{
+	public final int getMyFileH()  {
 		return this.GetValIntByKey(SysFileManagerAttr.MyFileH);
 	}
-	public final void setMyFileH(int value)  throws Exception
-	 {
+	public final void setMyFileH(int value){
 		this.SetValByKey(SysFileManagerAttr.MyFileH, value);
 	}
-	public final int getMyFileW() throws Exception
-	{
+	public final int getMyFileW()  {
 		return this.GetValIntByKey(SysFileManagerAttr.MyFileW);
 	}
-	public final void setMyFileW(int value)  throws Exception
-	 {
+	public final void setMyFileW(int value){
 		this.SetValByKey(SysFileManagerAttr.MyFileW, value);
 	}
-	public final float getMyFileSize() throws Exception
-	{
+	public final float getMyFileSize()  {
 		return this.GetValIntByKey(SysFileManagerAttr.MyFileSize);
 	}
-	public final void setMyFileSize(float value)  throws Exception
-	 {
+	public final void setMyFileSize(float value){
 		this.SetValByKey(SysFileManagerAttr.MyFileSize, value);
 	}
-	public final String getRDT() throws Exception
-	{
+	public final String getRDT()  {
 		return this.GetValStringByKey(SysFileManagerAttr.RDT);
 	}
-	public final void setRDT(String value)  throws Exception
-	 {
+	public final void setRDT(String value){
 		this.SetValByKey(SysFileManagerAttr.RDT, value);
 	}
-	public final String getNote() throws Exception
-	{
+	public final String getNote()  {
 		return this.GetValStringByKey(SysFileManagerAttr.Note);
 	}
-	public final void setNote(String value)  throws Exception
-	 {
+	public final void setNote(String value){
 		this.SetValByKey(SysFileManagerAttr.Note, value);
 	}
 
@@ -149,7 +121,8 @@ public class SysFileManager extends EntityOID
 
 
 		///#region 构造方法
-	public SysFileManager()  {
+	public SysFileManager()
+	{
 	}
 	/** 
 	 文件管理者
@@ -163,7 +136,7 @@ public class SysFileManager extends EntityOID
 	 map
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -180,27 +153,29 @@ public class SysFileManager extends EntityOID
 
 		map.AddMyFile("文件名称");
 
-			//map.AddTBString(SysFileManagerAttr.MyFileName, null, "文件名称", true, false, 1, 50, 20);
-			//map.AddTBInt(SysFileManagerAttr.MyFileSize, 0, "文件大小", true, true);
-			//map.AddTBInt(SysFileManagerAttr.MyFileH, 0, "Img高度", true, true);
-			//map.AddTBInt(SysFileManagerAttr.MyFileW, 0, "Img宽度", true, true);
-			//map.AddTBString(SysFileManagerAttr.MyFileExt, null, "文件类型", true, true, 0, 50, 20);
+		//map.AddTBString(SysFileManagerAttr.MyFileName, null, "文件名称", true, false, 1, 50, 20);
+		//map.AddTBInt(SysFileManagerAttr.MyFileSize, 0, "文件大小", true, true);
+		//map.AddTBInt(SysFileManagerAttr.MyFileH, 0, "Img高度", true, true);
+		//map.AddTBInt(SysFileManagerAttr.MyFileW, 0, "Img宽度", true, true);
+		//map.AddTBString(SysFileManagerAttr.MyFileExt, null, "文件类型", true, true, 0, 50, 20);
 
 		map.AddTBString(SysFileManagerAttr.RDT, null, "上传时间", true, true, 1, 50, 20);
 		map.AddTBString(SysFileManagerAttr.Rec, null, "上传人", true, true, 0, 50, 20);
-		map.AddTBStringDoc(SQLTemplateAttr.Docs, null, "SQL模版", true, false, true, 10);
+		map.AddTBStringDoc();
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 	   this.setRec(bp.web.WebUser.getNo());
 	   this.setRDT(DataType.getCurrentDateTime());
 		return super.beforeInsert();
 	}
 	@Override
-	protected boolean beforeDelete() throws Exception {
-		if (this.getRec().equals(WebUser.getNo()))
+	protected boolean beforeDelete() throws Exception
+	{
+		if (Objects.equals(this.getRec(), bp.web.WebUser.getNo()))
 		{
 			return super.beforeDelete();
 		}
@@ -217,7 +192,7 @@ public class SysFileManager extends EntityOID
 		//if (fi.Exists == false)
 		//    throw new Exception("文件已经不存在。");
 
-		//this.MyFileSize =int.Parse( fi.Length.ToString());
+		//this.MyFileSize =int.Parse( fi.length().ToString());
 		//this.MyFilePath = fi.FullMyFileName;
 		//this.MyFileName = fi.MyFileName;
 		//this.Insert();
@@ -227,19 +202,19 @@ public class SysFileManager extends EntityOID
 		//// Read file data into buffer
 		//using (FileStream fs = fi.OpenRead())
 		//{
-		//    bData = new byte[fi.Length];
-		//    int nReadLength = fs.Read(bData, 0, (int)(fi.Length));
+		//    bData = new byte[fi.length()];
+		//    int nReadLength = fs.Read(bData, 0, (int)(fi.length()));
 		//}
 
 		////			// Add file info into DB
-		////			string strQuery = "INSERT INTO FileInfo " 
+		////			String strQuery = "INSERT INTO FileInfo " 
 		////				+ " ( FileMyFileName, FullMyFileName, FileData ) "
 		////				+ " VALUES "
 		////				+ " ( @FileMyFileName, @FullMyFileName, @FileData ) "
 		////				+ " SELECT @@IDENTITY AS 'Identity'";
 
-		//string strQuery = "UPDATE Sys_FileManager SET FileData=@FileData WHERE OID=" + this.OID;
-		//OleDbConnection conn = (OleDbConnection)bp.da.DBAccess.GetAppCenterDBConn;
+		//String strQuery = "UPDATE Sys_FileManager SET FileData=@FileData WHERE OID=" + this.OID;
+		//OleDbConnection conn = (OleDbConnection)BP.DA.DBAccess.GetAppCenterDBConn;
 		//conn.Open();
 
 		//OleDbCommand sqlComm = new OleDbCommand(strQuery,

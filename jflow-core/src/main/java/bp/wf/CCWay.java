@@ -1,6 +1,5 @@
 package bp.wf;
 
-import bp.*;
 
 /** 
  抄送方式
@@ -26,11 +25,13 @@ public enum CCWay
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue() {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
-	public static CCWay forValue(int value) 
-	{return values()[value];
+	public static CCWay forValue(int value)
+	{
+		return values()[value];
 	}
 }

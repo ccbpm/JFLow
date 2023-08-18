@@ -1,6 +1,5 @@
 package bp.wf.template;
 
-
 /** 
  节点表单属性	  
 */

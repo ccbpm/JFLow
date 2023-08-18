@@ -1,14 +1,5 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.en.*;
-import bp.port.*;
-import bp.*;
-import bp.wf.*;
-import java.util.*;
-
-//using BP.ZHZS.Base;
-
 
 /** 
  可退回的节点属性	  

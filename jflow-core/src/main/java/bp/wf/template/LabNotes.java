@@ -1,11 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.wf.template.*;
-import bp.port.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -19,7 +14,8 @@ public class LabNotes extends Entities
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new LabNote();
 	}
 
@@ -30,12 +26,12 @@ public class LabNotes extends Entities
 	/** 
 	 标签集合
 	*/
-	public LabNotes() throws Exception {
+	public LabNotes()
+	{
 	}
 	/** 
 	 标签集合.
-	 
-	 param FlowNo
+	 @param fk_flow
 	*/
 	public LabNotes(String fk_flow) throws Exception {
 		this.Retrieve(NodeAttr.FK_Flow, fk_flow, null);
@@ -50,7 +46,8 @@ public class LabNotes extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.List<LabNote> ToJavaList() {
+	public final java.util.List<LabNote> ToJavaList()
+	{
 		return (java.util.List<LabNote>)(Object)this;
 	}
 	/** 
@@ -58,7 +55,8 @@ public class LabNotes extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<LabNote> Tolist()  {
+	public final ArrayList<LabNote> Tolist()
+	{
 		ArrayList<LabNote> list = new ArrayList<LabNote>();
 		for (int i = 0; i < this.size(); i++)
 		{

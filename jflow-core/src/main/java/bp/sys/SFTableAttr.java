@@ -1,12 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.web.*;
-import bp.difference.*;
-import bp.*;
-import java.util.*;
-
 /** 
  用户自定义表
 */
@@ -39,7 +33,7 @@ public class SFTableAttr extends EntityNoNameAttr
 	/** 
 	 表类型
 	*/
-	public static final String SrcType = "SrcType";
+	public static final String DictSrcType = "DBSrcType";
 	/** 
 	 字典表类型
 	*/
@@ -82,7 +76,7 @@ public class SFTableAttr extends EntityNoNameAttr
 	/** 
 	 缓存分钟数
 	*/
-	public static final String CashMinute = "CashMinute";
+	public static final String CacheMinute = "CacheMinute";
 	/** 
 	 最近缓存的时间
 	*/
@@ -95,10 +89,10 @@ public class SFTableAttr extends EntityNoNameAttr
 	 组织编号
 	*/
 	public static final String OrgNo = "OrgNo";
-	/**
+
+		///#endregion 链接到其他系统获取数据的属性。
+	/** 
 	 AtPara
 	*/
 	public static final String AtPara = "AtPara";
-
-		///#endregion 链接到其他系统获取数据的属性。
 }

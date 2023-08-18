@@ -23,11 +23,13 @@ public enum MenuCtrlWay
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
 	public static MenuCtrlWay forValue(int value)
-	{return values()[value];
+	{
+		return values()[value];
 	}
 }

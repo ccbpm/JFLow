@@ -1,5 +1,7 @@
 package bp.ccfast.ccmenu;
 
+import bp.*;
+import bp.ccfast.*;
 
 /** 
  控制方式
@@ -15,7 +17,7 @@ public enum CtrlWay
 	*/
 	AnyOne,
 	/** 
-	 按岗位
+	 按角色
 	*/
 	ByStation,
 	/** 
@@ -33,11 +35,13 @@ public enum CtrlWay
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue() {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
-	public static CtrlWay forValue(int value) 
-	{return values()[value];
+	public static CtrlWay forValue(int value)
+	{
+		return values()[value];
 	}
 }

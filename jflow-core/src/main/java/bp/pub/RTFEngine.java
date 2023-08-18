@@ -1,46 +1,53 @@
 package bp.pub;
 
+import bp.en.*; import bp.en.Map;
 import bp.da.*;
-import bp.difference.SystemConfig;
-import bp.en.Attr;
-import bp.en.Entities;
-import bp.en.Entity;
-import bp.en.Map;
-import bp.port.Emps;
+import bp.port.*;
 import bp.sys.*;
 import bp.tools.ConvertTools;
 import bp.tools.StringHelper;
-import bp.wf.ActionType;
-import bp.wf.GenerWorkerLists;
+import bp.web.*;
+import bp.difference.*;
+import bp.*;
+import bp.wf.*;
 import bp.wf.httphandler.WF_WorkOpt_OneWork;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.*;
+import java.io.*;
+import java.nio.file.*;
+import java.time.*;
+import java.math.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- * WebRtfReport 的摘要说明。
- */
-public class RTFEngine {
-	// 数据实体
-	private Entities _HisEns = null;
+ WebRtfReport 的摘要说明。
+*/
+public class RTFEngine
+{
 
-	public final Entities getHisEns()  {
-		if (_HisEns == null) {
+		///#region 数据实体
+	private Entities _HisEns = null;
+	public final Entities getHisEns()
+	{
+		if (_HisEns == null)
+		{
 			_HisEns = new Emps();
 		}
 
 		return _HisEns;
 	}
 
-	// 数据实体
+		///#endregion 数据实体
 
-	// 数据明细实体
+		///#region 模板数据
+	public String _rtfStr = "";
+	///#endregion 模板数据
+	///#region 数据明细实体
 
 	public final String GetCode(String str) {
 		if (StringHelper.isNullOrEmpty(str)) {
@@ -63,96 +70,147 @@ public class RTFEngine {
 		}
 		return rtn.replace("\n", " \\par ");
 	}
-
-	private java.util.ArrayList _EnsDataDtls = null;
-
-	public final java.util.ArrayList getEnsDataDtls() {
-		if (_EnsDataDtls == null) {
-			_EnsDataDtls = new java.util.ArrayList();
+	//明细表数据
+	private ArrayList _EnsDataDtls = null;
+	public final ArrayList getEnsDataDtls()
+	{
+		if (_EnsDataDtls == null)
+		{
+			_EnsDataDtls = new ArrayList();
 		}
 		return _EnsDataDtls;
 	}
-
-	// 多附件数据
+	//多附件数据
 	private Hashtable _EnsDataAths = null;
-
-	public Hashtable getEnsDataAths() {
-
+	public final Hashtable getEnsDataAths()
+	{
 		if (_EnsDataAths == null)
+		{
 			_EnsDataAths = new Hashtable();
+		}
 		return _EnsDataAths;
-
 	}
 
-	// 数据明细实体
+
+		///#endregion 数据明细实体
 
 	/**
-	 * 增加一个数据实体
-	 *
-	 * param en
-	 */
-	public final void AddEn(Entity en) throws Exception{
+	 增加一个数据实体
+
+	 @param en
+	*/
+	public final void AddEn(Entity en) throws Exception {
 		this.getHisEns().AddEntity(en);
 	}
-
 	/**
-	 * 增加一个Ens
-	 *
-	 * param dtlEns
-	 */
-	public final void AddDtlEns(Entities dtlEns) {
+	 增加一个Ens
+	 @param dtlEns
+	*/
+	public final void AddDtlEns(Entities dtlEns)
+	{
 		this.getEnsDataDtls().add(dtlEns);
 	}
-
 	public String CyclostyleFilePath = "";
 	public String TempFilePath = "";
 
-	// 获取特殊要处理的流程节点信息.
-	public final String GetValueByKeyOfCheckNode(String[] strs) throws Exception {
-		for (Object en : this.getHisEns()) {
 
-			String val = ((Entity) en).GetValStringByKey(strs[2]);
-			switch (strs.length) {
+		///#region 获取特殊要处理的流程节点信息.
+	public final String GetValueByKeyOfCheckNode(String[] strs) throws Exception {
+		for (Entity en : this.getHisEns())
+		{
+			String val = en.GetValStringByKey(strs[2]);
+			switch (strs.length)
+			{
 				case 1:
 				case 2:
 					throw new RuntimeException("step1参数设置错误" + strs.toString());
 				case 3: // S.9001002.Rec
 					return val;
 				case 4: // S.9001002.RDT.Year
-					if (strs[3].equals("Text")) {
-						if (val.equals("0")) {
-							return "否";
-						} else {
-							return "是";
-						}
-					} else if (strs[3].equals("YesNo")) {
-						if (val.equals("1")) {
-							return "[√]";
-						} else {
-							return "[×]";
-						}
-					} else if (strs[3].equals("Year")) {
-						return val.substring(0, 4);
-					} else if (strs[3].equals("Month")) {
-						return val.substring(5, 7);
-					} else if (strs[3].equals("Day")) {
-						return val.substring(8, 10);
-					} else if (strs[3].equals("NYR")) {
-						// return
-						// bp.da.DataType.ParseSysDate2DateTime(val).ToString("yyyy年MM月dd日");
-					} else if (strs[3].equals("RMB")) {
-						DecimalFormat fnum = new DecimalFormat("##0.00");
-						return fnum.format(val);
-					} else if (strs[3].equals("RMBDX")) {
-						return bp.da.DataType.ParseFloatToCash(Float.parseFloat(val));
-					} else {
-						throw new RuntimeException("step2参数设置错误" + strs);
+					switch (strs[3])
+					{
+						case "Text":
+							if (Objects.equals(val, "0"))
+							{
+								return "否";
+							}
+							else
+							{
+								return "是";
+							}
+						case "YesNo":
+							if (Objects.equals(val, "1"))
+							{
+								return "[√]";
+							}
+							else
+							{
+								return "[×]";
+							}
+						case "Year":
+							return val.substring(0, 4);
+						case "Month":
+							return val.substring(5, 7);
+						case "Day":
+							return val.substring(8, 10);
+						case "NYR":
+							return DataType.getDateByFormart(DataType.ParseSysDate2DateTime(val),"yyyy年MM月dd日");
+						case "RMB":
+							DecimalFormat fnum = new DecimalFormat("##0.00");
+							return fnum.format(val);
+						case "RMBDX":
+							return DataType.ParseFloatToCache(Float.parseFloat(val));
+						default:
+							throw new RuntimeException("step2参数设置错误" + strs);
 					}
 				default:
 					throw new RuntimeException("step3参数设置错误" + strs);
 			}
 		}
 		throw new RuntimeException("step4参数设置错误" + strs);
+	}
+	public Entity HisGEEntity = null;
+	/**
+	 获取ICON图片的数据。
+
+	 @param key
+	 @return
+	*/
+	public final String GetValueImgStrs(String key) throws Exception {
+		key = key.replace(" ", "");
+		key = key.replace("\r\n", "");
+		String web_path = SystemConfig.getPathOfWebApp();
+		// 说明是图片文件.
+		String path = key.replace("OID.Img@AppPath", web_path.substring(0, web_path.length() - 1)).replace("\\\\",
+				"\\");
+		// 定义rtf中图片字符串
+		StringBuilder pict = new StringBuilder();
+		// 获取要插入的图片
+		// Image img = Image.FromFile(path);
+		BufferedImage image = null;
+		try {
+			image = ImageIO.read(new File(path));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		// 将要插入的图片转换为16进制字符串
+		String imgHexString;
+
+
+		imgHexString = ImageTo16String(path);
+
+		// 生成rtf中图片字符串
+		pict.append("\n");
+		pict.append("{\\pict");
+		pict.append("\\jpegblip");
+		pict.append("\\picscalex100");
+		pict.append("\\picscaley100");
+		pict.append("\\picwgoal" + image.getWidth() * 15);
+		pict.append("\\pichgoal" + image.getHeight() * 15);
+		pict.append(imgHexString + "}");
+		pict.append("\n");
+		return pict.toString();
 	}
 
 	/**
@@ -163,29 +221,6 @@ public class RTFEngine {
 	 * @throws IOException
 	 */
 	public static String ImageTo16String(String image_path){
-		/*try{
-			FileInputStream fis = new FileInputStream(image_path);
-			BufferedInputStream bis = new BufferedInputStream(fis);
-			java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
-
-			byte[] buff = new byte[1024];
-			int len = 0;
-			while ((len = fis.read(buff)) != -1) {
-				bos.write(buff, 0, len);
-			}
-			// 得到图片的字节数组
-			byte[] result = bos.toByteArray();
-
-			System.out.println(byte2HexStr(result));
-			// 字节数组转成十六进制
-			String str = byte2HexStr(result);
-			return str;
-		}catch(Exception e){
-			e.printStackTrace();
-		}*/
-
-
-
 		FileInputStream fis = null;
 		ByteArrayOutputStream bos = null;
 		try {
@@ -235,116 +270,35 @@ public class RTFEngine {
 
 		return "";
 	}
-
-	/*
-	 * 实现字节数组向十六进制的转换方法一
-	 */
-	public static String byte2HexStr(byte[] b) {
-		String hs = "";
-		String stmp = "";
-		for (int n = 0; n < b.length; n++) {
-			stmp = (Integer.toHexString(b[n] & 0XFF));
-			if (stmp.length() == 1)
-				hs = hs + "0" + stmp;
-			else
-				hs = hs + stmp;
-		}
-		return hs.toUpperCase();
-	}
-
-	@SuppressWarnings("unused")
-	private static byte uniteBytes(String src0, String src1) {
-		byte b0 = Byte.decode("0x" + src0).byteValue();
-		b0 = (byte) (b0 << 4);
-		byte b1 = Byte.decode("0x" + src1).byteValue();
-		byte ret = (byte) (b0 | b1);
-		return ret;
-	}
-
-	/*
-	 * 实现字节数组向十六进制的转换的方法二
-	 */
-	public static String bytesToHexString(byte[] src) {
-		StringBuilder stringBuilder = new StringBuilder("");
-		if (src == null || src.length <= 0) {
-			return null;
-		}
-		for (int i = 0; i < src.length; i++) {
-			int v = src[i] & 0xFF;
-			String hv = Integer.toHexString(v);
-			if (hv.length() < 2) {
-				stringBuilder.append(0);
-			}
-			stringBuilder.append(hv);
-		}
-		return stringBuilder.toString();
-
-	}
-
-
-	public static String GetImgHexString(Image img, Image ext) {
-
-		return "";
-	}
-
-	public Entity HisGEEntity = null;
-
 	/**
-	 * 获取ICON图片的数据。
-	 *
-	 * param key
-	 * @return
-	 */
-	public final String GetValueImgStrs(String key) throws Exception {
-		key = key.replace(" ", "");
-		key = key.replace("\r\n", "");
-		String web_path = SystemConfig.getPathOfWebApp();
-		// 说明是图片文件.
-		String path = key.replace("OID.Img@AppPath", web_path.substring(0, web_path.length() - 1)).replace("\\\\",
-				"\\");
-		// 定义rtf中图片字符串
-		StringBuilder pict = new StringBuilder();
-		// 获取要插入的图片
-		// Image img = Image.FromFile(path);
-		BufferedImage image = null;
-		try {
-			image = ImageIO.read(new File(path));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		// 将要插入的图片转换为16进制字符串
-		String imgHexString;
-
-
-		imgHexString = ImageTo16String(path);
-
-		// 生成rtf中图片字符串
-		pict.append("\n");
-		pict.append("{\\pict");
-		pict.append("\\jpegblip");
-		pict.append("\\picscalex100");
-		pict.append("\\picscaley100");
-		pict.append("\\picwgoal" + image.getWidth() * 15);
-		pict.append("\\pichgoal" + image.getHeight() * 15);
-		pict.append(imgHexString + "}");
-		pict.append("\n");
-		return pict.toString();
-	}
-
-	/// <summary>
-	/// 输入轨迹表.
-	/// </summary>
-	/// <returns></returns>
+	 输入轨迹表.
+	 @return
+	*/
 	public StringBuilder GetFlowTrackTable(StringBuilder str) throws Exception {
-		WF_WorkOpt_OneWork oneWork = new WF_WorkOpt_OneWork();
 		DataTable dt = null;
 		GenerWorkerLists gwls = null;
 		try {
+			Work wk = (Work)this.HisGEEntity;
 			//获取轨迹信息
-			dt=oneWork.getTimeBase();
+			dt=bp.wf.Dev2Interface.DB_GenerTrackTable(wk.getHisNode().getFlowNo(), wk.getOID(), wk.getFID());
 			// 获取人员信息
-			gwls = oneWork.getGwf();
+			GenerWorkFlow gwf = new GenerWorkFlow();
+			gwls = new GenerWorkerLists();
+			gwf.setWorkID(wk.getOID());
+			gwf.RetrieveFromDBSources();
+
+			if (gwf.getWFState() != WFState.Complete) {
+
+				gwls.Retrieve(GenerWorkerListAttr.WorkID,wk.getOID(), GenerWorkerListAttr.Idx);
+
+				// warning 补偿式的更新. 做特殊的判断，当会签过了以后仍然能够看isPass=90的错误数据.
+				for (GenerWorkerList item : gwls.ToJavaList()) {
+					if (item.getPassInt() == 90 && gwf.getNodeID() != item.getNodeID()) {
+						item.setPassInt(0);
+						item.Update();
+					}
+				}
+			}
 
 			String shortName = "Track";
 
@@ -365,7 +319,7 @@ public class RTFEngine {
 
 				int i = dt.Rows.size();
 				//增加等待审核的人员, 在所有的人员循环以后.
-				Entity gwl = new GenerWorkerLists().getGetNewEntity();
+				Entity gwl = new GenerWorkerLists().getNewEntity();
 				for (int ii = 0; ii < gwls.size(); ii++) {
 
 					gwl = gwls.get(ii);
@@ -417,8 +371,8 @@ public class RTFEngine {
 						endTime = dr.getValue("rdt").toString();
 					} else {
 						//上一节点的到达时间就是本节点的开始时间
-						startTime= dt.Rows.get(i - 1).get("rdt").toString();
-						endTime = dt.Rows.get(i).get("rdt").toString();
+						startTime= dt.Rows.get(i - 1).getValue("rdt").toString();
+						endTime = dt.Rows.get(i).getValue("rdt").toString();
 					}
 					//求得历时时间差
 					SimpleDateFormat sf = new SimpleDateFormat(DataType.getSysDateTimessFormat());
@@ -439,11 +393,59 @@ public class RTFEngine {
 		return  str;
 	}
 	/**
-	 * 获取写字版的数据
-	 *
-	 * param key
-	 * @return
-	 */
+	 获取ICON图片的数据。
+	 @param billUrl
+	 @return
+	*/
+	public final String GetValueImgStrsOfQR(String billUrl)
+	{
+		/*说明是图片文件.*/
+		String path = SystemConfig.getPathOfTemp() + DBAccess.GenerGUID() + ".png"; // key.replace("OID.Img@AppPath", bp.difference.SystemConfig.getPathOfWebApp());
+
+
+		///#region 生成二维码.
+		bp.tools.QrCodeUtil.createQrCode(path,SystemConfig.getPathOfTemp(),DBAccess.GenerGUID()+".png","png");
+		///#endregion
+
+		//定义rtf中图片字符串
+		StringBuilder pict = new StringBuilder();
+		BufferedImage image = null;
+		try {
+			image = ImageIO.read(new File(path));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		// 将要插入的图片转换为16进制字符串
+		String imgHexString;
+		imgHexString = ImageTo16String(path);
+		//生成rtf中图片字符串
+		pict.append("\r\n");
+		pict.append("{\\pict");
+		pict.append("\\jpegblip");
+		pict.append("\\picscalex100");
+		pict.append("\\picscaley100");
+		pict.append("\\picwgoal" + image.getWidth() * 15);
+		pict.append("\\pichgoal" + image.getHeight() * 15);
+		pict.append(imgHexString + "}");
+		pict.append("\r\n");
+		return pict.toString();
+	}
+	/**
+	 获取M2M数据并输出
+
+	 @param key
+	 @return
+	*/
+	public final String GetValueM2MStrs(String key)
+	{
+		return "";
+	}
+	/**
+	 获取写字版的数据
+
+	 @param key
+	 @return
+	*/
 	public final String GetValueBPPaintStrs(String key) {
 		key = key.replace(" ", "");
 		key = key.replace("\r\n", "");
@@ -474,35 +476,7 @@ public class RTFEngine {
 		// 将要插入的图片转换为16进制字符串
 		String imgHexString;
 		filePath = filePath.toLowerCase();
-
 		imgHexString = ImageTo16String(filePath);
-
-		// if (filePath.contains(".png"))
-		// {
-		// imgHexString = GetImgHexString(img,
-		// System.Drawing.Imaging.ImageFormat.Png);
-		// }
-		// else if (filePath.contains(".jp"))
-		// {
-		// imgHexString = GetImgHexString(img,
-		// System.Drawing.Imaging.ImageFormat.Jpeg);
-		// }
-		// else if (filePath.contains(".gif"))
-		// {
-		// imgHexString = GetImgHexString(img,
-		// System.Drawing.Imaging.ImageFormat.Gif);
-		// }
-		// else if (filePath.contains(".ico"))
-		// {
-		// imgHexString = GetImgHexString(img,
-		// System.Drawing.Imaging.ImageFormat.Icon);
-		// }
-		// else
-		// {
-		// imgHexString = GetImgHexString(img,
-		// System.Drawing.Imaging.ImageFormat.Jpeg);
-		// }
-
 		// 生成rtf中图片字符串
 		pict.append("\n");
 		pict.append("{\\pict");
@@ -515,14 +489,14 @@ public class RTFEngine {
 		pict.append("\n");
 		return pict.toString();
 	}
-
 	/**
-	 * 获取类名+@+字段格式的数据. 比如： Demo_Inc@ABC Emp@Name
-	 *
-	 * param key
-	 * @return
-	 * @throws Exception
-	 */
+	 获取类名+@+字段格式的数据.
+	 比如：
+	 Demo_Inc@ABC
+	 Emp@Name
+	 @param key
+	 @return
+	*/
 	public final String GetValueByAtKey(String key) throws Exception {
 		for (Entity en : Entities.convertEntities(this.getHisEns())) {
 			String enKey = en.toString();
@@ -598,7 +572,7 @@ public class RTFEngine {
 				} else if (strs[1].trim().equals("RMB")) {
 					return new DecimalFormat("##0.00").format(Float.parseFloat(val));
 				} else if (strs[1].trim().equals("RMBDX")) {
-					return DataType.ParseFloatToCash(Float.parseFloat(val));
+					return DataType.ParseFloatToCache(Float.parseFloat(val));
 				} else if (strs[1].trim().equals("ImgAth")) {
 					String path1 = SystemConfig.getPathOfDataUser() + "\\ImgAth\\Data\\" + strs[0].trim() + "_"
 							+ this.HisGEEntity.getPKVal() + ".png";
@@ -666,51 +640,260 @@ public class RTFEngine {
 				}
 			}
 		} // 实体循环。
-
 		throw new RuntimeException("参数设置错误 GetValueByKey ：" + key);
-
 	}
 
 	/**
-	 * 审核节点的表示方法是 节点ID.Attr.
-	 *
-	 * param key
-	 * @return
-	 * @throws Exception
-	 */
+	 获得所所有的审核人员信息.
+
+	 @return
+	*/
+	public final String GetValueCheckWorks() throws Exception {
+		String html = "";
+
+		//获得当前待办的人员,把当前审批的人员排除在外,不然就有默认同意的意见可以打印出来.
+		String sql = "SELECT FK_Emp, FK_Node FROM WF_GenerWorkerlist WHERE IsPass!=1 AND WorkID=" + this.HisGEEntity.getPKVal();
+		DataTable dtOfTodo = DBAccess.RunSQLReturnTable(sql);
+
+		for (DataRow dr : dtTrack.Rows)
+		{
+
+				///#region 排除正在审批的人员.
+			String nodeID = dr.getValue("NDFrom").toString();
+			String empFrom = dr.getValue("EmpFrom").toString();
+			if (dtOfTodo.Rows.size() != 0)
+			{
+				boolean isHave = false;
+				for (DataRow mydr : dtOfTodo.Rows)
+				{
+					if (!Objects.equals(mydr.getValue("FK_Node").toString(), nodeID))
+					{
+						continue;
+					}
+
+					if (!Objects.equals(mydr.getValue("FK_Emp").toString(), empFrom))
+					{
+						continue;
+					}
+					isHave = true;
+				}
+
+				if (isHave == true)
+				{
+					continue;
+				}
+			}
+
+				///#endregion 排除正在审批的人员.
+
+
+			html += "<tr>";
+			html += " <td valign=middle >" + dr.getValue("NDFromT") + "</td>";
+
+			String msg = dr.getValue("Msg").toString();
+
+			msg += "<br>";
+			msg += "<br>";
+
+			String empStrs = "";
+			if (dtTrack == null)
+			{
+				empStrs = dr.getValue("EmpFromT").toString();
+			}
+			else
+			{
+				String singType = "0";
+				for (DataRow drTrack : dtTrack.Rows)
+				{
+					if (Objects.equals(drTrack.getValue("No").toString(), dr.getValue("EmpFrom").toString()))
+					{
+						singType = drTrack.getValue("SignType").toString();
+						break;
+					}
+				}
+
+				if (Objects.equals(singType, "0") || Objects.equals(singType, "2"))
+				{
+					empStrs = dr.getValue("EmpFromT").toString();
+				}
+
+
+				if (Objects.equals(singType, "1"))
+				{
+					empStrs = "<img src='../../../../../DataUser/Siganture/" + dr.getValue("EmpFrom") + ".jpg' title='" + dr.getValue("EmpFromT") + "' style='height:60px;' border=0 onerror=\"src='../../../../../DataUser/Siganture/UnName.jpg'\" /> " + dr.getValue("EmpFromT");
+				}
+
+			}
+
+			msg += "审核人:" + empStrs + " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期:" + dr.getValue("RDT").toString();
+
+			html += " <td colspan=3 valign=middle >" + msg + "</td>";
+			html += " </tr>";
+		}
+
+		return html;
+	}
+	/**
+	 获得审核组件的信息.
+
+	 @param key
+	 @return
+	*/
+	public final String GetValueCheckWorkByKey(String key)
+	{
+		key = key.replace(" ", "");
+		key = key.replace("\r\n", "");
+
+		String[] strs = key.split("[.]", -1);
+		if (strs.length == 3)
+		{
+			/*
+			 *  是一个节点一个审核人的模式. <WorkCheck.RDT.101>
+			 */
+			if (dtTrack == null)
+			{
+				throw new RuntimeException("@您设置了获取审核组件里的规则，但是你没有给审核组件数据源dtTrack赋值。");
+			}
+
+			String nodeID = strs[2];
+			for (DataRow dr : dtTrack.Rows)
+			{
+				if (!Objects.equals(dr.getValue("NDFrom").toString(), nodeID))
+				{
+					continue;
+				}
+
+				switch (strs[1])
+				{
+					case "RDT":
+						return dr.getValue("RDT").toString(); //审核日期.
+					case "RDT-NYR":
+						String rdt = dr.getValue("RDT").toString(); //审核日期.
+						LocalDateTime dt = LocalDateTime.parse(rdt);
+						return dt.getYear() + "\\'c4\\'ea" + dt.getMonthValue() + "\\'d4\\'c2" + dt.getDayOfMonth() + "\\'c8\\'d5";
+					case "Rec":
+						return dr.getValue("EmpFrom").toString(); //记录人.
+					case "RecName":
+						String recName = dr.getValue("EmpFromT").toString(); //审核人.
+						recName = this.GetCode(recName);
+						return recName;
+					case "Msg":
+					case "Note":
+						String text = dr.getValue("Msg").toString();
+						text = text.replace("\\", "\\\\");
+						text = this.GetCode(text);
+						return text;
+
+					//return System.Text.Encoder  //审核信息.
+					default:
+						break;
+				}
+			}
+		}
+
+		return "无";
+	}
+
+	private String GetValueCheckWorkByKey(DataRow row, String key)
+	{
+		key = key.replace(" ", "");
+		key = key.replace("\r\n", "");
+
+		switch (key)
+		{
+			case "RDT":
+				return row.getValue("RDT").toString(); //审核日期.
+			case "RDT-NYR":
+				String rdt = row.getValue("RDT").toString(); //审核日期.
+				LocalDateTime dt = LocalDateTime.parse(rdt);
+				return dt.getYear() + "\\'c4\\'ea" + dt.getMonthValue() + "\\'d4\\'c2" + dt.getDayOfMonth() + "\\'c8\\'d5";
+			case "Rec":
+				return row.getValue("EmpFrom").toString(); //记录人.
+			case "RecName":
+				String recName = row.getValue("EmpFromT").toString(); //审核人.
+				recName = this.GetCode(recName);
+				return recName;
+			case "Msg":
+			case "Note":
+				String text = row.getValue("Msg").toString();
+				text = text.replace("\\", "\\\\");
+				text = this.GetCode(text);
+				return text;
+			case "Siganture":
+				String empNo = row.getValue("EmpFrom").toString(); //记录人.
+				return empNo; //审核人的签名.
+			case "WriteDB":
+				return row.getValue("WriteDB").toString();
+			default:
+				return row.getValue(key) instanceof String ? (String)row.getValue(key) : null;
+		}
+	}
+	/**
+	 审核节点的表示方法是 节点ID.Attr.
+
+	 @param key
+	 @return
+	*/
 	public final String GetValueByKey(String key) throws Exception {
 		key = key.replace(" ", "");
 		key = key.replace("\r\n", "");
 
-		if (key.toString().contains("@")) {
+		//获取参数代码.
+		if (key.contains("@"))
+		{
 			return GetValueByAtKey(key);
 		}
 
 		String[] strs = key.split("[.]", -1);
 
 		// 如果不包含 . 就说明他是从Rpt中取数据。
-		if (this.HisGEEntity != null && key.toString().contains("ND") == false) {
-			if (strs.length == 1) {
-				String fk_mapdata = this.HisGEEntity.toString();
-				MapAttrs mapAttrs = new MapAttrs(fk_mapdata);
-				//判断数字类型保留小数点
-				for(MapAttr attr : mapAttrs.ToJavaList()){
-					if(key.equals(attr.getKeyOfEn())) {
-						switch (attr.getMyDataType()) {
-							case DataType.AppDouble:
-							case DataType.AppFloat:
-							case DataType.AppMoney:
-								String defval = attr.getDefVal();
-								if(defval ==""||defval==null)
-									defval="0.00";
-								String[] res = defval.split("[.]", -1);
-								Integer leg = res[1].split("").length;
-								return this.HisGEEntity.GetValDecimalByKey(key, leg).toString();
-							default:
-								return this.HisGEEntity.GetValStringByKey(key);
-						}
+		//if (this.HisGEEntity != null && key.contains("ND") == false)
+		if (this.HisGEEntity != null)
+		{
+			if (strs.length == 1)
+			{
+				return this.HisGEEntity.GetValStringByKey(key);
+			}
+
+			if (Objects.equals(strs[1].trim(), "Checkboxs"))
+			{
+				//获取复选框多选的值
+				String content = this.HisGEEntity.GetValStringByKey(strs[0]);
+				//转换成文本
+				Attr attr = this.HisGEEntity.getEnMap().getAttrs().GetAttrByKeyOfEn(strs[0]);
+				if (DataType.IsNullOrEmpty(attr.getUIBindKey()) == true)
+				{
+					return content;
+				}
+				SysEnums enums = new SysEnums(attr.getUIBindKey());
+				String str = "";
+				for (SysEnum en : enums.ToJavaList())
+				{
+					if ((content + ",").contains(en.getIntKey() + ",") == true)
+					{
+						str += en.getLab() + ",";
 					}
 				}
+				if (!Objects.equals(str, ""))
+				{
+					str = str.substring(0, str.length() - 1);
+				}
+				return str;
+			}
+			if (Objects.equals(strs[1].trim(), "Editor"))
+			{
+				//获取富文本的内容
+				String content = this.HisGEEntity.GetValStringByKey(strs[0]);
+				content = content.replace("img+", "img ");
+				String contentHtml = "<html><head></head><body>" + content + "</body></html>";
+				Pattern pattern = Pattern.compile("<[^>]+>");
+				Matcher matcher = pattern.matcher(contentHtml);
+				String StrNohtml = matcher.replaceAll("");
+				pattern = Pattern.compile("&[^;]+;");
+				matcher = pattern.matcher(StrNohtml);
+				StrNohtml = matcher.replaceAll("");
+				return this.GetCode(StrNohtml);
+
 			}
 
 			if (strs[1].trim().equals("ImgAth")) {
@@ -746,6 +929,7 @@ public class RTFEngine {
 				return mypict.toString();
 			}
 
+
 			if (strs[1].trim().equals("BPPaint")) {
 				String path1 = DBAccess.RunSQLReturnString("SELECT  Tag2 FROM Sys_FrmEleDB WHERE REFPKVAL="
 						+ this.HisGEEntity.getPKVal() + " AND EleID='" + strs[0].trim() + "'");
@@ -780,321 +964,556 @@ public class RTFEngine {
 				return mypict.toString();
 			}
 
-			if (strs.length == 2) {
-				String val = this.HisGEEntity.GetValStringByKey(strs[0].trim());
+			//根据枚举值返回选中符号
+			if (strs[1].contains("-EnumYes") == true)
+			{
+				String relVal = this.HisGEEntity.GetValStringByKey(strs[0]);
+				String[] checkVal = strs[1].split("[-]", -1);
+				if (checkVal.length == 1)
+				{
+					return relVal;
+				}
+				if (relVal.equals(checkVal[0]))
+				{
+					return "[√]";
+				}
+				else
+				{
+					return "[×]";
+				}
+			}
 
-				if (strs[1].trim().equals("Text")) {
-					if (val.equals("0")) {
-						return "否";
-					} else {
+			if (strs.length == 2)
+			{
+				String val = this.HisGEEntity.GetValStringByKey(strs[0].trim());
+				switch (strs[1].trim())
+				{
+
+					case "Text":
+						if (Objects.equals(val, "0"))
+						{
+							return "否";
+						}
+						else
+						{
+							return "是";
+						}
+					case "Year":
+						return val.substring(0, 4);
+					case "Month":
+						return val.substring(5, 7);
+					case "Day":
+						return val.substring(8, 10);
+					case "NYR":
+						return DataType.getDateByFormart(DataType.ParseSysDate2DateTime(val),"yyyy年MM月dd日");
+					case "RMB":
+						return DataType.IsNullOrEmpty(val) ? "" : new DecimalFormat("##0.00").format(Float.parseFloat(val)).toString();
+					case "RMBDX":
+						return this.GetCode(DataType.ParseFloatToCache(Float.parseFloat(val)));
+					case "Siganture":
+						String path = SystemConfig.getPathOfDataUser() + "/Siganture/" + val + ".jpg";
+						// 定义rtf中图片字符串
+						StringBuilder pict = new StringBuilder();
+						// 获取要插入的图片
+						// System.Drawing.Image img =
+						// System.Drawing.Image.FromFile(path);
+						BufferedImage image = null;
+						try {
+							image = ImageIO.read(new File(path));
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+
+						// 将要插入的图片转换为16进制字符串
+						// String imgHexStringImgAth = GetImgHexString(imgAth,
+						// System.Drawing.Imaging.ImageFormat.Jpeg);
+						String imgHexStringImgAth = ImageTo16String(path);
+						// 生成rtf中图片字符串
+						pict.append("\n");
+						pict.append("{\\pict");
+						pict.append("\\jpegblip");
+						pict.append("\\picscalex100");
+						pict.append("\\picscaley100");
+						pict.append("\\picwgoal" + image.getWidth() * 15);
+						pict.append("\\pichgoal" + image.getHeight() * 15);
+						pict.append(imgHexStringImgAth + "}");
+						pict.append("\n");
+						return pict.toString();
+					case "BoolenText":
+						if (Objects.equals(val, "0"))
+							return "否";
 						return "是";
-					}
-				} else if (strs[1].trim().equals("Year")) {
-					return val.substring(0, 4);
-				} else if (strs[1].trim().equals("Month")) {
-					return val.substring(5, 7);
-				} else if (strs[1].trim().equals("Day")) {
-					return val.substring(8, 10);
-				} else if (strs[1].trim().equals("NYR")) {
-					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日");
-					return dateFormat.format(DataType.ParseSysDate2DateTime(val));
-					// return
-					// DataType.ParseSysDate2DateTime(val).ToString("yyyy年MM月dd日");
-				} else if (strs[1].trim().equals("RMB")) {
-					return new DecimalFormat("##0.00").format(Float.parseFloat(val));
-				} else if (strs[1].trim().equals("RMBDX")) {
-					return DataType.ParseFloatToCash(Float.parseFloat(val));
-				} else if (strs[1].trim().equals("Siganture")) {
-					String path = SystemConfig.getPathOfDataUser() + "/Siganture/" + val + ".jpg";
-					// 定义rtf中图片字符串
-					StringBuilder pict = new StringBuilder();
-					// 获取要插入的图片
-					// System.Drawing.Image img =
-					// System.Drawing.Image.FromFile(path);
+
+					case "Boolen":
+						if (Objects.equals(val, "1"))
+							return "[√]";
+						return "[×]";
+					case "YesNo":
+						if (Objects.equals(val, "1"))
+							return "[√]";
+						return "[×]";
+
+					case "Yes":
+						if (Objects.equals(val, "1"))
+							return "[√]";
+						return "[×]";
+					case "No":
+						if (Objects.equals(val, "0"))
+							return "[√]";
+						return "[×]";
+
+					default:
+						throw new RuntimeException("参数设置错误，特殊方式取值错误：" + key);
+				}
+			}
+			else
+			{
+				throw new RuntimeException("参数设置错误，特殊方式取值错误：" + key);
+			}
+		}
+
+		for (Entity en : this.getHisEns())
+		{
+			String enKey = en.toString();
+			if (enKey.contains("."))
+			{
+				enKey = en.getClass().getSimpleName();
+			}
+			if (key.contains(en.toString() + ".") == false)
+			{
+				continue;
+			}
+
+			/*说明就在这个字段内*/
+			if (strs.length == 1)
+			{
+				throw new RuntimeException("参数设置错误，strs.length=1 。" + key);
+			}
+
+			if (strs.length == 2)
+			{
+				return en.GetValStringByKey(strs[1].trim());
+			}
+
+			if (strs.length == 3)
+			{
+				if (Objects.equals(strs[2].trim(), "ImgAth"))
+				{
+					String path1 = SystemConfig.getPathOfDataUser() + "ImgAth/Data/" + strs[1].trim() + "_" + en.getPKVal() + ".png";
+					//定义rtf中图片字符串.
+					StringBuilder mypict = new StringBuilder();
 					BufferedImage image = null;
 					try {
-						image = ImageIO.read(new File(path));
+						image = ImageIO.read(new File(path1));
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 
-					// 将要插入的图片转换为16进制字符串
-					// String imgHexStringImgAth = GetImgHexString(imgAth,
-					// System.Drawing.Imaging.ImageFormat.Jpeg);
-					String imgHexStringImgAth = ImageTo16String(path);
-					// 生成rtf中图片字符串
-					pict.append("\n");
-					pict.append("{\\pict");
-					pict.append("\\jpegblip");
-					pict.append("\\picscalex100");
-					pict.append("\\picscaley100");
-					pict.append("\\picwgoal" + image.getWidth() * 15);
-					pict.append("\\pichgoal" + image.getHeight() * 15);
-					pict.append(imgHexStringImgAth + "}");
-					pict.append("\n");
-					return pict.toString();
-					// 替换rtf模板文件中的签名图片标识为图片字符串
-					// str = str.replace(imgMark, pict.ToString());
-				} else if (strs[1].trim().equals("BoolenText")) {
-					if (val.equals("0"))
-						return "否";
-					else
-						return "是";
-
-				} else if (strs[1].trim().equals("Boolen")) {
-					if (val.equals("1"))
-						return "[√]";
-					else
-						return "[×]";
-				} else if (strs[1].trim().equals("YesNo")) {
-					if (val.equals("1")) {
-						return "[√]";
-					} else {
-						return "[×]";
-					}
-				} else if (strs[1].trim().equals("Yes")) {
-					if (val.equals("0")) {
-						return "[×]";
-					} else {
-						return "[√]";
-					}
-				} else if (strs[1].trim().equals("No")) {
-					if (val.equals("0")) {
-						return "[√]";
-					} else {
-						return "[×]";
-					}
-				} else {
-					throw new RuntimeException("参数设置错误，特殊方式取值错误：" + key);
+					//将要插入的图片转换为16进制字符串
+					String imgHexStringImgAth = ImageTo16String(path1);
+					//生成rtf中图片字符串
+					mypict.append("\r\n");
+					mypict.append("{\\pict");
+					mypict.append("\\jpegblip");
+					mypict.append("\\picscalex100");
+					mypict.append("\\picscaley100");
+					mypict.append("\\picwgoal" + image.getWidth() * 15);
+					mypict.append("\\pichgoal" + image.getHeight() * 15);
+					mypict.append(imgHexStringImgAth + "}");
+					mypict.append("\r\n");
+					return mypict.toString();
 				}
-			} else {
-				throw new RuntimeException("参数设置错误，特殊方式取值错误：" + key);
+
+
+				String val = en.GetValStringByKey(strs[1].trim());
+				switch (strs[2].trim())
+				{
+					case "Text":
+						if (Objects.equals(val, "0"))
+						{
+							return "否";
+						}
+						else
+						{
+							return "是";
+						}
+					case "Year":
+						return val.substring(0, 4);
+					case "Month":
+						return val.substring(5, 7);
+					case "Day":
+						return val.substring(8, 10);
+					case "NYR":
+						return DataType.getDateByFormart(DataType.ParseSysDate2DateTime(val),"yyyy年MM月dd日");
+					case "RMB":
+						return new DecimalFormat("##0.00").format(Float.parseFloat(val));
+					case "RMBDX":
+						return DataType.ParseFloatToCache(Float.parseFloat(val));
+					case "ImgAth":
+						String path1 = SystemConfig.getPathOfDataUser() + "ImgAth/Data/" + strs[0].trim() + "_" + this.HisGEEntity.getPKVal() + ".png";
+
+						// 定义rtf中图片字符串
+						StringBuilder mypict = new StringBuilder();
+						// 获取要插入的图片
+						// System.Drawing.Image img = System.Drawing.Image.FromFile(filePath);
+
+						BufferedImage image = null;
+						try {
+							image = ImageIO.read(new File(path1));
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						// 将要插入的图片转换为16进制字符串
+						String imgHexString;
+						path1 = path1.toLowerCase();
+						imgHexString = ImageTo16String(path1);
+						//生成rtf中图片字符串
+						mypict.append("\r\n");
+						mypict.append("{\\pict");
+						mypict.append("\\jpegblip");
+						mypict.append("\\picscalex100");
+						mypict.append("\\picscaley100");
+						mypict.append("\\picwgoal" + image.getWidth() * 15);
+						mypict.append("\\pichgoal" + image.getHeight() * 15);
+						mypict.append(imgHexString + "}");
+						mypict.append("\r\n");
+						return mypict.toString();
+					case "Siganture":
+						String path = SystemConfig.getPathOfDataUser() + "Siganture/" + val + ".jpg";
+						//定义rtf中图片字符串.
+						StringBuilder pict = new StringBuilder();
+						// 获取要插入的图片
+						// System.Drawing.Image img = System.Drawing.Image.FromFile(filePath);
+
+						BufferedImage image1 = null;
+						try {
+							image1 = ImageIO.read(new File(path));
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						// 将要插入的图片转换为16进制字符串
+						String imgHexString1;
+						path = path.toLowerCase();
+						imgHexString1 = ImageTo16String(path);
+						//生成rtf中图片字符串
+						pict.append("\r\n");
+						pict.append("{\\pict");
+						pict.append("\\jpegblip");
+						pict.append("\\picscalex100");
+						pict.append("\\picscaley100");
+						pict.append("\\picwgoal" + image1.getWidth() * 15);
+						pict.append("\\pichgoal" + image1.getHeight() * 15);
+						pict.append(imgHexString1 + "}");
+						pict.append("\r\n");
+						return pict.toString();
+					//替换rtf模板文件中的签名图片标识为图片字符串
+					// str = str.replace(imgMark, pict.ToString());
+					default:
+						throw new RuntimeException("参数设置错误，特殊方式取值错误：" + key);
+				}
 			}
 		}
 
 		throw new RuntimeException("参数设置错误 GetValueByKey ：" + key);
 	}
 
-	// /#region 生成单据
+		///#endregion
+
+
+		///#region 生成单据
 	/**
-	 * 生成单据
-	 *
-	 * param cfile
-	 *            模板文件
-	 * @throws Exception
-	 */
+	 生成单据
+
+	 @param cfile 模板文件
+	*/
 	public final void MakeDoc(String cfile) throws Exception {
 		String file = PubClass.GenerTempFileName("doc");
-		this.MakeDoc(cfile, SystemConfig.getPathOfTemp(), file,null);
+		this.MakeDoc(cfile, SystemConfig.getPathOfTemp(), file);
 	}
-
 	public String ensStrs = "";
-
 	/**
-	 * 轨迹表（用于输出打印审核轨迹,审核信息.）
-	 */
+	 轨迹表（用于输出打印审核轨迹,审核信息.）
+	*/
 	public DataTable dtTrack = null;
 	public DataTable wks = null;
+	public DataTable subFlows = null;
 
 	/**
-	 * 单据生成
-	 *
-	 * param cfile
-	 *            模板文件
-	 * param path
-	 *            生成路径
-	 * param file
-	 *            生成文件
-	 * param isOpen
-	 *            是否用IE打开？
-	 * @throws Exception
-	 */
-	public final void MakeDoc(String cfile, String path, String file,  String billUrl) throws Exception {
-		cfile = cfile.replace(".rtf.rtf", ".rtf");
+	 单据生成
 
-		if (new File(path).exists() == false)
-			new File(path).mkdirs();
+	 @param templateRtfFile 模板文件
+	 @param path 生成路径
+	 @param file 生成文件
+	*/
 
-		StringBuilder str = new StringBuilder(Cash.GetBillStr(cfile, false).substring(0));
-		if (this.getHisEns().size() == 0) {
-			if (this.HisGEEntity == null) {
+	public final void MakeDoc(String templateRtfFile, String path, String file) throws Exception {
+		MakeDoc(templateRtfFile, path, file, null);
+	}
+
+	public final void MakeDoc(String templateRtfFile, String path, String file, String billUrl) throws Exception {
+		templateRtfFile = templateRtfFile.replace(".rtf.rtf", ".rtf");
+
+		if ((new File(path)).isDirectory() == false)
+		{
+			(new File(path)).mkdirs();
+		}
+
+		StringBuilder str = new StringBuilder(this._rtfStr);
+		if (this.getHisEns().size()== 0)
+		{
+			if (this.HisGEEntity == null)
+			{
 				throw new RuntimeException("@您没有为报表设置数据源...");
 			}
 		}
 
 		this.ensStrs = "";
-		if (this.getHisEns().size() != 0) {
-			for (Entity en : Entities.convertEntities(this.getHisEns())) {
+		if (this.getHisEns().size()!= 0)
+		{
+			for (Entity en : this.getHisEns())
+			{
 				ensStrs += en.toString();
 			}
-		} else {
+		}
+		else
+		{
 			ensStrs = this.HisGEEntity.toString();
 		}
 
 		String error = "";
 		String[] paras = null;
-		if (this.HisGEEntity != null) {
-			paras = Cash.GetBillParas(cfile, ensStrs, this.HisGEEntity);
-		} else {
-			paras = Cash.GetBillParas(cfile, ensStrs, this.getHisEns());
+		if (this.HisGEEntity != null)
+		{
+			paras = Cache.GetBillParas(templateRtfFile, ensStrs, this.HisGEEntity);
+		}
+		else
+		{
+			paras = Cache.GetBillParas(templateRtfFile, ensStrs, this.getHisEns());
 		}
 
 		this.TempFilePath = path + file;
-		try {
+		try
+		{
 			String key = "";
 			String ss = "";
 
-			// 替换主表标记
-			for (String para : paras) {
-				if (para == null || para.equals("")) {
+
+				///#region 替换主表标记
+			for (String para : paras)
+			{
+				if (DataType.IsNullOrEmpty(para))
+				{
 					continue;
 				}
-				try {
-					if (para.contains("ImgAth"))
+
+				//如果包含,时间表.
+				if (para.contains("FlowTrackTable") == true && dtTrack != null)
+				{
+					str = new StringBuilder(str.toString().replace("<FlowTrackTable>", this.GetFlowTrackTable(str)));
+					continue;
+
+				}
+				try
+				{
+					if (para.contains("Editor"))
+					{
 						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueByKey(para)));
-					else if (para.contains("Siganture"))
-						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueByKey(para)));
-					else if (para.contains("Img@AppPath"))
-						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueImgStrs(para)));
-					/*else if (para.contains("Img@QR"))
-						str = new StringBuilder(
-								str.toString().replace("<" + para + ">", this.GetValueImgStrsOfQR(billUrl)));*/
-					else if (para.contains(".BPPaint"))
-						str = new StringBuilder(
-								str.toString().replace("<" + para + ">", this.GetValueBPPaintStrs(para)));
-					else if (para.contains(".RMB"))
-						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueByKey(para)));
-					else if (para.contains(".RMBDX"))
-
-						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueByKey(para)));
-					else if (para.contains(".Boolen"))
-
-						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueByKey(para)));
-
-					else if (para.contains(".BoolenText"))
-
-						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueByKey(para)));
-					else if (para.contains(".NYR"))
-
-						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueByKey(para)));
-					else if (para.contains(".Year"))
-
-						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueByKey(para)));
-
-					else if (para.contains(".Month"))
-
-						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueByKey(para)));
-
-					else if (para.contains(".Day"))
-
-						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueByKey(para)));
-
-					else if (para.contains(".Yes") == true)
-
-						str = new StringBuilder(
-								str.toString().replace("<" + para + ">", this.GetCode(this.GetValueByKey(para))));
-
-					else if (para.contains("-EnumYes") == true)
-
-						str = new StringBuilder(
-								str.toString().replace("<" + para + ">", this.GetCode(this.GetValueByKey(para))));
-					else if (para.contains(".") == true)
-
-						continue; // 有可能是明细表数据.
-
-					else {
-						str = new StringBuilder(str.toString().replace("<" +
-								para + ">", this.GetValueByKey(para)));
-
 					}
-				} catch (RuntimeException ex) {
-					error += "替换主表标记取参数[" + para
-							+ "]出现错误：有以下情况导致此错误;1你用Text取值时间，此属性不是外键。2,类无此属性。3,该字段是明细表字段但是丢失了明细表标记.<br>更详细的信息：<br>"
-							+ ex.getMessage();
-					Log.DebugWriteError("MakeDoc" + error);
-					if (SystemConfig.getIsDebug()) {
+					else if (para.contains("ImgAth"))
+					{
+						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueByKey(para)));
+					}
+					else if (para.contains("Siganture"))
+					{
+						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueByKey(para)));
+					}
+					else if (para.contains("Img@AppPath"))
+					{
+						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueImgStrs(para)));
+					}
+					else if (para.contains("Img@QR"))
+					{
+						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueImgStrsOfQR(billUrl)));
+					}
+					else if (para.contains(".BPPaint"))
+					{
+						str =new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueBPPaintStrs(para)));
+					}
+					else if (para.contains(".M2M"))
+					{
+						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueM2MStrs(para)));
+					}
+					else if (para.contains(".RMBDX"))
+					{
+						str =new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueByKey(para)));
+					}
+					else if (para.contains(".RMB"))
+					{
+						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueByKey(para)));
+					}
+					else if (para.contains(".Boolen"))
+					{
+						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueByKey(para)));
+					}
+					else if (para.contains(".BoolenText"))
+					{
+						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueByKey(para)));
+					}
+					else if (para.contains(".NYR"))
+					{
+						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetCode(this.GetValueByKey(para))));
+					}
+					else if (para.contains(".Year"))
+					{
+						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueByKey(para)));
+					}
+					else if (para.contains(".Month"))
+					{
+						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueByKey(para)));
+					}
+					else if (para.contains(".Day"))
+					{
+						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueByKey(para)));
+					}
+					else if (para.contains(".Yes") == true)
+					{
+						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetCode(this.GetValueByKey(para))));
+					}
+					else if (para.contains("-EnumYes") == true)
+					{
+						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetCode(this.GetValueByKey(para))));
+					}
+					else if (para.contains(".Checkboxs") == true)
+					{
+						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetCode(this.GetValueByKey(para))));
+					}
+					else if ((para.contains("WorkCheck.RDT") == true && para.contains("WorkCheck.RDT.") == false) || (para.contains("WorkCheck.Rec") == true && para.contains("WorkCheck.Rec.") == false) || (para.contains("WorkCheck.RecName") == true && para.contains("WorkCheck.RecName.") == false) || (para.contains("WorkCheck.Note") == true && para.contains("WorkCheck.Note.") == false)) // 审核组件的审核日期.
+					{
+						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueCheckWorkByKey(para)));
+					}
+					else if (para.contains("WorkChecks") == true) //为烟台增加审核人员的信息,把所有的审核人员信息都输入到这里.
+					{
+						str = new StringBuilder(str.toString().replace("<" + para + ">", this.GetValueCheckWorks()));
+					}
+					else if (para.contains(".") == true)
+					{
+						continue; //有可能是明细表数据.
+					}
+					else
+					{
+						String val = this.GetValueByKey(para);
+						val = val.replace("\\", "\\\\");
+						val = this.GetCode(val);
+						str = new StringBuilder(str.toString().replace("<" + para + ">", val));
+					}
+				}
+				catch (RuntimeException ex)
+				{
+					error += "@替换主表标记取参数[" + para + "]出现错误：有以下情况导致此错误;1你用Text取值时间，此属性不是外键。2,类无此属性。3,该字段是明细表字段但是丢失了明细表标记.<br>更详细的信息：<br>" + ex.getMessage();
+					if (SystemConfig.isDebug())
+					{
 						throw new RuntimeException(error);
 					}
+					Log.DebugWriteError(error);
 				}
 			}
-			// 替换主表标记
-
-			// 从表
+			///#endregion 替换主表标记
+			///#region 从表
 			String shortName = "";
 			ArrayList<Entities> al = this.getEnsDataDtls();
-			for (Entities dtls : al) {
-				Entity dtl = dtls.getGetNewEntity();
-				String dtlEnName = dtl.toString();
-				shortName = dtlEnName.substring(dtlEnName.lastIndexOf(".") + 1);
+			for (int K = 0; K < 2; K++)
+			{
+				for (Entities dtls : al)
+				{
+					Entity dtl = dtls.getNewEntity();
+					String dtlEnName = dtl.toString();
+					shortName = dtlEnName.substring(dtlEnName.lastIndexOf(".") + 1);
 
-				if (str.toString().indexOf(shortName) == -1) {
-					continue;
-				}
+					if (str.indexOf(shortName) == -1)
+					{
+						continue;
+					}
 
-				int pos_rowKey = str.indexOf(shortName);
-				int end_rowKey = str.lastIndexOf(shortName);
-				int row_start = -1, row_end = -1;
-				if (pos_rowKey != -1) {
-					row_start = str.substring(0, pos_rowKey).lastIndexOf("\\row");
-					// 获取从表表名出现的最后的位置
-					// int end_rowKey = str.lastIndexOf(shortName);
-					// 获取row的位置
-					row_end = str.substring(end_rowKey).indexOf("\\row");
-				}
+					int pos_rowKey = str.indexOf("<" + shortName + ".") + 1;
+					int row_start = -1, row_end = -1;
+					if (pos_rowKey != -1)
+					{
+						row_start = str.substring(0, pos_rowKey).lastIndexOf("\\nestrow");
+						if (row_start == -1)
+						{
+							row_start = str.substring(0, pos_rowKey).lastIndexOf("\\row");
+						}
 
-				if (row_start != -1 && row_end != -1) {
-					String row = str.substring(row_start, (end_rowKey) + row_end);
+
+						row_end = str.substring(pos_rowKey).indexOf("\\nestrow");
+						if (row_end == -1)
+						{
+							row_end = str.substring(pos_rowKey).indexOf("\\row");
+						}
+
+					}
+
+					if (row_start == -1 || row_end == -1)
+					{
+						continue; //如果没有发现标记.
+					}
+
+					//获得row的数据.
+					String row = str.substring(row_start, (pos_rowKey) + row_end);
 					str = new StringBuilder(str.toString().replace(row, ""));
 
-					Map map = dtls.getGetNewEntity().getEnMap();
+					Map map = dtls.getNewEntity().getEnMap();
 					int i = dtls.size();
-					while (i > 0) {
+					while (i > 0)
+					{
 						i--;
 						Object tempVar = row;
-						String rowData = (String) ((tempVar instanceof String) ? tempVar : null);
+						String rowData = tempVar instanceof String ? (String)tempVar : null;
 						dtl = dtls.get(i);
 						//替换序号
 						int rowIdx = i + 1;
 						rowData = rowData.replace("<IDX>", String.valueOf(rowIdx));
-						for (Attr attr : map.getAttrs()) {
-							if (!attr.getUIVisible() && attr.getUIIsReadonly()) {
-								continue;
-							}
-							switch (attr.getMyDataType()) {
+
+						for (Attr attr : map.getAttrs())
+						{
+							switch (attr.getMyDataType())
+							{
 								case DataType.AppDouble:
 								case DataType.AppFloat:
-								case DataType.AppRate:
-									rowData = rowData.replace("<" + shortName + "." + attr.getKey() + ">",
-											dtl.GetValStringByKey(attr.getKey()));
+									rowData = rowData.replace("<" + shortName + "." + attr.getKey() + ">", dtl.GetValStringByKey(attr.getKey()));
 									break;
 								case DataType.AppMoney:
-									rowData = rowData.replace("<" + shortName + "." + attr.getKey() + ">",
-											dtl.GetValDecimalByKey(attr.getKey(), 2).toString());
+									rowData = rowData.replace("<" + shortName + "." + attr.getKey() + ">", dtl.GetValDecimalByKey(attr.getKey(),2).toString());
 									break;
 								case DataType.AppInt:
 
-									if (attr.getMyDataType() == DataType.AppBoolean) {
-										rowData = rowData.replace("<" + shortName + "." + attr.getKey() + ">",
-												dtl.GetValStrByKey(attr.getKey()));
+									if (attr.getMyDataType() == DataType.AppBoolean)
+									{
+										rowData = rowData.replace("<" + shortName + "." + attr.getKey() + ">", dtl.GetValStrByKey(attr.getKey()));
 										int v = dtl.GetValIntByKey(attr.getKey());
-										if (v == 1) {
+										if (v == 1)
+										{
 											rowData = rowData.replace("<" + shortName + "." + attr.getKey() + "Text>", "是");
-										} else {
+										}
+										else
+										{
 											rowData = rowData.replace("<" + shortName + "." + attr.getKey() + "Text>", "否");
 										}
-									} else {
-										if (attr.getIsEnum()) {
-											rowData = rowData.replace("<" + shortName + "." + attr.getKey() + "Text>",
-													dtl.GetValRefTextByKey(attr.getKey()));
-										} else {
-											rowData = rowData.replace("<" + shortName + "." + attr.getKey() + ">",
-													dtl.GetValStrByKey(attr.getKey()));
+									}
+									else
+									{
+										if (attr.getItIsEnum())
+										{
+											rowData = rowData.replace("<" + shortName + "." + attr.getKey() + "Text>", GetCode(dtl.GetValRefTextByKey(attr.getKey())));
+										}
+										else
+										{
+											rowData = rowData.replace("<" + shortName + "." + attr.getKey() + ">", dtl.GetValStrByKey(attr.getKey()));
 										}
 									}
 									break;
 								default:
-									rowData = rowData.replace("<" + shortName + "." + attr.getKey() + ">",
-											dtl.GetValStrByKey(attr.getKey()));
+									rowData = rowData.replace("<" + shortName + "." + attr.getKey() + ">", GetCode(dtl.GetValStrByKey(attr.getKey())));
 									break;
 							}
 						}
@@ -1103,17 +1522,20 @@ public class RTFEngine {
 					}
 				}
 			}
-			// 从表
-
-			// 明细 合计信息。
+			///#endregion 从表
+			///#region 明细 合计信息。
 			al = this.getEnsDataDtls();
-			for (Entities dtls : al) {
-				Entity dtl = dtls.getGetNewEntity();
+			for (Entities dtls : al)
+			{
+				Entity dtl = dtls.getNewEntity();
 				String dtlEnName = dtl.toString();
 				shortName = dtlEnName.substring(dtlEnName.lastIndexOf(".") + 1);
+				//shortName = dtls.ToString().Substring(dtls.ToString().LastIndexOf(".") + 1);
 				Map map = dtl.getEnMap();
-				for (Attr attr : map.getAttrs()) {
-					switch (attr.getMyDataType()) {
+				for (Attr attr : map.getAttrs())
+				{
+					switch (attr.getMyDataType())
+					{
 						case DataType.AppDouble:
 						case DataType.AppFloat:
 						case DataType.AppMoney:
@@ -1136,7 +1558,7 @@ public class RTFEngine {
 							key = "<" + shortName + "." + attr.getKey() + ".SUM.RMBDX>";
 							if (str.indexOf(key) != -1) {
 								str = new StringBuilder(str.toString().replace(key,
-										GetCode(DataType.ParseFloatToCash(dtls.GetSumFloatByKey(attr.getKey())))));
+										GetCode(DataType.ParseFloatToCache(dtls.GetSumFloatByKey(attr.getKey())))));
 							}
 							break;
 						case DataType.AppInt:
@@ -1151,11 +1573,14 @@ public class RTFEngine {
 					}
 				}
 			}
-			// 从表合计
-			// 审核组件组合信息
 
+				///#endregion 从表合计
+
+
+				///#region 审核组件组合信息，added by liuxc,2016-12-16
+
+			//节点单个审核人
 			// 根据track表获取审核的节点
-			// 节点单个审核人——相关信息整合一起输出打印
 			if (dtTrack != null && str.toString().contains("<WorkCheckBegin>") == false
 					&& str.toString().contains("<WorkCheckEnd>") == false && SystemConfig.getWorkCheckShow() == 0) {
 				if(this.wks !=null && this.wks.Rows.size() !=0) {
@@ -1290,7 +1715,7 @@ public class RTFEngine {
 
 							String wkKey = "<WorkCheck.Note." + nodeID + ">";
 							str = new StringBuilder(str.toString().replace(wkKey, ""));
- 							wkKey = "<WorkCheck.Rec." + nodeID + ">";
+							wkKey = "<WorkCheck.Rec." + nodeID + ">";
 							str = new StringBuilder(str.toString().replace(wkKey, ""));
 							wkKey = "<WorkCheck.RecName." + nodeID + ">";
 							str = new StringBuilder(str.toString().replace(wkKey, ""));
@@ -1319,7 +1744,6 @@ public class RTFEngine {
 					}
 				}
 			}
-
 			//节点单个审核人——相关信息按配置标签输出
 			if (dtTrack != null && str.toString().contains("<WorkCheckBegin>") == false && str.toString().contains("<WorkCheckEnd>") == false)
 			{
@@ -1409,9 +1833,6 @@ public class RTFEngine {
 
 				}
 			}
-
-
-
 			// 轨迹信息
 			str = GetFlowTrackTable(str);
 			// 多附件
@@ -1442,73 +1863,218 @@ public class RTFEngine {
 				e.printStackTrace();
 			}
 
-		} catch (RuntimeException ex) {
+			///#region 多附件
+			for (Object athObjEnsName : this.getEnsDataAths().keySet())
+			{
+				String athName = "Ath." + athObjEnsName;
+				String athFilesName = "";
+				if (str.indexOf(athName) == -1)
+				{
+					continue;
+				}
+
+				Object tempVar2 = this.getEnsDataAths().get(athObjEnsName);
+				FrmAttachmentDBs athDbs = tempVar2 instanceof FrmAttachmentDBs ? (FrmAttachmentDBs)tempVar2 : null;
+				if (athDbs == null)
+				{
+					continue;
+				}
+
+				if (str.indexOf("Ath." + athObjEnsName + ".ImgAth") != -1)
+				{
+					String wkKey = "<Ath." + athObjEnsName + ".ImgAth>";
+					String athImgs = "";
+					// 定义rtf中图片字符串
+					StringBuilder mypict = new StringBuilder();
+					for (FrmAttachmentDB athDb : athDbs.ToJavaList())
+					{
+						if (athFilesName.length() > 0)
+						{
+							athFilesName += " ， ";
+						}
+						int i = athDb.getFileFullName().lastIndexOf("UploadFile/");
+						athDb.setFileFullName(athDb.getFileFullName().substring(i));
+						String filePath = SystemConfig.getPathOfDataUser() + athDb.getFileFullName();
+
+						BufferedImage imgAth = null;
+						try {
+							imgAth = ImageIO.read(new File(filePath));
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						//imgAth.Dispose();
+						//将要插入的图片转换为16进制字符串
+						String imgHexStringImgAth = ImageTo16String(filePath);
+						//生成rtf中图片字符串
+						mypict.append("\r\n");
+						mypict.append("{\\pict");
+						mypict.append("\\jpegblip");
+						mypict.append("\\picscalex100");
+						mypict.append("\\picscaley100");
+						mypict.append("\\picwgoal" + imgAth.getWidth() * 3);
+						mypict.append("\\pichgoal" + imgAth.getHeight() * 3);
+						mypict.append(imgHexStringImgAth + "}");
+						mypict.append("\n");
+						athImgs = mypict.toString();
+
+					}
+					str = new StringBuilder(str.toString().replace(wkKey, athImgs));
+				}
+				else
+				{
+					for (FrmAttachmentDB athDb : athDbs.ToJavaList())
+					{
+						if (athFilesName.length() > 0)
+						{
+							athFilesName += " ， ";
+						}
+
+						athFilesName += athDb.getFileName();
+					}
+				}
+
+				str = new StringBuilder(str.toString().replace("<" + athName + ">", this.GetCode(athFilesName)));
+			}
+			str = new StringBuilder(str.toString().replace("<", ""));
+			str = new StringBuilder(str.toString().replace(">", ""));
+			try {
+				ConvertTools.streamWriteConvertGBK(str.toString(), TempFilePath);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		catch (RuntimeException ex)
+		{
 			String msg = "";
-			if (SystemConfig.getIsDebug()) { // 异常可能与单据的配置有关系。
-				try {
-					this.CyclostyleFilePath = SystemConfig.getPathOfDataUser() + "/CyclostyleFile/" + cfile;
-					str = new StringBuilder(Cash.GetBillStr(cfile, false));
-					msg = "@已经成功的执行修复线  RepairLineV2，您重新发送一次或者，退后重新在发送一次，是否可以解决此问题。@" + str;
-				} catch (RuntimeException ex1) {
+			if (SystemConfig.isDebug())
+			{ // 异常可能与单据的配置有关系。
+				try
+				{
+					this.CyclostyleFilePath = SystemConfig.getPathOfDataUser() + "CyclostyleFile/" + templateRtfFile;
+					str = new StringBuilder(Cache.GetBillStr(templateRtfFile, false));
+					msg = "@已经成功的执行修复线  RepairLineV2，您重新发送一次或者，退后重新在发送一次，是否可以解决此问题";
+				}
+				catch (RuntimeException ex1)
+				{
 					msg = "执行修复线失败.  RepairLineV2 " + ex1.getMessage();
 				}
 			}
-			throw new RuntimeException(
-					"生成文档失败：单据名称[" + this.CyclostyleFilePath + "] 异常信息：" + ex.getMessage() + " @自动修复单据信息：" + msg);
-		}
-
-	}
-
-	private String GetValueCheckWorkByKey(DataRow row, String key) {
-		key = key.replace(" ", "");
-		key = key.replace("\r\n", "");
-
-		switch (key) {
-			case "RDT":
-				return row.getValue("RDT").toString(); // 审核日期.
-			case "RDT-NYR":
-				String rdt = row.getValue("RDT").toString(); // 审核日期.
-				return rdt;
-			case "Rec":
-				return row.getValue("EmpFrom").toString(); // 记录人.
-			case "RecName":
-				return row.getValue("EmpFromT").toString(); // 审核人.
-			case "Msg":
-			case "Note":
-				return row.getValue("Msg").toString();
-			default:
-				return row.getValue(key).toString();
+			throw new RuntimeException("生成文档失败：单据名称[" + this.CyclostyleFilePath + "] 异常信息：" + ex.getMessage() + " @自动修复单据信息：" + msg);
 		}
 	}
+	private String WorkCheckReplace(String str, DataRow row, int nodeID)
+	{
+		String wkKey = "<WorkCheck.Note." + nodeID + ">";
+		String wkVal;
+		if (row != null && !"null".equals(this.GetValueCheckWorkByKey(row, "Msg")))
+		{
+			wkVal = this.GetValueCheckWorkByKey(row, "Msg");
+		}
+		else
+		{
+			wkVal = "";
+		}
+		str = str.replace(wkKey, wkVal);
+		wkKey = "<WorkCheck.Rec." + nodeID + ">";
+		if (row != null)
+		{
+			wkVal = this.GetValueCheckWorkByKey(row, "EmpFrom");
+		}
+		else
+		{
+			wkVal = "";
+		}
+		str = str.replace(wkKey, wkVal);
+		wkKey = "<WorkCheck.RecName." + nodeID + ">";
+		if (row != null)
+		{
+			wkVal = this.GetValueCheckWorkByKey(row, "EmpFromT");
+		}
+		else
+		{
+			wkVal = "";
+		}
+		str = str.replace(wkKey, wkVal);
+		wkKey = "<WorkCheck.RDT." + nodeID + ">";
+		if (row != null)
+		{
+			wkVal = this.GetValueCheckWorkByKey(row, "RDT");
+		}
+		else
+		{
+			wkVal = "";
+		}
+		str = str.replace(wkKey, wkVal);
+		wkKey = "<WorkCheck.RDT-NYR." + nodeID + ">";
+		wkKey = "<WorkCheck.Siganture." + nodeID + ">";
+		if (str.indexOf(wkKey) != -1)
+		{
+			if (row != null)
+			{
+				wkVal = this.GetCode(this.GetValueCheckWorkByKey(row, "EmpFrom"));
+			}
+			else
+			{
+				wkVal = "";
+			}
+			String filePath = SystemConfig.getPathOfDataUser() + "/Siganture/" + wkVal + ".jpg";
+			// 定义rtf中图片字符串
+			StringBuilder mypict = new StringBuilder();
+			// 获取要插入的图片
+			// System.Drawing.Image img =
+			// System.Drawing.Image.FromFile(path);
+			//获取要插入的图片
+			BufferedImage imgAth = null;
+			try {
+				imgAth = ImageIO.read(new File(filePath));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 
-	// 生成单据
-	/**
-	 * 生成单据根据
-	 *
-	 * param templeteFile
-	 *            模板文件
-	 * param saveToFile
-	 * param mainDT
-	 * param dtls
-	 */
-	@Deprecated
-	public final void MakeDocByDataSet(String templeteFile, String saveToPath, String saveToFileName, DataTable mainDT,
-									   DataSet dtlsDS) {
-
+			//将要插入的图片转换为16进制字符串
+			String imgHexStringImgAth =ImageTo16String(filePath);
+			//生成rtf中图片字符串
+			mypict.append("\r\n");
+			mypict.append("{\\pict");
+			mypict.append("\\jpegblip");
+			mypict.append("\\picscalex100");
+			mypict.append("\\picscaley100");
+			mypict.append("\\picwgoal" + imgAth.getWidth() * 15);
+			mypict.append("\\pichgoal" + imgAth.getHeight() * 15);
+			mypict.append(imgHexStringImgAth + "}");
+			mypict.append("\n");
+			str = str.replace(wkKey, mypict.toString());
+		}
+		return str;
 	}
 
-	// 方法
+		///#region 方法
 	/**
-	 * RTFEngine
-	 */
-	public RTFEngine() {
+	 RTFEngine
+	*/
+	public RTFEngine()
+	{
 		this._EnsDataDtls = null;
 		this._HisEns = null;
 	}
+
+	public RTFEngine(String rtfFile) throws Exception {
+		this._EnsDataDtls = null;
+		this._HisEns = null;
+		this._rtfStr = Cache.GetBillStr(rtfFile, false).substring(0);
+	}
+
 	/**
-	 * 修复线
-	 *
-	 * param line
-	 * @return
-	 */
+	 传入的是单个实体
+
+	 @param en
+	*/
+	public RTFEngine(Entity en)
+	{
+		this._EnsDataDtls = null;
+		this._HisEns = null;
+		this.HisGEEntity = en;
+	}
+
+		///#endregion
 }

@@ -1,11 +1,23 @@
 package bp.wf.template.frm;
 
+import bp.da.*;
+import bp.en.*; import bp.en.Map;
+import bp.sys.*;
+import bp.*;
+import bp.wf.*;
+import bp.wf.template.*;
+import java.util.*;
+import java.io.*;
 
 /** 
  打印模板属性
 */
-public class FrmPrintTemplateAttr extends bp.en.EntityNoNameAttr
+public class FrmPrintTemplateAttr extends bp.en.EntityMyPKAttr
 {
+	/** 
+	 路径
+	*/
+	public static final String Name = "Name";
 	/** 
 	 路径
 	*/

@@ -1,7 +1,12 @@
 package bp.ccbill.template;
 
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.ccbill.*;
+import java.util.*;
+
 /** 
- 单据查询岗位属性	  
+ 单据查询角色属性	  
 */
 public class FrmStationDeptAttr
 {
@@ -10,7 +15,7 @@ public class FrmStationDeptAttr
 	*/
 	public static final String FK_Frm = "FK_Frm";
 	/** 
-	 工作岗位
+	 工作角色
 	*/
 	public static final String FK_Station = "FK_Station";
 	/** 

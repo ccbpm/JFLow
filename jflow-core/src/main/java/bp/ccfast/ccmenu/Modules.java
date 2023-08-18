@@ -1,7 +1,10 @@
 package bp.ccfast.ccmenu;
 
-import bp.en.*;
+import bp.da.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
+import bp.*;
+import bp.ccfast.*;
 import java.util.*;
 
 /** 
@@ -14,13 +17,15 @@ public class Modules extends EntitiesNoName
 	/** 
 	 模块s
 	*/
-	public Modules()  {
+	public Modules()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new Module();
 	}
 	@Override
@@ -30,8 +35,8 @@ public class Modules extends EntitiesNoName
 			return super.RetrieveAll("Idx");
 		}
 
-		////集团模式下的岗位体系: @0=每套组织都有自己的岗位体系@1=所有的组织共享一套岗则体系.
-		//if (bp.difference.SystemConfig.GroupStationModel == 1)
+		////集团模式下的角色体系: @0=每套组织都有自己的角色体系@1=所有的组织共享一套岗则体系.
+		//if (bp.difference.SystemConfig.getGroupStationModel() == 1)
 		//    return base.RetrieveAll("Idx");
 
 		//按照orgNo查询.
@@ -47,7 +52,8 @@ public class Modules extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<Module> ToJavaList()  {
+	public final java.util.List<Module> ToJavaList()
+	{
 		return (java.util.List<Module>)(Object)this;
 	}
 	/** 
@@ -55,7 +61,8 @@ public class Modules extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<Module> Tolist()  {
+	public final ArrayList<Module> Tolist()
+	{
 		ArrayList<Module> list = new ArrayList<Module>();
 		for (int i = 0; i < this.size(); i++)
 		{

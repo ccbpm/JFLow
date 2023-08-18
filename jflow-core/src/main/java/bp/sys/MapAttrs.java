@@ -1,14 +1,8 @@
 package bp.sys;
 
-import bp.ccbill.FrmBill;
-import bp.da.*;
 import bp.en.*;
-import bp.pub.*;
-import bp.*;
 import java.util.*;
-import java.io.*;
-import java.time.*;
-import java.math.*;
+
 
 /** 
  实体属性s
@@ -20,7 +14,8 @@ public class MapAttrs extends EntitiesMyPK
 	/** 
 	 实体属性s
 	*/
-	public MapAttrs()  {
+	public MapAttrs()
+	{
 	}
 	/** 
 	 实体属性s
@@ -40,13 +35,14 @@ public class MapAttrs extends EntitiesMyPK
 		// qo.addOrderBy(MapAttrAttr.Idx);
 		return qo.DoQuery();
 	}
-	/// <summary>
-	/// 查询日期+日期时间类型的
-	/// 代码移动.
-	/// </summary>
-	/// <param name="fk_map"></param>
-	/// <returns></returns>
-	public String SearchMapAttrsDateAndDateTime(String fk_map) throws Exception {
+	/** 
+	 查询日期+日期时间类型的
+	  代码移动.
+	 
+	 @param fk_map
+	 @return 
+	*/
+	public final String SearchMapAttrsDateAndDateTime(String fk_map) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(MapAttrAttr.FK_MapData, fk_map);
 		qo.addAnd();
@@ -59,10 +55,12 @@ public class MapAttrs extends EntitiesMyPK
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new MapAttr();
 	}
-	public final int getWithOfCtl() throws Exception {
+	public final int getWithOfCtl()
+	{
 		int i = 0;
 		for (MapAttr item : this.ToJavaList())
 		{
@@ -93,15 +91,17 @@ public class MapAttrs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<MapAttr> ToJavaList() {
-		return (List<MapAttr>)(Object)this;
+	public final java.util.List<MapAttr> ToJavaList()
+	{
+		return (java.util.List<MapAttr>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<MapAttr> Tolist() {
+	public final ArrayList<MapAttr> Tolist()
+	{
 		ArrayList<MapAttr> list = new ArrayList<MapAttr>();
 		for (int i = 0; i < this.size(); i++)
 		{

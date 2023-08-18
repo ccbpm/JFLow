@@ -1,8 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -15,12 +13,13 @@ public class MapDtls extends EntitiesNoName
 	/** 
 	 明细s
 	*/
-	public MapDtls()  {
+	public MapDtls()
+	{
 	}
 	/** 
 	 明细s
 	 
-	 param fk_mapdata s
+	 @param fk_mapdata s
 	*/
 	public MapDtls(String fk_mapdata) throws Exception {
 		if (fk_mapdata == null)
@@ -29,14 +28,15 @@ public class MapDtls extends EntitiesNoName
 		}
 
 		//zhoupeng 注销掉，为了这样多的过滤条件？
-		// this.Retrieve(MapDtlAttr.FK_MapData, fk_mapdata, MapDtlAttr.FK_Node, 0, MapDtlAttr.No);
+		// this.Retrieve(MapDtlAttr.FK_MapData, fk_mapdata, MapDtlAttr.FK_Node, 0, MapDtlAttr.getNo());
 		this.Retrieve(MapDtlAttr.FK_MapData, fk_mapdata);
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		return new MapDtl();
 	}
 
@@ -50,7 +50,8 @@ public class MapDtls extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<MapDtl> ToJavaList()  {
+	public final java.util.List<MapDtl> ToJavaList()
+	{
 		return (java.util.List<MapDtl>)(Object)this;
 	}
 	/** 
@@ -58,7 +59,8 @@ public class MapDtls extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<MapDtl> Tolist()  {
+	public final ArrayList<MapDtl> Tolist()
+	{
 		ArrayList<MapDtl> list = new ArrayList<MapDtl>();
 		for (int i = 0; i < this.size(); i++)
 		{

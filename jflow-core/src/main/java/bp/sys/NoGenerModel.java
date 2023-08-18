@@ -1,12 +1,5 @@
 package bp.sys;
 
-import bp.da.*;
-import bp.en.*;
-import bp.web.*;
-import bp.difference.*;
-import bp.*;
-import java.util.*;
-
 /** 
  编号生成规则
 */
@@ -35,11 +28,13 @@ public enum NoGenerModel
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue() {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
-	public static NoGenerModel forValue(int value) 
-	{return values()[value];
+	public static NoGenerModel forValue(int value)
+	{
+		return values()[value];
 	}
 }

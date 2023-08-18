@@ -17,7 +17,7 @@ import bp.web.WebUser;
 import org.apache.commons.lang3.StringUtils;
 import bp.difference.ContextHolderUtils;
 import bp.difference.SystemConfig;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.tools.CRC32Helper;
 import bp.web.*;
 
@@ -228,6 +228,9 @@ public class DBAccess {
 			} else if (SystemConfig.getAppCenterDBType() == DBType.MySQL) {
 				conn = DBAccess.getGetAppCenterDBConn_MySQL();
 				pstmt = conn.prepareStatement(sql);
+			} else if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL) {
+				conn = DBAccess.getGetAppCenterDBConn_PSQL();
+				pstmt = conn.prepareStatement(sql);
 			}
 
 			// 数据库字段类型不一致增加判断
@@ -242,6 +245,16 @@ public class DBAccess {
 				{
 					/*如果没有此列，就自动创建此列.*/
 					String sql = "ALTER TABLE " + tableName + " ADD  " + saveToFileField + " Image ";
+					DBAccess.RunSQL(sql);
+					SaveBytesToDB(bytes, tableName, tablePK, pkVal, saveToFileField);
+					return;
+				}
+			}
+			if (SystemConfig.getAppCenterDBType().getValue() == DBType.PostgreSQL.getValue()){
+				if (DBAccess.IsExitsTableCol(tableName, saveToFileField) == false)
+				{
+					/*如果没有此列，就自动创建此列.*/
+					String sql = "ALTER TABLE " + tableName + " ADD COLUMN " + saveToFileField + " bytea ";
 					DBAccess.RunSQL(sql);
 					SaveBytesToDB(bytes, tableName, tablePK, pkVal, saveToFileField);
 					return;
@@ -422,6 +435,7 @@ public class DBAccess {
 		if (SystemConfig.getAppCenterDBType() == DBType.Oracle
 			||SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
 			||SystemConfig.getAppCenterDBType() == DBType.KingBaseR6
+			||SystemConfig.getAppCenterDBType() == DBType.PostgreSQL
 			|| SystemConfig.getAppCenterDBType() == DBType.DM) {
 			strSQL = strSQL.replace("[", "").replace("]", "");
 		}
@@ -1836,7 +1850,7 @@ public class DBAccess {
 				Object val = rs.getObject(idx + 1);
 
 				if (val == null) {
-					if (attr.getIsNum() == true)
+					if (attr.getItIsNum() == true)
 						val = 0;
 					else
 						val = "";
@@ -1891,14 +1905,14 @@ public class DBAccess {
 				rs = stmt.executeQuery(sql);
 			}
 			Attr attr = null;
-			Entity myen = ens.getGetNewEntity();
-			SQLCash sqlCash = myen.getSQLCash();
+			Entity myen = ens.getNewEntity();
+			SQLCache sqlCache = myen.getSQLCache();
 			bp.en.Map map = myen.getEnMap();
 
 			while (rs.next()) {
 
-				Entity en = ens.getGetNewEntity();
-				en.setSQLCash(sqlCash);
+				Entity en = ens.getNewEntity();
+				en.setSQLCache(sqlCache);
 				en.set_enMap(map);
 
 				Hashtable ht = en.getRow();
@@ -1906,7 +1920,7 @@ public class DBAccess {
 					attr = attrs.get(idx);
 					Object val = rs.getObject(idx + 1);
 					if (val == null) {
-						if (attr.getIsNum() == true)
+						if (attr.getItIsNum() == true)
 							val = 0;
 						else
 							val = "";
@@ -2070,13 +2084,13 @@ public class DBAccess {
 				Object val = rs.getObject(idx + 1);
 
 				if (val == null) {
-					if (attr.getIsNum() == true)
+					if (attr.getItIsNum() == true)
 						val = 0;
 					else
 						val = "";
 				}
 				if(SystemConfig.getAppCenterDBType() == DBType.KingBaseR3)
-					ht.put(attr.getKey(), bp.sys.base.Glo.GenerRealType(attr,val));
+					ht.put(attr.getKey(), bp.sys.base.Glo.GenerRealType(attrs,attr.getKey(),val));
 				else
 					ht.put(attr.getKey(), val);
 
@@ -2136,7 +2150,7 @@ public class DBAccess {
 				Object val = rs.getObject(idx + 1);
 
 				if (val == null) {
-					if (attr.getIsNum() == true)
+					if (attr.getItIsNum() == true)
 						val = 0;
 					else
 						val = "";
@@ -2200,7 +2214,7 @@ public class DBAccess {
 				Object val = rs.getObject(idx + 1);
 
 				if (val == null) {
-					if (attr.getIsNum() == true)
+					if (attr.getItIsNum() == true)
 						val = 0;
 					else
 						val = "";
@@ -2253,14 +2267,14 @@ public class DBAccess {
 				rs = stmt.executeQuery(sql);
 			}
 			Attr attr = null;
-			Entity myen = ens.getGetNewEntity();
-			SQLCash sqlCash = myen.getSQLCash();
+			Entity myen = ens.getNewEntity();
+			SQLCache sqlCache = myen.getSQLCache();
 			bp.en.Map map = myen.getEnMap();
 
 			while (rs.next()) {
 
-				Entity en = ens.getGetNewEntity();
-				en.setSQLCash(sqlCash);
+				Entity en = ens.getNewEntity();
+				en.setSQLCache(sqlCache);
 				en.set_enMap(map);
 
 				Hashtable ht = en.getRow();
@@ -2268,13 +2282,13 @@ public class DBAccess {
 					attr = attrs.get(idx);
 					Object val = rs.getObject(idx + 1);
 					if (val == null) {
-						if (attr.getIsNum() == true)
+						if (attr.getItIsNum() == true)
 							val = 0;
 						else
 							val = "";
 					}
 					if(SystemConfig.getAppCenterDBType() == DBType.KingBaseR3)
-						ht.put(attr.getKey(), bp.sys.base.Glo.GenerRealType(attr,val));
+						ht.put(attr.getKey(), bp.sys.base.Glo.GenerRealType(attrs,attr.getKey(),val));
 					else
 						ht.put(attr.getKey(), val);
 				}
@@ -2327,23 +2341,23 @@ public class DBAccess {
 				rs = stmt.executeQuery(sql);
 			}
 			Attr attr = null;
-			Entity myen = ens.getGetNewEntity();
-			SQLCash sqlCash = myen.getSQLCash();
+			Entity myen = ens.getNewEntity();
+			SQLCache sqlCache = myen.getSQLCache();
 			bp.en.Map map = myen.getEnMap();
 
 			while (rs.next()) {
 
-				Entity en = ens.getGetNewEntity();
-				en.setSQLCash(sqlCash);
+				Entity en = ens.getNewEntity();
+				en.setSQLCache(sqlCache);
 				en.set_enMap(map);
-				// en.setRow( sqlCash.CreateNewRow() );
+				// en.setRow( sqlCache.CreateNewRow() );
 
 				Hashtable ht = en.getRow();
 				for (int idx = 0; idx < attrs.size(); idx++) {
 					attr = attrs.get(idx);
 					Object val = rs.getObject(idx + 1);
 					if (val == null) {
-						if (attr.getIsNum() == true)
+						if (attr.getItIsNum() == true)
 							val = 0;
 						else
 							val = "";
@@ -2722,23 +2736,23 @@ public class DBAccess {
 			}
 
 			Attr attr = null;
-			Entity myen = ens.getGetNewEntity();
-			SQLCash sqlCash = myen.getSQLCash();
+			Entity myen = ens.getNewEntity();
+			SQLCache sqlCache = myen.getSQLCache();
 			bp.en.Map map = myen.getEnMap();
 
 			while (rs.next()) {
 
-				Entity en = ens.getGetNewEntity();
-				en.setSQLCash(sqlCash);
+				Entity en = ens.getNewEntity();
+				en.setSQLCache(sqlCache);
 				en.set_enMap(map);
-				// en.setRow( sqlCash.CreateNewRow() );
+				// en.setRow( sqlCache.CreateNewRow() );
 
 				Hashtable ht = en.getRow();
 				for (int idx = 0; idx < attrs.size(); idx++) {
 					attr = attrs.get(idx);
 					Object val = rs.getObject(idx + 1);
 					if (val == null) {
-						if (attr.getIsNum() == true)
+						if (attr.getItIsNum() == true)
 							val = 0;
 						else
 							val = "";
@@ -2804,7 +2818,7 @@ public class DBAccess {
 				Object val = rs.getObject(idx + 1);
 
 				if (val == null) {
-					if (attr.getIsNum() == true)
+					if (attr.getItIsNum() == true)
 						val = 0;
 					else
 						val = "";
@@ -3182,8 +3196,8 @@ public class DBAccess {
 	/**
 	 * 运行sql返回一个值
 	 * 
-	 * param sql
-	 * param isNullAsVal
+	 * @param sql
+	 * @param isNullAsVal
 	 * @return
 	 * @throws Exception
 	 */
@@ -3209,8 +3223,7 @@ public class DBAccess {
 	public static Object RunSQLReturnVal(String sql, Paras paras) {
 		RunSQLReturnTableCount++;
 		DataTable dt = null;
-		try {
-			switch (SystemConfig.getAppCenterDBType()) {
+		switch (SystemConfig.getAppCenterDBType()) {
 			case Oracle:
 			case KingBaseR3:
 			case KingBaseR6:
@@ -3231,9 +3244,6 @@ public class DBAccess {
 				break;
 			default:
 				throw new RuntimeException("@没有判断的数据库类型");
-			}
-		} catch (RuntimeException e) {
-			return null;
 		}
 		if (dt.Rows.size() == 0) {
 			return null;
@@ -3523,7 +3533,7 @@ public class DBAccess {
 		}
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		if (SystemConfig.AppCenterDBFieldCaseModel()!=FieldCaseModel.None ) {
+		if (SystemConfig.getAppCenterDBFieldCaseModel()!=FieldCaseModel.None ) {
 			dt.Columns.get(0).setColumnName("FName");
 			dt.Columns.get(1).setColumnName("FType");
 			dt.Columns.get(2).setColumnName("FLen");
@@ -3687,7 +3697,6 @@ public class DBAccess {
             String getSql = "SELECT " + fileSaveField + " FROM " + tableName + " WHERE " + tablePK + " = '" + pkVal + "'";
             return DBAccess.RunSQLReturnString(getSql);
 		}
-
 	}
 
 	/**

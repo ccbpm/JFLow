@@ -564,7 +564,7 @@ public class Json
 					v = "";
 				}
 				dr.setValue("Name", v);
-				dt.Rows.AddRow(dr);
+				dt.Rows.add(dr);
 			}
 			return ToJson(dt);
 		}
@@ -620,7 +620,7 @@ public class Json
 
 		boolean isOracel=false;
 		// 20210426大小写jhy
-		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
+		if (SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 				/*SystemConfig.getAppCenterDBType() ==  DBType.Oracle
 				||SystemConfig.getAppCenterDBType() == DBType.KingBaseR3
 				||SystemConfig.getAppCenterDBType() == DBType.KingBaseR6*/
@@ -879,9 +879,9 @@ public class Json
 				}
 				String strValue = "";
 				if(!isRowUper){
-					if (SystemConfig.AppCenterDBFieldCaseModel()== FieldCaseModel.UpperCase){//按照大写取值
+					if (SystemConfig.getAppCenterDBFieldCaseModel()== FieldCaseModel.UpperCase){//按照大写取值
 						strValue = drc.get(i).get(strKey.toUpperCase()) == null ? "" : drc.get(i).get(strKey.toUpperCase()).toString();
-					}else if(SystemConfig.AppCenterDBFieldCaseModel()== FieldCaseModel.Lowercase){
+					}else if(SystemConfig.getAppCenterDBFieldCaseModel()== FieldCaseModel.Lowercase){
 						strValue = drc.get(i).get(strKey.toLowerCase()) == null ? "" : drc.get(i).get(strKey.toLowerCase()).toString();
 					} else{
 						strValue = drc.get(i).get(dt.Columns.get(j).ColumnName) == null ? "" : drc.get(i).get(dt.Columns.get(j).ColumnName).toString();
@@ -1032,5 +1032,41 @@ public class Json
 
 		ht.putAll(data);
 		return ht;
+	}
+	public static DataTable ConvertToDataTable(JSONArray dataArr) throws Exception {
+		if (dataArr == null || dataArr.size() <= 0)
+			return null;
+		DataTable dt = new DataTable();
+		DataRow row = null;
+		DataColumn dc = null;
+		int idx=0;
+		String key ="";
+		Object value=null;
+		for(int i = 0;i < dataArr.size();i++) {
+			JSONObject pjson = (JSONObject)dataArr.get(i);
+			@SuppressWarnings("unchecked")
+			Iterator<String> iterator = pjson.keys();
+			row = dt.NewRow();
+			dc = new DataColumn();
+			if(idx == 0){
+				while(iterator.hasNext())
+				{
+					key = (String) iterator.next();
+					dc.ColumnName = key;
+					value = pjson.get(key);
+					dt.Columns.Add(dc.ColumnName,value.getClass());
+					row.setValue(key, value);
+				}
+			}
+			idx++;
+			while(iterator.hasNext())
+			{
+				key = (String) iterator.next();
+				value = pjson.get(key);
+				row.setValue(key, value);
+			}
+			dt.Rows.add(i, row);
+		}
+		return dt;
 	}
 }

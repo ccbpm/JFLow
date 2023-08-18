@@ -1,11 +1,8 @@
 package bp.wf.xml;
 
-import bp.da.*;
 import bp.en.*;
 import bp.sys.xml.*;
 import bp.sys.*;
-import bp.*;
-import bp.wf.*;
 
 /** 
  
@@ -17,7 +14,8 @@ public class AdminMenus extends XmlEns
 	/** 
 	 考核率的数据元素
 	*/
-	public AdminMenus()  {
+	public AdminMenus()
+	{
 	}
 
 		///#endregion
@@ -27,11 +25,14 @@ public class AdminMenus extends XmlEns
 	/** 
 	 得到它的 Entity 
 	*/
-	public XmlEn getGetNewEntity() {
+	@Override
+	public XmlEn getNewEntity()
+	{
 		return new AdminMenu();
 	}
 	@Override
-	public String getFile() throws Exception {
+	public String getFile()
+	{
 		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
 		{
 			return bp.difference.SystemConfig.getPathOfWebApp() + "DataUser/XML/AdminMenu.xml";
@@ -66,12 +67,14 @@ public class AdminMenus extends XmlEns
 	 物理表名
 	*/
 	@Override
-	public String getTableName()  {
+	public String getTableName()
+	{
 		return "Item";
 	}
 	@Override
-	public Entities getRefEns()  {
-		return null; //new BP.ZF1.AdminAdminMenus();
+	public Entities getRefEns()
+	{
+		return null;
 	}
 
 		///#endregion

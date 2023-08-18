@@ -1,7 +1,5 @@
 package bp.wf;
 
-import bp.*;
-
 /** 
  子流程数据反填父流程数据规则
 */
@@ -26,11 +24,13 @@ public enum BackCopyRole
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue() {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
-	public static BackCopyRole forValue(int value) 
-	{return values()[value];
+	public static BackCopyRole forValue(int value)
+	{
+		return values()[value];
 	}
 }

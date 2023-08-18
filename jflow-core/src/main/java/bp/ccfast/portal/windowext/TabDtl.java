@@ -1,7 +1,11 @@
 package bp.ccfast.portal.windowext;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.ccfast.*;
+import bp.ccfast.portal.*;
+import java.util.*;
 
 /** 
  变量信息
@@ -11,12 +15,10 @@ public class TabDtl extends EntityMyPK
 	/** 
 	 表达式
 	*/
-	public final String getExp0() throws Exception
-	{
+	public final String getExp0()  {
 		return this.GetValStrByKey(DtlAttr.Exp0);
 	}
-	public final void setExp0(String value)  throws Exception
-	 {
+	public final void setExp0(String value)  {
 		this.SetValByKey(DtlAttr.Exp0, value);
 	}
 
@@ -26,7 +28,8 @@ public class TabDtl extends EntityMyPK
 	 控制权限
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 
 		uac.IsInsert = true;
@@ -48,13 +51,15 @@ public class TabDtl extends EntityMyPK
 	/** 
 	 变量信息
 	*/
-	public TabDtl() {
+	public TabDtl()
+	{
 	}
 	/** 
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -80,7 +85,8 @@ public class TabDtl extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		this.setMyPK(DBAccess.GenerGUID(0, null, null));
 		return super.beforeInsert();
 	}

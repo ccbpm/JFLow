@@ -1,6 +1,6 @@
 package bp.sys.frmui;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import java.util.*;
 
 /** 
@@ -13,13 +13,15 @@ public class ExtScores extends EntitiesMyPK
 	/** 
 	 评分控件s
 	*/
-	public ExtScores() {
+	public ExtScores()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new ExtLink();
 	}
 
@@ -32,7 +34,8 @@ public class ExtScores extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<ExtLink> ToJavaList() {
+	public final java.util.List<ExtLink> ToJavaList()
+	{
 		return (java.util.List<ExtLink>)(Object)this;
 	}
 	/** 
@@ -40,7 +43,8 @@ public class ExtScores extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<ExtLink> Tolist()  {
+	public final ArrayList<ExtLink> Tolist()
+	{
 		ArrayList<ExtLink> list = new ArrayList<ExtLink>();
 		for (int i = 0; i < this.size(); i++)
 		{

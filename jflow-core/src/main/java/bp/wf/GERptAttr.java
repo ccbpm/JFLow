@@ -1,6 +1,6 @@
 package bp.wf;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.wf.template.*;
 import bp.sys.*;
 import bp.*;
@@ -43,6 +43,10 @@ public class GERptAttr
 	 发起人部门编号
 	*/
 	public static final String FK_Dept = "FK_Dept";
+	/** 
+	 发起人部门名称
+	*/
+	public static final String FK_DeptName = "FK_DeptName";
 	/** 
 	 流程状态(详细状态)
 	*/
@@ -99,10 +103,6 @@ public class GERptAttr
 	 单据编号
 	*/
 	public static final String BillNo = "BillNo";
-	/** 
-	 流程备注
-	*/
-	public static final String FlowNote = "FlowNote";
 	/** 
 	 参数
 	*/

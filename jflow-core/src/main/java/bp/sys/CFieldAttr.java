@@ -13,7 +13,7 @@ public class CFieldAttr
 	/** 
 	 工作人员
 	*/
-	public static final String FK_Emp = "FK_Emp";
+	public static final String EmpNo = "EmpNo";
 	/** 
 	 列选择
 	*/

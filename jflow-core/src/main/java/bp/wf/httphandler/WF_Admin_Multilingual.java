@@ -2,29 +2,30 @@ package bp.wf.httphandler;
 
 import bp.difference.*;
 import bp.*;
-import bp.difference.handler.WebContralBase;
 import bp.wf.*;
 import java.util.*;
 
 /** 
  页面功能实体
 */
-public class WF_Admin_Multilingual extends WebContralBase
+public class WF_Admin_Multilingual extends bp.difference.handler.DirectoryPageBase
 {
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_Multilingual() throws Exception {
+	public WF_Admin_Multilingual()
+	{
 	}
 	/** 
 	 获得使用的语言.
 	 
 	 @return 使用的语言
 	*/
-	public final String GetLangue() throws Exception {
+	public final String GetLangue()
+	{
 		Hashtable ht = new Hashtable();
 
-		if (SystemConfig.getIsMultilingual() == true)
+		if (SystemConfig.isMultilingual() == true)
 		{
 			ht.put("IsMultilingual", "1");
 		}
@@ -45,7 +46,8 @@ public class WF_Admin_Multilingual extends WebContralBase
 	 @return 
 	*/
 	@Override
-	protected String DoDefaultMethod() throws Exception {
+	protected String DoDefaultMethod()
+	{
 		switch (this.getDoType())
 		{
 			case "DtlFieldUp": //字段上移
@@ -67,7 +69,8 @@ public class WF_Admin_Multilingual extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String CCForm_Init() throws Exception {
+	public final String CCForm_Init()
+	{
 		return "";
 	}
 

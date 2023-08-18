@@ -1,12 +1,9 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
-import java.util.*;
 
 /** 
- sss
+ 枚举注册 属性
 */
 public class SysEnumMainAttr extends EntityNoNameAttr
 {

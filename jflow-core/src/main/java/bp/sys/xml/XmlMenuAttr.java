@@ -1,6 +1,5 @@
 package bp.sys.xml;
 
-
 public class XmlMenuAttr
 {
 	public static final String No = "No";

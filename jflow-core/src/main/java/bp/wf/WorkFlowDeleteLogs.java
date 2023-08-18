@@ -1,11 +1,6 @@
 package bp.wf;
 
-import bp.da.*;
 import bp.en.*;
-import bp.wf.*;
-import bp.port.*;
-import bp.wf.data.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -18,13 +13,15 @@ public class WorkFlowDeleteLogs extends Entities
 	/** 
 	 流程删除日志s
 	*/
-	public WorkFlowDeleteLogs() throws Exception {
+	public WorkFlowDeleteLogs()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new WorkFlowDeleteLog();
 	}
 
@@ -37,7 +34,8 @@ public class WorkFlowDeleteLogs extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.List<WorkFlowDeleteLog> ToJavaList() {
+	public final java.util.List<WorkFlowDeleteLog> ToJavaList()
+	{
 		return (java.util.List<WorkFlowDeleteLog>)(Object)this;
 	}
 	/** 
@@ -45,7 +43,8 @@ public class WorkFlowDeleteLogs extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<WorkFlowDeleteLog> Tolist()  {
+	public final ArrayList<WorkFlowDeleteLog> Tolist()
+	{
 		ArrayList<WorkFlowDeleteLog> list = new ArrayList<WorkFlowDeleteLog>();
 		for (int i = 0; i < this.size(); i++)
 		{

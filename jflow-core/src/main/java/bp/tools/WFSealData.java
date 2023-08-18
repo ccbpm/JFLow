@@ -3,7 +3,7 @@ package bp.tools;
 import bp.da.DBAccess;
 import bp.da.DataType;
 import bp.da.Depositary;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.en.Map;
 
 /**
@@ -14,13 +14,11 @@ public class WFSealData extends EntityMyPK
 	// 用户日志信息键值列表
 	
 	// 基本属性
-	public final String getSealData() throws Exception
-	{
+	public final String getSealData()  {
 		return this.GetValStringByKey(WFSealDataAttr.SealData);
 	}
 	
-	public final void setSealData(String value) throws Exception
-	{
+	public final void setSealData(String value){
 		this.SetValByKey(WFSealDataAttr.SealData, value);
 	}
 	
@@ -28,43 +26,35 @@ public class WFSealData extends EntityMyPK
 	 * FK_Emp
 	 * @throws Exception 
 	 */
-	public final String getFK_Node() throws Exception
-	{
+	public final String getFK_Node()  {
 		return this.GetValStringByKey(WFSealDataAttr.FK_Node);
 	}
 	
-	public final void setFK_Node(String value) throws Exception
-	{
+	public final void setNodeID(String value){
 		this.SetValByKey(WFSealDataAttr.FK_Node, value);
 	}
 	
-	public final String getRDT() throws Exception
-	{
+	public final String getRDT()  {
 		return this.GetValStringByKey(WFSealDataAttr.RDT);
 	}
 	
-	public final void setRDT(String value) throws Exception
-	{
+	public final void setRDT(String value){
 		this.SetValByKey(WFSealDataAttr.RDT, value);
 	}
 	
-	public final String getFK_MapData() throws Exception
-	{
+	public final String getFK_MapData()  {
 		return this.GetValStringByKey(WFSealDataAttr.FK_MapData);
 	}
 	
-	public final void setFK_MapData(String value) throws Exception
-	{
+	public final void setFK_MapData(String value){
 		this.SetValByKey(WFSealDataAttr.FK_MapData, value);
 	}
 	
-	public final String getOID() throws Exception
-	{
+	public final String getOID()  {
 		return this.GetValStringByKey(WFSealDataAttr.OID);
 	}
 	
-	public final void setOID(String value) throws Exception
-	{
+	public final void setOID(String value){
 		this.SetValByKey(WFSealDataAttr.OID, value);
 	}
 	
@@ -151,7 +141,7 @@ public class WFSealData extends EntityMyPK
 	
 	// 重写
 	@Override
-	public Entities getGetNewEntities()
+	public Entities GetNewEntities()
 	{
 		return new bp.tools.WFSealDatas();
 	}

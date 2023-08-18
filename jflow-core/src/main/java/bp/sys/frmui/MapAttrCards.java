@@ -1,6 +1,10 @@
 package bp.sys.frmui;
 
-import bp.en.*;
+import bp.da.*;
+import bp.en.*; import bp.en.Map;
+import bp.sys.*;
+import bp.*;
+import bp.sys.*;
 import java.util.*;
 
 /** 
@@ -13,13 +17,15 @@ public class MapAttrCards extends EntitiesMyPK
 	/** 
 	 实体属性s
 	*/
-	public MapAttrCards()  {
+	public MapAttrCards()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new MapAttrCard();
 	}
 
@@ -32,7 +38,8 @@ public class MapAttrCards extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<MapAttrCard> ToJavaList() {
+	public final java.util.List<MapAttrCard> ToJavaList()
+	{
 		return (java.util.List<MapAttrCard>)(Object)this;
 	}
 	/** 
@@ -40,7 +47,8 @@ public class MapAttrCards extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<MapAttrCard> Tolist()  {
+	public final ArrayList<MapAttrCard> Tolist()
+	{
 		ArrayList<MapAttrCard> list = new ArrayList<MapAttrCard>();
 		for (int i = 0; i < this.size(); i++)
 		{

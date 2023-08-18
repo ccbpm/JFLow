@@ -7,9 +7,8 @@ import bp.en.*;
 import bp.da.*;
 import bp.web.*;
 import bp.sys.*;
+import bp.wf.template.*;
 import bp.*;
-import bp.wf.template.SysFormTrees;
-
 import java.util.*;
 import java.time.*;
 import java.util.Map;
@@ -22,10 +21,10 @@ public class Dev2Interface
 	/** 
 	 增加日志
 	 
-	 param at
-	 param frmID
-	 param at
-	 param msg
+	 @param at
+	 @param frmID
+	 @param at
+	 @param msg
 	 @return 
 	*/
 
@@ -53,7 +52,6 @@ public class Dev2Interface
 		Dict_AddTrack(frmID, frmWorkID, at, msg, null, null, null, 0, 0, "");
 	}
 
-//ORIGINAL LINE: public static void Dict_AddTrack(string frmID, string frmWorkID, string at, string msg, string paras = null, string flowNo = null, string flowName = null, int nodeID = 0, Int64 workIDOfFlow = 0, string frmName = "")
 	public static void Dict_AddTrack(String frmID, String frmWorkID, String at, String msg, String paras, String flowNo, String flowName, int nodeID, long workIDOfFlow, String frmName) throws Exception {
 		bp.ccbill.Track tk = new bp.ccbill.Track();
 		tk.setWorkID(frmWorkID);
@@ -85,8 +83,8 @@ public class Dev2Interface
 
 		tk.setRec(WebUser.getNo());
 		tk.setRecName(WebUser.getName());
-		tk.setDeptNo(WebUser.getFK_Dept());
-		tk.setDeptName(WebUser.getFK_DeptName());
+		tk.setDeptNo(WebUser.getDeptNo());
+		tk.setDeptName(WebUser.getDeptName());
 
 		// 流程信息。
 		tk.setWorkIDOfFlow(workIDOfFlow);
@@ -100,16 +98,16 @@ public class Dev2Interface
 			tk.setFlowNo(flowNo);
 		}
 
-		//tk.setMyPK(tk.FrmID + "_" + tk.WorkID + "_" + tk.Rec + "_" + (int)BP.CCBill.FrmActionType.BBS;
+		//tk.setMyPK(tk.getFrmID() + "_" + tk.WorkID + "_" + tk.Rec + "_" + (int)BP.CCBill.FrmActionType.BBS;
 		tk.setMsg(msg);
-		tk.setRDT(DataType.getCurrentDataTime());
+		tk.setRDT(DataType.getCurrentDateTime());
 
 		////流程信息.
-		//tk.NodeID = nodeID;
-		//tk.NodeName = nodeName;
-		//tk.FlowNo = flowNo;
+		//tk.setNodeID(nodeID;
+		//tk.setNodeName(nodeName;
+		//tk.setFlowNo(flowNo);
 		//tk.FlowName = flowName;
-		//tk.FID = fid;
+		//tk.setFID(fid;
 		tk.Insert();
 	}
 
@@ -117,10 +115,9 @@ public class Dev2Interface
 	/** 
 	 创建单据的WorkID
 	 
-	 param frmID
-	 param userNo
-	 param htParas
-	 param pDictFrmID
+	 @param frmID
+	 @param userNo
+	 @param htParas
 	 @return 
 	*/
 
@@ -139,8 +136,6 @@ public class Dev2Interface
 	public static long CreateBlankBillID(String frmID) throws Exception {
 		return CreateBlankBillID(frmID, null, null, null, 0);
 	}
-
-//ORIGINAL LINE: public static Int64 CreateBlankBillID(string frmID, string userNo = null, Hashtable htParas = null, string pDictFrmID = null, Int64 pDictWorkID = 0)
 	public static long CreateBlankBillID(String frmID, String userNo, Hashtable htParas, String pDictFrmID, long pDictWorkID) throws Exception {
 		if (userNo == null)
 		{
@@ -163,7 +158,7 @@ public class Dev2Interface
 			rpt1.SetValByKey("BillState", 0);
 			rpt1.SetValByKey("Starter", gb.getStarter());
 			rpt1.SetValByKey("StarterName", gb.getStarterName());
-			rpt1.SetValByKey("FK_Dept", WebUser.getFK_Dept());
+			rpt1.SetValByKey("FK_Dept", WebUser.getDeptNo());
 			rpt1.SetValByKey("RDT", gb.getRDT());
 			rpt1.SetValByKey("Title", gb.getTitle());
 			rpt1.SetValByKey("BillNo", gb.getBillNo());
@@ -194,10 +189,10 @@ public class Dev2Interface
 
 		//if (DataType.IsNullOrEmpty(billNo) == false)
 		//    gb.BillNo = billNo; //BillNo
-		gb.setFK_Dept(WebUser.getFK_Dept());
-		gb.setDeptName(WebUser.getFK_DeptName());
-		gb.setFKFrmTree(fb.getFKFormTree()); //单据类别.
-		gb.setRDT(DataType.getCurrentDataTime());
+		gb.setDeptNo(WebUser.getDeptNo());
+		gb.setDeptName(WebUser.getDeptName());
+		gb.setFrmTreeNo(fb.getFormTreeNo()); //单据类别.
+		gb.setRDT(DataType.getCurrentDateTime());
 		gb.setNDStep(1);
 		gb.setNDStepName("启动");
 
@@ -224,7 +219,7 @@ public class Dev2Interface
 
 		if (fb.getEntityType() == EntityType.EntityTree || fb.getEntityType() == EntityType.FrmDict)
 		{
-			rpt.getEnMap().setCodeStruct(fb.getEnMap().getCodeStruct());
+			rpt.getEnMap().setCodeStruct( fb.getEnMap().getCodeStruct());
 			//if (DataType.IsNullOrEmpty(billNo) == false)
 			//    gb.BillNo = billNo;
 			//else
@@ -246,7 +241,7 @@ public class Dev2Interface
 		rpt.SetValByKey("BillState", gb.getBillState().getValue());
 		rpt.SetValByKey("Starter", gb.getStarter());
 		rpt.SetValByKey("StarterName", gb.getStarterName());
-		rpt.SetValByKey("FK_Dept", WebUser.getFK_Dept());
+		rpt.SetValByKey("FK_Dept", WebUser.getDeptNo());
 		rpt.SetValByKey("RDT", gb.getRDT());
 		rpt.SetValByKey("Title", gb.getTitle());
 		rpt.SetValByKey("BillNo", gb.getBillNo());
@@ -268,9 +263,9 @@ public class Dev2Interface
 	/** 
 	 创建一个实体ID
 	 
-	 param frmID 实体ID
-	 param userNo 用户编号
-	 param htParas 参数
+	 @param frmID 实体ID
+	 @param userNo 用户编号
+	 @param htParas 参数
 	 @return 一个实例的workid
 	*/
 	public static long CreateBlankDictID(String frmID, String userNo, Hashtable htParas) throws Exception {
@@ -308,7 +303,7 @@ public class Dev2Interface
 		rpt.SetValByKey("BillState", 0);
 		rpt.SetValByKey("Starter", WebUser.getNo());
 		rpt.SetValByKey("StarterName", WebUser.getName());
-		rpt.SetValByKey("FK_Dept", WebUser.getFK_Dept());
+		rpt.SetValByKey("FK_Dept", WebUser.getDeptNo());
 		rpt.SetValByKey("RDT", DataType.getCurrentDate());
 
 		//设置编号生成规则.
@@ -317,6 +312,7 @@ public class Dev2Interface
 		//rpt.SetValByKey("Title", gb.Title);
 		rpt.SetValByKey("BillNo", rpt.GenerNewNoByKey("BillNo", null));
 		rpt.setOID(DBAccess.GenerOID("WorkID"));
+		rpt.ResetDefaultVal(null, null, 0);
 		rpt.InsertAsOID(rpt.getOID());
 
 
@@ -327,9 +323,9 @@ public class Dev2Interface
 	/** 
 	 保存实体数据
 	 
-	 param frmID 表单ID
-	 param workid 工作ID
-	 param htParas 参数数据
+	 @param frmID 表单ID
+	 @param workid 工作ID
+	 @param htParas 参数数据
 	 @return 
 	*/
 	public static void SaveDictWork(String frmID, long workid, Hashtable htParas) throws Exception {
@@ -362,7 +358,7 @@ public class Dev2Interface
 		rpt.SetValByKey("BillState", 100);
 		rpt.SetValByKey("Starter", WebUser.getNo());
 		rpt.SetValByKey("StarterName", WebUser.getName());
-		rpt.SetValByKey("FK_Dept", WebUser.getFK_Dept());
+		rpt.SetValByKey("FK_Dept", WebUser.getDeptNo());
 		rpt.SetValByKey("RDT", DataType.getCurrentDate());
 		rpt.Update();
 
@@ -373,8 +369,8 @@ public class Dev2Interface
 	/** 
 	 保存
 	 
-	 param frmID 表单ID
-	 param workID 工作ID
+	 @param frmID 表单ID
+	 @param workID 工作ID
 	 @return 返回保存结果
 	*/
 	public static String SaveBillWork(String frmID, long workID) throws Exception {
@@ -438,8 +434,8 @@ public class Dev2Interface
 	/** 
 	 提交
 	 
-	 param frmID 表单ID
-	 param workID 工作ID
+	 @param frmID 表单ID
+	 @param workID 工作ID
 	 @return 返回保存结果
 	*/
 	public static String SubmitWork(String frmID, long workID) throws Exception {
@@ -503,8 +499,8 @@ public class Dev2Interface
 	/** 
 	 保存
 	 
-	 param frmID 表单ID
-	 param workID 工作ID
+	 @param frmID 表单ID
+	 @param workID 工作ID
 	 @return 返回保存结果
 	*/
 	public static String SaveAsDraft(String frmID, long workID) throws Exception {
@@ -524,8 +520,8 @@ public class Dev2Interface
 	/** 
 	 删除单据
 	 
-	 param frmID
-	 param workID
+	 @param frmID
+	 @param workID
 	 @return 
 	*/
 	public static String MyBill_Delete(String frmID, long workID) throws Exception {
@@ -535,7 +531,6 @@ public class Dev2Interface
 		DBAccess.RunSQLs(sqls);
 		return "删除成功.";
 	}
-
 	public static String MyBill_DeleteBills(String frmID, String workIds) throws Exception {
 		FrmBill fb = new FrmBill(frmID);
 		String sqls = "DELETE FROM Frm_GenerBill WHERE WorkID in (" + workIds + ")";
@@ -547,8 +542,8 @@ public class Dev2Interface
 	/** 
 	 删除实体
 	 
-	 param frmID
-	 param workID
+	 @param frmID
+	 @param workID
 	 @return 
 	*/
 	public static String MyDict_Delete(String frmID, long workID) throws Exception {
@@ -562,8 +557,8 @@ public class Dev2Interface
 	/** 
 	 删除实体单据
 	 
-	 param frmID
-	 param workIds
+	 @param frmID
+	 @param workIds
 	 @return 
 	*/
 	public static String MyDict_DeleteDicts(String frmID, String workIds) throws Exception {
@@ -575,8 +570,8 @@ public class Dev2Interface
 	/** 
 	 删除树形结构的实体表单
 	 
-	 param frmID
-	 param billNo
+	 @param frmID
+	 @param billNo
 	 @return 
 	*/
 	public static String MyEntityTree_Delete(String frmID, String billNo) throws Exception {
@@ -589,8 +584,8 @@ public class Dev2Interface
 	/** 
 	 复制单据数据
 	 
-	 param frmID
-	 param workID
+	 @param frmID
+	 @param workID
 	 @return 
 	*/
 	public static String MyBill_Copy(String frmID, long workID) throws Exception {
@@ -605,7 +600,7 @@ public class Dev2Interface
 		gb.setFrmName(fb.getName()); //单据名称.
 		gb.setFrmID(fb.getNo()); //单据ID
 
-		gb.setFKFrmTree(fb.getFKFormTree()); //单据类别.
+		gb.setFrmTreeNo(fb.getFormTreeNo()); //单据类别.
 		gb.setRDT(DataType.getCurrentDateTime());
 		gb.setNDStep(1);
 		gb.setNDStepName("启动");
@@ -637,7 +632,7 @@ public class Dev2Interface
 		{
 			for (MapDtl dtl : dtls.ToJavaList())
 			{
-				if (dtl.getIsCopyNDData() == false)
+				if (dtl.getItIsCopyNDData() == false)
 				{
 					continue;
 				}
@@ -651,7 +646,7 @@ public class Dev2Interface
 				{
 					//是否启用多附件
 					FrmAttachmentDBs dbs = null;
-					if (dtl.getIsEnableAthM() == true)
+					if (dtl.getItIsEnableAthM() == true)
 					{
 						//根据从表的OID 获取附件信息
 						dbs = new FrmAttachmentDBs();
@@ -668,8 +663,8 @@ public class Dev2Interface
 						for (FrmAttachmentDB db : dbs.ToJavaList())
 						{
 							newDB.Copy(db);
-							newDB.setRefPKVal(String.valueOf(dtlData.getOID()));
-							newDB.setFID(dtlData.getOID());
+							newDB.setRefPKVal( String.valueOf(dtlData.getOID()));
+							newDB.setFID( dtlData.getOID());
 							newDB.setMyPK(DBAccess.GenerGUID(0, null, null));
 							newDB.Insert();
 						}
@@ -693,7 +688,7 @@ public class Dev2Interface
 				{
 					FrmAttachmentDB athDB_N = new FrmAttachmentDB();
 					athDB_N.Copy(athDB);
-					athDB_N.setRefPKVal ( String.valueOf(rpt.getOID()));
+					athDB_N.setRefPKVal( String.valueOf(rpt.getOID()));
 					athDB_N.setMyPK(DBAccess.GenerGUID(0, null, null));
 					athDB_N.Insert();
 				}
@@ -711,7 +706,7 @@ public class Dev2Interface
 	/** 
 	 获得发起列表
 	 
-	 param empID
+	 @param empID
 	 @return 
 	*/
 	public static DataSet DB_StartBills(String empID) throws Exception {
@@ -723,7 +718,7 @@ public class Dev2Interface
 		ens.RetrieveAll();
 
 		DataTable dtSort = ens.ToDataTableField("Sort");
-		dtSort.TableName = "Sort";
+		dtSort.setTableName("Sort");
 		ds.Tables.add(dtSort);
 
 		//查询出来单据运行模式的.
@@ -733,14 +728,14 @@ public class Dev2Interface
 		//bills.Retrieve(FrmBillAttr.EntityType, 0); //实体类型.
 
 		DataTable dtStart = bills.ToDataTableField("dt");
-		dtStart.TableName = "Start";
+		dtStart.setTableName("Start");
 		ds.Tables.add(dtStart);
 		return ds;
 	}
 	/** 
 	 获得待办列表
 	 
-	 param empID
+	 @param empID
 	 @return 
 	*/
 	public static DataTable DB_Todolist(String empID)
@@ -750,8 +745,8 @@ public class Dev2Interface
 	/** 
 	 草稿列表
 	 
-	 param frmID 单据ID
-	 param empID 操作员
+	 @param frmID 单据ID
+	 @param empID 操作员
 	 @return 
 	*/
 	public static DataTable DB_Draft(String frmID, String empID) throws Exception {
@@ -766,8 +761,7 @@ public class Dev2Interface
 		return bills.ToDataTableField("dt");
 	}
 
-	public static String GenerTitle(String titleRole, Entity wk)
-	{
+	public static String GenerTitle(String titleRole, Entity wk) throws Exception {
 		if (DataType.IsNullOrEmpty(titleRole))
 		{
 			// 为了保持与ccflow4.5的兼容,从开始节点属性里获取.
@@ -784,34 +778,34 @@ public class Dev2Interface
 
 			if (DataType.IsNullOrEmpty(titleRole) || titleRole.contains("@") == false)
 			{
-				titleRole = "@WebUser.FK_DeptName-@WebUser.No,@WebUser.Name在@RDT发起.";
+				titleRole = "@WebUser.FK_DeptName-@WebUser.getNo(),@WebUser.Name在@RDT发起.";
 			}
 		}
 
-		if (titleRole.equals("@OutPara") || DataType.IsNullOrEmpty(titleRole) == true)
+		if (Objects.equals(titleRole, "@OutPara") || DataType.IsNullOrEmpty(titleRole) == true)
 		{
-			titleRole = "@WebUser.FK_DeptName-@WebUser.No,@WebUser.Name在@RDT发起.";
+			titleRole = "@WebUser.FK_DeptName-@WebUser.getNo(),@WebUser.Name在@RDT发起.";
 		}
 
 
 		titleRole = titleRole.replace("@WebUser.No", WebUser.getNo());
 		titleRole = titleRole.replace("@WebUser.Name", WebUser.getName());
-		titleRole = titleRole.replace("@WebUser.FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
-		titleRole = titleRole.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
-		titleRole = titleRole.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
+		titleRole = titleRole.replace("@WebUser.FK_DeptNameOfFull", WebUser.getDeptNameOfFull());
+		titleRole = titleRole.replace("@WebUser.FK_DeptName", WebUser.getDeptName());
+		titleRole = titleRole.replace("@WebUser.FK_Dept", WebUser.getDeptNo());
 		titleRole = titleRole.replace("@RDT", DataType.getCurrentDateByFormart("yy年MM月dd日HH时mm分"));
 		if (titleRole.contains("@"))
 		{
 			Attrs attrs = wk.getEnMap().getAttrs();
 
 			// 优先考虑外键的替换,因为外键文本的字段的长度相对较长。
-			for (Attr attr : attrs.ToJavaList())
+			for (Attr attr : attrs)
 			{
 				if (titleRole.contains("@") == false)
 				{
 					break;
 				}
-				if (attr.getIsRefAttr() == false)
+				if (attr.getItIsRefAttr()  == false)
 				{
 					continue;
 				}
@@ -819,14 +813,14 @@ public class Dev2Interface
 			}
 
 			//在考虑其它的字段替换.
-			for (Attr attr : attrs.ToJavaList())
+			for (Attr attr : attrs)
 			{
 				if (titleRole.contains("@") == false)
 				{
 					break;
 				}
 
-				if (attr.getIsRefAttr() == true)
+				if (attr.getItIsRefAttr()  == true)
 				{
 					continue;
 				}
@@ -843,13 +837,14 @@ public class Dev2Interface
 	/** 
 	 生成单据编号
 	 
-	 param billNo 单据编号规则
-	 param workid 工作ID
-	 param en 实体类
-	 param frmID 表单ID
+	 @param billNo 单据编号规则
+	 @param workid 工作ID
+	 @param en 实体类
+	 @param frmID 表单ID
 	 @return 生成的单据编号
 	*/
-	public static String GenerBillNo(String billNo, long workid, Entity en, String frmID) throws Exception {
+	public static String GenerBillNo(String billNo, long workid, Entity en, String frmID)
+	{
 		if (DataType.IsNullOrEmpty(billNo))
 		{
 			billNo = "3";
@@ -870,10 +865,10 @@ public class Dev2Interface
 		billNo = billNo.replace("{MM}", DataType.getCurrentDateByFormart("MM"));
 		billNo = billNo.replace("{mm}", DataType.getCurrentDateByFormart("MM"));
 
-		billNo = billNo.replace("{DD}", DateUtils.format(new Date(), "dd"));
+		billNo = billNo.replace("{DD}", DateUtils.format(new Date(), "DD"));
 		billNo = billNo.replace("{dd}", DateUtils.format(new Date(), "dd"));
-		billNo = billNo.replace("{HH}", DateUtils.format(new Date(),"HH"));
-		billNo = billNo.replace("{hh}", DateUtils.format(new Date(),"HH"));
+		billNo = billNo.replace("{HH}", DateUtils.format(new Date(), "HH"));
+		billNo = billNo.replace("{hh}", DateUtils.format(new Date(), "hh"));
 
 		billNo = billNo.replace("{LSH}", String.valueOf(workid));
 		billNo = billNo.replace("{WorkID}", String.valueOf(workid));
@@ -881,7 +876,7 @@ public class Dev2Interface
 
 		if (billNo.contains("@WebUser.DeptZi"))
 		{
-			String val = DBAccess.RunSQLReturnStringIsNull("SELECT Zi FROM Port_Dept WHERE No='" + WebUser.getFK_Dept() + "'", "");
+			String val = DBAccess.RunSQLReturnStringIsNull("SELECT Zi FROM Port_Dept WHERE No='" + WebUser.getDeptNo() + "'", "");
 			billNo = billNo.replace("@WebUser.DeptZi", val.toString());
 		}
 
@@ -906,14 +901,14 @@ public class Dev2Interface
 				//查找流水号所在位置
 				lshIdx = supposeBillNo.indexOf(lsh);
 				//将找到的流水号码替换成假设的流水号
-				supposeBillNo = (lshIdx == 0 ? "" : supposeBillNo.substring(0, lshIdx)) + StringHelper.padLeft("", i, '_') + (lshIdx + 6 < supposeBillNo.length() ? supposeBillNo.substring(lshIdx + 6) : "");
+				supposeBillNo = (lshIdx == 0 ? "" : supposeBillNo.substring(0, lshIdx)) + bp.tools.StringHelper.padLeft("", i, '_') + (lshIdx + 6 < supposeBillNo.length() ? supposeBillNo.substring(lshIdx + 6) : "");
 				//保存当前流程号所处位置，及流程号长度，以便之后使用替换成正确的流水号
 				map.put(lshIdx, i);
 			}
 		}
-		Iterator<Map.Entry<Integer, Integer>> iterator = map.entrySet().iterator();
+		Iterator<java.util.Map.Entry<Integer, Integer>> iterator = map.entrySet().iterator();
 		while (iterator.hasNext()) {
-			Map.Entry<Integer, Integer> entry = iterator.next();
+			java.util.Map.Entry<Integer, Integer> entry = iterator.next();
 			loc.add(entry);
 		}
 		//数据库中查找符合的单据号集合,NOTE:此处需要注意，在LIKE中带有左广方括号时，要使用一对广播号将其转义
@@ -927,7 +922,7 @@ public class Dev2Interface
 			//没有数据，则所有流水号都从1开始
 			for (java.util.Map.Entry<Integer, Integer> kv : loc)
 			{
-				supposeBillNo = (kv.getKey() == 0 ? "" : supposeBillNo.substring(0, kv.getKey())) + StringHelper.padLeft("1", kv.getValue(), '0') + (kv.getKey() + kv.getValue() < supposeBillNo.length() ? supposeBillNo.substring(kv.getKey() + kv.getValue()) : "");
+				supposeBillNo = (kv.getKey() == 0 ? "" : supposeBillNo.substring(0, kv.getKey())) + bp.tools.StringHelper.padLeft("1", kv.getValue(), '0') + (kv.getKey() + kv.getValue() < supposeBillNo.length() ? supposeBillNo.substring(kv.getKey() + kv.getValue()) : "");
 			}
 		}
 		else
@@ -939,7 +934,7 @@ public class Dev2Interface
 			for (int i = loc.size() - 1; i >= 0; i--)
 			{
 				//获取单据号中当前位的流水码数
-				ilsh = Integer.parseInt(StringHelper.substring(maxBillNo, loc.get(i).getKey(), loc.get(i).getValue()));
+				ilsh = Integer.parseInt(bp.tools.StringHelper.substring(maxBillNo, loc.get(i).getKey(), loc.get(i).getValue()));
 
 				if (plus1idx >= 0)
 				{
@@ -953,7 +948,7 @@ public class Dev2Interface
 					continue;
 				}
 
-				if (ilsh >= Integer.parseInt(StringHelper.padLeft("", loc.get(i).getValue(), '9')))
+				if (ilsh >= Integer.parseInt(bp.tools.StringHelper.padLeft("", loc.get(i).getValue(), '9')))
 				{
 					//右侧已经达到最大值
 					if (i > 0)
@@ -989,7 +984,6 @@ public class Dev2Interface
 		}
 
 		billNo = supposeBillNo;
-
 		return billNo;
 	}
 }

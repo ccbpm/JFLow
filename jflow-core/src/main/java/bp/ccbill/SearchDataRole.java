@@ -17,7 +17,7 @@ public enum SearchDataRole
 	*/
 	ByDeptAndSSubLevel(2),
 	/** 
-	 根据岗位设定的部门的集合
+	 根据角色设定的部门的集合
 	*/
 	ByStationDept(3),
 	/** 
@@ -29,7 +29,8 @@ public enum SearchDataRole
 
 	private int intValue;
 	private static java.util.HashMap<Integer, SearchDataRole> mappings;
-	private static java.util.HashMap<Integer, SearchDataRole> getMappings()  {
+	private static java.util.HashMap<Integer, SearchDataRole> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (SearchDataRole.class)
@@ -44,15 +45,18 @@ public enum SearchDataRole
 	}
 
 	private SearchDataRole(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue() {
+	public int getValue()
+	{
 		return intValue;
 	}
 
-	public static SearchDataRole forValue(int value) 
-	{return getMappings().get(value);
+	public static SearchDataRole forValue(int value)
+	{
+		return getMappings().get(value);
 	}
 }

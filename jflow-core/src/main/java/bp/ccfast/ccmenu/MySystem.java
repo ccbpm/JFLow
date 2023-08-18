@@ -1,13 +1,13 @@
 package bp.ccfast.ccmenu;
 
 import bp.ccbill.template.Method;
+import bp.en.Map;
 import bp.sys.*;
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.ccbill.template.*;
 import bp.sys.CCFormAPI;
 import bp.wf.*;
-import bp.wf.template.FlowTabAttr;
 
 import java.io.*;
 
@@ -21,7 +21,7 @@ public class MySystem extends EntityNoName
 	/** 
 	 打开方式
 	*/
-	public final String getOpenWay() {
+	public final String getOpenWay() throws Exception {
 		int openWay = 0;
 
 		switch (openWay)
@@ -37,59 +37,48 @@ public class MySystem extends EntityNoName
 	/** 
 	 路径
 	*/
-	public final String getWebPath()
-	{
+	public final String getWebPath() {
 		return this.GetValStringByKey("WebPath");
 	}
 	/** 
 	 是否启用
 	*/
-	public final boolean isEnable()
-	{
+	public final boolean getItIsEnable() {
 		return this.GetValBooleanByKey(MySystemAttr.IsEnable);
 	}
-	public final void setEnable(boolean value)
-	 {
+	public final void setItIsEnable(boolean value)  {
 		this.SetValByKey(MySystemAttr.IsEnable, value);
 	}
 	/** 
 	 顺序
 	*/
-	public final int getIdx()
-	{
+	public final int getIdx() {
 		return this.GetValIntByKey(MySystemAttr.Idx);
 	}
-	public final void setIdx(int value)
-	 {
+	public final void setIdx(int value)  {
 		this.SetValByKey(MySystemAttr.Idx, value);
 	}
 	/** 
 	 Icon
 	*/
-	public final String getIcon()
-	{
+	public final String getIcon()  {
 		return this.GetValStrByKey(MySystemAttr.Icon);
 	}
-	public final void setIcon(String value)
-	 {
+	public final void setIcon(String value)  {
 		this.SetValByKey(MySystemAttr.Icon, value);
 	}
 
 
-	public final String getOrgNo()
-	{
+	public final String getOrgNo() {
 		return this.GetValStringByKey(MySystemAttr.OrgNo);
 	}
-	public final void setOrgNo(String value)
-	 {
+	public final void setOrgNo(String value)  {
 		this.SetValByKey(MySystemAttr.OrgNo, value);
 	}
-	public final String getRefMenuNo()
-	{
+	public final String getRefMenuNo() {
 		return this.GetValStringByKey(MySystemAttr.RefMenuNo);
 	}
-	public final void setRefMenuNo(String value)
-	 {
+	public final void setRefMenuNo(String value)  {
 		this.SetValByKey(MySystemAttr.RefMenuNo, value);
 	}
 
@@ -98,7 +87,8 @@ public class MySystem extends EntityNoName
 
 		///#region 按钮权限控制
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		uac.IsInsert = false;
@@ -112,33 +102,29 @@ public class MySystem extends EntityNoName
 	/** 
 	 系统
 	*/
-	public MySystem(){
+	public MySystem()
+	{
 	}
 	/** 
 	 系统
 	 
-	 param no
+	 @param no
 	*/
-	public MySystem(String no)
+	public MySystem(String no) throws Exception
 	{
 		this.setNo(no);
-		try {
-			this.Retrieve();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.Retrieve();
 	}
-	/** 
-	 EnMap
-	*/
+	/**
+	 * EnMap
+	 */
 	@Override
-	public bp.en.Map getEnMap()  {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
 		}
 		Map map = new Map("GPM_System", "系统");
-		map.setDepositaryOfEntity( Depositary.None);
 
 		map.AddTBStringPK(MySystemAttr.No, null, "编号", true, false, 2, 100, 100);
 		map.AddTBString(MySystemAttr.Name, null, "名称", true, false, 0, 300, 150, true);
@@ -146,12 +132,12 @@ public class MySystem extends EntityNoName
 		map.AddTBString(MySystemAttr.Icon, null, "图标", true, false, 0, 50, 150, true);
 
 		map.AddTBString(MenuAttr.OrgNo, null, "组织编号", true, false, 0, 50, 20);
-		map.AddTBInt(MySystemAttr.Idx, 0, "显示顺序", true, false);
+		map.AddTBInt(MySystemAttr.Idx, 0, "顺序", true, false);
 
 		RefMethod rm = new RefMethod();
 		rm.Title = "导出应用模板";
 		rm.ClassMethodName = this.toString() + ".DoExpAppModel";
-			//rm.refMethodType = RefMethodType.LinkeWinOpen;
+		//rm.refMethodType = RefMethodType.LinkeWinOpen;
 		map.AddRefMethod(rm);
 
 		this.set_enMap(map);
@@ -187,15 +173,15 @@ public class MySystem extends EntityNoName
 		ds.Tables.add(menus.ToDataTableField("Menus"));
 
 		String file = path + "Menus.xml"; //默认的页面.
-		ds.WriteXml(file,XmlWriteMode.IgnoreSchema,ds);
+		ds.WriteXml(file, XmlWriteMode.WriteSchema, ds);
 
 		//遍历菜单.
 		for (Menu en : menus.ToJavaList())
 		{
 			////常规的功能，不需要备份.
-			//if (en.Mark.Equals("WorkRec") == true
-			//    || en.Mark.Equals("Calendar") == true
-			//    || en.Mark.Equals("Notepad") == true)
+			//if (en.Mark.equals("WorkRec") == true
+			//    || en.Mark.equals("Calendar") == true
+			//    || en.Mark.equals("Notepad") == true)
 			//    continue;
 			switch (en.getMenuModel())
 			{
@@ -210,8 +196,6 @@ public class MySystem extends EntityNoName
 					break;
 				case "DictTable": //如果是字典.
 					DictTable(en, path);
-				case "StandAloneFlow":
-					StandAloneFlow(en,path);
 					break;
 				default:
 					//    throw new Exception("err@没有判断的应用类型:" + en.Mark);
@@ -229,10 +213,10 @@ public class MySystem extends EntityNoName
 		ds.Tables.add(sf.ToDataTableField("SFTable"));
 
 		DataTable dt = sf.GenerHisDataTable(null);
-		dt.TableName = "Data";
+		dt.setTableName("Data");
 		ds.Tables.add(dt);
 
-		ds.WriteXml(path + en.getUrlExt() + ".xml",XmlWriteMode.IgnoreSchema,ds);
+		ds.WriteXml(path + en.getUrlExt() + ".xml", XmlWriteMode.WriteSchema, ds);
 		return "";
 	}
 	/** 
@@ -245,8 +229,8 @@ public class MySystem extends EntityNoName
 		String frmID = en.getUrlExt();
 
 		DataSet ds = CCFormAPI.GenerHisDataSet_AllEleInfo(frmID);
-		String file = path + "\\" + frmID + ".xml"; //实体方法.
-		ds.WriteXml(file,XmlWriteMode.WriteSchema, ds);
+		String file = path + "/" + frmID + ".xml"; //实体方法.
+		ds.WriteXml(file, XmlWriteMode.WriteSchema, ds);
 
 
 			///#region 导出实体的方法 .
@@ -264,7 +248,7 @@ public class MySystem extends EntityNoName
 		ds.Tables.add(ens.ToDataTableField("Methods"));
 
 		file = path + frmID + "_GroupMethods.xml"; //实体方法.
-		ds.WriteXml(file,XmlWriteMode.IgnoreSchema,ds);
+		ds.WriteXml(file, XmlWriteMode.WriteSchema, ds);
 
 		//循环单实体方法集合.
 		for (Method method : ens.ToJavaList())
@@ -291,7 +275,7 @@ public class MySystem extends EntityNoName
 
 			///#region 导出集合 .
 		//获得方法分组
-		bp.ccbill.template.Collections ensCollts = new bp.ccbill.template.Collections();
+		bp.ccbill.template.Collections ensCollts = new Collections();
 		ensCollts.Retrieve(CollectionAttr.FrmID, frmID, null);
 
 		//保存方法.
@@ -299,7 +283,7 @@ public class MySystem extends EntityNoName
 		ds.Tables.add(ensCollts.ToDataTableField("Collections"));
 
 		file = path + "/" + frmID + "_Collections.xml"; //实体方法.
-		ds.WriteXml(file,XmlWriteMode.WriteSchema, ds);
+		ds.WriteXml(file, XmlWriteMode.WriteSchema, ds);
 
 		//循环单实体方法集合.
 		for (Collection method : ensCollts.ToJavaList())
@@ -323,31 +307,12 @@ public class MySystem extends EntityNoName
 
 		return "实体导出成功";
 	}
-	public final String StandAloneFlow(Menu en, String path) throws Exception {
-		String file;
-		String newMark = en.getTag1()+"_"+en.getMark();
-		Flow f1 = new Flow(en.getTag1());
-
-		f1.DoExpFlowXmlTemplete(path +newMark + "_Flow");
-
-		//获得功能页
-		bp.wf.template.FlowTabs flowTabs = new bp.wf.template.FlowTabs();
-		flowTabs.Retrieve(FlowTabAttr.FK_Flow,en.getTag1());
-		DataSet ds=new DataSet();
-		ds.Tables.add(flowTabs.ToDataTableField("FlowTab"));
-
-		file = path + "/" +newMark + "_FlowTab.xml"; //实体方法.
-		ds.WriteXml(file,XmlWriteMode.WriteSchema, ds);
-
-
-		return "独立运行流程导出成功";
-	}
 	/** 
 	 导出应用模板
 	 
 	 @return 
 	*/
-	public final String DoExpAppModel()  {
+	public final String DoExpAppModel() {
 		return "../../GPM/PowerCenter.htm?CtrlObj=System&CtrlPKVal=" + this.getNo() + "&CtrlGroup=System";
 	}
 
@@ -357,7 +322,8 @@ public class MySystem extends EntityNoName
 	 @return 
 	*/
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		if (DataType.IsNullOrEmpty(this.getNo()) == true)
 		{
 			this.setNo(DBAccess.GenerGUID(10, null, null));
@@ -368,7 +334,8 @@ public class MySystem extends EntityNoName
 	}
 
 	@Override
-	protected boolean beforeDelete() throws Exception {
+	protected boolean beforeDelete() throws Exception
+	{
 		Modules ens = new Modules();
 		ens.Retrieve(ModuleAttr.SystemNo, this.getNo(), null);
 		if (ens.size() != 0)
@@ -411,7 +378,8 @@ public class MySystem extends EntityNoName
 	/** 
 	 向下移动
 	*/
-	public final void DoDown()  {
+	public final void DoDown() throws Exception
+	{
 		if (bp.difference.SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
 		{
 			this.DoOrderDown(MySystemAttr.OrgNo, this.getOrgNo(), MySystemAttr.Idx);

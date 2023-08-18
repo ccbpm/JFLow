@@ -1,9 +1,10 @@
 package bp.wf.dts;
 
 import bp.da.*;
-import bp.en.*;
-import bp.wf.*;
+import bp.en.*; import bp.en.Map;
 import bp.wf.template.*;
+import bp.*;
+import bp.wf.*;
 
 /** 
  升级ccflow6 要执行的调度
@@ -13,7 +14,7 @@ public class CheckDirCondModel extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public CheckDirCondModel()throws Exception
+	public CheckDirCondModel()
 	{
 		this.Title = "检查所有流程方向条件设置是否正确?";
 		this.Help = "1.检查DirCondModel,配置的模式是否正确.";
@@ -49,8 +50,7 @@ public class CheckDirCondModel extends Method
 	 @return 返回执行结果
 	*/
 	@Override
-	public Object Do()throws Exception
-	{
+	public Object Do() throws Exception {
 		String err = "";
 
 		// 查询出来按照连接线.
@@ -78,7 +78,7 @@ public class CheckDirCondModel extends Method
 			}
 			if (num > 1)
 			{
-				err += "<br>@流程[" + item.getFK_Flow() + "," + item.getFlowName() + "],节点[" + item.getNodeID() + "," + item.getName() + "]方向条件设置错误,到达的节点有[" + toNDs.size() + "]个，没有设置连接线条件的有[" + num + "]个";
+				err += "<br>@流程[" + item.getFlowNo() + "," + item.getFlowName() + "],节点[" + item.getNodeID() + "," + item.getName() + "]方向条件设置错误,到达的节点有[" + toNDs.size() + "]个，没有设置连接线条件的有[" + num + "]个";
 			}
 		}
 

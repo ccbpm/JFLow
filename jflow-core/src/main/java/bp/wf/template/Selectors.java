@@ -11,7 +11,8 @@ public class Selectors extends Entities
 	/** 
 	 Accpter
 	*/
-	public Selectors() throws Exception {
+	public Selectors()
+	{
 	}
 
 	public Selectors(String fk_flow) throws Exception {
@@ -22,7 +23,8 @@ public class Selectors extends Entities
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new Selector();
 	}
 
@@ -33,7 +35,8 @@ public class Selectors extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.List<Selector> ToJavaList() {
+	public final java.util.List<Selector> ToJavaList()
+	{
 		return (java.util.List<Selector>)(Object)this;
 	}
 	/** 
@@ -41,7 +44,8 @@ public class Selectors extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<Selector> Tolist()  {
+	public final ArrayList<Selector> Tolist()
+	{
 		ArrayList<Selector> list = new ArrayList<Selector>();
 		for (int i = 0; i < this.size(); i++)
 		{

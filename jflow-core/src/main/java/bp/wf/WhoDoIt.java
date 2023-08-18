@@ -1,7 +1,4 @@
 package bp.wf;
-
-import bp.*;
-
 /** 
  谁执行它
 */
@@ -22,11 +19,13 @@ public enum WhoDoIt
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue() {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
-	public static WhoDoIt forValue(int value) 
-	{return values()[value];
+	public static WhoDoIt forValue(int value)
+	{
+		return values()[value];
 	}
 }

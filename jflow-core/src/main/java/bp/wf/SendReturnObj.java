@@ -1,7 +1,4 @@
 package bp.wf;
-
-import bp.*;
-
 /** 
  工作发送返回对象
 */
@@ -14,7 +11,8 @@ public class SendReturnObj
 	/** 
 	 消息标记描述
 	*/
-	public final String getMsgFlagDesc() throws Exception {
+	public final String getMsgFlagDesc()
+	{
 		if (MsgFlag == null)
 		{
 			throw new RuntimeException("@没有标记");
@@ -90,7 +88,7 @@ public class SendReturnObj
 				return "分配任务";
 			default:
 				return "信息:" + MsgFlag;
-				//  throw new Exception("@没有判断的标记...");
+			//  throw new Exception("@没有判断的标记...");
 		}
 	}
 	/** 
@@ -108,6 +106,7 @@ public class SendReturnObj
 	/** 
 	 发送消息
 	*/
-	public SendReturnObj() {
+	public SendReturnObj()
+	{
 	}
 }

@@ -1,6 +1,6 @@
 package bp.ccfast.portal.windowext;
 
-import bp.en.*;
+import bp.en.Map;
 import bp.ccfast.portal.*;
 
 public class Glo

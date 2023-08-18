@@ -1,12 +1,7 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.en.*;
-import bp.en.Map;
-import bp.wf.port.*;
-import bp.*;
-import bp.wf.*;
-import java.util.*;
+import bp.en.*; import bp.en.Map;
+import bp.sys.CCBPMRunModel;
 
 /** 
  节点人员
@@ -21,27 +16,22 @@ public class NodeEmp extends EntityMyPK
 	/** 
 	节点
 	*/
-	public final int getFK_Node() throws Exception
-	{
+	public final int getNodeID()  {
 		return this.GetValIntByKey(NodeEmpAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)  throws Exception
-	 {
+	public final void setNodeID(int value){
 		this.SetValByKey(NodeEmpAttr.FK_Node, value);
 	}
 	/** 
 	 到人员
 	*/
-	public final String getFK_Emp() throws Exception
-	{
+	public final String getEmpNo()  {
 		return this.GetValStringByKey(NodeEmpAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)  throws Exception
-	 {
+	public final void setEmpNo(String value){
 		this.SetValByKey(NodeEmpAttr.FK_Emp, value);
 	}
-	public final String getFK_EmpT() throws Exception
-	{
+	public final String getEmpName()  {
 		return this.GetValRefTextByKey(NodeEmpAttr.FK_Emp);
 	}
 
@@ -52,13 +42,15 @@ public class NodeEmp extends EntityMyPK
 	/** 
 	 节点人员
 	*/
-	public NodeEmp()  {
+	public NodeEmp()
+	{
 	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -66,25 +58,38 @@ public class NodeEmp extends EntityMyPK
 
 		Map map = new Map("WF_NodeEmp", "节点人员");
 		map.IndexField = NodeEmpAttr.FK_Node;
-		map.AddMyPK();
-		map.AddTBInt(NodeEmpAttr.FK_Node,0,"Node",true,true);
+
+		map.AddMyPK(true);
+
+		map.AddTBInt(NodeEmpAttr.FK_Node, 0, "节点ID", true, true);
 		map.AddDDLEntities(NodeEmpAttr.FK_Emp, null, "到人员", new bp.port.Emps(), true);
+
+		//map.AddTBIntPK(NodeEmpAttr.FK_Node,0,"Node",true,true);
+		//map.AddDDLEntitiesPK(NodeEmpAttr.FK_Emp, null, "到人员", new bp.port.Emps(), true);
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
+
+		///#endregion
+
+
 	@Override
-	protected  boolean beforeUpdateInsertAction() throws Exception
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
-		this.setMyPK(this.getFK_Node() + "_" + this.getFK_Emp());
+		this.setMyPK(this.getNodeID() + "_" + this.getEmpNo());
 		return super.beforeUpdateInsertAction();
 	}
+
+
 	@Override
-	protected boolean beforeInsert() throws Exception {
-		if (bp.difference.SystemConfig.getCCBPMRunModel() == bp.sys.CCBPMRunModel.SAAS)
+	protected boolean beforeInsert() throws Exception
+	{
+		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 		{
-			this.setFK_Emp(bp.web.WebUser.getOrgNo() + "_" + this.getFK_Emp());
+			this.setEmpNo(bp.web.WebUser.getOrgNo() + "_" + this.getEmpNo());
 		}
+
 		return super.beforeInsert();
 	}
 

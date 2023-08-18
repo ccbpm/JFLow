@@ -24,12 +24,12 @@ public class RegularExpressionDtls extends XmlEns
 	 得到它的 Entity 
 	*/
 	@Override
-	public XmlEn getGetNewEntity()
+	public XmlEn getNewEntity()
 	{
 		return new RegularExpressionDtl();
 	}
 	@Override
-	public String getFile()throws Exception
+	public String getFile()
 	{
 		return bp.difference.SystemConfig.getPathOfData() + "XML/RegularExpression.xml";
 	}
@@ -37,11 +37,13 @@ public class RegularExpressionDtls extends XmlEns
 	 物理表名
 	*/
 	@Override
-	public String getTableName()  {
+	public String getTableName()
+	{
 		return "Dtl";
 	}
 	@Override
-	public Entities getRefEns()  {
+	public Entities getRefEns()
+	{
 		return null;
 	}
 

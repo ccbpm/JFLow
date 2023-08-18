@@ -1,12 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.port.*;
-import bp.sys.*;
-import bp.wf.template.sflow.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -19,12 +13,13 @@ public class FrmNodeExts extends EntitiesMyPK
 	/** 
 	 节点表单
 	*/
-	public FrmNodeExts() throws Exception {
+	public FrmNodeExts()
+	{
 	}
 	/** 
 	 节点表单
 	 
-	 param NodeID 节点ID
+	 @param NodeID 节点ID
 	*/
 	public FrmNodeExts(String fk_flow, int nodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -44,7 +39,8 @@ public class FrmNodeExts extends EntitiesMyPK
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FrmNodeExt();
 	}
 
@@ -57,7 +53,8 @@ public class FrmNodeExts extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmNodeExt> ToJavaList() {
+	public final java.util.List<FrmNodeExt> ToJavaList()
+	{
 		return (java.util.List<FrmNodeExt>)(Object)this;
 	}
 	/** 
@@ -65,7 +62,8 @@ public class FrmNodeExts extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmNodeExt> Tolist()  {
+	public final ArrayList<FrmNodeExt> Tolist()
+	{
 		ArrayList<FrmNodeExt> list = new ArrayList<FrmNodeExt>();
 		for (int i = 0; i < this.size(); i++)
 		{

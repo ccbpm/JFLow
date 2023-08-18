@@ -22,7 +22,8 @@ public enum PrintFileType
 
 	private int intValue;
 	private static java.util.HashMap<Integer, PrintFileType> mappings;
-	private static java.util.HashMap<Integer, PrintFileType> getMappings()  {
+	private static java.util.HashMap<Integer, PrintFileType> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (PrintFileType.class)
@@ -37,15 +38,18 @@ public enum PrintFileType
 	}
 
 	private PrintFileType(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue() {
+	public int getValue()
+	{
 		return intValue;
 	}
 
 	public static PrintFileType forValue(int value)
-	{return getMappings().get(value);
+	{
+		return getMappings().get(value);
 	}
 }

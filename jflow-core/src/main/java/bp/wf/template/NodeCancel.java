@@ -1,12 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.en.*;
-import bp.en.Map;
-import bp.port.*;
-import bp.*;
-import bp.wf.*;
-import java.util.*;
+import bp.en.*; import bp.en.Map;
 
 /** 
  可撤销的节点
@@ -21,23 +15,19 @@ public class NodeCancel extends EntityMM
 	/** 
 	撤销到
 	*/
-	public final int getCancelTo() throws Exception
-	{
+	public final int getCancelTo()  {
 		return this.GetValIntByKey(NodeCancelAttr.CancelTo);
 	}
-	public final void setCancelTo(int value)  throws Exception
-	 {
+	public final void setCancelTo(int value){
 		this.SetValByKey(NodeCancelAttr.CancelTo, value);
 	}
 	/** 
 	 工作流程
 	*/
-	public final int getFK_Node() throws Exception
-	{
+	public final int getNodeID()  {
 		return this.GetValIntByKey(NodeCancelAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)  throws Exception
-	 {
+	public final void setNodeID(int value){
 		this.SetValByKey(NodeCancelAttr.FK_Node, value);
 	}
 
@@ -48,13 +38,15 @@ public class NodeCancel extends EntityMM
 	/** 
 	 可撤销的节点
 	*/
-	public NodeCancel()  {
+	public NodeCancel()
+	{
 	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();

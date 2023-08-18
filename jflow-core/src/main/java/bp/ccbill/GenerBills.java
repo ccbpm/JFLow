@@ -1,6 +1,6 @@
 package bp.ccbill;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.wf.*;
 import bp.*;
 import java.util.*;
@@ -15,13 +15,15 @@ public class GenerBills extends Entities
 	/** 
 	 单据控制表s
 	*/
-	public GenerBills()  {
+	public GenerBills()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new GenerBill();
 	}
 
@@ -34,7 +36,8 @@ public class GenerBills extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.List<GenerBill> ToJavaList() {
+	public final java.util.List<GenerBill> ToJavaList()
+	{
 		return (java.util.List<GenerBill>)(Object)this;
 	}
 	/** 
@@ -42,7 +45,8 @@ public class GenerBills extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<GenerBill> Tolist()  {
+	public final ArrayList<GenerBill> Tolist()
+	{
 		ArrayList<GenerBill> list = new ArrayList<GenerBill>();
 		for (int i = 0; i < this.size(); i++)
 		{

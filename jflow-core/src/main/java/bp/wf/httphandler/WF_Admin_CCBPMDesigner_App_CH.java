@@ -1,18 +1,15 @@
 package bp.wf.httphandler;
 
-import bp.*;
-import bp.difference.handler.WebContralBase;
-import bp.wf.*;
-
 /** 
  初始化函数
 */
-public class WF_Admin_CCBPMDesigner_App_CH extends WebContralBase
+public class WF_Admin_CCBPMDesigner_App_CH extends bp.difference.handler.DirectoryPageBase
 {
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_CCBPMDesigner_App_CH() throws Exception {
+	public WF_Admin_CCBPMDesigner_App_CH()
+	{
 	}
 
 
@@ -23,7 +20,8 @@ public class WF_Admin_CCBPMDesigner_App_CH extends WebContralBase
 	 @return 
 	*/
 	@Override
-	protected String DoDefaultMethod() throws Exception {
+	protected String DoDefaultMethod()
+	{
 		switch (this.getDoType())
 		{
 

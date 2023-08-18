@@ -1,6 +1,5 @@
 package bp.wf;
 
-
 /** 
  抢办发送后执行规则
 */
@@ -23,7 +22,8 @@ public enum QiangBanSendAfterRole
 
 	private int intValue;
 	private static java.util.HashMap<Integer, QiangBanSendAfterRole> mappings;
-	private static java.util.HashMap<Integer, QiangBanSendAfterRole> getMappings()  {
+	private static java.util.HashMap<Integer, QiangBanSendAfterRole> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (QiangBanSendAfterRole.class)
@@ -37,14 +37,19 @@ public enum QiangBanSendAfterRole
 		return mappings;
 	}
 
-	private QiangBanSendAfterRole(int value)  {intValue = value;
+	private QiangBanSendAfterRole(int value)
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue() {
+	public int getValue()
+	{
 		return intValue;
 	}
 
-	public static QiangBanSendAfterRole forValue(int value)  {return getMappings().get(value);
+	public static QiangBanSendAfterRole forValue(int value)
+	{
+		return getMappings().get(value);
 	}
 }

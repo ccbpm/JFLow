@@ -1,6 +1,5 @@
 package bp.sys.xml;
 
-
 /** 
  EnsAppGroupXml 的摘要说明，属性的配置。
 */
@@ -11,22 +10,19 @@ public class EnsAppGroupXml extends XmlEnNoName
 	/** 
 	 类名
 	*/
-	public final String getEnsName()  throws Exception
-	{
+	public final String getEnsName()  {
 		return this.GetValStringByKey(EnsAppGroupXmlEnsName.EnsName);
 	}
 	/** 
 	 数据类型
 	*/
-	public final String getGroupName()  throws Exception
-	{
+	public final String getGroupName()  {
 		return this.GetValStringByKey(EnsAppGroupXmlEnsName.GroupName);
 	}
 	/** 
 	 描述
 	*/
-	public final String getGroupKey()  throws Exception
-	{
+	public final String getGroupKey()  {
 		return this.GetValStringByKey(EnsAppGroupXmlEnsName.GroupKey);
 	}
 
@@ -41,7 +37,7 @@ public class EnsAppGroupXml extends XmlEnNoName
 	 获取一个实例
 	*/
 	@Override
-	public XmlEns getGetNewEntities()throws Exception
+	public XmlEns getNewEntities()
 	{
 		return new EnsAppGroupXmls();
 	}

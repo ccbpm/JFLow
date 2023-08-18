@@ -22,8 +22,7 @@ public class DemoBp {
          * */
         emp.setNo("zhangsan");
         emp.setName("张三");
-        emp.setFK_Dept("01");
-        emp.setIsPass("pub");
+        emp.setDeptNo("01");
         emp.Insert(); // 如果主键重复要抛异常。
         ///#endregion  直接插入一条数据.
 
@@ -31,8 +30,7 @@ public class DemoBp {
         emp = new Emp();
         emp.setNo("zhangsan");
         emp.setName("张三");
-        emp.setFK_Dept("01");
-        emp.setIsPass("pub");
+        emp.setDeptNo("01");
         emp.Save(); // 如果主键重复直接更新，不会抛出异常。
         ///#endregion  保存的方式插入一条数据.
 
@@ -77,8 +75,8 @@ public class DemoBp {
             msg += "<BR>编号:" + myEmp.getNo();
             msg += "<BR>名称:" + myEmp.getName();
             msg += "<BR>密码:" + myEmp.getPass();
-            msg += "<BR>部门编号:" + myEmp.getFK_Dept();
-            msg += "<BR>部门名称:" + myEmp.getFK_DeptText();
+            msg += "<BR>部门编号:" + myEmp.getDeptNo();
+            msg += "<BR>部门名称:" + myEmp.getDeptText();
 
         }
 
@@ -90,8 +88,8 @@ public class DemoBp {
         msg += "<BR>编号:" + myEmp.getNo();
         msg += "<BR>名称:" + myEmp.getName();
         msg += "<BR>密码:" + myEmp.getPass();
-        msg += "<BR>部门编号:" + myEmp.getFK_Dept();
-        msg += "<BR>部门名称:" + myEmp.getFK_DeptText();
+        msg += "<BR>部门编号:" + myEmp.getDeptNo();
+        msg += "<BR>部门名称:" + myEmp.getDeptText();
 
         ///#endregion 查询.
 

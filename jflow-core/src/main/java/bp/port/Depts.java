@@ -1,8 +1,10 @@
 package bp.port;
 
-import bp.en.*;
+import bp.da.*;
+import bp.en.*; import bp.en.Map;
 import bp.web.*;
 import bp.sys.*;
+import bp.*;
 import java.util.*;
 
 /** 
@@ -16,18 +18,20 @@ public class Depts extends EntitiesTree
 	 得到一个新实体
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		return new Dept();
 	}
 	/** 
 	 部门集合
 	*/
-	public Depts()  {
+	public Depts()
+	{
 	}
 	/** 
 	 部门集合
 	 
-	 param parentNo 父部门No
+	 @param parentNo 父部门No
 	*/
 	public Depts(String parentNo) throws Exception {
 		this.Retrieve(DeptAttr.ParentNo, parentNo);
@@ -47,21 +51,13 @@ public class Depts extends EntitiesTree
 			qo.addOrderBy(DeptAttr.Idx);
 			return qo.DoQuery();
 		}
-		if (WebUser.getIsAdmin() == false)
-		{
-			QueryObject qo = new QueryObject(this);
-			qo.AddWhere(DeptAttr.No, " = ", WebUser.getFK_Dept());
-			qo.addOr();
-			qo.AddWhereInSQL(DeptAttr.No,"SELECT FK_Dept From Port_DeptEmp WHERE FK_Emp='" + WebUser.getNo() + "'");
-			qo.addOrderBy(DeptAttr.Idx);
-			return qo.DoQuery();
-		}
+
 		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
 		{
 			QueryObject qo = new QueryObject(this);
-			qo.AddWhere(DeptAttr.No, " = ", WebUser.getFK_Dept());
+			qo.AddWhere(DeptAttr.No, " = ", WebUser.getDeptNo());
 			qo.addOr();
-			qo.AddWhere(DeptAttr.ParentNo, " = ", WebUser.getFK_Dept());
+			qo.AddWhere(DeptAttr.ParentNo, " = ", WebUser.getDeptNo());
 			qo.addOrderBy(DeptAttr.Idx);
 			return qo.DoQuery();
 		}
@@ -94,7 +90,8 @@ public class Depts extends EntitiesTree
 	 
 	 @return List
 	*/
-	public final java.util.List<Dept> ToJavaList() {
+	public final java.util.List<Dept> ToJavaList()
+	{
 		return (java.util.List<Dept>)(Object)this;
 	}
 	/** 
@@ -102,7 +99,8 @@ public class Depts extends EntitiesTree
 	 
 	 @return List
 	*/
-	public final ArrayList<Dept> Tolist()  {
+	public final ArrayList<Dept> Tolist()
+	{
 		ArrayList<Dept> list = new ArrayList<Dept>();
 		for (int i = 0; i < this.size(); i++)
 		{

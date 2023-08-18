@@ -1,13 +1,5 @@
 package bp.wf;
 
-import bp.da.*;
-import bp.en.*;
-import bp.sys.*;
-import bp.port.*;
-import bp.wf.xml.*;
-import bp.wf.template.*;
-import bp.*;
-
 /** 
  工作属性
 */

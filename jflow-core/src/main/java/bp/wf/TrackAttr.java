@@ -1,12 +1,6 @@
 package bp.wf;
 
-import bp.da.*;
 import bp.en.*;
-import bp.sys.*;
-import bp.wf.template.*;
-import bp.*;
-import java.util.*;
-import java.time.*;
 
 /** 
   轨迹-属性

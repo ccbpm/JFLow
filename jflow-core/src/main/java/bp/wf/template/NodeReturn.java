@@ -1,12 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.en.*;
-import bp.en.Map;
-import bp.port.*;
-import bp.*;
-import bp.wf.*;
-import java.util.*;
+import bp.en.*; import bp.en.Map;
 
 /** 
  可退回的节点
@@ -22,7 +16,8 @@ public class NodeReturn extends EntityMM
 	 UI界面上的访问控制
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		return uac;
@@ -30,23 +25,19 @@ public class NodeReturn extends EntityMM
 	/** 
 	退回到
 	*/
-	public final int getReturnTo() throws Exception
-	{
+	public final int getReturnTo()  {
 		return this.GetValIntByKey(NodeReturnAttr.ReturnTo);
 	}
-	public final void setReturnTo(int value)  throws Exception
-	 {
+	public final void setReturnTo(int value){
 		this.SetValByKey(NodeReturnAttr.ReturnTo, value);
 	}
 	/** 
 	 工作流程
 	*/
-	public final int getFK_Node() throws Exception
-	{
+	public final int getNodeID()  {
 		return this.GetValIntByKey(NodeReturnAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)  throws Exception
-	 {
+	public final void setNodeID(int value){
 		this.SetValByKey(NodeReturnAttr.FK_Node, value);
 	}
 
@@ -57,13 +48,15 @@ public class NodeReturn extends EntityMM
 	/** 
 	 可退回的节点
 	*/
-	public NodeReturn()  {
+	public NodeReturn()
+	{
 	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -73,7 +66,7 @@ public class NodeReturn extends EntityMM
 
 		map.AddTBIntPK(NodeReturnAttr.FK_Node, 0, "节点", true, true);
 		map.AddTBIntPK(NodeReturnAttr.ReturnTo, 0, "退回到", true, true);
-		//    map.AddTBString(NodeReturnAttr.Dots, null, "轨迹信息", true, true,0,300,0,false);
+	//    map.AddTBString(NodeReturnAttr.Dots, null, "轨迹信息", true, true,0,300,0,false);
 
 		this.set_enMap(map);
 		return this.get_enMap();

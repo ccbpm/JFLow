@@ -15,7 +15,8 @@ public class Nodes extends EntitiesOID
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		return new Node();
 	}
 
@@ -26,17 +27,18 @@ public class Nodes extends EntitiesOID
 	/** 
 	 节点集合
 	*/
-	public Nodes()  {
+	public Nodes()
+	{
 	}
 	/** 
 	 节点集合.
 	 
-	 param
+	 @param FlowNo
 	*/
 	public Nodes(String fk_flow) throws Exception {
 		//   Nodes nds = new Nodes();
 		this.Retrieve(NodeAttr.FK_Flow, fk_flow, NodeAttr.Step);
-		//this.AddEntities(NodesCash.GetNodes(fk_flow));
+		//this.AddEntities(NodesCache.GetNodes(fk_flow));
 		return;
 	}
 
@@ -49,7 +51,8 @@ public class Nodes extends EntitiesOID
 	 
 	 @return List
 	*/
-	public final java.util.List<Node> ToJavaList() {
+	public final java.util.List<Node> ToJavaList()
+	{
 		return (java.util.List<Node>)(Object)this;
 	}
 	/** 
@@ -57,7 +60,8 @@ public class Nodes extends EntitiesOID
 	 
 	 @return List
 	*/
-	public final ArrayList<bp.wf.Node> Tolist()  {
+	public final ArrayList<bp.wf.Node> Tolist()
+	{
 		ArrayList<bp.wf.Node> list = new ArrayList<bp.wf.Node>();
 		for (int i = 0; i < this.size(); i++)
 		{

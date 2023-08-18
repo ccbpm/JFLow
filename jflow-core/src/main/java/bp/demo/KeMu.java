@@ -68,7 +68,7 @@ public class KeMu extends EntityNoName
 	}
 	
 	@Override
-	public Entities getGetNewEntities()
+	public Entities GetNewEntities()
 	{
 		return new KeMus();
 	}

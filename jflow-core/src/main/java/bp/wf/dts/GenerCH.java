@@ -1,8 +1,10 @@
 package bp.wf.dts;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
 import bp.wf.*;
+import java.util.*;
 
 /** 
  生成考核数据
@@ -12,7 +14,7 @@ public class GenerCH extends Method
 	/** 
 	 生成考核数据
 	*/
-	public GenerCH()throws Exception
+	public GenerCH()
 	{
 		this.Title = "生成考核数据（为所有的流程,根据最新配置的节点考核信息，生成考核数据。）";
 		this.Help = "需要先删除运行时生成的数据，然后为每个流程的每个节点运行数据自动生成。";
@@ -46,8 +48,7 @@ public class GenerCH extends Method
 	 @return 返回执行结果
 	*/
 	@Override
-	public Object Do()throws Exception
-	{
+	public Object Do() throws Exception {
 		String err = "";
 		try
 		{
@@ -60,8 +61,8 @@ public class GenerCH extends Method
 
 			for (Node nd : nds.ToJavaList())
 			{
-				String sql = "SELECT * FROM ND" + Integer.parseInt(nd.getFK_Flow()) + "TRACK WHERE NDFrom=" + nd.getNodeID() + " ORDER BY WorkID, RDT ";
-				bp.da.DataTable dt = DBAccess.RunSQLReturnTable(sql);
+				String sql = "SELECT * FROM ND" + Integer.parseInt(nd.getFlowNo()) + "TRACK WHERE NDFrom=" + nd.getNodeID() + " ORDER BY WorkID, RDT ";
+				DataTable dt = DBAccess.RunSQLReturnTable(sql);
 				String priRDT = null;
 				String sdt = null;
 				for (DataRow dr : dt.Rows)
@@ -86,7 +87,7 @@ public class GenerCH extends Method
 
 					//当前的人员，如果不是就让其登录.
 					String fk_emp = dr.getValue(TrackAttr.EmpFrom) instanceof String ? (String)dr.getValue(TrackAttr.EmpFrom) : null;
-					if (!bp.web.WebUser.getNo().equals(fk_emp))
+					if (!Objects.equals(bp.web.WebUser.getNo(), fk_emp))
 					{
 						try
 						{
@@ -102,8 +103,8 @@ public class GenerCH extends Method
 					String title = DBAccess.RunSQLReturnStringIsNull("select title from wf_generworkflow where workid=" + workid, "");
 
 					////调用他.
-					//Glo.InitCH2017(nd.HisFlow, nd, workid, fid, title, priRDT, sdt,
-					//    DataType.ParseSysDate2DateTime(dr[TrackAttr.RDT].ToString()));
+					//Glo.InitCH2017(nd.getHisFlow(), nd, workid, fid, title, priRDT, sdt,
+					//    DataType.ParseSysDate2DateTime(dr[TrackAttr.RDT).toString()));
 
 					priRDT = dr.getValue(TrackAttr.RDT).toString();
 					sdt = "无";
@@ -113,6 +114,8 @@ public class GenerCH extends Method
 		catch (RuntimeException ex)
 		{
 			return "生成考核失败:" + ex.getStackTrace();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 
 		//登录.

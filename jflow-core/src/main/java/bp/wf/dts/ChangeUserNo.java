@@ -1,8 +1,10 @@
 package bp.wf.dts;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
-
+import bp.*;
+import bp.wf.*;
+import java.util.*;
 
 /** 
  修改人员编号 的摘要说明
@@ -12,10 +14,10 @@ public class ChangeUserNo extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public ChangeUserNo()throws Exception
+	public ChangeUserNo()
 	{
 		this.Title = "修改人员编号（原来一个操作中编号叫A,现在修改成B）";
-		this.Help = "请慎重执行，执行前请先备份数据库，系统会把生成的SQL放在日志里，打开日志文件(" + bp.difference.SystemConfig.getPathOfDataUser() + "/Log)，然后找到这些sql.";
+		this.Help = "请慎重执行，执行前请先备份数据库，系统会把生成的SQL放在日志里，打开日志文件(" + bp.difference.SystemConfig.getPathOfDataUser() + "\\Log)，然后找到这些sql.";
 		this.GroupName = "系统维护";
 
 	}
@@ -52,8 +54,7 @@ public class ChangeUserNo extends Method
 	 @return 返回执行结果
 	*/
 	@Override
-	public Object Do()throws Exception
-	{
+	public Object Do() throws Exception {
 		String oldNo = this.GetValStrByKey("P1");
 		String newNo = this.GetValStrByKey("P2");
 
@@ -70,9 +71,9 @@ public class ChangeUserNo extends Method
 			MapAttrs mattrs = new MapAttrs(md.getNo());
 			for (MapAttr attr : mattrs.ToJavaList())
 			{
-				if (attr.getUIIsEnable() == false && attr.getDefValReal().equals("@WebUser.No"))
+				if (attr.getUIIsEnable() == false && Objects.equals(attr.getDefValReal(), "@WebUser.No"))
 				{
-					sqls += "\t\n UPDATE " + md.getPTable()+ " SET ";
+					sqls += "\t\n UPDATE " + md.getPTable() + " SET ";
 				}
 				continue;
 

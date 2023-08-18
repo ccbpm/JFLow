@@ -6,35 +6,31 @@ public abstract class XmlMenu extends XmlEnNoName
 	/** 
 	 功能编号
 	*/
-	public final String getImg()  throws Exception
-	{
+	public final String getImg() {
 		return this.GetValStringByKey("Img");
 	}
 
 	/** 
 	 URL
 	*/
-	public final String getUrl()  throws Exception
-	{
+	public final String getUrl() {
 		return this.GetValStringByKey("Url");
 	}
-	public final String getTarget()  throws Exception
-	{
+	public final String getTarget() {
 		return this.GetValStringByKey("Target");
 	}
 	/** 
 	 菜单
 	*/
-	public XmlMenu()throws Exception
+	public XmlMenu()
 	{
 	}
 	/** 
 	 菜单
 	 
-	 param no
+	 @param no
 	*/
-	public XmlMenu(String no) throws Exception 
-	{
+	public XmlMenu(String no) throws Exception  {
 		this.RetrieveByPK("No", no);
 	}
 }

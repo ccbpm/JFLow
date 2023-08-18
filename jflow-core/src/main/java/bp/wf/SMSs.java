@@ -1,11 +1,6 @@
 package bp.wf;
 
-import bp.da.*;
 import bp.en.*;
-import bp.web.*;
-import bp.sys.*;
-import bp.wf.port.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -17,10 +12,12 @@ public class SMSs extends Entities
 	 获得实体
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new SMS();
 	}
-	public SMSs() throws Exception {
+	public SMSs()
+	{
 	}
 
 
@@ -30,7 +27,8 @@ public class SMSs extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.List<SMS> ToJavaList() {
+	public final java.util.List<SMS> ToJavaList()
+	{
 		return (java.util.List<SMS>)(Object)this;
 	}
 	/** 
@@ -38,7 +36,8 @@ public class SMSs extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<SMS> Tolist()  {
+	public final ArrayList<SMS> Tolist()
+	{
 		ArrayList<SMS> list = new ArrayList<SMS>();
 		for (int i = 0; i < this.size(); i++)
 		{

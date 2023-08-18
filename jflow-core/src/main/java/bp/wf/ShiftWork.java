@@ -5,16 +5,16 @@ import bp.web.*;
 import bp.port.*;
 import bp.da.*;
 import bp.wf.template.*;
-import bp.*;
+import java.util.*;
 
 public class ShiftWork
 {
 	/** 
 	 工作移交
 	 
-	 param workID 工作ID
-	 param toEmp 要移交的人
-	 param msg 移交信息
+	 @param workID 工作ID
+	 @param toEmp 要移交的人
+	 @param msg 移交信息
 	 @return 执行结果
 	*/
 	public static String Node_Shift_ToEmp(long workID, String toEmp, String msg) throws Exception {
@@ -32,7 +32,7 @@ public class ShiftWork
 		int i = 0;
 		//人员.
 		Emp emp = new Emp(toEmp);
-		Node nd = new Node(gwf.getFK_Node());
+		Node nd = new Node(gwf.getNodeID());
 		Work work = nd.getHisWork();
 		work.setOID(workID);
 		if (nd.getTodolistModel() == TodolistModel.Order || nd.getTodolistModel() == TodolistModel.Teamup || nd.getTodolistModel() == TodolistModel.TeamupGroupLeader)
@@ -48,7 +48,7 @@ public class ShiftWork
 			}
 
 			//把自己的待办更新到被移交人身上.
-			String sql = "UPDATE WF_GenerWorkerlist SET IsRead=0, FK_Emp='" + emp.getUserID() + "', FK_EmpText='" + emp.getName() + "' WHERE FK_Emp='" + WebUser.getNo() + "' AND FK_Node=" + gwf.getFK_Node() + " AND WorkID=" + workID;
+			String sql = "UPDATE WF_GenerWorkerlist SET IsRead=0, FK_Emp='" + emp.getUserID() + "', EmpName='" + emp.getName() + "' WHERE FK_Emp='" + WebUser.getNo() + "' AND FK_Node=" + gwf.getNodeID() + " AND WorkID=" + workID;
 			int myNum = DBAccess.RunSQL(sql);
 
 
@@ -57,25 +57,25 @@ public class ShiftWork
 			{
 				//说明移交人是 admin，执行的.
 				GenerWorkerLists mygwls = new GenerWorkerLists();
-				mygwls.Retrieve(GenerWorkerListAttr.WorkID, workID, GenerWorkerListAttr.FK_Node, gwf.getFK_Node(), null);
+				mygwls.Retrieve(GenerWorkerListAttr.WorkID, workID, GenerWorkerListAttr.FK_Node, gwf.getNodeID(), null);
 				if (mygwls.size() == 0)
 				{
 					throw new RuntimeException("err@系统错误，没有找到待办.");
 				}
 
 				//把他们都删除掉.
-				mygwls.Delete(GenerWorkerListAttr.WorkID, workID, GenerWorkerListAttr.FK_Node, gwf.getFK_Node());
+				mygwls.Delete(GenerWorkerListAttr.WorkID, workID, GenerWorkerListAttr.FK_Node, gwf.getNodeID());
 
 				//取出来第1个，把人员信息改变掉.
 				for (GenerWorkerList item : mygwls.ToJavaList())
 				{
-					item.setFK_Emp(WebUser.getNo());
-					item.setFK_EmpText(WebUser.getName());
+					item.setEmpNo(WebUser.getNo());
+					item.setEmpName(WebUser.getName());
 
-					item.setFK_Dept(WebUser.getFK_Dept());
-					item.setFK_DeptT(WebUser.getFK_DeptName());
+					item.setDeptNo(WebUser.getDeptNo());
+					item.setDeptName(WebUser.getDeptName());
 
-					item.setRead(false);
+					item.setItIsRead(false);
 
 					item.Insert(); //执行插入.
 					break;
@@ -85,7 +85,7 @@ public class ShiftWork
 				///#endregion 判断是否是,admin的移交.
 
 			//记录日志.
-			Glo.AddToTrack(ActionType.Shift, nd.getFK_Flow(), workID, gwf.getFID(), nd.getNodeID(), nd.getName(), WebUser.getNo(), WebUser.getName() , nd.getNodeID(), nd.getName(), toEmp, emp.getName(), msg, null);
+			Glo.AddToTrack(ActionType.Shift, nd.getFlowNo(), workID, gwf.getFID(), nd.getNodeID(), nd.getName(), WebUser.getNo(), WebUser.getName(), nd.getNodeID(), nd.getName(), toEmp, emp.getName(), msg, null);
 
 			//移交后事件
 			String atPara1 = "@SendToEmpIDs=" + emp.getUserID();
@@ -108,14 +108,14 @@ public class ShiftWork
 
 		//非协作模式.
 		GenerWorkerLists gwls = new GenerWorkerLists();
-		gwls.Retrieve(GenerWorkerListAttr.FK_Node, gwf.getFK_Node(), GenerWorkerListAttr.WorkID, gwf.getWorkID(), null);
-		gwls.Delete(GenerWorkerListAttr.FK_Node, gwf.getFK_Node(), GenerWorkerListAttr.WorkID, gwf.getWorkID());
+		gwls.Retrieve(GenerWorkerListAttr.FK_Node, gwf.getNodeID(), GenerWorkerListAttr.WorkID, gwf.getWorkID(), null);
+		gwls.Delete(GenerWorkerListAttr.FK_Node, gwf.getNodeID(), GenerWorkerListAttr.WorkID, gwf.getWorkID());
 
 		for (GenerWorkerList item : gwls.ToJavaList())
 		{
-			item.setFK_Emp(emp.getUserID());
-			item.setFK_EmpText(emp.getName());
-			item.setEnable(true);
+			item.setEmpNo(emp.getUserID());
+			item.setEmpName(emp.getName());
+			item.setItIsEnable(true);
 			item.Insert();
 			break;
 		}
@@ -126,7 +126,7 @@ public class ShiftWork
 		gwf.Update();
 
 		//记录日志.
-		Glo.AddToTrack(ActionType.Shift, nd.getFK_Flow(), workID, gwf.getFID(), nd.getNodeID(), nd.getName(), WebUser.getNo(), WebUser.getName() , nd.getNodeID(), nd.getName(), toEmp, emp.getName(), msg, null);
+		Glo.AddToTrack(ActionType.Shift, nd.getFlowNo(), workID, gwf.getFID(), nd.getNodeID(), nd.getName(), WebUser.getNo(), WebUser.getName(), nd.getNodeID(), nd.getName(), toEmp, emp.getName(), msg, null);
 
 		String inf1o = "@工作移交成功。@您已经成功的把工作移交给：" + emp.getUserID() + " , " + emp.getName();
 		//移交后事件
@@ -138,9 +138,9 @@ public class ShiftWork
 	/** 
 	 工作移交
 	 
-	 param workID 工作ID
-	 param toEmps 要移交的多个人,比如:zhangsan,lisi
-	 param msg
+	 @param workID 工作ID
+	 @param toEmps 要移交的多个人,比如:zhangsan,lisi
+	 @param msg
 	 @return 执行信息.err@说明执行错误.
 	*/
 	public static String Node_Shift_ToEmps(long workID, String toEmps, String msg) throws Exception {
@@ -157,13 +157,13 @@ public class ShiftWork
 
 		//定义变量,查询出来当前的人员列表.
 		GenerWorkerLists gwls = new GenerWorkerLists();
-		gwls.Retrieve(GenerWorkerListAttr.FK_Node, gwf.getFK_Node(), GenerWorkerListAttr.WorkID, workID, null);
+		gwls.Retrieve(GenerWorkerListAttr.FK_Node, gwf.getNodeID(), GenerWorkerListAttr.WorkID, workID, null);
 		//定义变量.
 		GenerWorkerList gwl = null;
 
 		int i = 0;
 		//人员.
-		Node nd = new Node(gwf.getFK_Node());
+		Node nd = new Node(gwf.getNodeID());
 		Work work = nd.getHisWork();
 		work.setOID(workID);
 
@@ -192,13 +192,13 @@ public class ShiftWork
 
 				//写入移交数据.
 				gwl = (GenerWorkerList)gwls.get(0);
-				gwl.setFK_Emp(emp.getUserID());
-				gwl.setFK_EmpText(emp.getName());
-				gwl.setIsPassInt(0);
+				gwl.setEmpNo(emp.getUserID());
+				gwl.setEmpName(emp.getName());
+				gwl.setPassInt(0);
 				gwl.Insert();
 
 				//记录日志.
-				Glo.AddToTrack(ActionType.Shift, nd.getFK_Flow(), workID, gwf.getFID(), nd.getNodeID(), nd.getName(), WebUser.getNo(), WebUser.getName() , nd.getNodeID(), nd.getName(), toEmp, emp.getName(), msg, null);
+				Glo.AddToTrack(ActionType.Shift, nd.getFlowNo(), workID, gwf.getFID(), nd.getNodeID(), nd.getName(), WebUser.getNo(), WebUser.getName(), nd.getNodeID(), nd.getName(), toEmp, emp.getName(), msg, null);
 
 				//移交后事件
 				String atPara1 = "@SendToEmpIDs=" + emp.getUserID();
@@ -219,20 +219,20 @@ public class ShiftWork
 			//非协作模式.
 			//写入移交数据.
 			gwl = (GenerWorkerList)gwls.get(0);
-			gwl.setFK_Emp(emp.getUserID());
-			gwl.setFK_EmpText(emp.getName());
-			gwl.setIsPassInt(0);
+			gwl.setEmpNo(emp.getUserID());
+			gwl.setEmpName(emp.getName());
+			gwl.setPassInt(0);
 			gwl.Insert();
 		}
 
 		//重新查询.
-		gwls.Retrieve(GenerWorkerListAttr.FK_Node, gwf.getFK_Node(), GenerWorkerListAttr.WorkID, workID, null);
+		gwls.Retrieve(GenerWorkerListAttr.FK_Node, gwf.getNodeID(), GenerWorkerListAttr.WorkID, workID, null);
 
 		//工作处理人员.
 		String todoEmps = "";
 		for (GenerWorkerList mygwl : gwls.ToJavaList())
 		{
-			todoEmps += mygwl.getFK_Emp() + "," + mygwl.getFK_EmpText() + ";";
+			todoEmps += mygwl.getEmpNo() + "," + mygwl.getEmpName() + ";";
 		}
 
 		//更新主表信息.
@@ -242,10 +242,10 @@ public class ShiftWork
 		gwf.Update();
 
 		//删除自己的待办.
-		DBAccess.RunSQL("DELETE FROM WF_GenerWorkerList WHERE WorkID=" + gwf.getWorkID() + " AND FK_Node=" + gwf.getFK_Node() + " AND FK_Emp='" + WebUser.getNo() + "'");
+		DBAccess.RunSQL("DELETE FROM WF_GenerWorkerList WHERE WorkID=" + gwf.getWorkID() + " AND FK_Node=" + gwf.getNodeID() + " AND FK_Emp='" + WebUser.getNo() + "'");
 
 		//记录日志.
-		Glo.AddToTrack(ActionType.Shift, nd.getFK_Flow(), workID, gwf.getFID(), nd.getNodeID(), nd.getName(), WebUser.getNo(), WebUser.getName() , nd.getNodeID(), nd.getName(), toEmps, "移交给多个人", msg, null);
+		Glo.AddToTrack(ActionType.Shift, nd.getFlowNo(), workID, gwf.getFID(), nd.getNodeID(), nd.getName(), WebUser.getNo(), WebUser.getName(), nd.getNodeID(), nd.getName(), toEmps, "移交给多个人", msg, null);
 
 		//移交后事件.
 		String atPara = "@SendToEmpIDs=" + toEmps;
@@ -262,23 +262,23 @@ public class ShiftWork
 
 		GenerWorkFlow gwf = new GenerWorkFlow(workid);
 		GenerWorkerLists wls = new GenerWorkerLists();
-		wls.Retrieve(GenerWorkerListAttr.WorkID, workid, GenerWorkerListAttr.FK_Node, gwf.getFK_Node(), null);
+		wls.Retrieve(GenerWorkerListAttr.WorkID, workid, GenerWorkerListAttr.FK_Node, gwf.getNodeID(), null);
 		if (wls.size() == 0)
 		{
 			return "移交失败没有当前的工作。";
 		}
 
-		Node nd = new Node(gwf.getFK_Node());
+		Node nd = new Node(gwf.getNodeID());
 		Work wk1 = nd.getHisWork();
 		wk1.setOID(workid);
 		wk1.Retrieve();
 
 		// 记录日志.
 		WorkNode wn = new WorkNode(wk1, nd);
-		wn.AddToTrack(ActionType.UnShift, WebUser.getNo(), WebUser.getName() , nd.getNodeID(), nd.getName(), "撤消移交");
+		wn.AddToTrack(ActionType.UnShift, WebUser.getNo(), WebUser.getName(), nd.getNodeID(), nd.getName(), "撤消移交");
 
 		//删除撤销信息.
-		DBAccess.RunSQL("DELETE FROM WF_ShiftWork WHERE WorkID=" + workid + " AND FK_Node=" + gwf.getFK_Node());
+		DBAccess.RunSQL("DELETE FROM WF_ShiftWork WHERE WorkID=" + workid + " AND FK_Node=" + gwf.getNodeID());
 
 		//更新流程主表字段信息
 		gwf.setWFState(WFState.Runing);
@@ -287,10 +287,10 @@ public class ShiftWork
 		if (wls.size() == 1)
 		{
 			GenerWorkerList wl = (GenerWorkerList)wls.get(0);
-			wl.setFK_Emp(WebUser.getNo());
-			wl.setFK_EmpText(WebUser.getName());
-			wl.setEnable(true);
-			wl.setIsPass(false);
+			wl.setEmpNo(WebUser.getNo());
+			wl.setEmpName(WebUser.getName());
+			wl.setItIsEnable(true);
+			wl.setItIsPass(false);
 			wl.Update();
 			return "@撤消移交成功。";
 		}
@@ -298,12 +298,12 @@ public class ShiftWork
 		GenerWorkerList mywl = null;
 		for (GenerWorkerList wl : wls.ToJavaList())
 		{
-			if (wl.getFK_Emp().equals(WebUser.getNo()))
+			if (Objects.equals(wl.getEmpNo(), WebUser.getNo()))
 			{
-				wl.setFK_Emp(WebUser.getNo());
-				wl.setFK_EmpText(WebUser.getName());
-				wl.setEnable(true);
-				wl.setIsPass(false);
+				wl.setEmpNo(WebUser.getNo());
+				wl.setEmpName(WebUser.getName());
+				wl.setItIsEnable(true);
+				wl.setItIsPass(false);
 				wl.Update();
 				mywl = wl;
 			}
@@ -320,10 +320,10 @@ public class ShiftWork
 		GenerWorkerList wk = (GenerWorkerList)wls.get(0);
 		GenerWorkerList wkNew = new GenerWorkerList();
 		wkNew.Copy(wk);
-		wkNew.setFK_Emp(WebUser.getNo());
-		wkNew.setFK_EmpText(WebUser.getName());
-		wkNew.setEnable(true);
-		wkNew.setIsPass(false);
+		wkNew.setEmpNo(WebUser.getNo());
+		wkNew.setEmpName(WebUser.getName());
+		wkNew.setItIsEnable(true);
+		wkNew.setItIsPass(false);
 		wkNew.Insert();
 		return "@撤消移交成功";
 	}

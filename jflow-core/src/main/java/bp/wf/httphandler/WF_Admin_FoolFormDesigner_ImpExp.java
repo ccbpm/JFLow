@@ -3,7 +3,7 @@ package bp.wf.httphandler;
 import bp.difference.handler.CommonFileUtils;
 import bp.sys.*;
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.ccbill.*;
 import bp.difference.*;
 import bp.*;
@@ -13,14 +13,15 @@ import bp.wf.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
+import java.util.*;
 
-public class WF_Admin_FoolFormDesigner_ImpExp extends bp.difference.handler.WebContralBase
+public class WF_Admin_FoolFormDesigner_ImpExp extends bp.difference.handler.DirectoryPageBase
 {
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_FoolFormDesigner_ImpExp()  {
+	public WF_Admin_FoolFormDesigner_ImpExp()
+	{
 	}
 
 
@@ -50,24 +51,24 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends bp.difference.handler.WebC
 		String sql = "";
 		DataTable dt;
 
-		if (this.getFK_Flow() != null)
+		if (this.getFlowNo() != null)
 		{
 			//加入节点表单. 如果没有流程参数.
 
 			Paras ps = new Paras();
 			ps.SQL = "SELECT NodeID, Name  FROM WF_Node WHERE FK_Flow=" + SystemConfig.getAppCenterDBVarStr() + "FK_Flow ORDER BY NODEID ";
-			ps.Add("FK_Flow", this.getFK_Flow(), false);
+			ps.Add("FK_Flow", this.getFlowNo(), false);
 			dt = DBAccess.RunSQLReturnTable(ps);
 
 			dt.TableName = "WF_Node";
 
-			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
+			if (SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 			{
 				dt.Columns.get("NODEID").ColumnName = "NodeID";
 				dt.Columns.get("NAME").ColumnName = "Name";
 			}
 
-			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+			if (SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
 			{
 				dt.Columns.get("nodeid").ColumnName = "NodeID";
 				dt.Columns.get("name").ColumnName = "Name";
@@ -79,29 +80,15 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends bp.difference.handler.WebC
 
 
 			///#region 加入表单库目录.
-		if (SystemConfig.getAppCenterDBType( ) == DBType.Oracle)
-		{
-			sql = "SELECT NO as No ,Name,ParentNo FROM Sys_FormTree ORDER BY  PARENTNO, IDX ";
-		}
-		else
-		{
-			sql = "SELECT No,Name,ParentNo FROM Sys_FormTree ORDER BY  PARENTNO, IDX ";
-		}
+
+		sql = "SELECT No,Name,ParentNo FROM Sys_FormTree ORDER BY  PARENTNO, IDX ";
 
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_FormTree";
-		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
-		{
-			dt.Columns.get("NO").ColumnName = "No";
-			dt.Columns.get("NAME").ColumnName = "Name";
-			dt.Columns.get("PARENTNO").ColumnName = "ParentNo";
-		}
-		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
-		{
-			dt.Columns.get("no").ColumnName = "No";
-			dt.Columns.get("name").ColumnName = "Name";
-			dt.Columns.get("parentno").ColumnName = "ParentNo";
-		}
+
+		dt.Columns.get(0).ColumnName = "No";
+		dt.Columns.get(1).ColumnName = "Name";
+		dt.Columns.get(2).ColumnName = "ParentNo";
 		ds.Tables.add(dt);
 
 		//加入表单
@@ -109,18 +96,11 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends bp.difference.handler.WebC
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_MapData";
 		ds.Tables.add(dt);
-		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
-		{
-			dt.Columns.get("NO").ColumnName = "No";
-			dt.Columns.get("NAME").ColumnName = "Name";
-			dt.Columns.get("FK_FORMTREE").ColumnName = "FK_FormTree";
-		}
-		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
-		{
-			dt.Columns.get("no").ColumnName = "No";
-			dt.Columns.get("name").ColumnName = "Name";
-			dt.Columns.get("fk_formtree").ColumnName = "FK_FormTree";
-		}
+
+		dt.Columns.get(0).ColumnName = "No";
+		dt.Columns.get(1).ColumnName = "Name";
+		dt.Columns.get(2).ColumnName = "FK_FormTree";
+
 
 			///#endregion 加入表单库目录.
 
@@ -130,14 +110,14 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends bp.difference.handler.WebC
 
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "WF_FlowSort";
-		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
+		if (SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			dt.Columns.get("NO").ColumnName = "No";
 			dt.Columns.get("NAME").ColumnName = "Name";
 			dt.Columns.get("PARENTNO").ColumnName = "ParentNo";
 		}
 
-		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+		if (SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
 		{
 			dt.Columns.get("no").ColumnName = "No";
 			dt.Columns.get("name").ColumnName = "Name";
@@ -151,13 +131,13 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends bp.difference.handler.WebC
 		dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "WF_Flow";
 		ds.Tables.add(dt);
-		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
+		if (SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			dt.Columns.get("NO").ColumnName = "No";
 			dt.Columns.get("NAME").ColumnName = "Name";
 			dt.Columns.get("FK_FLOWSORT").ColumnName = "FK_FlowSort";
 		}
-		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+		if (SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
 		{
 			dt.Columns.get("no").ColumnName = "No";
 			dt.Columns.get("name").ColumnName = "Name";
@@ -183,43 +163,35 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends bp.difference.handler.WebC
 
 
 
-	/** 
-	 从本机装载表单模版
 	 
-	 param fileByte 文件流
-	 param fk_mapData 表单模版ID
-	 param isClear 是否清空？
-	 @return 执行结果
-	*/
 	public final String Imp_LoadFrmTempleteFromLocalFile() throws Exception {
+		File xmlFile = null;
+		String fileName = UUID.randomUUID().toString();
+		try {
+			xmlFile = File.createTempFile(fileName, ".xml");
+		} catch (IOException e1) {
+			xmlFile = new File(System.getProperty("java.io.tmpdir"), fileName + ".xml");
+		}
+		xmlFile.deleteOnExit();
+		HttpServletRequest request = ContextHolderUtils.getRequest();
+		try {
+			CommonFileUtils.upload(request, "file", xmlFile);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "err@执行失败";
+		}
+
 		try
 		{
-			File xmlFile = null;
-			String fileName = UUID.randomUUID().toString();
-			try {
-				xmlFile = File.createTempFile(fileName, ".xml");
-			} catch (IOException e1) {
-				xmlFile = new File(System.getProperty("java.io.tmpdir"), fileName + ".xml");
-			}
-			xmlFile.deleteOnExit();
-			HttpServletRequest request = getRequest();
-			try {
-				CommonFileUtils.upload(request, "file", xmlFile);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return "err@执行失败";
-			}
-
-			Object a = getRequest().getParameter("file");
-			String fk_mapData = this.getFK_MapData();
+			String fk_mapData = this.getFrmID();
+			MapData mapData = new MapData(fk_mapData);
 			DataSet ds = new DataSet();
 			ds.readXml(xmlFile.getAbsolutePath());
-
 			//执行装载.
 			MapData.ImpMapData(fk_mapData, ds);
-			if (this.getFK_Node() != 0)
+			if (this.getNodeID() != 0)
 			{
-				Node nd = new Node(this.getFK_Node());
+				Node nd = new Node(this.getNodeID());
 				nd.RepareMap(nd.getHisFlow());
 			}
 			//清空缓存
@@ -256,48 +228,28 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends bp.difference.handler.WebC
 				entityDict.Update();
 				entityDict.CheckEnityTypeAttrsFor_EntityNoName();
 			}
-			SystemConfig.DoClearCash();
+			SystemConfig.DoClearCache();
 			return "执行成功.";
 		}
 		catch (RuntimeException ex)
 		{
-			String msg = ex.getMessage();
-			if (msg.contains("@此模板文件为流程模板")) {
-				return "@以下错误不可导入:此模板文件为流程模板,请用表单模板导入！";
-			}
 			//第一次导入，可能因为没有字段，导致报错，系统会刷新一次，并修复字段
 			//所以再执行一次导入
 			try
 			{
-				String fk_mapData = this.getFK_MapData();
-				File xmlFile = null;
+				String fk_mapData = this.getFrmID();
+
 				//读取上传的XML 文件.
 				DataSet ds = new DataSet();
-				String fileName = UUID.randomUUID().toString();
-				try {
-					xmlFile = File.createTempFile(fileName, ".xml");
-				} catch (IOException e1) {
-					xmlFile = new File(System.getProperty("java.io.tmpdir"), fileName + ".xml");
-				}
-				xmlFile.deleteOnExit();
-				HttpServletRequest request = getRequest();
-				try {
-					CommonFileUtils.upload(request, "file", xmlFile);
-				} catch (Exception e) {
-					e.printStackTrace();
-					return "err@执行失败";
-				}
-
-				Object a = getRequest().getParameter("file");
-
-				ds.readXml(xmlFile.getAbsolutePath());
+				//ds.readXml(path);
+				ds.readXml(xmlFile.getAbsolutePath()); //this.context.Request.Files[0].InputStream
 
 				//执行装载.
 				MapData.ImpMapData(fk_mapData, ds);
 
-				if (this.getFK_Node() != 0)
+				if (this.getNodeID() != 0)
 				{
-					Node nd = new Node(this.getFK_Node());
+					Node nd = new Node(this.getNodeID());
 					nd.RepareMap(nd.getHisFlow());
 				}
 				//清空缓存
@@ -336,7 +288,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends bp.difference.handler.WebC
 					entityDict.Update();
 					entityDict.CheckEnityTypeAttrsFor_EntityNoName();
 				}
-				SystemConfig.DoClearCash();
+				SystemConfig.DoClearCache();
 				return "执行成功.";
 			}
 			catch (RuntimeException newex)
@@ -353,26 +305,26 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends bp.difference.handler.WebC
 	 @return 
 	*/
 	public final String Imp_CopyFromFlow() throws Exception {
-		String ndfrm = "ND" + Integer.parseInt(this.getFK_Flow()) + "01";
+		String ndfrm = "ND" + Integer.parseInt(this.getFlowNo()) + "01";
 		return Imp_CopyFrm(null, ndfrm);
 	}
 	public final String Imp_FrmEnsName() throws Exception {
 
 		MapData md = new MapData(this.getFrmID());
 
-		Entity en = ClassFactory.GetEns(this.getEnsName()).getGetNewEntity();
+		Entity en = ClassFactory.GetEns(this.getEnsName()).getNewEntity();
 
 		Attrs attrs = en.getEnMap().getAttrs();
-		for (Attr item : attrs.ToJavaList())
+		for (Attr item : attrs)
 		{
-			if (item.getIsPK() == true)
+			if (item.getItIsPK() == true)
 			{
 				continue;
 			}
 
 			MapAttr mapAttr = item.getToMapAttr();
 			mapAttr.setMyPK(this.getFrmID() + "_" + item.getKey());
-			mapAttr.setFK_MapData(this.getFrmID());
+			mapAttr.setFrmID(this.getFrmID());
 			mapAttr.Save();
 		}
 
@@ -388,15 +340,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends bp.difference.handler.WebC
 	public final String Imp_FromsCopyFrm() throws Exception {
 		return Imp_CopyFrm();
 	}
-	/** 
-	 从节点上Copy
 	 
-	 param fromMapData 从表单ID
-	 param fk_mapdata 到表单ID
-	 param isClear 是否清楚现有的元素？
-	 param isSetReadonly 是否设置为只读？
-	 @return 执行结果
-	*/
 
 	public final String Imp_CopyFrm(String toFrmID) throws Exception {
 		return Imp_CopyFrm(toFrmID, null);
@@ -406,14 +350,12 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends bp.difference.handler.WebC
 		return Imp_CopyFrm(null, null);
 	}
 
-//ORIGINAL LINE: public string Imp_CopyFrm(string toFrmID = null, string fromFrmID = null)
-	public final String Imp_CopyFrm(String toFrmID, String fromFrmID)throws Exception
-	{
+	public final String Imp_CopyFrm(String toFrmID, String fromFrmID) throws Exception {
 		try
 		{
 			if (toFrmID == null)
 			{
-				toFrmID = this.getFK_MapData();
+				toFrmID = this.getFrmID();
 			}
 
 
@@ -428,7 +370,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends bp.difference.handler.WebC
 
 			//首先初始化本部门的.
 			MapData mymd = new MapData(toFrmID);
-			String frmSort = mymd.getFK_FormTree(); //表单类别,防止表单类别冲掉,导致表单树看不到他.
+			String frmSort = mymd.getFormTreeNo(); //表单类别,防止表单类别冲掉,导致表单树看不到他.
 
 
 			MapData mdFrom = new MapData(fromMapData);
@@ -453,8 +395,8 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends bp.difference.handler.WebC
 				nd.RepareMap(nd.getHisFlow());
 
 				//设置节点ID.
-				mymd.setName( nd.getName());
-				mymd.setFK_FormTree("");
+				mymd.setName(nd.getName());
+				mymd.setFormTreeNo("");
 				mymd.Update();
 
 				//如果包含ND，就保持附件的从表一致.
@@ -468,7 +410,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends bp.difference.handler.WebC
 			}
 			else
 			{
-				mymd.setFK_FormTree(frmSort);
+				mymd.setFormTreeNo(frmSort);
 				mymd.Update();
 
 			}
@@ -507,7 +449,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends bp.difference.handler.WebC
 				entityDict.Update();
 				entityDict.CheckEnityTypeAttrsFor_EntityNoName();
 			}
-			SystemConfig.DoClearCash();
+			SystemConfig.DoClearCache();
 			return "执行成功.";
 
 				///#endregion
@@ -544,7 +486,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends bp.difference.handler.WebC
 		DataSet ds = new DataSet();
 
 		//01.当前节点表单已经存在的列
-		MapAttrs attrs = new MapAttrs(this.getFK_MapData());
+		MapAttrs attrs = new MapAttrs(this.getFrmID());
 		ds.Tables.add(attrs.ToDataTableField("MapAttrs"));
 
 		//02.数据源表中的列
@@ -558,21 +500,24 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends bp.difference.handler.WebC
 
 	public final String Imp_Src_Step3_Init() throws Exception {
 		DataSet ds = new DataSet();
+
 		String SColumns = this.GetRequestVal("SColumns");
 		SFDBSrc src = new SFDBSrc(this.GetRequestVal("FK_SFDBSrc"));
 		DataTable tableColumns = src.GetColumns(this.GetRequestVal("STable"));
 
-		// 01.添加列
+		//01.添加列
 		DataTable dt = tableColumns.clone();
-		for (DataRow dr : tableColumns.Rows) {
-			if (SColumns.contains(dr.getValue("no").toString())) {
+		for (DataRow dr : tableColumns.Rows)
+		{
+			if (SColumns.contains(dr.getValue("no").toString()))
+			{
 				dt.Rows.add(dr);
 			}
 		}
 		dt.TableName = "Columns";
 		ds.Tables.add(dt);
 
-		// 02.添加枚举
+		//02.添加枚举
 		SysEnums ens = new SysEnums(MapAttrAttr.MyDataType);
 		ds.Tables.add(ens.ToDataTableField("EnumsDataType"));
 		ens = new SysEnums(MapAttrAttr.LGType);
@@ -588,7 +533,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends bp.difference.handler.WebC
 		String[] fields = StringHelper.trimEnd(hidImpFields, ',').split("[,]", -1);
 
 		MapData md = new MapData();
-		md.setNo(this.getFK_MapData());
+		md.setNo(this.getFrmID());
 		md.RetrieveFromDBSources();
 
 
@@ -601,14 +546,14 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends bp.difference.handler.WebC
 			MapAttr ma = new MapAttr();
 			ma.setKeyOfEn(colname);
 			ma.setName(this.GetRequestVal("TB_Desc_" + colname));
-			ma.setFK_MapData(this.getFK_MapData());
+			ma.setFrmID(this.getFrmID());
 			ma.setMyDataType(Integer.parseInt(this.GetRequestVal("DDL_DBType_" + colname)));
 			ma.setMaxLen(Integer.parseInt(this.GetRequestVal("TB_Len_" + colname)));
 			ma.setUIBindKey(this.GetRequestVal("TB_BindKey_" + colname));
-			ma.setMyPK(this.getFK_MapData() + "_" + ma.getKeyOfEn());
+			ma.setMyPK(this.getFrmID() + "_" + ma.getKeyOfEn());
 			ma.setLGType(FieldTypeS.Normal);
 
-			if (!ma.getUIBindKey().equals(""))
+			if (!Objects.equals(ma.getUIBindKey(), ""))
 			{
 				SysEnums se = new SysEnums();
 				se.Retrieve(SysEnumAttr.EnumKey, ma.getUIBindKey(), null);
@@ -631,7 +576,7 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends bp.difference.handler.WebC
 
 			if (ma.getMyDataType() == DataType.AppBoolean)
 			{
-				ma.setUIContralType ( UIContralType.CheckBok);
+				ma.setUIContralType(UIContralType.CheckBok);
 			}
 			if (ma.getIsExits())
 			{
@@ -639,12 +584,10 @@ public class WF_Admin_FoolFormDesigner_ImpExp extends bp.difference.handler.WebC
 			}
 			ma.Insert();
 
-			msg += "\t\n字段:" + ma.getKeyOfEn() + "" + ma.getName() + "加入成功.";
+			msg += "\t\n字段:" + ma.getKeyOfEn() + "" + ma.getName() +"加入成功.";
 
 			isLeft = !isLeft;
 		}
-
-
 		return msg;
 
 	}

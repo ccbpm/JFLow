@@ -1,12 +1,5 @@
 package bp.sys;
-
-import bp.da.*;
-import bp.difference.*;
 import bp.en.*;
-import bp.*;
-import java.util.*;
-import java.io.*;
-
 /** 
  附件数据存储 - 属性
 */
@@ -96,6 +89,4 @@ public class FrmAttachmentDBAttr extends EntityMyPKAttr
 	 保存方式
 	*/
 	public static final String AthSaveWay = "AthSaveWay";
-
-
 }

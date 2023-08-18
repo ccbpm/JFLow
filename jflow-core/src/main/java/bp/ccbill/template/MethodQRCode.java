@@ -1,8 +1,9 @@
 package bp.ccbill.template;
 
 import bp.da.*;
+import bp.en.Map;
 import bp.web.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 
 /** 
  二维码
@@ -14,23 +15,19 @@ public class MethodQRCode extends EntityNoName
 	/** 
 	 表单ID
 	*/
-	public final String getFrmID()
-	{
+	public final String getFrmID() {
 		return this.GetValStringByKey(MethodAttr.FrmID);
 	}
-	public final void setFrmID(String value)
-	 {
+	public final void setFrmID(String value)  {
 		this.SetValByKey(MethodAttr.FrmID, value);
 	}
 	/** 
 	 方法ID
 	*/
-	public final String getMethodID()
-	{
+	public final String getMethodID() {
 		return this.GetValStringByKey(MethodAttr.MethodID);
 	}
-	public final void setMethodID(String value)
-	 {
+	public final void setMethodID(String value)  {
 		this.SetValByKey(MethodAttr.MethodID, value);
 	}
 
@@ -39,7 +36,8 @@ public class MethodQRCode extends EntityNoName
 
 		///#region 构造方法
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (WebUser.getIsAdmin())
 		{
@@ -51,13 +49,14 @@ public class MethodQRCode extends EntityNoName
 	/** 
 	 二维码
 	*/
-	public MethodQRCode()  {
+	public MethodQRCode()
+	{
 	}
-	/** 
-	 重写基类方法
-	*/
+	/**
+	 * 重写基类方法
+	 */
 	@Override
-	public bp.en.Map getEnMap()  {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -65,13 +64,13 @@ public class MethodQRCode extends EntityNoName
 
 		Map map = new Map("Frm_Method", "二维码");
 
-			//主键.
+		//主键.
 		map.AddTBStringPK(MethodAttr.No, null, "编号", true, true, 0, 50, 10);
 		map.AddTBString(MethodAttr.Name, null, "方法名", true, false, 0, 300, 10);
 		map.AddTBString(MethodAttr.MethodID, null, "方法ID", true, true, 0, 300, 10);
 		map.AddTBString(MethodAttr.GroupID, null, "分组ID", true, true, 0, 50, 10);
 
-			//功能标记.
+		//功能标记.
 		map.AddTBString(MethodAttr.MethodModel, null, "方法模式", true, true, 0, 300, 10);
 		map.AddTBString(MethodAttr.Mark, null, "Mark", true, true, 0, 300, 10);
 		map.AddTBString(MethodAttr.Icon, null, "图标", true, false, 0, 50, 10, true);
@@ -95,7 +94,8 @@ public class MethodQRCode extends EntityNoName
 		///#endregion
 
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		if (DataType.IsNullOrEmpty(this.getNo()) == true)
 		{
 			this.setNo(DBAccess.GenerGUID(0, null, null));

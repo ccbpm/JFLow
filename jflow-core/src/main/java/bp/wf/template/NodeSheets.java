@@ -1,11 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.sys.*;
-import bp.port.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -18,13 +13,15 @@ public class NodeSheets extends Entities
 	/** 
 	 节点集合
 	*/
-	public NodeSheets() throws Exception {
+	public NodeSheets()
+	{
 	}
 
 		///#endregion
 
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new NodeSheet();
 	}
 
@@ -35,7 +32,8 @@ public class NodeSheets extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.List<NodeSheet> ToJavaList() {
+	public final java.util.List<NodeSheet> ToJavaList()
+	{
 		return (java.util.List<NodeSheet>)(Object)this;
 	}
 	/** 
@@ -43,7 +41,8 @@ public class NodeSheets extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<NodeSheet> Tolist()  {
+	public final ArrayList<NodeSheet> Tolist()
+	{
 		ArrayList<NodeSheet> list = new ArrayList<NodeSheet>();
 		for (int i = 0; i < this.size(); i++)
 		{

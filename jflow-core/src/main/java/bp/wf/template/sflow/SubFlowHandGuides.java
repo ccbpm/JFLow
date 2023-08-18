@@ -1,6 +1,9 @@
 package bp.wf.template.sflow;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.wf.*;
+import bp.wf.template.*;
 import java.util.*;
 
 /** 
@@ -14,7 +17,8 @@ public class SubFlowHandGuides extends EntitiesMyPK
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new SubFlowHandGuide();
 	}
 
@@ -25,7 +29,8 @@ public class SubFlowHandGuides extends EntitiesMyPK
 	/** 
 	 手工启动子流程集合
 	*/
-	public SubFlowHandGuides() throws Exception {
+	public SubFlowHandGuides()
+	{
 	}
 
 		///#endregion
@@ -37,7 +42,8 @@ public class SubFlowHandGuides extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<SubFlowHandGuide> ToJavaList() {
+	public final java.util.List<SubFlowHandGuide> ToJavaList()
+	{
 		return (java.util.List<SubFlowHandGuide>)(Object)this;
 	}
 	/** 
@@ -45,7 +51,8 @@ public class SubFlowHandGuides extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<SubFlowHandGuide> Tolist()  {
+	public final ArrayList<SubFlowHandGuide> Tolist()
+	{
 		ArrayList<SubFlowHandGuide> list = new ArrayList<SubFlowHandGuide>();
 		for (int i = 0; i < this.size(); i++)
 		{

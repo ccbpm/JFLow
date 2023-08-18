@@ -1,12 +1,11 @@
 package bp.wf;
 
 import bp.wf.template.*;
-import bp.wf.data.*;
 import bp.da.*;
 import bp.en.*;
 import bp.sys.*;
 import bp.wf.template.sflow.*;
-import bp.wf.data.GERpt;
+import java.util.*;
 
 /** 
  流程检查类
@@ -35,7 +34,7 @@ public class FlowCheckError
 	/** 
 	 流程检查
 	 
-	 param fl 流程实体
+	 @param fl 流程实体
 	*/
 	public FlowCheckError(Flow fl) throws Exception {
 		this.flow = fl;
@@ -50,7 +49,7 @@ public class FlowCheckError
 	/** 
 	 流程检查
 	 
-	 param flNo 流程编号
+	 @param flNo 流程编号
 	*/
 	public FlowCheckError(String flNo) throws Exception {
 		this.flow = new Flow(flNo);
@@ -67,65 +66,50 @@ public class FlowCheckError
 	/** 
 	 信息
 	 
-	 param info
-	 param nd
+	 @param info
 	*/
 
-	private void AddMsgInfo(String info)
-	{
+	private void AddMsgInfo(String info) throws Exception {
 		AddMsgInfo(info, null);
 	}
 
-//ORIGINAL LINE: private void AddMsgInfo(string info, Node nd = null)
-	private void AddMsgInfo(String info, Node nd)
-	{
+	private void AddMsgInfo(String info, Node nd) throws Exception {
 		AddMsg("信息", info, nd);
 	}
 	/** 
 	 警告
 	 
-	 param info
-	 param nd
+	 @param info
 	*/
 
-	private void AddMsgWarning(String info)
-	{
+	private void AddMsgWarning(String info) throws Exception {
 		AddMsgWarning(info, null);
 	}
 
-//ORIGINAL LINE: private void AddMsgWarning(string info, Node nd = null)
-	private void AddMsgWarning(String info, Node nd)
-	{
+	private void AddMsgWarning(String info, Node nd) throws Exception {
 		AddMsg("警告", info, nd);
 	}
 
-	private void AddMsgError(String info)
-	{
+	private void AddMsgError(String info) throws Exception {
 		AddMsgError(info, null);
 	}
 
-//ORIGINAL LINE: private void AddMsgError(string info, Node nd = null)
-	private void AddMsgError(String info, Node nd)
-	{
+	private void AddMsgError(String info, Node nd) throws Exception {
 		AddMsg("错误", info, nd);
 	}
 	/** 
 	 增加审核信息
 	 
-	 param type 类型
-	 param info 消息
-	 param nd 节点
-	 @return 
+	 @param type 类型
+	 @param info 消息
+	 @return
 	*/
 
-	private void AddMsg(String type, String info)
-	{
+	private void AddMsg(String type, String info) throws Exception {
 		AddMsg(type, info, null);
 	}
 
-//ORIGINAL LINE: private void AddMsg(string type, string info, Node nd = null)
-	private void AddMsg(String type, String info, Node nd)
-	{
+	private void AddMsg(String type, String info, Node nd) throws Exception {
 		DataRow dr = this.dt.NewRow();
 		dr.setValue(0, type);
 		dr.setValue(1, info);
@@ -146,7 +130,7 @@ public class FlowCheckError
 	 @return 
 	*/
 	public final void DoCheck() throws Exception {
-		Cash.ClearCash();
+		Cache.ClearCache();
 		try
 		{
 			//设置自动计算.
@@ -189,6 +173,8 @@ public class FlowCheckError
 		catch (RuntimeException ex)
 		{
 			this.AddMsgError("err@" + ex.getMessage() + " " + ex.getStackTrace());
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 	/** 
@@ -207,7 +193,7 @@ public class FlowCheckError
 			nd.RepareMap(this.flow);
 
 			// 从表检查。
-			MapDtls dtls = new MapDtls("ND" + nd.getNodeID());
+			bp.sys.MapDtls dtls = new MapDtls("ND" + nd.getNodeID());
 			for (MapDtl dtl : dtls.ToJavaList())
 			{
 				this.AddMsgInfo("检查明细表" + dtl.getName(), nd);
@@ -225,51 +211,59 @@ public class FlowCheckError
 			{
 				case ByStation:
 				case FindSpecDeptEmpsInStationlist:
-					if (nd.getNodeStations().isEmpty())
+					if (nd.getNodeStations().size()== 0)
 					{
-						this.AddMsgInfo("错误:您设置了该节点的访问规则是按岗位，但是您没有为节点绑定岗位。", nd);
+						this.AddMsgInfo("错误:您设置了该节点的访问规则是按角色，但是您没有为节点绑定角色。", nd);
 					}
 					break;
 				case ByDept:
-					if (nd.getNodeDepts().isEmpty())
+					if (nd.getNodeDepts().size()== 0)
 					{
 						this.AddMsgInfo("设置了该节点的访问规则是按部门，但是您没有为节点绑定部门", nd);
 					}
 
 					break;
 				case ByBindEmp:
-					if (nd.getNodeEmps().isEmpty())
+					if (nd.getNodeEmps().size()== 0)
 					{
 						this.AddMsgInfo("您设置了该节点的访问规则是按人员，但是您没有为节点绑定人员。", nd);
 					}
 
 					break;
-				case BySpecNodeEmp: //按指定的岗位计算.
-				case BySpecNodeEmpStation: //按指定的岗位计算.
+				case BySpecNodeEmp: //按指定的角色计算.
+				case BySpecNodeEmpStation: //按指定的角色计算.
 					if (nd.getDeliveryParas().trim().length() == 0)
 					{
-						this.AddMsgInfo("您设置了该节点的访问规则是按指定的岗位计算，但是您没有设置节点编号。", nd);
+						this.AddMsgInfo("您设置了该节点的访问规则是按指定的角色计算，但是您没有设置节点编号。", nd);
 					}
 					else
 					{
 						if (DataType.IsNumStr(nd.getDeliveryParas()) == false)
 						{
-							this.AddMsgInfo("您没有设置指定岗位的节点编号，目前设置的为{" + nd.getDeliveryParas() + "}", nd);
+							this.AddMsgInfo("您没有设置指定角色的节点编号，目前设置的为{" + nd.getDeliveryParas() + "}", nd);
 						}
 					}
 					break;
-				case ByDeptAndStation: //按部门与岗位的交集计算.
+				case ByDeptAndStation: //按部门与角色的交集计算.
 					String mysql = "";
 					//added by liuxc,2015.6.30.
 					//区别集成与BPM模式
-
-						mysql = "SELECT pdes.FK_Emp AS No" + " FROM   Port_DeptEmpStation pdes" + "        INNER JOIN WF_NodeDept wnd" + "             ON  wnd.FK_Dept = pdes.FK_Dept" + "             AND wnd.FK_Node = " + nd.getNodeID() + "        INNER JOIN WF_NodeStation wns" + "             ON  wns.FK_Station = pdes.FK_Station" + "             AND wnd.FK_Node =" + nd.getNodeID() + " ORDER BY" + "        pdes.FK_Emp";
+					mysql = "SELECT pdes.fk_emp AS No"
+							+ " FROM   Port_DeptEmpStation pdes"
+							+ "        INNER JOIN WF_NodeDept wnd"
+							+ "             ON  wnd.fk_dept = pdes.fk_dept"
+							+ "             AND wnd.fk_node = " + nd.getNodeID()
+							+ "        INNER JOIN WF_NodeStation wns"
+							+ "             ON  wns.FK_Station = pdes.fk_station"
+							+ "             AND wnd.fk_node =" + nd.getNodeID()
+							+ " ORDER BY"
+							+ "        pdes.fk_emp";
 
 
 					DataTable mydt = DBAccess.RunSQLReturnTable(mysql);
 					if (mydt.Rows.size() == 0)
 					{
-						this.AddMsgInfo("按照岗位与部门的交集计算错误，没有人员集合{" + mysql + "}", nd);
+						this.AddMsgInfo("按照角色与部门的交集计算错误，没有人员集合{" + mysql + "}", nd);
 					}
 					break;
 				case BySQL:
@@ -283,7 +277,7 @@ public class FlowCheckError
 					String sql = nd.getDeliveryParas();
 					for (MapAttr item : mattrs.ToJavaList())
 					{
-						if (item.getIsNum())
+						if (item.getItIsNum())
 						{
 							sql = sql.replace("@" + item.getKeyOfEn(), "0");
 						}
@@ -328,7 +322,6 @@ public class FlowCheckError
 				case ByPreviousNodeFormStationsAI:
 				case ByPreviousNodeFormStationsOnly:
 				case ByPreviousNodeFormDepts:
-
 					//去rpt表中，查询是否有这个字段
 					String str = String.valueOf(nd.getNodeID()).substring(0, String.valueOf(nd.getNodeID()).length() - 2);
 					MapAttrs rptAttrs = new MapAttrs();
@@ -432,7 +425,7 @@ public class FlowCheckError
 			md.setNo(item.getFKFrm());
 			if (md.RetrieveFromDBSources() == 0)
 			{
-				this.AddMsgError("节点绑定的表单ID=" + item.getFKFrm() + "，但该表单已经不存在.", new Node(item.getFK_Node()));
+				this.AddMsgError("节点绑定的表单ID=" + item.getFKFrm() + "，但该表单已经不存在.", new Node(item.getNodeID()));
 				continue;
 			}
 		}
@@ -468,20 +461,15 @@ public class FlowCheckError
 	 检查是否是数据合并模式
 	*/
 	public final void CheckMode_SpecTable() throws Exception {
-		if (this.flow.getHisDataStoreModel() != DataStoreModel.SpecTable)
-		{
-			return;
-		}
-
 		for (Node nd : nds.ToJavaList())
 		{
 			MapData md = new MapData();
 			md.setNo("ND" + nd.getNodeID());
 			if (md.RetrieveFromDBSources() == 1)
 			{
-				if (!this.flow.getPTable().equals(md.getPTable()))
+				if (!Objects.equals(md.getPTable(), this.flow.getPTable()))
 				{
-					md.setPTable ( this.flow.getPTable());
+					md.setPTable(this.flow.getPTable());
 					md.Update();
 				}
 			}
@@ -510,19 +498,19 @@ public class FlowCheckError
 		GERpt rpt = this.flow.getHisGERpt();
 		for (Node nd : nds.ToJavaList())
 		{
-			if (nd.getFocusField().trim().equals(""))
+			if (Objects.equals(nd.getFocusField().trim(), ""))
 			{
 				Work wk = nd.getHisWork();
 				String attrKey = "";
 				for (Attr attr : wk.getEnMap().getAttrs())
 				{
-					if (attr.getUIVisible()== true && attr.getUIIsDoc() && attr.getUIIsReadonly() == false)
+					if (attr.getUIVisible() == true && attr.getUIIsDoc() && attr.getUIIsReadonly() == false)
 					{
 						attrKey = attr.getDesc() + ":@" + attr.getKey();
 					}
 				}
 
-				if (attrKey.equals(""))
+				if (Objects.equals(attrKey, ""))
 				{
 					msg = "@警告:节点ID:" + nd.getNodeID() + " 名称:" + nd.getName() + "属性里没有设置焦点字段，会导致信息写入轨迹表空白，为了能够保证流程轨迹是可读的请设置焦点字段.";
 					this.AddMsgWarning(msg, nd);
@@ -540,14 +528,14 @@ public class FlowCheckError
 
 			Object tempVar = nd.getFocusField();
 			String strs = tempVar instanceof String ? (String)tempVar : null;
-			strs = Glo.DealExp(strs, rpt, "err");
+			strs = bp.wf.Glo.DealExp(strs, rpt, "err");
 			if (strs.contains("@") == true)
 			{
 				msg = "@警告:焦点字段（" + nd.getFocusField() + "）在节点(step:" + nd.getStep() + " 名称:" + nd.getName() + ")属性里的设置已无效，表单里不存在该字段.";
 				this.AddMsgError(msg, nd);
 			}
 
-			if (this.flow.isMD5())
+			if (this.flow.getItIsMD5())
 			{
 				if (nd.getHisWork().getEnMap().getAttrs().contains(WorkAttr.MD5) == false)
 				{
@@ -563,7 +551,7 @@ public class FlowCheckError
 		String msg = "";
 		for (Node nd : nds.ToJavaList())
 		{
-			if (nd.isEval())
+			if (nd.getItIsEval())
 			{
 				/*如果是质量考核点，检查节点表单是否具别质量考核的特别字段？*/
 				String sql = "SELECT COUNT(*) FROM Sys_MapAttr WHERE FK_MapData='ND" + nd.getNodeID() + "' AND KeyOfEn IN ('EvalEmpNo','EvalEmpName','EvalEmpCent')";
@@ -602,7 +590,7 @@ public class FlowCheckError
 					Nodes toNodes = nd.getHisToNodes();
 					if (toNodes.size() == 1)
 					{
-						//msg += "@错误:节点ID:" + nd.NodeID + " 名称:" + nd.Name + " 错误当前节点为子线程，但是该节点的到达.";
+						//msg += "@错误:节点ID:" + nd.getNodeID() + " 名称:" + nd.getName() +" 错误当前节点为子线程，但是该节点的到达.";
 					}
 				}
 			}
@@ -614,7 +602,8 @@ public class FlowCheckError
 	 
 	 @return 检查结果
 	*/
-	private String CheckModel_FormFields() throws Exception {
+	private String CheckModel_FormFields() throws Exception
+	{
 		StringBuilder errorAppend = new StringBuilder();
 		errorAppend.append("@信息: -------- 流程节点表单的字段类型检查: ------ ");
 		try
@@ -631,12 +620,11 @@ public class FlowCheckError
 			DataTable dt_Fields = DBAccess.RunSQLReturnTable(checkSQL);
 			for (DataRow row : dt_Fields.Rows)
 			{
-				String keyOfEn = row.getValue("KEYOFEN").toString();
-				String myNum = row.getValue("MYNUM").toString();
+				String keyOfEn = row.get("KEYOFEN").toString();
+				String myNum = row.get("MYNUM").toString();
 				int iMyNum = 0;
-//				OutObject<Integer> tempOut_iMyNum = new OutObject<Integer>();
-//				TryParseHelper.tryParseInt(myNum, tempOut_iMyNum);
-//			iMyNum = tempOut_iMyNum.outArgValue;
+				iMyNum = Integer.parseInt(myNum);
+
 
 				//存在2种以上数据类型，有手动进行调整
 				if (iMyNum > 2)
@@ -650,7 +638,7 @@ public class FlowCheckError
 				MapAttr rptMapAttr = new MapAttr("ND" + Integer.parseInt(this.flow.getNo()) + "Rpt", keyOfEn);
 
 				//Rpt表中不存在此字段
-				if (rptMapAttr == null || rptMapAttr.getMyPK().equals(""))
+				if (rptMapAttr == null || Objects.equals(rptMapAttr.getMyPK(), ""))
 				{
 					this.DoCheck_CheckRpt(this.nds);
 					rptMapAttr = new MapAttr("ND" + Integer.parseInt(this.flow.getNo()) + "Rpt", keyOfEn);
@@ -658,7 +646,7 @@ public class FlowCheckError
 				}
 
 				//Rpt表中不存在此字段,直接结束
-				if (rptMapAttr == null || rptMapAttr.getMyPK().equals(""))
+				if (rptMapAttr == null || Objects.equals(rptMapAttr.getMyPK(), ""))
 				{
 					continue;
 				}
@@ -666,7 +654,7 @@ public class FlowCheckError
 				for (Node nd : nds.ToJavaList())
 				{
 					MapAttr ndMapAttr = new MapAttr("ND" + nd.getNodeID(), keyOfEn);
-					if (ndMapAttr == null || ndMapAttr.getMyPK().equals(""))
+					if (ndMapAttr == null || Objects.equals(ndMapAttr.getMyPK(), ""))
 					{
 						continue;
 					}
@@ -678,13 +666,13 @@ public class FlowCheckError
 						break;
 					}
 				}
-				errorAppend.append("@基础表" + baseMapAttr.getFK_MapData() + "，字段" + keyOfEn + "数据类型为：" + baseMapAttr.getMyDataTypeStr());
+				errorAppend.append("@基础表" + baseMapAttr.getFrmID() + "，字段" + keyOfEn + "数据类型为：" + baseMapAttr.getMyDataTypeStr());
 				//根据基础属性类修改数据类型不同的表单
 				for (Node nd : nds.ToJavaList())
 				{
 					MapAttr ndMapAttr = new MapAttr("ND" + nd.getNodeID(), keyOfEn);
 					//不包含此字段的进行返回,类型相同的进行返回
-					if (ndMapAttr == null || ndMapAttr.getMyPK().equals("") || ndMapAttr.getMyPK().equals(baseMapAttr.getMyPK()) || baseMapAttr.getMyDataType() == ndMapAttr.getMyDataType())
+					if (ndMapAttr == null || Objects.equals(ndMapAttr.getMyPK(), "") || Objects.equals(baseMapAttr.getMyPK(), ndMapAttr.getMyPK()) || baseMapAttr.getMyDataType() == ndMapAttr.getMyDataType())
 					{
 						continue;
 					}
@@ -733,12 +721,11 @@ public class FlowCheckError
 	/** 
 	 检查数据报表.
 	 
-	 param nds
+	 @param nds
 	*/
 	private void DoCheck_CheckRpt(Nodes nds) throws Exception {
 		String fk_mapData = "ND" + Integer.parseInt(this.flow.getNo()) + "Rpt";
-		String flowId = String.valueOf(Integer.parseInt(this.flow.getNo()));
-
+		String flowId = Integer.parseInt(this.flow.getNo()) + "";
 
 		//生成该节点的 nds 比如  "'ND101','ND102','ND103'"
 		String ndsstrs = "";
@@ -751,7 +738,7 @@ public class FlowCheckError
 
 			///#region 插入字段。
 		String sql = "SELECT distinct KeyOfEn FROM Sys_MapAttr WHERE FK_MapData IN (" + ndsstrs + ")";
-		if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MySQL)
+		if (bp.difference.SystemConfig.getAppCenterDBType() == DBType.MySQL)
 		{
 			sql = "SELECT A.* FROM (" + sql + ") AS A ";
 			String sql3 = "DELETE FROM Sys_MapAttr WHERE KeyOfEn NOT IN (" + sql + ") AND FK_MapData='" + fk_mapData + "' ";
@@ -792,7 +779,7 @@ public class FlowCheckError
 			MapAttr ma = new MapAttr(mypk);
 
 			ma.setMyPK("ND" + flowId + "Rpt_" + ma.getKeyOfEn());
-			ma.setFK_MapData("ND" + flowId + "Rpt");
+			ma.setFrmID("ND" + flowId + "Rpt");
 			ma.setUIIsEnable(false);
 
 			if (ma.getDefValReal().contains("@"))
@@ -802,7 +789,7 @@ public class FlowCheckError
 			}
 
 			// 如果不存在.
-			if (ma.getIsExits() == false)
+			if (ma.getIsExits())
 			{
 				ma.Insert();
 			}
@@ -815,14 +802,14 @@ public class FlowCheckError
 		md.setNo("ND" + flowId + "Rpt");
 		if (md.RetrieveFromDBSources() == 0)
 		{
-			md.setName( this.flow.getName());
-			md.setPTable ( this.flow.getPTable());
+			md.setName(this.flow.getName());
+			md.setPTable(this.flow.getPTable());
 			md.Insert();
 		}
 		else
 		{
-			md.setName( this.flow.getName());
-			md.setPTable ( this.flow.getPTable());
+			md.setName(this.flow.getName());
+			md.setPTable(this.flow.getPTable());
 			md.Update();
 		}
 
@@ -961,8 +948,8 @@ public class FlowCheckError
 			attr.SetValByKey(MapAttrAttr.MaxLen, 1);
 			attr.SetValByKey(MapAttrAttr.Idx, -100);
 
-			//attr.setFK_MapData(md.getNo());
-			//attr.setHisEditType( EditType.UnDel);
+			//attr.setFrmID(md.No;
+			//attr.setHisEditType(EditType.UnDel;
 			//attr.setKeyOfEn(GERptAttr.WFState;
 			//attr.setName("流程状态"; //  
 			//attr.setMyDataType(DataType.AppInt);
@@ -973,7 +960,7 @@ public class FlowCheckError
 			//attr.setUIIsEnable(false);
 			//attr.setMinLen(0);
 			//attr.setMaxLen(1000;
-			//attr.setIdx( -1);
+			//attr.setIdx(-1);
 			attr.Insert();
 		}
 
@@ -1017,8 +1004,6 @@ public class FlowCheckError
 			attr.SetValByKey(MapAttrAttr.MinLen, 0);
 			attr.SetValByKey(MapAttrAttr.MaxLen, 1000);
 			attr.SetValByKey(MapAttrAttr.Idx, -100);
-
-
 			attr.Insert();
 		}
 
@@ -1083,8 +1068,8 @@ public class FlowCheckError
 			attr.SetValByKey(MapAttrAttr.MaxLen, 20);
 			attr.SetValByKey(MapAttrAttr.Idx, -100);
 
-			//attr.setFK_MapData(md.getNo());
-			//attr.setHisEditType( EditType.UnDel);
+			//attr.setFrmID(md.No;
+			//attr.setHisEditType(EditType.UnDel;
 			//attr.setKeyOfEn(GERptAttr.FlowEnder;
 			//attr.setName("结束人"; //  
 			//attr.setMyDataType(DataType.AppString);
@@ -1095,7 +1080,7 @@ public class FlowCheckError
 			//attr.setUIIsEnable(false);
 			//attr.setMinLen(0);
 			//attr.setMaxLen(32);
-			//attr.setIdx( -1);
+			//attr.setIdx(-1);
 			attr.Insert();
 		}
 
@@ -1113,7 +1098,7 @@ public class FlowCheckError
 			attr.SetValByKey(MapAttrAttr.UIIsEnable, false);
 			attr.SetValByKey(MapAttrAttr.UIIsLine, false);
 			attr.SetValByKey(MapAttrAttr.MinLen, 0);
-			attr.SetValByKey(MapAttrAttr.MaxLen, 30);
+			attr.SetValByKey(MapAttrAttr.MaxLen, 20);
 			attr.SetValByKey(MapAttrAttr.Idx, -100);
 
 			attr.Insert();
@@ -1162,8 +1147,6 @@ public class FlowCheckError
 			attr.SetValByKey(MapAttrAttr.MinLen, 0);
 			attr.SetValByKey(MapAttrAttr.MaxLen, 10);
 			attr.SetValByKey(MapAttrAttr.Idx, -100);
-
-
 			attr.Insert();
 		}
 
@@ -1183,7 +1166,7 @@ public class FlowCheckError
 			attr.SetValByKey(MapAttrAttr.UIIsEnable, false);
 			attr.SetValByKey(MapAttrAttr.UIIsLine, false);
 			attr.SetValByKey(MapAttrAttr.MinLen, 0);
-			attr.SetValByKey(MapAttrAttr.MaxLen, 10);
+			attr.SetValByKey(MapAttrAttr.MaxLen, 30);
 			attr.SetValByKey(MapAttrAttr.Idx, -100);
 
 
@@ -1364,30 +1347,6 @@ public class FlowCheckError
 
 		}
 
-		if (attrs.contains(md.getNo() + "_" + GERptAttr.FlowNote) == false)
-		{
-			/* 流程信息 */
-			MapAttr attr = new MapAttr();
-
-			attr.SetValByKey(MapAttrAttr.FK_MapData, md.getNo());
-			attr.SetValByKey(MapAttrAttr.EditType, EditType.UnDel.getValue());
-
-			attr.SetValByKey(MapAttrAttr.KeyOfEn, GERptAttr.FlowNote);
-			attr.SetValByKey(MapAttrAttr.Name, "流程信息");
-			attr.SetValByKey(MapAttrAttr.MyDataType, DataType.AppString);
-
-			attr.setUIContralType(UIContralType.TB);
-			attr.setLGType(FieldTypeS.Normal);
-			attr.SetValByKey(MapAttrAttr.UIVisible, true);
-			attr.SetValByKey(MapAttrAttr.UIIsEnable, false);
-			attr.SetValByKey(MapAttrAttr.UIIsLine, true);
-
-			attr.SetValByKey(MapAttrAttr.MinLen, 0);
-			attr.SetValByKey(MapAttrAttr.MaxLen, 500);
-			attr.SetValByKey(MapAttrAttr.Idx, -100);
-			attr.Insert();
-		}
-
 			///#endregion 补充上流程字段。
 
 
@@ -1420,7 +1379,7 @@ public class FlowCheckError
 		GERpt gerpt = this.getHisGERpt();
 		gerpt.CheckPhysicsTable(); //让报表重新生成.
 
-		if (DBAccess.getAppCenterDBType() == DBType.PostgreSQL || DBAccess.getAppCenterDBType() == DBType.UX || DBAccess.getAppCenterDBType() == DBType.HGDB)
+		if (DBAccess.getAppCenterDBType() == DBType.PostgreSQL || bp.difference.SystemConfig.getAppCenterDBType() == DBType.HGDB || DBAccess.getAppCenterDBType() == DBType.UX)
 		{
 			DBAccess.RunSQL("DELETE FROM Sys_GroupField WHERE FrmID='" + fk_mapData + "' AND ''||OID NOT IN (SELECT GroupID FROM Sys_MapAttr WHERE FK_MapData = '" + fk_mapData + "')");
 		}

@@ -1,10 +1,11 @@
 package bp.wf.dts;
 
 import bp.da.*;
+import bp.difference.StringHelper;
 import bp.port.*;
-import bp.en.*;
-import bp.tools.StringHelper;
-import bp.port.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.wf.*;
 
 /** 
  Method 的摘要说明
@@ -14,7 +15,7 @@ public class GenerDeptTree extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public GenerDeptTree()throws Exception
+	public GenerDeptTree()
 	{
 		this.Title = "为部门Port_Dept表生成 TreeNo 字段,跟节点为01。";
 		this.Help = "该字段仅仅为了用于LIKE查询，不能作为关联主键，因为该字段是变化的，随着部门的增加而变化.";
@@ -44,8 +45,7 @@ public class GenerDeptTree extends Method
 	 @return 返回执行结果
 	*/
 	@Override
-	public Object Do()throws Exception
-	{
+	public Object Do() throws Exception {
 		if (DBAccess.IsExitsTableCol("Port_Dept", "TreeNo") == false)
 		{
 			return "err@ Port_Dept 没有找到 TreeNo 的列.";
@@ -66,7 +66,7 @@ public class GenerDeptTree extends Method
 		depts.Retrieve(DeptAttr.ParentNo, dept.getNo(), null);
 
 		int idx = 0;
-		for (Dept item : depts.ToJavaList() )
+		for (Dept item : depts.ToJavaList())
 		{
 			idx++;
 
@@ -90,7 +90,7 @@ public class GenerDeptTree extends Method
 		depts.Retrieve(DeptAttr.ParentNo, dept.getNo(), null);
 
 		int idx = 0;
-		for (Dept item : depts.ToJavaList() )
+		for (Dept item : depts.ToJavaList())
 		{
 			idx++;
 			String subNo = StringHelper.padLeft(String.valueOf(idx), 2, '0');

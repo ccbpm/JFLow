@@ -13,14 +13,14 @@ public class RptDfines extends EntitiesNoName
 	/** 
 	 报表定义s
 	*/
-	public RptDfines()throws Exception
+	public RptDfines()
 	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new RptDfine();
 	}
@@ -34,7 +34,7 @@ public class RptDfines extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<RptDfine> ToJavaList()throws Exception
+	public final java.util.List<RptDfine> ToJavaList()
 	{
 		return (java.util.List<RptDfine>)(Object)this;
 	}
@@ -43,7 +43,7 @@ public class RptDfines extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<RptDfine> Tolist()throws Exception
+	public final ArrayList<RptDfine> Tolist()
 	{
 		ArrayList<RptDfine> list = new ArrayList<RptDfine>();
 		for (int i = 0; i < this.size(); i++)

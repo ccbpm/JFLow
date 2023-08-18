@@ -170,7 +170,6 @@ public class FrmAttr extends bp.en.EntityOIDNameAttr
 		///#endregion 按钮.
 
 
-
 		///#region 集合的操作.
 	/** 
 	 导入Excel
@@ -195,7 +194,6 @@ public class FrmAttr extends bp.en.EntityOIDNameAttr
 	 行打开模式
 	*/
 	public static final String RowOpenModel = "RowOpenModel";
-
 	public static final String PopHeight = "PopHeight";
 	public static final String PopWidth = "PopWidth";
 	public static final String Tag0 = "Tag0";
@@ -205,4 +203,7 @@ public class FrmAttr extends bp.en.EntityOIDNameAttr
 	 实体编辑模式
 	*/
 	public static final String EntityEditModel = "EntityEditModel";
+
+	public static final String SearchDictOpenType = "SearchDictOpenType";
+
 }

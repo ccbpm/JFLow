@@ -1,7 +1,5 @@
 package bp.wf;
 
-import bp.*;
-
 /** 
  节点工作退回规则
 */
@@ -30,11 +28,13 @@ public enum JumpWay
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
 	public static JumpWay forValue(int value)
-	{return values()[value];
+	{
+		return values()[value];
 	}
 }

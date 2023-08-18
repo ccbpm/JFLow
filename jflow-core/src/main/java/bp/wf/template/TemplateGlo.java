@@ -2,30 +2,28 @@ package bp.wf.template;
 
 import bp.da.*;
 import bp.sys.*;
-import bp.tools.DateUtils;
 import bp.web.*;
-import bp.wf.*;
-import bp.en.*;
-import bp.wf.Glo;
+import bp.en.*; import bp.en.Map;
 import bp.difference.*;
+import bp.wf.Glo;
 import bp.wf.template.sflow.*;
-import bp.wf.template.ccen.*;
 import bp.wf.template.frm.*;
+import bp.*;
+import bp.wf.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.util.*;
 import java.io.*;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.time.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.CountDownLatch;
+
+import static bp.tools.StringHelper.padLeft;
 
 /** 
  流程模版的操作
@@ -35,8 +33,8 @@ public class TemplateGlo
 	/** 
 	 装载流程模板
 	 
-	 param fk_flowSort 流程类别
-	 param path 流程名称
+	 @param fk_flowSort 流程类别
+	 @param path 流程名称
 	 @return 
 	*/
 
@@ -63,7 +61,7 @@ public class TemplateGlo
 
 		if (ds.contains("WF_Flow") == false)
 		{
-			throw new RuntimeException("导入错误，非流程模版文件" + path + "。");
+			throw new RuntimeException("err@导入错误，非流程模版文件" + path + "。");
 		}
 
 		DataTable dtFlow = ds.GetTableByName("WF_Flow");
@@ -73,7 +71,7 @@ public class TemplateGlo
 
 		int oldFlowID = Integer.parseInt(oldFlowNo);
 		int iOldFlowLength = String.valueOf(oldFlowID).length();
-		String timeKey = DateUtils.format(new Date(),"yyMMddhhmmss");
+		String timeKey = DBAccess.GenerGUID();// LocalDateTime.now().toString("yyMMddhhmmss");
 
 
 			///#region 根据不同的流程模式，设置生成不同的流程编号.
@@ -123,7 +121,7 @@ public class TemplateGlo
 
 			///#endregion 根据不同的流程模式，设置生成不同的流程编号.
 
-		// string timeKey = fl.No;
+		// String timeKey = fl.No;
 		int idx = 0;
 		String infoErr = "";
 		String infoTable = "";
@@ -133,20 +131,21 @@ public class TemplateGlo
 			///#region 处理流程表数据
 		for (DataColumn dc : dtFlow.Columns)
 		{
-			String val = dtFlow.Rows.get(0).getValue(dc.ColumnName) instanceof String ? (String)dtFlow.Rows.get(0).getValue(dc.ColumnName) : null;
+			String val = dtFlow.Rows.get(0).getValue(dc.ColumnName) instanceof String ? (String) dtFlow.Rows.get(0).getValue(dc.ColumnName) : null;
 			switch (dc.ColumnName.toLowerCase())
 			{
 				case "no":
 				case "fk_flowsort":
 					continue;
 				case "name":
+					// val = "复制:" + val + "_" + DateTime.Now.ToString("MM月dd日HH时mm分");
 					break;
 				default:
 					break;
 			}
 			fl.SetValByKey(dc.ColumnName, val);
 		}
-		fl.setFK_FlowSort(fk_flowSort);
+		fl.setFlowSortNo(fk_flowSort);
 		if (DBAccess.IsExitsObject(fl.getPTable()) == true)
 		{
 			fl.setPTable(null);
@@ -178,12 +177,14 @@ public class TemplateGlo
 
 		for (DataRow dr : mydtGF.Rows)
 		{
-			GroupField gf = new GroupField();
+			bp.sys.GroupField gf = new bp.sys.GroupField();
 			for (DataColumn dc : mydtGF.Columns)
 			{
-				String val = dr.getValue(dc.ColumnName)!=null? dr.getValue(dc.ColumnName).toString(): null;
+				String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
 				if (val == null)
+				{
 					continue;
+				}
 				switch (dc.ColumnName.toLowerCase())
 				{
 					case "enname":
@@ -197,7 +198,7 @@ public class TemplateGlo
 				}
 				gf.SetValByKey(dc.ColumnName, val);
 			}
-			int oldID = Math.toIntExact(gf.getOID());
+			long oldID = gf.getOID();
 			gf.setOID(DBAccess.GenerOID());
 			gf.DirectInsert();
 			dr.setValue("OID", gf.getOID()); //给他一个新的OID.
@@ -325,7 +326,7 @@ public class TemplateGlo
 					//    FlowForm cd = new FlowForm();
 					//    foreach (DataColumn dc in dt.Columns)
 					//    {
-					//        string val = dr[dc.ColumnName] as string;
+					//        String val = dr[dc.ColumnName] as string;
 					//        if (val == null)
 					//            continue;
 					//        switch (dc.ColumnName.ToLower())
@@ -334,7 +335,7 @@ public class TemplateGlo
 					//                val = fl.No;
 					//                break;
 					//            default:
-					//                val = val.Replace("ND" + oldFlowID, "ND" + flowID);
+					//                val = val.replace("ND" + oldFlowID, "ND" + flowID);
 					//                break;
 					//        }
 					//        cd.SetValByKey(dc.ColumnName, val);
@@ -479,7 +480,7 @@ public class TemplateGlo
 							bt.SetValByKey(dc.ColumnName, val);
 						}
 
-							bt.setMyPK(DBAccess.GenerGUID(0, null, null));
+						bt.setMyPK(DBAccess.GenerGUID(0, null, null));
 
 						try
 						{
@@ -497,7 +498,7 @@ public class TemplateGlo
 					for (DataRow dr : dt.Rows)
 					{
 						FrmNode fn = new FrmNode();
-						fn.setFK_Flow(fl.getNo());
+						fn.setFlowNo(fl.getNo());
 						for (DataColumn dc : dt.Columns)
 						{
 							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
@@ -524,51 +525,15 @@ public class TemplateGlo
 							fn.SetValByKey(dc.ColumnName, val);
 						}
 						// 开始插入。
-						fn.setMyPK(fn.getFKFrm() + "_" + fn.getFK_Node());
+						fn.setMyPK(fn.getFKFrm() + "_" + fn.getNodeID());
 						fn.Insert();
-					}
-					break;
-				case "WF_FindWorkerRole": //找人规则
-					for (DataRow dr : dt.Rows)
-					{
-						FindWorkerRole en = new FindWorkerRole();
-						for (DataColumn dc : dt.Columns)
-						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
-							if (val == null)
-							{
-								continue;
-							}
-							switch (dc.ColumnName.toLowerCase())
-							{
-								case "fk_node":
-								case "nodeid":
-									if (val.length() < iOldFlowLength)
-									{
-										//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
-										throw new RuntimeException("@导入模板名称：" + oldFlowName + "；节点WF_FindWorkerRole下FK_Node值错误:" + val);
-									}
-									val = flowID + val.substring(iOldFlowLength);
-									break;
-								case "fk_flow":
-									val = fl.getNo();
-									break;
-								default:
-									val = val.replace("ND" + oldFlowID, "ND" + flowID);
-									break;
-							}
-							en.SetValByKey(dc.ColumnName, val);
-						}
-
-						//插入.
-						en.DirectInsert();
 					}
 					break;
 				case "WF_Cond": //Conds.xml。
 					for (DataRow dr : dt.Rows)
 					{
 						Cond cd = new Cond();
-						cd.setFK_Flow(fl.getNo());
+						cd.setFlowNo(fl.getNo());
 						for (DataColumn dc : dt.Columns)
 						{
 							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
@@ -599,50 +564,11 @@ public class TemplateGlo
 							cd.SetValByKey(dc.ColumnName, val);
 						}
 
-						cd.setFK_Flow(fl.getNo()); //@hongyan.
+						cd.setFlowNo(fl.getNo());
 						cd.setMyPK(DBAccess.GenerGUID(0, null, null));
 						cd.DirectInsert();
 					}
 					break;
-				case "WF_CCDept": //抄送到部门。
-					for (DataRow dr : dt.Rows)
-					{
-						CCDept cd = new CCDept();
-						for (DataColumn dc : dt.Columns)
-						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
-							if (val == null)
-							{
-								continue;
-							}
-							switch (dc.ColumnName.toLowerCase())
-							{
-								case "fk_node":
-									if (val.length() < iOldFlowLength)
-									{
-										//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
-										throw new RuntimeException("@导入模板名称：" + oldFlowName + "；节点WF_CCDept下FK_Node值错误:" + val);
-									}
-									val = flowID + val.substring(iOldFlowLength);
-									break;
-								default:
-									break;
-							}
-							cd.SetValByKey(dc.ColumnName, val);
-						}
-
-						//开始插入。
-						try
-						{
-							cd.Insert();
-						}
-						catch (java.lang.Exception e)
-						{
-							cd.Update();
-						}
-					}
-					break;
-
 				case "WF_NodeReturn": //可退回的节点。
 					for (DataRow dr : dt.Rows)
 					{
@@ -676,7 +602,7 @@ public class TemplateGlo
 						{
 							cd.Insert();
 						}
-						catch (java.lang.Exception e2)
+						catch (java.lang.Exception e)
 						{
 							cd.Update();
 						}
@@ -709,7 +635,7 @@ public class TemplateGlo
 							}
 							dir.SetValByKey(dc.ColumnName, val);
 						}
-						dir.setFK_Flow(fl.getNo());
+						dir.setFlowNo(fl.getNo());
 						dir.Insert();
 					}
 					break;
@@ -728,7 +654,7 @@ public class TemplateGlo
 							ln.SetValByKey(dc.ColumnName, val);
 						}
 						idx++;
-						ln.setFK_Flow(fl.getNo());
+						ln.setFlowNo(fl.getNo());
 						ln.setMyPK(DBAccess.GenerGUID(0, null, null));
 						ln.DirectInsert();
 					}
@@ -762,9 +688,9 @@ public class TemplateGlo
 						try
 						{
 							//如果部门不属于本组织的，就要删除.  
-							if (Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
+							if (bp.wf.Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
 							{
-								bp.wf.port.admin2group.Dept dept = new bp.wf.port.admin2group.Dept(dp.getFK_Dept());
+								bp.wf.port.admin2group.Dept dept = new bp.wf.port.admin2group.Dept(dp.getDeptNo());
 								if (dept.getOrgNo().equals(WebUser.getOrgNo()) == false)
 								{
 									continue;
@@ -780,10 +706,8 @@ public class TemplateGlo
 				case "WF_Node": //导入节点信息.
 					for (DataRow dr : dt.Rows)
 					{
-						NodeExt nd = new NodeExt();
-						CC cc = new CC(); //抄送相关的信息.
-						NodeWorkCheck fwc = new NodeWorkCheck();
-
+						bp.wf.template.NodeExt nd = new bp.wf.template.NodeExt();
+						bp.wf.template.NodeWorkCheck fwc = new NodeWorkCheck();
 						for (DataColumn dc : dt.Columns)
 						{
 							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
@@ -811,33 +735,21 @@ public class TemplateGlo
 									String key = "@" + flowID;
 									val = val.replace(key, "@");
 									break;
-								case "atpara":
-									if(DataType.IsNullOrEmpty(val)==false){
-										AtPara para  = new AtPara(val);
-										String sf = para.GetValStrByKey("ShenFenVal");
-										if(DataType.IsNullOrEmpty(sf)==false){
-											sf = sf.replace(String.valueOf(oldFlowID),String.valueOf(flowID));
-											para.SetVal("ShenFenVal",sf);
-											val = para.GenerAtParaStrs();
-										}
-									}
-									break;
 								default:
 									break;
 							}
 							nd.SetValByKey(dc.ColumnName, val);
-							cc.SetValByKey(dc.ColumnName, val);
 							fwc.SetValByKey(dc.ColumnName, val);
 						}
 
-						nd.setFK_Flow(fl.getNo());
+						nd.setFlowNo(fl.getNo());
 						nd.setFlowName(fl.getName());
 						try
 						{
 
 							if (nd.getEnMap().getAttrs().contains("OfficePrintEnable"))
 							{
-								if (nd.GetValStringByKey("OfficePrintEnable").equals("打印"))
+								if (Objects.equals(nd.GetValStringByKey("OfficePrintEnable"), "打印"))
 								{
 									nd.SetValByKey("OfficePrintEnable", 0);
 								}
@@ -853,14 +765,12 @@ public class TemplateGlo
 							}
 
 							//把抄送的信息也导入里面去.
-							cc.DirectUpdate();
 							fwc.setFWCVer(1); //设置为2019版本. 2018版是1个节点1个人,仅仅显示1个意见.
 							fwc.DirectUpdate();
 							DBAccess.RunSQL("DELETE FROM Sys_MapAttr WHERE FK_MapData='ND" + nd.getNodeID() + "'");
 						}
 						catch (RuntimeException ex)
 						{
-							cc.CheckPhysicsTable();
 							fwc.CheckPhysicsTable();
 
 							throw new RuntimeException("@导入节点:FlowName:" + nd.getFlowName() + " nodeID: " + nd.getNodeID() + " , " + nd.getName() + " 错误:" + ex.getMessage());
@@ -874,7 +784,7 @@ public class TemplateGlo
 						Node nd = new Node();
 						nd.setNodeID(Integer.parseInt(dr.getValue(NodeAttr.NodeID).toString()));
 						nd.RetrieveFromDBSources();
-						nd.setFK_Flow(fl.getNo());
+						nd.setFlowNo(fl.getNo());
 						//获取表单类别
 						String formType = dr.getValue(NodeAttr.FormType).toString();
 						for (DataColumn dc : dt.Columns)
@@ -914,23 +824,12 @@ public class TemplateGlo
 									String key = "@" + flowID;
 									val = val.replace(key, "@");
 									break;
-								case "atpara":
-									if(DataType.IsNullOrEmpty(val)==false){
-										AtPara para  = new AtPara(val);
-										String sf = para.GetValStrByKey("ShenFenVal");
-										if(DataType.IsNullOrEmpty(sf)==false){
-											sf = sf.replace(String.valueOf(oldFlowID),String.valueOf(flowID));
-											para.SetVal("ShenFenVal",sf);
-											val = para.GenerAtParaStrs();
-										}
-									}
-									break;
 								default:
 									break;
 							}
 							nd.SetValByKey(dc.ColumnName, val);
 						}
-						nd.setFK_Flow(fl.getNo());
+						nd.setFlowNo(fl.getNo());
 						nd.setFlowName(fl.getName());
 						nd.DirectUpdate();
 					}
@@ -942,7 +841,7 @@ public class TemplateGlo
 				case "WF_NodeExt":
 					for (DataRow dr : dt.Rows)
 					{
-						NodeExt nd = new NodeExt();
+						bp.wf.template.NodeExt nd = new bp.wf.template.NodeExt();
 						nd.setNodeID(Integer.parseInt(flowID + dr.getValue(NodeAttr.NodeID).toString().substring(iOldFlowLength)));
 						nd.RetrieveFromDBSources();
 						for (DataColumn dc : dt.Columns)
@@ -967,23 +866,12 @@ public class TemplateGlo
 									String key = "@" + flowID;
 									val = val.replace(key, "@");
 									break;
-								case "atpara":
-									if(DataType.IsNullOrEmpty(val)==false){
-										AtPara para  = new AtPara(val);
-										String sf = para.GetValStrByKey("ShenFenVal");
-										if(DataType.IsNullOrEmpty(sf)==false){
-											sf = sf.replace(String.valueOf(oldFlowID),String.valueOf(flowID));
-											para.SetVal("ShenFenVal",sf);
-											val = para.GenerAtParaStrs();
-										}
-									}
-									break;
 								default:
 									break;
 							}
 							nd.SetValByKey(dc.ColumnName, val);
 						}
-						nd.setFK_Flow(fl.getNo());
+						nd.setFlowNo(fl.getNo());
 						nd.DirectUpdate();
 					}
 					break;
@@ -1050,7 +938,7 @@ public class TemplateGlo
 				case "Sys_Enums":
 					for (DataRow dr : dt.Rows)
 					{
-						SysEnum se = new SysEnum();
+						SysEnum se = new bp.sys.SysEnum();
 						for (DataColumn dc : dt.Columns)
 						{
 							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
@@ -1069,7 +957,7 @@ public class TemplateGlo
 						se.setOrgNo(WebUser.getOrgNo());
 						se.ResetPK();
 
-						if (se.getIsExits() == true)
+						if (se.IsExits())
 						{
 							continue;
 						}
@@ -1089,7 +977,7 @@ public class TemplateGlo
 							}
 							sem.SetValByKey(dc.ColumnName, val);
 						}
-						if (sem.getIsExits())
+						if (sem.IsExits())
 						{
 							continue;
 						}
@@ -1119,9 +1007,9 @@ public class TemplateGlo
 							}
 							ma.SetValByKey(dc.ColumnName, val);
 						}
-						boolean b = ma.IsExit(MapAttrAttr.FK_MapData, ma.getFK_MapData(), MapAttrAttr.KeyOfEn, ma.getKeyOfEn());
+						boolean b = ma.IsExit(MapAttrAttr.FK_MapData, ma.getFrmID(), MapAttrAttr.KeyOfEn, ma.getKeyOfEn());
 
-						ma.setMyPK(ma.getFK_MapData() + "_" + ma.getKeyOfEn());
+						ma.setMyPK(ma.getFrmID() + "_" + ma.getKeyOfEn());
 						if (b == true)
 						{
 							ma.DirectUpdate();
@@ -1135,11 +1023,11 @@ public class TemplateGlo
 				case "Sys_MapData": //RptEmps.xml。
 					for (DataRow dr : dt.Rows)
 					{
-						MapData md = new MapData();
+						MapData md = new bp.sys.MapData();
 						String htmlCode = "";
 						for (DataColumn dc : dt.Columns)
 						{
-							if (dc.ColumnName.equals("HtmlTemplateFile"))
+							if (Objects.equals(dc.ColumnName, "HtmlTemplateFile"))
 							{
 								htmlCode = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
 								continue;
@@ -1159,7 +1047,7 @@ public class TemplateGlo
 						//如果是开发者表单，赋值HtmlTemplateFile数据库的值并保存到DataUser下
 						if (md.getHisFrmType() == FrmType.Develop)
 						{
-							//string htmlCode = DBAccess.GetBigTextFromDB("Sys_MapData", "No", "ND" + oldFlowID, "HtmlTemplateFile");
+							//String htmlCode = DBAccess.GetBigTextFromDB("Sys_MapData", "No", "ND" + oldFlowID, "HtmlTemplateFile");
 							if (DataType.IsNullOrEmpty(htmlCode) == false)
 							{
 								htmlCode = htmlCode.replace("ND" + oldFlowID, "ND" + Integer.parseInt(fl.getNo()));
@@ -1193,7 +1081,7 @@ public class TemplateGlo
 				case "Sys_MapDtl": //RptEmps.xml。
 					for (DataRow dr : dt.Rows)
 					{
-						MapDtl md = new MapDtl();
+						MapDtl md = new bp.sys.MapDtl();
 						for (DataColumn dc : dt.Columns)
 						{
 							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
@@ -1212,7 +1100,7 @@ public class TemplateGlo
 				case "Sys_MapExt":
 					for (DataRow dr : dt.Rows)
 					{
-						MapExt md = new MapExt();
+						MapExt md = new bp.sys.MapExt();
 						for (DataColumn dc : dt.Columns)
 						{
 							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
@@ -1232,7 +1120,7 @@ public class TemplateGlo
 					break;
 				case "Sys_FrmImg":
 					idx = 0;
-					timeKey = DateUtils.format(new Date(),"yyMMddhhmmss");
+					timeKey = DBAccess.GenerGUID(); // LocalDateTime.now().toString("yyyyMMddHHmmss");
 					for (DataRow dr : dt.Rows)
 					{
 						idx++;
@@ -1249,13 +1137,13 @@ public class TemplateGlo
 						}
 
 						//设置主键.
-						en.setMyPK(en.getFK_MapData() + "_" + en.getKeyOfEn());
+						en.setMyPK(en.getFrmID() + "_" + en.getKeyOfEn());
 						en.Save(); //执行保存.
 					}
 					break;
 				case "Sys_FrmImgAth": //图片附件.
 					idx = 0;
-					timeKey = DateUtils.format(new Date(),"yyMMddhhmmss");
+					timeKey = DBAccess.GenerGUID(); // LocalDateTime.now().toString("yyyyMMddHHmmss");
 					for (DataRow dr : dt.Rows)
 					{
 						idx++;
@@ -1270,7 +1158,7 @@ public class TemplateGlo
 							val = val.replace("ND" + oldFlowID, "ND" + flowID);
 							en.SetValByKey(dc.ColumnName, val);
 						}
-						en.setMyPK(en.getFK_MapData() + "_" + en.getCtrlID());
+						en.setMyPK(en.getFrmID() + "_" + en.getCtrlID());
 						en.Save();
 						//  en.setMyPK(Guid.NewGuid().ToString());
 					}
@@ -1293,7 +1181,7 @@ public class TemplateGlo
 							en.SetValByKey(dc.ColumnName, val);
 						}
 
-						en.setMyPK(en.getFK_MapData() + "_" + en.getNoOfObj());
+						en.setMyPK(en.getFrmID() + "_" + en.getNoOfObj());
 						en.Save();
 					}
 					break;
@@ -1411,125 +1299,31 @@ public class TemplateGlo
 					}
 					break;
 				case "Sys_GroupField":
-					/*for (DataRow dr : dt.Rows)
-					{
-						GroupField gf = new GroupField();
-						for (DataColumn dc : dt.Columns)
-						{
-							String val = dr.getValue(dc.ColumnName)!=null? dr.getValue(dc.ColumnName).toString(): null;
-							if (val == null)
-								continue;
-							switch (dc.ColumnName.toLowerCase())
-							{
-								case "enname":
-								case "keyofen":
-								case "ctrlid": //升级傻瓜表单的时候,新增加的字段 add by zhoupeng 2016.11.21
-								case "frmid": //升级傻瓜表单的时候,新增加的字段 add by zhoupeng 2016.11.21
-									val = val.replace("ND" + oldFlowID, "ND" + flowID);
-									break;
-								default:
-									break;
-							}
-							gf.SetValByKey(dc.ColumnName, val);
-						}
-						if(gf.getCtrlID().contains("_AthMDtl")==true)
-							continue;
-						gf.InsertAsOID(gf.getOID());
-					}*/
+					//foreach (DataRow dr in dt.Rows)
+					//{
+					//    GroupField gf = new Sys.GroupField();
+					//    foreach (DataColumn dc in dt.Columns)
+					//    {
+					//        String val = dr[dc.ColumnName] as string;
+					//        if (val == null)
+					//            continue;
+					//        switch (dc.ColumnName.ToLower())
+					//        {
+					//            case "enname":
+					//            case "keyofen":
+					//            case "ctrlid": //升级傻瓜表单的时候,新增加的字段 add by zhoupeng 2016.11.21
+					//            case "frmid": //升级傻瓜表单的时候,新增加的字段 add by zhoupeng 2016.11.21
+					//                val = val.replace("ND" + oldFlowID, "ND" + flowID);
+					//                break;
+					//            default:
+					//                break;
+					//        }
+					//        gf.SetValByKey(dc.ColumnName, val);
+					//    }
+					//    gf.InsertAsOID(gf.getOID());
+					//}
 					break;
-				case "WF_NodeCC":
-					for (DataRow dr : dt.Rows)
-					{
-						CC cc = new CC();
-						cc.setNodeID(Integer.parseInt(flowID + dr.getValue(NodeAttr.NodeID).toString().substring(iOldFlowLength)));
-						cc.RetrieveFromDBSources();
-						for (DataColumn dc : dt.Columns)
-						{
 
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
-							if (val == null)
-							{
-								continue;
-							}
-
-							if (dc.ColumnName.toLowerCase().equals("nodeid"))
-							{
-								if (val.length() < iOldFlowLength)
-								{
-									// 节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
-									throw new RuntimeException("@导入模板名称：" + oldFlowName + "；节点WF_Node下FK_Node值错误:" + val);
-								}
-								val = flowID + val.substring(iOldFlowLength);
-							}
-
-							cc.SetValByKey(dc.ColumnName, val);
-						}
-						cc.SetValByKey("FK_Flow", fl.getNo());
-						cc.DirectUpdate();
-					}
-					break;
-				case "WF_CCEmp": // 抄送.
-					for (DataRow dr : dt.Rows)
-					{
-						CCEmp ne = new CCEmp();
-						for (DataColumn dc : dt.Columns)
-						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
-							if (val == null)
-							{
-								continue;
-							}
-
-							switch (dc.ColumnName.toLowerCase())
-							{
-								case "fk_node":
-									if (val.length() < iOldFlowLength)
-									{
-										//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
-										throw new RuntimeException("@导入模板名称：" + oldFlowName + "；节点WF_CCEmp下FK_Node值错误:" + val);
-									}
-									val = flowID + val.substring(iOldFlowLength);
-									break;
-								default:
-									break;
-							}
-							ne.SetValByKey(dc.ColumnName, val);
-						}
-						ne.Insert();
-					}
-					break;
-				case "WF_CCStation": // 抄送.
-					String mysql = " DELETE FROM WF_CCStation WHERE   FK_Node IN (SELECT NodeID FROM WF_Node WHERE FK_Flow='" + flowID + "')";
-					DBAccess.RunSQL(mysql);
-					for (DataRow dr : dt.Rows)
-					{
-						CCStation ne = new CCStation();
-						for (DataColumn dc : dt.Columns)
-						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
-							if (val == null)
-							{
-								continue;
-							}
-
-							switch (dc.ColumnName.toLowerCase())
-							{
-								case "fk_node":
-									if (val.length() < iOldFlowLength)
-									{
-										//节点编号长度小于流程编号长度则为异常数据，异常数据不进行处理
-										throw new RuntimeException("@导入模板名称：" + oldFlowName + "；节点WF_CCStation下FK_Node值错误:" + val);
-									}
-									val = flowID + val.substring(iOldFlowLength);
-									break;
-								default:
-									break;
-							}
-							ne.SetValByKey(dc.ColumnName, val);
-						}
-						ne.Save();
-					}
-					break;
 				default:
 					// infoErr += "Error:" + dt.TableName;
 					break;
@@ -1558,7 +1352,7 @@ public class TemplateGlo
 			///#endregion
 
 		//处理OrgNo 的导入问题.
-		if (Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
+		if (bp.wf.Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
 		{
 			fl.RetrieveFromDBSources();
 			fl.setOrgNo(WebUser.getOrgNo());
@@ -1566,13 +1360,9 @@ public class TemplateGlo
 		}
 
 
-
-
-		if (infoErr.equals(""))
+		if (Objects.equals(infoErr, ""))
 		{
 			infoTable = "";
-
-
 			//写入日志.
 			bp.sys.base.Glo.WriteUserLog("导入流程模板：" + fl.getName() + " - " + fl.getNo(), "通用操作");
 
@@ -1585,21 +1375,7 @@ public class TemplateGlo
 		throw new RuntimeException(infoErr);
 	}
 
-
-	public static Node NewNode(String flowNo, int x, int y) throws Exception {
-		return NewNode(flowNo, x, y, null);
-	}
-
-	public static Node NewNode(String flowNo, int x, int y, String icon) throws Exception {
-		return NewNode(flowNo, x, y, icon, RunModel.Ordinary);
-	}
-
-	public static Node NewNode(String flowNo, int x, int y, String icon, RunModel runModel) throws Exception {
-		return NewNode(flowNo, x, y, icon, runModel, NodeType.UserNode);
-	}
-
-//ORIGINAL LINE: public static Node NewNode(string flowNo, int x, int y, string icon = null)
-	public static Node NewNode(String flowNo, int x, int y, String icon, RunModel runModel, NodeType nodeType) throws Exception {
+	public static Node NewEtcNode(String flowNo, int x, int y, NodeType type) throws Exception {
 		Flow flow = new Flow(flowNo);
 
 		Node nd = new Node();
@@ -1615,16 +1391,79 @@ public class TemplateGlo
 		{
 			String strID = flowNo + StringHelper.padLeft(String.valueOf(idx), 2, '0');
 			nd.setNodeID(Integer.parseInt(strID));
-			if (nd.getIsExits() == false)
+			if (nd.IsExits() == false)
 			{
 				break;
 			}
 			idx++;
 		}
 
-		if (nd.getNodeID() > Integer.parseInt(flowNo + "99"))
+		if (nd.getNodeID()> Integer.parseInt(flowNo + "99"))
 		{
 			throw new RuntimeException("流程最大节点编号不可以超过100");
+		}
+
+		if (type == NodeType.RouteNode)
+		{
+			nd.setName("条件" + nd.getNodeID());
+		}
+
+		if (type == NodeType.CCNode)
+		{
+			nd.setName("抄送" + nd.getNodeID());
+		}
+
+		if (type == NodeType.SubFlowNode)
+		{
+			nd.setName("子流程节点" + nd.getNodeID());
+		}
+
+		nd.setFlowNo(flowNo);
+		nd.setHisNodeType(type); //抄送节点.
+		nd.setX(x);
+		nd.setY(y);
+		nd.Insert();
+		return nd;
+	}
+
+
+	public static Node NewNode(String flowNo, int x, int y, String icon, int runModel) throws Exception {
+		return NewNode(flowNo, x, y, icon, runModel, 0);
+	}
+
+	public static Node NewNode(String flowNo, int x, int y, String icon) throws Exception {
+		return NewNode(flowNo, x, y, icon, 0, 0);
+	}
+
+	public static Node NewNode(String flowNo, int x, int y) throws Exception {
+		return NewNode(flowNo, x, y, null, 0, 0);
+	}
+
+	public static Node NewNode(String flowNo, int x, int y, String icon, int runModel, int nodeType) throws Exception {
+		Flow flow = new Flow(flowNo);
+		NodeSimples nds = new NodeSimples();
+		nds.Retrieve("FK_Flow", flowNo,"Step");
+
+		Node nd = new Node();
+		int nodeID = 0;
+		int idx = 2; //从第2个开始.
+		//设置节点ID.
+		while (true)
+		{
+			String strID = "";
+			if (String.valueOf(idx).length() == 3 || String.valueOf(idx).length() == 2)
+			{
+				strID = flowNo + String.valueOf(idx);
+				nd.setNodeID(Integer.valueOf(strID));
+			}
+			else
+			{
+				strID = flowNo + padLeft(String.valueOf(idx),2, '0');
+				nd.setNodeID(Integer.valueOf((strID)));
+			}
+			if (nds.contains("NodeID", nd.getNodeID()) == false)
+				break;
+			idx++;
 		}
 
 		nodeID = nd.getNodeID();
@@ -1634,82 +1473,79 @@ public class TemplateGlo
 		nd.setHisDeliveryWay(DeliveryWay.BySelected); //上一步发送人来选择.
 		nd.setFormType(NodeFormType.FoolForm); //设置为傻瓜表单.
 
-
 		//如果是极简模式.
 		if (flow.getFlowDevModel() == FlowDevModel.JiJian)
 		{
+			nd.setFlowNo(flowNo);
 			nd.setFormType(NodeFormType.FoolForm); //设置为傻瓜表单.
-			nd.setNodeFrmID("ND" + Integer.parseInt(flow.getNo()) + "01");
+			nd.setNodeFrmID( "ND" + Integer.parseInt(flow.getNo()) + "01");
 			nd.setFrmWorkCheckSta(FrmWorkCheckSta.Enable);
 			nd.DirectUpdate();
 			FrmNode fn = new FrmNode();
 			fn.setFKFrm(nd.getNodeFrmID());
 			fn.setEnableFWC(FrmWorkCheckSta.Enable);
-			fn.setFK_Node(nd.getNodeID());
-			fn.setFK_Flow(flowNo);
+			fn.setNodeID(nd.getNodeID());
+			fn.setFlowNo(flowNo);
 			fn.setFrmSln(FrmSln.Readonly);
-			fn.setMyPK(fn.getFKFrm() + "_" + fn.getFK_Node() + "_" + fn.getFK_Flow());
+			fn.setMyPK(fn.getFKFrm() + "_" + fn.getNodeID() + "_" + fn.getFlowNo());
 			//执行保存.
 			fn.Save();
-			MapData md = new MapData(nd.getNodeFrmID());
-			md.setHisFrmType( FrmType.FoolForm);
-			md.Update();
+			//MapData md = new MapData();
+			//nd.setNo(nd.getNodeFrmID();
+			//md.setHisFrmType(FrmType.FoolForm);
+			//md.Update();
 		}
 
 		//如果是累加.
 		if (flow.getFlowDevModel() == FlowDevModel.FoolTruck)
 		{
 			nd.setFormType(NodeFormType.FoolTruck); //设置为傻瓜表单.
-			nd.setNodeFrmID("ND" + nodeID);
-			nd.setFrmWorkCheckSta(FrmWorkCheckSta.Disable);
+			nd.setNodeFrmID( "ND" + nodeID);
+			nd.setFrmWorkCheckSta (FrmWorkCheckSta.Disable);
 			nd.DirectUpdate();
-
-
 		}
 
 		//如果是绑定表单库的表单
 		if (flow.getFlowDevModel() == FlowDevModel.RefOneFrmTree)
 		{
 			nd.setFormType(NodeFormType.RefOneFrmTree); //设置为傻瓜表单.
-			nd.setNodeFrmID(flow.getFrmUrl());
+			nd.setNodeFrmID( flow.getFrmUrl());
 			nd.setFrmWorkCheckSta(FrmWorkCheckSta.Enable);
 			nd.DirectUpdate();
 			FrmNode fn = new FrmNode();
 			fn.setFKFrm(nd.getNodeFrmID());
 			fn.setEnableFWC(FrmWorkCheckSta.Enable);
-			fn.setFK_Node(nd.getNodeID());
-			fn.setFK_Flow(flowNo);
+			fn.setNodeID(nd.getNodeID());
+			fn.setFlowNo(flowNo);
 			fn.setFrmSln(FrmSln.Readonly);
-			fn.setMyPK(fn.getFKFrm() + "_" + fn.getFK_Node() + "_" + fn.getFK_Flow());
+			fn.setMyPK(fn.getFKFrm() + "_" + fn.getNodeID() + "_" + fn.getFlowNo());
 			//执行保存.
 			fn.Save();
 
 		}
 		//如果是Self类型的表单的类型
-		if (flow.getFlowDevModel() == FlowDevModel.SDKFrm)
+		if (flow.getFlowDevModel() == FlowDevModel.SDKFrmSelfPK || flow.getFlowDevModel() == FlowDevModel.SDKFrmWorkID)
 		{
 			nd.setHisFormType(NodeFormType.SDKForm);
-			nd.setFormUrl(flow.getFrmUrl());
+			nd.setFormUrl (flow.getFrmUrl());
 			nd.DirectUpdate();
-
 		}
+
 		//如果是Self类型的表单的类型
 		if (flow.getFlowDevModel() == FlowDevModel.SelfFrm)
 		{
-			nd.setHisFormType(NodeFormType.SelfForm);
-			nd.setFormUrl(flow.getFrmUrl());
+			nd.setHisFormType (NodeFormType.SelfForm);
+			nd.setFormUrl (flow.getFrmUrl());
 			nd.DirectUpdate();
-
 		}
-
-		nd.setFK_Flow(flowNo);
-
+		nd.setFlowNo(flowNo);
 		nd.Insert();
 
-		//为创建节点设置默认值  @sly 部分方法
+		//为创建节点设置默认值   部分方法
 		String file = SystemConfig.getPathOfDataUser() + "XML/DefaultNewNodeAttr.xml";
 		DataSet ds = new DataSet();
-		if (1==2 &&(new File(file)).isFile() == true)
+
+		if (1 == 2 && (new File(file)).isFile() == true)
 		{
 			ds.readXml(file);
 
@@ -1721,40 +1557,39 @@ public class TemplateGlo
 				ndExt.SetValByKey(dc.ColumnName, dt.Rows.get(0).getValue(dc.ColumnName));
 			}
 
-			ndExt.setFK_Flow(flowNo);
+			ndExt.setFlowNo(flowNo);
 			ndExt.setNodeID(nodeID);
 			ndExt.DirectUpdate();
 		}
 		nd.setFWCVer(1); //设置为2019版本. 2018版是1个节点1个人,仅仅显示1个意见.
 		nd.setNodeID(nodeID);
-
 		nd.setHisDeliveryWay(DeliveryWay.BySelected);
-
 		nd.setX(x);
 		nd.setY(y);
-		nd.setICON(icon);
+		nd.setIcon(icon);
 		nd.setStep(idx);
 
 		//节点类型.
 		nd.setHisNodeWorkType(NodeWorkType.Work);
 		nd.setName("New Node " + idx);
 		nd.setHisNodePosType(NodePosType.Mid);
-		nd.setFK_Flow(flow.getNo());
+		nd.setFlowNo(flow.getNo());
 		nd.setFlowName(flow.getName());
 
 		//设置审核意见的默认值.
 		nd.SetValByKey(NodeWorkCheckAttr.FWCDefInfo, Glo.getDefValWFNodeFWCDefInfo());
 
 		//设置节点运行模式.
-		nd.setHisRunModel(runModel);
+		nd.setHisRunModel(RunModel.forValue(runModel));
 		//设置节点类型
-		nd.setHisNodeType(nodeType);
+		nd.setHisNodeType(NodeType.forValue(nodeType));
 
-		nd.Update(); //执行更新. @sly
+
+		nd.Update(); //执行更新.
 		nd.CreateMap();
 
 		//通用的人员选择器.
-		Selector select = new Selector(nd.getNodeID());
+		bp.wf.template.Selector select = new Selector(nd.getNodeID());
 		select.setSelectorModel(SelectorModel.GenerUserSelecter);
 		select.Update();
 
@@ -1771,21 +1606,19 @@ public class TemplateGlo
 		//创建默认的推送消息.
 		CreatePushMsg(nd);
 
-
 		//写入日志.
 		bp.sys.base.Glo.WriteUserLog("创建节点：" + nd.getName() + " - " + nd.getNodeID(), "通用操作");
-
 		return nd;
 	}
 	private static void CreatePushMsg(Node nd) throws Exception {
 		/*创建发送短消息,为默认的消息.*/
-		PushMsg pm = new PushMsg();
-		int i = pm.Retrieve(PushMsgAttr.FK_Event, EventListNode.SendSuccess, PushMsgAttr.FK_Node, nd.getNodeID(), PushMsgAttr.FK_Flow, nd.getFK_Flow());
+		bp.wf.template.PushMsg pm = new bp.wf.template.PushMsg();
+		int i = pm.Retrieve(PushMsgAttr.FK_Event, EventListNode.SendSuccess, PushMsgAttr.FK_Node, nd.getNodeID(), PushMsgAttr.FK_Flow, nd.getFlowNo());
 		if (i == 0)
 		{
 			pm.setFKEvent(EventListNode.SendSuccess);
 			pm.setFK_Node(nd.getNodeID());
-			pm.setFK_Flow(nd.getFK_Flow());
+			pm.setFK_Flow(nd.getFlowNo());
 
 			pm.setSMSPushWay(1); // 发送短消息.
 			pm.setSMSPushModel("Email");
@@ -1794,12 +1627,12 @@ public class TemplateGlo
 		}
 
 		//设置退回消息提醒.
-		i = pm.Retrieve(PushMsgAttr.FK_Event, EventListNode.ReturnAfter, PushMsgAttr.FK_Node, nd.getNodeID(), PushMsgAttr.FK_Flow, nd.getFK_Flow());
+		i = pm.Retrieve(PushMsgAttr.FK_Event, EventListNode.ReturnAfter, PushMsgAttr.FK_Node, nd.getNodeID(), PushMsgAttr.FK_Flow, nd.getFlowNo());
 		if (i == 0)
 		{
 			pm.setFKEvent(EventListNode.ReturnAfter);
 			pm.setFK_Node(nd.getNodeID());
-			pm.setFK_Flow(nd.getFK_Flow());
+			pm.setFK_Flow(nd.getFlowNo());
 
 			pm.setSMSPushWay(1); // 发送短消息.
 			pm.setMailPushWay(0); //不发送邮件消息.
@@ -1811,316 +1644,15 @@ public class TemplateGlo
 	/** 
 	 检查当前人员是否有修改该流程模版的权限.
 	 
-	 param flowNo
+	 @param flowNo
 	 @return 
 	*/
 	public static boolean CheckPower(String flowNo)
 	{
-        return true;
-		/**if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.GroupInc)
-		{
+		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.GroupInc)
 			return true;
-		}
-
-		//return true;
-
-		if (WebUser.getNo().equals("admin") == true)
-		{
-			return true;
-		}
-
-		String sql = "SELECT DesignerNo FROM WF_Flow WHERE No='" + flowNo + "'";
-		String empNo = DBAccess.RunSQLReturnStringIsNull(sql, null);
-		if (DataType.IsNullOrEmpty(empNo) == true)
-		{
-			return true;
-		}
-
-		if (empNo.equals(WebUser.getNo()) == false)
-		{
-			throw new RuntimeException("err@您没有权限对该流程修改.");
-		}
-
-		return true;**/
+		return true;
 	}
-
-	/** 
-	 创建一个流程模版
-	 
-	 param flowSort 流程类别
-	 param flowName 名称
-	 param dsm 存储方式
-	 param ptable 物理量
-	 param flowMark 标记
-	 @return 创建的流程编号
-	*/
-	public static String NewFlow(String flowSort, String flowName, DataStoreModel dsm, String ptable, String flowMark)throws Exception
-	{
-		//定义一个变量.
-		Flow flow = new Flow();
-		try
-		{
-			//检查参数的完整性.
-			if (DataType.IsNullOrEmpty(ptable) == false && ptable.length() >= 1)
-			{
-				String c = ptable.substring(0, 1);
-				if (DataType.IsNumStr(c) == true)
-				{
-					throw new RuntimeException("@非法的流程数据表(" + ptable + "),它会导致ccflow不能创建该表.");
-				}
-			}
-
-			flow.setHisDataStoreModel(dsm);
-			flow.setPTable(ptable);
-			flow.setFK_FlowSort(flowSort);
-			flow.setFlowMark(flowMark);
-
-			if (DataType.IsNullOrEmpty(flowMark) == false)
-			{
-				if (flow.IsExit(FlowAttr.FlowMark, flowMark))
-				{
-					throw new RuntimeException("@该流程标示:" + flowMark + "已经存在于系统中.");
-				}
-			}
-
-			/*给初始值*/
-			//this.Paras = "@StartNodeX=10@StartNodeY=15@EndNodeX=40@EndNodeY=10";
-			flow.setParas("@StartNodeX=200@StartNodeY=50@EndNodeX=200@EndNodeY=350");
-
-			flow.setNo(flow.GenerNewNoByKey(FlowAttr.No, null));
-			flow.setName(flowName);
-			if (DataType.IsNullOrEmpty(flow.getName()))
-			{
-				flow.setName("新建流程" + flow.getNo()); //新建流程.
-			}
-
-			if (flow.getIsExits() == true)
-			{
-				throw new RuntimeException("err@系统出现自动生成的流程编号重复.");
-			}
-
-			if (Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
-			{
-				flow.setOrgNo(WebUser.getOrgNo()); //隶属组织
-			}
-			flow.setPTable("ND" + Integer.parseInt(flow.getNo()) + "Rpt");
-
-			//设置创建人，创建日期.
-			flow.SetValByKey(FlowAttr.CreateDate, DataType.getCurrentDateTime());
-			flow.SetValByKey(FlowAttr.Creater, bp.web.WebUser.getNo());
-			flow.SetValByKey("Icon", "icon-people");
-			flow.Insert();
-
-			//如果是集团模式下.
-			/*if (Glo.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
-			{*/
-				// 记录创建人.
-				FlowExt fe = new FlowExt(flow.getNo());
-				fe.setDesignerNo(WebUser.getNo());
-				fe.setDesignerName(WebUser.getName());
-				fe.setDesignTime(DataType.getCurrentDateTime());
-				fe.DirectUpdate();
-			//}
-
-
-			Node nd = new Node();
-			nd.setNodeID(Integer.parseInt(flow.getNo() + "01"));
-			nd.setName("Start Node"); //  "开始节点";
-			nd.setStep(1);
-			nd.setFK_Flow(flow.getNo());
-			nd.setFlowName(flow.getName());
-			nd.setHisNodePosType(NodePosType.Start);
-			nd.setHisNodeWorkType(NodeWorkType.StartWork);
-			nd.setX(200);
-			nd.setY(150);
-			nd.setNodePosType(NodePosType.Start);
-			nd.setICON("前台");
-
-			//增加了两个默认值值 . 2016.11.15. 目的是让创建的节点，就可以使用.
-			nd.setCondModel(DirCondModel.ByDDLSelected); //默认的发送方向.
-			nd.setHisDeliveryWay(DeliveryWay.BySelected); //上一步发送人来选择.
-			nd.setFormType(NodeFormType.FoolForm); //设置为傻瓜表单.
-
-			//如果是集团模式.   
-			if (Glo.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
-			{
-				if (DataType.IsNullOrEmpty(WebUser.getOrgNo()) == true)
-				{
-					throw new RuntimeException("err@登录信息丢失了组织信息,请重新登录.");
-				}
-
-				nd.setHisDeliveryWay(DeliveryWay.BySelectedOrgs);
-
-				//把本组织加入进去.
-				FlowOrg fo = new FlowOrg();
-				fo.Delete(FlowOrgAttr.FlowNo, nd.getFK_Flow());
-				fo.setFlowNo(nd.getFK_Flow());
-				fo.setOrgNo(WebUser.getOrgNo());
-				fo.Insert();
-			}
-
-			nd.Insert();
-			nd.CreateMap();
-
-			//为开始节点增加一个删除按钮. @李国文.
-			String sql = "UPDATE WF_Node SET DelEnable=1 WHERE NodeID=" + nd.getNodeID();
-			DBAccess.RunSQL(sql);
-
-			//nd.HisWork.CheckPhysicsTable();  去掉，检查的时候会执行.
-			CreatePushMsg(nd);
-
-			//通用的人员选择器.
-			Selector select = new Selector(nd.getNodeID());
-			select.setSelectorModel(SelectorModel.GenerUserSelecter);
-			select.Update();
-
-			nd = new Node();
-
-			//为创建节点设置默认值 
-			String fileNewNode = SystemConfig.getPathOfDataUser() + "XML/DefaultNewNodeAttr.xml";
-			if ((new File(fileNewNode)).isFile() == true)
-			{
-				DataSet myds = new DataSet();
-				myds.readXml(fileNewNode);
-				DataTable dt = myds.Tables.get(0);
-				for (DataColumn dc : dt.Columns)
-				{
-					nd.SetValByKey(dc.ColumnName, dt.Rows.get(0).getValue(dc.ColumnName));
-				}
-			}
-			else
-			{
-				nd.setHisNodePosType(NodePosType.Mid);
-				nd.setHisNodeWorkType(NodeWorkType.Work);
-				nd.setX(200);
-				nd.setY(250);
-				nd.setICON("审核");
-				nd.setNodePosType(NodePosType.End);
-
-				//增加了两个默认值值 . 2016.11.15. 目的是让创建的节点，就可以使用.
-				nd.setCondModel(DirCondModel.ByDDLSelected); //默认的发送方向.
-				nd.setHisDeliveryWay(DeliveryWay.BySelected); //上一步发送人来选择.
-				nd.setFormType(NodeFormType.FoolForm); //设置为傻瓜表单.
-			}
-
-			nd.setNodeID(Integer.parseInt(flow.getNo() + "02"));
-			nd.setName("Node 2"); // "结束节点";
-			nd.setStep(2);
-			nd.setFK_Flow(flow.getNo());
-			nd.setFlowName(flow.getName());
-			nd.setHisDeliveryWay(DeliveryWay.BySelected); //上一步发送人来选择.
-			nd.setFormType(NodeFormType.FoolForm); //设置为傻瓜表单.
-			nd.setCondModel(DirCondModel.ByDDLSelected);
-
-			nd.setX(200);
-			nd.setY(250);
-
-			//设置审核意见的默认值.
-			nd.SetValByKey(NodeWorkCheckAttr.FWCDefInfo, Glo.getDefValWFNodeFWCDefInfo());
-
-			nd.Insert();
-			nd.CreateMap();
-			//nd.HisWork.CheckPhysicsTable(); //去掉，检查的时候会执行.
-			CreatePushMsg(nd);
-
-			//通用的人员选择器.
-			select = new Selector(nd.getNodeID());
-			select.setSelectorModel(SelectorModel.GenerUserSelecter);
-			select.Update();
-
-			MapData md = new MapData();
-			md.setNo("ND" + Integer.parseInt(flow.getNo()) + "Rpt");
-			md.setName( flow.getName());
-			md.Save();
-
-			// 装载模版.
-			String file = SystemConfig.getPathOfDataUser() + "XML/TempleteSheetOfStartNode.xml";
-			if ((new File(file)).isFile() == false && SystemConfig.getIsJarRun()==false)
-			{
-				//throw new RuntimeException("@开始节点表单模版丢失" + file);
-				/*如果存在开始节点表单模版*/
-				DataSet ds = new DataSet();
-				ds.readXml(file);
-
-				String nodeID = "ND" + Integer.parseInt(flow.getNo() + "01");
-				bp.sys.MapData.ImpMapData(nodeID, ds);
-			}
-
-
-			/*如果存在开始节点表单模版*/
-			DataSet ds = new DataSet();
-			ds.readXml(file);
-
-			String nodeID = "ND" + Integer.parseInt(flow.getNo() + "01");
-			MapData.ImpMapData(nodeID, ds);
-
-			//创建track.
-			Track.CreateOrRepairTrackTable(flow.getNo());
-
-		}
-		catch (RuntimeException ex)
-		{
-			/**删除垃圾数据.
-			*/
-			flow.DoDelete();
-			//提示错误.
-			throw new RuntimeException("err@创建流程错误:" + ex.getMessage());
-		}
-
-
-		FlowExt flowExt = new FlowExt(flow.getNo());
-		flowExt.setDesignerNo(WebUser.getNo());
-		flowExt.setDesignerName(WebUser.getName());
-		flowExt.setDesignTime(DateUtils.format(new Date(),"yyMMddhhmmss"));
-		flowExt.DirectSave();
-
-		//创建连线
-		Direction drToNode = new Direction();
-		drToNode.setFK_Flow(flow.getNo());
-		drToNode.setNode(Integer.parseInt(Integer.parseInt(flow.getNo()) + "01"));
-		drToNode.setToNode(Integer.parseInt(Integer.parseInt(flow.getNo()) + "02"));
-		drToNode.Save();
-
-		//增加方向.
-		Node mynd = new Node(drToNode.getNode());
-		mynd.setHisToNDs(String.valueOf(drToNode.getToNode()));
-		mynd.Update();
-
-
-		//设置流程的默认值.
-		for (String key :SystemConfig.getAppSettings().keySet())
-		{
-			if (key.toString().contains("NewFlowDefVal") == false)
-			{
-				continue;
-			}
-
-			String val = SystemConfig.GetValByKey(key, "");
-
-			//设置值.
-			flow.SetValByKey(key.replace("NewFlowDefVal_",""), val);
-
-		}
-
-		//执行一次流程检查, 为了节省效率，把检查去掉了.
-		flow.DoCheck();
-
-
-		//写入日志.
-		bp.sys.base.Glo.WriteUserLog("创建流程：" + flow.getName() + " - " + flow.getNo(), "通用操作");
-
-		return flow.getNo();
-	}
-	/** 
-	 删除节点.
-	 
-	 param nodeid
-	*/
-	public static void DeleteNode(int nodeid) throws Exception {
-		Node nd = new Node(nodeid);
-		nd.Delete();
-	}
-
 	public static Document readXml(String filePath) throws Exception {
 		File xmlFile = new File(filePath);
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -2130,13 +1662,13 @@ public class TemplateGlo
 		return doc;
 	}
 
-	/**
-	 * 创建流程
-	 * @param flowSort
-	 * @param filePath
-	 * @return
-	 * @throws Exception
-	 */
+	/** 
+	 创建流程.
+	 @param flowSort
+	 @param filePath
+	 @return 
+	 @exception Exception
+	*/
 	public static Flow NewFlowByBPMN(String flowSort, String filePath) throws Exception {
 		Document doc = readXml(filePath);
 		// #region 0. 读取文件.
@@ -2176,7 +1708,7 @@ public class TemplateGlo
 
 		// #region 1. 创建空白的模板做准备..
 		String sortNo = "001"; //放入的流程目录.
-		String flowNo = bp.wf.template.TemplateGlo.NewFlow(sortNo, flowName, DataStoreModel.ByCCFlow, null, null);
+		String flowNo = bp.wf.template.TemplateGlo.NewFlowTemplate(sortNo, flowName, DataStoreModel.ByCCFlow, null, null);
 
 		fl.SetValByKey("No", flowNo);
 		fl.RetrieveFromDBSources();
@@ -2253,7 +1785,7 @@ public class TemplateGlo
 			//#endregion 获得节点信息.
 
 		}
-    	// #endregion 2. 生成节点.
+		// #endregion 2. 生成节点.
 
 		//#region 3. 生成网关节点
 		for (int i = 0; i < dtGateway.getLength(); i++)
@@ -2261,7 +1793,7 @@ public class TemplateGlo
 			NamedNodeMap dr = dtGateway.item(i).getAttributes();
 			String gatewayID = dr.getNamedItem("id").getTextContent();
 			//创建网关节点
-			nd = TemplateGlo.NewNode(flowNo, 100, 100, null, RunModel.Ordinary, NodeType.RouteNode);
+			nd = TemplateGlo.NewNode(flowNo, 100, 100, null, RunModel.Ordinary.getValue(), NodeType.RouteNode.getValue());
 			// 找到图形信息
 			boolean hasPostion = false;
 			for (int j = 0; j < dtShapes.getLength(); j++)
@@ -2316,9 +1848,9 @@ public class TemplateGlo
 			nodeUserTaskID.put(nd.getNodeID(), gatewayID);  // 保存关系
 			flowNodes.add(nd);  // 保存节点
 		}
-        //#endregion 3. 生成网关节点
+		//#endregion 3. 生成网关节点
 
-    	// #region 4. 生成链接线.
+		// #region 4. 生成链接线.
 		// 插入连接线，经过上面的流程后才知道对应关系
 		for(Node node : flowNodes)
 		{
@@ -2361,6 +1893,306 @@ public class TemplateGlo
 
 		return fl;
 	}
+	/** 
+	 创建一个流程模版
+	 
+	 @param flowSort 流程类别
+	 @param flowName 名称
+	 @param dsm 存储方式
+	 @param ptable 物理量
+	 @param flowMark 标记
+	 @return 创建的流程编号
+	*/
+	public static String NewFlowTemplate(String flowSort, String flowName, bp.wf.template.DataStoreModel dsm, String ptable, String flowMark) throws Exception {
+		//定义一个变量.
+		Flow flow = new Flow();
+		try
+		{
+			//检查参数的完整性.
+			if (DataType.IsNullOrEmpty(ptable) == false && ptable.length() >= 1)
+			{
+				String c = ptable.substring(0, 1);
+				if (DataType.IsNumStr(c) == true)
+				{
+					throw new RuntimeException("@非法的流程数据表(" + ptable + "),它会导致ccflow不能创建该表.");
+				}
+			}
 
+			flow.setPTable(ptable);
+			flow.setFlowSortNo(flowSort);
+			flow.setFlowMark(flowMark);
 
+			if (DataType.IsNullOrEmpty(flowMark) == false)
+			{
+				if (flow.IsExit(FlowAttr.FlowMark, flowMark))
+				{
+					throw new RuntimeException("@该流程标示:" + flowMark + "已经存在于系统中.");
+				}
+			}
+
+			/*给初始值*/
+			//this.Paras = "@StartNodeX=10@StartNodeY=15@EndNodeX=40@EndNodeY=10";
+			flow.setParas( "@StartNodeX=200@StartNodeY=50@EndNodeX=200@EndNodeY=350");
+
+			flow.setNo(flow.GenerNewNoByKey(FlowAttr.No, null));
+			flow.setName(flowName);
+			if ((flow.getName() == null || flow.getName().isEmpty()))
+			{
+				flow.setName("新建流程" + flow.getNo()); //新建流程.
+			}
+
+			//if (flow.getIsExits( true)
+			//    throw new Exception("err@系统出现自动生成的流程编号重复.");
+
+			if (bp.wf.Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
+			{
+				flow.setOrgNo(WebUser.getOrgNo()); //隶属组织
+			}
+
+			flow.setPTable("ND" + Integer.parseInt(flow.getNo()) + "Rpt");
+
+			// 设置创建人，创建日期.
+			flow.SetValByKey(FlowAttr.CreateDate, DataType.getCurrentDateTime());
+			flow.SetValByKey(FlowAttr.Creater, WebUser.getNo());
+			// flow.SetValByKey("Icon", "icon-people");
+			flow.SetValByKey("ICON", "icon-people"); //图标.
+
+			//flow.TitleRole
+			flow.Insert();
+
+			////如果是集团模式下.
+			//if (bp.wf.Glo.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
+			//{
+			//    // 记录创建人.
+			//    FlowExt fe = new FlowExt(flow.getNo());
+			//    fe.DesignerNo = bp.web.WebUser.getNo();
+			//    fe.DesignerName = bp.web.WebUser.getName();
+			//    fe.DesignTime = DataType.getCurrentDateTime();
+			//    fe.DirectUpdate();
+			//}
+
+			Node nd = new Node();
+			nd.setNodeID(Integer.parseInt(flow.getNo() + "01"));
+			nd.setName("Start Node"); //  "开始节点";
+			nd.setStep(1);
+			nd.setFlowNo(flow.getNo());
+			nd.setFlowName(flow.getName());
+			nd.setHisNodePosType(NodePosType.Start);
+			nd.setHisNodeWorkType(NodeWorkType.StartWork);
+			nd.setX(200);
+			nd.setY(150);
+			nd.setNodePosType(NodePosType.Start);
+			nd.setHisReturnRole(ReturnRole.CanNotReturn); //不能退回. @hongyan.
+			nd.setIcon("前台");
+
+			//增加了两个默认值值 . 2016.11.15. 目的是让创建的节点，就可以使用.
+			nd.setCondModel(DirCondModel.ByDDLSelected); //默认的发送方向.
+			nd.setHisDeliveryWay(DeliveryWay.BySelected); //上一步发送人来选择.
+			nd.setFormType(NodeFormType.FoolForm); //设置为傻瓜表单.
+
+			//如果是集团模式.   
+			if (bp.wf.Glo.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
+			{
+				if (DataType.IsNullOrEmpty(WebUser.getOrgNo()) == true)
+				{
+					throw new RuntimeException("err@登录信息丢失了组织信息,请重新登录.");
+				}
+
+				nd.setHisDeliveryWay(DeliveryWay.BySelectedOrgs);
+
+				//把本组织加入进去.
+				FlowOrg fo = new FlowOrg();
+				fo.Delete(FlowOrgAttr.FlowNo, nd.getFlowNo());
+				fo.setFlowNo(nd.getFlowNo());
+				fo.setOrgNo(WebUser.getOrgNo());
+				fo.Insert();
+			}
+
+			nd.Insert();
+			nd.CreateMap();
+
+			//为开始节点增加一个删除按钮.
+			String sql = "UPDATE WF_Node SET DelEnable=1 WHERE NodeID=" + nd.getNodeID();
+			DBAccess.RunSQL(sql);
+
+			//nd.getHisWork().CheckPhysicsTable();  去掉，检查的时候会执行.
+			CreatePushMsg(nd);
+
+			//通用的人员选择器.
+			bp.wf.template.Selector select = new Selector(nd.getNodeID());
+			select.setSelectorModel(SelectorModel.GenerUserSelecter);
+			select.Update();
+
+			nd = new Node();
+
+			//为创建节点设置默认值 
+			String fileNewNode = SystemConfig.getPathOfDataUser() + "XML/DefaultNewNodeAttr.xml";
+			if ((new File(fileNewNode)).isFile() == true && 1 == 2)
+			{
+				DataSet myds = new DataSet();
+				myds.readXml(fileNewNode);
+				DataTable dt = myds.Tables.get(0);
+				for (DataColumn dc : dt.Columns)
+				{
+					nd.SetValByKey(dc.ColumnName, dt.Rows.get(0).getValue(dc.ColumnName));
+				}
+			}
+			else
+			{
+				nd.setHisNodePosType(NodePosType.Mid);
+				nd.setHisNodeWorkType(NodeWorkType.Work);
+				nd.setX(200);
+				nd.setY(250);
+				nd.setIcon("审核");
+				nd.setNodePosType(NodePosType.End);
+
+				//增加了两个默认值值 . 2016.11.15. 目的是让创建的节点，就可以使用.
+				nd.setCondModel(DirCondModel.ByDDLSelected); //默认的发送方向.
+				nd.setHisDeliveryWay(DeliveryWay.BySelected); //上一步发送人来选择.
+				nd.setFormType(NodeFormType.FoolForm); //设置为傻瓜表单.
+			}
+
+			nd.setNodeID(Integer.parseInt(flow.getNo() + "02"));
+			nd.setName("Node 2"); // "结束节点";
+			nd.setStep(2);
+			nd.setFlowNo(flow.getNo());
+			nd.setFlowName(flow.getName());
+			nd.setHisDeliveryWay(DeliveryWay.BySelected); //上一步发送人来选择.
+			nd.setFormType(NodeFormType.FoolForm); //设置为傻瓜表单.
+			nd.setCondModel(DirCondModel.ByDDLSelected);
+
+			nd.setX(200);
+			nd.setY(250);
+
+			//设置审核意见的默认值.
+			nd.SetValByKey(NodeWorkCheckAttr.FWCDefInfo, Glo.getDefValWFNodeFWCDefInfo());
+
+			nd.Insert();
+			nd.CreateMap();
+			//nd.getHisWork().CheckPhysicsTable(); //去掉，检查的时候会执行.
+			CreatePushMsg(nd);
+
+			//通用的人员选择器.
+			select = new Selector(nd.getNodeID());
+			select.setSelectorModel(SelectorModel.GenerUserSelecter);
+			select.Update();
+
+			MapData md = new MapData();
+			md.setNo("ND" + Integer.parseInt(flow.getNo()) + "Rpt");
+			md.setName(flow.getName());
+			md.Save();
+
+			// 装载模版.
+			String file = SystemConfig.getPathOfDataUser() + "XML/TempleteSheetOfStartNode.xml";
+			if ((new File(file)).isFile() == true && 1 == 2)
+			{
+				//throw new Exception("@开始节点表单模版丢失" + file); 
+				/*如果存在开始节点表单模版*/
+				DataSet ds = new DataSet();
+				ds.readXml(file);
+
+				String nodeID = "ND" + Integer.parseInt(flow.getNo() + "01");
+				MapData.ImpMapData(nodeID, ds);
+			}
+
+			//加载默认字段.
+			if (1 == 1)
+			{
+				String frmID = "ND" + Integer.parseInt(flow.getNo() + "01");
+
+				MapAttr attr = new MapAttr();
+				attr.setMyPK(frmID + "_SQR");
+				attr.setName("申请人");
+				attr.setKeyOfEn("SQR");
+				attr.setDefValReal("@WebUser.Name");
+				attr.setUIVisible(true);
+				attr.setUIIsEnable(false);
+				attr.setFrmID( frmID);
+				attr.setColSpan(1);
+				attr.Insert();
+
+				attr = new MapAttr();
+				attr.setMyPK(frmID + "_SQDT");
+				attr.setName("申请日期");
+				attr.setKeyOfEn("SQRQ");
+				attr.setDefValReal("@RDT");
+				attr.setUIVisible(true);
+				attr.setUIIsEnable(false);
+				attr.setFrmID( frmID);
+				attr.setMyDataType(DataType.AppDateTime);
+				attr.setColSpan(1);
+				attr.Insert();
+
+				attr = new MapAttr();
+				attr.setMyPK(frmID + "_SQDept");
+				attr.setName("申请人部门");
+				attr.setKeyOfEn("SQDept");
+				attr.setDefValReal("@WebUser.FK_DeptName");
+				attr.setUIVisible(true);
+				attr.setUIIsEnable(false);
+				attr.setFrmID( frmID);
+				attr.setColSpan(3);
+				attr.Insert();
+			}
+
+			//创建track.
+			Track.CreateOrRepairTrackTable(flow.getNo());
+
+		}
+		catch (RuntimeException ex)
+		{
+			/**删除垃圾数据.
+			*/
+			flow.DoDelete();
+			//提示错误.
+			throw new RuntimeException("err@创建流程错误:" + ex.getMessage());
+		}
+
+		//FlowExt flowExt = new FlowExt(flow.getNo());
+		//flowExt.DesignerNo = bp.web.WebUser.getNo();
+		//flowExt.DesignerName = bp.web.WebUser.getName();
+		//flowExt.DesignTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+		//flowExt.DirectSave();
+
+		//创建连线
+		Direction drToNode = new Direction();
+		drToNode.setFlowNo(flow.getNo());
+		drToNode.setNode(Integer.parseInt(Integer.parseInt(flow.getNo()) + "01"));
+		drToNode.setToNode(Integer.parseInt(Integer.parseInt(flow.getNo()) + "02"));
+		drToNode.Save();
+
+		//增加方向.
+		Node mynd = new Node(drToNode.getNode());
+		mynd.setHisToNDs( String.valueOf(drToNode.getToNode()));
+		mynd.Update();
+
+		//设置流程的默认值.
+		for (String key : SystemConfig.getAppSettings().keySet())
+		{
+			if (key.contains("NewFlowDefVal") == false)
+			{
+				continue;
+			}
+
+			String val = (String) SystemConfig.getAppSettings().get(key);
+			//设置值.
+			flow.SetValByKey(key.replace("NewFlowDefVal_", ""), val);
+		}
+		//执行一次流程检查, 为了节省效率，把检查去掉了.
+		flow.DoCheck();
+
+		//写入日志.
+		bp.sys.base.Glo.WriteUserLog("创建流程：" + flow.getName() + " - " + flow.getNo(), "通用操作");
+
+		return flow.getNo();
+	}
+	/** 
+	 删除节点.
+	 
+	 @param nodeid
+	*/
+	public static void DeleteNode(int nodeid) throws Exception {
+		Node nd = new Node(nodeid);
+		nd.Delete();
+	}
 }

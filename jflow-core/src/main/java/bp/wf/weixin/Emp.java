@@ -1,12 +1,8 @@
 package bp.wf.weixin;
 
-import bp.da.*;
-import bp.en.*;
-import bp.en.Map;
+import bp.en.*; import bp.en.Map;
 import bp.port.*;
-import bp.*;
-import bp.wf.*;
-import java.util.*;
+
 
 /** 
  Emp 的摘要说明。
@@ -15,32 +11,26 @@ public class Emp extends EntityNoName
 {
 
 		///#region 扩展属性
-	public final String getOpenID() throws Exception
-	{
+	public final String getOpenID()  {
 		return this.GetValStrByKey(EmpAttr.OpenID);
 	}
-	public final void setOpenID(String value)  throws Exception
-	 {
+	public final void setOpenID(String value){
 		this.SetValByKey(EmpAttr.OpenID, value);
 	}
-	public final String getFK_Dept() throws Exception
-	{
+	public final String getDeptNo()  {
 		return this.GetValStrByKey(EmpAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)  throws Exception
-	 {
+	public final void setDeptNo(String value){
 		this.SetValByKey(EmpAttr.FK_Dept, value);
 	}
 
 	/** 
 	 手机号码
 	*/
-	public final String getTel() throws Exception
-	{
+	public final String getTel()  {
 		return this.GetValStrByKey(EmpAttr.Tel);
 	}
-	public final void setTel(String value)  throws Exception
-	 {
+	public final void setTel(String value){
 		this.SetValByKey(EmpAttr.Tel, value);
 	}
 
@@ -50,14 +40,16 @@ public class Emp extends EntityNoName
 	/** 
 	 工作人员
 	*/
-	public Emp()  {
+	public Emp()
+	{
 	}
 
 	/** 
 	 UI界面上的访问控制
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.OpenForAppAdmin();
 		return uac;
@@ -66,7 +58,7 @@ public class Emp extends EntityNoName
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -76,7 +68,7 @@ public class Emp extends EntityNoName
 
 
 			///#region 字段
-			/*关于字段属性的增加 */
+		/*关于字段属性的增加 */
 		map.AddTBStringPK(EmpAttr.No, null, "编号", true, false, 1, 50, 100);
 		map.AddTBString(EmpAttr.Name, null, "名称", true, false, 0, 100, 100);
 		map.AddTBString(EmpAttr.OpenID, null, "OpenID", true, false, 0, 100, 100);
@@ -91,7 +83,9 @@ public class Emp extends EntityNoName
 		return this.get_enMap();
 	}
 
-	public Entities getNewEntities()  {
+	@Override
+	public Entities GetNewEntities()
+	{
 		return new Emps();
 	}
 }

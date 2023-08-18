@@ -1,7 +1,5 @@
 package bp.wf;
 
-import bp.*;
-
 /** 
  流程状态(简)
 */
@@ -24,7 +22,8 @@ public enum WFSta
 
 	private int intValue;
 	private static java.util.HashMap<Integer, WFSta> mappings;
-	private static java.util.HashMap<Integer, WFSta> getMappings()  {
+	private static java.util.HashMap<Integer, WFSta> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (WFSta.class)
@@ -39,15 +38,18 @@ public enum WFSta
 	}
 
 	private WFSta(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return intValue;
 	}
 
 	public static WFSta forValue(int value)
-	{return getMappings().get(value);
+	{
+		return getMappings().get(value);
 	}
 }

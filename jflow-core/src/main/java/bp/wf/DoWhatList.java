@@ -1,10 +1,5 @@
 package bp.wf;
 
-import bp.wf.*;
-import bp.web.*;
-import bp.en.*;
-import bp.da.*;
-import bp.*;
 
 /** 
  执行内容列表
@@ -25,14 +20,11 @@ public class DoWhatList
 	public static final String Emps = "Emps";
 	public static final String EmpWorks = "EmpWorks";
 	public static final String MyFlow = "MyFlow";
+	public static final String MyCC = "MyCC";
 	public static final String FlowFX = "FlowFX";
 	public static final String DealWork = "DealWork";
 	public static final String Bill = "Bill";
 	public static final String Home = "Home";
-	public static final String MyStartFlows = "MyStartFlows";
-	public static final String GenerWorkFlowViews = "GenerWorkFlowViews";
-	public static final String CC = "CC";
-	public static final String MyJoinFlows = "MyJoinFlows";
 	/** 
 	 处理消息连接
 	*/
@@ -41,7 +33,9 @@ public class DoWhatList
 	public static final String ToolsSmall = "ToolsSmall";
 	public static final String Runing = "Runing";
 	public static final String Draft = "Draft";
-
+	/** 
+	 打开iu成
+	*/
 	public static final String Flows = "Flows";
 	public static final String Frms = "Frms";
 	/** 

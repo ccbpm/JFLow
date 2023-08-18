@@ -3,7 +3,6 @@ package bp.wf.template;
 
 import bp.en.*;
 
-
 /** 
  Selector属性
 */
@@ -50,7 +49,7 @@ public class SelectorAttr extends EntityNoNameAttr
 	*/
 	public static final String IsEnableDeptRange = "IsEnableDeptRange";
 	/** 
-	 是否启用岗位搜索范围限定
+	 是否启用角色搜索范围限定
 	*/
 	public static final String IsEnableStaRange = "IsEnableStaRange";
 }

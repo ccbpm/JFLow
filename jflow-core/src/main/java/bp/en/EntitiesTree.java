@@ -165,7 +165,7 @@ public abstract class EntitiesTree extends Entities
 
 	public List<EntityTree> ToJavaListEnTree()
 	{
-		return (List<EntityTree>)(Object)this;
+		return (List<EntityTree>)(Object)(Object)this;
 	}	
 		/// 构造.
 }

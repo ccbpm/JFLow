@@ -1,11 +1,5 @@
 package bp.ccoa.ccinfo;
-
-import bp.da.*;
-import bp.web.*;
 import bp.en.*;
-import bp.sys.*;
-import bp.*;
-import bp.ccoa.*;
 import java.util.*;
 
 /** 
@@ -18,22 +12,20 @@ public class Infos extends EntitiesNoName
 	/** 
 	 信息
 	*/
-	public Infos()  {
+	public Infos()
+	{
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new Info();
 	}
 
 		///#endregion 构造函数.
 
-	@Override
-	public int RetrieveAll() throws Exception {
-		return super.RetrieveAll();
-	}
 
 
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
@@ -42,7 +34,8 @@ public class Infos extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<Info> ToJavaList() {
+	public final java.util.List<Info> ToJavaList()
+	{
 		return (java.util.List<Info>)(Object)this;
 	}
 	/** 
@@ -50,7 +43,8 @@ public class Infos extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<Info> Tolist()  {
+	public final ArrayList<Info> Tolist()
+	{
 		ArrayList<Info> list = new ArrayList<Info>();
 		for (int i = 0; i < this.size(); i++)
 		{

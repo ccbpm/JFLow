@@ -83,7 +83,7 @@ public class DataTable implements Cloneable
 	 */
 	public DataTable(String tableName)  {
 		this();
-		this.TableName = tableName;
+		this.setTableName(tableName);
 	}
 
 	/**
@@ -486,7 +486,7 @@ public class DataTable implements Cloneable
 			pathType =1;
 		try {
 			String encoding = "UTF-8"; // 字符编码
-			if(SystemConfig.getIsJarRun() && pathType==1){
+			if(SystemConfig.isJarRun() && pathType==1){
 				ClassPathResource classPathResource = new ClassPathResource(path);
 				InputStream inputStream = classPathResource.getInputStream();
 				StringBuilder stringBuilder = new StringBuilder();

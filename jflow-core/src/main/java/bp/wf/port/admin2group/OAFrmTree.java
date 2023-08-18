@@ -1,95 +1,92 @@
 package bp.wf.port.admin2group;
 
 import bp.en.*;
-import bp.wf.template.SysFormTree;
-import bp.wf.template.FlowSort;
-import bp.wf.template.FlowSorts;
+import bp.en.Map;
+import bp.wf.template.*;
 
-/** 
- 组织管理员-
-*/
-public class OAFrmTree extends EntityMyPK
-{
+/**
+ * 组织管理员-
+ */
+public class OAFrmTree extends EntityMyPK {
 
-		///#region 属性
-	public final String getFK_Emp() throws Exception
-	{
-		return this.GetValStringByKey(OAFrmTreeAttr.FK_Emp);
-	}
-	public final void setFK_Emp(String value)  throws Exception
-	 {
-		this.SetValByKey(OAFrmTreeAttr.FK_Emp, value);
-	}
-	public final String getOrgNo() throws Exception
-	{
-		return this.GetValStringByKey(OAFrmTreeAttr.OrgNo);
-	}
-	public final void setOrgNo(String value)  throws Exception
-	 {
-		this.SetValByKey(OAFrmTreeAttr.OrgNo, value);
-	}
+    ///#region 属性
+    public final String getEmpNo() throws Exception {
+        return this.GetValStringByKey(OAFrmTreeAttr.FK_Emp);
+    }
 
-		///#endregion
+    public final void setEmpNo(String value) throws Exception {
+        this.SetValByKey(OAFrmTreeAttr.FK_Emp, value);
+    }
+
+    public final String getOrgNo() throws Exception {
+        return this.GetValStringByKey(OAFrmTreeAttr.OrgNo);
+    }
+
+    public final void setOrgNo(String value) throws Exception {
+        this.SetValByKey(OAFrmTreeAttr.OrgNo, value);
+    }
+
+    ///#endregion
 
 
-		///#region 构造方法
-	/** 
-	 组织管理员
-	*/
-	public OAFrmTree()  {
-	}
-	/** 
-	 组织管理员
-	*/
-	@Override
-	public bp.en.Map getEnMap() {
-		if (this.get_enMap() != null)
-		{
-			return this.get_enMap();
-		}
-		Map map = new Map("Port_OrgAdminerFrmTree", "表单目录权限");
-		map.AddMyPK(true);
-		map.AddTBString(OAFrmTreeAttr.OrgNo, null, "组织", true, false, 0, 1000, 20);
-		map.AddTBString(OAFrmTreeAttr.FK_Emp, null, "管理员", true, false, 0, 100, 20);
-		map.AddTBString(OAFrmTreeAttr.RefOrgAdminer, null, "组织管理员", true, false, 0, 100, 20);
+    ///#region 构造方法
 
-			//map.AddDDLEntities(OAFrmTreeAttr.FK_Emp, null, "管理员", new Emps(), false);
-			//map.AddDDLEntities(OAFrmTreeAttr.RefOrgAdminer, null, "管理员", new Emps(), false);
-		map.AddDDLEntities(OAFrmTreeAttr.FrmTreeNo, null, "表单目录", new bp.wf.template.SysFormTrees(), false);
+    /**
+     * 组织管理员
+     */
+    public OAFrmTree() {
+    }
 
-		this.set_enMap(map);
-		return this.get_enMap();
-	}
+    /**
+     * 组织管理员
+     */
+    @Override
+    public Map getEnMap() {
+        if (this.get_enMap() != null) {
+            return this.get_enMap();
+        }
+        Map map = new Map("Port_OrgAdminerFrmTree", "表单目录权限");
+        map.AddMyPK(true);
+        map.AddTBString(OAFrmTreeAttr.OrgNo, null, "组织", true, false, 0, 100, 20);
+        map.AddTBString(OAFrmTreeAttr.FK_Emp, null, "管理员", true, false, 0, 100, 20);
+        map.AddTBString(OAFrmTreeAttr.RefOrgAdminer, null, "组织管理员", true, false, 0, 100, 20);
 
-		///#endregion
+        //map.AddDDLEntities(OAFrmTreeAttr.FK_Emp, null, "管理员", new Emps(), false);
+        //map.AddDDLEntities(OAFrmTreeAttr.RefOrgAdminer, null, "管理员", new Emps(), false);
+        map.AddDDLEntities(OAFrmTreeAttr.FrmTreeNo, null, "表单目录", new SysFormTrees(), false);
 
-	@Override
-	protected boolean beforeInsert() throws Exception {
-		String str = this.GetValStringByKey("RefOrgAdminer");
+        this.set_enMap(map);
+        return this.get_enMap();
+    }
 
-		this.setMyPK(this.GetValStringByKey("RefOrgAdminer") + "_" + this.GetValStringByKey("FrmTreeNo"));
+    ///#endregion
 
-		OrgAdminer oa = new OrgAdminer(str);
+    @Override
+    protected boolean beforeInsert() throws Exception {
+        String str = this.GetValStringByKey("RefOrgAdminer");
 
-		this.setOrgNo(oa.getOrgNo());
-		this.setFK_Emp(oa.getFK_Emp());
+        this.setMyPK(this.GetValStringByKey("RefOrgAdminer") + "_" + this.GetValStringByKey("FrmTreeNo"));
 
-		return super.beforeInsert();
-	}
+        OrgAdminer oa = new OrgAdminer(str);
 
-	@Override
-	protected void afterInsert() throws Exception {
-		//插入入后更改OrgAdminer中
-		String str = "";
-		bp.wf.template.SysFormTrees enTrees = new bp.wf.template.SysFormTrees();
-		enTrees.RetrieveInSQL("SELECT FrmTreeNo FROM Port_OrgAdminerFrmTree WHERE  FK_Emp='" + this.getFK_Emp() + "' AND OrgNo='" + this.getOrgNo() + "'");
-		for (SysFormTree item : enTrees.ToJavaList())
-		{
-			str += "(" + item.getNo() + ")" + item.getName() + ";";
-		}
-		OrgAdminer adminer = new OrgAdminer(this.GetValStringByKey("RefOrgAdminer"));
-		adminer.SetValByKey("FrmTrees", str);
-		adminer.Update();
-		super.afterInsert();
-	}
+        this.setOrgNo(oa.getOrgNo());
+        this.setEmpNo(oa.getEmpNo());
+
+        return super.beforeInsert();
+    }
+
+    @Override
+    protected void afterInsert() throws Exception {
+        //插入入后更改OrgAdminer中
+        String str = "";
+        SysFormTrees enTrees = new SysFormTrees();
+        enTrees.RetrieveInSQL("SELECT FrmTreeNo FROM Port_OrgAdminerFrmTree WHERE  FK_Emp='" + this.getEmpNo() + "' AND OrgNo='" + this.getOrgNo() + "'");
+        for (SysFormTree item : enTrees.ToJavaList()) {
+            str += "(" + item.getNo() + ")" + item.getName() + ";";
+        }
+        OrgAdminer adminer = new OrgAdminer(this.GetValStringByKey("RefOrgAdminer"));
+        adminer.SetValByKey("FrmTrees", str);
+        adminer.Update();
+        super.afterInsert();
+    }
 }

@@ -1,11 +1,8 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
 import bp.en.Map;
 
-import java.util.*;
 
 /** 
  映射基础
@@ -17,21 +14,23 @@ public class MapDataTemplate extends EntityNoName
 	/** 
 	 映射基础
 	*/
-	public MapDataTemplate()  {
+	public MapDataTemplate()
+	{
 	}
 	/** 
 	 映射基础
 	 
-	 param no 映射编号
+	 @param no 映射编号
 	*/
-	public MapDataTemplate(String no) throws Exception {
+	public MapDataTemplate(String no) throws Exception
+	{
 		super(no);
 	}
 	/** 
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -51,7 +50,7 @@ public class MapDataTemplate extends EntityNoName
 
 
 			///#region 设计者信息.
-			//增加参数字段.
+		//增加参数字段.
 		map.AddTBAtParas(4000);
 
 			///#endregion

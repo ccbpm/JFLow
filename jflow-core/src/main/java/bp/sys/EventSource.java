@@ -1,7 +1,4 @@
 package bp.sys;
-
-import bp.*;
-
 /** 
  事件类型
 */
@@ -22,11 +19,13 @@ public enum EventSource
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue() {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
-	public static EventSource forValue(int value) 
-	{return values()[value];
+	public static EventSource forValue(int value)
+	{
+		return values()[value];
 	}
 }

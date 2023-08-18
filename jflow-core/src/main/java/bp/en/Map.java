@@ -22,7 +22,7 @@ public class Map  implements Serializable
 	 param url
 	 */
 	public final void SetHelperUrl(String key, String url)  {
-		if (SystemConfig.getIsDisHelp())
+		if (SystemConfig.isDisHelp())
 			return;
 		Attr attr = this.GetAttrByKey(key);
 		attr.HelperUrl = url;
@@ -33,7 +33,7 @@ public class Map  implements Serializable
 	 param key 字段
 	 */
 	public final void SetHelperBaidu(String key)  {
-		if (SystemConfig.getIsDisHelp())
+		if (SystemConfig.isDisHelp())
 			return;
 		Attr attr = this.GetAttrByKey(key);
 		attr.HelperUrl = "http://www.baidu.com/s?word=ccflow " + attr.getDesc();
@@ -45,7 +45,7 @@ public class Map  implements Serializable
 	 param keyword 关键字
 	 */
 	public final void SetHelperBaidu(String key, String keyword)  {
-		if (SystemConfig.getIsDisHelp())
+		if (SystemConfig.isDisHelp())
 			return;
 		Attr attr = this.GetAttrByKey(key);
 		attr.HelperUrl = "http://www.baidu.com/s?word=" + keyword;
@@ -57,7 +57,7 @@ public class Map  implements Serializable
 	 param context 连接
 	 */
 	public final void SetHelperAlert(String key, String context)  {
-		if (SystemConfig.getIsDisHelp())
+		if (SystemConfig.isDisHelp())
 			return;
 		context = context.replace("@", "＠");
 		Attr attr = this.GetAttrByKey(key);
@@ -74,7 +74,7 @@ public class Map  implements Serializable
 	public String XmlFile = null;
 
 	/// 与xml 文件操作有关系
-	public boolean IsJM = false;
+	public boolean ItIsJM = false;
 	private boolean _IsAllowRepeatNo;
 	public final boolean getIsAllowRepeatNo()
 	{
@@ -102,8 +102,7 @@ public class Map  implements Serializable
 	 设置为简单的
 	 * @
 	 */
-	public final Attrs SetToSimple()
-	{
+	public final Attrs SetToSimple() throws Exception {
 		Attrs attrs = new Attrs();
 		for (Attr attr : this._attrs)
 		{
@@ -187,7 +186,7 @@ public class Map  implements Serializable
 	 @return
 	 */
 	public final Attrs GetChoseAttrs(Entity en) throws Exception {
-		return CField.GetMyAttrs(en.getGetNewEntities(), en.getEnMap());
+		return CField.GetMyAttrs(en.GetNewEntities(), en.get_enMap());
 	}
 	public final Attrs GetChoseAttrs(Entities ens)
 	{
@@ -201,18 +200,19 @@ public class Map  implements Serializable
 	/**
 	 查找的attrs
 	 */
-	private AttrSearchs _SearchAttrs = null;
+	private SearchFKEnums _SearchAttrs = null;
 	/**
 	 查找的attrs
 	 */
-	public final AttrSearchs getSearchAttrs()
+	public final SearchFKEnums getSearchFKEnums()
 	{
 		if (this._SearchAttrs == null)
 		{
-			this._SearchAttrs = new AttrSearchs();
+			this._SearchAttrs = new SearchFKEnums();
 		}
 		return this._SearchAttrs;
 	}
+
 	public final void AddHidden(String refKey, String symbol, String val)
 	{
 		SearchNormal aos = new SearchNormal("K" + this.getSearchNormals().size(), refKey, refKey, symbol, val, 0, true);
@@ -232,11 +232,11 @@ public class Map  implements Serializable
 		Attr attr = this.GetAttrByKey(key);
 		if (attr.getKey().equals("FK_Dept"))
 		{
-			this.getSearchAttrs().Add(attr, false, null, width);
+			this.getSearchFKEnums().Add(attr, false, null, width);
 		}
 		else
 		{
-			this.getSearchAttrs().Add(attr, true, null, width);
+			this.getSearchFKEnums().Add(attr, true, null, width);
 		}
 	}
 	/**
@@ -248,7 +248,7 @@ public class Map  implements Serializable
 	 */
 	public final void AddSearchAttr(String key, boolean isShowSelectedAll, String relationalDtlKey)  {
 		Attr attr = this.GetAttrByKey(key);
-		this.getSearchAttrs().Add(attr, isShowSelectedAll, relationalDtlKey);
+		this.getSearchFKEnums().Add(attr, isShowSelectedAll, relationalDtlKey);
 	}
 
 
@@ -333,7 +333,7 @@ public class Map  implements Serializable
 
 	 @return attr
 	 */
-	public final Attr GetAttrByDesc(String desc) throws Exception {
+	public final Attr GetAttrByDesc(String desc)  {
 		for (Attr attr : this.getAttrs())
 		{
 			if (attr.getDesc().equals(desc))
@@ -382,8 +382,7 @@ public class Map  implements Serializable
 	 物理键盘集合
 	 * @throws Exception
 	 */
-	public final Attrs getHisPhysicsAttrs()
-	{
+	public final Attrs getHisPhysicsAttrs() {
 		if (_HisPhysicsAttrs == null)
 		{
 			_HisPhysicsAttrs = new Attrs();
@@ -487,8 +486,7 @@ public class Map  implements Serializable
 
 	///他的实体配置信息
 	private Attrs _HisCfgAttrs = null;
-	public final Attrs getHisCfgAttrs()
-	{
+	public final Attrs getHisCfgAttrs() throws Exception {
 		if (this._HisCfgAttrs == null)
 		{
 			this._HisCfgAttrs = new Attrs();
@@ -578,39 +576,6 @@ public class Map  implements Serializable
 		this.getHisRefMethods().Add(rm);
 	}
 
-
-	/**
-	 增加明细
-
-	 param ens 集合信息
-	 param refKey 属性
-
-	 * @throws Exception
-	 */
-
-	public final void AddDtl(Entities ens, String refKey) throws Exception
-	{
-		AddDtl(ens, refKey, null);
-	}
-
-	public final void AddDtl(Entities ens, String refKey, String groupName)
-	{
-		AddDtl(ens, refKey,groupName,DtlEditerModel.DtlBatch,null);
-	}
-	public final void AddDtl(Entities ens, String refKey, String groupName,DtlEditerModel model )
-	{
-		AddDtl(ens, refKey,groupName,model,null);
-	}
-	public final void AddDtl(Entities ens, String refKey, String groupName,DtlEditerModel model,String icon ){
-		EnDtl dtl = new EnDtl();
-		dtl.setEns(ens);
-		dtl.setRefKey(refKey);
-		dtl.setGroupName(groupName);
-		dtl.setDtlEditerModel(model);
-		dtl.GroupName = this.currGroupMethodName;
-		dtl.Icon = icon;
-		this.getDtls().Add(dtl);
-	}
 	/**
 	 相关功能s
 	 */
@@ -659,8 +624,8 @@ public class Map  implements Serializable
 			for (AttrOfOneVSM en : this.getAttrsOfOneVSM())
 			{
 				EnDtl dtl = new EnDtl();
-				dtl.setEns(en.getEnsOfMM());
-				dtl.setRefKey(en.getAttrOfOneInMM());
+				dtl.Ens=en.getEnsOfMM();
+				dtl.RefKey=en.getAttrOfOneInMM();
 				//dtl.Desc =en.Desc;
 				//dtl.Desc = en.Desc ;
 				_DtlsAll.Add(dtl);
@@ -792,8 +757,8 @@ public class Map  implements Serializable
 	/**
 	 是否版本管理 IsAllowRepeatName
 	 */
-	public boolean IsEnableVer = false;
-	public boolean IsShowSearchKey = true;
+	public boolean ItIsEnableVer = false;
+	public boolean ItIsShowSearchKey = true;
 	public boolean IsAllowRepeatName = true;
 	/**
 	 如果是null，就按照通用的查询关键字.
@@ -1111,7 +1076,7 @@ public class Map  implements Serializable
 	public final void setCodeStruct(String value)
 	{
 		this._CodeStruct = value;
-		this.setIsAutoGenerNo(true);
+		this.setItIsAutoGenerNo(true);
 	}
 	/**
 	 设置编码规则，为方便java转换使用.
@@ -1167,11 +1132,11 @@ public class Map  implements Serializable
 	/**
 	 是否自动编号.		 
 	 */
-	public final boolean getIsAutoGenerNo()
+	public final boolean getItIsAutoGenerNo()
 	{
 		return _IsAutoGenerNo;
 	}
-	public final void setIsAutoGenerNo(boolean value)
+	public final void setItIsAutoGenerNo(boolean value)
 	{
 		_IsAutoGenerNo = value;
 	}
@@ -1213,8 +1178,7 @@ public class Map  implements Serializable
 	 是否是视图
 	 * @
 	 */
-	public final boolean getIsView()
-	{
+	public final boolean getIsView() {
 		return DBAccess.IsView(this.getPhysicsTableExt(), this.getEnDBUrl().getDBType());
 	}
 
@@ -1244,8 +1208,8 @@ public class Map  implements Serializable
 	{
 		// 因为组成的select 语句放入了内存,修改它的时间也要修改内存的数据。
 
-		Cash.RemoveObj(this.toString() + "SQL", Depositary.Application);
-		Cash.RemoveObj("MapOf" + this.toString(), this.getDepositaryOfMap()); // RemoveObj
+		Cache.RemoveObj(this.toString() + "SQL", Depositary.Application);
+		Cache.RemoveObj("MapOf" + this.toString(), this.getDepositaryOfMap()); // RemoveObj
 
 		this._PhysicsTable = value;
 	}
@@ -1260,8 +1224,7 @@ public class Map  implements Serializable
 		}
 		return this._attrs;
 	}
-	public final void setAttrs(Attrs value)
-	{
+	public final void setAttrs(Attrs value) throws Exception {
 		if (this._attrs == null) {
 			this._attrs = new Attrs();
 		}
@@ -1273,12 +1236,10 @@ public class Map  implements Serializable
 	}
 
 
-	public final void AddBoolean(String key, boolean defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, boolean isLine, String helpUrl)
-	{
+	public final void AddBoolean(String key, boolean defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, boolean isLine, String helpUrl)  {
 		AddBoolean(key, key, defaultVal, desc, isUIVisable, isUIEnable, isLine, null);
 	}
-	public final void AddBoolean(String key, String field, boolean defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, boolean isLine)
-	{
+	public final void AddBoolean(String key, String field, boolean defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, boolean isLine)  {
 		AddBoolean(key, field, defaultVal, desc, isUIVisable, isUIEnable, isLine, null);
 	}
 	/**
@@ -1292,8 +1253,7 @@ public class Map  implements Serializable
 	 param isUIVisable isUIVisable
 	 * @
 	 */
-	public final void AddBoolean(String key, String field, boolean defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, boolean isLine, String helpUrl)
-	{
+	public final void AddBoolean(String key, String field, boolean defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, boolean isLine, String helpUrl) {
 		Attr attr = new Attr();
 		attr.setKey(key);
 		attr.setField(field);
@@ -1329,8 +1289,7 @@ public class Map  implements Serializable
 	 param isUIVisable isUIVisable
 	 * @
 	 */
-	public final void AddBoolean(String key, boolean defaultVal, String desc, boolean isUIVisable, boolean isUIEnable)
-	{
+	public final void AddBoolean(String key, boolean defaultVal, String desc, boolean isUIVisable, boolean isUIEnable)  {
 		AddBoolean(key, key, defaultVal, desc, isUIVisable, isUIEnable, false);
 	}
 
@@ -1345,8 +1304,7 @@ public class Map  implements Serializable
 	 param isUIVisable isUIVisable
 	 * @
 	 */
-	public final void AddBoolean(String key, boolean defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, boolean isLine)
-	{
+	public final void AddBoolean(String key, boolean defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, boolean isLine) {
 		AddBoolean(key, key, defaultVal, desc, isUIVisable, isUIEnable, isLine);
 	}
 
@@ -1355,8 +1313,7 @@ public class Map  implements Serializable
 
 
 	///于帮定自定义,枚举类型有关系的操作。
-	public final void AddDDLSysEnumPK(String key, String field, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey)
-	{
+	public final void AddDDLSysEnumPK(String key, String field, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey)  {
 		Attr attr = new Attr();
 		attr.setKey(key);
 		attr.setField(field);
@@ -1370,8 +1327,7 @@ public class Map  implements Serializable
 		attr.setUIIsReadonly(!isUIEnable);
 		this.getAttrs().Add(attr);
 	}
-	public final void AddDDLSysEnum(String key, String field, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey, String cfgVal, boolean isLine)
-	{
+	public final void AddDDLSysEnum(String key, String field, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey, String cfgVal, boolean isLine) {
 		AddDDLSysEnum(key, field, defaultVal, desc, isUIVisable, isUIEnable, sysEnumKey, cfgVal, isLine, null);
 	}
 	/**
@@ -1384,8 +1340,7 @@ public class Map  implements Serializable
 	 param sysEnumKey Key
 	 * @
 	 */
-	public final void AddDDLSysEnum(String key, String field, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey, String cfgVal, boolean isLine, String helpUrl)
-	{
+	public final void AddDDLSysEnum(String key, String field, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey, String cfgVal, boolean isLine, String helpUrl)  {
 		Attr attr = new Attr();
 		attr.setKey(key);
 		attr.HelperUrl = helpUrl;
@@ -1411,27 +1366,19 @@ public class Map  implements Serializable
 	 param sysEnumKey Key
 	 * @
 	 */
-	public final void AddDDLSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey)
-	{
+	public final void AddDDLSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey)  {
 		AddDDLSysEnum(key, key, defaultVal, desc, isUIVisable, isUIEnable, sysEnumKey, null, false);
 	}
-	public final void AddDDLSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey, String cfgVal, boolean isLine)
-	{
+	public final void AddDDLSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey, String cfgVal, boolean isLine) {
 		AddDDLSysEnum(key, key, defaultVal, desc, isUIVisable, isUIEnable, sysEnumKey, cfgVal, isLine);
 	}
-	public final void AddDDLSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey, String cfgVal)
-	{
+	public final void AddDDLSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey, String cfgVal) {
 		AddDDLSysEnum(key, key, defaultVal, desc, isUIVisable, isUIEnable, sysEnumKey, cfgVal, false);
 	}
-	public final void AddDDLSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable)
-	{
+	public final void AddDDLSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable){
 		AddDDLSysEnum(key, key, defaultVal, desc, isUIVisable, isUIEnable, key, null, false);
 	}
-
 	///
-
-
-
 	///于帮定自定义,枚举类型有关系的操作。
 	/**
 	 自定义枚举类型
@@ -1443,8 +1390,7 @@ public class Map  implements Serializable
 	 param sysEnumKey Key
 	 * @
 	 */
-	public final void AddRadioBtnSysEnum(String key, String field, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey)
-	{
+	public final void AddRadioBtnSysEnum(String key, String field, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey)  {
 		Attr attr = new Attr();
 		attr.setKey(key);
 		attr.setField(field);
@@ -1467,8 +1413,7 @@ public class Map  implements Serializable
 	 param sysEnumKey Key
 	 * @
 	 */
-	public final void AddRadioBtnSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey)
-	{
+	public final void AddRadioBtnSysEnum(String key, int defaultVal, String desc, boolean isUIVisable, boolean isUIEnable, String sysEnumKey) {
 		AddDDLSysEnum(key, key, defaultVal, desc, isUIVisable, isUIEnable, sysEnumKey, null, false);
 	}
 
@@ -1478,14 +1423,12 @@ public class Map  implements Serializable
 
 	///DDLSQL
 
-	public final void AddDDLSQL(String key, Object defaultVal, String desc, String sql)
-	{
+	public final void AddDDLSQL(String key, Object defaultVal, String desc, String sql)  {
 		AddDDLSQL(key, defaultVal, desc, sql, true);
 	}
 
 
-	public final void AddDDLSQL(String key, Object defaultVal, String desc, String sql, boolean uiIsEnable)
-	{
+	public final void AddDDLSQL(String key, Object defaultVal, String desc, String sql, boolean uiIsEnable)  {
 		if (defaultVal == null)
 		{
 			defaultVal = "";
@@ -1541,16 +1484,13 @@ public class Map  implements Serializable
 
 
 	///entityNoName
-	public final void AddDDLEntities(String key, String defaultVal, String desc, EntitiesTree ens, boolean uiIsEnable)
-	{
+	public final void AddDDLEntities(String key, String defaultVal, String desc, EntitiesTree ens, boolean uiIsEnable)  {
 		this.AddDDLEntities(key, key, defaultVal, DataType.AppString, desc, ens, "No", "Name", uiIsEnable);
 	}
-	public final void AddDDLEntities(String key, String defaultVal, String desc, EntitiesNoName ens, boolean uiIsEnable)
-	{
+	public final void AddDDLEntities(String key, String defaultVal, String desc, EntitiesNoName ens, boolean uiIsEnable) {
 		this.AddDDLEntities(key, key, defaultVal, DataType.AppString, desc, ens, "No", "Name", uiIsEnable);
 	}
-	public final void AddDDLEntities(String key, String field, String defaultVal, String desc, EntitiesNoName ens, boolean uiIsEnable)
-	{
+	public final void AddDDLEntities(String key, String field, String defaultVal, String desc, EntitiesNoName ens, boolean uiIsEnable) {
 		this.AddDDLEntities(key, field, defaultVal, DataType.AppString, desc, ens, "No", "Name", uiIsEnable);
 	}
 
@@ -1558,12 +1498,10 @@ public class Map  implements Serializable
 
 
 	///EntitiesOIDName
-	public final void AddDDLEntities(String key, int defaultVal, String desc, EntitiesOIDName ens, boolean uiIsEnable)
-	{
+	public final void AddDDLEntities(String key, int defaultVal, String desc, EntitiesOIDName ens, boolean uiIsEnable)  {
 		this.AddDDLEntities(key, key, defaultVal, DataType.AppInt, desc, ens, "OID", "Name", uiIsEnable);
 	}
-	public final void AddDDLEntities(String key, String field, Object defaultVal, String desc, EntitiesOIDName ens, boolean uiIsEnable)
-	{
+	public final void AddDDLEntities(String key, String field, Object defaultVal, String desc, EntitiesOIDName ens, boolean uiIsEnable) {
 		this.AddDDLEntities(key, field, defaultVal, DataType.AppInt, desc, ens, "OID", "Name", uiIsEnable);
 	}
 
@@ -1582,8 +1520,7 @@ public class Map  implements Serializable
 	 param refText 关联的Text
 	 * @throws Exception
 	 */
-	private void AddDDLEntities(String key, String field, Object defaultVal, int dataType, FieldType _fildType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable)
-	{
+	private void AddDDLEntities(String key, String field, Object defaultVal, int dataType, FieldType _fildType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable)  {
 		Attr attr = new Attr();
 		attr.setKey(key);
 		attr.setField(field);
@@ -1595,7 +1532,7 @@ public class Map  implements Serializable
 		attr.setDesc(desc);
 		attr.setUIContralType(UIContralType.DDL);
 		attr.setUIBindKey(ens.toString());
-		// attr.getUIBindKey()OfEn = ens.getGetNewEntity().ToString();
+		// attr.getUIBindKey()OfEn = ens.getNewEntity().ToString();
 
 		attr.setHisFKEns(ens);
 
@@ -1607,8 +1544,7 @@ public class Map  implements Serializable
 
 		this.getAttrs().Add(attr, true, this.IsAddRefName);
 	}
-	public final void AddDDLEntities(String key, String field, Object defaultVal, int dataType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable)
-	{
+	public final void AddDDLEntities(String key, String field, Object defaultVal, int dataType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable) {
 		AddDDLEntities(key, field, defaultVal, dataType, FieldType.FK, desc, ens, refKey, refText, uiIsEnable);
 	}
 	/**
@@ -1624,20 +1560,16 @@ public class Map  implements Serializable
 	 param refText 关联的Text
 	 * @throws Exception
 	 */
-	public final void AddDDLEntities(String key, Object defaultVal, int dataType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable)
-	{
+	public final void AddDDLEntities(String key, Object defaultVal, int dataType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable) {
 		AddDDLEntities(key, key, defaultVal, dataType, desc, ens, refKey, refText, uiIsEnable);
 	}
-	public final void AddDDLEntitiesPK(String key, Object defaultVal, int dataType, String desc, EntitiesTree ens, boolean uiIsEnable)
-	{
+	public final void AddDDLEntitiesPK(String key, Object defaultVal, int dataType, String desc, EntitiesTree ens, boolean uiIsEnable){
 		AddDDLEntities(key, key, defaultVal, dataType, FieldType.PKFK, desc, ens, "No", "Name", uiIsEnable);
 	}
-	public final void AddDDLEntitiesPK(String key, Object defaultVal, int dataType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable)
-	{
+	public final void AddDDLEntitiesPK(String key, Object defaultVal, int dataType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable){
 		AddDDLEntities(key, key, defaultVal, dataType, FieldType.PKFK, desc, ens, refKey, refText, uiIsEnable);
 	}
-	public final void AddDDLEntitiesPK(String key, String field, Object defaultVal, int dataType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable)
-	{
+	public final void AddDDLEntitiesPK(String key, String field, Object defaultVal, int dataType, String desc, Entities ens, String refKey, String refText, boolean uiIsEnable)  {
 		AddDDLEntities(key, field, defaultVal, dataType, FieldType.PKFK, desc, ens, refKey, refText, uiIsEnable);
 	}
 
@@ -1654,20 +1586,16 @@ public class Map  implements Serializable
 	 param uiIsEnable
 	 * @
 	 */
-	public final void AddDDLEntitiesPK(String key, String field, String defaultVal, String desc, EntitiesTree ens, boolean uiIsEnable)
-	{
+	public final void AddDDLEntitiesPK(String key, String field, String defaultVal, String desc, EntitiesTree ens, boolean uiIsEnable) {
 		AddDDLEntities(key, field, (Object)defaultVal, DataType.AppString, FieldType.PKFK, desc, ens, "No", "Name", uiIsEnable);
 	}
-	public final void AddDDLEntitiesPK(String key, String field, String defaultVal, String desc, EntitiesNoName ens, boolean uiIsEnable)
-	{
+	public final void AddDDLEntitiesPK(String key, String field, String defaultVal, String desc, EntitiesNoName ens, boolean uiIsEnable) {
 		AddDDLEntities(key, field, (Object)defaultVal, DataType.AppString, FieldType.PKFK, desc, ens, "No", "Name", uiIsEnable);
 	}
-	public final void AddDDLEntitiesPK(String key, String defaultVal, String desc, EntitiesNoName ens, boolean uiIsEnable)
-	{
+	public final void AddDDLEntitiesPK(String key, String defaultVal, String desc, EntitiesNoName ens, boolean uiIsEnable) {
 		AddDDLEntitiesPK(key, key, defaultVal, desc, ens, uiIsEnable);
 	}
-	public final void AddDDLEntitiesPK(String key, String defaultVal, String desc, EntitiesTree ens, boolean uiIsEnable)
-	{
+	public final void AddDDLEntitiesPK(String key, String defaultVal, String desc, EntitiesTree ens, boolean uiIsEnable)  {
 		AddDDLEntitiesPK(key, key, defaultVal, desc, ens, uiIsEnable);
 	}
 
@@ -1688,16 +1616,14 @@ public class Map  implements Serializable
 	///TB
 
 
-	///string 有关系的操作。
+	///String 有关系的操作。
 
 
 	///关于
-	protected final void AddTBString(String key, String field, Object defaultVal, FieldType _FieldType, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith, boolean isUILine)
-	{
+	protected final void AddTBString(String key, String field, Object defaultVal, FieldType _FieldType, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith, boolean isUILine)  {
 		AddTBString(key, field, defaultVal, _FieldType, desc, uiVisable, isReadonly, minLength, maxLength, tbWith, isUILine, null);
 	}
-	protected final void AddTBString(String key, String field, Object defaultVal, FieldType _FieldType, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith, boolean isUILine, String helpUrl)
-	{
+	protected final void AddTBString(String key, String field, Object defaultVal, FieldType _FieldType, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith, boolean isUILine, String helpUrl)  {
 		Attr attr = new Attr();
 		attr.setKey(key);
 		attr.HelperUrl = helpUrl;
@@ -1761,14 +1687,14 @@ public class Map  implements Serializable
 				continue;
 			}
 
-			if (attr.getIsRefAttr())
+			if (attr.getItIsRefAttr())
 			{
 				continue;
 			}
 
 			//把文件实体类的属性放入关系实体类中去。
 			MapAttr mapattrN = attr.getToMapAttr();
-			mapattrN.setFK_MapData(this.getFK_MapData());
+			mapattrN.setFrmID(this.getFK_MapData());
 			if (mapattrN.getUIHeight() == 0)
 			{
 				mapattrN.setUIHeight(23);
@@ -1787,26 +1713,23 @@ public class Map  implements Serializable
 			this.AddAttr(attr.getHisAttr());
 		}
 	}
-	public final void AddAttrs(Attrs attrs){
+	public final void AddAttrs(Attrs attrs) throws Exception {
 		AddAttrs(attrs,false);
 	}
-	public final void AddAttrs(Attrs attrs,boolean isClearGroupName)
-	{
-		for (Attr attr : attrs.ToJavaList())
+	public final void AddAttrs(Attrs attrs,boolean isClearGroupName) {
+		for (Attr attr : attrs)
 		{
-			if (attr.getIsRefAttr())
+			if (attr.getItIsRefAttr())
 			{
 				continue;
 			}
 			this.getAttrs().Add(attr,isClearGroupName);
 		}
 	}
-	public final void AddAttr(Attr attr)
-	{
+	public final void AddAttr(Attr attr)  {
 		this.getAttrs().Add(attr);
 	}
-	public final void AddAttr(String key, Object defaultVal, int dbtype, boolean isPk, String desc)
-	{
+	public final void AddAttr(String key, Object defaultVal, int dbtype, boolean isPk, String desc) throws Exception {
 		if (isPk)
 		{
 			AddTBStringPK(key, key, desc, true, false, 0, 1000, 100);
@@ -1831,28 +1754,23 @@ public class Map  implements Serializable
 	 param tbWith 宽度
 	 * @
 	 */
-	public final void AddTBString(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
-	{
+	public final void AddTBString(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)  {
 		AddTBString(key, key, defaultVal, FieldType.Normal, desc, uiVisable, isReadonly, minLength, maxLength, tbWith, false);
 	}
-	public final void AddTBString(String key, String field, Object defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
-	{
+	public final void AddTBString(String key, String field, Object defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)  {
 		AddTBString(key, field, defaultVal, FieldType.Normal, desc, uiVisable, isReadonly, minLength, maxLength, tbWith, false);
 	}
-	public final void AddTBString(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith, boolean isUILine)
-	{
+	public final void AddTBString(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith, boolean isUILine)  {
 		AddTBString(key, key, defaultVal, FieldType.Normal, desc, uiVisable, isReadonly, minLength, maxLength, tbWith, isUILine);
 	}
-	public final void AddTBString(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith, boolean isUILine, String helpUrl)
-	{
+	public final void AddTBString(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith, boolean isUILine, String helpUrl)  {
 		AddTBString(key, key, defaultVal, FieldType.Normal, desc, uiVisable, isReadonly, minLength, maxLength, tbWith, isUILine, helpUrl);
 	}
 	/**
 	 附件集合
 	 * @
 	 */
-	public final void AddMyFileS()
-	{
+	public final void AddMyFileS()  {
 		this.AddTBInt(EntityNoMyFileAttr.MyFileNum, 0, "附件", false, false);
 		this.HisBPEntityAthType = BPEntityAthType.Multi;
 	}
@@ -1862,26 +1780,22 @@ public class Map  implements Serializable
 	 param desc
 	 * @
 	 */
-	public final void AddMyFileS(String desc)
-	{
+	public final void AddMyFileS(String desc)  {
 		this.AddTBInt(EntityNoMyFileAttr.MyFileNum, 0, desc, false, false);
 		this.HisBPEntityAthType = BPEntityAthType.Multi;
 	}
 
-	public final void AddMyFile(String fileDesc)
-	{
+	public final void AddMyFile(String fileDesc)  {
 		AddMyFile(fileDesc, null, null);
 	}
 
-	public final void AddMyFile()
-	{
+	public final void AddMyFile() throws Exception {
 		AddMyFile(null, null, null);
 	}
 
 
 
-	public final void AddMyFile(String fileDesc, String ext, String savePath)
-	{
+	public final void AddMyFile(String fileDesc, String ext, String savePath)  {
 		if (fileDesc == null)
 		{
 			fileDesc = "附件或图片";
@@ -1916,8 +1830,7 @@ public class Map  implements Serializable
 	 param fExt
 	 * @
 	 */
-	public final void AddMyFile(String fileDesc, String fExt)
-	{
+	public final void AddMyFile(String fileDesc, String fExt){
 		getHisAttrFiles().Add(fExt, fileDesc);
 		this.HisBPEntityAthType = BPEntityAthType.Single;
 
@@ -1946,8 +1859,10 @@ public class Map  implements Serializable
    //#endregion 方法分组.
 
 	//#region 属性.
-	public void AddDDLStringEnum(String key, String defaultVal, String name, String cfgString, Boolean uiIsEnable, String helpDoc, Boolean isUILine)
-	{
+	public void AddDDLStringEnum(String key, String defaultVal, String name, String cfgString, Boolean uiIsEnable) {
+		AddDDLStringEnum(key,defaultVal,name,cfgString,uiIsEnable,"",false);
+	}
+	public void AddDDLStringEnum(String key, String defaultVal, String name, String cfgString, Boolean uiIsEnable, String helpDoc, Boolean isUILine){
 		if(DataType.IsNullOrEmpty(helpDoc))	helpDoc = "";
 		if(DataType.IsNullOrEmpty(isUILine)) isUILine = false;
 
@@ -1966,7 +1881,7 @@ public class Map  implements Serializable
 		attr.setDesc(name);
 		//转化为sql.
 		attr.setUIBindKey(bp.difference.Glo.DealSQLStringEnumFormat(cfgString));
-		// alert(attr.UIBindKey);
+		// alert(attr.getUIBindKey());
 
 		attr.setUIIsReadonly(!uiIsEnable);
 		attr.HelperUrl = helpDoc;
@@ -1985,7 +1900,7 @@ public class Map  implements Serializable
 		attr2.setUIContralType(UIContralType.TB);
 		attr2.HelperUrl = helpDoc;
 		attr2.UIIsLine = !!isUILine;
-		//	attr.UIBindKey = sql;
+		//	attr.setUIBindKey( sql;
 		attr2.setUIIsReadonly(true);
 		attr2.setUIVisible(false);
 		this.getAttrs().Add(attr2);
@@ -1993,39 +1908,32 @@ public class Map  implements Serializable
     //#endregion 枚举属性
 
 	///增加大块文本输入
-	public final void AddTBStringDoc()
-	{
+	public final void AddTBStringDoc()  {
 		AddTBStringDoc("Doc", "Doc", null, "内容", true, false, 0, 4000, 10, true);
 	}
 
 
-	public final void AddTBStringDoc(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, boolean isUILine)
-	{
+	public final void AddTBStringDoc(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, boolean isUILine){
 		AddTBStringDoc(key, defaultVal, desc, uiVisable, isReadonly, isUILine, 10);
 	}
 
-	//ORIGINAL LINE: public void AddTBStringDoc(string key, string defaultVal, string desc, bool uiVisable, bool isReadonly, bool isUILine, int rows = 10)
-	public final void AddTBStringDoc(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, boolean isUILine, int rows)
-	{
+	//ORIGINAL LINE: public void AddTBStringDoc(String key, String defaultVal, String desc, bool uiVisable, bool isReadonly, bool isUILine, int rows = 10)
+	public final void AddTBStringDoc(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, boolean isUILine, int rows)  {
 		AddTBStringDoc(key, key, defaultVal, desc, uiVisable, isReadonly, 0, 4000, rows, isUILine);
 	}
 
-	public final void AddTBStringDoc(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly)
-	{
+	public final void AddTBStringDoc(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly)  {
 		AddTBStringDoc(key, key, defaultVal, desc, uiVisable, isReadonly, 0, 4000, 300, false);
 	}
-	public final void AddTBStringDoc(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int rows)
-	{
+	public final void AddTBStringDoc(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int rows){
 		AddTBStringDoc(key, key, defaultVal, desc, uiVisable, isReadonly, minLength, maxLength, rows, false);
 	}
 
-	public final void AddTBStringDoc(String key, String field, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int rows, boolean isUILine)
-	{
+	public final void AddTBStringDoc(String key, String field, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int rows, boolean isUILine) {
 		AddTBStringDoc(key, field, defaultVal, desc, uiVisable, isReadonly, minLength, maxLength, rows, isUILine, false);
 	}
 
-	public final void AddTBStringDoc(String key, String field, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int rows, boolean isUILine, boolean isRichText)
-	{
+	public final void AddTBStringDoc(String key, String field, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int rows, boolean isUILine, boolean isRichText)  {
 
 
 		if (field == null)
@@ -2048,12 +1956,12 @@ public class Map  implements Serializable
 		attr.setUIHeight(rows);
 		if (isRichText == true)
 		{
-			attr.setIsSupperText(1); //是富文本. 都要解析为上下结构.
+			attr.setItIsSupperText(1); //是富文本. 都要解析为上下结构.
 			isUILine = true; //必须是上下结构.
 		}
 		else
 		{
-			attr.setIsSupperText(0); //不是富文本. 根据 isUILine 解析是否上下结构.
+			attr.setItIsSupperText(0); //不是富文本. 根据 isUILine 解析是否上下结构.
 		}
 		attr.UIIsLine=isUILine;
 		this.getAttrs().Add(attr);
@@ -2063,13 +1971,11 @@ public class Map  implements Serializable
 
 
 	/// PK
-	public final void AddTBStringPK(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
-	{
+	public final void AddTBStringPK(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) {
 		this.PKs = key;
 		AddTBString(key, key, defaultVal, FieldType.PK, desc, uiVisable, isReadonly, minLength, maxLength, tbWith, false);
 	}
-	public final void AddTBStringPK(String key, String field, Object defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
-	{
+	public final void AddTBStringPK(String key, String field, Object defaultVal, String desc, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)  {
 		this.PKs = key;
 		AddTBString(key, field, defaultVal, FieldType.PK, desc, uiVisable, isReadonly, minLength, maxLength, tbWith, false);
 	}
@@ -2099,8 +2005,7 @@ public class Map  implements Serializable
 	 param tbWith 宽度
 	 * @
 	 */
-	public final void AddTBStringFKEns(String key, String field, String defaultVal, String desc, Entities ens, String refKey, String refText, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
-	{
+	public final void AddTBStringFKEns(String key, String field, String defaultVal, String desc, Entities ens, String refKey, String refText, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) throws Exception {
 		Attr attr = new Attr();
 		attr.setKey(key);
 
@@ -2109,7 +2014,7 @@ public class Map  implements Serializable
 		attr.setMyDataType(DataType.AppString);
 		attr.setUIBindKey(ens.toString());
 		attr.setHisFKEns(ens);
-		// attr.getUIBindKey()OfEn = ens.getGetNewEntity().ToString();
+		// attr.getUIBindKey()OfEn = ens.getNewEntity().ToString();
 		attr.setDesc(desc);
 		attr.setUIVisible(uiVisable);
 		attr.setUIWidth(tbWith);
@@ -2135,8 +2040,7 @@ public class Map  implements Serializable
 	 param tbWith 宽度
 	 * @
 	 */
-	public final void AddTBStringFKEns(String key, String defaultVal, String desc, Entities ens, String refKey, String refText, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
-	{
+	public final void AddTBStringFKEns(String key, String defaultVal, String desc, Entities ens, String refKey, String refText, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) throws Exception {
 		this.AddTBStringFKEns(key, key, defaultVal, desc, ens, refKey, refText, uiVisable, isReadonly, minLength, maxLength, tbWith);
 	}
 
@@ -2159,8 +2063,7 @@ public class Map  implements Serializable
 	 param tbWith
 	 * @
 	 */
-	public final void AddTBMultiValues(String key, String field, Object defaultVal, String desc, Entities ens, String refValue, String refText, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
-	{
+	public final void AddTBMultiValues(String key, String field, Object defaultVal, String desc, Entities ens, String refValue, String refText, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) throws Exception {
 		Attr attr = new Attr();
 		attr.setKey(key);
 		attr.setField(field);
@@ -2169,7 +2072,7 @@ public class Map  implements Serializable
 		attr.setUIBindKey(ens.toString());
 		attr.setHisFKEns(ens);
 
-		// attr.getUIBindKey()OfEn = ens.getGetNewEntity().ToString();
+		// attr.getUIBindKey()OfEn = ens.getNewEntity().ToString();
 
 		attr.setDesc(desc);
 		attr.setUIVisible(uiVisable);
@@ -2204,8 +2107,7 @@ public class Map  implements Serializable
 	 param tbWith 宽度
 	 * @
 	 */
-	public final void AddTBStringPKEns(String key, String field, Object defaultVal, String desc, Entities ens, String refVal, String refText, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
-	{
+	public final void AddTBStringPKEns(String key, String field, Object defaultVal, String desc, Entities ens, String refVal, String refText, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) throws Exception {
 		Attr attr = new Attr();
 		attr.setKey(key);
 		attr.setField(field);
@@ -2213,7 +2115,7 @@ public class Map  implements Serializable
 		attr.setMyDataType(DataType.AppString);
 		attr.setUIBindKey(ens.toString());
 		attr.setHisFKEns(attr.getHisFKEns());
-		//attr.getUIBindKey()OfEn = ens.getGetNewEntity().ToString();
+		//attr.getUIBindKey()OfEn = ens.getNewEntity().ToString();
 		attr.setDesc(desc);
 		attr.setUIVisible(uiVisable);
 		attr.setUIWidth(tbWith);
@@ -2241,8 +2143,7 @@ public class Map  implements Serializable
 	 param tbWith 宽度
 	 * @
 	 */
-	public final void AddTBStringPKEns(String key, String defaultVal, String desc, Entities ens, String refKey, String refText, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
-	{
+	public final void AddTBStringPKEns(String key, String defaultVal, String desc, Entities ens, String refKey, String refText, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) throws Exception {
 		this.AddTBStringPKEns(key, key, defaultVal, desc, ens, refKey, refText, uiVisable, isReadonly, minLength, maxLength, tbWith);
 	}
 
@@ -2265,8 +2166,7 @@ public class Map  implements Serializable
 	 param tbWith 宽度
 	 * @
 	 */
-	public final void AddTBStringPKSelf(String key, String field, Object defaultVal, String desc, String DataHelpKey, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
-	{
+	public final void AddTBStringPKSelf(String key, String field, Object defaultVal, String desc, String DataHelpKey, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) throws Exception {
 		Attr attr = new Attr();
 		attr.setKey(key);
 		attr.setField(field);
@@ -2296,8 +2196,7 @@ public class Map  implements Serializable
 	 param tbWith 宽度
 	 * @
 	 */
-	public final void AddTBStringPKSelf(String key, Object defaultVal, String desc, String DataHelpKey, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
-	{
+	public final void AddTBStringPKSelf(String key, Object defaultVal, String desc, String DataHelpKey, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) throws Exception {
 		this.AddTBStringPKSelf(key, key, defaultVal, desc, DataHelpKey, uiVisable, isReadonly, minLength, maxLength, tbWith);
 	}
 
@@ -2320,8 +2219,7 @@ public class Map  implements Serializable
 	 param tbWith 宽度
 	 * @
 	 */
-	public final void AddTBStringFKSelf(String key, String field, Object defaultVal, String desc, String DataHelpKey, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
-	{
+	public final void AddTBStringFKSelf(String key, String field, Object defaultVal, String desc, String DataHelpKey, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) throws Exception {
 		Attr attr = new Attr();
 		attr.setKey(key);
 		attr.setField(field);
@@ -2351,8 +2249,7 @@ public class Map  implements Serializable
 	 param tbWith 宽度
 	 * @
 	 */
-	public final void AddTBStringFKSelf(String key, Object defaultVal, String desc, String DataHelpKey, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith)
-	{
+	public final void AddTBStringFKSelf(String key, Object defaultVal, String desc, String DataHelpKey, boolean uiVisable, boolean isReadonly, int minLength, int maxLength, int tbWith) throws Exception {
 		this.AddTBStringFKSelf(key, key, defaultVal, desc, DataHelpKey, uiVisable, isReadonly, minLength, maxLength, tbWith);
 	}
 
@@ -2376,8 +2273,7 @@ public class Map  implements Serializable
 
 
 	///日期类型
-	public final void AddTBDate(String key)
-	{
+	public final void AddTBDate(String key) throws Exception {
 		switch (key)
 		{
 			case "RDT":
@@ -2401,8 +2297,7 @@ public class Map  implements Serializable
 	 param isReadonly 是不是只读
 	 * @
 	 */
-	public final void AddTBDate(String key, String field, String defaultVal, String desc, boolean uiVisable, boolean isReadonly)
-	{
+	public final void AddTBDate(String key, String field, String defaultVal, String desc, boolean uiVisable, boolean isReadonly) {
 		Attr attr = new Attr();
 		attr.setKey(key);
 		attr.setField(field);
@@ -2424,8 +2319,7 @@ public class Map  implements Serializable
 	 param isReadonly isReadonly
 	 * @
 	 */
-	public final void AddTBDate(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly)
-	{
+	public final void AddTBDate(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly)  {
 		AddTBDate(key, key, defaultVal, desc, uiVisable, isReadonly);
 	}
 	/**
@@ -2437,9 +2331,8 @@ public class Map  implements Serializable
 	 param isReadonly isReadonly
 	 * @
 	 */
-	public final void AddTBDate(String key, String desc, boolean uiVisable, boolean isReadonly)
-	{
-		AddTBDate(key, key, DataType.getCurrentDateByFormart(DataType.getSysDataFormat()), desc, uiVisable, isReadonly);
+	public final void AddTBDate(String key, String desc, boolean uiVisable, boolean isReadonly) {
+		AddTBDate(key, key, DataType.getCurrentDateByFormart(DataType.getSysDateFormat()), desc, uiVisable, isReadonly);
 	}
 
 	///
@@ -2456,8 +2349,7 @@ public class Map  implements Serializable
 	 param isReadonly 是不是只读
 	 * @
 	 */
-	public final void AddTBDateTime(String key, String field, String defaultVal, String desc, boolean uiVisable, boolean isReadonly)
-	{
+	public final void AddTBDateTime(String key, String field, String defaultVal, String desc, boolean uiVisable, boolean isReadonly) {
 		Attr attr = new Attr();
 		attr.setKey(key);
 		attr.setField(field);
@@ -2470,12 +2362,10 @@ public class Map  implements Serializable
 		attr.setUIWidth(100);
 		this.getAttrs().Add(attr);
 	}
-	public final void AddTBDateTime(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly)
-	{
+	public final void AddTBDateTime(String key, String defaultVal, String desc, boolean uiVisable, boolean isReadonly)  {
 		this.AddTBDateTime(key, key, defaultVal, desc, uiVisable, isReadonly);
 	}
-	public final void AddTBDateTime(String key, String desc, boolean uiVisable, boolean isReadonly)
-	{
+	public final void AddTBDateTime(String key, String desc, boolean uiVisable, boolean isReadonly)  {
 		this.AddTBDateTime(key, key, DataType.getCurrentDateByFormart(DataType.getSysDateTimeFormat()), desc, uiVisable, isReadonly);
 	}
 
@@ -2483,8 +2373,7 @@ public class Map  implements Serializable
 
 
 	///资金类型
-	public final void AddTBMoney(String key, String field, float defaultVal, String desc, boolean uiVisable, boolean isReadonly)
-	{
+	public final void AddTBMoney(String key, String field, float defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception {
 		Attr attr = new Attr();
 		attr.setKey(key);
 		attr.setField(field);
@@ -2495,8 +2384,7 @@ public class Map  implements Serializable
 		attr.setUIIsReadonly(isReadonly);
 		this.getAttrs().Add(attr);
 	}
-	public final void AddTBMoney(String key, float defaultVal, String desc, boolean uiVisable, boolean isReadonly)
-	{
+	public final void AddTBMoney(String key, float defaultVal, String desc, boolean uiVisable, boolean isReadonly) throws Exception {
 		this.AddTBMoney(key, key, defaultVal, desc, uiVisable, isReadonly);
 	}
 
@@ -2515,8 +2403,7 @@ public class Map  implements Serializable
 	 param isReadonly 是不是只读
 	 * @
 	 */
-	public final void AddTBInt(String key, String _Field, int defaultVal, String desc, boolean uiVisable, boolean isReadonly)
-	{
+	public final void AddTBInt(String key, String _Field, int defaultVal, String desc, boolean uiVisable, boolean isReadonly)  {
 		Attr attr = new Attr();
 		attr.setKey(key);
 		attr.setField(_Field);
@@ -2538,8 +2425,7 @@ public class Map  implements Serializable
 	 param isReadonly 是不是只读
 	 * @
 	 */
-	public final void AddTBInt(String key, int defaultVal, String desc, boolean uiVisable, boolean isReadonly)
-	{
+	public final void AddTBInt(String key, int defaultVal, String desc, boolean uiVisable, boolean isReadonly){
 		this.AddTBInt(key, key, defaultVal, desc, uiVisable, isReadonly);
 	}
 	/**
@@ -2553,8 +2439,7 @@ public class Map  implements Serializable
 	 param isReadonly 是不是只读
 	 * @
 	 */
-	public final void AddTBIntPK(String key, String _Field, int defaultVal, String desc, boolean uiVisable, boolean isReadonly, boolean identityKey)
-	{
+	public final void AddTBIntPK(String key, String _Field, int defaultVal, String desc, boolean uiVisable, boolean isReadonly, boolean identityKey){
 		this.PKs = key;
 		Attr attr = new Attr();
 		attr.setKey(key);
@@ -2578,22 +2463,27 @@ public class Map  implements Serializable
 	 param desc 描述
 	 * @
 	 */
-	public final void AddTBIntPKOID(String _field, String desc)
-	{
+	public final void AddTBIntPKOID(String _field, String desc){
 		this.AddTBIntPK("OID", _field, 0, "OID", false, true, false);
 	}
-	public final void AddTBIntPKOID()
-	{
+	public final void AddTBIntPKOID()  {
 		this.AddTBIntPKOID("OID", "OID");
+	}
+
+	public void AddLang()  {
+		this.AddTBString("NameFT", null, "繁体", true, false, 0, 200, 150, false);
+		this.AddTBString("NameEn", null, "英文", true, false, 0, 200, 150, false);
+		this.AddTBString("NameJP", null, "日文", true, false, 0, 200, 150, false);
+	}
+	public final void AddTBAtParas() {
+		this.AddTBString("AtPara", null, "AtPara", false, true, 0, 4000, 10);
 	}
 	/**
 	 增加  AtParas字段.
-
 	 param fieldLength
 	 * @
 	 */
-	public final void AddTBAtParas(int fieldLength)
-	{
+	public final void AddTBAtParas(int fieldLength)  {
 		this.AddTBString("AtPara", null, "AtPara", false, true, 0, fieldLength, 10);
 	}
 	/**
@@ -2601,46 +2491,14 @@ public class Map  implements Serializable
 	 * @
 	 */
 
-	public final void AddMyPK()
-	{
+	public final void AddMyPK() {
 		AddMyPK(true);
 	}
 
 
-	public final void AddMyPK(boolean uiVisable)
-	{
+	public final void AddMyPK(boolean uiVisable)  {
 		this.PKs = "MyPK";
 		this.AddTBStringPK("MyPK", null, "主键MyPK", uiVisable, true, 1, 150, 10);
-		//Attr attr = new Attr();
-		//attr.getKey() = "MyPK";
-		//attr.Field = "MyPK";
-		//attr.getDefaultVal() = null;
-		//attr.setMyDataType(DataType.AppString);
-		//attr.getMyFieldType() = FieldType.PK;
-		//attr.getDesc() = "MyPK";
-		//attr.UITBShowType = TBType.TB;
-		//attr.setUIVisible( false);
-		//attr.getUIIsReadonly() = true;
-		//attr.MinLength = 1;
-		//attr.MaxLength = 100;
-		//this.getAttrs().Add(attr);
-	}
-	/**
-	 增加自动增长列
-	 * @
-	 */
-	public final void AddAID()
-	{
-		Attr attr = new Attr();
-		attr.setKey("AID");
-		attr.setField("AID");
-		attr.setDefaultVal(null);
-		attr.setMyDataType(DataType.AppInt);
-		attr.setMyFieldType(FieldType.PK);
-		attr.setDesc("AID");
-		attr.setUIVisible(false);
-		attr.setUIIsReadonly(true);
-		this.getAttrs().Add(attr);
 	}
 	/**
 	 增加一个PK的类型。字段值与属性相同。
@@ -2652,17 +2510,14 @@ public class Map  implements Serializable
 	 param isReadonly 是不是只读
 	 * @
 	 */
-	public final void AddTBIntPK(String key, int defaultVal, String desc, boolean uiVisable, boolean isReadonly)
-	{
+	public final void AddTBIntPK(String key, int defaultVal, String desc, boolean uiVisable, boolean isReadonly)  {
 		this.AddTBIntPK(key, key, defaultVal, desc, uiVisable, isReadonly, false);
 	}
 
-	public final void AddTBIntPK(String key, int defaultVal, String desc, boolean uiVisable, boolean isReadonly, boolean identityKey)
-	{
+	public final void AddTBIntPK(String key, int defaultVal, String desc, boolean uiVisable, boolean isReadonly, boolean identityKey) {
 		this.AddTBIntPK(key, key, defaultVal, desc, uiVisable, isReadonly, identityKey);
 	}
-	public final void AddTBIntMyNum()
-	{
+	public final void AddTBIntMyNum() throws Exception {
 		this.AddTBInt("MyNum", "MyNum", 1, "个数", true, true);
 	}
 
@@ -2670,8 +2525,7 @@ public class Map  implements Serializable
 
 
 	///Float类型
-	public final void AddTBFloat(String key, String _Field, float defaultVal, String desc, boolean uiVisable, boolean isReadonly)
-	{
+	public final void AddTBFloat(String key, String _Field, float defaultVal, String desc, boolean uiVisable, boolean isReadonly)  {
 		Attr attr = new Attr();
 		attr.setKey(key);
 		attr.setField(_Field);
@@ -2682,8 +2536,7 @@ public class Map  implements Serializable
 		attr.setUIIsReadonly(isReadonly);
 		this.getAttrs().Add(attr);
 	}
-	public final void AddTBFloat(String key, float defaultVal, String desc, boolean uiVisable, boolean isReadonly)
-	{
+	public final void AddTBFloat(String key, float defaultVal, String desc, boolean uiVisable, boolean isReadonly) {
 		this.AddTBFloat(key, key, defaultVal, desc, uiVisable, isReadonly);
 	}
 
@@ -2691,8 +2544,7 @@ public class Map  implements Serializable
 
 
 	///Decimal类型
-	public final void AddTBDecimal(String key, String _Field, BigDecimal defaultVal, String desc, boolean uiVisable, boolean isReadonly)
-	{
+	public final void AddTBDecimal(String key, String _Field, BigDecimal defaultVal, String desc, boolean uiVisable, boolean isReadonly)  {
 		Attr attr = new Attr();
 		attr.setKey(key);
 		attr.setField(_Field);
@@ -2703,15 +2555,72 @@ public class Map  implements Serializable
 		attr.setUIIsReadonly(isReadonly);
 		this.getAttrs().Add(attr);
 	}
-	public final void AddTBDecimal(String key, BigDecimal defaultVal, String desc, boolean uiVisable, boolean isReadonly)
-	{
+	public final void AddTBDecimal(String key, BigDecimal defaultVal, String desc, boolean uiVisable, boolean isReadonly)  {
 		this.AddTBDecimal(key, key, defaultVal, desc, uiVisable, isReadonly);
 	}
 
-	///
+	/**
+	 增加明细
+	 @param ens 子类
+	 @param refKey 关联的键值
+	 @param groupName 分组名字
+	 @param model 模式
+	 */
+	public final void AddDtl(Entities ens, String refKey, String groupName, DtlEditerModel model)
+	{
+		AddDtl(ens, refKey, groupName, model, null);
+	}
 
-	///
+	public final void AddDtl(Entities ens, String refKey, String groupName)
+	{
+		AddDtl(ens, refKey, groupName, DtlEditerModel.DtlBatch, null);
+	}
 
+	public final void AddDtl(Entities ens, String refKey)
+	{
+		AddDtl(ens, refKey, null, DtlEditerModel.DtlBatch, null);
+	}
 
-	///
+	public final void AddDtl(Entities ens, String refKey, String groupName, DtlEditerModel model, String icon)
+	{
+		EnDtl dtl = new EnDtl();
+		dtl.Ens = ens;
+		dtl.RefKey = refKey;
+		dtl.GroupName = this.currGroupMethodName;
+		dtl.DtlEditerModel = model;
+		dtl.Icon = icon;
+		this.getDtls().Add(dtl);
+	}
+
+	public final void AddDtl(String url, String refKey, String groupName, DtlEditerModel model, String icon)
+	{
+		AddDtl(url, refKey, groupName, model, icon, "");
+	}
+
+	public final void AddDtl(String url, String refKey, String groupName, DtlEditerModel model)
+	{
+		AddDtl(url, refKey, groupName, model, null, "");
+	}
+
+	public final void AddDtl(String url, String refKey, String groupName)
+	{
+		AddDtl(url, refKey, groupName, DtlEditerModel.DtlBatch, null, "");
+	}
+
+	public final void AddDtl(String url, String refKey)
+	{
+		AddDtl(url, refKey, null, DtlEditerModel.DtlBatch, null, "");
+	}
+
+	public final void AddDtl(String url, String refKey, String groupName, DtlEditerModel model, String icon, String desc)
+	{
+		EnDtl dtl = new EnDtl();
+		dtl.UrlExt = url;
+		dtl.RefKey=refKey;
+		dtl.GroupName = this.currGroupMethodName;
+		dtl.setDesc(desc);
+		dtl.DtlEditerModel=model;
+		dtl.Icon = icon;
+		this.getDtls().Add(dtl);
+	}
 }

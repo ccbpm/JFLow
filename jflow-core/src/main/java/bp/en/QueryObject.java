@@ -16,7 +16,7 @@ public class QueryObject
 	private Entity getEn() throws Exception {
 		if (this._en == null)
 		{
-			return this.getEns().getGetNewEntity();
+			return this.getEns().getNewEntity();
 		}
 		else
 		{
@@ -127,8 +127,7 @@ public class QueryObject
 	}
 	/** DictBase
 	*/
-	public QueryObject(Entity en)
-	{
+	public QueryObject(Entity en) throws Exception {
 		this.getMyParas().clear();
 		this._en = en;
 
@@ -140,7 +139,7 @@ public class QueryObject
 		ens.clear();
 		this._ens = ens;
 
-		Entity en = this._ens.getGetNewEntity();
+		Entity en = this._ens.getNewEntity();
 
 		this.HisDBType = en.getEnMap().getEnDBUrl().getDBType();
 		this.HisDBUrlType = en.getEnMap().getEnDBUrl().getDBUrlType();
@@ -669,7 +668,7 @@ public class QueryObject
 	*/
 	private String attr2Field(String attrKey) throws Exception {
 		Attr attr = this.getHisMap().GetAttrByKey(attrKey);
-		if (attr.getIsRefAttr() == true)
+		if (attr.getItIsRefAttr()  == true)
 		{
 			//  Entity en = attr.getHisFKEn();
 			if (this.HisDBType == DBType.Oracle ||this.HisDBType == DBType.KingBaseR3 
@@ -686,7 +685,7 @@ public class QueryObject
 		}
 
 		return this.getHisMap().getPhysicsTable() + "." + attr.getField();
-		// return this.HisMap.PhysicsTable + "."+attr;
+		// return this.HisMap.getPhysicsTable() + "."+attr;
 	}
 	public final DataTable DoGroupReturnTable(Entity en, Attrs attrsOfGroupKey, Attr attrGroup, GroupWay gw, OrderWay ow) throws Exception
 	{
@@ -758,7 +757,7 @@ public class QueryObject
 			by += str;
 		}
 		by = by.substring(1);
-		//string sql 
+		//String sql 
 		String sql = "SELECT " + fields.substring(1) + " FROM " + this.getEn().getEnMap().getPhysicsTable() + " WHERE " + this._sql + " Group BY " + by;
 
 			///
@@ -849,7 +848,7 @@ public class QueryObject
 			by += str;
 		}
 		by = by.substring(1);
-		//string sql 
+		//String sql 
 		String sql = "SELECT " + fields.substring(1) + " FROM " + this.getEn().getEnMap().getPhysicsTable() + " WHERE " + this._sql + " Group BY " + by;
 
 			///
@@ -862,7 +861,7 @@ public class QueryObject
 		map.getAttrs().Add(attrGroup);
 
 			/// .
-		//string sql1=SqlBuilder.SelectSQLOfMS( map )+" "+SqlBuilder.GenerFormWhereOfMS( en,map) + "   AND (" + this._sql+" ) "+_endSql;
+		//String sql1=SqlBuilder.SelectSQLOfMS( map )+" "+SqlBuilder.GenerFormWhereOfMS( en,map) + "   AND (" + this._sql+" ) "+_endSql;
 
 		String sql1 = SqlBuilder.SelectSQLOfMS(map) + " " + SqlBuilder.GenerFormWhereOfMS(en, map);
 
@@ -948,7 +947,7 @@ public class QueryObject
 			by += str;
 		}
 		by = by.substring(1);
-		//string sql 
+		//String sql 
 		String sql = "SELECT " + fields.substring(1) + " FROM " + this.getEn().getEnMap().getPhysicsTable() + " WHERE " + this._sql + " Group BY " + by;
 
 			///
@@ -962,7 +961,7 @@ public class QueryObject
 
 			/// .
 
-		//string sql1=SqlBuilder.SelectSQLOfMS( map )+" "+SqlBuilder.GenerFormWhereOfMS( en,map) + "   AND (" + this._sql+" ) "+_endSql;
+		//String sql1=SqlBuilder.SelectSQLOfMS( map )+" "+SqlBuilder.GenerFormWhereOfMS( en,map) + "   AND (" + this._sql+" ) "+_endSql;
 
 		String sql1 = SqlBuilder.SelectSQLOfMS(map) + " " + SqlBuilder.GenerFormWhereOfMS(en, map);
 
@@ -1004,7 +1003,7 @@ public class QueryObject
 		{
 			if (this._en == null)
 			{
-				this._ens.getGetNewEntity().CheckPhysicsTable();
+				this._ens.getNewEntity().CheckPhysicsTable();
 			}
 			else
 			{
@@ -1032,7 +1031,7 @@ public class QueryObject
 			{
 				if (this._en == null)
 				{
-					this.getEns().getGetNewEntity().CheckPhysicsTable();
+					this.getEns().getNewEntity().CheckPhysicsTable();
 				}
 				else
 				{
@@ -1104,7 +1103,7 @@ public class QueryObject
 			if (i > from)
 			{
 				paraI++;
-				//pks += "'" + dr[0].ToString() + "'";
+				//pks += "'" + dr[0).toString() + "'";
 				if (dbStr.equals("?"))
 				{
 					pks += "?,";
@@ -1291,7 +1290,7 @@ public class QueryObject
 				pageNum++;
 
 				String sql = "";
-				Entity en = this._ens.getGetNewEntity();
+				Entity en = this._ens.getNewEntity();
 				Map map = en.getEnMap();
 				int toIdx = 0;
 				String pks = "";
@@ -1480,7 +1479,7 @@ public class QueryObject
 			{
 				if (this._en == null)
 				{
-					this.getEns().getGetNewEntity().CheckPhysicsTable();
+					this.getEns().getNewEntity().CheckPhysicsTable();
 				}
 				else
 				{
@@ -1512,7 +1511,7 @@ public class QueryObject
 		{
 			if (this._en == null)
 			{
-				this.getEns().getGetNewEntity().CheckPhysicsTable();
+				this.getEns().getNewEntity().CheckPhysicsTable();
 			}
 			else
 			{
@@ -1562,7 +1561,7 @@ public class QueryObject
 					sql = "SELECT COUNT(" + ptable + "." + pk + ") as C " + sql;
 				}
 				//sql="SELECT COUNT(*) as C "+this._endSql  +sql.Substring(  sql.IndexOf("FROM ") ) ;
-				//sql="SELECT COUNT(*) as C FROM "+ this._ens.getGetNewEntity().getEnMap().getPhysicsTable()+ "  " +sql.Substring(sql.IndexOf("WHERE") ) ;
+				//sql="SELECT COUNT(*) as C FROM "+ this._ens.getNewEntity().getEnMap().getPhysicsTable()+ "  " +sql.Substring(sql.IndexOf("WHERE") ) ;
 				//int i = sql.IndexOf("ORDER BY") ;
 				//if (i!=-1)
 				//	sql=sql.Substring(0,i);
@@ -1677,7 +1676,7 @@ public class QueryObject
 					sql = selectSQl + sql + groupBy + orderBy;
 				}
 				//sql="SELECT COUNT(*) as C "+this._endSql  +sql.Substring(  sql.IndexOf("FROM ") ) ;
-				//sql="SELECT COUNT(*) as C FROM "+ this._ens.getGetNewEntity().getEnMap().getPhysicsTable()+ "  " +sql.Substring(sql.IndexOf("WHERE") ) ;
+				//sql="SELECT COUNT(*) as C FROM "+ this._ens.getNewEntity().getEnMap().getPhysicsTable()+ "  " +sql.Substring(sql.IndexOf("WHERE") ) ;
 				//int i = sql.IndexOf("ORDER BY") ;
 				//if (i!=-1)
 				//	sql=sql.Substring(0,i);
@@ -1733,16 +1732,16 @@ public class QueryObject
 	*/
 	public static Entities InitEntitiesByDataTable(Entities ens, DataTable dt, String[] fullAttrs) throws Exception
 	{
-		FieldCaseModel caseModel =SystemConfig.AppCenterDBFieldCaseModel();
+		FieldCaseModel caseModel =SystemConfig.getAppCenterDBFieldCaseModel();
 		if (fullAttrs == null) {
-			Map enMap = ens.getGetNewEntity().getEnMap();
+			Map enMap = ens.getNewEntity().getEnMap();
 			Attrs attrs = enMap.getAttrs();
 			try {
 				Row row = null;
 				for (DataRow dr : dt.Rows) {
-					Entity en = ens.getGetNewEntity();
+					Entity en = ens.getNewEntity();
 					row = new Row();
-					for (Attr attr : attrs.ToJavaList()) {
+					for (Attr attr : attrs) {
 						if (caseModel == FieldCaseModel.UpperCase){
 							if(attr.getMyFieldType() == FieldType.RefText && dt.Columns.containsMatchCase(attr.getKey()))
 								en.SetValByKey(attr.getKey(), dr.getValue(attr.getKey()));
@@ -1773,7 +1772,7 @@ public class QueryObject
 		}
 		Row row = null;
 		for (DataRow dr : dt.Rows) {
-			Entity en = ens.getGetNewEntity();
+			Entity en = ens.getNewEntity();
 			row = new Row();
 			for (String str : fullAttrs) {
 				if (caseModel== FieldCaseModel.UpperCase){

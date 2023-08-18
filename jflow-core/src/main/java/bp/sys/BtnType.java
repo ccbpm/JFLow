@@ -30,7 +30,8 @@ public enum BtnType
 
 	private int intValue;
 	private static java.util.HashMap<Integer, BtnType> mappings;
-	private static java.util.HashMap<Integer, BtnType> getMappings()  {
+	private static java.util.HashMap<Integer, BtnType> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (BtnType.class)
@@ -45,7 +46,8 @@ public enum BtnType
 	}
 
 	private BtnType(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
@@ -54,7 +56,7 @@ public enum BtnType
 		return intValue;
 	}
 
-	public static BtnType forValue(int value) 
+	public static BtnType forValue(int value)
 	{
 		return getMappings().get(value);
 	}

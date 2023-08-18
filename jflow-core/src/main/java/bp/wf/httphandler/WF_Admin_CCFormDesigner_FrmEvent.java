@@ -7,13 +7,14 @@ import bp.*;
 import bp.wf.*;
 import java.util.*;
 
-public class WF_Admin_CCFormDesigner_FrmEvent extends bp.difference.handler.WebContralBase
+public class WF_Admin_CCFormDesigner_FrmEvent extends bp.difference.handler.DirectoryPageBase
 {
 
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_CCFormDesigner_FrmEvent() throws Exception {
+	public WF_Admin_CCFormDesigner_FrmEvent()
+	{
 	}
 
 
@@ -21,18 +22,19 @@ public class WF_Admin_CCFormDesigner_FrmEvent extends bp.difference.handler.WebC
 	/** 
 	 事件类型
 	*/
-	public final String getShowType() throws Exception {
-		if (this.getFK_Node() != 0)
+	public final String getShowType()
+	{
+		if (this.getNodeID() != 0)
 		{
 			return "Node";
 		}
 
-		if (this.getFK_Node() == 0 && DataType.IsNullOrEmpty(this.getFK_Flow()) == false && this.getFK_Flow().length() >= 3)
+		if (this.getNodeID() == 0 && DataType.IsNullOrEmpty(this.getFlowNo()) == false && this.getFlowNo().length() >= 3)
 		{
 			return "Flow";
 		}
 
-		if (this.getFK_Node() == 0 && DataType.IsNullOrEmpty(this.getFK_MapData()) == false)
+		if (this.getNodeID() == 0 && DataType.IsNullOrEmpty(this.getFrmID()) == false)
 		{
 			return "Frm";
 		}
@@ -50,7 +52,7 @@ public class WF_Admin_CCFormDesigner_FrmEvent extends bp.difference.handler.WebC
 
 		//事件实体.
 		FrmEvents ndevs = new FrmEvents();
-		ndevs.Retrieve(FrmEventAttr.FK_MapData, this.getFK_MapData(), null);
+		ndevs.Retrieve(FrmEventAttr.FrmID, this.getFrmID(), null);
 
 		DataTable dt = ndevs.ToDataTableField("FrmEvents");
 		ds.Tables.add(dt);
@@ -86,14 +88,13 @@ public class WF_Admin_CCFormDesigner_FrmEvent extends bp.difference.handler.WebC
 		return "删除成功.";
 	}
 	public final String ActionDtl_Save() throws Exception {
-
 		//事件实体.
 		FrmEvent en = new FrmEvent();
 
-		en.setFK_Node(this.getFK_Node());
-		en.setFK_Event(this.GetRequestVal("FK_Event")); //事件类型.
+		en.setNodeID(this.getNodeID());
+		en.setEventNo(this.GetRequestVal("FK_Event")); //事件类型.
 		en.setHisDoTypeInt(this.GetValIntFromFrmByKey("EventDoType")); //执行类型.
-		en.setMyPK(this.getFK_Node() + "_" + en.getFK_Event() + "_" + en.getHisDoTypeInt()); //组合主键.
+		en.setMyPK(this.getNodeID() + "_" + en.getEventNo() + "_" + en.getHisDoTypeInt()); //组合主键.
 		en.RetrieveFromDBSources();
 
 		en.setMsgOKString(this.GetValFromFrmByKey("MsgOK")); //成功的消息.

@@ -11,8 +11,8 @@ public class Schedules extends EntitiesMyPK
 	/** 
 	 查询事件到.
 	 
-	 param dtFrom
-	 param dtTo
+	 @param dtFrom
+	 @param dtTo
 	 @return 
 	*/
 	public final String DTFromTo(String dtFrom, String dtTo) throws Exception {
@@ -22,13 +22,15 @@ public class Schedules extends EntitiesMyPK
 	/** 
 	 日程
 	*/
-	public Schedules() throws Exception {
+	public Schedules()
+	{
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new Schedule();
 	}
 
@@ -38,7 +40,8 @@ public class Schedules extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<Schedule> ToJavaList() {
+	public final java.util.List<Schedule> ToJavaList()
+	{
 		return (java.util.List<Schedule>)(Object)this;
 	}
 	/** 
@@ -46,7 +49,8 @@ public class Schedules extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<Schedule> Tolist()  {
+	public final ArrayList<Schedule> Tolist()
+	{
 		ArrayList<Schedule> list = new ArrayList<Schedule>();
 		for (int i = 0; i < this.size(); i++)
 		{

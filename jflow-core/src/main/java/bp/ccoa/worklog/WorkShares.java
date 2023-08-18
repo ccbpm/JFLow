@@ -21,7 +21,7 @@ public class WorkShares extends EntitiesMyPK
 		if (this.size() == 0)
 		{
 			Emps emps = new Emps();
-			emps.Retrieve(EmpAttr.FK_Dept, WebUser.getFK_Dept(), null);
+			emps.Retrieve(EmpAttr.FK_Dept, WebUser.getDeptNo(), null);
 
 			for (Emp emp : emps.ToJavaList())
 			{
@@ -40,13 +40,15 @@ public class WorkShares extends EntitiesMyPK
 	/** 
 	 日志共享
 	*/
-	public WorkShares() throws Exception {
+	public WorkShares()
+	{
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new WorkShare();
 	}
 
@@ -56,7 +58,8 @@ public class WorkShares extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<WorkShare> ToJavaList() {
+	public final java.util.List<WorkShare> ToJavaList()
+	{
 		return (java.util.List<WorkShare>)(Object)this;
 	}
 	/** 
@@ -64,7 +67,8 @@ public class WorkShares extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<WorkShare> Tolist()  {
+	public final ArrayList<WorkShare> Tolist()
+	{
 		ArrayList<WorkShare> list = new ArrayList<WorkShare>();
 		for (int i = 0; i < this.size(); i++)
 		{

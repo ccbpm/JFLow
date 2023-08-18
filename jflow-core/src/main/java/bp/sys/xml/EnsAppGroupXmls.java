@@ -2,7 +2,6 @@ package bp.sys.xml;
 
 import bp.en.*;
 
-
 /** 
  属性集合
 */
@@ -13,7 +12,7 @@ public class EnsAppGroupXmls extends XmlEns
 	/** 
 	 考核过错行为的数据元素
 	*/
-	public EnsAppGroupXmls()throws Exception
+	public EnsAppGroupXmls()
 	{
 	}
 
@@ -26,24 +25,25 @@ public class EnsAppGroupXmls extends XmlEns
 	 得到它的 Entity 
 	*/
 	@Override
-	public XmlEn getGetNewEntity()
+	public XmlEn getNewEntity()
 	{
 		return new EnsAppGroupXml();
 	}
 	@Override
-	public String getFile()throws Exception
-	{
+	public String getFile() {
 		return bp.difference.SystemConfig.getPathOfXML() + "Ens/EnsAppXml/";
 	}
 	/** 
 	 物理表名
 	*/
 	@Override
-	public String getTableName()  {
+	public String getTableName()
+	{
 		return "Group";
 	}
 	@Override
-	public Entities getRefEns()  {
+	public Entities getRefEns()
+	{
 		return null;
 	}
 

@@ -1,7 +1,7 @@
 package bp.da;
 
 import bp.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.da.*;
 
 public class DataTableConvertJson
@@ -102,7 +102,7 @@ public class DataTableConvertJson
 		{
 			jsonBuilder.deleteCharAt(jsonBuilder.length() - 1);
 		}
-		//jsonBuilder.Remove(jsonBuilder.Length - 1, 1);
+		//jsonBuilder.Remove(jsonBuilder.length() - 1, 1);
 		if (totalRows == 0)
 		{
 			jsonBuilder.append("],total:0");

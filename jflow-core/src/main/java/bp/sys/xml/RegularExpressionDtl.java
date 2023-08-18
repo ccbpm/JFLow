@@ -11,31 +11,25 @@ public class RegularExpressionDtl extends XmlEn
 	/** 
 	 编号
 	*/
-	public final String getItemNo()  throws Exception
-	{
+	public final String getItemNo()  {
 		return this.GetValStringByKey("ItemNo");
 	}
 	/** 
 	 名称
 	*/
-	public final String getName()  throws Exception
-	{
+	public final String getName()  {
 		return this.GetValStringByKey("Name");
 	}
-	public final String getNote()  throws Exception
-	{
+	public final String getNote()  {
 		return this.GetValStringByKey("Note");
 	}
-	public final String getExp()  throws Exception
-	{
+	public final String getExp()  {
 		return this.GetValStringByKey("Exp");
 	}
-	public final String getForEvent()  throws Exception
-	{
+	public final String getForEvent()  {
 		return this.GetValStringByKey("ForEvent");
 	}
-	public final String getMsg()  throws Exception
-	{
+	public final String getMsg()  {
 		return this.GetValStringByKey("Msg");
 	}
 
@@ -53,7 +47,7 @@ public class RegularExpressionDtl extends XmlEn
 	 获取一个实例
 	*/
 	@Override
-	public XmlEns getGetNewEntities()
+	public XmlEns getNewEntities()
 	{
 		return new RegularExpressionDtls();
 	}

@@ -1,8 +1,10 @@
 package bp.wf.dts;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
+import bp.*;
+import bp.wf.*;
 
 /** 
  修复非法字段名称
@@ -12,7 +14,7 @@ public class PackAutoErrFormatFieldTable extends Method
 	/** 
 	 修复非法字段名称
 	*/
-	public PackAutoErrFormatFieldTable()throws Exception
+	public PackAutoErrFormatFieldTable()
 	{
 		this.Title = "修复非法字段名称,物理表名称";
 		this.Help = "在以前的版本中，用户创建表单物理表名、字段名的合法性没有检查会造成系统在自动创建物理表修复物理表时出现错误。此补丁可以批量修复全局的表单。";
@@ -42,8 +44,7 @@ public class PackAutoErrFormatFieldTable extends Method
 	 @return 返回执行结果
 	*/
 	@Override
-	public Object Do()throws Exception
-	{
+	public Object Do() throws Exception {
 		String keys = "~!@#$%^&*()+{}|:<>?`=[];,./～！＠＃￥％……＆×（）——＋｛｝｜：“《》？｀－＝［］；＇，．／";
 		char[] cc = keys.toCharArray();
 		for (char c : cc)
@@ -57,7 +58,7 @@ public class PackAutoErrFormatFieldTable extends Method
 		String msg = "";
 		for (MapAttr item : mattrs.ToJavaList())
 		{
-			String f = item.getKeyOfEn().toString();
+			String f = item.getKeyOfEn();
 			try
 			{
 				int i = Integer.parseInt(item.getKeyOfEn().substring(0, 1));

@@ -300,8 +300,7 @@ public class MyDeptFlow extends Entity
 	{
 		return this.GetValStrByKey(MyDeptFlowAttr.StarterName);
 	}
-	public final void setStarterName(String value) throws Exception
-	{
+	public final void setStarterName(String value){
 		this.SetValByKey(MyDeptFlowAttr.StarterName, value);
 	}
 	/** 
@@ -311,8 +310,7 @@ public class MyDeptFlow extends Entity
 	{
 		return this.GetValStrByKey(MyDeptFlowAttr.DeptName);
 	}
-	public final void setDeptName(String value) throws Exception
-	{
+	public final void setDeptName(String value){
 		this.SetValByKey(MyDeptFlowAttr.DeptName, value);
 	}
 	/** 
@@ -322,8 +320,7 @@ public class MyDeptFlow extends Entity
 	{
 		return this.GetValStrByKey(MyDeptFlowAttr.NodeName);
 	}
-	public final void setNodeName(String value) throws Exception
-	{
+	public final void setNodeName(String value){
 		this.SetValByKey(MyDeptFlowAttr.NodeName, value);
 	}
 	/** 
@@ -333,7 +330,7 @@ public class MyDeptFlow extends Entity
 	{
 		return this.GetValIntByKey(MyDeptFlowAttr.FK_Node);
 	}
-	public final void setFK_Node(int value) throws Exception
+	public final void setNodeID(int value) throws Exception
 	{
 		SetValByKey(MyDeptFlowAttr.FK_Node, value);
 	}
@@ -380,7 +377,7 @@ public class MyDeptFlow extends Entity
 				return "已完成";
 			case Runing:
 				return "在运行";
-			case HungUp:
+			case Hungup:
 				return "挂起";
 			case Askfor:
 				return "加签";
@@ -499,7 +496,7 @@ public class MyDeptFlow extends Entity
 		map.AddHidden(MyStartFlowAttr.FID, "=", "0");
 
 			//增加隐藏的查询条件.
-		SearchNormal search = new SearchNormal(MyDeptFlowAttr.FK_Dept, "部门", MyDeptFlowAttr.FK_Dept, "=", bp.web.WebUser.getFK_Dept(), 0, true);
+		SearchNormal search = new SearchNormal(MyDeptFlowAttr.FK_Dept, "部门", MyDeptFlowAttr.FK_Dept, "=", bp.web.WebUser.getDeptNo(), 0, true);
 
 		map.getSearchNormals().add(search);
 
@@ -511,7 +508,7 @@ public class MyDeptFlow extends Entity
 		rm.ClassMethodName = this+ ".DoOpenLastForm";
 		rm.Icon = "../../WF/Img/FileType/doc.gif";
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
-		rm.IsForEns = true;
+		rm.ItIsForEns = true;
 		map.AddRefMethod(rm);
 
 		this.set_enMap(map);

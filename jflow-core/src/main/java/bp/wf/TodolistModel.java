@@ -1,7 +1,5 @@
 package bp.wf;
 
-import bp.*;
-
 /** 
  普通工作节点处理模式
 */
@@ -32,7 +30,8 @@ public enum TodolistModel
 
 	private int intValue;
 	private static java.util.HashMap<Integer, TodolistModel> mappings;
-	private static java.util.HashMap<Integer, TodolistModel> getMappings()  {
+	private static java.util.HashMap<Integer, TodolistModel> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (TodolistModel.class)
@@ -47,15 +46,18 @@ public enum TodolistModel
 	}
 
 	private TodolistModel(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return intValue;
 	}
 
 	public static TodolistModel forValue(int value)
-	{return getMappings().get(value);
+	{
+		return getMappings().get(value);
 	}
 }

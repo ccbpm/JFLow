@@ -4,20 +4,22 @@ import bp.en.*;
 import java.util.*;
 
 /** 
- 信息 s
+ 类型 s
 */
 public class InfoTypes extends EntitiesNoName
 {
 	/** 
-	 信息
+	 类型
 	*/
-	public InfoTypes()  {
+	public InfoTypes()
+	{
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new InfoType();
 	}
 
@@ -28,7 +30,8 @@ public class InfoTypes extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<InfoType> ToJavaList() {
+	public final java.util.List<InfoType> ToJavaList()
+	{
 		return (java.util.List<InfoType>)(Object)this;
 	}
 	/** 
@@ -36,7 +39,8 @@ public class InfoTypes extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<InfoType> Tolist()  {
+	public final ArrayList<InfoType> Tolist()
+	{
 		ArrayList<InfoType> list = new ArrayList<InfoType>();
 		for (int i = 0; i < this.size(); i++)
 		{

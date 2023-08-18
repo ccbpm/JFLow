@@ -1,6 +1,7 @@
 package bp.ccfast.ccmenu;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.en.Map;
 
 /** 
  标签容器
@@ -10,7 +11,8 @@ public class Tab extends EntityNoName
 
 		///#region 属性
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (bp.web.WebUser.getIsAdmin() == true)
 		{
@@ -33,17 +35,19 @@ public class Tab extends EntityNoName
 	/** 
 	 标签容器
 	*/
-	public Tab() {
+	public Tab()
+	{
 	}
 	@Override
-	protected boolean beforeDelete() throws Exception {
+	protected boolean beforeDelete() throws Exception
+	{
 		return super.beforeDelete();
 	}
-	/** 
-	 EnMap
-	*/
+	/**
+	 * EnMap
+	 */
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -56,8 +60,8 @@ public class Tab extends EntityNoName
 		map.AddTBString(MenuAttr.Name, null, "名称", true, false, 0, 300, 200, true);
 		map.AddTBString(MenuAttr.Icon, null, "Icon", true, false, 0, 50, 50, true);
 
-			//从表明细.
-		map.AddDtl(new TabDtls(), TabDtlAttr.RefMenuNo, null);
+		//从表明细.
+		map.AddDtl(new TabDtls(), TabDtlAttr.RefMenuNo);
 
 		this.set_enMap(map);
 		return this.get_enMap();
@@ -66,7 +70,8 @@ public class Tab extends EntityNoName
 		///#endregion
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception {
+	protected boolean beforeUpdateInsertAction() throws Exception
+	{
 		return super.beforeUpdateInsertAction();
 	}
 }

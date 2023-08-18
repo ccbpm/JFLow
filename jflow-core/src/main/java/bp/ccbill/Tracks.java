@@ -1,7 +1,7 @@
 package bp.ccbill;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.*;
 import java.util.*;
 
@@ -15,10 +15,12 @@ public class Tracks extends EntitiesMyPK
 	/** 
 	 轨迹集合
 	*/
-	public Tracks()  {
+	public Tracks()
+	{
 	}
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		return new Track();
 	}
 
@@ -31,7 +33,8 @@ public class Tracks extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<Track> ToJavaList() {
+	public final java.util.List<Track> ToJavaList()
+	{
 		return (java.util.List<Track>)(Object)this;
 	}
 	/** 
@@ -39,7 +42,8 @@ public class Tracks extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<Track> Tolist()  {
+	public final ArrayList<Track> Tolist()
+	{
 		ArrayList<Track> list = new ArrayList<Track>();
 		for (int i = 0; i < this.size(); i++)
 		{

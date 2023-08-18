@@ -1,7 +1,13 @@
 package bp.wf.template.frm;
 
-import bp.en.*;
+import bp.da.*;
+import bp.en.*; import bp.en.Map;
+import bp.sys.*;
+import bp.*;
+import bp.wf.*;
+import bp.wf.template.*;
 import java.util.*;
+import java.io.*;
 
 /** 
  打印模板s
@@ -14,13 +20,15 @@ public class FrmPrintTemplates extends EntitiesMyPK
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FrmPrintTemplate();
 	}
 	/** 
 	 打印模板
 	*/
-	public FrmPrintTemplates() throws Exception {
+	public FrmPrintTemplates()
+	{
 	}
 	public FrmPrintTemplates(int nodeID) throws Exception {
 		this.Retrieve(FrmPrintTemplateAttr.NodeID, nodeID, null);
@@ -39,7 +47,8 @@ public class FrmPrintTemplates extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmPrintTemplate> ToJavaList() {
+	public final java.util.List<FrmPrintTemplate> ToJavaList()
+	{
 		return (java.util.List<FrmPrintTemplate>)(Object)this;
 	}
 	/** 
@@ -47,7 +56,8 @@ public class FrmPrintTemplates extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmPrintTemplate> Tolist()  {
+	public final ArrayList<FrmPrintTemplate> Tolist()
+	{
 		ArrayList<FrmPrintTemplate> list = new ArrayList<FrmPrintTemplate>();
 		for (int i = 0; i < this.size(); i++)
 		{

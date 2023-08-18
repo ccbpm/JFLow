@@ -1,6 +1,8 @@
 package bp.ccbill;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.sys.*;
+import bp.*;
 import java.util.*;
 
 /** 
@@ -13,13 +15,15 @@ public class DBListDBSrcs extends EntitiesNoName
 	/** 
 	 数据源实体s
 	*/
-	public DBListDBSrcs() throws Exception {
+	public DBListDBSrcs()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		return new DBListDBSrc();
 	}
 
@@ -32,7 +36,8 @@ public class DBListDBSrcs extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<DBListDBSrc> ToJavaList() {
+	public final java.util.List<DBListDBSrc> ToJavaList()
+	{
 		return (java.util.List<DBListDBSrc>)(Object)this;
 	}
 	/** 
@@ -40,7 +45,8 @@ public class DBListDBSrcs extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<DBListDBSrc> Tolist()  {
+	public final ArrayList<DBListDBSrc> Tolist()
+	{
 		ArrayList<DBListDBSrc> list = new ArrayList<DBListDBSrc>();
 		for (int i = 0; i < this.size(); i++)
 		{

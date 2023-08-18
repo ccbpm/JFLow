@@ -2,6 +2,7 @@ package bp.ccbill;
 
 import bp.da.*;
 import bp.en.*;
+import bp.en.Map;
 import bp.wf.*;
 import bp.sys.*;
 
@@ -13,7 +14,8 @@ public class DBList extends EntityNoName
 
 		///#region 权限控制.
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.OpenForAppAdmin();
 		uac.IsDelete = false;
@@ -22,13 +24,11 @@ public class DBList extends EntityNoName
 	}
 
 		///#endregion 权限控制.
-
-
 		///#region 属性
 	/** 
 	 物理表
 	*/
-	public final String getPTable()  {
+	public final String getPTable() throws Exception {
 		String s = this.GetValStrByKey(MapDataAttr.PTable);
 		if (DataType.IsNullOrEmpty(s) == true)
 		{
@@ -36,56 +36,49 @@ public class DBList extends EntityNoName
 		}
 		return s;
 	}
-	public final void setPTable(String value)
-	 {
+	public final void setPTable(String value)  {
 		this.SetValByKey(MapDataAttr.PTable, value);
 	}
 	/** 
 	 实体类型：@0=单据@1=编号名称实体@2=树结构实体
 	*/
-	public final EntityType getEntityType()  {
+	public final EntityType getEntityType() {
 		return EntityType.forValue(this.GetValIntByKey(DBListAttr.EntityType));
 	}
-	public final void setEntityType(EntityType value)
-	 {
+	public final void setEntityType(EntityType value)  {
 		this.SetValByKey(DBListAttr.EntityType, value.getValue());
 	}
 	/** 
 	 表单类型 (0=傻瓜，2=自由 ...)
 	*/
-	public final FrmType getFrmType()  {
+	public final FrmType getFrmType() {
 		return FrmType.forValue(this.GetValIntByKey(MapDataAttr.FrmType));
 	}
-	public final void setFrmType(FrmType value)
-	 {
+	public final void setFrmType(FrmType value)  {
 		this.SetValByKey(MapDataAttr.FrmType, value.getValue());
 	}
 	/** 
 	 表单树
 	*/
-	public final String getFKFormTree()
-	{
+	public final String getFKFormTree()  {
 		return this.GetValStrByKey(MapDataAttr.FK_FormTree);
 	}
-	public final void setFK_FormTree(String value)
-	 {
+	public final void setFKFormTree(String value)  {
 		this.SetValByKey(MapDataAttr.FK_FormTree, value);
 	}
 	/** 
 	 新建模式 @0=表格模式@1=卡片模式@2=不可用
 	*/
-	public final int getBtnNewModel()
-	{
+	public final int getBtnNewModel() {
 		return this.GetValIntByKey(DBListAttr.BtnNewModel);
 	}
-	public final void setBtnNewModel(int value)
-	 {
+	public final void setBtnNewModel(int value)  {
 		this.SetValByKey(DBListAttr.BtnNewModel, value);
 	}
 	/** 
 	 单据格式(流水号4)
 	*/
-	public final String getBillNoFormat()  {
+	public final String getBillNoFormat() throws Exception {
 		String str = this.GetValStrByKey(DBListAttr.BillNoFormat);
 		if (DataType.IsNullOrEmpty(str) == true)
 		{
@@ -93,14 +86,13 @@ public class DBList extends EntityNoName
 		}
 		return str;
 	}
-	public final void setBillNoFormat(String value)
-	 {
+	public final void setBillNoFormat(String value)  {
 		this.SetValByKey(DBListAttr.BillNoFormat, value);
 	}
 	/** 
 	 单据编号生成规则
 	*/
-	public final String getTitleRole()  {
+	public final String getTitleRole() throws Exception {
 		String str = this.GetValStrByKey(DBListAttr.TitleRole);
 		if (DataType.IsNullOrEmpty(str) == true)
 		{
@@ -108,160 +100,127 @@ public class DBList extends EntityNoName
 		}
 		return str;
 	}
-	public final void setTitleRole(String value)
-	 {
-		this.SetValByKey(DBListAttr.BillNoFormat, value);
-	}
 	/** 
 	 新建标签
 	*/
-	public final String getBtnNewLable()
-	{
+	public final String getBtnNewLable()  {
 		return this.GetValStrByKey(DBListAttr.BtnNewLable);
 	}
 	/** 
 	 删除标签
 	*/
-	public final String getBtnDelLable()
-	{
+	public final String getBtnDelLable()  {
 		return this.GetValStrByKey(DBListAttr.BtnDelLable);
 	}
 	/** 
 	 保存标签
 	*/
-	public final String getBtnSaveLable()
-	{
+	public final String getBtnSaveLable()  {
 		return this.GetValStrByKey(DBListAttr.BtnSaveLable);
 	}
 	/** 
 	 提交标签
 	*/
-	public final String getBtnSubmitLable()
-	{
+	public final String getBtnSubmitLable()  {
 		return this.GetValStrByKey(DBListAttr.BtnSubmitLable);
 	}
 	/** 
 	 查询标签
 	*/
-	public final String getBtnSearchLabel()
-	{
+	public final String getBtnSearchLabel()  {
 		return this.GetValStrByKey(DBListAttr.BtnSearchLabel);
 	}
 	/** 
 	 数据快照
 	*/
-	public final String getBtnDataVer()
-	{
+	public final String getBtnDataVer()  {
 		return this.GetValStrByKey(DBListAttr.BtnDataVer);
 	}
 	/** 
 	 分组按钮
 	*/
-	public final boolean getBtnGroupEnable()
-	{
+	public final boolean getBtnGroupEnable() {
 		return this.GetValBooleanByKey(DBListAttr.BtnGroupEnable);
 	}
-	public final String getBtnGroupLabel()
-	{
+	public final String getBtnGroupLabel()  {
 		return this.GetValStrByKey(DBListAttr.BtnGroupLabel);
 	}
 	/** 
 	 打印HTML按钮
 	*/
-	public final boolean getBtnPrintHtmlEnable()
-	{
+	public final boolean getBtnPrintHtmlEnable() {
 		return this.GetValBooleanByKey(DBListAttr.BtnPrintHtmlEnable);
 	}
-	public final String getBtnPrintHtml()
-	{
+	public final String getBtnPrintHtml()  {
 		return this.GetValStrByKey(DBListAttr.BtnPrintHtml);
 	}
 	/** 
 	 打印PDF按钮
 	*/
-	public final boolean getBtnPrintPDFEnable()
-	{
+	public final boolean getBtnPrintPDFEnable() {
 		return this.GetValBooleanByKey(DBListAttr.BtnPrintPDFEnable);
 	}
-	public final String getBtnPrintPDF()
-	{
+	public final String getBtnPrintPDF()  {
 		return this.GetValStrByKey(DBListAttr.BtnPrintPDF);
 	}
 	/** 
 	 打印RTF按钮
 	*/
-	public final boolean getBtnPrintRTFEnable()
-	{
+	public final boolean getBtnPrintRTFEnable() {
 		return this.GetValBooleanByKey(DBListAttr.BtnPrintRTFEnable);
 	}
-	public final String getBtnPrintRTF()
-	{
+	public final String getBtnPrintRTF()  {
 		return this.GetValStrByKey(DBListAttr.BtnPrintRTF);
 	}
 	/** 
 	 打印CCWord按钮
 	*/
-	public final boolean getBtnPrintCCWordEnable()
-	{
+	public final boolean getBtnPrintCCWordEnable() {
 		return this.GetValBooleanByKey(DBListAttr.BtnPrintCCWordEnable);
 	}
-	public final String getBtnPrintCCWord()
-	{
+	public final String getBtnPrintCCWord()  {
 		return this.GetValStrByKey(DBListAttr.BtnPrintCCWord);
 	}
 	/** 
 	 数据源类型
 	*/
-	public final int getDBType()
-	{
+	public final int getDBType() {
 		return this.GetValIntByKey(MapDataAttr.DBType);
 	}
-	public final String getDBSrc()
-	{
+	public final String getDBSrc()  {
 		return this.GetValStrByKey(MapDataAttr.DBSrc);
 	}
-	public final void setDBSrc(String value)
-	 {
+	public final void setDBSrc(String value)  {
 		this.SetValByKey(MapDataAttr.DBSrc, value);
 	}
-	public final String getExpEn()
-	{
+	public final String getExpEn()  {
 		return this.GetValStrByKey(MapDataAttr.ExpEn);
 	}
-	public final void setExpEn(String value)
-	 {
+	public final void setExpEn(String value)  {
 		this.SetValByKey(MapDataAttr.ExpEn, value);
 	}
-	public final String getExpList()
-	{
+	public final String getExpList()  {
 		return this.GetValStrByKey(MapDataAttr.ExpList);
 	}
-	public final void setExpList(String value)
-	 {
+	public final void setExpList(String value)  {
 		this.SetValByKey(MapDataAttr.ExpList, value);
 	}
-	public final String getExpCount()
-	{
+	public final String getExpCount()  {
 		return this.GetValStrByKey(MapDataAttr.ExpCount);
 	}
-	public final void setExpCount(String value)
-	 {
+	public final void setExpCount(String value)  {
 		this.SetValByKey(MapDataAttr.ExpCount, value);
 	}
-	public final String getMainTable()
-	{
+	public final String getMainTable()  {
 		return this.GetValStrByKey(DBListAttr.MainTable);
 	}
-	public final void setMainTable(String value)
-	 {
+	public final void setMainTable(String value)  {
 		this.SetValByKey(DBListAttr.MainTable, value);
 	}
-	public final String getMainTablePK()
-	{
+	public final String getMainTablePK()  {
 		return this.GetValStrByKey(DBListAttr.MainTablePK);
 	}
-	public final void setMainTablePK(String value)
-	 {
+	public final void setMainTablePK(String value)  {
 		this.SetValByKey(DBListAttr.MainTablePK, value);
 	}
 
@@ -272,46 +231,43 @@ public class DBList extends EntityNoName
 	/** 
 	 数据源实体
 	*/
-	public DBList()  {
+	public DBList()
+	{
 	}
 	/** 
 	 数据源实体
 	 
-	 param no 映射编号
+	 @param no 映射编号
 	*/
-	public DBList(String no) throws Exception {
+	public DBList(String no) throws Exception
+	{
 		super(no);
 	}
-	/** 
-	 EnMap
-	*/
+	/**
+	 * EnMap
+	 */
 	@Override
-	public bp.en.Map getEnMap()  {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
-		{
 			return this.get_enMap();
-		}
 		Map map = new Map("Sys_MapData", "数据源实体");
-
 		map.setCodeStruct("4");
 
-
 		///#region 基本属性.
-		map.AddGroupAttr("基本属性");
+		map.AddGroupAttr("基本属性", "");
 		map.AddTBStringPK(MapDataAttr.No, null, "表单编号", true, true, 1, 190, 20);
 		map.SetHelperAlert(MapDataAttr.No, "也叫表单ID,系统唯一.");
 
 		map.AddDDLSysEnum(MapDataAttr.FrmType, 0, "表单类型", true, true, "BillFrmType", "@0=傻瓜表单@1=自由表单@8=开发者表单");
-			//  map.AddTBString(MapDataAttr.PTable, null, "存储表", false, false, 0, 500, 20, true);
-			// map.SetHelperAlert(MapDataAttr.PTable, "存储的表名,如果您修改一个不存在的系统将会自动创建一个表.");
+		//  map.AddTBString(MapDataAttr.PTable, null, "存储表", false, false, 0, 500, 20, true);
+		// map.SetHelperAlert(MapDataAttr.PTable, "存储的表名,如果您修改一个不存在的系统将会自动创建一个表.");
 		map.AddTBString(MapDataAttr.Name, null, "表单名称", true, false, 0, 200, 20, true);
-			// map.AddDDLEntities(MapDataAttr.FK_FormTree, "01", "表单类别", new SysFormTrees(), false);
-
-			///#endregion 基本属性.
-
+		// map.AddDDLEntities(MapDataAttr.FK_FormTree, "01", "表单类别", new SysFormTrees(), false);
+		// #endregion 基本属性.
 
 			///#region 数据源.
-		map.AddGroupAttr("数据源");
+		map.AddGroupAttr("数据源", "");
 		map.AddTBInt(MapDataAttr.DBType, 0, "数据源类型", true, true);
 		map.AddTBString(MapDataAttr.DBSrc, null, "数据源", false, false, 0, 600, 20);
 
@@ -321,11 +277,10 @@ public class DBList extends EntityNoName
 		map.AddTBString(DBListAttr.MainTable, null, "列表数据源主表", false, false, 0, 50, 20, false);
 		map.AddTBString(DBListAttr.MainTablePK, null, "列表数据源主表主键", false, false, 0, 50, 20, false);
 		map.AddTBString(MapDataAttr.ExpCount, null, "列表总数", false, false, 0, 600, 20, true);
+		///#endregion 数据源.
 
-			///#endregion 数据源.
-
-		///#region 外观.
-		map.AddGroupAttr("外观");
+			///#region 外观.
+		map.AddGroupAttr("外观", "");
 		map.AddDDLSysEnum(FrmAttr.RowOpenModel, 2, "行记录打开模式", true, true, "RowOpenMode", "@0=新窗口打开@1=在本窗口打开@2=弹出窗口打开,关闭后不刷新列表@3=弹出窗口打开,关闭后刷新列表");
 		String cfg = "@0=MyDictFrameWork.htm 实体与实体相关功能编辑器";
 		cfg += "@1=MyDict.htm 实体编辑器";
@@ -340,9 +295,7 @@ public class DBList extends EntityNoName
 
 		map.AddDDLSysEnum(FrmAttr.EntityEditModel, 0, "编辑模式", true, true, FrmAttr.EntityEditModel, "@0=表格@1=行编辑");
 		map.SetHelperAlert(FrmAttr.EntityEditModel, "用什么方式打开实体列表进行编辑0=只读查询模式SearchDict.htm,1=行编辑模式SearchEditer.htm");
-
 			///#endregion 外观.
-
 
 			///#region 数据源实体.
 		map.AddDDLSysEnum(DBListAttr.EntityType, 0, "业务类型", true, false, DBListAttr.EntityType, "@0=独立表单@1=单据@2=编号名称实体@3=树结构实体");
@@ -354,7 +307,7 @@ public class DBList extends EntityNoName
 		map.AddTBString(FrmBillAttr.ColorSet, null, "颜色设置", true, false, 0, 100, 20, true);
 		map.AddTBString(FrmBillAttr.FieldSet, null, "字段求和求平均设置", true, false, 0, 100, 20, true);
 
-			//字段格式化函数.
+		//字段格式化函数.
 		map.AddTBString("ForamtFunc", null, "字段格式化函数", true, false, 0, 200, 60, true);
 		String msg = "对字段的显示使用函数进行处理";
 		msg += "\t\n 1. 对于字段内容需要处理后在输出出来.";
@@ -364,7 +317,7 @@ public class DBList extends EntityNoName
 		map.SetHelperAlert("ForamtFunc", msg);
 
 			///#endregion 数据源实体.
-			//增加参数字段.
+		//增加参数字段.
 		map.AddTBAtParas(4000);
 
 
@@ -399,14 +352,14 @@ public class DBList extends EntityNoName
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
 
-			//rm = new RefMethod();
-			//rm.Title = "步骤4: 总数数据"; // "设计表单";
-			//rm.ClassMethodName = this.ToString() + ".DoExpCount";
-			//rm.Icon = "../../WF/Img/Event.png";
-			//rm.Visable = true;
-			//rm.refMethodType = RefMethodType.RightFrameOpen;
-			//rm.Target = "_blank";
-			//map.AddRefMethod(rm);
+		//rm = new RefMethod();
+		//rm.Title = "步骤4: 总数数据"; // "设计表单";
+		//rm.ClassMethodName = this.ToString() + ".DoExpCount";
+		//rm.Icon = "../../WF/Img/Event.png";
+		//rm.Visable = true;
+		//rm.refMethodType = RefMethodType.RightFrameOpen;
+		//rm.Target = "_blank";
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "步骤4: 测试"; // "设计表单";
@@ -420,7 +373,7 @@ public class DBList extends EntityNoName
 
 		rm = new RefMethod();
 		rm.Title = "查询条件"; // "设计表单";
-							   //   rm.GroupName = "高级选项";
+						   //   rm.GroupName = "高级选项";
 		rm.ClassMethodName = this.toString() + ".DoSearch";
 		rm.Icon = "../../WF/Img/Event.png";
 		rm.Visable = true;
@@ -445,33 +398,33 @@ public class DBList extends EntityNoName
 
 		///#endregion
 
-	public final String DoVideo()  {
+	public final String DoVideo()
+	{
 		return "https://www.bilibili.com/video/BV15P4y1p7Sj";
 	}
-
-
-	public final String DoDBSrc()  {
+	public final String DoDBSrc() {
 		return "../../Comm/RefFunc/EnOnly.htm?EnName=BP.CCBill.DBListDBSrc&No=" + this.getNo();
 	}
 
-	public final String DoExpEn()  {
+	public final String DoExpEn() {
 		return "../../CCBill/Admin/DBList/FieldsORM.htm?s=34&FrmID=" + this.getNo() + "&ExtType=PageLoadFull&RefNo=ss3";
 	}
-	public final String DoExpList()  {
+	public final String DoExpList() {
 		return "../../CCBill/Admin/DBList/ListDBSrc.htm?s=34&FrmID=" + this.getNo() + "&ExtType=PageLoadFull&RefNo=ss3";
 	}
-	public final String DoExpCount()  {
+	public final String DoExpCount() {
 		return "../../CCBill/Admin/DBList/ListDBCount.htm?s=34&FrmID=" + this.getNo() + "&ExtType=PageLoadFull&RefNo=ss3";
 	}
-	public final String DoDBList()  {
+	public final String DoDBList() {
 		return "../../CCBill/SearchDBList.htm?FrmID=" + this.getNo();
 	}
-	public final String DoSearch()  {
+	public final String DoSearch() {
 		return "../../CCBill/Admin/Collection/SearchCond.htm?s=34&FrmID=" + this.getNo() + "&ExtType=PageLoadFull&RefNo=ss3";
 	}
 
 	@Override
-	protected void afterInsertUpdateAction() throws Exception {
+	protected void afterInsertUpdateAction() throws Exception
+	{
 		super.afterInsertUpdateAction();
 	}
 
@@ -488,7 +441,7 @@ public class DBList extends EntityNoName
 		{
 			/* WorkID */
 			MapAttr attr = new MapAttr();
-			attr.setFK_MapData(this.getNo());
+			attr.setFrmID( this.getNo());
 			attr.setKeyOfEn("OID");
 			attr.setName("主键ID");
 			attr.setMyDataType(DataType.AppInt);
@@ -496,7 +449,7 @@ public class DBList extends EntityNoName
 			attr.setLGType(FieldTypeS.Normal);
 			attr.setUIVisible(false);
 			attr.setUIIsEnable(false);
-			attr.setDefVal( "0");
+			attr.setDefVal("0");
 			attr.setEditType(EditType.Readonly);
 			attr.Insert();
 		}
@@ -504,8 +457,8 @@ public class DBList extends EntityNoName
 		{
 			/* 单据编号 */
 			MapAttr attr = new MapAttr();
-			attr.setFK_MapData(this.getNo());
-			attr.setHisEditType( EditType.UnDel);
+			attr.setFrmID( this.getNo());
+			attr.setHisEditType(EditType.UnDel);
 			attr.setKeyOfEn(GERptAttr.BillNo);
 			attr.setName("编号"); //  单据编号
 			attr.setMyDataType(DataType.AppString);
@@ -513,10 +466,10 @@ public class DBList extends EntityNoName
 			attr.setLGType(FieldTypeS.Normal);
 			attr.setUIVisible(true);
 			attr.setUIIsEnable(false);
-			attr.setUIIsLine(false);
+			attr.setUIIsLine (false);
 			attr.setMinLen(0);
 			attr.setMaxLen(100);
-			attr.setIdx( -100);
+			attr.setIdx(-1);
 			attr.Insert();
 		}
 
@@ -524,8 +477,8 @@ public class DBList extends EntityNoName
 		{
 			/* 名称 */
 			MapAttr attr = new MapAttr();
-			attr.setFK_MapData(this.getNo());
-			attr.setHisEditType( EditType.UnDel);
+			attr.setFrmID(this.getNo());
+			attr.setHisEditType(EditType.UnDel);
 			attr.setKeyOfEn(GERptAttr.Title); // "FlowEmps";
 			attr.setName("名称"); //   单据模式， ccform的模式.
 			attr.setMyDataType(DataType.AppString);
@@ -536,15 +489,15 @@ public class DBList extends EntityNoName
 			attr.setUIIsLine(true);
 			attr.setMinLen(0);
 			attr.setMaxLen(400);
-			attr.setIdx( -90);
+			attr.setIdx(-90);
 			attr.Insert();
 		}
 		if (attrs.contains(this.getNo() + "_BillState") == false)
 		{
 			/* 单据状态 */
 			MapAttr attr = new MapAttr();
-			attr.setFK_MapData(this.getNo());
-			attr.setHisEditType( EditType.UnDel);
+			attr.setFrmID( this.getNo());
+			attr.setHisEditType(EditType.UnDel);
 			attr.setKeyOfEn("BillState"); // "FlowEmps";
 			attr.setName("单据状态");
 			attr.setMyDataType(DataType.AppInt);
@@ -555,7 +508,7 @@ public class DBList extends EntityNoName
 			attr.setUIIsLine(true);
 			attr.setMinLen(0);
 			attr.setMaxLen(10);
-			attr.setIdx( -98);
+			attr.setIdx(-98);
 			attr.Insert();
 		}
 
@@ -563,8 +516,8 @@ public class DBList extends EntityNoName
 		{
 			/* 发起人 */
 			MapAttr attr = new MapAttr();
-			attr.setFK_MapData(this.getNo());
-			attr.setHisEditType( EditType.UnDel);
+			attr.setFrmID( this.getNo());
+			attr.setHisEditType(EditType.UnDel);
 			attr.setKeyOfEn("Starter");
 			attr.setName("创建人");
 			attr.setMyDataType(DataType.AppString);
@@ -574,16 +527,16 @@ public class DBList extends EntityNoName
 			attr.setUIVisible(false);
 			attr.setUIIsEnable(false);
 			attr.setMinLen(0);
-			attr.setMaxLen(32);
-			attr.setIdx( -1);
+			attr.setMaxLen(100);
+			attr.setIdx(-1);
 			attr.Insert();
 		}
 		if (attrs.contains(this.getNo() + "_StarterName") == false)
 		{
 			/* 创建人名称 */
 			MapAttr attr = new MapAttr();
-			attr.setFK_MapData(this.getNo());
-			attr.setHisEditType( EditType.UnDel);
+			attr.setFrmID( this.getNo());
+			attr.setHisEditType(EditType.UnDel);
 			attr.setKeyOfEn("StarterName");
 			attr.setName("创建人名称");
 			attr.setMyDataType(DataType.AppString);
@@ -594,7 +547,7 @@ public class DBList extends EntityNoName
 			attr.setUIIsEnable(false);
 			attr.setMinLen(0);
 			attr.setMaxLen(32);
-			attr.setIdx( -1);
+			attr.setIdx(-1);
 			attr.Insert();
 		}
 
@@ -602,8 +555,8 @@ public class DBList extends EntityNoName
 		{
 			/* 参数 */
 			MapAttr attr = new MapAttr();
-			attr.setFK_MapData(this.getNo());
-			attr.setHisEditType( EditType.UnDel);
+			attr.setFrmID( this.getNo());
+			attr.setHisEditType(EditType.UnDel);
 			attr.setKeyOfEn(GERptAttr.AtPara);
 			attr.setName("参数"); // 单据编号
 			attr.setMyDataType(DataType.AppString);
@@ -611,18 +564,18 @@ public class DBList extends EntityNoName
 			attr.setLGType(FieldTypeS.Normal);
 			attr.setUIVisible(false);
 			attr.setUIIsEnable(false);
-			attr.setUIIsLine(false);
+			attr.setUIIsLine (false);
 			attr.setMinLen(0);
 			attr.setMaxLen(4000);
-			attr.setIdx( -99);
+			attr.setIdx(-99);
 			attr.Insert();
 		}
 
 		if (attrs.contains(this.getNo() + "_RDT") == false)
 		{
 			MapAttr attr = new MapAttr();
-			attr.setFK_MapData(this.getNo());
-			attr.setHisEditType( EditType.UnDel);
+			attr.setFrmID( this.getNo());
+			attr.setHisEditType(EditType.UnDel);
 			attr.setKeyOfEn("RDT");
 			attr.setName("创建时间");
 			attr.setMyDataType(DataType.AppDateTime);
@@ -630,16 +583,16 @@ public class DBList extends EntityNoName
 			attr.setLGType(FieldTypeS.Normal);
 			attr.setUIVisible(false);
 			attr.setUIIsEnable(false);
-			attr.setUIIsLine(false);
-			attr.setIdx( -97);
+			attr.setUIIsLine (false);
+			attr.setIdx(-97);
 			attr.Insert();
 		}
 		if (attrs.contains(this.getNo() + "_FK_Dept") == false)
 		{
 			/* 创建人部门 */
 			MapAttr attr = new MapAttr();
-			attr.setFK_MapData(this.getNo());
-			attr.setHisEditType( EditType.UnDel);
+			attr.setFrmID( this.getNo());
+			attr.setHisEditType(EditType.UnDel);
 			attr.setKeyOfEn("FK_Dept");
 			attr.setName("创建人部门");
 			attr.setMyDataType(DataType.AppString);
@@ -650,15 +603,15 @@ public class DBList extends EntityNoName
 			attr.setUIIsEnable(false);
 			attr.setMinLen(0);
 			attr.setMaxLen(100);
-			attr.setIdx( -1);
+			attr.setIdx(-1);
 			attr.Insert();
 		}
 		if (attrs.contains(this.getNo() + "_OrgNo") == false)
 		{
 			/* 创建人名称 */
 			MapAttr attr = new MapAttr();
-			attr.setFK_MapData(this.getNo());
-			attr.setHisEditType( EditType.UnDel);
+			attr.setFrmID( this.getNo());
+			attr.setHisEditType(EditType.UnDel);
 			attr.setKeyOfEn("OrgNo");
 			attr.setName("创建人所在的组织");
 			attr.setMyDataType(DataType.AppString);
@@ -668,8 +621,8 @@ public class DBList extends EntityNoName
 			attr.setUIVisible(false);
 			attr.setUIIsEnable(false);
 			attr.setMinLen(0);
-			attr.setMaxLen(32);
-			attr.setIdx( -1);
+			attr.setMaxLen(100);
+			attr.setIdx(-1);
 			attr.Insert();
 		}
 

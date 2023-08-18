@@ -2,10 +2,11 @@ package bp.wf.dts;
 
 import bp.da.*;
 import bp.port.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.web.*;
+import bp.*;
 import bp.wf.*;
-import bp.wf.Glo;
+import java.util.*;
 
 /** 
  处理延期的任务 的摘要说明
@@ -15,7 +16,7 @@ public class DTS_DealDeferredWork extends Method
 	/** 
 	 处理延期的任务
 	*/
-	public DTS_DealDeferredWork()throws Exception
+	public DTS_DealDeferredWork()
 	{
 		this.Title = "处理逾期的任务";
 		this.Help = "需要每天执行一次,对于已经逾期的工作,按照逾期的规则处理。";
@@ -49,15 +50,16 @@ public class DTS_DealDeferredWork extends Method
 	 @return 返回执行结果
 	*/
 	@Override
-	public Object Do()throws Exception
-	{
+	public Object Do() throws Exception {
+		//String sql = "SELECT * FROM WF_EmpWorks WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE OutTimeDeal >0 ) AND SDT <='" + DataType.getCurrentDate() + "' ORDER BY FK_Emp";
+		//改成小于号SDT <'" + DataType.getCurrentDate()
 		String sql = "SELECT * FROM WF_EmpWorks WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE OutTimeDeal >0 ) AND SDT <'" + DataType.getCurrentDate() + "' ORDER BY FK_Emp";
+		//String sql = "SELECT * FROM WF_EmpWorks WHERE FK_Node IN (SELECT NodeID FROM WF_Node WHERE OutTimeDeal >0 ) AND SDT <='2013-12-30' ORDER BY FK_Emp";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		String msg = "";
 		String dealWorkIDs = "";
 		for (DataRow dr : dt.Rows)
 		{
-
 			String FK_Emp = dr.getValue("FK_Emp").toString();
 			String fk_flow = dr.getValue("FK_Flow").toString();
 			int fk_node = Integer.parseInt(dr.getValue("FK_Node").toString());
@@ -71,7 +73,7 @@ public class DTS_DealDeferredWork extends Method
 			}
 			dealWorkIDs += "," + workid + ",";
 
-			if (!WebUser.getNo().equals(FK_Emp))
+			if (!Objects.equals(WebUser.getNo(), FK_Emp))
 			{
 				Emp emp = new Emp(FK_Emp);
 				WebUser.SignInOfGener(emp, "CH", false, false, null, null);
@@ -90,8 +92,9 @@ public class DTS_DealDeferredWork extends Method
 				wk.Retrieve();
 				Object tempVar = nd.getDoOutTimeCond();
 				String exp = tempVar instanceof String ? (String)tempVar : null;
-				if (Glo.ExeExp(exp, wk) == false)
+				if (this.ExeExp(exp, wk) == false)
 				{
+				  //  msg += "err@条件表达式配置错误:"+exp;
 					continue; // 不能通过条件的设置.
 				}
 			}
@@ -143,5 +146,98 @@ public class DTS_DealDeferredWork extends Method
 		WebUser.SignInOfGener(emp1, "CH", false, false, null, null);
 		return msg;
 
+	}
+
+	/** 
+	 计算表达式是否通过(或者是否正确.)
+	 
+	 @param exp 表达式
+	 @param en 实体
+	 @return true/false
+	*/
+	public final boolean ExeExp(String exp, Entity en) throws Exception {
+		exp = exp.replace("@WebUser.No", WebUser.getNo());
+		exp = exp.replace("@WebUser.Name", WebUser.getName());
+		exp = exp.replace("@WebUser.FK_DeptNameOfFull", WebUser.getDeptNameOfFull());
+		exp = exp.replace("@WebUser.FK_DeptName", WebUser.getDeptName());
+		exp = exp.replace("@WebUser.FK_Dept", WebUser.getDeptNo());
+
+		exp = exp.replace("@RDT", DataType.getCurrentDate());
+		exp = exp.replace("@DateTime", DataType.getCurrentDateTime());
+
+
+		String[] strs = exp.split("[ ]", -1);
+		boolean isPass = false;
+
+		String key = strs[0].trim();
+		String oper = strs[1].trim();
+		String val = strs[2].trim();
+		val = val.replace("'", "");
+		val = val.replace("%", "");
+		val = val.replace("~", "");
+		Row row = en.getRow();
+		for (String item : row.keySet())
+		{
+			if (!Objects.equals(key, item.trim()))
+			{
+				continue;
+			}
+
+			String valPara = row.get(key).toString();
+			if (Objects.equals(oper, "="))
+			{
+				if (Objects.equals(valPara, val))
+				{
+					return true;
+				}
+			}
+
+			if (Objects.equals(oper.toUpperCase(), "LIKE"))
+			{
+				if (valPara.contains(val))
+				{
+					return true;
+				}
+			}
+
+			if (Objects.equals(oper, ">"))
+			{
+				if (Float.parseFloat(valPara) > Float.parseFloat(val))
+				{
+					return true;
+				}
+			}
+			if (Objects.equals(oper, ">="))
+			{
+				if (Float.parseFloat(valPara) >= Float.parseFloat(val))
+				{
+					return true;
+				}
+			}
+			if (Objects.equals(oper, "<"))
+			{
+				if (Float.parseFloat(valPara) < Float.parseFloat(val))
+				{
+					return true;
+				}
+			}
+			if (Objects.equals(oper, "<="))
+			{
+				if (Float.parseFloat(valPara) <= Float.parseFloat(val))
+				{
+					return true;
+				}
+			}
+
+			if (Objects.equals(oper, "!="))
+			{
+				if (Float.parseFloat(valPara) != Float.parseFloat(val))
+				{
+					return true;
+				}
+			}
+			throw new RuntimeException("@参数格式错误:" + exp + " Key=" + key + " oper=" + oper + " Val=" + val);
+		}
+		return false;
 	}
 }

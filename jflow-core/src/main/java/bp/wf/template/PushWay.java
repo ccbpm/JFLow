@@ -1,6 +1,5 @@
 package bp.wf.template;
 
-
 /** 
  推送的方式
 */
@@ -19,7 +18,7 @@ public enum PushWay
 	*/
 	SpecEmps,
 	/** 
-	 指定的工作岗位s
+	 指定的工作角色s
 	*/
 	SpecStations,
 	/** 
@@ -37,11 +36,13 @@ public enum PushWay
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue() {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
-	public static PushWay forValue(int value) 
-	{return values()[value];
+	public static PushWay forValue(int value)
+	{
+		return values()[value];
 	}
 }

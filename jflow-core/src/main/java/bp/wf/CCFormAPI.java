@@ -1,20 +1,18 @@
 package bp.wf;
 
-import bp.difference.handler.CommonUtils;
-import bp.pub.PubClass;
-import bp.wf.*;
 import bp.da.*;
-import bp.port.*;
 import bp.web.*;
-import bp.wf.template.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
 import bp.difference.*;
 import bp.wf.template.frm.*;
+import bp.tools.*;
 import bp.*;
+import com.google.gson.JsonObject;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.*;
 
 /** 
  表单引擎api
@@ -22,50 +20,89 @@ import java.util.Enumeration;
 public class CCFormAPI extends Dev2Interface
 {
 	/** 
-	 生成报表
+	 获得Pop的字段的值
 	 
-	 param templeteFilePath 模版路径
-	 param ds 数据源
-	 @return 生成单据的路径
+	 @param fieldName
+	 @param pk
+	 @return 返回data, No=编号,Name=名称两个列. 
+	 @exception Exception
 	*/
-	public static void Frm_GenerBill(String templeteFullFile, String saveToDir, String saveFileName, PrintFileType fileType, DataSet ds, String fk_mapData) throws Exception {
-		MapData md = new MapData(fk_mapData);
-		GEEntity entity = md.GenerGEEntityByDataSet(ds);
+	public static DataTable GenerPopData2022(String pk, String fieldName)
+	{
+		//判断该字段是否启用了pop返回值？
+	   String sql = "SELECT  Tag1 AS VAL FROM Sys_FrmEleDB WHERE RefPKVal=" + pk + " AND EleID='" + fieldName + "'";
+		String emps = "";
+		DataTable dtVals = DBAccess.RunSQLReturnTable(sql);
 
-		bp.pub.RTFEngine rtf = new bp.pub.RTFEngine();
-		rtf.getHisEns().clear();
-		rtf.getEnsDataDtls().clear();
+		DataTable dt = new DataTable();
+		dt.Columns.Add("No");
+		dt.Columns.Add("Name");
 
-		rtf.getHisEns().AddEntity(entity);
-		ArrayList dtls = entity.getDtls();
-
-		for (Object item : dtls)
+		//获取接受人并格式化接受人, 
+		if (dtVals.Rows.size() > 0)
 		{
-			rtf.getEnsDataDtls().add(item);
+			for (DataRow dr : dtVals.Rows)
+			{
+				emps += dr.getValue(0).toString() + ",";
+			}
 		}
 
-		rtf.MakeDoc(templeteFullFile, saveToDir, saveFileName, null);
-	}
+		if (emps.contains(",") && emps.contains(";"))
+		{
+			/*如果包含,; 例如 zhangsan,张三;lisi,李四;*/
+			String[] myemps1 = emps.split("[;]", -1);
+			for (String str : myemps1)
+			{
+				if (DataType.IsNullOrEmpty(str))
+				{
+					continue;
+				}
 
+				String[] ss = str.split("[,]", -1);
+				DataRow dr = dt.NewRow();
+				dr.setValue(0, ss[0]);
+				dt.Rows.add(dr);
+			}
+			return dt;
+		}
+
+		emps = emps.replace(";", ",");
+		emps = emps.replace("；", ",");
+		emps = emps.replace("，", ",");
+		emps = emps.replace("、", ",");
+		emps = emps.replace("@", ",");
+
+		// 把它加入接受人员列表中.
+		String[] myemps = emps.split("[,]", -1);
+		for (String s : myemps)
+		{
+			if (DataType.IsNullOrEmpty(s))
+			{
+				continue;
+			}
+
+			DataRow dr = dt.NewRow();
+			dr.setValue(0, s);
+			dt.Rows.add(dr);
+		}
+		return dt;
+	}
 	/** 
 	 仅获取表单数据
 	 
-	 param enName
-	 param pkval
-	 param atParas
-	 param specDtlFrmID
-	 @return 
+	 @param enName
+	 @param pkval
+	 @param atParas
+	 @return
 	*/
 
 	private static DataSet GenerDBForVSTOExcelFrmModelOfEntity(String enName, Object pkval, String atParas) throws Exception {
 		return GenerDBForVSTOExcelFrmModelOfEntity(enName, pkval, atParas, null);
 	}
 
-//ORIGINAL LINE: private static DataSet GenerDBForVSTOExcelFrmModelOfEntity(string enName, object pkval, string atParas, string specDtlFrmID = null)
 	private static DataSet GenerDBForVSTOExcelFrmModelOfEntity(String enName, Object pkval, String atParas, String specDtlFrmID) throws Exception {
 		DataSet myds = new DataSet();
 
-		// 创建实体..
 
 			///#region 主表
 
@@ -77,26 +114,26 @@ public class CCFormAPI extends Dev2Interface
 
 
 		//设置外部传入的默认值.
-		if (SystemConfig.getIsBSsystem() == true)
+		if (SystemConfig.isBSsystem() == true)
 		{
 			// 处理传递过来的参数。
 			//2019-07-25 zyt改造
-			for (String k : CommonUtils.getRequest().getParameterMap().keySet())
+			for (String k : ContextHolderUtils.getRequest().getParameterMap().keySet())
 			{
-				en.SetValByKey(k, bp.sys.Glo.getRequest().getParameter(k));
+				en.SetValByKey(k, ContextHolderUtils.getRequest().getParameter(k));
 			}
 		}
 
 		//主表数据放入集合.
 		DataTable mainTable = en.ToDataTableField("Main");
-		mainTable.TableName = "MainTable";
+		mainTable.setTableName("MainTable");
 		myds.Tables.add(mainTable);
 
 
 			///#region 主表 Sys_MapData
 		String sql = "SELECT * FROM Sys_MapData WHERE 1=2 ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		dt.TableName = "Sys_MapData";
+		dt.setTableName("Sys_MapData");
 
 		Map map = en.getEnMapInTime();
 		DataRow dr = dt.NewRow();
@@ -134,7 +171,7 @@ public class CCFormAPI extends Dev2Interface
 					//增加枚举字段.
 					if (myds.contains(attr.getUIBindKey()) == false)
 					{
-						String mysql = "SELECT IntKey AS No, Lab as Name FROM "+bp.sys.base.Glo.SysEnum()+" WHERE EnumKey='" + attr.getUIBindKey() + "' ORDER BY IntKey ";
+						String mysql = "SELECT IntKey AS No, Lab as Name FROM " + bp.sys.base.Glo.SysEnum() + " WHERE EnumKey='" + attr.getUIBindKey() + "' ORDER BY IntKey ";
 						DataTable dtEnum = DBAccess.RunSQLReturnTable(mysql);
 						dtEnum.TableName = attr.getUIBindKey();
 						myds.Tables.add(dtEnum);
@@ -151,8 +188,8 @@ public class CCFormAPI extends Dev2Interface
 					if (myds.contains(ens.toString()) == false && attr.getUIIsReadonly() == false)
 					{
 						ens.RetrieveAll();
-						DataTable mydt = ens.ToDataTableDescField("dt");
-						mydt.TableName = ens.toString();
+						DataTable mydt = ens.ToDataTableDescField();
+						mydt.setTableName(ens.toString());
 						myds.Tables.add(mydt);
 					}
 					break;
@@ -188,7 +225,7 @@ public class CCFormAPI extends Dev2Interface
 
 				///#region  把从表的数据放入集合.
 
-			Entities dtls = item.getEns();
+			Entities dtls = item.Ens;
 
 			QueryObject qo = qo = new QueryObject(dtls);
 
@@ -197,10 +234,10 @@ public class CCFormAPI extends Dev2Interface
 				qo.addOrderBy("RDT"); //按照日期进行排序，不用也可以.
 			}
 
-			qo.AddWhere(item.getRefKey(), pkval);
+			qo.AddWhere(item.RefKey, pkval);
 			DataTable dtDtl = qo.DoQueryToTable();
 
-			dtDtl.TableName = item.getEnsName(); //修改明细表的名称.
+			dtDtl.setTableName(item.getEnsName()); //修改明细表的名称.
 			myds.Tables.add(dtDtl); //加入这个明细表.
 
 
@@ -209,13 +246,13 @@ public class CCFormAPI extends Dev2Interface
 
 				///#region 从表 Sys_MapDtl (相当于mapdata)
 
-			Entity dtl = dtls.getGetNewEntity();
+			Entity dtl = dtls.getNewEntity();
 			map = dtl.getEnMap();
 
 			//明细表的 描述 . 
 			sql = "SELECT * FROM Sys_MapDtl WHERE 1=2";
 			dt = DBAccess.RunSQLReturnTable(sql);
-			dt.TableName = "Sys_MapDtl_For_" + item.getEnsName();
+			dt.setTableName("Sys_MapDtl_For_" + item.getEnsName());
 
 			dr = dt.NewRow();
 			dr.setValue(MapDtlAttr.No, item.getEnsName());
@@ -231,7 +268,7 @@ public class CCFormAPI extends Dev2Interface
 				///#region 明细表 Sys_MapAttr
 			sql = "SELECT * FROM Sys_MapAttr WHERE 1=2";
 			dt = DBAccess.RunSQLReturnTable(sql);
-			dt.TableName = "Sys_MapAttr_For_" + item.getEnsName();
+			dt.setTableName("Sys_MapAttr_For_" + item.getEnsName());
 			for (Attr attr : map.getAttrs())
 			{
 				dr = dt.NewRow();
@@ -253,9 +290,9 @@ public class CCFormAPI extends Dev2Interface
 						//增加枚举字段.
 						if (myds.contains(attr.getUIBindKey()) == false)
 						{
-							String mysql = "SELECT IntKey AS No, Lab as Name FROM "+bp.sys.base.Glo.SysEnum()+" WHERE EnumKey='" + attr.getUIBindKey() + "' ORDER BY IntKey ";
+							String mysql = "SELECT IntKey AS No, Lab as Name FROM " + bp.sys.base.Glo.SysEnum() + " WHERE EnumKey='" + attr.getUIBindKey() + "' ORDER BY IntKey ";
 							DataTable dtEnum = DBAccess.RunSQLReturnTable(mysql);
-							dtEnum.TableName = attr.getUIBindKey();
+							dtEnum.setTableName(attr.getUIBindKey());
 							myds.Tables.add(dtEnum);
 						}
 						break;
@@ -270,7 +307,7 @@ public class CCFormAPI extends Dev2Interface
 						{
 							ens.RetrieveAll();
 							DataTable mydt = ens.ToDataTableDescField("dt");
-							mydt.TableName = ens.toString();
+							mydt.setTableName(ens.toString());
 							myds.Tables.add(mydt);
 						}
 						break;
@@ -295,10 +332,9 @@ public class CCFormAPI extends Dev2Interface
 	/** 
 	 仅获取表单数据
 	 
-	 param frmID 表单ID
-	 param pkval 主键
-	 param atParas 参数
-	 param specDtlFrmID 指定明细表的参数，如果为空就标识主表数据，否则就是从表数据.
+	 @param frmID 表单ID
+	 @param pkval 主键
+	 @param atParas 参数
 	 @return 数据
 	*/
 
@@ -306,24 +342,15 @@ public class CCFormAPI extends Dev2Interface
 		return GenerDBForVSTOExcelFrmModel(frmID, pkval, atParas, null);
 	}
 
-//ORIGINAL LINE: public static DataSet GenerDBForVSTOExcelFrmModel(string frmID, object pkval, string atParas, string specDtlFrmID = null)
 	public static DataSet GenerDBForVSTOExcelFrmModel(String frmID, Object pkval, String atParas, String specDtlFrmID) throws Exception {
 		//如果是一个实体类.
 		if (frmID.toUpperCase().contains("BP."))
 		{
 			// 执行map同步.
 			Entities ens = ClassFactory.GetEns(frmID + "s");
-			Entity myen = ens.getGetNewEntity();
+			Entity myen = ens.getNewEntity();
 			myen.DTSMapToSys_MapData(null);
 			return GenerDBForVSTOExcelFrmModelOfEntity(frmID, pkval, atParas, specDtlFrmID = null);
-
-			//上面这行代码的解释（2017-04-25）：
-			//若不加上这行，代码执行到" MapData md = new MapData(frmID); ”会报错：
-			//@没有找到记录[表单注册表  Sys_MapData, [ 主键=No 值=BP.LI.BZQX ]记录不存在,请与管理员联系, 或者确认输入错误.@在Entity(BP.Sys.MapData)查询期间出现错误@   在 bp.en.Entity.Retrieve() 位置 D:\ccflow\Components\BP.En30\En\Entity.cs:行号 1051
-			//即使加上：
-			//frmID = frmID.Substring(0, frmID.Length - 1);
-			//也会出现该问题
-			//2017-04-25 15:26:34：new MapData(frmID)应传入"BZQX”，但考虑到 GenerDBForVSTOExcelFrmModelOfEntity()运行稳定，暂不采用『统一执行下方代码』的方案。
 		}
 
 		//数据容器,就是要返回的对象.
@@ -434,7 +461,7 @@ public class CCFormAPI extends Dev2Interface
 			}
 			else
 			{
-				if (!item.getNo().equals(specDtlFrmID))
+				if (!Objects.equals(item.getNo(), specDtlFrmID))
 				{
 					continue;
 				}
@@ -445,19 +472,19 @@ public class CCFormAPI extends Dev2Interface
 			//明细表的主表描述
 			sql = "SELECT * FROM Sys_MapDtl WHERE No='" + item.getNo() + "'";
 			dt = DBAccess.RunSQLReturnTable(sql);
-			dt.TableName = "Sys_MapDtl_For_" + (DataType.IsNullOrEmpty(item.getAlias()) ? item.getNo() : item.getAlias());
+			dt.TableName = "Sys_MapDtl_For_" + ((item.getAlias() == null || item.getAlias().isEmpty() ? item.getNo() : item.getAlias()));
 			myds.Tables.add(dt);
 
 			//明细表的表单描述
 			sql = "SELECT * FROM Sys_MapAttr WHERE FK_MapData='" + item.getNo() + "'";
 			dtMapAttr = DBAccess.RunSQLReturnTable(sql);
-			dtMapAttr.TableName = "Sys_MapAttr_For_" + (DataType.IsNullOrEmpty(item.getAlias()) ? item.getNo() : item.getAlias());
+			dtMapAttr.TableName = "Sys_MapAttr_For_" + ((item.getAlias() == null || item.getAlias().isEmpty() ? item.getNo() : item.getAlias()));
 			myds.Tables.add(dtMapAttr);
 
 			//明细表的配置信息.
 			sql = "SELECT * FROM Sys_MapExt WHERE FK_MapData='" + item.getNo() + "'";
 			dt = DBAccess.RunSQLReturnTable(sql);
-			dt.TableName = "Sys_MapExt_For_" + (DataType.IsNullOrEmpty(item.getAlias()) ? item.getNo() : item.getAlias());
+			dt.TableName = "Sys_MapExt_For_" + ((item.getAlias() == null || item.getAlias().isEmpty() ? item.getNo() : item.getAlias()));
 			myds.Tables.add(dt);
 
 
@@ -485,7 +512,7 @@ public class CCFormAPI extends Dev2Interface
 						continue;
 					}
 
-					String mysql = "SELECT IntKey AS No, Lab as Name FROM "+bp.sys.base.Glo.SysEnum()+" WHERE EnumKey='" + uiBindKey + "' ORDER BY IntKey ";
+					String mysql = "SELECT IntKey AS No, Lab as Name FROM " + bp.sys.base.Glo.SysEnum() + " WHERE EnumKey='" + uiBindKey + "' ORDER BY IntKey ";
 					DataTable dtEnum = DBAccess.RunSQLReturnTable(mysql);
 					dtEnum.TableName = uiBindKey;
 					myds.Tables.add(dtEnum);
@@ -514,11 +541,11 @@ public class CCFormAPI extends Dev2Interface
 					Object tempVar2 = me.getDoc();
 					String fullSQL = tempVar2 instanceof String ? (String)tempVar2 : null;
 					fullSQL = fullSQL.replace("~", ",");
-					fullSQL = Glo.DealExp(fullSQL, en, null);
+					fullSQL = bp.wf.Glo.DealExp(fullSQL, en, null);
 
 					dt = DBAccess.RunSQLReturnTable(fullSQL);
 
-					dt.TableName = mypk;
+					dt.setTableName(mypk);
 					myds.Tables.add(dt);
 					continue;
 				}
@@ -549,12 +576,12 @@ public class CCFormAPI extends Dev2Interface
 
 
 			///#region 主表数据
-		if (SystemConfig.getIsBSsystem() == true)
+		if (SystemConfig.isBSsystem() == true)
 		{
 			// 处理传递过来的参数。
-			for (String k : CommonUtils.getRequest().getParameterMap().keySet())
+			for (String k : ContextHolderUtils.getRequest().getParameterMap().keySet())
 			{
-				en.SetValByKey(k, bp.sys.Glo.getRequest().getParameter(k));
+				en.SetValByKey(k, ContextHolderUtils.getRequest().getParameter(k));
 			}
 		}
 
@@ -575,7 +602,7 @@ public class CCFormAPI extends Dev2Interface
 			//执行通用的装载方法.
 			MapAttrs attrs = new MapAttrs(frmID);
 			MapDtls dtls = new MapDtls(frmID);
-			Entity tempVar3 = Glo.DealPageLoadFull(en, me, attrs, dtls);
+			Entity tempVar3 = DealPageLoadFull(en, me, attrs, dtls);
 			en = tempVar3 instanceof GEEntity ? (GEEntity)tempVar3 : null;
 		}
 
@@ -598,7 +625,7 @@ public class CCFormAPI extends Dev2Interface
 			}
 			else
 			{
-				if (!dtl.getNo().equals(specDtlFrmID))
+				if (!Objects.equals(dtl.getNo(), specDtlFrmID))
 				{
 					continue;
 				}
@@ -609,7 +636,7 @@ public class CCFormAPI extends Dev2Interface
 			GEDtls dtls = new GEDtls(dtl.getNo());
 			QueryObject qo = null;
 
-			if (dtl.getRefPK().equals(""))
+			if (Objects.equals(dtl.getRefPK(), ""))
 			{
 				try
 				{
@@ -634,7 +661,7 @@ public class CCFormAPI extends Dev2Interface
 				}
 				catch (java.lang.Exception e)
 				{
-					dtls.getGetNewEntity().CheckPhysicsTable();
+					dtls.getNewEntity().CheckPhysicsTable();
 				}
 			}
 			else
@@ -677,7 +704,7 @@ public class CCFormAPI extends Dev2Interface
 				}
 			}
 
-			dtDtl.TableName = DataType.IsNullOrEmpty(dtl.getAlias()) ? dtl.getNo() : dtl.getAlias(); //edited by liuxc,2017-10-10.如果有别名，则使用别名，没有则使用No
+			dtDtl.TableName = (dtl.getAlias() == null || dtl.getAlias().isEmpty() ? dtl.getNo() : dtl.getAlias()); //edited by liuxc,2017-10-10.如果有别名，则使用别名，没有则使用No
 			myds.Tables.add(dtDtl); //加入这个明细表, 如果没有数据，xml体现为空.
 		}
 
@@ -706,7 +733,7 @@ public class CCFormAPI extends Dev2Interface
 					continue;
 				}
 
-				String mysql = "SELECT IntKey AS No, Lab as Name FROM "+bp.sys.base.Glo.SysEnum()+" WHERE EnumKey='" + uiBindKey + "' ORDER BY IntKey ";
+				String mysql = "SELECT IntKey AS No, Lab as Name FROM " + bp.sys.base.Glo.SysEnum() + " WHERE EnumKey='" + uiBindKey + "' ORDER BY IntKey ";
 				DataTable dtEnum = DBAccess.RunSQLReturnTable(mysql);
 				dtEnum.TableName = uiBindKey;
 				myds.Tables.add(dtEnum);
@@ -737,7 +764,7 @@ public class CCFormAPI extends Dev2Interface
 				Object tempVar5 = me.getDoc();
 				String fullSQL = tempVar5 instanceof String ? (String)tempVar5 : null;
 				fullSQL = fullSQL.replace("~", ",");
-				fullSQL = Glo.DealExp(fullSQL, en, null);
+				fullSQL = bp.wf.Glo.DealExp(fullSQL, en, null);
 				dt = DBAccess.RunSQLReturnTable(fullSQL);
 				dt.TableName = myPK; //可能存在隐患，如果多个字段，绑定同一个表，就存在这样的问题.
 				myds.Tables.add(dt);
@@ -753,7 +780,6 @@ public class CCFormAPI extends Dev2Interface
 
 			///#endregion 主表的 外键表/枚举
 
-
 		String name = "";
 		for (DataTable item : myds.Tables)
 		{
@@ -763,22 +789,557 @@ public class CCFormAPI extends Dev2Interface
 		return myds;
 	}
 	/** 
-	 获取从表数据，用于显示dtl.htm 
+	 执行PageLoad装载数据
 	 
-	 param frmID 表单ID
-	 param pkval 主键
-	 param atParas 参数
-	 param specDtlFrmID 指定明细表的参数，如果为空就标识主表数据，否则就是从表数据.
-	 @return 数据
+	 @param item
+	 @param en
+	 @param mattrs
+	 @param dtls
+	 @return 
 	*/
-	public static DataSet GenerDBForCCFormDtl(String frmID, MapDtl dtl, int pkval, String atParas) throws Exception
-	{
-		return GenerDBForCCFormDtl(frmID, dtl, pkval, atParas, "0",0);
+
+	public static Entity DealPageLoadFull(Entity en, MapExt item, MapAttrs mattrs, MapDtls dtls, boolean isSelf, int nodeID) throws Exception {
+		return DealPageLoadFull(en, item, mattrs, dtls, isSelf, nodeID, 0);
 	}
 
+	public static Entity DealPageLoadFull(Entity en, MapExt item, MapAttrs mattrs, MapDtls dtls, boolean isSelf) throws Exception {
+		return DealPageLoadFull(en, item, mattrs, dtls, isSelf, 0, 0);
+	}
 
-	public static DataSet GenerDBForCCFormDtl(String frmID, MapDtl dtl, int pkval, String atParas, String dtlRefPKVal,long fid) throws Exception
-	{
+	public static Entity DealPageLoadFull(Entity en, MapExt item, MapAttrs mattrs, MapDtls dtls) throws Exception {
+		return DealPageLoadFull(en, item, mattrs, dtls, false, 0, 0);
+	}
+
+	public static Entity DealPageLoadFull(Entity en, MapExt item, MapAttrs mattrs, MapDtls dtls, boolean isSelf, int nodeID, long workID) throws Exception {
+		if (item == null)
+		{
+			return en;
+		}
+
+		DataTable dt = null;
+		String sql = item.getDoc();
+		/* 如果有填充主表的sql  */
+		sql = bp.wf.Glo.DealExp(sql, en, null);
+		String fk_dbSrc = item.getDBSrcNo();
+		//填充方式，0=sql，1=url,2=CCFromRef.js , 3=webapi
+		String doWay = item.getDoWay();
+
+		SFDBSrc sfdb = null;
+		//如果是sql方式填充
+		if (doWay.equals("0") || doWay.equals("None"))
+		{
+			if (DataType.IsNullOrEmpty(fk_dbSrc) == false && fk_dbSrc.equals("local") == false)
+			{
+				sfdb = new SFDBSrc(fk_dbSrc);
+			}
+			if (DataType.IsNullOrEmpty(sql) == false)
+			{
+				if (DataType.IsNullOrEmpty(sql) == false)
+				{
+					int num = sql.toUpperCase().split("WHERE").length - 1;
+					if (num == 1)
+					{
+						String sqlext = sql.substring(0, sql.toUpperCase().indexOf("WHERE"));
+						sqlext = sql.substring(sqlext.length() + 1);
+						if (sqlext.contains("@"))
+						{
+							throw new RuntimeException("设置的sql有错误可能有没有替换的变量:" + sql);
+						}
+					}
+					if (num > 1 && sql.contains("@"))
+					{
+						throw new RuntimeException("设置的sql有错误可能有没有替换的变量:" + sql);
+					}
+					if (sfdb != null)
+					{
+						dt = sfdb.RunSQLReturnTable(sql);
+					}
+					else
+					{
+						dt = DBAccess.RunSQLReturnTable(sql);
+					}
+
+					Attrs attrs = en.getEnMap().getAttrs();
+
+					if (dt.Rows.size() == 1)
+					{
+						DataRow dr = dt.Rows.get(0);
+						for (DataColumn dc : dt.Columns)
+						{
+							//去掉一些不需要copy的字段.
+							switch (dc.ColumnName)
+							{
+								case WorkAttr.OID:
+								case WorkAttr.FID:
+								case WorkAttr.Rec:
+								case WorkAttr.MD5:
+								case GERptAttr.FlowEnder:
+								case GERptAttr.FlowEnderRDT:
+								case GERptAttr.AtPara:
+								case GERptAttr.PFlowNo:
+								case GERptAttr.PWorkID:
+								case GERptAttr.PNodeID:
+								case GERptAttr.BillNo:
+								case GERptAttr.FlowDaySpan:
+								case "RefPK":
+								case WorkAttr.RecText:
+									continue;
+								default:
+									break;
+							}
+
+							//如果不包含数据库.
+							if (attrs.contains(dc.ColumnName) == false)
+							{
+								continue;
+							}
+
+							//开始赋值.
+							if (DataType.IsNullOrEmpty(en.GetValStringByKey(dc.ColumnName)) || Objects.equals(en.GetValStringByKey(dc.ColumnName), "0") || en.GetValStringByKey(dc.ColumnName).contains("0.0"))
+							{
+								en.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName).toString());
+								continue;
+							}
+
+							//获取attr
+							Entity entity = mattrs.GetEntityByKey("KeyOfEn", dc.ColumnName);
+							if (entity != null)
+							{
+								MapAttr attr = (MapAttr)entity;
+								if (attr.getLGType() == FieldTypeS.Enum && en.GetValStringByKey(dc.ColumnName).equals("-1"))
+								{
+									en.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName).toString());
+									continue;
+								}
+								continue;
+							}
+
+						}
+					}
+				}
+			}
+		}
+		//如果是webapi方式填充
+		else if (doWay.equals("3"))
+		{
+			//请求地址
+			String apiUrl = sql;
+			//设置请求头
+			Hashtable headerMap = new Hashtable();
+
+			//设置返回值格式
+			headerMap.put("Content-Type", "application/json");
+			//设置token，用于接口校验
+			headerMap.put("Authorization", WebUser.getToken());
+
+			try
+			{
+				//post方式请求数据
+				String postData = bp.tools.HttpClientUtil.doPost(apiUrl,null, headerMap);
+				//数据序列化
+				JSONObject jsonData = JSONObject.fromObject(postData);
+				//code=200，表示请求成功，否则失败
+				if (!jsonData.get("code").toString().equals("200"))
+					return en;
+
+				//获取返回的数据
+				JSONObject data = JSONObject.fromObject(jsonData.getString("data"));
+				//获取主表数据
+				String mainTable = data.getString("mainTable");
+				dt = Json.ToDataTable(mainTable);
+
+				//获取全部附件数据
+				JSONArray athsJSON = JSONArray.fromObject(jsonData.getString("aths"));
+				for (int i = 0; i < athsJSON.size(); i++)
+				{
+					//获取附件
+					JSONObject athDatas = athsJSON.getJSONObject(i);
+					//获取附件组件ID
+					String FK_FrmAttachment = athDatas.getString("attachmentid");
+					//获取当前组件中的附件数据
+					JSONArray athArryData =JSONArray.fromObject(athDatas.getString("attachmentdbs"));
+					//填充附件数据
+					for (int k = 0; k < athArryData.size(); k++)
+					{
+						JSONObject athData = athArryData.getJSONObject(k);
+						//生成mypk主键值
+						String guid = DBAccess.GenerGUID(0, null, null);
+						FrmAttachment attachment = new FrmAttachment(FK_FrmAttachment);
+
+						//是否要先删除掉原有附件？根据实际需求，再做调整
+						//FrmAttachmentDBs attachmentDBs = new FrmAttachmentDBs();
+						//attachmentDBs.Retrieve(FrmAttachmentDBAttr.RefPKVal, workID, FrmAttachmentDBAttr.FK_MapData, attachment.getFrmID());
+						//attachmentDBs.Delete();
+
+						//插入数据
+						FrmAttachmentDB attachmentDB = new FrmAttachmentDB();
+						attachmentDB.setMyPK(guid);
+						attachmentDB.setFKFrmAttachment(FK_FrmAttachment);
+						attachmentDB.setFrmID(attachment.getFrmID());
+						attachmentDB.setRefPKVal( String.valueOf(workID));
+						attachmentDB.setFID(0); //先默认为0
+						attachmentDB.setRec(athData.getString("rec")); //执行人
+						attachmentDB.setFileFullName(athData.getString("fileFullName")); //附件全路径
+						attachmentDB.setFileName(athData.getString("fileName")); //附件名称
+						attachmentDB.setFileExts(athData.getString("fileExts")); //文件类型
+						attachmentDB.setSort(athData.getString("sort")); //附件类型
+						attachmentDB.setDeptNo(athData.getString("fk_dept")); //上传人所在部门
+						attachmentDB.setDeptName(athData.getString("fk_deptName")); //上传人所在部门名称
+						attachmentDB.setRecName(athData.getString("recName")); //上传人名称
+						attachmentDB.setRDT(athData.getString("rdt")); //上传时间
+						attachmentDB.setUploadGUID(guid);
+						attachment.Insert();
+					}
+				}
+
+				//获取从表数据
+				JSONArray dtlJSON = jsonData.getJSONArray("dtls");
+				for (int i = 0; i < dtlJSON.size(); i++)
+				{
+					JSONObject dtlDatas = dtlJSON.getJSONObject(i);
+					//获取从表编号
+					String dtlNo = dtlDatas.getString("dtlNo");
+					//定义map
+					MapDtl dtl = new MapDtl(dtlNo);
+					//插入之前判断
+					GEDtls gedtls = null;
+					try
+					{
+						gedtls = new GEDtls(dtl.getNo());
+						if (dtl.getDtlOpenType() == DtlOpenType.ForFID)
+						{
+							if (gedtls.RetrieveByAttr(GEDtlAttr.RefPK, workID) > 0)
+							{
+								continue;
+							}
+						}
+						else
+						{
+							//如果存在数据，默认先删除
+							if (gedtls.RetrieveByAttr(GEDtlAttr.RefPK, en.getPKVal()) > 0)
+							{
+								gedtls.Delete(GEDtlAttr.RefPK, en.getPKVal());
+							}
+						}
+					}
+					catch (RuntimeException ex)
+					{
+						bp.en.Entity tempVar = gedtls.getNewEntity();
+						(tempVar instanceof GEDtl ? (GEDtl)tempVar : null).CheckPhysicsTable();
+					}
+					//获取从表数据
+					JSONArray dtlArryData = dtlDatas.getJSONArray("dtl");
+					for (int k = 0; k < dtlArryData.size(); k++)
+					{
+						//获取一条数据
+						JSONObject dtlData = dtlArryData.getJSONObject(k);
+						//从表数据
+						String dtlDataStr = dtlData.getString("dtlData");
+						//从表附件数据
+						JSONArray dtlAthData = dtlData.getJSONArray("dtlAths");
+						//从表数据字符串，转换成datatable
+						DataTable dtlDt = Json.ToDataTable(dtlDataStr);
+						//执行数据插入
+						for (DataRow dr : dtlDt.Rows)
+						{
+							bp.en.Entity tempVar2 = gedtls.getNewEntity();
+							GEDtl gedtl = tempVar2 instanceof GEDtl ? (GEDtl)tempVar2 : null;
+							for (DataColumn dc : dt.Columns)
+							{
+								gedtl.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName).toString());
+							}
+
+							switch (dtl.getDtlOpenType())
+							{
+								case ForEmp: // 按人员来控制.
+									gedtl.setRefPK(en.getPKVal().toString());
+									gedtl.setFID(Long.parseLong(en.getPKVal().toString()));
+									break;
+								case ForWorkID: // 按工作ID来控制
+									gedtl.setRefPK(en.getPKVal().toString());
+									gedtl.setFID(Long.parseLong(en.getPKVal().toString()));
+									break;
+								case ForFID: // 按流程ID来控制.
+									gedtl.setRefPK(String.valueOf(workID));
+									gedtl.setFID(Long.parseLong(en.getPKVal().toString()));
+									break;
+							}
+							gedtl.setRDT(DataType.getCurrentDateTime());
+							gedtl.setRec(WebUser.getNo());
+							gedtl.Insert();
+						}
+					}
+				}
+			}
+			catch (RuntimeException ex)
+			{
+				throw new RuntimeException("接口请求失败,message:" + ex.getMessage().toString());
+			}
+		}
+		if (DataType.IsNullOrEmpty(item.getTag1()) || item.getTag1().length() < 15)
+		{
+			return en;
+		}
+
+		// 填充从表.
+		for (MapDtl dtl : dtls.ToJavaList())
+		{
+			//如果有数据，就不要填充了.
+
+			String[] sqls = item.getTag1().split("[$]", -1);
+			for (String mysql : sqls)
+			{
+				if (DataType.IsNullOrEmpty(mysql))
+				{
+					continue;
+				}
+				if (mysql.contains(dtl.getNo() + ":") == false)
+				{
+					continue;
+				}
+				if (mysql.equals(dtl.getNo() + ":") == true)
+				{
+					continue;
+				}
+
+
+					///#region 处理sql.
+				sql = Glo.DealSQLExp(mysql.replace(dtl.getNo() + ":", "").toString(), en, null);
+
+					///#endregion 处理sql.
+
+				if (DataType.IsNullOrEmpty(sql))
+				{
+					continue;
+				}
+
+				int num = sql.toUpperCase().split("WHERE").length - 1;
+				if (num == 1)
+				{
+					String sqlext = sql.substring(0, sql.toUpperCase().indexOf("WHERE"));
+					sqlext = sql.substring(sqlext.length() + 1);
+					if (sqlext.contains("@"))
+					{
+						throw new RuntimeException("设置的sql有错误可能有没有替换的变量:" + sql);
+					}
+				}
+				if (num > 1 && sql.contains("@"))
+				{
+					throw new RuntimeException("设置的sql有错误可能有没有替换的变量:" + sql);
+				}
+
+				if (isSelf == true)
+				{
+					MapDtl mdtlSln = new MapDtl();
+					mdtlSln.setNo(dtl.getNo() + "_" + nodeID);
+					int result = mdtlSln.RetrieveFromDBSources();
+					if (result != 0)
+					{
+						dtl.setDtlOpenType(mdtlSln.getDtlOpenType());
+					}
+				}
+
+
+
+				GEDtls gedtls = null;
+
+				try
+				{
+					gedtls = new GEDtls(dtl.getNo());
+					if (dtl.getDtlOpenType() == DtlOpenType.ForFID)
+					{
+						if (gedtls.RetrieveByAttr(GEDtlAttr.RefPK, workID) > 0)
+						{
+							continue;
+						}
+					}
+					else
+					{
+						if (gedtls.RetrieveByAttr(GEDtlAttr.RefPK, en.getPKVal()) > 0)
+						{
+							continue;
+						}
+					}
+
+
+					//gedtls.Delete(GEDtlAttr.RefPK, en.getPKVal());
+				}
+				catch (RuntimeException ex)
+				{
+					bp.en.Entity tempVar3 = gedtls.getNewEntity();
+					(tempVar3 instanceof GEDtl ? (GEDtl)tempVar3 : null).CheckPhysicsTable();
+				}
+
+				sql = sql.startsWith(dtl.getNo() + "=") ? sql.substring((dtl.getNo() + "=").length()) : sql;
+				if (sfdb != null)
+				{
+					dt = sfdb.RunSQLReturnTable(sql);
+				}
+				else
+				{
+					dt = DBAccess.RunSQLReturnTable(sql);
+				}
+
+				for (DataRow dr : dt.Rows)
+				{
+					bp.en.Entity tempVar4 = gedtls.getNewEntity();
+					GEDtl gedtl = tempVar4 instanceof GEDtl ? (GEDtl)tempVar4 : null;
+					for (DataColumn dc : dt.Columns)
+					{
+						gedtl.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName).toString());
+					}
+
+					switch (dtl.getDtlOpenType())
+					{
+						case ForEmp: // 按人员来控制.
+							gedtl.setRefPK(en.getPKVal().toString());
+							gedtl.setFID(Long.parseLong(en.getPKVal().toString()));
+							break;
+						case ForWorkID: // 按工作ID来控制
+							gedtl.setRefPK(en.getPKVal().toString());
+							gedtl.setFID(Long.parseLong(en.getPKVal().toString()));
+							break;
+						case ForFID: // 按流程ID来控制.
+							gedtl.setRefPK(String.valueOf(workID));
+							gedtl.setFID(Long.parseLong(en.getPKVal().toString()));
+							break;
+					}
+					gedtl.setRDT(DataType.getCurrentDateTime());
+					gedtl.setRec(WebUser.getNo());
+					gedtl.Insert();
+				}
+			}
+		}
+		return en;
+	}
+	/** 
+	 获取上传附件集合信息
+	 
+	 @param athDesc
+	 @param pkval
+	 @param FK_FrmAttachment
+	 @param workid
+	 @param fid
+	 @param pworkid
+	 @param isContantSelf
+	 @param fk_node
+	 @return
+	*/
+
+	public static bp.sys.FrmAttachmentDBs GenerFrmAttachmentDBs(FrmAttachment athDesc, String pkval, String FK_FrmAttachment, long workid, long fid, long pworkid, boolean isContantSelf, int fk_node) throws Exception {
+		return GenerFrmAttachmentDBs(athDesc, pkval, FK_FrmAttachment, workid, fid, pworkid, isContantSelf, fk_node, null);
+	}
+
+	public static bp.sys.FrmAttachmentDBs GenerFrmAttachmentDBs(FrmAttachment athDesc, String pkval, String FK_FrmAttachment, long workid, long fid, long pworkid, boolean isContantSelf) throws Exception {
+		return GenerFrmAttachmentDBs(athDesc, pkval, FK_FrmAttachment, workid, fid, pworkid, isContantSelf, 0, null);
+	}
+
+	public static bp.sys.FrmAttachmentDBs GenerFrmAttachmentDBs(FrmAttachment athDesc, String pkval, String FK_FrmAttachment, long workid, long fid, long pworkid) throws Exception {
+		return GenerFrmAttachmentDBs(athDesc, pkval, FK_FrmAttachment, workid, fid, pworkid, true, 0, null);
+	}
+
+	public static bp.sys.FrmAttachmentDBs GenerFrmAttachmentDBs(FrmAttachment athDesc, String pkval, String FK_FrmAttachment, long workid, long fid) throws Exception {
+		return GenerFrmAttachmentDBs(athDesc, pkval, FK_FrmAttachment, workid, fid, 0, true, 0, null);
+	}
+
+	public static bp.sys.FrmAttachmentDBs GenerFrmAttachmentDBs(FrmAttachment athDesc, String pkval, String FK_FrmAttachment, long workid) throws Exception {
+		return GenerFrmAttachmentDBs(athDesc, pkval, FK_FrmAttachment, workid, 0, 0, true, 0, null);
+	}
+
+	public static bp.sys.FrmAttachmentDBs GenerFrmAttachmentDBs(FrmAttachment athDesc, String pkval, String FK_FrmAttachment) throws Exception {
+		return GenerFrmAttachmentDBs(athDesc, pkval, FK_FrmAttachment, 0, 0, 0, true, 0, null);
+	}
+
+	public static FrmAttachmentDBs GenerFrmAttachmentDBs(FrmAttachment athDesc, String pkval, String FK_FrmAttachment, long workid, long fid, long pworkid, boolean isContantSelf, int fk_node, String fk_mapData) throws Exception {
+		if (pkval == null)
+		{
+			pkval = "0"; //解决预览的时候的错误.
+		}
+
+		FrmAttachmentDBs dbs = new FrmAttachmentDBs();
+		//查询使用的workId
+		String ctrlWayId = "";
+		if (FK_FrmAttachment.contains("AthMDtl") == true || athDesc.GetParaBoolen("IsDtlAth") == true)
+		{
+			ctrlWayId = pkval;
+		}
+		else
+		{
+			MapData mapData = new MapData(athDesc.getFrmID());
+			if (mapData.getEntityType() == EntityType.FrmDict || mapData.getEntityType() == EntityType.FrmBill)
+			{
+				ctrlWayId = pkval;
+			}
+			else
+			{
+				ctrlWayId = bp.wf.Dev2Interface.GetAthRefPKVal(workid, pworkid, fid, fk_node, fk_mapData, athDesc);
+			}
+		}
+
+
+		//如果是空的，就返回空数据结构. @lizhen.
+		if (ctrlWayId.equals("0") == true)
+		{
+			return dbs;
+		}
+
+		QueryObject qo = new QueryObject(dbs);
+		//从表附件
+		if (FK_FrmAttachment.contains("AthMDtl") || athDesc.GetParaBoolen("IsDtlAth") == true)
+		{
+			/*如果是一个明细表的多附件，就直接按照传递过来的PK来查询.*/
+			qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, pkval);
+			qo.addAnd();
+			qo.AddWhere(FrmAttachmentDBAttr.NoOfObj, athDesc.getNoOfObj());
+			qo.DoQuery();
+			return dbs;
+		}
+		if (athDesc.getHisCtrlWay() == AthCtrlWay.MySelfOnly || athDesc.getHisCtrlWay() == AthCtrlWay.PK)
+		{
+			qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, pkval);
+			qo.addAnd();
+			qo.AddWhere(FrmAttachmentDBAttr.FK_FrmAttachment, FK_FrmAttachment);
+			if (isContantSelf == false)
+			{
+				qo.addAnd();
+				qo.AddWhere(FrmAttachmentDBAttr.Rec, "!=", WebUser.getNo());
+			}
+			qo.addOrderBy("Idx,RDT");
+			qo.DoQuery();
+			return dbs;
+		}
+
+		/* 继承模式 */
+		if (athDesc.getAthUploadWay() == AthUploadWay.Interwork)
+		{
+			qo.AddWhere(FrmAttachmentDBAttr.RefPKVal, ctrlWayId);
+		}
+		else
+		{
+			qo.AddWhereIn(FrmAttachmentDBAttr.RefPKVal, "('" + ctrlWayId + "','" + pkval + "')");
+		}
+
+		qo.addAnd();
+		qo.AddWhere(FrmAttachmentDBAttr.NoOfObj, athDesc.getNoOfObj());
+
+		if (isContantSelf == false)
+		{
+			qo.addAnd();
+			qo.AddWhere(FrmAttachmentDBAttr.Rec, "!=", WebUser.getNo());
+		}
+		qo.addOrderBy("Idx,RDT");
+		qo.DoQuery();
+		return dbs;
+	}
+	/** 
+	 获取从表数据，用于显示dtl.htm 
+	 
+	 @param frmID 表单ID
+	 @param pkval 主键
+	 @param atParas 参数
+	 @return 数据
+	*/
+	public static DataSet GenerDBForCCFormDtl(String frmID, MapDtl dtl, int pkval, String atParas, String dtlRefPKVal, long fid) throws Exception {
 		//数据容器,就是要返回的对象.
 		DataSet myds = new DataSet();
 
@@ -799,9 +1360,13 @@ public class CCFormAPI extends Dev2Interface
 				try
 				{
 					if (en.getRow().containsKey(key) == true) //有就该变.
-						en.getRow().SetValByKey(key,ap.GetValStrByKey(key));
+					{
+						en.getRow().put(key, ap.GetValStrByKey(key));
+					}
 					else
+					{
 						en.getRow().put(key, ap.GetValStrByKey(key)); //增加他.
+					}
 				}
 				catch (RuntimeException ex)
 				{
@@ -809,69 +1374,64 @@ public class CCFormAPI extends Dev2Interface
 				}
 			}
 		}
-		if (SystemConfig.getIsBSsystem() == true)
+		if (SystemConfig.isBSsystem() == true)
 		{
 			// 处理传递过来的参数。
-			Enumeration enu = bp.sys.Glo.getRequest().getParameterNames();
-			while (enu.hasMoreElements()) {
-				String k = (String) enu.nextElement();
-				en.SetValByKey(k, bp.sys.Glo.getRequest().getParameter(k));
+			for (String k : ContextHolderUtils.getRequest().getParameterMap().keySet())
+			{
+				en.SetValByKey(k, ContextHolderUtils.getRequest().getParameter(k));
 			}
-
 		}
 
 
 
-		///加载从表表单模版信息.
+			///#region 加载从表表单模版信息.
 
 		DataTable Sys_MapDtl = dtl.ToDataTableField("Sys_MapDtl");
 		myds.Tables.add(Sys_MapDtl);
 
 		//明细表的表单描述
-		DataTable Sys_MapAttr = dtl.getMapAttrs().ToDataTableField("Sys_MapAttr");
+		MapAttrs attrs = dtl.getMapAttrs();
+		DataTable Sys_MapAttr = attrs.ToDataTableField("Sys_MapAttr");
 		myds.Tables.add(Sys_MapAttr);
 
 		//明细表的配置信息.
-		DataTable Sys_MapExt = dtl.getMapExts().ToDataTableField("Sys_MapExt");
+		MapExts mes = dtl.getMapExts();
+		DataTable Sys_MapExt = mes.ToDataTableField("Sys_MapExt");
 		myds.Tables.add(Sys_MapExt);
 
 		//启用附件，增加附件信息
 		DataTable Sys_FrmAttachment = dtl.getFrmAttachments().ToDataTableField("Sys_FrmAttachment");
 		myds.Tables.add(Sys_FrmAttachment);
-		/// 加载从表表单模版信息.
+
+			///#endregion 加载从表表单模版信息.
 
 
-		///把从表的- 外键表/枚举 加入 DataSet.
-		MapExts mes = dtl.getMapExts();
+			///#region 把从表的- 外键表/枚举 加入 DataSet.
+
 		MapExt me = null;
-
 		DataTable ddlTable = new DataTable();
 		ddlTable.Columns.Add("No");
-		for (DataRow dr : Sys_MapAttr.Rows)
+		for (MapAttr attr : attrs.ToJavaList())
 		{
-			String lgType = dr.getValue("LGType").toString();
-			String ctrlType = dr.getValue(MapAttrAttr.UIContralType).toString();
 
 			//没有绑定外键
-			String uiBindKey = dr.getValue("UIBindKey").toString();
+			String uiBindKey = attr.getUIBindKey();
 			if (DataType.IsNullOrEmpty(uiBindKey) == true)
 			{
 				continue;
 			}
 
-			String mypk = dr.getValue("MyPK").toString();
 
-
-			///枚举字段
-			if (lgType.equals("1") == true)
+				///#region 枚举字段
+			if (attr.getLGType() == FieldTypeS.Enum)
 			{
 				// 如果是枚举值, 判断是否存在.
-				if (myds.GetTableByName(uiBindKey) !=null)
+				if (myds.contains(uiBindKey) == true)
 				{
 					continue;
 				}
-
-				String mysql = "SELECT IntKey AS No, Lab as Name FROM "+bp.sys.base.Glo.SysEnum()+" WHERE EnumKey='" + uiBindKey + "' ORDER BY IntKey ";
+				String mysql = "SELECT IntKey AS No, Lab as Name FROM " + bp.sys.base.Glo.SysEnum() + " WHERE EnumKey='" + uiBindKey + "' ORDER BY IntKey ";
 				DataTable dtEnum = DBAccess.RunSQLReturnTable(mysql);
 				dtEnum.TableName = uiBindKey;
 
@@ -882,17 +1442,16 @@ public class CCFormAPI extends Dev2Interface
 				continue;
 			}
 
-			///
+				///#endregion
 
-			String UIIsEnable = dr.getValue("UIIsEnable").toString();
 			// 检查是否有下拉框自动填充。
-			String keyOfEn = dr.getValue("KeyOfEn").toString();
+			String keyOfEn = attr.getKeyOfEn();
 
 
-			///处理下拉框数据范围. for 小杨.
+				///#region 处理下拉框数据范围. for 小杨.
 			Object tempVar = mes.GetEntityByKey(MapExtAttr.ExtType, MapExtXmlList.AutoFullDLL, MapExtAttr.AttrOfOper, keyOfEn);
 			me = tempVar instanceof MapExt ? (MapExt)tempVar : null;
-			if (me != null && myds.GetTableByName(uiBindKey) ==null) //是否存在.
+			if (me != null && myds.contains(uiBindKey) == false) //是否存在.
 			{
 				Object tempVar2 = me.getDoc();
 				String fullSQL = tempVar2 instanceof String ? (String)tempVar2 : null;
@@ -905,10 +1464,12 @@ public class CCFormAPI extends Dev2Interface
 				}
 
 				DataTable dt = DBAccess.RunSQLReturnTable(fullSQL);
+				if (uiBindKey.toLowerCase().equals("blank"))
+					dt.TableName = keyOfEn;
+				else
+					dt.TableName = uiBindKey;
 
-				dt.TableName = uiBindKey;
-
-				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
+				if (SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 				{
 					if (dt.Columns.contains("NO") == true)
 					{
@@ -924,7 +1485,7 @@ public class CCFormAPI extends Dev2Interface
 					}
 				}
 
-				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+				if (SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
 				{
 					if (dt.Columns.contains("no") == true)
 					{
@@ -944,20 +1505,21 @@ public class CCFormAPI extends Dev2Interface
 				continue;
 			}
 
-			/// 处理下拉框数据范围.
+				///#endregion 处理下拉框数据范围.
 
 
-			///外键字段
+				///#region 外键字段
 
 			// 判断是否存在.
-			if (myds.GetTableByName(uiBindKey) !=null)
+			if (myds.contains(uiBindKey) == true)
 			{
 				continue;
 			}
 
 			// 获得数据.
-			DataTable mydt = PubClass.GetDataTableByUIBineKey(uiBindKey,en.getRow());
-
+			DataTable mydt = bp.pub.PubClass.GetDataTableByUIBineKey(uiBindKey,en.getRow());
+			if (uiBindKey.toLowerCase().equals("blank"))
+				mydt.TableName = keyOfEn;
 			if (mydt == null)
 			{
 				DataRow ddldr = ddlTable.NewRow();
@@ -969,18 +1531,18 @@ public class CCFormAPI extends Dev2Interface
 				myds.Tables.add(mydt);
 			}
 
-			/// 外键字段
+				///#endregion 外键字段
 		}
 		ddlTable.TableName = "UIBindKey";
 		myds.Tables.add(ddlTable);
 
-		/// 把从表的- 外键表/枚举 加入 DataSet.
+			///#endregion 把从表的- 外键表/枚举 加入 DataSet.
 
 
-		///把主表数据放入.
+			///#region 把主表数据放入.
 
 		//重设默认值.
-		en.ResetDefaultVal();
+		en.ResetDefaultVal(null, null, 0);
 
 
 		//增加主表数据.
@@ -988,62 +1550,116 @@ public class CCFormAPI extends Dev2Interface
 		mainTable.TableName = "MainTable";
 		myds.Tables.add(mainTable);
 
-		/// 把主表数据放入.
+			///#endregion 把主表数据放入.
 
 
-		/// 把从表的数据放入.
-		GEDtls dtls = new GEDtls(dtl.getNo());
-		DataTable dtDtl = GetDtlInfo(dtl,  en,dtlRefPKVal);
-
-		//从表数据的填充
-		if (dtDtl.Rows.size() == 0 && DataType.IsNullOrEmpty(dtl.getInitDBAttrs()) == false)
+			///#region  把从表的数据放入.
+		DataTable dtDtl = GetDtlInfo(dtl, en, dtlRefPKVal);
+		//从表集合为空时填充从表的情况
+		if (dtDtl.Rows.size() == 0)
 		{
-			String[] keys = dtl.getInitDBAttrs().split(",");
 			GEDtl endtl = null;
-			MapAttr attr = null;
-			for(String keyOfEn : keys)
+			//1.行初始化字段，设置了改字段值时默认就添加枚举值集合的行数据，一般不再新增从表数据
+			if (DataType.IsNullOrEmpty(dtl.getInitDBAttrs()) == false)
 			{
-				Entity ent  = dtl.getMapAttrs().GetEntityByKey(dtl.getNo() + "_" + keyOfEn);
-				if (ent == null)
-					continue;
-				attr =(MapAttr) ent ;
-				if (DataType.IsNullOrEmpty(attr.getUIBindKey()) == true)
-					continue;
-				DataTable dt = null;
-				//枚举字段
-				if(attr.getLGType() == FieldTypeS.Enum && attr.getMyDataType() == DataType.AppInt)
-					dt = myds.GetTableByName(attr.getUIBindKey());
-				//外键、外部数据源
-				if ((attr.getLGType() == FieldTypeS.FK && attr.getMyDataType() == DataType.AppString)
-						|| (attr.getLGType() == FieldTypeS.Normal && attr.getMyDataType() == DataType.AppString && attr.getUIContralType() == UIContralType.DDL))
-					dt = myds.GetTableByName(attr.getUIBindKey());;
-				if (dt == null)
-					continue;
-				for(DataRow dr : dt.Rows)
+				String[] keys = dtl.getInitDBAttrs().split("[,]", -1);
+
+				MapAttr attr = null;
+				for (String keyOfEn : keys)
+				{
+					Entity ent = dtl.getMapAttrs().GetEntityByKey(dtl.getNo() + "_" + keyOfEn);
+					if (ent == null)
+					{
+						continue;
+					}
+					attr = ent instanceof MapAttr ? (MapAttr)ent : null;
+					if (DataType.IsNullOrEmpty(attr.getUIBindKey()) == true)
+					{
+						continue;
+					}
+					DataTable dt = null;
+					//枚举字段
+					if (attr.getLGType() == FieldTypeS.Enum && attr.getMyDataType() == DataType.AppInt)
+					{
+						dt = myds.GetTableByName(attr.getUIBindKey());
+					}
+					//外键、外部数据源
+					if ((attr.getLGType() == FieldTypeS.FK && attr.getMyDataType() == DataType.AppString) || (attr.getLGType() == FieldTypeS.Normal && attr.getMyDataType() == DataType.AppString && attr.getUIContralType() == UIContralType.DDL))
+					{
+						dt = myds.GetTableByName(attr.getUIBindKey());
+					}
+					if (dt == null)
+					{
+						continue;
+					}
+					for (DataRow dr : dt.Rows)
+					{
+						endtl = new GEDtl(dtl.getNo());
+						endtl.ResetDefaultVal(null, null, 0);
+						endtl.SetValByKey(keyOfEn, dr.getValue(0));
+						endtl.setRefPK(dtlRefPKVal);
+						endtl.setFID(fid);
+						endtl.Insert();
+					}
+
+				}
+			}
+			//2.从表装载填充
+			Object tempVar3 = mes.GetEntityByKey("ExtModel", MapExtXmlList.PageLoadFullDtl);
+			me = tempVar3 instanceof MapExt ? (MapExt)tempVar3 : null;
+			if (me != null && me.getDoWay().equals("1") && DataType.IsNullOrEmpty(me.getDoc()) == false)
+			{
+				String sql = Glo.DealSQLExp(me.getDoc(), en, null);
+				int num = sql.toUpperCase().split("WHERE").length - 1;
+				if (num == 1)
+				{
+					String sqlext = sql.substring(0, sql.toUpperCase().indexOf("WHERE"));
+					sqlext = sql.substring(sqlext.length() + 1);
+					if (sqlext.contains("@"))
+					{
+						throw new RuntimeException("设置的sql有错误可能有没有替换的变量:" + sql);
+					}
+				}
+				if (num > 1 && sql.contains("@"))
+				{
+					throw new RuntimeException("设置的sql有错误可能有没有替换的变量:" + sql);
+				}
+				DataTable dt = DBAccess.RunSQLReturnTable(sql);
+				for (DataRow dr : dt.Rows)
 				{
 					endtl = new GEDtl(dtl.getNo());
-					endtl.ResetDefaultVal();
-					endtl.SetValByKey(keyOfEn, dr.getValue("No"));
+					for (DataColumn dc : dt.Columns)
+					{
+						endtl.SetValByKey(dc.ColumnName, dr.getValue(dc.ColumnName).toString());
+					}
 					endtl.setRefPK(dtlRefPKVal);
 					endtl.setFID(fid);
+
+					endtl.setRDT(DataType.getCurrentDateTime());
+					endtl.setRec(WebUser.getNo());
 					endtl.Insert();
 				}
-
 			}
-			dtDtl = GetDtlInfo(dtl, en, dtlRefPKVal);
+
+		   dtDtl = GetDtlInfo(dtl, en, dtlRefPKVal);
 		}
 
-		// 为明细表设置默认值.
-		MapAttrs dtlAttrs = new MapAttrs(dtl.getNo());
-		for (MapAttr attr : dtlAttrs.ToJavaList())
-		{
-			if (attr.getUIContralType()== UIContralType.TB)
-				continue;
 
+
+		// 为明细表设置默认值.
+		MapAttrs mattrs = new MapAttrs(dtl.getNo());
+		for (MapAttr attr : mattrs.ToJavaList())
+		{
+			if (attr.getUIContralType() == UIContralType.TB)
+			{
+				continue;
+			}
 
 			//处理它的默认值.
 			if (attr.getDefValReal().contains("@") == false)
+			{
 				continue;
+			}
 
 			for (DataRow dr : dtDtl.Rows)
 			{
@@ -1052,35 +1668,30 @@ public class CCFormAPI extends Dev2Interface
 					dr.setValue(attr.getKeyOfEn(), attr.getDefVal());
 				}
 			}
-
 		}
 
 		dtDtl.TableName = "DBDtl"; //修改明细表的名称.
 		myds.Tables.add(dtDtl); //加入这个明细表, 如果没有数据，xml体现为空.
 
-		/// 把从表的数据放入.
-
+			///#endregion 把从表的数据放入.
 
 		//放入一个空白的实体，用与获取默认值.
-		GEDtl dtlBlank = dtls.getGetNewEntity() instanceof GEDtl ? (GEDtl)dtls.getGetNewEntity() : null;
-		dtlBlank.ResetDefaultVal();
-
+		GEDtl dtlBlank = new GEDtl(dtl.getNo());
+		dtlBlank.ResetDefaultVal(null, null, 0);
 		myds.Tables.add(dtlBlank.ToDataTableField("Blank"));
-
-		// myds.WriteXml("c:\\xx.xml");
 
 		return myds;
 	}
-	public static DataTable GetDtlInfo(MapDtl dtl, GEEntity en,String dtlRefPKVal) throws Exception {
+
+	public static DataTable GetDtlInfo(MapDtl dtl, GEEntity en, String dtlRefPKVal) throws Exception {
 		return GetDtlInfo(dtl, en, dtlRefPKVal, false);
 	}
-	public static DataTable GetDtlInfo(MapDtl dtl, GEEntity en,String dtlRefPKVal,boolean isReload) throws Exception
-	{
+
+	public static DataTable GetDtlInfo(MapDtl dtl, GEEntity en, String dtlRefPKVal, boolean isReload) throws Exception {
 		QueryObject qo = null;
 		GEDtls dtls = new GEDtls(dtl.getNo());
 		try
 		{
-
 			qo = new QueryObject(dtls);
 			switch (dtl.getDtlOpenType())
 			{
@@ -1090,11 +1701,8 @@ public class CCFormAPI extends Dev2Interface
 					qo.AddWhere(GEDtlAttr.Rec, WebUser.getNo());
 					break;
 				case ForWorkID: // 按工作ID来控制
-					//qo.addLeftBracket();
+				case ForPWorkID:
 					qo.AddWhere(GEDtlAttr.RefPK, dtlRefPKVal);
-					/*qo.addOr();
-					qo.AddWhere(GEDtlAttr.FID, pkval);
-					qo.addRightBracket();*/
 
 					break;
 				case ForFID: // 按工作ID来控制
@@ -1104,21 +1712,21 @@ public class CCFormAPI extends Dev2Interface
 					qo.AddWhere(GEDtlAttr.RefPK, dtlRefPKVal);
 					break;
 			}
-			//条件过滤.
-			if ( DataType.IsNullOrEmpty( dtl.getFilterSQLExp()) ==false )
-			{
-				String exp=dtl.getFilterSQLExp();
-				exp=Glo.DealExp(exp, en);
 
+			//条件过滤.
+			String exp = dtl.getFilterSQLExp();
+			if (DataType.IsNullOrEmpty(exp) == false)
+			{
+				exp = bp.wf.Glo.DealExp(exp, en);
 				exp = exp.replace("''", "'");
 
 				if (exp.substring(0, 5).toLowerCase().contains("and") == false)
+				{
 					exp = " AND " + exp;
+				}
 				qo.setSQL(exp);
-
 			}
 
-			//增加排序.
 			//排序.
 			if (DataType.IsNullOrEmpty(dtl.getOrderBySQLExp()) == false)
 			{
@@ -1127,17 +1735,28 @@ public class CCFormAPI extends Dev2Interface
 			else
 			{
 				//增加排序.
-				qo.addOrderBy(GEDtlAttr.OID);
+				qo.addOrderBy("Idx");
 			}
-			qo.DoQuery();
-			return dtls.ToDataTableField();
-		}
-		catch (RuntimeException ex)
-		{   if (isReload == false)
-			return GetDtlInfo(dtl, en, dtlRefPKVal, true);
-		else
-			throw new Exception("获取从表[" + dtl.getName() + "]失败,错误:" + ex.getMessage());
 
+			qo.DoQuery();
+
+			return dtls.ToDataTableField("dt");
+		}
+		catch (Exception ex)
+		{
+			dtl.IntMapAttrs();
+			dtl.CheckPhysicsTable();
+			CacheFrmTemplate.Remove(dtl.getNo());
+			Cache.SetMap(dtl.getNo(), null);
+			Cache.getSQL_Cache().remove(dtl.getNo());
+			if (isReload == false)
+			{
+				return GetDtlInfo(dtl, en, dtlRefPKVal, true);
+			}
+			else
+			{
+				throw new RuntimeException("获取从表[" + dtl.getName() +"]失败,错误:" + ex.getMessage());
+			}
 		}
 
 	}

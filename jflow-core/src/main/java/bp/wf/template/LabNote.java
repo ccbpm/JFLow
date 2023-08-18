@@ -1,13 +1,7 @@
 package bp.wf.template;
 
 import bp.da.*;
-import bp.en.*;
-import bp.en.Map;
-import bp.wf.template.*;
-import bp.port.*;
-import bp.*;
-import bp.wf.*;
-import java.util.*;
+import bp.en.*; import bp.en.Map;
 
 /** 
  标签.	 
@@ -20,7 +14,8 @@ public class LabNote extends EntityMyPK
 	 UI界面上的访问控制
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.IsUpdate = true;
 		return uac;
@@ -29,42 +24,38 @@ public class LabNote extends EntityMyPK
 	/** 
 	 x
 	*/
-	public final int getX() throws Exception
-	{
+	public final int getX()  {
 		return this.GetValIntByKey(NodeAttr.X);
 	}
-	public final void setX(int value)  throws Exception
-	 {
+	public final void setX(int value){
 		this.SetValByKey(NodeAttr.X, value);
 	}
 
 	/** 
 	 y
 	*/
-	public final int getY() throws Exception
-	{
+	public final int getY()  {
 		return this.GetValIntByKey(NodeAttr.Y);
 	}
-	public final void setY(int value)  throws Exception
-	 {
+	public final void setY(int value){
 		this.SetValByKey(NodeAttr.Y, value);
 	}
 	/** 
 	 标签的事务编号
 	*/
-	public final String getFK_Flow() throws Exception
-	{
+	public final String getFlowNo()  {
 		return this.GetValStringByKey(NodeAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)throws Exception
-	{SetValByKey(NodeAttr.FK_Flow, value);
-	}
-	public final String getName() throws Exception
+	public final void setFlowNo(String value) throws Exception
 	{
+		SetValByKey(NodeAttr.FK_Flow, value);
+	}
+	public final String getName()  {
 		return this.GetValStringByKey(NodeAttr.Name);
 	}
-	public final void setName(String value)throws Exception
-	{SetValByKey(NodeAttr.Name, value);
+	public final void setName(String value) throws Exception
+	{
+		SetValByKey(NodeAttr.Name, value);
 	}
 
 		///#endregion
@@ -74,14 +65,15 @@ public class LabNote extends EntityMyPK
 	/** 
 	 标签
 	*/
-	public LabNote()  {
+	public LabNote()
+	{
 	}
 	/** 
 	 标签
 	 
-	 param _oid 标签ID
+	 @param _oid 标签ID	
 	*/
-	public LabNote(String mypk)throws Exception
+	public LabNote(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -90,7 +82,8 @@ public class LabNote extends EntityMyPK
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -101,7 +94,7 @@ public class LabNote extends EntityMyPK
 
 		map.AddMyPK(true);
 
-		map.AddTBString(NodeAttr.Name, null, null, true, false, 0, 3000, 10, true);
+		map.AddTBString(NodeAttr.Name, null, null, true, false, 0, 400, 10, true);
 		map.AddTBString(NodeAttr.FK_Flow, null, "流程", false, true, 0, 10, 10);
 
 		map.AddTBInt(NodeAttr.X, 0, "X坐标", false, false);
@@ -114,7 +107,8 @@ public class LabNote extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		this.setMyPK(String.valueOf(DBAccess.GenerOID()));
 		return super.beforeInsert();
 	}

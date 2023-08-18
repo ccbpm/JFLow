@@ -4,7 +4,6 @@ import bp.da.*;
 import bp.port.*;
 import bp.pub.*;
 import bp.difference.*;
-import java.util.*;
 
 /** 
  客户的用户信息。
@@ -30,7 +29,7 @@ public class GuestUser
 		SignInOfGener(guestNo, guestName, "CH", true);
 	}
 
-//ORIGINAL LINE: public static void SignInOfGener(string guestNo, string guestName, string lang="CH", bool isRememberMe=true)
+//ORIGINAL LINE: public static void SignInOfGener(String guestNo, String guestName, String lang="CH", bool isRememberMe=true)
 	public static void SignInOfGener(String guestNo, String guestName, String lang, boolean isRememberMe)throws Exception
 	{
 		SignInOfGener(guestNo, guestName, "deptNo", "deptName", lang, isRememberMe);
@@ -73,7 +72,7 @@ public class GuestUser
 		}
 		bp.web.WebUser.SignInOfGener(em);
 
-//		if (SystemConfig.getIsBSsystem())
+//		if (SystemConfig.isBSsystem())
 //		{
 //			HashMap<String, String> cookieValues = new HashMap<String, String>();
 //			cookieValues.put("GuestNo", guestNo);
@@ -203,12 +202,12 @@ public class GuestUser
 		try {
 		WebUser.setNo(null);
 		WebUser.setName(null);
-		WebUser.setFK_Dept(null);
-		WebUser.setFK_DeptName(null);
+		WebUser.setDeptNo(null);
+		WebUser.setDeptName(null);
 		WebUser.setSID(null);
 		WebUser.setAuth(null);
 		WebUser.setSysLang(null);
-		if (SystemConfig.getIsBSsystem()) {
+		if (SystemConfig.isBSsystem()) {
 
 			ContextHolderUtils.addCookie("No",  null);
 			ContextHolderUtils.addCookie("Name", null);

@@ -1,10 +1,12 @@
 package bp.wf.dts;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.tools.DateUtils;
 import bp.wf.data.*;
+import bp.*;
 import bp.wf.*;
+import java.time.*;
 import java.util.Date;
 
 /** 
@@ -15,7 +17,7 @@ public class Auto_Rpt_Dtl_DTS extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public Auto_Rpt_Dtl_DTS()throws Exception
+	public Auto_Rpt_Dtl_DTS()
 	{
 		this.Title = "自动报表的发送";
 		this.Help = "自动报表配置到WF_AutoRpt, 与WF_AutoRptDtl中，读取之后进行发送消息或者数据.";
@@ -31,9 +33,7 @@ public class Auto_Rpt_Dtl_DTS extends Method
 	public void Init()
 	{
 	}
-
-
-	/**
+	/** 
 	 当前的操纵员是否可以执行这个方法
 	*/
 	@Override
@@ -47,15 +47,14 @@ public class Auto_Rpt_Dtl_DTS extends Method
 	 @return 返回执行结果
 	*/
 	@Override
-	public Object Do()throws Exception
-	{
+	public Object Do() throws Exception {
 		//获得定时任务信息.
 		AutoRpts rpts = new AutoRpts();
 		rpts.RetrieveAllFromDBSource();
 
 		int nowInt = Integer.parseInt( DateUtils.format(new Date(),"HHmm"));
 		//比如: 2009
-		String strHours = DateUtils.format(new Date(),"yyyy-MM-dd HH:");
+		String strHours = DataType.getCurrentDateTime();
 
 		String msg = "";
 
@@ -109,7 +108,7 @@ public class Auto_Rpt_Dtl_DTS extends Method
 
 
 				///#region 求出可以发起的人员,并执行发送.
-			String empOfSQLs = Glo.DealExp(rpt.getToEmpOfSQLs(), null);
+			String empOfSQLs = bp.wf.Glo.DealExp(rpt.getToEmpOfSQLs(), null);
 			DataTable dtEmp = DBAccess.RunSQLReturnTable(empOfSQLs);
 			for (DataRow dr : dtEmp.Rows)
 			{
@@ -121,33 +120,33 @@ public class Auto_Rpt_Dtl_DTS extends Method
 				String docs = "";
 				for (AutoRptDtl dtl : dtls.ToJavaList())
 				{
-					String sql = dtl.getSQLExp().toString();
+					String sql = dtl.getSQLExp();
 					Glo.DealExp(sql, null);
 
 					String val = DBAccess.RunSQLReturnStringIsNull(sql, "无");
 					docs += "\t\n" + dtl.getName() + " (" + val + "): " + dtl.getBeiZhu();
 
-					String url = dtl.getUrlExp().toString();
+					String url = dtl.getUrlExp();
 					Glo.DealExp(url, null);
 					docs += " <a href='" + url + "'> 打开连接</a>";
 				}
 
-				/*String agentId = SystemConfig.getWXAgentID() != null ? SystemConfig.getWXAgentID() : null;
+				String agentId = bp.difference.SystemConfig.getWX_AgentID() != null ? bp.difference.SystemConfig.getWX_AgentID() : null;
 				if (agentId != null)
 				{
 					String accessToken = bp.gpm.weixin.WeiXinEntity.getAccessToken(); //获取 AccessToken
 
-					bp.gpm.Emp emp = new bp.gpm.Emp(empNo);
+					bp.port.Emp emp = new bp.port.Emp(empNo);
 					bp.gpm.weixin.MsgText msgText = new bp.gpm.weixin.MsgText();
 					msgText.setContent(docs);
 					msgText.setAccessToken(accessToken);
-					msgText.setAgentid(SystemConfig.WX_AgentID);
+					msgText.setAgentid(bp.difference.SystemConfig.getWX_AgentID());
 					msgText.setTouser(emp.getNo());
 					msgText.setSafe("0");
 
-					//执行发送
+					//执行发送 
 					bp.gpm.weixin.Glo.PostMsgOfText(msgText);
-				}*/
+				}
 			}
 
 				///#endregion 求出可以发起的人员.并执行发送

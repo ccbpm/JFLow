@@ -1,6 +1,12 @@
 package bp.ccbill.template;
 
-import bp.en.*;
+import bp.da.*;
+import bp.en.*; import bp.en.Map;
+import bp.wf.template.*;
+import bp.sys.*;
+import bp.port.*;
+import bp.*;
+import bp.ccbill.*;
 import java.util.*;
 
 /** 
@@ -13,13 +19,15 @@ public class FrmTemplates extends EntitiesNoName
 	/** 
 	 单据模版s
 	*/
-	public FrmTemplates() {
+	public FrmTemplates()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		return new FrmTemplate();
 	}
 
@@ -32,7 +40,8 @@ public class FrmTemplates extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmTemplate> ToJavaList() {
+	public final java.util.List<FrmTemplate> ToJavaList()
+	{
 		return (java.util.List<FrmTemplate>)(Object)this;
 	}
 	/** 
@@ -40,7 +49,8 @@ public class FrmTemplates extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmTemplate> Tolist()  {
+	public final ArrayList<FrmTemplate> Tolist()
+	{
 		ArrayList<FrmTemplate> list = new ArrayList<FrmTemplate>();
 		for (int i = 0; i < this.size(); i++)
 		{

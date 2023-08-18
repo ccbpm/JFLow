@@ -1,16 +1,14 @@
 package bp.ccbill;
 
 import bp.da.*;
-import bp.difference.handler.WebContralBase;
 import bp.sys.*;
-import bp.wf.httphandler.*;
 import bp.ccbill.template.*;
 import bp.difference.*;
 
 /** 
  页面功能实体
 */
-public class WF_CCBill_Admin extends WebContralBase
+public class WF_CCBill_Admin extends bp.difference.handler.DirectoryPageBase
 {
 
 	/** 
@@ -71,7 +69,7 @@ public class WF_CCBill_Admin extends WebContralBase
 			btn.setBtnID("PrintHtml");
 			btn.setBtnLab("打印Html");
 			btn.setMyPK(btn.getFrmID() + "_" + btn.getBtnID());
-			btn.setEnable(false);
+			btn.setItIsEnable(false);
 			btn.SetValByKey("Idx", 3);
 			btn.Insert();
 
@@ -80,7 +78,7 @@ public class WF_CCBill_Admin extends WebContralBase
 			btn.setBtnID("PrintPDF");
 			btn.setBtnLab("打印PDF");
 			btn.setMyPK(btn.getFrmID() + "_" + btn.getBtnID());
-			btn.setEnable(false);
+			btn.setItIsEnable(false);
 			btn.SetValByKey("Idx", 4);
 			btn.Insert();
 
@@ -89,7 +87,7 @@ public class WF_CCBill_Admin extends WebContralBase
 			btn.setBtnID("PrintRTF");
 			btn.setBtnLab("打印RTF");
 			btn.setMyPK(btn.getFrmID() + "_" + btn.getBtnID());
-			btn.setEnable(false);
+			btn.setItIsEnable(false);
 			btn.SetValByKey("Idx", 5);
 			btn.Insert();
 
@@ -98,7 +96,7 @@ public class WF_CCBill_Admin extends WebContralBase
 			btn.setBtnID("PrintCCWord");
 			btn.setBtnLab("打印CCWord");
 			btn.setMyPK(btn.getFrmID() + "_" + btn.getBtnID());
-			btn.setEnable(false);
+			btn.setItIsEnable(false);
 			btn.SetValByKey("Idx", 6);
 			btn.Insert();
 
@@ -107,7 +105,7 @@ public class WF_CCBill_Admin extends WebContralBase
 			btn.setBtnID("ExpZip");
 			btn.setBtnLab("导出Zip包");
 			btn.setMyPK(btn.getFrmID() + "_" + btn.getBtnID());
-			btn.setEnable(false);
+			btn.setItIsEnable(false);
 			btn.SetValByKey("Idx", 7);
 			btn.Insert();
 
@@ -120,7 +118,8 @@ public class WF_CCBill_Admin extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String ToolbarSetting_Mover() throws Exception {
+	public final String ToolbarSetting_Mover()
+	{
 		String[] ens = this.GetRequestVal("MyPKs").split("[,]", -1);
 		for (int i = 0; i < ens.length; i++)
 		{
@@ -160,14 +159,14 @@ public class WF_CCBill_Admin extends WebContralBase
 		}
 
 		DataTable dtGroups = gms.ToDataTableField("Groups");
-		dtGroups.TableName = "Groups";
+		dtGroups.setTableName("Groups");
 
 		Methods methods = new Methods();
 	 //   methods.Retrieve(MethodAttr.FrmID, this.FrmID, MethodAttr.IsEnable, 1, "Idx");
 		methods.Retrieve(MethodAttr.FrmID, this.getFrmID(), "Idx");
 
 		DataTable dtMethods = methods.ToDataTableField("Methods");
-		dtMethods.TableName = "Methods";
+		dtMethods.setTableName("Methods");
 
 		DataSet ds = new DataSet();
 		ds.Tables.add(dtGroups);
@@ -181,7 +180,8 @@ public class WF_CCBill_Admin extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String Method_MoverGroup() throws Exception {
+	public final String Method_MoverGroup()
+	{
 		String[] ens = this.GetRequestVal("GroupIDs").split("[,]", -1);
 		String frmID = this.getFrmID();
 		for (int i = 0; i < ens.length; i++)
@@ -198,7 +198,8 @@ public class WF_CCBill_Admin extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String Method_MoverMethod() throws Exception {
+	public final String Method_MoverMethod()
+	{
 		String sortNo = this.GetRequestVal("GroupID");
 
 		String[] ens = this.GetRequestVal("MethodIDs").split("[,]", -1);
@@ -216,7 +217,8 @@ public class WF_CCBill_Admin extends WebContralBase
 	/** 
 	 构造函数
 	*/
-	public WF_CCBill_Admin() throws Exception {
+	public WF_CCBill_Admin()
+	{
 
 	}
 	/** 
@@ -311,7 +313,8 @@ public class WF_CCBill_Admin extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String Collection_Mover() throws Exception {
+	public final String Collection_Mover()
+	{
 		String[] ens = this.GetRequestVal("MyPKs").split("[,]", -1);
 		for (int i = 0; i < ens.length; i++)
 		{
@@ -334,7 +337,8 @@ public class WF_CCBill_Admin extends WebContralBase
 	 @return 
 	*/
 	@Override
-	protected String DoDefaultMethod() throws Exception {
+	protected String DoDefaultMethod()
+	{
 		switch (this.getDoType())
 		{
 			case "DtlFieldUp": //字段上移

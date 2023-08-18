@@ -1,13 +1,7 @@
 package bp.wf;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
-import bp.wf.*;
-import bp.port.*;
-import bp.sys.*;
 import bp.en.*;
-import bp.wf.template.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -18,8 +12,8 @@ public class GenerWorkFlows extends Entities
 	/** 
 	 根据工作流程,工作人员 ID 查询出来他当前的能做的工作.
 	 
-	 param flowNo 流程编号
-	 param empId 工作人员ID
+	 @param flowNo 流程编号
+	 @param empId 工作人员ID
 	 @return 
 	*/
 	public static DataTable QuByFlowAndEmp(String flowNo, int empId)
@@ -31,8 +25,8 @@ public class GenerWorkFlows extends Entities
 	/** 
 	 根据流程编号，标题模糊查询
 	 
-	 param flowNo
-	 param likeKey
+	 @param flowNo
+	 @param likeKey
 	 @return 
 	*/
 	public final String QueryByLike(String flowNo, String likeKey) throws Exception {
@@ -41,9 +35,9 @@ public class GenerWorkFlows extends Entities
 		if (DataType.IsNullOrEmpty(likeKey) == false)
 		{
 			qo.addAnd();
-			if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
+			if (Objects.equals(bp.difference.SystemConfig.getAppCenterDBVarStr(), "@") || Objects.equals(bp.difference.SystemConfig.getAppCenterDBVarStr(), "?"))
 			{
-				qo.AddWhere("Title", " LIKE ", bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + bp.difference.SystemConfig.getAppCenterDBVarStr() + "Title" + ",'%')") : (" '%'+" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "Title" + "+'%'"));
+				qo.AddWhere("Title", " LIKE ", bp.difference.SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + bp.difference.SystemConfig.getAppCenterDBVarStr() + "Title" + ",'%')") : (" '%'+" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "Title" + "+'%'"));
 			}
 			else
 			{
@@ -63,13 +57,15 @@ public class GenerWorkFlows extends Entities
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new GenerWorkFlow();
 	}
 	/** 
 	 流程实例集合
 	*/
-	public GenerWorkFlows()  {
+	public GenerWorkFlows()
+	{
 	}
 
 		///#endregion
@@ -81,7 +77,8 @@ public class GenerWorkFlows extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.List<GenerWorkFlow> ToJavaList() {
+	public final java.util.List<GenerWorkFlow> ToJavaList()
+	{
 		return (java.util.List<GenerWorkFlow>)(Object)this;
 	}
 	/** 
@@ -89,7 +86,8 @@ public class GenerWorkFlows extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<GenerWorkFlow> Tolist()  {
+	public final ArrayList<GenerWorkFlow> Tolist()
+	{
 		ArrayList<GenerWorkFlow> list = new ArrayList<GenerWorkFlow>();
 		for (int i = 0; i < this.size(); i++)
 		{

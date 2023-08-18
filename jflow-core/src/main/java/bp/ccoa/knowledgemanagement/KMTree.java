@@ -3,6 +3,7 @@ package bp.ccoa.knowledgemanagement;
 import bp.da.*;
 import bp.web.*;
 import bp.en.*;
+import bp.en.Map;
 import bp.sys.*;
 
 /** 
@@ -15,44 +16,34 @@ public class KMTree extends EntityTree
 	/** 
 	 组织编号
 	*/
-	public final String getOrgNo()
-	{
+	public final String getOrgNo()  {
 		return this.GetValStrByKey(KMTreeAttr.OrgNo);
 	}
-	public final void setOrgNo(String value)
-	 {
+	public final void setOrgNo(String value)  {
 		this.SetValByKey(KMTreeAttr.OrgNo, value);
 	}
-	public final String getRec()
-	{
+	public final String getRec()  {
 		return this.GetValStrByKey(KMTreeAttr.Rec);
 	}
-	public final void setRec(String value)
-	 {
+	public final void setRec(String value)  {
 		this.SetValByKey(KMTreeAttr.Rec, value);
 	}
-	public final String getRecName()
-	{
+	public final String getRecName()  {
 		return this.GetValStrByKey(KMTreeAttr.RecName);
 	}
-	public final void setRecName(String value)
-	 {
+	public final void setRecName(String value)  {
 		this.SetValByKey(KMTreeAttr.RecName, value);
 	}
-	public final String getRDT()
-	{
+	public final String getRDT()  {
 		return this.GetValStrByKey(KMTreeAttr.RDT);
 	}
-	public final void setRDT(String value)
-	 {
+	public final void setRDT(String value)  {
 		this.SetValByKey(KMTreeAttr.RDT, value);
 	}
-	public final String getKnowledgeNo()
-	{
+	public final String getKnowledgeNo()  {
 		return this.GetValStrByKey(KMTreeAttr.KnowledgeNo);
 	}
-	public final void setKnowledgeNo(String value)
-	 {
+	public final void setKnowledgeNo(String value)  {
 		this.SetValByKey(KMTreeAttr.KnowledgeNo, value);
 	}
 
@@ -65,7 +56,8 @@ public class KMTree extends EntityTree
 	 权限控制
 	*/
 	@Override
-	public UAC getHisUAC() {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (WebUser.getIsAdmin())
 		{
@@ -77,18 +69,19 @@ public class KMTree extends EntityTree
 	/** 
 	 知识树
 	*/
-	public KMTree()  {
-	}
-	public KMTree(String mypk)throws Exception
+	public KMTree()
 	{
-		this.setNo(mypk);
+	}
+	public KMTree(String mypk) throws Exception
+	{
 		this.Retrieve();
 	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -121,7 +114,8 @@ public class KMTree extends EntityTree
 
 		///#region 执行方法.
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		this.setNo(DBAccess.GenerGUID(0, null, null));
 		this.setRec(WebUser.getNo());
 		this.setRecName(WebUser.getName());
@@ -133,7 +127,8 @@ public class KMTree extends EntityTree
 		return super.beforeInsert();
 	}
 	@Override
-	protected boolean beforeUpdate() throws Exception {
+	protected boolean beforeUpdate() throws Exception
+	{
 		return super.beforeUpdate();
 	}
 

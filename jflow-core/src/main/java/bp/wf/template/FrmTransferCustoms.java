@@ -1,12 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.wf.template.*;
-import bp.wf.*;
-import bp.sys.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -19,28 +13,30 @@ public class FrmTransferCustoms extends Entities
 	/** 
 	 流转自定义组件s
 	*/
-	public FrmTransferCustoms() throws Exception {
+	public FrmTransferCustoms()
+	{
 	}
 	/** 
 	 流转自定义组件s
 	 
-	 param fk_mapdata s
+	 @param fk_mapdata s
 	*/
 	public FrmTransferCustoms(String fk_mapdata) throws Exception {
-		if (bp.difference.SystemConfig.getIsDebug())
+		if (bp.difference.SystemConfig.isDebug())
 		{
 			this.Retrieve("No", fk_mapdata, null);
 		}
 		else
 		{
-			this.RetrieveFromCash("No", (Object)fk_mapdata);
+			this.RetrieveFromCache("No", (Object)fk_mapdata);
 		}
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FrmTransferCustom();
 	}
 
@@ -52,7 +48,8 @@ public class FrmTransferCustoms extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmTransferCustom> ToJavaList() {
+	public final java.util.List<FrmTransferCustom> ToJavaList()
+	{
 		return (java.util.List<FrmTransferCustom>)(Object)this;
 	}
 
@@ -61,7 +58,8 @@ public class FrmTransferCustoms extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmTransferCustom> Tolist()  {
+	public final ArrayList<FrmTransferCustom> Tolist()
+	{
 		ArrayList<FrmTransferCustom> list = new ArrayList<FrmTransferCustom>();
 		for (int i = 0; i < this.size(); i++)
 		{

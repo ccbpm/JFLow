@@ -1,11 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.port.*;
-import bp.sys.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -18,7 +13,8 @@ public class FoolTruckNodeFrms extends EntitiesMyPK
 	/** 
 	 累加表单方案
 	*/
-	public FoolTruckNodeFrms() throws Exception {
+	public FoolTruckNodeFrms()
+	{
 	}
 
 		///#endregion 构造方法..
@@ -29,7 +25,8 @@ public class FoolTruckNodeFrms extends EntitiesMyPK
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FoolTruckNodeFrm();
 	}
 
@@ -42,7 +39,8 @@ public class FoolTruckNodeFrms extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<FoolTruckNodeFrm> ToJavaList() {
+	public final java.util.List<FoolTruckNodeFrm> ToJavaList()
+	{
 		return (java.util.List<FoolTruckNodeFrm>)(Object)this;
 	}
 	/** 
@@ -50,7 +48,8 @@ public class FoolTruckNodeFrms extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<FoolTruckNodeFrm> Tolist()  {
+	public final ArrayList<FoolTruckNodeFrm> Tolist()
+	{
 		ArrayList<FoolTruckNodeFrm> list = new ArrayList<FoolTruckNodeFrm>();
 		for (int i = 0; i < this.size(); i++)
 		{

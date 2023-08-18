@@ -1,8 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -15,7 +13,8 @@ public class FrmImgAthDBs extends EntitiesMyPK
 	/** 
 	 剪切图片附件数据存储s
 	*/
-	public FrmImgAthDBs() throws Exception {
+	public FrmImgAthDBs()
+	{
 	}
 
 	public FrmImgAthDBs(String fk_mapdata) throws Exception {
@@ -24,7 +23,7 @@ public class FrmImgAthDBs extends EntitiesMyPK
 	/** 
 	 剪切图片附件数据存储s
 	 
-	 param fk_mapdata s
+	 @param fk_mapdata s
 	*/
 	public FrmImgAthDBs(String fk_mapdata, String pkval) throws Exception {
 		this.Retrieve(FrmImgAthDBAttr.FK_MapData, fk_mapdata, FrmImgAthDBAttr.RefPKVal, pkval);
@@ -33,7 +32,8 @@ public class FrmImgAthDBs extends EntitiesMyPK
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FrmImgAthDB();
 	}
 
@@ -46,7 +46,8 @@ public class FrmImgAthDBs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmImgAthDB> ToJavaList() {
+	public final java.util.List<FrmImgAthDB> ToJavaList()
+	{
 		return (java.util.List<FrmImgAthDB>)(Object)this;
 	}
 	/** 
@@ -54,7 +55,8 @@ public class FrmImgAthDBs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmImgAthDB> Tolist()  {
+	public final ArrayList<FrmImgAthDB> Tolist()
+	{
 		ArrayList<FrmImgAthDB> list = new ArrayList<FrmImgAthDB>();
 		for (int i = 0; i < this.size(); i++)
 		{

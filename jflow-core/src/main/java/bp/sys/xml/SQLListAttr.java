@@ -1,6 +1,5 @@
 package bp.sys.xml;
 
-
 /** 
  属性
 */

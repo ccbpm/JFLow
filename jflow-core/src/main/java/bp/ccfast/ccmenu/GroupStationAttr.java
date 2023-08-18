@@ -1,12 +1,12 @@
 package bp.ccfast.ccmenu;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.*;
 import bp.ccfast.*;
 import java.util.*;
 
 /** 
- 权限组岗位
+ 权限组角色
 */
 public class GroupStationAttr
 {

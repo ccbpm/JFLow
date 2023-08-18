@@ -1,9 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.port.*;
-import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -28,12 +25,13 @@ public class NodeCancels extends EntitiesMM
 	/** 
 	 可撤销的节点
 	*/
-	public NodeCancels() throws Exception {
+	public NodeCancels()
+	{
 	}
 	/** 
 	 可撤销的节点
 	 
-	 param NodeID 节点ID
+	 @param NodeID 节点ID
 	*/
 	public NodeCancels(int NodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -43,7 +41,7 @@ public class NodeCancels extends EntitiesMM
 	/** 
 	 可撤销的节点
 	 
-	 param NodeNo NodeNo
+	 @param NodeNo NodeNo 
 	*/
 	public NodeCancels(String NodeNo) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -54,7 +52,8 @@ public class NodeCancels extends EntitiesMM
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new NodeCancel();
 	}
 
@@ -65,7 +64,7 @@ public class NodeCancels extends EntitiesMM
 	/** 
 	 可撤销的节点s
 	 
-	 param sts 可撤销的节点
+	 @param sts 可撤销的节点
 	 <Cancels></Cancels>
 	*/
 	public final Nodes GetHisNodes(Nodes sts) throws Exception {
@@ -88,7 +87,7 @@ public class NodeCancels extends EntitiesMM
 	/** 
 	 可撤销的节点
 	 
-	 param NodeNo 撤销到编号
+	 @param NodeNo 撤销到编号
 	 <Cancels>节点s</Cancels>
 	*/
 	public final Nodes GetHisNodes(String NodeNo) throws Exception {
@@ -99,14 +98,14 @@ public class NodeCancels extends EntitiesMM
 		Nodes ens = new Nodes();
 		for (NodeCancel en : this.ToJavaList())
 		{
-			ens.AddEntity(new Node(en.getFK_Node()));
+			ens.AddEntity(new Node(en.getNodeID()));
 		}
 		return ens;
 	}
 	/** 
 	 转向此节点的集合的Nodes
 	 
-	 param nodeID 此节点的ID
+	 @param nodeID 此节点的ID
 	 <Cancels>转向此节点的集合的Nodes (FromNodes)</Cancels> 
 	*/
 	public final Nodes GetHisNodes(int nodeID) throws Exception {
@@ -131,7 +130,8 @@ public class NodeCancels extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final java.util.List<NodeCancel> ToJavaList() {
+	public final java.util.List<NodeCancel> ToJavaList()
+	{
 		return (java.util.List<NodeCancel>)(Object)this;
 	}
 	/** 
@@ -139,7 +139,8 @@ public class NodeCancels extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final ArrayList<NodeCancel> Tolist()  {
+	public final ArrayList<NodeCancel> Tolist()
+	{
 		ArrayList<NodeCancel> list = new ArrayList<NodeCancel>();
 		for (int i = 0; i < this.size(); i++)
 		{

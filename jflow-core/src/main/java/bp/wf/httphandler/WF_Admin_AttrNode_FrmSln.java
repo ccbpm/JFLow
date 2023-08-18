@@ -3,21 +3,23 @@ package bp.wf.httphandler;
 import bp.da.*;
 import bp.sys.*;
 import bp.web.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.wf.Glo;
 import bp.wf.template.*;
 import bp.*;
 import bp.wf.*;
+import java.util.*;
 
 /** 
  页面功能实体
 */
-public class WF_Admin_AttrNode_FrmSln extends bp.difference.handler.WebContralBase
+public class WF_Admin_AttrNode_FrmSln extends bp.difference.handler.DirectoryPageBase
 {
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_AttrNode_FrmSln() throws Exception {
+	public WF_Admin_AttrNode_FrmSln()
+	{
 
 	}
 	/** 
@@ -27,8 +29,8 @@ public class WF_Admin_AttrNode_FrmSln extends bp.difference.handler.WebContralBa
 	*/
 	public final String RefOneFrmTree_SetAllNodeFrmUseThisSln() throws Exception {
 		String nodeID = GetRequestVal("FK_Node");
-		Node currNode = new Node(this.getFK_Node());
-		String flowNo = currNode.getFK_Flow();
+		Node currNode = new Node(this.getNodeID());
+		String flowNo = currNode.getFlowNo();
 		Nodes nds = new Nodes();
 		nds.Retrieve("FK_Flow", flowNo, null);
 
@@ -39,9 +41,6 @@ public class WF_Admin_AttrNode_FrmSln extends bp.difference.handler.WebContralBa
 		qo.addAnd();
 		qo.AddWhere(MapAttrAttr.UIContralType, ">=", 6);
 		qo.DoQuery();
-
-	 //   attrOfCommpents.Retrieve(MapAttrAttr.FK_MapData,
-	   // currNode.)
 
 		for (int i = 0; i < nds.size(); i++)
 		{
@@ -55,7 +54,7 @@ public class WF_Admin_AttrNode_FrmSln extends bp.difference.handler.WebContralBa
 			//修改表单属性
 			jsNode.setFormType(currNode.getFormType());
 
-			jsNode.setNodeFrmID(currNode.getNodeFrmID());
+			jsNode.setNodeFrmID( currNode.getNodeFrmID());
 			jsNode.Update();
 
 			//节点表单属性
@@ -68,10 +67,10 @@ public class WF_Admin_AttrNode_FrmSln extends bp.difference.handler.WebContralBa
 			for (int idx = 0; idx < ens.size(); idx++)
 			{
 				FrmNode en = ens.get(idx) instanceof FrmNode ? (FrmNode)ens.get(idx) : null;
-				if (!en.getFKFrm().equals(currNode.getNodeFrmID()))
+				if (!Objects.equals(en.getFKFrm(), currNode.getNodeFrmID()))
 				{
-					FrmNode frm = new FrmNode(en.getMyPK());
-					frm.Delete();
+					FrmNode Frm = new FrmNode(en.getMyPK());
+					Frm.Delete();
 					continue;
 				}
 				isHave = true;
@@ -82,14 +81,14 @@ public class WF_Admin_AttrNode_FrmSln extends bp.difference.handler.WebContralBa
 			}
 
 			FrmNode frmNode = new FrmNode();
-			frmNode.setMyPK(jsNode.getNodeFrmID() + "_" + jsNode.getNodeID() + "_" + jsNode.getFK_Flow());
-			frmNode.setFK_Node(jsNode.getNodeID());
-			frmNode.setFK_Flow(jsNode.getFK_Flow());
+			frmNode.setMyPK(jsNode.getNodeFrmID() + "_" + jsNode.getNodeID() + "_" + jsNode.getFlowNo());
+			frmNode.setNodeID(jsNode.getNodeID());
+			frmNode.setFlowNo(jsNode.getFlowNo());
 			frmNode.setFKFrm(jsNode.getNodeFrmID());
 
 			//判断是否为开始节点
 			String nodeID1 = String.valueOf(jsNode.getNodeID());
-			if (nodeID1.substring(nodeID1.length() - 2).equals("01"))
+			if (Objects.equals(nodeID1.substring(nodeID1.length() - 2), "01"))
 			{
 				frmNode.setFrmSln(FrmSln.Default); //默认方案
 			}
@@ -105,16 +104,17 @@ public class WF_Admin_AttrNode_FrmSln extends bp.difference.handler.WebContralBa
 			{
 				ff.setUIVisible(true);
 				ff.setKeyOfEn(attr.getKeyOfEn());
-				ff.setFK_Flow(currNode.getFK_Flow());
-				ff.setFK_Node(jsNode.getNodeID());
-				ff.setFK_MapData(jsNode.getNodeFrmID()); //表单ID.
-				ff.setMyPK(ff.getFK_MapData() + "_" + ff.getFK_Node() + "_" + ff.getKeyOfEn());
-				if (ff.getIsExits() == false)
+				ff.setFlowNo(currNode.getFlowNo());
+				ff.setNodeID(jsNode.getNodeID());
+				ff.setFrmID(jsNode.getNodeFrmID()); //表单ID.
+				ff.setMyPK(ff.getFrmID() + "_" + ff.getNodeID() + "_" + ff.getKeyOfEn());
+				if (ff.IsExits() == false)
 				{
 					ff.Insert();
 				}
 			}
 		}
+
 		return "执行成功.";
 	}
 	/** 
@@ -135,14 +135,14 @@ public class WF_Admin_AttrNode_FrmSln extends bp.difference.handler.WebContralBa
 		SysEnums myses = new SysEnums("SigantureEnabel");
 		ds.Tables.add(myses.ToDataTableField("SigantureEnabel"));
 
-		String sql = Glo.getSQLOfCheckField();
-		sql = sql.replace("@FK_Frm", this.getFrmID());
+		String sql = Glo.getSQLOfCheckField().replace("@FK_Frm", this.getFrmID());
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		if (bp.difference.SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		if (bp.difference.SystemConfig.getAppCenterDBFieldCaseModel() != FieldCaseModel.None)
 		{
 			dt.Columns.get(0).ColumnName = "No";
 			dt.Columns.get(1).ColumnName = "Name";
 		}
+
 		dt.TableName = "CheckFields";
 		ds.Tables.add(dt);
 		return bp.tools.Json.ToJson(ds);
@@ -153,11 +153,12 @@ public class WF_Admin_AttrNode_FrmSln extends bp.difference.handler.WebContralBa
 	 
 	 @return 
 	*/
-	public final String RefOneFrmTreeFrms_Init() throws Exception {
+	public final String RefOneFrmTreeFrms_Init()
+	{
 		String sql = "";
 		String key = GetRequestVal("KeyWord"); //查询的关键字
 		//单机模式下
-		if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
+		if (bp.wf.Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
 		{
 			sql += "SELECT  b.NAME AS SortName, a.no AS \"No\", A.name AS \"Name\",";
 			sql += "A.PTable,";
@@ -167,7 +168,7 @@ public class WF_Admin_AttrNode_FrmSln extends bp.difference.handler.WebContralBa
 			sql += "Sys_FormTree B ";
 			sql += " WHERE ";
 			sql += " A.FK_FormTree = B.NO ";
-			//sql += " AND B.OrgNo = '" + WebUser.getOrgNo() + "'";
+			//sql += " AND B.setOrgNo('" + WebUser.getOrgNo() + "'";
 			if (DataType.IsNullOrEmpty(key) == false)
 			{
 				sql += " AND A.Name like '%" + key + "%'";
@@ -177,7 +178,7 @@ public class WF_Admin_AttrNode_FrmSln extends bp.difference.handler.WebContralBa
 		}
 
 		// 云服务器环境下
-		if (Glo.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+		if (bp.wf.Glo.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 		{
 			sql += "SELECT  b.NAME AS SortName, a.no AS \"No\", A.name AS \"Name\", ";
 			sql += "A.PTable, ";
@@ -196,7 +197,7 @@ public class WF_Admin_AttrNode_FrmSln extends bp.difference.handler.WebContralBa
 		}
 
 		//集团模式下
-		if (Glo.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
+		if (bp.wf.Glo.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
 		{
 			sql += " SELECT  b.NAME AS SortName, a.no AS \"No\", A.name AS \"Name\",";
 			sql += "A.PTable,";
@@ -221,7 +222,7 @@ public class WF_Admin_AttrNode_FrmSln extends bp.difference.handler.WebContralBa
 			sql += " FROM ";
 			sql += " Sys_MapData A,  WF_FrmOrg B, Port_Org C ";
 			sql += " WHERE ";
-			sql += "  A.No = B.FrmID  AND B.OrgNo=C.No ";
+			sql += "  A.setNo(B.FrmID  AND B.OrgNo=C.No ";
 			sql += "  AND B.OrgNo = '" + WebUser.getOrgNo() + "' ";
 			if (DataType.IsNullOrEmpty(key) == false)
 			{
@@ -233,7 +234,7 @@ public class WF_Admin_AttrNode_FrmSln extends bp.difference.handler.WebContralBa
 
 
 			///#warning 需要判断不同的数据库类型
-		if (bp.difference.SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
+		if (bp.difference.SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			dt.Columns.get("SORTNAME").ColumnName = "SortName";
 			dt.Columns.get("NO").ColumnName = "No";
@@ -241,7 +242,7 @@ public class WF_Admin_AttrNode_FrmSln extends bp.difference.handler.WebContralBa
 			dt.Columns.get("PTABLE").ColumnName = "PTable";
 			dt.Columns.get("ORGNO").ColumnName = "OrgNo";
 		}
-		if (bp.difference.SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+		if (bp.difference.SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
 		{
 			dt.Columns.get("sortname").ColumnName = "SortName";
 			dt.Columns.get("no").ColumnName = "No";

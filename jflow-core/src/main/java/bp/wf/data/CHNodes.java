@@ -31,7 +31,7 @@ public class CHNodes extends Entities
 	 节点时限
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new CHNode();
 	}

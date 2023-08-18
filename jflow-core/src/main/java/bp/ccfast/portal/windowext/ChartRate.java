@@ -1,7 +1,8 @@
 package bp.ccfast.portal.windowext;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.ccfast.portal.*;
+import bp.en.Map;
 
 /** 
  百分比扇形图
@@ -14,7 +15,8 @@ public class ChartRate extends EntityNoName
 	 控制权限
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (bp.web.WebUser.getIsAdmin() == true)
 		{
@@ -41,27 +43,23 @@ public class ChartRate extends EntityNoName
 	/** 
 	 百分比扇形图
 	*/
-	public ChartRate()  {
+	public ChartRate()
+	{
 	}
 	/** 
 	 百分比扇形图
 	 
-	 param no
+	 @param no
 	*/
-	public ChartRate(String no)
-	{
+	public ChartRate(String no) throws Exception  {
 		this.setNo(no);
-		try {
-			this.Retrieve();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.Retrieve();
 	}
-	/** 
-	 EnMap
-	*/
+	/**
+	 * EnMap
+	 */
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();

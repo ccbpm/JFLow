@@ -1,8 +1,9 @@
 package bp.wf.rpt;
 
-import bp.en.*;
-import bp.en.Map;
+import bp.en.*; import bp.en.Map;
 import bp.port.*;
+
+
 /** 
  RptEmp 的摘要说明。
 */
@@ -29,26 +30,23 @@ public class RptEmp extends Entity
 	/** 
 	 报表ID
 	*/
-	public final String getFK_Rpt()  throws Exception
-	{
+	public final String getFKRpt()  {
 		return this.GetValStringByKey(RptEmpAttr.FK_Rpt);
 	}
-	public final void setFK_Rpt(String value) throws Exception
+	public final void setFKRpt(String value) throws Exception
 	{
 		SetValByKey(RptEmpAttr.FK_Rpt, value);
 	}
-	public final String getFK_EmpT()  throws Exception
-	{
+	public final String getEmpName()  {
 		return this.GetValRefTextByKey(RptEmpAttr.FK_Emp);
 	}
 	/** 
 	人员
 	*/
-	public final String getFK_Emp()  throws Exception
-	{
+	public final String getEmpNo()  {
 		return this.GetValStringByKey(RptEmpAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value) throws Exception
+	public final void setEmpNo(String value) throws Exception
 	{
 		SetValByKey(RptEmpAttr.FK_Emp, value);
 	}
@@ -72,12 +70,12 @@ public class RptEmp extends Entity
 	/** 
 	 报表人员对应
 	 
-	 param _empoid 报表ID
-	 param wsNo 人员编号
+	 @param _empoid 报表ID
+	 @param wsNo 人员编号 	
 	*/
 	public RptEmp(String _empoid, String wsNo) throws Exception {
-		this.setFK_Rpt(_empoid);
-		this.setFK_Emp(wsNo);
+		this.setFKRpt(_empoid);
+		this.setEmpNo(wsNo);
 		if (this.Retrieve() == 0)
 		{
 			this.Insert();
@@ -87,8 +85,7 @@ public class RptEmp extends Entity
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap()
-	{
+	public Map getEnMap()  {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();

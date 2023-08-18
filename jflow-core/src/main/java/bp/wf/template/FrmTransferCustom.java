@@ -1,7 +1,8 @@
 package bp.wf.template;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+
 
 /** 
  流转自定义组件
@@ -10,55 +11,48 @@ public class FrmTransferCustom extends Entity
 {
 
 		///#region 属性
-	public final String getNo() throws Exception {
+	public final String getNo() {
 		return "ND" + this.getNodeID();
 	}
-	public final void setNo(String value)throws Exception
-	{String nodeID = value.replace("ND", "");
+	public final void setNo(String value) throws Exception {
+		String nodeID = value.replace("ND", "");
 		this.setNodeID(Integer.parseInt(nodeID));
 	}
 	/** 
 	 节点ID
 	*/
-	public final int getNodeID() throws Exception
-	{
+	public final int getNodeID()  {
 		return this.GetValIntByKey(NodeAttr.NodeID);
 	}
-	public final void setNodeID(int value)
-	 {
+	public final void setNodeID(int value){
 		this.SetValByKey(NodeAttr.NodeID, value);
 	}
 	/** 
 	 控件状态
 	*/
-	public final FTCSta getFTCSta()  {
+	public final FTCSta getFTCSta() {
 		return FTCSta.forValue(this.GetValIntByKey(FTCAttr.FTCSta));
 	}
-	public final void setFTCSta(FTCSta value)
-	 {
+	public final void setFTCSta(FTCSta value){
 		this.SetValByKey(FTCAttr.FTCSta, value.getValue());
 	}
 	/** 
 	 工作模式
 	*/
-	public final int getFTCWorkModel()
-	{
+	public final int getFTCWorkModel()  {
 		return this.GetValIntByKey(FTCAttr.FTCWorkModel);
 	}
-	public final void setFTCWorkModel(int value)
-	 {
+	public final void setFTCWorkModel(int value){
 		this.SetValByKey(FTCAttr.FTCWorkModel, value);
 	}
 
 	/** 
 	 H
 	*/
-	public final float getFtcH() throws Exception
-	{
+	public final float getFtcH()  {
 		return this.GetValFloatByKey(FTCAttr.FTC_H);
 	}
-	public final void setFtcH(float value)  throws Exception
-	 {
+	public final void setFtcH(float value){
 		this.SetValByKey(FTCAttr.FTC_H, value);
 	}
 	public final String getFTCHstr() throws Exception {
@@ -71,15 +65,13 @@ public class FrmTransferCustom extends Entity
 	/** 
 	 节点名称.
 	*/
-	public final String getName() throws Exception
-	{
+	public final String getName()  {
 		return this.GetValStringByKey("Name");
 	}
 	/** 
 	 显示标签
 	*/
-	public final String getFTCLab() throws Exception
-	{
+	public final String getFTCLab()  {
 		return this.GetValStrByKey(FTCAttr.FTCLab);
 	}
 
@@ -91,7 +83,8 @@ public class FrmTransferCustom extends Entity
 	 控制
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		uac.IsDelete = false;
@@ -102,18 +95,20 @@ public class FrmTransferCustom extends Entity
 	 重写主键
 	*/
 	@Override
-	public String getPK()  {
+	public String getPK()
+	{
 		return "NodeID";
 	}
 	/** 
 	 流转自定义组件
 	*/
-	public FrmTransferCustom()  {
+	public FrmTransferCustom()
+	{
 	}
 	/** 
 	 流转自定义组件
 	 
-	 param no
+	 @param mapData
 	*/
 	public FrmTransferCustom(String mapData) throws Exception {
 		if (mapData.contains("ND") == false)
@@ -142,7 +137,7 @@ public class FrmTransferCustom extends Entity
 	/** 
 	 流转自定义组件
 	 
-	 param no
+	 @param nodeID
 	*/
 	public FrmTransferCustom(int nodeID) throws Exception {
 		this.setNodeID(nodeID);
@@ -152,14 +147,17 @@ public class FrmTransferCustom extends Entity
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_Node", "流转自定义组件");
-		map.AddGroupAttr("流转自定义");
+
+
+		map.AddGroupAttr("流转自定义", "");
 
 		map.AddTBIntPK(NodeAttr.NodeID, 0, "节点ID", true, true);
 		map.AddTBString(NodeAttr.Name, null, "节点名称", true, true, 0, 100, 10);

@@ -1,6 +1,5 @@
 package bp.sys;
 
-
 /** 
  从表显示方式
 */

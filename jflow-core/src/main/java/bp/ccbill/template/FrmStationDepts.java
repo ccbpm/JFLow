@@ -1,23 +1,26 @@
 package bp.ccbill.template;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.ccbill.*;
 import java.util.*;
 
 /** 
- 单据查询岗位
+ 单据查询角色
 */
 public class FrmStationDepts extends EntitiesMM
 {
 
 	/** 
-	 单据查询岗位
+	 单据查询角色
 	*/
-	public FrmStationDepts() throws Exception {
+	public FrmStationDepts()
+	{
 	}
 	/** 
-	 单据查询岗位
+	 单据查询角色
 	 
-	 param frmID 单据ID
+	 @param frmID 单据ID
 	*/
 	public FrmStationDepts(String frmID) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -29,7 +32,8 @@ public class FrmStationDepts extends EntitiesMM
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		return new FrmStationDept();
 	}
 
@@ -40,7 +44,8 @@ public class FrmStationDepts extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmStationDept> ToJavaList() {
+	public final java.util.List<FrmStationDept> ToJavaList()
+	{
 		return (java.util.List<FrmStationDept>)(Object)this;
 	}
 	/** 
@@ -48,7 +53,8 @@ public class FrmStationDepts extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmStationDept> Tolist()  {
+	public final ArrayList<FrmStationDept> Tolist()
+	{
 		ArrayList<FrmStationDept> list = new ArrayList<FrmStationDept>();
 		for (int i = 0; i < this.size(); i++)
 		{

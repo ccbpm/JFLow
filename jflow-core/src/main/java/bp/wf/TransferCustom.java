@@ -1,8 +1,7 @@
 package bp.wf;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.wf.template.*;
-
 /** 
  自定义运行路径
 */
@@ -13,115 +12,94 @@ public class TransferCustom extends EntityMyPK
 	/** 
 	 节点ID
 	*/
-	public final int getFK_Node()
-	{
+	public final int getNodeID() {
 		return this.GetValIntByKey(TransferCustomAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
-	 {
+	public final void setNodeID(int value)  {
 		this.SetValByKey(TransferCustomAttr.FK_Node, value);
 	}
-	public final long getWorkID()
-	{
+	public final long getWorkID() {
 		return this.GetValInt64ByKey(TransferCustomAttr.WorkID);
 	}
-	public final void setWorkID(long value)
-	 {
+	public final void setWorkID(long value)  {
 		this.SetValByKey(TransferCustomAttr.WorkID, value);
 	}
 	/** 
 	 节点名称
 	*/
-	public final String getNodeName()
-	{
+	public final String getNodeName() {
 		return this.GetValStringByKey(TransferCustomAttr.NodeName);
 	}
-	public final void setNodeName(String value)
-	 {
+	public final void setNodeName(String value)  {
 		this.SetValByKey(TransferCustomAttr.NodeName, value);
 	}
 	/** 
 	 计划完成日期
 	*/
-	public final String getPlanDT()
-	{
+	public final String getPlanDT() {
 		return this.GetValStringByKey(TransferCustomAttr.PlanDT);
 	}
-	public final void setPlanDT(String value)
-	 {
+	public final void setPlanDT(String value)  {
 		this.SetValByKey(TransferCustomAttr.PlanDT, value);
 	}
 	/** 
 	 处理人（多个人用逗号分开）
 	*/
-	public final String getWorker()
-	{
+	public final String getWorker() {
 		return this.GetValStringByKey(TransferCustomAttr.Worker);
 	}
-	public final void setWorker(String value)
-	 {
+	public final void setWorker(String value)  {
 		this.SetValByKey(TransferCustomAttr.Worker, value);
 	}
 	/** 
 	 处理人显示（多个人用逗号分开）
 	*/
-	public final String getWorkerName()
-	{
+	public final String getWorkerName() {
 		return this.GetValStringByKey(TransferCustomAttr.WorkerName);
 	}
-	public final void setWorkerName(String value)
-	 {
+	public final void setWorkerName(String value)  {
 		this.SetValByKey(TransferCustomAttr.WorkerName, value);
 	}
 	/** 
 	 要启用的子流程编号
 	*/
-	public final String getSubFlowNo()
-	{
+	public final String getSubFlowNo() {
 		return this.GetValStringByKey(TransferCustomAttr.SubFlowNo);
 	}
-	public final void setSubFlowNo(String value)
-	 {
+	public final void setSubFlowNo(String value)  {
 		this.SetValByKey(TransferCustomAttr.SubFlowNo, value);
 	}
 	/** 
 	 多人处理工作模式
 	*/
-	public final TodolistModel getTodolistModel()  {
+	public final TodolistModel getTodolistModel() {
 		return TodolistModel.forValue(this.GetValIntByKey(TransferCustomAttr.TodolistModel));
 	}
-	public final void setTodolistModel(TodolistModel value)
-	 {
+	public final void setTodolistModel(TodolistModel value)  {
 		this.SetValByKey(TransferCustomAttr.TodolistModel, value.getValue());
 	}
 	/** 
 	 发起时间（可以为空）
 	*/
-	public final String getStartDT()
-	{
+	public final String getStartDT() {
 		return this.GetValStringByKey(TransferCustomAttr.StartDT);
 	}
-	public final void setStartDT(String value)
-	 {
+	public final void setStartDT(String value)  {
 		this.SetValByKey(TransferCustomAttr.StartDT, value);
 	}
 	/** 
 	 顺序
 	*/
-	public final int getIdx()
-	{
+	public final int getIdx() {
 		return this.GetValIntByKey(TransferCustomAttr.Idx);
 	}
-	public final void setIdx(int value)
-	 {
+	public final void setIdx(int value)  {
 		this.SetValByKey(TransferCustomAttr.Idx, value);
 	}
-	public final boolean isEnable()
-	{
+	public final boolean getItIsEnable() {
 		return this.GetValBooleanByKey(TransferCustomAttr.IsEnable);
 	}
-	public final void setEnable(boolean value)
-	 {
+	public final void setItIsEnable(boolean value)  {
 		this.SetValByKey(TransferCustomAttr.IsEnable, value);
 	}
 
@@ -132,13 +110,15 @@ public class TransferCustom extends EntityMyPK
 	/** 
 	 TransferCustom
 	*/
-	public TransferCustom() {
+	public TransferCustom()
+	{
 	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -148,7 +128,7 @@ public class TransferCustom extends EntityMyPK
 
 		map.AddMyPK(true); //唯一的主键.
 
-			//主键.
+		//主键.
 		map.AddTBInt(TransferCustomAttr.WorkID, 0, "WorkID", true, false);
 		map.AddTBInt(TransferCustomAttr.FK_Node, 0, "节点ID", true, false);
 		map.AddTBString(TransferCustomAttr.NodeName, null, "节点名称", true, false, 0, 200, 10);
@@ -163,7 +143,7 @@ public class TransferCustom extends EntityMyPK
 
 		map.AddTBInt(TransferCustomAttr.Idx, 0, "顺序号", true, false);
 
-			//map.AddTBString(TransferCustomAttr.StartDT, null, "发起时间", true, false, 0, 20, 10);
+		//map.AddTBString(TransferCustomAttr.StartDT, null, "发起时间", true, false, 0, 20, 10);
 
 		this.set_enMap(map);
 		return this.get_enMap();
@@ -171,19 +151,22 @@ public class TransferCustom extends EntityMyPK
 
 		///#endregion
 
-	public final String DoUp()  {
+	public final String DoUp() throws Exception
+	{
 		this.DoOrderUp(TransferCustomAttr.WorkID, String.valueOf(this.getWorkID()), TransferCustomAttr.Idx);
 		return "执行成功";
 	}
 
-	public final String DoDown()  {
+	public final String DoDown() throws Exception
+	{
 		this.DoOrderDown(TransferCustomAttr.WorkID, String.valueOf(this.getWorkID()), TransferCustomAttr.Idx);
 		return "执行成功";
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception {
-		this.setMyPK(this.getFK_Node() + "_" + this.getWorkID());
+	protected boolean beforeUpdateInsertAction() throws Exception
+	{
+		this.setMyPK(this.getNodeID() + "_" + this.getWorkID());
 		return super.beforeInsert();
 	}
 
@@ -195,8 +178,8 @@ public class TransferCustom extends EntityMyPK
 	 3, 如果当前节点是最后一个并且没有连接线连到固定节点,就返回null,表示要结束流程.
 	 4. 如果当前节点是最后一个且有连接线连到固定节点
 	 
-	 param workid 当前工作ID
-	 param currNodeID 当前节点ID
+	 @param workid 当前工作ID
+	 @param currNodeID 当前节点ID
 	 @return 获取下一个要到达的定义路径,如果没有就返回空.
 	*/
 	public static TransferCustom GetNextTransferCustom(long workid, int currNodeID) throws Exception {
@@ -211,13 +194,13 @@ public class TransferCustom extends EntityMyPK
 		boolean isMeet = false;
 		for (TransferCustom item : ens.ToJavaList())
 		{
-			if (item.getFK_Node() == currNodeID)
+			if (item.getNodeID() == currNodeID)
 			{
 				isMeet = true;
 				continue;
 			}
 
-			if (isMeet == true && item.isEnable() == true)
+			if (isMeet == true && item.getItIsEnable() == true)
 			{
 				return item;
 			}
@@ -228,7 +211,7 @@ public class TransferCustom extends EntityMyPK
 		{
 			for (TransferCustom item : ens.ToJavaList())
 			{
-				if (item.isEnable() == true && item.getFK_Node() != currNodeID)
+				if (item.getItIsEnable() == true && item.getNodeID() != currNodeID)
 				{
 					return (TransferCustom)item;
 				}
@@ -250,7 +233,7 @@ public class TransferCustom extends EntityMyPK
 				}
 
 				TransferCustom en = new TransferCustom();
-				en.setFK_Node(nd.getNodeID());
+				en.setNodeID(nd.getNodeID());
 				//更改流程的运行状态
 				GenerWorkFlow gwf = new GenerWorkFlow(workid);
 				gwf.setTransferCustomType(TransferCustomType.ByCCBPMDefine);

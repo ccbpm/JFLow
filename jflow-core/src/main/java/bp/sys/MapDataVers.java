@@ -1,10 +1,6 @@
 package bp.sys;
-
-import bp.da.*;
-import bp.sys.base.*;
+;
 import bp.en.*;
-import bp.pub.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -17,13 +13,15 @@ public class MapDataVers extends EntitiesMyPK
 	/** 
 	 模板版本管理s
 	*/
-	public MapDataVers()  {
+	public MapDataVers()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new MapDataVer();
 	}
 
@@ -36,7 +34,8 @@ public class MapDataVers extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<MapDataVer> ToJavaList() {
+	public final java.util.List<MapDataVer> ToJavaList()
+	{
 		return (java.util.List<MapDataVer>)(Object)this;
 	}
 	/** 
@@ -44,7 +43,8 @@ public class MapDataVers extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<MapDataVer> Tolist()  {
+	public final ArrayList<MapDataVer> Tolist()
+	{
 		ArrayList<MapDataVer> list = new ArrayList<MapDataVer>();
 		for (int i = 0; i < this.size(); i++)
 		{

@@ -2,27 +2,27 @@ package bp.wf.httphandler;
 
 import bp.da.*;
 import bp.*;
-import bp.difference.handler.WebContralBase;
 import bp.wf.*;
 import java.util.*;
 
 /** 
  页面功能实体
 */
-public class CCMobile_WorkOpt extends WebContralBase
+public class CCMobile_WorkOpt extends bp.difference.handler.DirectoryPageBase
 {
 	/** 
 	 构造函数
 	*/
 	public CCMobile_WorkOpt() throws Exception {
-		bp.web.WebUser.setSheBei( "Mobile");
+		bp.web.WebUser.setSheBei("Mobile");
 	}
 	/** 
 	 打包下载
 	 
 	 @return 
 	*/
-	public final String Packup_Init() throws Exception {
+	public final String Packup_Init()
+	{
 		WF_WorkOpt en = new WF_WorkOpt();
 		return en.Packup_Init();
 	}
@@ -80,11 +80,13 @@ public class CCMobile_WorkOpt extends WebContralBase
 		WF_WorkOpt en = new WF_WorkOpt();
 		return en.Accepter_Init();
 	}
-	public final String Accepter_Save() throws Exception {
+	public final String Accepter_Save()
+	{
 		WF_WorkOpt en = new WF_WorkOpt();
 		return en.Accepter_Save();
 	}
-	public final String Accepter_Send() throws Exception {
+	public final String Accepter_Send()
+	{
 		WF_WorkOpt en = new WF_WorkOpt();
 		return en.Accepter_Send();
 	}
@@ -97,16 +99,17 @@ public class CCMobile_WorkOpt extends WebContralBase
 		WF_WorkOpt en = new WF_WorkOpt();
 		return en.AccepterOfGener_Init();
 	}
-	public final String AccepterOfGener_AddEmps() throws Exception {
+	public final String AccepterOfGener_AddEmps()
+	{
 		WF_WorkOpt en = new WF_WorkOpt();
 		return en.AccepterOfGener_AddEmps();
 	}
-	public final String AccepterOfGener_Send() throws Exception {
+	public final String AccepterOfGener_Send()
+	{
 		WF_WorkOpt en = new WF_WorkOpt();
 		return en.AccepterOfGener_Send();
 	}
 
-	//string flowNo, Int64 workID, int unSendToNode = 0
 	public final String AccepterOfGener_UnSend() throws Exception {
 		return Dev2Interface.Flow_DoUnSend(this.GetRequestVal("flowNo"), Integer.parseInt(this.GetRequestVal("WorkID")));
 	}
@@ -144,9 +147,9 @@ public class CCMobile_WorkOpt extends WebContralBase
 		//计算出来曾经抄送过的人.
 		Paras ps = new Paras();
 		ps.SQL = "SELECT CCToName FROM WF_CCList WHERE FK_Node=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "FK_Node AND WorkID=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "WorkID";
-		ps.Add("FK_Node",this.getFK_Node());
+		ps.Add("FK_Node",this.getNodeID());
 		ps.Add("WorkID",this.getWorkID());
-		//string sql = "SELECT CCToName FROM WF_CCList WHERE FK_Node=" + this.FK_Node + " AND WorkID=" + this.WorkID;
+		//String sql = "SELECT CCToName FROM WF_CCList WHERE FK_Node=" + this.getNodeID() + " AND WorkID=" + this.WorkID;
 
 		DataTable mydt = DBAccess.RunSQLReturnTable(ps);
 		String toAllEmps = "";
@@ -186,14 +189,14 @@ public class CCMobile_WorkOpt extends WebContralBase
 	 @return 
 	*/
 	public final String CC_SelectStations() throws Exception {
-		//岗位类型.
+		//角色类型.
 		String sql = "SELECT NO,NAME FROM Port_StationType ORDER BY NO";
 		DataSet ds = new DataSet();
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Port_StationType";
 		ds.Tables.add(dt);
 
-		//岗位.
+		//角色.
 		String sqlStas = "SELECT NO,NAME,FK_STATIONTYPE FROM Port_Station ORDER BY FK_STATIONTYPE,NO";
 		DataTable dtSta = DBAccess.RunSQLReturnTable(sqlStas);
 		dtSta.TableName = "Port_Station";
@@ -209,7 +212,7 @@ public class CCMobile_WorkOpt extends WebContralBase
 		//人员信息. 格式 zhangsan,张三;lisi,李四;
 		String emps = this.GetRequestVal("Emps");
 
-		//岗位信息. 格式:  001,002,003,
+		//角色信息. 格式:  001,002,003,
 		String stations = this.GetRequestVal("Stations");
 		stations = stations.replace(";", ",");
 
@@ -229,9 +232,9 @@ public class CCMobile_WorkOpt extends WebContralBase
 		String doc = this.GetRequestVal("TB_Doc");
 
 		//调用抄送接口执行抄送.
-		String ccRec = Dev2Interface.Node_CC_WriteTo_CClist(this.getFK_Node(), this.getWorkID(), title, doc, emps, depts, stations, groups);
+		String ccRec = Dev2Interface.Node_CC_WriteTo_CClist(this.getNodeID(), this.getWorkID(), title, doc, emps, depts, stations, groups);
 
-		if (ccRec.equals(""))
+		if (Objects.equals(ccRec, ""))
 		{
 			return "没有抄送到任何人。";
 		}
@@ -244,7 +247,8 @@ public class CCMobile_WorkOpt extends WebContralBase
 	}
 
 		///#region 退回.
-	public final String Return_Init() throws Exception {
+	public final String Return_Init()
+	{
 		WF_WorkOpt en = new WF_WorkOpt();
 		return en.Return_Init();
 	}

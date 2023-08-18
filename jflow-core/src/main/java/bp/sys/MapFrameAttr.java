@@ -1,9 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
-import java.util.*;
 
 /** 
  框架
@@ -20,8 +17,6 @@ public class MapFrameAttr extends EntityMyPKAttr
 	public static final String URL = "URL";
 	public static final String FrameURL = "FrameURL";
 	public static final String UrlSrcType = "UrlSrcType";
-	public static final String FrmID = "FrmID";
-
 	/** 
 	 高度
 	*/

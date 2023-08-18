@@ -13,7 +13,7 @@ public class CHExt extends EntityMyPK
 	/** 
 	 考核状态
 	*/
-	public final CHSta getCHSta() throws Exception {
+	public final CHSta getCHSta() {
 		return CHSta.forValue(this.GetValIntByKey(CHAttr.CHSta));
 	}
 	public final void setCHSta(CHSta value)  throws Exception
@@ -23,8 +23,7 @@ public class CHExt extends EntityMyPK
 	/** 
 	 时间到
 	*/
-	public final String getDTTo() throws Exception
-	{
+	public final String getDTTo()  {
 		return this.GetValStringByKey(CHAttr.DTTo);
 	}
 	public final void setDTTo(String value)  throws Exception
@@ -34,8 +33,7 @@ public class CHExt extends EntityMyPK
 	/** 
 	 时间从
 	*/
-	public final String getDTFrom() throws Exception
-	{
+	public final String getDTFrom()  {
 		return this.GetValStringByKey(CHAttr.DTFrom);
 	}
 	public final void setDTFrom(String value)  throws Exception
@@ -45,8 +43,7 @@ public class CHExt extends EntityMyPK
 	/** 
 	 应完成日期
 	*/
-	public final String getSDT() throws Exception
-	{
+	public final String getSDT()  {
 		return this.GetValStringByKey(CHAttr.SDT);
 	}
 	public final void setSDT(String value)  throws Exception
@@ -56,8 +53,7 @@ public class CHExt extends EntityMyPK
 	/** 
 	 流程标题
 	*/
-	public final String getTitle() throws Exception
-	{
+	public final String getTitle()  {
 		return this.GetValStringByKey(CHAttr.Title);
 	}
 	public final void setTitle(String value)  throws Exception
@@ -67,8 +63,7 @@ public class CHExt extends EntityMyPK
 	/** 
 	 流程编号
 	*/
-	public final String getFK_Flow() throws Exception
-	{
+	public final String getFK_Flow()  {
 		return this.GetValStringByKey(CHAttr.FK_Flow);
 	}
 	public final void setFK_Flow(String value)  throws Exception
@@ -78,8 +73,7 @@ public class CHExt extends EntityMyPK
 	/** 
 	 流程
 	*/
-	public final String getFK_FlowT() throws Exception
-	{
+	public final String getFK_FlowT()  {
 		return this.GetValStringByKey(CHAttr.FK_FlowT);
 	}
 	public final void setFK_FlowT(String value)  throws Exception
@@ -89,8 +83,7 @@ public class CHExt extends EntityMyPK
 	/** 
 	 限期
 	*/
-	public final int getTimeLimit() throws Exception
-	{
+	public final int getTimeLimit()  {
 		return this.GetValIntByKey(CHAttr.TimeLimit);
 	}
 	public final void setTimeLimit(int value)  throws Exception
@@ -100,8 +93,7 @@ public class CHExt extends EntityMyPK
 	/** 
 	 操作人员
 	*/
-	public final String getFK_Emp() throws Exception
-	{
+	public final String getFK_Emp()  {
 		return this.GetValStringByKey(CHAttr.FK_Emp);
 	}
 	public final void setFK_Emp(String value)  throws Exception
@@ -111,8 +103,7 @@ public class CHExt extends EntityMyPK
 	/** 
 	 人员
 	*/
-	public final String getFK_EmpT() throws Exception
-	{
+	public final String getFK_EmpT()  {
 		return this.GetValStringByKey(CHAttr.FK_EmpT);
 	}
 	public final void setFK_EmpT(String value)  throws Exception
@@ -122,8 +113,7 @@ public class CHExt extends EntityMyPK
 	/** 
 	 部门
 	*/
-	public final String getFK_Dept() throws Exception
-	{
+	public final String getFK_Dept()  {
 		return this.GetValStrByKey(CHAttr.FK_Dept);
 	}
 	public final void setFK_Dept(String value)  throws Exception
@@ -133,8 +123,7 @@ public class CHExt extends EntityMyPK
 	/** 
 	 部门名称
 	*/
-	public final String getFK_DeptT() throws Exception
-	{
+	public final String getFK_DeptT()  {
 		return this.GetValStrByKey(CHAttr.FK_DeptT);
 	}
 	public final void setFK_DeptT(String value)  throws Exception
@@ -144,8 +133,7 @@ public class CHExt extends EntityMyPK
 	/** 
 	 年月
 	*/
-	public final String getFkNy() throws Exception
-	{
+	public final String getFkNy()  {
 		return this.GetValStrByKey(CHAttr.FK_NY);
 	}
 	public final void setFk_Ny(String value)  throws Exception
@@ -155,8 +143,7 @@ public class CHExt extends EntityMyPK
 	/** 
 	 工作ID
 	*/
-	public final long getWorkID() throws Exception
-	{
+	public final long getWorkID()  {
 		return this.GetValInt64ByKey(CHAttr.WorkID);
 	}
 	public final void setWorkID(long value)  throws Exception
@@ -166,8 +153,7 @@ public class CHExt extends EntityMyPK
 	/** 
 	 流程ID
 	*/
-	public final long getFID() throws Exception
-	{
+	public final long getFID()  {
 		return this.GetValInt64ByKey(CHAttr.FID);
 	}
 	public final void setFID(long value)  throws Exception
@@ -177,19 +163,17 @@ public class CHExt extends EntityMyPK
 	/** 
 	 节点ID
 	*/
-	public final int getFK_Node() throws Exception
-	{
+	public final int getFK_Node()  {
 		return this.GetValIntByKey(CHAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)  throws Exception
+	public final void setNodeID(int value)  throws Exception
 	 {
 		this.SetValByKey(CHAttr.FK_Node, value);
 	}
 	/** 
 	 节点名称
 	*/
-	public final String getFK_NodeT() throws Exception
-	{
+	public final String getFK_NodeT()  {
 		return this.GetValStrByKey(CHAttr.FK_NodeT);
 	}
 	public final void setFK_NodeT(String value)  throws Exception
@@ -235,7 +219,7 @@ public class CHExt extends EntityMyPK
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap()  {
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -278,7 +262,7 @@ public class CHExt extends EntityMyPK
 		rm.Title = "详情";
 		rm.ClassMethodName = this.toString() + ".DoOpen";
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
-		rm.IsForEns = false;
+		rm.ItIsForEns = false;
 		map.AddRefMethod(rm);
 
 
@@ -288,7 +272,7 @@ public class CHExt extends EntityMyPK
 
 		///#endregion
 
-	public final String DoOpen() throws Exception {
+	public final String DoOpen() {
 		return "../../MyView.htm?FK_Flow" + this.getFK_Flow() + "&WorkID=" + this.getWorkID() + "&OID=" + this.getWorkID();
 	}
 }

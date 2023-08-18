@@ -1,9 +1,6 @@
 package bp.wf.admin;
 
-import bp.da.*;
 import bp.en.*;
-import bp.web.*;
-import bp.wf.port.admin2group.*;
 import java.util.*;
 
 /** 
@@ -18,7 +15,7 @@ public class Orgs extends EntitiesNoName
 	 得到一个新实体
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new Org();
 	}
@@ -38,9 +35,9 @@ public class Orgs extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final List<Org> ToJavaList()
+	public final java.util.List<Org> ToJavaList()
 	{
-		return (List<Org>)(Object)this;
+		return (java.util.List<Org>)(Object)this;
 	}
 	/** 
 	 转化成list

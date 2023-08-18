@@ -1,9 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -13,7 +10,8 @@ public class FrmDBRemarks extends EntitiesMyPK
 {
 
 		///#region 构造
-	public FrmDBRemarks() throws Exception {
+	public FrmDBRemarks()
+	{
 	}
 
 		///#endregion
@@ -24,7 +22,8 @@ public class FrmDBRemarks extends EntitiesMyPK
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FrmDBRemark();
 	}
 
@@ -37,7 +36,8 @@ public class FrmDBRemarks extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmDBRemark> Tolist()  {
+	public final ArrayList<FrmDBRemark> Tolist()
+	{
 		ArrayList<FrmDBRemark> list = new ArrayList<FrmDBRemark>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -55,7 +55,8 @@ public class FrmDBRemarks extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmDBRemark> ToJavaList() {
+	public final java.util.List<FrmDBRemark> ToJavaList()
+	{
 		return (java.util.List<FrmDBRemark>)(Object)this;
 	}
 

@@ -1,7 +1,5 @@
 package bp.sys;
 
-
-
 /** 
  运行模式
 */
@@ -27,7 +25,7 @@ public enum CCBPMRunModel
 		return this.ordinal();
 	}
 
-	public static CCBPMRunModel forValue(int value) 
+	public static CCBPMRunModel forValue(int value)
 	{
 		return values()[value];
 	}

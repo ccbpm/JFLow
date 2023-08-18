@@ -18,65 +18,55 @@ public class Resume extends EntityOID
 	/**
 	 * 年月
 	 */
-	public final String getNianYue()
-	{
+	public final String getNianYue() {
 		return this.GetValStringByKey(ResumeAttr.NianYue);
 	}
 	
-	public final void setNianYue(String value)
-	{
+	public final void setNianYue(String value)  {
 		this.SetValByKey(ResumeAttr.NianYue, value);
 	}
 	
 	/**
 	 * 人员
 	 */
-	public final String getRefPK()
-	{
+	public final String getRefPK() {
 		return this.GetValStringByKey(ResumeAttr.RefPK);
 	}
 	
-	public final void setRefPK(String value)
-	{
+	public final void setRefPK(String value)  {
 		this.SetValByKey(ResumeAttr.RefPK, value);
 	}
 	
 	/**
 	 * 工作单位
 	 */
-	public final String getGongZuoDanWei()
-	{
+	public final String getGongZuoDanWei() {
 		return this.GetValStringByKey(ResumeAttr.GongZuoDanWei);
 	}
 	
-	public final void setGongZuoDanWei(String value)
-	{
+	public final void setGongZuoDanWei(String value)  {
 		this.SetValByKey(ResumeAttr.GongZuoDanWei, value);
 	}
 	
 	/**
 	 * 证明人
 	 */
-	public final String getZhengMingRen()
-	{
+	public final String getZhengMingRen() {
 		return this.GetValStringByKey(ResumeAttr.ZhengMingRen);
 	}
 	
-	public final void setZhengMingRen(String value)
-	{
+	public final void setZhengMingRen(String value)  {
 		this.SetValByKey(ResumeAttr.ZhengMingRen, value);
 	}
 	
 	/**
 	 * 备注
 	 */
-	public final String getBeiZhu()
-	{
+	public final String getBeiZhu() {
 		return this.GetValStringByKey(ResumeAttr.BeiZhu);
 	}
 	
-	public final void setBeiZhu(String value)
-	{
+	public final void setBeiZhu(String value)  {
 		this.SetValByKey(ResumeAttr.BeiZhu, value);
 	}
 	/**
@@ -85,7 +75,7 @@ public class Resume extends EntityOID
 	@Override
 	public UAC getHisUAC()  {
 		UAC uac = new UAC();
-		if (WebUser.getFK_Dept().contains("01,02,03")) {
+		if (WebUser.getDeptNo().contains("01,02,03")) {
 			//如果是部门编号为01,02,03的人员，都可以编辑
 			uac.IsDelete = true;
 			uac.IsUpdate = true;

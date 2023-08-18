@@ -4,8 +4,7 @@ import bp.da.*;
 import bp.en.*;
 import bp.en.Map;
 import bp.pub.*;
-import bp.web.WebUser;
-
+import java.util.*;
 import java.io.*;
 import java.math.*;
 
@@ -19,36 +18,26 @@ public class MapAttr extends EntityMyPK
 	/** 
 	 是否是超大文本？
 	*/
-	public final int isSupperText()
-	{
+	public final int getItIsSupperText() {
 		return this.GetValIntByKey(MapAttrAttr.IsSupperText, 0);
 	}
-	public final void setSupperText(int value)
-	 {
+	public final void setItIsSupperText(int value)  {
 		this.SetValByKey(MapAttrAttr.IsSupperText, value);
 	}
-	/** 
-	 是否是富文本？
-	 * @
-	*/
-	public final boolean getIsRichText()
-	{
-		return this.GetParaBoolen(MapAttrAttr.IsRichText, false);
+
+	public final int getTextModel() {
+		return this.GetValIntByKey(MapAttrAttr.TextModel);
 	}
-	public final void setIsRichText(boolean value)
-	{
-		this.SetPara(MapAttrAttr.IsRichText, value);
+	public final void setTextModel(int value)  {
+		this.SetValByKey(MapAttrAttr.TextModel, value);
 	}
 	/** 
 	 是否启用二维码？
-	 * @
 	*/
-	public final boolean isEnableQrCode()
-	{
+	public final boolean getItIsEnableQrCode() {
 		return this.GetParaBoolen("IsEnableQrCode", false);
 	}
-	public final void setEnableQrCode(boolean value)
-	{
+	public final void setItIsEnableQrCode(boolean value)  {
 		this.SetPara("IsEnableQrCode", value);
 	}
 
@@ -59,13 +48,13 @@ public class MapAttr extends EntityMyPK
 	/** 
 	 数值字段是否合计(默认true)
 	*/
-	public final boolean isSum()  {
+	public final boolean getItIsSum() {
 		return this.GetParaBoolen(MapAttrAttr.IsSum, true);
 	}
-	public final void setIsSum(boolean value)  {
+	public final void setItIsSum(boolean value)  {
 		this.SetPara(MapAttrAttr.IsSum, value);
 	}
-	public final boolean getExtIsSum()  {
+	public final boolean getExtIsSum() {
 		return this.GetParaBoolen(MapAttrAttr.ExtIsSum, true);
 	}
 	public final void setExtIsSum(boolean value)  {
@@ -74,60 +63,35 @@ public class MapAttr extends EntityMyPK
 
 
 		///#endregion
-		public final void setIsSupperText(int value) throws Exception {
-			this.SetValByKey(MapAttrAttr.IsSupperText, value);
-		}
 
-	public final void setIsSigan(boolean value) throws Exception {
-		this.SetValByKey(MapAttrAttr.IsSigan, value);
-	}
 
 		///#region 参数属性.
 	/** 
 	 是否必填字段
 	*/
-	public final boolean getUIIsInput()
-	{
+	public final boolean getUIIsInput()  {
 		return this.GetValBooleanByKey(MapAttrAttr.UIIsInput, false);
 	}
-	public final void setUIIsInput(boolean value)
-	 {
+	public final void setUIIsInput(boolean value)  {
 		this.SetValByKey(MapAttrAttr.UIIsInput, value);
-	}
-	public final float getX()  {
-		return this.GetValFloatByKey(MapAttrAttr.X);
-	}
-
-	public final void setX(float value)  {
-		this.SetValByKey(MapAttrAttr.X, value);
-	}
-
-	public final float getY()  {
-		return this.GetValFloatByKey(MapAttrAttr.Y);
-	}
-
-	public final void setY(float value)  {
-		this.SetValByKey(MapAttrAttr.Y, value);
 	}
 	/** 
 	 在手机端中是否显示
 	*/
-	public final boolean isEnableInAPP()
-	{
+	public final boolean getItIsEnableInAPP()  {
 		return this.GetValBooleanByKey(MapAttrAttr.IsEnableInAPP, true);
 	}
-	public final void setEnableInAPP(boolean value)
-	 {
+	public final void setItIsEnableInAPP(boolean value)  {
 		this.SetValByKey(MapAttrAttr.IsEnableInAPP, value);
 	}
 	/** 
 	 是否启用高级JS设置
 	*/
-	public final boolean isEnableJS()  {
+	public final boolean getItIsEnableJS() {
 		return this.GetParaBoolen("IsEnableJS", false);
 	}
-	public final void setIsEnableJS(boolean value)
-	{this.SetPara("IsEnableJS", value);
+	public final void setItIsEnableJS(boolean value)  {
+		this.SetPara("IsEnableJS", value);
 	}
 
 		///#endregion
@@ -155,18 +119,18 @@ public class MapAttr extends EntityMyPK
 		{
 			SFTable sf = new SFTable(this.getUIBindKey());
 
-			if (sf.getFK_SFDBSrc().equals("local"))
+			if (sf.getSFDBSrcNo().equals("local"))
 			{
 				GENoNames myens = new GENoNames(this.getUIBindKey(), this.getName());
 
-				if (sf.getSrcType() == SrcType.SQL)
+				if (Objects.equals(sf.getSrcType(), DictSrcType.SQL))
 				{
-						//此种类型时，没有物理表或视图，从SQL直接查出数据
+					//此种类型时，没有物理表或视图，从SQL直接查出数据
 					DataTable dt = sf.GenerHisDataTable();
 					EntityNoName enn = null;
 					for (DataRow row : dt.Rows)
 					{
-						bp.en.Entity tempVar = myens.getGetNewEntity();
+						bp.en.Entity tempVar = myens.getNewEntity();
 						enn = tempVar instanceof EntityNoName ? (EntityNoName)tempVar : null;
 						enn.setNo(row.get("No") instanceof String ? (String)row.get("No") : null);
 						enn.setName(row.get("Name") instanceof String ? (String)row.get("Name") : null);
@@ -185,7 +149,7 @@ public class MapAttr extends EntityMyPK
 			{
 				GENoNames myens = new GENoNames(this.getUIBindKey(), this.getName());
 				_ens = myens;
-					//throw new Exception("@非实体类实体不能获取EntitiesNoName。");
+				//throw new Exception("@非实体类实体不能获取EntitiesNoName。");
 			}
 		}
 		return _ens;
@@ -211,13 +175,13 @@ public class MapAttr extends EntityMyPK
 	/** 
 	 是否是导入过来的字段
 	*/
-	public final boolean isTableAttr() throws Exception {
+	public final boolean getItIsTableAttr() {
 		return DataType.IsNumStr(this.getKeyOfEn().replace("F", ""));
 	}
 	/** 
 	 转换成属性.
 	*/
-	public final Attr getHisAttr()  {
+	public final Attr getHisAttr() throws Exception {
 		Attr attr = new Attr();
 		attr.setKey(this.getKeyOfEn());
 		attr.setDesc(this.getName());
@@ -239,11 +203,11 @@ public class MapAttr extends EntityMyPK
 		attr.setMaxLength(this.getMaxLen());
 		attr.setMinLength(this.getMinLen());
 		attr.setUIBindKey(this.getUIBindKey());
-		attr.UIIsLine=this.getUIIsLine();
-		attr.setUIHeight (0);
+		attr.UIIsLine = this.getUIIsLine();
+		attr.setUIHeight(0);
 		if (this.getUIHeight() > 30)
 		{
-			attr.setUIHeight((int)this.getUIHeight());
+			attr.setUIHeight((int) this.getUIHeight());
 		}
 
 		attr.setUIWidth(this.getUIWidth());
@@ -252,55 +216,55 @@ public class MapAttr extends EntityMyPK
 		attr.setUIRefKeyText(this.getUIRefKeyText());
 		attr.setUIVisible(this.getUIVisible());
 		attr.setMyFieldType(FieldType.Normal); //普通类型的字段.
-		if (this.isPK())
+		if (this.getItIsPK())
 		{
 			attr.setMyFieldType(FieldType.PK);
 		}
 
-		attr.setIsSupperText(this.isSupperText());
+		attr.setItIsSupperText(this.getItIsSupperText());
 
 		switch (this.getLGType())
 		{
 			case Enum:
-				 attr.setUIContralType(this.getUIContralType());
-				attr.setMyFieldType (FieldType.Enum);
-				attr.setUIIsReadonly( this.getUIIsEnable());
+				attr.setUIContralType(this.getUIContralType());
+				attr.setMyFieldType(FieldType.Enum);
+				attr.setUIIsReadonly(this.getUIIsEnable());
 				break;
 			case FK:
-				 attr.setUIContralType(this.getUIContralType());
-				attr.setMyFieldType (FieldType.FK);
-					//attr.UIRefKeyValue = "No";
-					//attr.UIRefKeyText = "Name";
-				attr.setUIIsReadonly( this.getUIIsEnable());
+				attr.setUIContralType(this.getUIContralType());
+				attr.setMyFieldType(FieldType.FK);
+				//attr.UIRefKeyValue = "No";
+				//attr.UIRefKeyText = "Name";
+				attr.setUIIsReadonly(this.getUIIsEnable());
 				break;
 			default:
 
-				if (this.isPK())
+				if (this.getItIsPK())
 				{
-					attr.setMyFieldType (FieldType.PK);
+					attr.setMyFieldType(FieldType.PK);
 				}
 
-				attr.setUIIsReadonly( !this.getUIIsEnable());
+				attr.setUIIsReadonly(!this.getUIIsEnable());
 				switch (this.getMyDataType())
 				{
 					case DataType.AppBoolean:
-						 attr.setUIContralType(UIContralType.CheckBok);
-						attr.setUIIsReadonly( this.getUIIsEnable());
+						attr.setUIContralType(UIContralType.CheckBok);
+						attr.setUIIsReadonly(this.getUIIsEnable());
 						break;
 					case DataType.AppDate:
-						if (this.getTag().equals("1"))
+						if (Objects.equals(this.getTag(), "1"))
 						{
 							attr.setDefaultVal(DataType.getCurrentDate());
 						}
 						break;
 					case DataType.AppDateTime:
-						if (this.getTag().equals("1"))
+						if (Objects.equals(this.getTag(), "1"))
 						{
 							attr.setDefaultVal(DataType.getCurrentDate());
 						}
 						break;
 					default:
-						 attr.setUIContralType(this.getUIContralType());
+						attr.setUIContralType(this.getUIContralType());
 						break;
 				}
 				break;
@@ -310,8 +274,8 @@ public class MapAttr extends EntityMyPK
 	/** 
 	 是否主键
 	*/
-	public final boolean isPK()  {
-		switch(this.getKeyOfEn())
+	public final boolean getItIsPK() throws Exception {
+		switch (this.getKeyOfEn())
 		{
 			case "OID":
 			case "No":
@@ -326,64 +290,47 @@ public class MapAttr extends EntityMyPK
 	/** 
 	 编辑类型
 	*/
-	public final EditType getHisEditType()  {
+	public final EditType getHisEditType() {
 		return EditType.forValue(this.GetValIntByKey(MapAttrAttr.EditType));
 	}
-	public final void setHisEditType(EditType value)
-	 {
+	public final void setHisEditType(EditType value)  {
 		this.SetValByKey(MapAttrAttr.EditType, value.getValue());
 	}
-	public final void setEditType(EditType val)
-	 {
+	public final void setEditType(EditType val)  {
 		this.SetValByKey(MapAttrAttr.EditType, val.getValue());
 	}
 	/** 
 	 表单ID
 	*/
-	public final String getFK_MapData()
-	{
+	public final String getFrmID()  {
 		return this.GetValStrByKey(MapAttrAttr.FK_MapData);
 	}
-	public final void setFK_MapData(String val)
-	{
-
-		this.SetValByKey(MapAttrAttr.FK_MapData, val);
+	public final void setFrmID(String value)  {
+		this.SetValByKey(MapAttrAttr.FK_MapData, value);
 	}
 	/** 
 	 字段名
 	*/
-	public final String getKeyOfEn()
-	{
+	public final String getKeyOfEn()  {
 		return this.GetValStrByKey(MapAttrAttr.KeyOfEn);
 	}
-	public final void setKeyOfEn(String val)
-	{
+	public final void setKeyOfEn(String val) throws Exception {
 
 		this.SetValByKey(MapAttrAttr.KeyOfEn, val);
 	}
-	public final FieldTypeS getLGType()
-	{
+	public final FieldTypeS getLGType() {
 		return FieldTypeS.forValue(this.GetValIntByKey(MapAttrAttr.LGType));
 	}
-
-	/*
-	 * public final void setLGType(FieldTypeS value)  {
-	 * this.SetValByKey(MapAttrAttr.LGType, value.getValue()); }
-	 */
-	public final void setLGType(FieldTypeS val)
-	 {
-		this.SetValByKey(MapAttrAttr.LGType, val.getValue());
+	public final void setLGType(FieldTypeS value)  {
+		this.SetValByKey(MapAttrAttr.LGType, value.getValue());
 	}
-	public final String getLGTypeT()
-	{
+	public final String getLGTypeT() {
 		return this.GetValRefTextByKey(MapAttrAttr.LGType);
 	}
 	/** 
 	 描述
-	 * @
 	*/
-	public final String getName()
-	{
+	public final String getName() throws Exception {
 		String s = this.GetValStrByKey(MapAttrAttr.Name);
 		if (DataType.IsNullOrEmpty(s) == true)
 		{
@@ -391,16 +338,11 @@ public class MapAttr extends EntityMyPK
 		}
 		return s;
 	}
-	public final void setName(String value)
-	 {
+	public final void setName(String value)  {
 		this.SetValByKey(MapAttrAttr.Name, value);
 	}
-	/*
-	 * public final void setName(String val)  {
-	 * this.SetValByKey(MapAttrAttr.Name, val); }
-	 */
 
-	public final boolean getIsNum()  {
+	public final boolean getItIsNum() throws Exception {
 		switch (this.getMyDataType())
 		{
 			case DataType.AppString:
@@ -412,33 +354,25 @@ public class MapAttr extends EntityMyPK
 				return true;
 		}
 	}
-	public final BigDecimal getDefValDecimal() throws Exception {
-		return  new BigDecimal(this.getDefVal());
+	public final BigDecimal getDefValDecimal() {
+		return new BigDecimal(this.GetValFloatByKey(MapAttrAttr.DefVal));
 	}
-	public final String getDefValReal()
-	{
+	public final String getDefValReal()  {
 		return this.GetValStrByKey(MapAttrAttr.DefVal);
 	}
-	public final void setDefValReal(String val)
-	 {
+	public final void setDefValReal(String val)  {
 		this.SetValByKey(MapAttrAttr.DefVal, val);
 	}
-	public final int getDefValType()
-	{
+	public final int getDefValType() {
 		return this.GetValIntByKey(MapAttrAttr.DefValType);
 	}
-	public final void setDefValType(int value)
-	 {
+	public final void setDefValType(int value)  {
 		this.SetValByKey(MapAttrAttr.DefValType, value);
 	}
-	/*public final void setDefValType(int val)
-	 {
-		this.SetValByKey(MapAttrAttr.DefValType, val);
-	}*/
-	/** 
+	/**
 	 合并单元格数
 	*/
-	public final int getColSpan()  {
+	public final int getColSpan() throws Exception {
 		int i = this.GetValIntByKey(MapAttrAttr.ColSpan);
 		if (this.getUIIsLine() && i == 1)
 		{
@@ -450,8 +384,7 @@ public class MapAttr extends EntityMyPK
 		}
 		return i;
 	}
-	public final void setColSpan(int value)
-	 {
+	public final void setColSpan(int value)  {
 		this.SetValByKey(MapAttrAttr.ColSpan, value);
 	}
 	/** 
@@ -459,9 +392,9 @@ public class MapAttr extends EntityMyPK
 	*/
 	public final String getDefVal() throws Exception {
 		String s = this.GetValStrByKey(MapAttrAttr.DefVal);
-		if (this.getIsNum())
+		if (this.getItIsNum())
 		{
-			if (s.equals(""))
+			if (Objects.equals(s, ""))
 			{
 				return "0";
 			}
@@ -470,7 +403,7 @@ public class MapAttr extends EntityMyPK
 		switch (this.getMyDataType())
 		{
 			case DataType.AppDate:
-				if (this.getTag().equals("1") || s.equals("@RDT"))
+				if (Objects.equals(this.getTag(), "1") || Objects.equals(s, "@RDT"))
 				{
 					return DataType.getCurrentDate();
 				}
@@ -478,9 +411,8 @@ public class MapAttr extends EntityMyPK
 				{
 					return "          ";
 				}
-				//break;
 			case DataType.AppDateTime:
-				if (this.getTag().equals("1") || s.equals("@RDT"))
+				if (Objects.equals(this.getTag(), "1") || Objects.equals(s, "@RDT"))
 				{
 					return DataType.getCurrentDateTime();
 				}
@@ -488,8 +420,6 @@ public class MapAttr extends EntityMyPK
 				{
 					return "               ";
 				}
-					//return "    -  -    :  ";
-				//break;
 			default:
 				break;
 		}
@@ -499,17 +429,18 @@ public class MapAttr extends EntityMyPK
 			return s;
 		}
 
-		switch (s.toLowerCase()) {
+		switch (s.toLowerCase())
+		{
 			case "@webuser.no":
-				return WebUser.getNo();
+				return bp.web.WebUser.getNo();
 			case "@webuser.name":
-				return WebUser.getName();
+				return bp.web.WebUser.getName();
 			case "@webuser.fk_dept":
-				return WebUser.getFK_Dept();
+				return bp.web.WebUser.getDeptNo();
 			case "@webuser.fk_deptname":
-				return WebUser.getFK_DeptName();
+				return bp.web.WebUser.getDeptName();
 			case "@webuser.fk_deptfullname":
-				return WebUser.getFK_DeptNameOfFull();
+				return bp.web.WebUser.getDeptNameOfFull();
 			case "@fk_ny":
 				return DataType.getCurrentYearMonth();
 			case "@fk_nd":
@@ -517,23 +448,12 @@ public class MapAttr extends EntityMyPK
 			case "@fk_yf":
 				return DataType.getCurrentMonth();
 			case "@rdt":
-				if (this.getMyDataType() == DataType.AppDate)
-				{
-					return DataType.getCurrentDate();
-				}
-				else
-				{
-					return DataType.getCurrentDateTime();
-				}
 			case "@rd":
 				if (this.getMyDataType() == DataType.AppDate)
 				{
 					return DataType.getCurrentDate();
 				}
-				else
-				{
-					return DataType.getCurrentDateTime();
-				}
+				return DataType.getCurrentDateTime();
 			case "@yyyy年MM月dd日":
 				return DataType.getCurrentDateCNOfLong();
 			case "@yyyy年MM月dd日hh时mm分":
@@ -544,39 +464,34 @@ public class MapAttr extends EntityMyPK
 				return DataType.getCurrentDateByFormart("yy年MM月dd日HH时mm分");
 			default:
 				return s;
-					//throw new Exception("没有约定的变量默认值类型" + s);
+				//throw new Exception("没有约定的变量默认值类型" + s);
 		}
-		//return this.GetValStrByKey(MapAttrAttr.DefVal);
 	}
-	public final void setDefVal(String value)
-	{this.SetValByKey(MapAttrAttr.DefVal, value);
+	public final void setDefVal(String value)  {
+		this.SetValByKey(MapAttrAttr.DefVal, value);
 	}
-	/*//public final void setDefVal(Object val)
+	public final void setDefVal(Object val)
 	{
 		this.GetValStrByKey(MapAttrAttr.DefVal, val.toString());
-	}*/
-	public final boolean getDefValOfBool()
-	{
+	}
+	public final boolean getDefValOfBool()  {
 		return this.GetValBooleanByKey(MapAttrAttr.DefVal, false);
 	}
 
 	/** 
 	 字段
 	*/
-	public final String getField()  {
+	public final String getField() {
 		return this.getKeyOfEn();
 	}
 
-	public final int getMyDataType()
-	{
+	public final int getMyDataType() {
 		return this.GetValIntByKey(MapAttrAttr.MyDataType);
 	}
-	public final void setMyDataType(int value)
-	 {
+	public final void setMyDataType(int value)  {
 		this.SetValByKey(MapAttrAttr.MyDataType, value);
 	}
-
-	public final String getMyDataTypeS()  {
+	public final String getMyDataTypeS() throws Exception {
 		switch (this.getMyDataType())
 		{
 			case DataType.AppString:
@@ -597,9 +512,11 @@ public class MapAttr extends EntityMyPK
 				throw new RuntimeException("没有判断。");
 		}
 	}
-	public final void setMyDataTypeS(String value)throws Exception
-	{switch (value)
-	{case "String":
+	public final void setMyDataTypeS(String value) throws Exception {
+
+		switch (value)
+		{
+			case "String":
 				this.SetValByKey(MapAttrAttr.MyDataType, DataType.AppString);
 				break;
 			case "Int":
@@ -625,13 +542,13 @@ public class MapAttr extends EntityMyPK
 		}
 
 	}
-	public final String getMyDataTypeStr() throws Exception {
+	public final String getMyDataTypeStr() {
 		return DataType.GetDataTypeDese(this.getMyDataType());
 	}
 	/** 
 	 最大长度
 	*/
-	public final int getMaxLen()  {
+	public final int getMaxLen() throws Exception {
 		switch (this.getMyDataType())
 		{
 			case DataType.AppDate:
@@ -653,25 +570,22 @@ public class MapAttr extends EntityMyPK
 		}
 		return i;
 	}
-	public final void setMaxLen(int val)
-	 {
+	public final void setMaxLen(int val)  {
 		this.SetValByKey(MapAttrAttr.MaxLen, val);
 	}
 	/** 
 	 最小长度
 	*/
-	public final int getMinLen()
-	{
+	public final int getMinLen() {
 		return this.GetValIntByKey(MapAttrAttr.MinLen);
 	}
-	public final void setMinLen(int val)
-	 {
+	public final void setMinLen(int val)  {
 		this.SetValByKey(MapAttrAttr.MinLen, val);
 	}
 	/** 
 	 是否可以为空, 对数值类型的数据有效.
 	*/
-	public final boolean isNull()  {
+	public final boolean getItIsNull() throws Exception {
 		if (this.getMinLen() == 0)
 		{
 			return false;
@@ -684,231 +598,206 @@ public class MapAttr extends EntityMyPK
 	/** 
 	 所在的分组
 	*/
-	public final int getGroupID()  {
+	public final int getGroupID() throws Exception {
 		String str = this.GetValStringByKey(MapAttrAttr.GroupID);
-		if (str.equals("无") || str.equals(""))
+		if (Objects.equals(str, "无") || Objects.equals(str, ""))
 		{
 			return 1;
 		}
 		return Integer.parseInt(str);
 	}
-	public final void setGroupID(long value) throws Exception {
+	public final void setGroupID(long value)  {
 		this.SetValByKey(MapAttrAttr.GroupID, value);
 	}
-
-
-	/** 
+	/**
 	 是否是大块文本？
 	*/
-	public final boolean getIsBigDoc()  {
+	public final boolean getItIsBigDoc() throws Exception {
 		if (this.getUIRows() > 1 && this.getMyDataType() == DataType.AppString)
 		{
 			return true;
 		}
-
+		//if (this.ColSpan == 4 && this.getMyDataType() == DataType.AppString)
+		//    return true;
 		return false;
 	}
 	/** 
 	 textbox控件的行数.
 	*/
-	public final int getUIRows()  {
+	public final int getUIRows() throws Exception {
 		if (this.getUIHeight() < 40)
 		{
 			return 1;
 		}
 
-		//BigDecimal d =  new BigDecimal(String.valueOf(this.getUIHeight())).divide(new BigDecimal(23));
 		java.math.BigDecimal d = new java.math.BigDecimal((new Float(this.getUIHeight())).toString());
 		java.math.BigDecimal c = new java.math.BigDecimal(23);
 		return d.divide(c, 0, RoundingMode.HALF_UP).intValue();
-		//return (int)Double.isNaN(d) ? Double.NaN : Math.round(d.multiply(Math.pow(10, 0))) / Math.pow(10, 0);
 	}
 	/** 
 	 高度
-	 * @
 	*/
-	public final int getUIHeightInt()
-	{
+	public final int getUIHeightInt() {
 		return (int)this.getUIHeight();
 	}
-	public final void setUIHeightInt(int value)
-	{
+	public final void setUIHeightInt(int value) throws Exception {
 		this.setUIHeight(value);
-	}
-	public final void setUIWidthInt(int value)  {
-		this.SetValByKey(MapAttrAttr.UIWidth, value);
 	}
 
 	/** 
 	 高度
 	*/
-	public final float getUIHeight()
-	{
+	public final float getUIHeight() {
 		return this.GetValFloatByKey(MapAttrAttr.UIHeight);
 	}
-	public final void setUIHeight(float value)
-	 {
+	public final void setUIHeight(float value)  {
 		this.SetValByKey(MapAttrAttr.UIHeight, value);
 	}
-
-	/** 
+	/**
 	 宽度
 	*/
-	public final int getUIWidthInt()  {
+	public final int getUIWidthInt() {
 		return (int)this.getUIWidth();
 	}
 	/** 
 	 宽度
 	*/
-	public final float getUIWidth()
-	{
+	public final float getUIWidth() {
 		return this.GetValFloatByKey(MapAttrAttr.UIWidth);
 	}
-	public final void setUIWidth(float value)
-	 {
+	public final void setUIWidth(float value)  {
 		this.SetValByKey(MapAttrAttr.UIWidth, value);
 	}
-
-	public final int getUIWidthOfLab()  {
+	public final int getUIWidthOfLab()
+	{
 		return 0;
 	}
 	/** 
 	 是否是否可见？
 	*/
-	public final boolean getUIVisible()
-	{
+	public final boolean getUIVisible() {
 		return this.GetValBooleanByKey(MapAttrAttr.UIVisible);
 	}
-	public final void setUIVisible(boolean value)
-	 {
+	public final void setUIVisible(boolean value)  {
 		this.SetValByKey(MapAttrAttr.UIVisible, value);
 	}
-
-	/** 
+	/**
 	 是否可用
 	*/
-	public final boolean getUIIsEnable()
-	{
+	public final boolean getUIIsEnable() {
 		return this.GetValBooleanByKey(MapAttrAttr.UIIsEnable);
 	}
-	public final void setUIIsEnable(boolean val)
-	 {
+	public final void setUIIsEnable(boolean val)  {
 		this.SetValByKey(MapAttrAttr.UIIsEnable, val);
 	}
 	/** 
 	 是否单独行显示
 	*/
-	public final boolean getUIIsLine()
-	{
+	public final boolean getUIIsLine() {
 		return this.GetValBooleanByKey(MapAttrAttr.UIIsLine);
 	}
-	public final void setUIIsLine(boolean value)
-	 {
+	public final void setUIIsLine(boolean value)  {
 		this.SetValByKey(MapAttrAttr.UIIsLine, value);
 	}
-
-	/** 
+	/**
 	 是否数字签名
 	*/
-	public final boolean getIsSigan()  {
+	public final boolean getItIsSigan() throws Exception {
 		if (this.getUIIsEnable())
 		{
 			return false;
 		}
 		return this.GetValBooleanByKey(MapAttrAttr.IsSigan);
 	}
-	public final void setSigan(boolean value)
-	 {
+	public final void setItIsSigan(boolean value)  {
 		this.SetValByKey(MapAttrAttr.IsSigan, value);
 	}
 	/** 
 	 签名类型
 	*/
-	public final SignType getSignType()  {
-			//if (this.UIIsEnable)
-			//    return SignType.None;
+	public final SignType getSignType() throws Exception {
+		//if (this.UIIsEnable)
+		//    return SignType.None;
 		return SignType.forValue(this.GetValIntByKey(MapAttrAttr.IsSigan));
 	}
-	public final void setSignType(SignType value)
-	 {
+	public final void setSignType(SignType value)  {
 		this.SetValByKey(MapAttrAttr.IsSigan, value.getValue());
 	}
-	public final int getPara_FontSize()  {
+	public final int getParaFontSize() {
 		return this.GetParaInt(MapAttrAttr.FontSize);
 	}
-	public final void setPara_FontSize(int value)
-	{this.SetPara(MapAttrAttr.FontSize, value);
+	public final void setParaFontSize(int value)  {
+		this.SetPara(MapAttrAttr.FontSize, value);
 	}
 	/** 
 	 radiobutton的展现方式
 	*/
-	public final int getRBShowModel()  {
+	public final int getRBShowModel() {
 		return this.GetParaInt("RBShowModel");
 	}
-	public final void setRBShowModel(int value)
-	{this.SetPara("RBShowModel", value);
+	public final void setRBShowModel(int value)  {
+		this.SetPara("RBShowModel", value);
 	}
 
 	/** 
 	 操作提示
 	*/
-	public final String getPara_Tip()  {
+	public final String getParaTip() {
 		return this.GetParaString(MapAttrAttr.Tip);
 	}
-	public final void setPara_Tip(String value)
-	{this.SetPara(MapAttrAttr.Tip, value);
+	public final void setParaTip(String value)  {
+		this.SetPara(MapAttrAttr.Tip, value);
 	}
 	/** 
 	 是否数字签名
 	*/
-	public final String getParaSiganField()  {
+	public final String getParaSiganField() throws Exception {
 		if (this.getUIIsEnable())
 		{
 			return "";
 		}
 		return this.GetParaString(MapAttrAttr.SiganField);
 	}
-	public final void setParaSiganField(String value)
-	{this.SetPara(MapAttrAttr.SiganField, value);
+	public final void setParaSiganField(String value)  {
+		this.SetPara(MapAttrAttr.SiganField, value);
 	}
 	/** 
 	 签名类型
 	*/
-	public final PicType getPicType()  {
+	public final PicType getPicType() throws Exception {
 		if (this.getUIIsEnable())
 		{
 			return PicType.Auto;
 		}
 		return PicType.forValue(this.GetParaInt(MapAttrAttr.PicType));
 	}
-	public final void setPicType(PicType value)
-	{this.SetPara(MapAttrAttr.PicType, value.getValue());
+	public final void setPicType(PicType value)  {
+		this.SetPara(MapAttrAttr.PicType, value.getValue());
 	}
 	/** 
 	 TextBox类型
 	*/
-	public final TBModel getTBModel()  {
+	public final TBModel getTBModel() {
 		return TBModel.forValue(this.GetParaInt(MapAttrAttr.TBModel));
 	}
-	public final void setTBModel(TBModel value)
-	{this.SetPara(MapAttrAttr.TBModel, value.getValue());
+	public final void setTBModel(TBModel value)  {
+		this.SetPara(MapAttrAttr.TBModel, value.getValue());
 	}
 	/** 
 	 绑定的值
 	*/
-	public final String getUIBindKey()
-	{
+	public final String getUIBindKey()  {
 		return this.GetValStrByKey(MapAttrAttr.UIBindKey);
 	}
-	public final void setUIBindKey(String value)
-	{String val = bp.sys.base.Glo.DealClassEntityName(value);
+	public final void setUIBindKey(String value) throws Exception {
+		String val = bp.sys.base.Glo.DealClassEntityName(value);
 		this.SetValByKey(MapAttrAttr.UIBindKey, val);
 	}
 
 	/** 
 	 关联的表的Key
 	*/
-	public final String getUIRefKey()  {
+	public final String getUIRefKey() throws Exception {
 		String s = this.GetValStrByKey(MapAttrAttr.UIRefKey);
 		if (DataType.IsNullOrEmpty(s) == true)
 		{
@@ -916,14 +805,13 @@ public class MapAttr extends EntityMyPK
 		}
 		return s;
 	}
-	public final void setUIRefKey(String value)
-	 {
+	public final void setUIRefKey(String value)  {
 		this.SetValByKey(MapAttrAttr.UIRefKey, value);
 	}
 	/** 
 	 关联的表的Lab
 	*/
-	public final String getUIRefKeyText()  {
+	public final String getUIRefKeyText() throws Exception {
 		String s = this.GetValStrByKey(MapAttrAttr.UIRefKeyText);
 		if (DataType.IsNullOrEmpty(s) == true)
 		{
@@ -931,91 +819,48 @@ public class MapAttr extends EntityMyPK
 		}
 		return s;
 	}
-	public final void setUIRefKeyText(String value)
-	 {
+	public final void setUIRefKeyText(String value)  {
 		this.SetValByKey(MapAttrAttr.UIRefKeyText, value);
 	}
 	/** 
 	 标识
 	*/
-	public final String getTag()
-	{
+	public final String getTag()  {
 		return this.GetValStrByKey(MapAttrAttr.Tag);
 	}
-	public final void setTag(String value)
-	 {
+	public final void setTag(String value)  {
 		this.SetValByKey(MapAttrAttr.Tag, value);
 	}
 	/** 
 	 控件类型
 	*/
-	public final UIContralType getUIContralType()  {
+	public final UIContralType getUIContralType() {
 		return UIContralType.forValue(this.GetValIntByKey(MapAttrAttr.UIContralType));
 	}
-	public final void setUIContralType(UIContralType value)
-	 {
+	public final void setUIContralType(UIContralType value)  {
 		this.SetValByKey(MapAttrAttr.UIContralType, value.getValue());
 
 	}
 
-	public final String getFDesc()  {
-		switch (this.getMyDataType())
-		{
-			case DataType.AppString:
-				if (this.getUIVisible() == false)
-				{
-					return "长度" + this.getMinLen() + "-" + this.getMaxLen() + "不可见";
-				}
-				else
-				{
-					return "长度" + this.getMinLen() + "-" + this.getMaxLen();
-				}
-			case DataType.AppDate:
-			case DataType.AppDateTime:
-			case DataType.AppInt:
-			case DataType.AppFloat:
-			case DataType.AppMoney:
-				if (this.getUIVisible() == false)
-				{
-					return "不可见";
-				}
-				else
-				{
-					return "";
-				}
-			default:
-				return "";
-		}
-	}
 	/** 
 	 TabIdx
 	*/
-	public final int getTabIdx()
-	{
+	public final int getTabIdx() {
 		return this.GetValIntByKey(MapAttrAttr.TabIdx);
 	}
-	public final void setTabIdx(int value)
-	 {
+	public final void setTabIdx(int value)  {
 		this.SetValByKey(MapAttrAttr.TabIdx, value);
 	}
 	/** 
 	 序号
 	*/
-	public final int getIdx()
-	{
+	public final int getIdx() {
 		return this.GetValIntByKey(MapAttrAttr.Idx);
 	}
-	public final void setIdx(int value)
-	 {
+	public final void setIdx(int value)  {
 		this.SetValByKey(MapAttrAttr.Idx, value);
 	}
 
-	public final int getTextModel(){
-		return this.GetValIntByKey(MapAttrAttr.TextModel);
-	}
-	public final void setTextModel(int value){
-		this.SetValByKey(MapAttrAttr.TextModel, value);
-	}
 		///#endregion
 
 
@@ -1023,7 +868,8 @@ public class MapAttr extends EntityMyPK
 	/** 
 	 实体属性
 	*/
-	public MapAttr() {
+	public MapAttr()
+	{
 	}
 	public MapAttr(String mypk) throws Exception {
 		this.setMyPK(mypk);
@@ -1032,13 +878,14 @@ public class MapAttr extends EntityMyPK
 	public MapAttr(String fk_mapdata, String key) throws Exception {
 		this.SetValByKey(MapAttrAttr.FK_MapData, fk_mapdata);
 		this.SetValByKey(MapAttrAttr.KeyOfEn, key);
-		this.Retrieve(MapAttrAttr.FK_MapData, this.getFK_MapData(), MapAttrAttr.KeyOfEn, this.getKeyOfEn());
+		this.Retrieve(MapAttrAttr.FK_MapData, this.getFrmID(), MapAttrAttr.KeyOfEn, this.getKeyOfEn());
 	}
 	/** 
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap()  {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -1076,16 +923,11 @@ public class MapAttr extends EntityMyPK
 		map.AddTBInt(MapAttrAttr.UIIsEnable, 1, "是否启用", true, true);
 		map.AddTBInt(MapAttrAttr.UIIsLine, 0, "是否单独栏显示", true, true);
 		map.AddTBInt(MapAttrAttr.UIIsInput, 0, "是否必填字段", true, true);
-		map.AddTBInt(MapAttrAttr.IsSecret, 0, "是否保密", true, true);
-		map.AddTBInt(MapAttrAttr.IsRichText, 0, "富文本", true, true);
 		map.AddTBInt(MapAttrAttr.TextModel, 0, "TextModel", true, true);
 		map.AddTBInt(MapAttrAttr.IsSupperText, 0, "是否是大文本", true, true);
 		map.AddTBInt(MapAttrAttr.FontSize, 0, "字体大小", true, true);
-		map.AddTBInt(MapAttrAttr.LabelColSpan, 1, "LabelColSpan", true, true);
 
-
-
-			// 是否是签字，操作员字段有效。2010-09-23 增加。 @0=无@1=图片签名@2=CA签名.
+		// 是否是签字，操作员字段有效。2010-09-23 增加。 @0=无@1=图片签名@2=CA签名.
 		map.AddTBInt(MapAttrAttr.IsSigan, 0, "签字？", true, false);
 
 		map.AddTBString(MapAttrAttr.GUID, null, "GUID", true, false, 0, 128, 20);
@@ -1099,30 +941,31 @@ public class MapAttr extends EntityMyPK
 
 		map.AddTBString(MapAttrAttr.Tip, null, "激活提示", false, true, 0, 200, 20);
 
-			//单元格数量。2013-07-24 增加。
-			//  map.AddTBString(MapAttrAttr.ColSpan, "1", "单元格数量", true, false, 0, 3, 3);
+		//单元格数量。2013-07-24 增加。
+		//  map.AddTBString(MapAttrAttr.ColSpan, "1", "单元格数量", true, false, 0, 3, 3);
 		map.AddTBInt(MapAttrAttr.ColSpan, 1, "单元格数量", true, false);
 
-			//文本占单元格数量
+		//文本占单元格数量
 		map.AddTBInt(MapAttrAttr.LabelColSpan, 1, "文本单元格数量", true, false);
 
-			//文本跨行
+		//文本跨行
 		map.AddTBInt(MapAttrAttr.RowSpan, 1, "行数", true, false);
 
-			//显示的分组.
+		//显示的分组.
 		map.AddTBString(MapAttrAttr.GroupID, null, "显示的分组", false, true, 0, 20, 20);
-			//map.AddTBInt(MapAttrAttr.GroupID, 1, "显示的分组", true, false);
 
 		map.AddBoolean(MapAttrAttr.IsEnableInAPP, true, "是否在移动端中显示", true, true);
 
-			// xxx 新增的样式.
+		// xxx 新增的样式.
 		map.AddTBString(MapAttrAttr.CSSCtrl, "0", "CSSCtrl自定义样式", true, false, 0, 50, 20);
 		map.AddTBString(MapAttrAttr.CSSLabel, "0", "CSSLabel标签样式", true, false, 0, 50, 20);
 		map.AddTBInt(MapAttrAttr.Idx, 0, "序号", true, false);
 		map.AddTBString(MapAttrAttr.ICON, "0", "ICON", true, false, 0, 50, 20);
-
-			//参数属性.
+		//参数属性.
 		map.AddTBAtParas(4000);
+
+
+		map.AddLang(); //增加多语言.
 
 		this.set_enMap(map);
 		return this.get_enMap();
@@ -1133,7 +976,7 @@ public class MapAttr extends EntityMyPK
 	/** 
 	 移动插入
 	 
-	 param insertPK
+	 @param insertPK
 	 @return 
 	*/
 	public final String InsertTo(String insertPK) throws Exception {
@@ -1146,7 +989,7 @@ public class MapAttr extends EntityMyPK
 	 @return 
 	*/
 	public final String SaveBigNoteHtmlText(String text) throws Exception {
-		String file = bp.difference.SystemConfig.getPathOfDataUser() + "CCForm/BigNoteHtmlText/" + this.getFK_MapData() + ".htm";
+		String file = bp.difference.SystemConfig.getPathOfDataUser() + "CCForm" + File.separator + "BigNoteHtmlText" + File.separator + this.getFrmID() + ".htm";
 		//若文件夹不存在，则创建
 		String folder = (new File(file)).getParent();
 		if ((new File(folder)).isDirectory() == false)
@@ -1159,7 +1002,7 @@ public class MapAttr extends EntityMyPK
 	}
 	//删除大块文本信息
 	public final String DeleteBigNoteHtmlText() throws Exception {
-		String file = bp.difference.SystemConfig.getPathOfDataUser() + "CCForm/BigNoteHtmlText/" + this.getFK_MapData() + ".htm";
+		String file = bp.difference.SystemConfig.getPathOfDataUser() + "CCForm" + File.separator + "BigNoteHtmlText" + File.separator + this.getFrmID() + ".htm";
 
 		if ((new File(file)).isFile() == true)
 		{
@@ -1178,7 +1021,7 @@ public class MapAttr extends EntityMyPK
 	*/
 	public final String ReadBigNoteHtmlText() throws Exception {
 		String doc = "";
-		String file = bp.difference.SystemConfig.getPathOfDataUser() + "CCForm/BigNoteHtmlText/" + this.getFK_MapData() + ".htm";
+		String file = bp.difference.SystemConfig.getPathOfDataUser() + "CCForm" + File.separator + "BigNoteHtmlText" + File.separator + this.getFrmID() + ".htm";
 		String folder = (new File(file)).getParent();
 		if ((new File(folder)).isDirectory() != false)
 		{
@@ -1192,19 +1035,20 @@ public class MapAttr extends EntityMyPK
 		return doc;
 	}
 	public final void DoDownTabIdx() throws Exception {
-		this.DoOrderDown(MapAttrAttr.FK_MapData, this.getFK_MapData(), MapAttrAttr.Idx);
+		this.DoOrderDown(MapAttrAttr.FK_MapData, this.getFrmID(), MapAttrAttr.Idx);
 	}
 	public final void DoUpTabIdx() throws Exception {
-		this.DoOrderUp(MapAttrAttr.FK_MapData, this.getFK_MapData(), MapAttrAttr.Idx);
+		this.DoOrderUp(MapAttrAttr.FK_MapData, this.getFrmID(), MapAttrAttr.Idx);
 	}
-	public final String DoUp() throws Exception {
+	public final String DoUp() throws Exception
+	{
 		this.DoOrderUp(MapAttrAttr.GroupID, String.valueOf(this.getGroupID()), MapAttrAttr.Idx);
 
 		MapAttr attr = new MapAttr();
-		attr.setMyPK(this.getFK_MapData() + "_Title");
+		attr.setMyPK(this.getFrmID() + "_Title");
 		if (attr.RetrieveFromDBSources() == 1)
 		{
-			//  attr.setIdx( -1);
+			//  attr.setIdx(-1);
 			attr.Update("Idx", -1);
 		}
 		return "执行成功";
@@ -1214,7 +1058,7 @@ public class MapAttr extends EntityMyPK
 		this.DoOrderInsertTo(MapAttrAttr.Idx, entityPK, MapAttrAttr.GroupID);
 
 		MapAttr attr = new MapAttr();
-		attr.setMyPK(this.getFK_MapData() + "_Title");
+		attr.setMyPK(this.getFrmID() + "_Title");
 		if (attr.RetrieveFromDBSources() == 1)
 		{
 			attr.Update("Idx", -1);
@@ -1234,11 +1078,12 @@ public class MapAttr extends EntityMyPK
 	/** 
 	 下移
 	*/
-	public final String DoDown() throws Exception {
+	public final String DoDown() throws Exception
+	{
 		this.DoOrderDown(MapAttrAttr.GroupID, String.valueOf(this.getGroupID()), MapAttrAttr.Idx);
 
 		MapAttr attr = new MapAttr();
-		attr.setMyPK(this.getFK_MapData() + "_Title");
+		attr.setMyPK(this.getFrmID() + "_Title");
 		if (attr.RetrieveFromDBSources() == 1)
 		{
 			attr.Update("Idx", -1);
@@ -1251,16 +1096,16 @@ public class MapAttr extends EntityMyPK
 	public final String DoUpForMapDtl() throws Exception {
 		//规整groupID.
 		GroupField gf = new GroupField();
-		gf.Retrieve(GroupFieldAttr.FrmID, this.getFK_MapData());
-		DBAccess.RunSQL("UPDATE Sys_MapAttr SET GroupID=" + gf.getOID() + " WHERE FK_MapData='" + this.getFK_MapData() + "'");
+		gf.Retrieve(GroupFieldAttr.FrmID, this.getFrmID());
+		DBAccess.RunSQL("UPDATE Sys_MapAttr SET GroupID=" + gf.getOID() + " WHERE FK_MapData='" + this.getFrmID() + "'");
 
-		this.DoOrderUp(MapAttrAttr.FK_MapData, this.getFK_MapData(), MapAttrAttr.UIVisible, "1", MapAttrAttr.Idx);
+		this.DoOrderUp(MapAttrAttr.FK_MapData, this.getFrmID(), MapAttrAttr.UIVisible, "1", MapAttrAttr.Idx);
 
 		MapAttr attr = new MapAttr();
-		attr.setMyPK(this.getFK_MapData() + "_Title");
+		attr.setMyPK(this.getFrmID() + "_Title");
 		if (attr.RetrieveFromDBSources() == 1)
 		{
-			//  attr.setIdx( -1);
+			//  attr.setIdx(-1);
 			attr.Update("Idx", -1);
 		}
 		return "执行成功";
@@ -1271,13 +1116,13 @@ public class MapAttr extends EntityMyPK
 	public final String DoDownForMapDtl() throws Exception {
 		//规整groupID.
 		GroupField gf = new GroupField();
-		gf.Retrieve(GroupFieldAttr.FrmID, this.getFK_MapData());
-		DBAccess.RunSQL("UPDATE Sys_MapAttr SET GroupID=" + gf.getOID() + " WHERE FK_MapData='" + this.getFK_MapData() + "'");
+		gf.Retrieve(GroupFieldAttr.FrmID, this.getFrmID());
+		DBAccess.RunSQL("UPDATE Sys_MapAttr SET GroupID=" + gf.getOID() + " WHERE FK_MapData='" + this.getFrmID() + "'");
 
-		this.DoOrderDown(MapAttrAttr.FK_MapData, this.getFK_MapData(), MapAttrAttr.UIVisible, "1", MapAttrAttr.Idx);
+		this.DoOrderDown(MapAttrAttr.FK_MapData, this.getFrmID(), MapAttrAttr.UIVisible, "1", MapAttrAttr.Idx);
 
 		MapAttr attr = new MapAttr();
-		attr.setMyPK(this.getFK_MapData() + "_Title");
+		attr.setMyPK(this.getFrmID() + "_Title");
 		if (attr.RetrieveFromDBSources() == 1)
 		{
 			attr.Update("Idx", -1);
@@ -1296,7 +1141,7 @@ public class MapAttr extends EntityMyPK
 		}
 	}
 	private String DoJumpUp(MapAttr attrTo) throws Exception {
-		String sql = "UPDATE Sys_MapAttr SET Idx=Idx+1 WHERE Idx <=" + attrTo.getIdx() + " AND FK_MapData='" + this.getFK_MapData() + "' AND GroupID=" + this.getGroupID();
+		String sql = "UPDATE Sys_MapAttr SET Idx=Idx+1 WHERE Idx <=" + attrTo.getIdx() + " AND FK_MapData='" + this.getFrmID() + "' AND GroupID=" + this.getGroupID();
 		DBAccess.RunSQL(sql);
 		this.setIdx(attrTo.getIdx() - 1);
 		this.SetValByKey(MapAttrAttr.GroupID, attrTo.getGroupID());
@@ -1305,7 +1150,7 @@ public class MapAttr extends EntityMyPK
 		return null;
 	}
 	private String DoJumpDown(MapAttr attrTo) throws Exception {
-		String sql = "UPDATE Sys_MapAttr SET Idx=Idx-1 WHERE Idx <=" + attrTo.getIdx() + " AND FK_MapData='" + this.getFK_MapData() + "' AND GroupID=" + this.getGroupID();
+		String sql = "UPDATE Sys_MapAttr SET Idx=Idx-1 WHERE Idx <=" + attrTo.getIdx() + " AND FK_MapData='" + this.getFrmID() + "' AND GroupID=" + this.getGroupID();
 		DBAccess.RunSQL(sql);
 		this.setIdx(attrTo.getIdx() + 1);
 		this.SetValByKey(MapAttrAttr.GroupID, attrTo.getGroupID());
@@ -1314,26 +1159,27 @@ public class MapAttr extends EntityMyPK
 		return null;
 	}
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception {
-		//if (this.LGType == FieldTypeS.Normal)
+	protected boolean beforeUpdateInsertAction() throws Exception
+	{
+		//if (this.getLGType() == FieldTypeS.Normal)
 		//    if (this.UIIsEnable == true &&this.DefVal !=null &&  this.DefVal.contains("@") == true)
 		//        throw new Exception("@不能在非只读(不可编辑)的字段设置具有@的默认值. 您设置的默认值为:" + this.DefVal);
-		//if (this.UIContralType == En.UIContralType.DDL && this.LGType == FieldTypeS.Normal)
+		//if (this.getUIContralType() == En.getUIContralType().DDL && this.getLGType() == FieldTypeS.Normal)
 
 		//added by liuxc,2016-12-2
 		//判断当前属性是否有分组，没有分组，则自动创建一个分组，并关联
-		if (String.valueOf(this.getGroupID()).equals("1"))
+		if (Objects.equals(String.valueOf(this.getGroupID()), "1"))
 		{
 			//查找分组，查找到的第一个分组，关联当前属性
 			GroupField group = new GroupField();
-			if (group.Retrieve(GroupFieldAttr.FrmID, this.getFK_MapData()) > 0)
+			if (group.Retrieve(GroupFieldAttr.FrmID, this.getFrmID()) > 0)
 			{
 				this.SetValByKey(MapAttrAttr.GroupID, group.getOID());
 
 			}
 			else
 			{
-				group.setFrmID(this.getFK_MapData());
+				group.setFrmID(this.getFrmID());
 				group.setLab("基础信息");
 				group.setIdx(1);
 				group.Insert();
@@ -1344,7 +1190,7 @@ public class MapAttr extends EntityMyPK
 
 		if (this.getLGType() == FieldTypeS.Enum && this.getUIContralType() == UIContralType.RadioBtn)
 		{
-			String sql = "UPDATE Sys_FrmRB SET UIIsEnable=" + this.GetValIntByKey(MapAttrAttr.UIIsEnable) + " WHERE FK_MapData='" + this.getFK_MapData() + "' AND KeyOfEn='" + this.getKeyOfEn() + "'";
+			String sql = "UPDATE Sys_FrmRB SET UIIsEnable=" + this.GetValIntByKey(MapAttrAttr.UIIsEnable) + " WHERE FK_MapData='" + this.getFrmID() + "' AND KeyOfEn='" + this.getKeyOfEn() + "'";
 			DBAccess.RunSQL(sql);
 		}
 
@@ -1355,20 +1201,26 @@ public class MapAttr extends EntityMyPK
 		}
 		if (this.getMyDataType() == DataType.AppDateTime)
 		{
-			this.setUIWidth(145);
+			this.setUIWidth(165);
 		}
-
-		if(this.getMyDataType() == DataType.AppString){
+		if (this.getMyDataType() == DataType.AppString)
+		{
 			MapAttr attr = new MapAttr();
 			attr.setMyPK(this.getMyPK());
 			attr.RetrieveFromDBSources();
 			if (this.getTextModel() == 2 || this.getTextModel() == 3)
+			{
+				//attr.setMaxLen(4000);
 				this.SetValByKey(MapAttrAttr.MaxLen, 4000);
-			if (attr.getMaxLen() < this.getMaxLen() && DataType.IsNullOrEmpty(this.getField())==false)
+			}
+
+
+		   //自动扩展字段长度. 需要翻译.
+			if (attr.getMaxLen() < this.getMaxLen() && DataType.IsNullOrEmpty(this.getField()) == false)
 			{
 				String sql = "";
 				MapData md = new MapData();
-				md.setNo(this.getFK_MapData());
+				md.setNo(this.getFrmID());
 				if (md.RetrieveFromDBSources() == 1)
 				{
 					if (DBAccess.IsExitsTableCol(md.getPTable(), this.getKeyOfEn()) == true)
@@ -1387,7 +1239,7 @@ public class MapAttr extends EntityMyPK
 								break;
 							case KingBaseR3:
 							case KingBaseR6:
-								sql = "ALTER table " + md.getPTable() + " ALTER COLUMN " + this.getField() + " TYPE NVARCHAR2(" + this.getMaxLen() + ")";
+								sql = "ALTER table " + md.getPTable() + " ALTER COLUMN " + this.getField() + " Type NVARCHAR2(" + this.getMaxLen() + ")";
 								break;
 							case PostgreSQL:
 							case UX:
@@ -1405,7 +1257,8 @@ public class MapAttr extends EntityMyPK
 		return super.beforeUpdateInsertAction();
 	}
 	@Override
-	protected boolean beforeUpdate() throws Exception {
+	protected boolean beforeUpdate() throws Exception
+	{
 		switch (this.getMyDataType())
 		{
 			case DataType.AppDateTime:
@@ -1420,11 +1273,11 @@ public class MapAttr extends EntityMyPK
 
 		if (DataType.IsNullOrEmpty(this.getKeyOfEn()))
 		{
-			this.setMyPK(this.getFK_MapData());
+			this.setMyPK(this.getFrmID());
 		}
 		else
 		{
-			this.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn());
+			this.setMyPK(this.getFrmID() + "_" + this.getKeyOfEn());
 		}
 
 		return super.beforeUpdate();
@@ -1435,7 +1288,8 @@ public class MapAttr extends EntityMyPK
 	 @return 
 	*/
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		if (DataType.IsNullOrEmpty(this.getName()))
 		{
 			throw new RuntimeException("@请输入字段名称。");
@@ -1476,29 +1330,30 @@ public class MapAttr extends EntityMyPK
 			throw new RuntimeException("@错误:[" + this.getKeyOfEn() + "]是字段关键字，您不能用它做字段。");
 		}
 
-		if (this.IsExit(MapAttrAttr.KeyOfEn, this.getKeyOfEn(), MapAttrAttr.FK_MapData, this.getFK_MapData()))
+		if (this.IsExit(MapAttrAttr.KeyOfEn, this.getKeyOfEn(), MapAttrAttr.FK_MapData, this.getFrmID()))
 		{
 			return false;
-			//throw new RuntimeException("@在[" + this.getMyPK() + "]已经存在字段名称[" + this.getName() + "]字段[" + this.getKeyOfEn() + "]");
+		   // throw new Exception("@在[" + this.MyPK + "]已经存在字段名称[" + this.getName() +"]字段[" + this.getKeyOfEn() + "]");
 		}
 
 		if (this.getIdx() == 0)
 		{
-			this.setIdx(DBAccess.RunSQLReturnValInt("SELECT MAX(Idx) FROM Sys_MapAttr WHERE FK_MapData='" + this.getFK_MapData() + "'", 0) + 1);
+			this.setIdx(DBAccess.RunSQLReturnValInt("SELECT MAX(Idx) FROM Sys_MapAttr WHERE FK_MapData='" + this.getFrmID() + "'", 0) + 1);
 		}
 
-		//@hongyan
+		//
 		if (this.getGroupID() == 0)
 		{
-			this.setGroupID(DBAccess.RunSQLReturnValInt("SELECT MAX(GroupID) FROM Sys_MapAttr WHERE FK_MapData='" + this.getFK_MapData() + "'", 0));
+			this.setGroupID(DBAccess.RunSQLReturnValInt("SELECT MAX(GroupID) FROM Sys_MapAttr WHERE FK_MapData='" + this.getFrmID() + "'", 0));
 		}
 
-		this.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn());
+		this.setMyPK(this.getFrmID() + "_" + this.getKeyOfEn());
 
 		return super.beforeInsert();
 	}
 	@Override
-	protected void afterInsert() throws Exception {
+	protected void afterInsert() throws Exception
+	{
 		if (this.getKeyOfEn().equals("Tel") || this.getName().contains("电话") || this.getName().contains("手机"))
 		{
 			DBAccess.RunSQL("UPDATE Sys_MapAttr SET ICON='icon-phone' WHERE MyPK='" + this.getMyPK() + "'");
@@ -1517,8 +1372,15 @@ public class MapAttr extends EntityMyPK
 		}
 
 
-
 		super.afterInsert();
+	}
+	@Override
+	protected void afterUpdate() throws Exception
+	{
+		//调用frmEditAction, 完成其他的操作.
+		bp.sys.CCFormAPI.AfterFrmEditAction(this.getFrmID());
+
+		super.afterUpdate();
 	}
 	/** 
 	 删除之前
@@ -1526,22 +1388,24 @@ public class MapAttr extends EntityMyPK
 	 @return 
 	*/
 	@Override
-	protected boolean beforeDelete() throws Exception {
-		String sqls = "DELETE FROM Sys_MapExt WHERE (AttrOfOper='" + this.getKeyOfEn() + "' OR AttrsOfActive='" + this.getKeyOfEn() + "' ) AND (FK_MapData='" + this.getFK_MapData() + "')";
+	protected boolean beforeDelete() throws Exception
+	{
+		String sqls = "DELETE FROM Sys_MapExt WHERE (AttrOfOper='" + this.getKeyOfEn() + "' OR AttrsOfActive='" + this.getKeyOfEn() + "' ) AND (FK_MapData='" + this.getFrmID() + "')";
 		//删除权限管理字段.
-		sqls += "@DELETE FROM Sys_FrmSln WHERE KeyOfEn='" + this.getKeyOfEn() + "' AND FK_MapData='" + this.getFK_MapData() + "'";
+		sqls += "@DELETE FROM Sys_FrmSln WHERE KeyOfEn='" + this.getKeyOfEn() + "' AND FK_MapData='" + this.getFrmID() + "'";
 
 		//如果外部数据，或者ws数据，就删除其影子字段.
 		if (this.getUIContralType() == UIContralType.DDL && this.getLGType() == FieldTypeS.Normal)
 		{
-			sqls += "@DELETE FROM Sys_MapAttr WHERE KeyOfEn='" + this.getKeyOfEn() + "T' AND FK_MapData='" + this.getFK_MapData() + "'";
+			sqls += "@DELETE FROM Sys_MapAttr WHERE KeyOfEn='" + this.getKeyOfEn() + "T' AND FK_MapData='" + this.getFrmID() + "'";
 		}
 
 		DBAccess.RunSQLs(sqls);
 		return super.beforeDelete();
 	}
 	@Override
-	protected void afterDelete() throws Exception {
+	protected void afterDelete() throws Exception
+	{
 		if (this.getUIContralType() == UIContralType.AthShow)
 		{
 			//删除附件

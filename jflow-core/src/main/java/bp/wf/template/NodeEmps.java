@@ -1,10 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.wf.port.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -15,12 +11,13 @@ public class NodeEmps extends EntitiesMyPK
 	/** 
 	 节点人员
 	*/
-	public NodeEmps()  {
+	public NodeEmps()
+	{
 	}
 	/** 
 	 节点人员
 	 
-	 param NodeID 节点ID
+	 @param NodeID 节点ID
 	*/
 	public NodeEmps(int NodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -28,20 +25,11 @@ public class NodeEmps extends EntitiesMyPK
 		qo.DoQuery();
 	}
 	/** 
-	 节点人员
-	 
-	 param EmpNo EmpNo 
-	*/
-	public NodeEmps(String EmpNo) throws Exception {
-		QueryObject qo = new QueryObject(this);
-		qo.AddWhere(NodeEmpAttr.FK_Emp, EmpNo);
-		qo.DoQuery();
-	}
-	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new NodeEmp();
 	}
 
@@ -52,7 +40,8 @@ public class NodeEmps extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<NodeEmp> ToJavaList() {
+	public final java.util.List<NodeEmp> ToJavaList()
+	{
 		return (java.util.List<NodeEmp>)(Object)this;
 	}
 	/** 
@@ -60,7 +49,8 @@ public class NodeEmps extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<NodeEmp> Tolist()  {
+	public final ArrayList<NodeEmp> Tolist()
+	{
 		ArrayList<NodeEmp> list = new ArrayList<NodeEmp>();
 		for (int i = 0; i < this.size(); i++)
 		{

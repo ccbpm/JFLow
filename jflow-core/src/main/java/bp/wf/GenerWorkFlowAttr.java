@@ -1,18 +1,10 @@
 package bp.wf;
 
-import bp.da.*;
-import bp.wf.*;
-import bp.port.*;
-import bp.sys.*;
 import bp.en.*;
-import bp.wf.template.*;
-import bp.*;
-import java.util.*;
-
 /** 
  流程实例
 */
-public class GenerWorkFlowAttr
+public class GenerWorkFlowAttr extends EntityNoNameAttr
 {
 
 		///#region 基本属性
@@ -61,7 +53,7 @@ public class GenerWorkFlowAttr
 	*/
 	public static final String FK_Node = "FK_Node";
 	/** 
-	 当前工作岗位
+	 当前工作角色
 	*/
 	public static final String FK_Station = "FK_Station";
 	/** 
@@ -149,10 +141,6 @@ public class GenerWorkFlowAttr
 	*/
 	public static final String BillNo = "BillNo";
 	/** 
-	 备注
-	*/
-	public static final String FlowNote = "FlowNote";
-	/** 
 	 待办人员
 	*/
 	public static final String TodoEmps = "TodoEmps";
@@ -210,7 +198,11 @@ public class GenerWorkFlowAttr
 	public static final String PrjName = "PrjName";
 
 	public static final String OrgNo = "OrgNo";
-
+	public static final String FlowNote = "FlowNote";
+	/** 
+	 耗时
+	*/
+	public static final String LostTimeHH = "LostTimeHH";
 
 
 		///#endregion

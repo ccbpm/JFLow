@@ -1,6 +1,10 @@
 package bp.ccfast.portal.windowext;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.ccfast.*;
+import bp.ccfast.portal.*;
+import java.util.*;
 
 /** 
  变量信息
@@ -13,7 +17,8 @@ public class Dtl extends EntityMyPK
 	 控制权限
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (bp.web.WebUser.getIsAdmin() == true)
 		{
@@ -42,13 +47,15 @@ public class Dtl extends EntityMyPK
 	/** 
 	 变量信息
 	*/
-	public Dtl()  {
+	public Dtl()
+	{
 	}
 	/** 
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();

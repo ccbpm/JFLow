@@ -19,13 +19,15 @@ public class KMTrees extends EntitiesTree
 	/** 
 	 知识树
 	*/
-	public KMTrees()  {
+	public KMTrees()
+	{
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new KMTree();
 	}
 
@@ -39,7 +41,8 @@ public class KMTrees extends EntitiesTree
 	 
 	 @return List
 	*/
-	public final java.util.List<KMTree> ToJavaList() {
+	public final java.util.List<KMTree> ToJavaList()
+	{
 		return (java.util.List<KMTree>)(Object)this;
 	}
 	/** 
@@ -47,7 +50,8 @@ public class KMTrees extends EntitiesTree
 	 
 	 @return List
 	*/
-	public final ArrayList<KMTree> Tolist()  {
+	public final ArrayList<KMTree> Tolist()
+	{
 		ArrayList<KMTree> list = new ArrayList<KMTree>();
 		for (int i = 0; i < this.size(); i++)
 		{

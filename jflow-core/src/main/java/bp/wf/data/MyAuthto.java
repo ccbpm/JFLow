@@ -308,8 +308,7 @@ public class MyAuthto extends Entity
 	{
 		return this.GetValStrByKey(MyAuthtoAttr.StarterName);
 	}
-	public final void setStarterName(String value) throws Exception
-	{
+	public final void setStarterName(String value){
 		this.SetValByKey(MyAuthtoAttr.StarterName, value);
 	}
 	/** 
@@ -319,8 +318,7 @@ public class MyAuthto extends Entity
 	{
 		return this.GetValStrByKey(MyAuthtoAttr.DeptName);
 	}
-	public final void setDeptName(String value) throws Exception
-	{
+	public final void setDeptName(String value){
 		this.SetValByKey(MyAuthtoAttr.DeptName, value);
 	}
 	/** 
@@ -330,8 +328,7 @@ public class MyAuthto extends Entity
 	{
 		return this.GetValStrByKey(MyAuthtoAttr.NodeName);
 	}
-	public final void setNodeName(String value) throws Exception
-	{
+	public final void setNodeName(String value){
 		this.SetValByKey(MyAuthtoAttr.NodeName, value);
 	}
 	/** 
@@ -341,7 +338,7 @@ public class MyAuthto extends Entity
 	{
 		return this.GetValIntByKey(MyAuthtoAttr.FK_Node);
 	}
-	public final void setFK_Node(int value) throws Exception
+	public final void setNodeID(int value) throws Exception
 	{
 		SetValByKey(MyAuthtoAttr.FK_Node, value);
 	}
@@ -388,8 +385,7 @@ public class MyAuthto extends Entity
 				return "已完成";
 			case Runing:
 				return "在运行";
-			case HungUp:
-				return "挂起";
+
 			case Askfor:
 				return "加签";
 			default:
@@ -521,7 +517,7 @@ public class MyAuthto extends Entity
 		rm.ClassMethodName = this.toString() + ".DoTrack";
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.Icon = "../../WF/Img/Track.png";
-		rm.IsForEns = true;
+		//rm.ItIsForEns = true;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -529,14 +525,14 @@ public class MyAuthto extends Entity
 		rm.ClassMethodName = this.toString() + ".DoForm";
 		rm.Icon = "../../WF/Img/Form.png";
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
-		rm.IsForEns = true;
+		//rm.ItIsForEns = true;
 		map.AddRefMethod(rm);
 
 			//rm = new RefMethod();
 			//rm.Title = "打印表单";
 			//rm.ClassMethodName = this.ToString() + ".DoPrintFrm";
 			//rm.refMethodType = RefMethodType.LinkeWinOpen;
-			//rm.IsForEns = false;
+			//rm.ItIsForEns = false;
 			//map.AddRefMethod(rm);
 
 		this.set_enMap(map);

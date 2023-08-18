@@ -1,7 +1,5 @@
 package bp.sys;
 
-import bp.*;
-
 /** 
  棫行处理
 */
@@ -22,11 +20,13 @@ public enum WhenOverSize
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
 	public static WhenOverSize forValue(int value)
-	{return values()[value];
+	{
+		return values()[value];
 	}
 }

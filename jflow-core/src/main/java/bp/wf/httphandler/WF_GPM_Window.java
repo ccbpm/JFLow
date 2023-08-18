@@ -2,20 +2,21 @@ package bp.wf.httphandler;
 
 import bp.da.*;
 import bp.*;
-import bp.difference.handler.WebContralBase;
 import bp.wf.*;
 
 /** 
  页面功能实体
 */
-public class WF_GPM_Window extends WebContralBase
+public class WF_GPM_Window extends bp.difference.handler.DirectoryPageBase
 {
 	/** 
 	 构造函数
 	*/
-	public WF_GPM_Window() throws Exception {
+	public WF_GPM_Window()
+	{
 	}
-	public final String Default_Mover() throws Exception {
+	public final String Default_Mover()
+	{
 		String[] ens = this.GetRequestVal("MyPKs").split("[,]", -1);
 		for (int i = 0; i < ens.length; i++)
 		{
@@ -26,7 +27,8 @@ public class WF_GPM_Window extends WebContralBase
 		}
 		return "移动成功..";
 	}
-	public final String Tabs_Default_Mover() throws Exception {
+	public final String Tabs_Default_Mover()
+	{
 		String[] ens = this.GetRequestVal("MyPKs").split("[,]", -1);
 		for (int i = 0; i < ens.length; i++)
 		{

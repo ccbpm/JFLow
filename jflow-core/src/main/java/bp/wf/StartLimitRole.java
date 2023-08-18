@@ -1,7 +1,5 @@
 package bp.wf;
 
-import bp.*;
-
 /** 
  流程发起限制
 */
@@ -52,7 +50,8 @@ public enum StartLimitRole
 
 	private int intValue;
 	private static java.util.HashMap<Integer, StartLimitRole> mappings;
-	private static java.util.HashMap<Integer, StartLimitRole> getMappings()  {
+	private static java.util.HashMap<Integer, StartLimitRole> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (StartLimitRole.class)
@@ -67,15 +66,18 @@ public enum StartLimitRole
 	}
 
 	private StartLimitRole(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return intValue;
 	}
 
 	public static StartLimitRole forValue(int value)
-	{return getMappings().get(value);
+	{
+		return getMappings().get(value);
 	}
 }

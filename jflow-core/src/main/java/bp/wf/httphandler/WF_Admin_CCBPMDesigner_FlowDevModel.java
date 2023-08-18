@@ -1,34 +1,34 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
-import bp.difference.handler.WebContralBase;
 import bp.web.*;
 import bp.wf.template.*;
 import bp.*;
 import bp.wf.*;
 
-import java.io.UnsupportedEncodingException;
-
 /** 
  页面功能实体
 */
-public class WF_Admin_CCBPMDesigner_FlowDevModel extends WebContralBase
+public class WF_Admin_CCBPMDesigner_FlowDevModel extends bp.difference.handler.DirectoryPageBase
 {
 
 		///#region 变量.
 	/** 
 	 类别
 	*/
-	public final String getSortNo() throws UnsupportedEncodingException {
+	public final String getSortNo()
+	{
 		return this.GetRequestVal("SortNo");
 	}
 	/** 
 	 流程名称
 	*/
-	public final String getFlowName() throws UnsupportedEncodingException {
+	public final String getFlowName()
+	{
 		return this.GetRequestVal("FlowName");
 	}
-	public final FlowDevModel getFlowDevModel() throws UnsupportedEncodingException {
+	public final FlowDevModel getFlowDevModel()
+	{
 		return FlowDevModel.forValue(this.GetRequestValInt("FlowDevModel"));
 	}
 
@@ -37,14 +37,16 @@ public class WF_Admin_CCBPMDesigner_FlowDevModel extends WebContralBase
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_CCBPMDesigner_FlowDevModel()  {
+	public WF_Admin_CCBPMDesigner_FlowDevModel()
+	{
 	}
 	/** 
 	 获取默认的开发模式.
 	 
 	 @return 
 	*/
-	public final String Default_Init()  {
+	public final String Default_Init()
+	{
 		String sql = "SELECT val FROM Sys_GloVar WHERE No='FlowDevModel_" + WebUser.getNo() + "'";
 		int val = DBAccess.RunSQLReturnValInt(sql, 1);
 		return String.valueOf(val);
@@ -53,23 +55,25 @@ public class WF_Admin_CCBPMDesigner_FlowDevModel extends WebContralBase
 		String SortNo = GetRequestVal("SortNo");
 		String FlowName = GetRequestVal("FlowName");
 		String url = GetRequestVal("Url");
+		String frmURL = GetRequestVal("FrmUrl");
+		String frmID = GetRequestVal("FrmID");
+		String frmPK = GetRequestVal("FrmPK"); //自定义表单主键.
 
-		String FrmUrl = GetRequestVal("FrmUrl");
-		String FrmID = GetRequestVal("FrmID");
+		if (DataType.IsNullOrEmpty(frmURL) == true)
+		{
+			frmURL = frmID;
+		}
 		//执行创建流程模版.
-		String flowNo = TemplateGlo.NewFlow(SortNo, FlowName, DataStoreModel.ByCCFlow, null, null);
+		String flowNo = TemplateGlo.NewFlowTemplate(SortNo, FlowName, DataStoreModel.ByCCFlow, null, null);
 		Flow fl = new Flow(flowNo);
 		fl.setFlowDevModel(this.getFlowDevModel()); //流程开发模式.
-		fl.setHisDataStoreModel(DataStoreModel.SpecTable);
-		fl.setFrmUrl(FrmUrl);
-		if (DataType.IsNullOrEmpty(FrmID) == true || FrmID.equals("undefined"))
+		if (this.getFlowDevModel() == FlowDevModel.JiJian)
 		{
-			fl.setFrmUrl(FrmUrl);
+			frmURL = "ND" + Integer.parseInt(flowNo + "01");
 		}
-		else
-		{
-			fl.setFrmUrl(FrmID);
-		}
+
+		fl.SetPara("FrmPK", frmPK); //自定义主键模式的表单.
+		fl.setFrmUrl(frmURL);
 		fl.Update();
 		//发起测试人为当前登录人No
 		DBAccess.RunSQL("UPDATE WF_Flow SET Tester = '" + WebUser.getNo() + "' WHERE No='" + flowNo + "'");
@@ -81,18 +85,18 @@ public class WF_Admin_CCBPMDesigner_FlowDevModel extends WebContralBase
 			nds.Retrieve(NodeAttr.FK_Flow, fl.getNo(), null);
 			for (Node nd : nds.ToJavaList())
 			{
-				nd.setNodeFrmID("ND" + Integer.parseInt(fl.getNo()) + "01");
-				if (nd.isStartNode() == false)
+				nd.setNodeFrmID( "ND" + Integer.parseInt(fl.getNo()) + "01");
+				if (nd.getItIsStartNode() == false)
 				{
 					nd.setFrmWorkCheckSta(FrmWorkCheckSta.Enable);
 
 					FrmNode fn = new FrmNode();
 					fn.setFKFrm(nd.getNodeFrmID());
 					fn.setEnableFWC(FrmWorkCheckSta.Enable);
-					fn.setFK_Node(nd.getNodeID());
-					fn.setFK_Flow(flowNo);
+					fn.setNodeID(nd.getNodeID());
+					fn.setFlowNo(flowNo);
 					fn.setFrmSln(FrmSln.Readonly);
-					fn.setMyPK(fn.getFKFrm() + "_" + fn.getFK_Node() + "_" + fn.getFK_Flow());
+					fn.setMyPK(fn.getFKFrm() + "_" + fn.getNodeID() + "_" + fn.getFlowNo());
 					//执行保存.
 					fn.Save();
 				}
@@ -107,14 +111,14 @@ public class WF_Admin_CCBPMDesigner_FlowDevModel extends WebContralBase
 			nds.Retrieve(NodeAttr.FK_Flow, fl.getNo(), null);
 			for (Node nd : nds.ToJavaList())
 			{
-			   //表单方案的保存
+				//表单方案的保存
 				FrmNode fn = new FrmNode();
 				fn.setFKFrm(nd.getNodeFrmID());
 				//fn.IsEnableFWC = FrmWorkCheckSta.Enable;
-				fn.setFK_Node(nd.getNodeID());
-				fn.setFK_Flow(flowNo);
+				fn.setNodeID(nd.getNodeID());
+				fn.setFlowNo(flowNo);
 				fn.setFrmSln(FrmSln.Readonly);
-				fn.setMyPK(fn.getFKFrm() + "_" + fn.getFK_Node() + "_" + fn.getFK_Flow());
+				fn.setMyPK(fn.getFKFrm() + "_" + fn.getNodeID() + "_" + fn.getFlowNo());
 				//执行保存.
 				fn.Save();
 				nd.setHisFormType(NodeFormType.FoolTruck);
@@ -129,10 +133,10 @@ public class WF_Admin_CCBPMDesigner_FlowDevModel extends WebContralBase
 			nds.Retrieve(NodeAttr.FK_Flow, fl.getNo(), null);
 			for (Node nd : nds.ToJavaList())
 			{
-				nd.setNodeFrmID(fl.getFrmUrl());
-				if (nd.isStartNode() == true)
+				nd.setNodeFrmID( fl.getFrmUrl());
+				if (nd.getItIsStartNode() == true)
 				{
-					nd.setFrmWorkCheckSta(FrmWorkCheckSta.Disable);
+					nd.setFrmWorkCheckSta (FrmWorkCheckSta.Disable);
 				}
 				else
 				{
@@ -143,22 +147,21 @@ public class WF_Admin_CCBPMDesigner_FlowDevModel extends WebContralBase
 
 				FrmNode fn = new FrmNode();
 				fn.setFKFrm(nd.getNodeFrmID());
-				if (nd.isStartNode() == true)
+				if (nd.getItIsStartNode() == true)
 				{
 					fn.setEnableFWC(FrmWorkCheckSta.Disable);
 					fn.setFrmSln(FrmSln.Default);
 				}
-
 				else
 				{
 					fn.setEnableFWC(FrmWorkCheckSta.Enable);
 					fn.setFrmSln(FrmSln.Readonly);
 				}
 
-				fn.setFK_Node(nd.getNodeID());
-				fn.setFK_Flow(flowNo);
+				fn.setNodeID(nd.getNodeID());
+				fn.setFlowNo(flowNo);
 				fn.setFrmSln(FrmSln.Readonly);
-				fn.setMyPK(fn.getFKFrm() + "_" + fn.getFK_Node() + "_" + fn.getFK_Flow());
+				fn.setMyPK(fn.getFKFrm() + "_" + fn.getNodeID() + "_" + fn.getFlowNo());
 				//执行保存.
 				fn.Save();
 			}
@@ -172,35 +175,48 @@ public class WF_Admin_CCBPMDesigner_FlowDevModel extends WebContralBase
 			for (Node nd : nds.ToJavaList())
 			{
 				//nd.setNodeFrmID(fl.getFrmUrl());
-				if (nd.isStartNode() == true)
-					nd.setFrmWorkCheckSta(FrmWorkCheckSta.Disable);
+				if (nd.getItIsStartNode() == true)
+				{
+					nd.setFrmWorkCheckSta (FrmWorkCheckSta.Disable);
+				}
 				else
+				{
 					nd.setFrmWorkCheckSta(FrmWorkCheckSta.Enable);
+				}
 				nd.setHisFormType(NodeFormType.SheetTree);
 				nd.DirectUpdate();
 				FrmNode fn = new FrmNode();
-				fn.setFKFrm(fl.getFrmUrl());
-				if (nd.isStartNode() == true)
-				{
-					fn.setEnableFWC(FrmWorkCheckSta.Disable);
-					fn.setFrmSln(FrmSln.Default);
-				}
+				String[] frmIDs = fl.getFrmUrl().split("[,]", -1);
 
-				else
+				for (String str : frmIDs)
 				{
-					fn.setEnableFWC(FrmWorkCheckSta.Enable);
+					if (DataType.IsNullOrEmpty(str) == true)
+					{
+						continue;
+					}
+
+					fn.setFKFrm(str);
+					fn.setFrmNameShow(DBAccess.RunSQLReturnString("SELECT Name FROM Sys_MapData WHERE No='" + str + "'"));
+					if (nd.getItIsStartNode() == true)
+					{
+						fn.setEnableFWC(FrmWorkCheckSta.Disable);
+						fn.setFrmSln(FrmSln.Default);
+					}
+					else
+					{
+						fn.setEnableFWC(FrmWorkCheckSta.Enable);
+						fn.setFrmSln(FrmSln.Readonly);
+					}
+
+					fn.setNodeID(nd.getNodeID());
+					fn.setFlowNo(flowNo);
 					fn.setFrmSln(FrmSln.Readonly);
+					fn.setMyPK(fn.getFKFrm() + "_" + fn.getNodeID() + "_" + fn.getFlowNo());
+					fn.Save(); //执行保存.
 				}
-
-				fn.setFK_Node(nd.getNodeID());
-				fn.setFK_Flow(flowNo);
-				fn.setFrmSln(FrmSln.Readonly);
-				fn.setMyPK(fn.getFKFrm() + "_" + fn.getFK_Node() + "_" + fn.getFK_Flow());
-				//执行保存.
-				fn.Save();
 			}
 		}
-		if (this.getFlowDevModel() == FlowDevModel.SDKFrm)
+		if (this.getFlowDevModel() == FlowDevModel.SDKFrmSelfPK || this.getFlowDevModel() == FlowDevModel.SDKFrmWorkID)
 		{
 			Nodes nds = new Nodes();
 			nds.Retrieve(NodeAttr.FK_Flow, fl.getNo(), null);
@@ -221,7 +237,6 @@ public class WF_Admin_CCBPMDesigner_FlowDevModel extends WebContralBase
 				nd.setFormUrl(fl.getFrmUrl());
 				nd.DirectUpdate();
 			}
-
 		}
 
 		/**保存模式.
@@ -234,7 +249,7 @@ public class WF_Admin_CCBPMDesigner_FlowDevModel extends WebContralBase
 	/** 
 	 保存模式
 	 
-	 param val
+	 @param val
 	*/
 	public final void SaveModel(FlowDevModel val)
 	{
@@ -270,14 +285,14 @@ public class WF_Admin_CCBPMDesigner_FlowDevModel extends WebContralBase
 			String FlowSort = this.GetRequestVal("FlowSort").trim();
 			FlowSort = FlowSort.trim();
 
-			int DataStoreModel = this.GetRequestValInt("DataStoreModel");
+			//int DataStoreModel = this.GetRequestValInt("DataStoreModel");
 			String PTable = this.GetRequestVal("PTable");
 			String FlowMark = this.GetRequestVal("FlowMark");
 			int FlowFrmModel = this.GetRequestValInt("FlowFrmModel");
 			String FrmUrl = this.GetRequestVal("FrmUrl");
 			String FlowVersion = this.GetRequestVal("FlowVersion");
 
-			String flowNo = TemplateGlo.NewFlow(FlowSort, FlowName, bp.wf.template.DataStoreModel.SpecTable, PTable, FlowMark);
+			String flowNo = TemplateGlo.NewFlowTemplate(FlowSort, FlowName, bp.wf.template.DataStoreModel.SpecTable, PTable, FlowMark);
 
 			Flow fl = new Flow(flowNo);
 

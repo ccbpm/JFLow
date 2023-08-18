@@ -1,8 +1,7 @@
 package bp.wf.dts;
 
-
-import bp.en.*;
-
+import bp.en.*; import bp.en.Map;
+import bp.*;
 import bp.wf.*;
 
 /** 
@@ -13,7 +12,7 @@ public class DTSCheckFlowAll extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public DTSCheckFlowAll()throws Exception
+	public DTSCheckFlowAll()
 	{
 		this.Title = "体检全部流程";
 		this.Help = "只能功能与单独体检流程相同，体检流程不会伤害数据。";
@@ -46,8 +45,7 @@ public class DTSCheckFlowAll extends Method
 	 @return 返回执行结果
 	*/
 	@Override
-	public Object Do()throws Exception
-	{
+	public Object Do() throws Exception {
 		Flows fls = new Flows();
 		fls.RetrieveAllFromDBSource();
 		for (Flow fl : fls.ToJavaList())

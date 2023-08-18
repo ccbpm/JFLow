@@ -1,7 +1,6 @@
 package bp.ccoa.worklog;
 
 import bp.en.*;
-
 /** 
  日志共享 属性
 */

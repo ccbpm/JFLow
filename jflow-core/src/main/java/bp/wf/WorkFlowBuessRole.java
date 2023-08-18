@@ -1,17 +1,17 @@
 package bp.wf;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.tools.DateUtils;
 import bp.tools.StringHelper;
+import bp.tools.StringUtils;
 import bp.wf.template.*;
 import bp.sys.*;
 import bp.en.*;
 import bp.port.*;
 import bp.web.*;
-import bp.wf.template.ccen.*;
-import bp.wf.data.GERpt;
+import bp.*;
 import java.util.*;
+import java.time.*;
 import java.util.Map;
 
 /** 
@@ -24,9 +24,9 @@ public class WorkFlowBuessRole
 	/** 
 	 生成标题
 	 
-	 param wk 工作
-	 param emp 人员
-	 param rdt 日期
+	 @param wk 工作
+	 @param emp 人员
+	 @param rdt 日期
 	 @return 生成string.
 	*/
 	public static String GenerTitle(Flow fl, Work wk, Emp emp, String rdt) throws Exception {
@@ -48,29 +48,29 @@ public class WorkFlowBuessRole
 
 			if (DataType.IsNullOrEmpty(titleRole) || titleRole.contains("@") == false)
 			{
-				titleRole = "@WebUser.FK_DeptName-@WebUser.No,@WebUser.Name在@RDT发起.";
+				titleRole = "@WebUser.FK_DeptName-@WebUser.getNo(),@WebUser.Name在@RDT发起.";
 			}
 		}
 
 
 		titleRole = titleRole.replace("@WebUser.No", emp.getUserID());
 		titleRole = titleRole.replace("@WebUser.Name", emp.getName());
-		titleRole = titleRole.replace("@WebUser.FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
-		titleRole = titleRole.replace("@WebUser.FK_DeptName", emp.getFK_DeptText());
-		titleRole = titleRole.replace("@WebUser.FK_Dept", emp.getFK_Dept());
+		titleRole = titleRole.replace("@WebUser.FK_DeptNameOfFull", WebUser.getDeptNameOfFull());
+		titleRole = titleRole.replace("@WebUser.FK_DeptName", emp.getDeptText());
+		titleRole = titleRole.replace("@WebUser.FK_Dept", emp.getDeptNo());
 		titleRole = titleRole.replace("@RDT", rdt);
 		if (titleRole.contains("@") == true)
 		{
 			Attrs attrs = wk.getEnMap().getAttrs();
 
 			// 优先考虑外键的替换。
-			for (Attr attr : attrs.ToJavaList())
+			for (Attr attr : attrs)
 			{
 				if (titleRole.contains("@") == false)
 				{
 					break;
 				}
-				if (attr.getIsRefAttr() == false)
+				if (attr.getItIsRefAttr()  == false)
 				{
 					continue;
 				}
@@ -78,13 +78,13 @@ public class WorkFlowBuessRole
 			}
 
 			//在考虑其它的字段替换.
-			for (Attr attr : attrs.ToJavaList())
+			for (Attr attr : attrs)
 			{
 				if (titleRole.contains("@") == false)
 				{
 					break;
 				}
-				if (attr.getIsRefAttr() == true)
+				if (attr.getItIsRefAttr()  == true)
 				{
 					continue;
 				}
@@ -120,7 +120,7 @@ public class WorkFlowBuessRole
 	/** 
 	 生成标题
 	 
-	 param wk
+	 @param wk
 	 @return 
 	*/
 	public static String GenerTitle(Flow fl, Work wk) throws Exception {
@@ -142,21 +142,21 @@ public class WorkFlowBuessRole
 
 			if (DataType.IsNullOrEmpty(titleRole) || titleRole.contains("@") == false)
 			{
-				titleRole = "@WebUser.FK_DeptName-@WebUser.No,@WebUser.Name在@RDT发起.";
+				titleRole = "@WebUser.FK_DeptName-@WebUser.getNo(),@WebUser.Name在@RDT发起.";
 			}
 		}
 
-		if (titleRole.equals("@OutPara") || DataType.IsNullOrEmpty(titleRole) == true)
+		if (Objects.equals(titleRole, "@OutPara") || DataType.IsNullOrEmpty(titleRole) == true)
 		{
-			titleRole = "@WebUser.FK_DeptName-@WebUser.No,@WebUser.Name在@RDT发起.";
+			titleRole = "@WebUser.FK_DeptName-@WebUser.getNo(),@WebUser.Name在@RDT发起.";
 		}
 
 		titleRole = titleRole.replace("@WebUser.No", WebUser.getNo());
 		titleRole = titleRole.replace("@WebUser.Name", WebUser.getName());
-		titleRole = titleRole.replace("@WebUser.FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
+		titleRole = titleRole.replace("@WebUser.FK_DeptNameOfFull", WebUser.getDeptNameOfFull());
 
-		titleRole = titleRole.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
-		titleRole = titleRole.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
+		titleRole = titleRole.replace("@WebUser.FK_DeptName", WebUser.getDeptName());
+		titleRole = titleRole.replace("@WebUser.FK_Dept", WebUser.getDeptNo());
 		titleRole = titleRole.replace("@RDT", DataType.getCurrentDateTime());
 
 
@@ -165,13 +165,13 @@ public class WorkFlowBuessRole
 			Attrs attrs = wk.getEnMap().getAttrs();
 
 			// 优先考虑外键的替换 , 因为外键文本的字段的长度相对较长。
-			for (Attr attr : attrs.ToJavaList())
+			for (Attr attr : attrs)
 			{
 				if (titleRole.contains("@") == false)
 				{
 					break;
 				}
-				if (attr.getIsRefAttr() == false)
+				if (attr.getItIsRefAttr()  == false)
 				{
 					continue;
 				}
@@ -188,14 +188,14 @@ public class WorkFlowBuessRole
 			}
 
 			//在考虑其它的字段替换.
-			for (Attr attr : attrs.ToJavaList())
+			for (Attr attr : attrs)
 			{
 				if (titleRole.contains("@") == false)
 				{
 					break;
 				}
 
-				if (attr.getIsRefAttr() == true)
+				if (attr.getItIsRefAttr()  == true)
 				{
 					continue;
 				}
@@ -226,11 +226,10 @@ public class WorkFlowBuessRole
 	/** 
 	 生成标题
 	 
-	 param fl
-	 param wk
+	 @param fl
+	 @param wk
 	 @return 
 	*/
-
 	public static String GenerTitle(Flow fl, GERpt wk) throws Exception {
 		Object tempVar = fl.getTitleRole();
 		String titleRole = tempVar instanceof String ? (String)tempVar : null;
@@ -250,34 +249,34 @@ public class WorkFlowBuessRole
 
 			if (DataType.IsNullOrEmpty(titleRole) || titleRole.contains("@") == false)
 			{
-				titleRole = "@WebUser.FK_DeptName-@WebUser.No,@WebUser.Name在@RDT发起.";
+				titleRole = "@WebUser.FK_DeptName-@WebUser.getNo(),@WebUser.Name在@RDT发起.";
 			}
 		}
 
-		if (titleRole.equals("@OutPara") || DataType.IsNullOrEmpty(titleRole) == true)
+		if (Objects.equals(titleRole, "@OutPara") || DataType.IsNullOrEmpty(titleRole) == true)
 		{
-			titleRole = "@WebUser.FK_DeptName-@WebUser.No,@WebUser.Name在@RDT发起.";
+			titleRole = "@WebUser.FK_DeptName-@WebUser.getNo(),@WebUser.Name在@RDT发起.";
 		}
 
 
 		titleRole = titleRole.replace("@WebUser.No", wk.getFlowStarter());
 		titleRole = titleRole.replace("@WebUser.Name", WebUser.getName());
-		titleRole = titleRole.replace("@WebUser.FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
-		titleRole = titleRole.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
-		titleRole = titleRole.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
+		titleRole = titleRole.replace("@WebUser.FK_DeptNameOfFull", WebUser.getDeptNameOfFull());
+		titleRole = titleRole.replace("@WebUser.FK_DeptName", WebUser.getDeptName());
+		titleRole = titleRole.replace("@WebUser.FK_Dept", WebUser.getDeptNo());
 		titleRole = titleRole.replace("@RDT", wk.getFlowStartRDT());
 		if (titleRole.contains("@"))
 		{
 			Attrs attrs = wk.getEnMap().getAttrs();
 
 			// 优先考虑外键的替换,因为外键文本的字段的长度相对较长。
-			for (Attr attr : attrs.ToJavaList())
+			for (Attr attr : attrs)
 			{
 				if (titleRole.contains("@") == false)
 				{
 					break;
 				}
-				if (attr.getIsRefAttr() == false)
+				if (attr.getItIsRefAttr()  == false)
 				{
 					continue;
 				}
@@ -285,14 +284,14 @@ public class WorkFlowBuessRole
 			}
 
 			//在考虑其它的字段替换.
-			for (Attr attr : attrs.ToJavaList())
+			for (Attr attr : attrs)
 			{
 				if (titleRole.contains("@") == false)
 				{
 					break;
 				}
 
-				if (attr.getIsRefAttr() == true)
+				if (attr.getItIsRefAttr()  == true)
 				{
 					continue;
 				}
@@ -329,8 +328,8 @@ public class WorkFlowBuessRole
 	/** 
 	 如果从节点表单上没有替换下来，就考虑独立表单的替换.
 	 
-	 param fl 流程
-	 param workid 工作ID
+	 @param fl 流程
+	 @param workid 工作ID
 	 @return 返回生成的标题
 	*/
 	private static String GenerTitleExt(Flow fl, int nodeId, long workid, String titleRole) throws Exception {
@@ -347,22 +346,20 @@ public class WorkFlowBuessRole
 					continue;
 				}
 			}
-			catch (RuntimeException ex)
+			catch (Exception ex)
 			{
 				continue;
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
 
 			Attrs attrs = en.getEnMap().getAttrs();
 			// 优先考虑外键的替换,因为外键文本的字段的长度相对较长。
-			for (Attr attr : attrs.ToJavaList())
+			for (Attr attr : attrs)
 			{
 				if (titleRole.contains("@") == false)
 				{
 					break;
 				}
-				if (attr.getIsRefAttr() == false)
+				if (attr.getItIsRefAttr()  == false)
 				{
 					continue;
 				}
@@ -370,14 +367,14 @@ public class WorkFlowBuessRole
 			}
 
 			//在考虑其它的字段替换.
-			for (Attr attr : attrs.ToJavaList())
+			for (Attr attr : attrs)
 			{
 				if (titleRole.contains("@") == false)
 				{
 					break;
 				}
 
-				if (attr.getIsRefAttr() == true)
+				if (attr.getItIsRefAttr()  == true)
 				{
 					continue;
 				}
@@ -410,8 +407,10 @@ public class WorkFlowBuessRole
 	/** 
 	 产生单据编号
 	 
-	 param billFormat
-	 param en
+	 @param billNo
+	 @param workid
+	 @param en
+	 @param flowPTable
 	 @return 
 	*/
 	public static String GenerBillNo(String billNo, long workid, Entity en, String flowPTable) throws Exception {
@@ -447,7 +446,7 @@ public class WorkFlowBuessRole
 
 		if (billNo.contains("@WebUser.DeptZi"))
 		{
-			String val = DBAccess.RunSQLReturnStringIsNull("SELECT Zi FROM Port_Dept WHERE No='" + WebUser.getFK_Dept()+ "'", "");
+			String val = DBAccess.RunSQLReturnStringIsNull("SELECT Zi FROM Port_Dept WHERE No='" + WebUser.getDeptNo()+ "'", "");
 			billNo = billNo.replace("@WebUser.DeptZi", val.toString());
 		}
 
@@ -468,7 +467,7 @@ public class WorkFlowBuessRole
 
 				sql = "SELECT COUNT(OID) FROM " + flowPTable + " WHERE PWorkID =" + pWorkID + " AND WFState >1 ";
 				num = DBAccess.RunSQLReturnValInt(sql, 0);
-				billNo = billNo + StringHelper.padLeft(String.valueOf(num), i, '0');
+				billNo = billNo + bp.tools.StringHelper.padLeft(String.valueOf(num), i, '0');
 				billNo = billNo.replace("{LSH" + i + "}", "");
 				break;
 			}
@@ -478,7 +477,7 @@ public class WorkFlowBuessRole
 			String sql = "";
 			int num = 0;
 			String supposeBillNo = billNo; //假设单据号，长度与真实单据号一致
-			ArrayList<Map.Entry<Integer, Integer>> loc = new ArrayList<Map.Entry<Integer, Integer>>();   //流水号位置，流水号位数
+			ArrayList<java.util.Map.Entry<Integer, Integer>> loc = new ArrayList<java.util.Map.Entry<Integer, Integer>>();   //流水号位置，流水号位数
 			String lsh; //流水号设置码
 			int lshIdx = -1; //流水号设置码所在位置
 			java.util.Map<Integer, Integer>  map = new HashMap<Integer, Integer>();
@@ -496,13 +495,13 @@ public class WorkFlowBuessRole
 					//查找流水号所在位置
 					lshIdx = supposeBillNo.indexOf(lsh);
 					//将找到的流水号码替换成假设的流水号
-					supposeBillNo = (lshIdx == 0 ? "" : supposeBillNo.substring(0, lshIdx)) + StringHelper.padLeft("", i, '_') + (lshIdx + 6 < supposeBillNo.length() ? supposeBillNo.substring(lshIdx + 6) : "");
+					supposeBillNo = (lshIdx == 0 ? "" : supposeBillNo.substring(0, lshIdx)) + bp.tools.StringHelper.padLeft("", i, '_') + (lshIdx + 6 < supposeBillNo.length() ? supposeBillNo.substring(lshIdx + 6) : "");
 					//保存当前流程号所处位置，及流程号长度，以便之后使用替换成正确的流水号
 					map.put(lshIdx, i);
 				}
 			}
 
-			Iterator<Map.Entry<Integer, Integer>> iterator = map.entrySet().iterator();
+			Iterator<java.util.Map.Entry<Integer, Integer>> iterator = map.entrySet().iterator();
 			while (iterator.hasNext()) {
 				Map.Entry<Integer, Integer> entry = iterator.next();
 				loc.add(entry);
@@ -520,7 +519,7 @@ public class WorkFlowBuessRole
 				//没有数据，则所有流水号都从1开始
 				for (java.util.Map.Entry<Integer, Integer> kv : loc)
 				{
-					supposeBillNo = (kv.getKey() == 0 ? "" : supposeBillNo.substring(0, kv.getKey())) + StringHelper.padLeft("1", kv.getValue(), '0') + (kv.getKey() + kv.getValue() < supposeBillNo.length() ? supposeBillNo.substring(kv.getKey() + kv.getValue()) : "");
+					supposeBillNo = (kv.getKey() == 0 ? "" : supposeBillNo.substring(0, kv.getKey())) + bp.tools.StringHelper.padLeft("1", kv.getValue(), '0') + (kv.getKey() + kv.getValue() < supposeBillNo.length() ? supposeBillNo.substring(kv.getKey() + kv.getValue()) : "");
 				}
 			}
 			else
@@ -532,7 +531,7 @@ public class WorkFlowBuessRole
 				for (int i = loc.size() - 1; i >= 0; i--)
 				{
 					//获取单据号中当前位的流水码数
-					ilsh = Integer.parseInt(StringHelper.substring(maxBillNo, loc.get(i).getKey(), loc.get(i).getValue()));
+					ilsh = Integer.parseInt(bp.tools.StringHelper.substring(maxBillNo, loc.get(i).getKey(), loc.get(i).getValue()));
 
 					if (plus1idx >= 0)
 					{
@@ -546,7 +545,7 @@ public class WorkFlowBuessRole
 						continue;
 					}
 
-					if (ilsh >= Integer.parseInt(StringHelper.padLeft("", loc.get(i).getValue(), '9')))
+					if (ilsh >= Integer.parseInt(bp.tools.StringHelper.padLeft("", loc.get(i).getValue(), '9')))
 					{
 						//右侧已经达到最大值
 						if (i > 0)
@@ -588,21 +587,16 @@ public class WorkFlowBuessRole
 
 		return billNo;
 	}
-
-		///#endregion 产生单据编号
-
-
-		///#region 找到下一个节点的接受人员
-	/** 
+	/**
 	 找到下一个节点的接受人员
 	 
-	 param fl 流程
-	 param currNode 当前节点
-	 param toNode 到达节点
+	 @param fl 流程
+	 @param currNode 当前节点
+	 @param toNode 到达节点
 	 @return 下一步工作人员No,Name格式的返回.
 	*/
 	public static DataTable RequetNextNodeWorkers(Flow fl, Node currNode, Node toNode, Entity enParas, long workid) throws Exception {
-		if (toNode.isGuestNode())
+		if (toNode.getItIsGuestNode())
 		{
 			/*到达的节点是客户参与的节点. add by zhoupeng 2016.5.11*/
 			DataTable mydt = new DataTable();
@@ -650,14 +644,13 @@ public class WorkFlowBuessRole
 					throw new RuntimeException("@您设置的当前节点按照SQL，决定下一步的接受人员，但是你没有设置SQL.");
 				}
 				sql = toNode.getDeliveryParas();
-				sql = sql.toString();
 			}
 
 			//特殊的变量.
 			sql = sql.replace("@FK_Node", String.valueOf(toNode.getNodeID()));
 			sql = sql.replace("@NodeID", String.valueOf(toNode.getNodeID()));
 
-			sql = Glo.DealExp(sql, enParas, null);
+			sql = bp.wf.Glo.DealExp(sql, enParas, null);
 
 
 			dt = DBAccess.RunSQLReturnTable(sql);
@@ -670,10 +663,11 @@ public class WorkFlowBuessRole
 
 			///#endregion 首先判断是否配置了获取下一步接受人员的sql.
 
+
 			///#region 按绑定部门计算,该部门一人处理标识该工作结束(子线程)..
 		if (toNode.getHisDeliveryWay() == DeliveryWay.BySetDeptAsSubthread)
 		{
-			if (toNode.getIsSubThread()== false)
+			if (toNode.getItIsSubThread() == false)
 			{
 				throw new RuntimeException("@您设置的节点接收人方式为：按绑定部门计算,该部门一人处理标识该工作结束(子线程)，但是当前节点非子线程节点。");
 			}
@@ -693,7 +687,7 @@ public class WorkFlowBuessRole
 			///#region 按照明细表,作为子线程的接收人.
 		if (toNode.getHisDeliveryWay() == DeliveryWay.ByDtlAsSubThreadEmps)
 		{
-			if (toNode.getIsSubThread()== false)
+			if (toNode.getItIsSubThread() == false)
 			{
 				throw new RuntimeException("@您设置的节点接收人方式为：以分流点表单的明细表数据源确定子线程的接收人，但是当前节点非子线程节点。");
 			}
@@ -725,7 +719,7 @@ public class WorkFlowBuessRole
 				catch (RuntimeException ex)
 				{
 					msg += ex.getMessage();
-					//if (dtls.size() == 1)
+					//if (dtls.size()== 1)
 					//    throw new Exception("@估计是流程设计错误,没有在分流节点的明细表中设置");
 				}
 			}
@@ -773,7 +767,7 @@ public class WorkFlowBuessRole
 						{
 							// 2020.08.17 这里注释掉了， 有可能是到达的节点是，按照弹出窗体计算的. 
 							// 不做强制修改.
-							//currNode.CondModel = DirCondModel.SendButtonSileSelect;
+							//currNode.getCondModel() = DirCondModel.SendButtonSileSelect;
 							//currNode.Update();
 							//throw new Exception("@下一个节点的接收人规则是按照上一步发送人员选择器选择的，但是在当前节点您没有启接收人选择器，系统已经自动做了设置，请关闭当前窗口重新打开重试。");
 						}
@@ -790,7 +784,7 @@ public class WorkFlowBuessRole
 				for (SelectAccper item : sas.ToJavaList())
 				{
 					DataRow dr = dt.NewRow();
-					dr.setValue(0, item.getFK_Emp());
+					dr.setValue(0, item.getEmpName());
 					dt.Rows.add(dr);
 				}
 				return dt;
@@ -804,14 +798,14 @@ public class WorkFlowBuessRole
 			///#region 按照指定节点的处理人计算。
 		if (toNode.getHisDeliveryWay() == DeliveryWay.BySpecNodeEmp || toNode.getHisDeliveryWay() == DeliveryWay.ByStarter)
 		{
-			/* 按指定节点岗位上的人员计算 */
+			/* 按指定节点角色上的人员计算 */
 			String strs = toNode.getDeliveryParas();
 			if (toNode.getHisDeliveryWay() == DeliveryWay.ByStarter)
 			{
 				/*找开始节点的处理人员. */
 				strs = Integer.parseInt(fl.getNo()) + "01";
 				ps = new Paras();
-				ps.SQL = "SELECT FK_Emp FROM WF_GenerWorkerList WHERE WorkID=" + dbStr + "OID AND FK_Node=" + dbStr + "FK_Node AND IsPass=1 AND IsEnable=1 ORDER BY CDT ";
+				ps.SQL = "SELECT FK_Emp FROM WF_GenerWorkerlist WHERE WorkID=" + dbStr + "OID AND FK_Node=" + dbStr + "FK_Node AND IsPass=1 AND IsEnable=1 ORDER BY CDT ";
 				ps.Add("FK_Node", Integer.parseInt(strs));
 				ps.Add("OID", workid);
 				dt = DBAccess.RunSQLReturnTable(ps);
@@ -841,13 +835,13 @@ public class WorkFlowBuessRole
 
 				if (DataType.IsNumStr(nd) == false)
 				{
-					throw new RuntimeException("流程设计错误:您设置的节点(" + toNode.getName() + ")的接收方式为按指定的节点岗位投递，但是您没有在访问规则设置中设置节点编号。");
+					throw new RuntimeException("流程设计错误:您设置的节点(" + toNode.getName() + ")的接收方式为按指定的节点角色投递，但是您没有在访问规则设置中设置节点编号。");
 				}
 
 				ps = new Paras();
-				ps.SQL = "SELECT FK_Emp FROM WF_GenerWorkerList WHERE WorkID=" + dbStr + "OID AND FK_Node=" + dbStr + "FK_Node AND IsPass=1 AND IsEnable=1 ";
+				ps.SQL = "SELECT FK_Emp FROM WF_GenerWorkerlist WHERE WorkID=" + dbStr + "OID AND FK_Node=" + dbStr + "FK_Node AND IsPass=1 AND IsEnable=1 ";
 				ps.Add("FK_Node", Integer.parseInt(nd));
-				if (currNode.getIsSubThread()== true)
+				if (currNode.getItIsSubThread() == true)
 				{
 					ps.Add("OID", workid);
 				}
@@ -863,7 +857,7 @@ public class WorkFlowBuessRole
 					for (DataRow row : dt_ND.Rows)
 					{
 						DataRow dr = dt.NewRow();
-						dr.setValue(0, row.getValue(0).toString());
+						dr.setValue(0, row.get(0).toString());
 						dt.Rows.add(dr);
 					}
 					//此节点已找到数据则不向下找，继续下个节点
@@ -887,7 +881,7 @@ public class WorkFlowBuessRole
 					for (DataRow row : dt_ND.Rows)
 					{
 						DataRow dr = dt.NewRow();
-						dr.setValue(0, row.getValue(0).toString());
+						dr.setValue(0, row.get(0).toString());
 						dt.Rows.add(dr);
 					}
 				}
@@ -905,15 +899,15 @@ public class WorkFlowBuessRole
 					}
 
 					Node nd = new Node(Integer.parseInt(pnodeiD));
-					if (!nd.getFK_Flow().equals(gwf.getPFlowNo()))
+					if (!Objects.equals(nd.getFlowNo(), gwf.getPFlowNo()))
 					{
 						continue; // 如果不是父流程的节点，就不执行.
 					}
 
 					ps = new Paras();
-					ps.SQL = "SELECT FK_Emp FROM WF_GenerWorkerList WHERE WorkID=" + dbStr + "OID AND FK_Node=" + dbStr + "FK_Node AND IsPass=1 AND IsEnable=1 ";
+					ps.SQL = "SELECT FK_Emp FROM WF_GenerWorkerlist WHERE WorkID=" + dbStr + "OID AND FK_Node=" + dbStr + "FK_Node AND IsPass=1 AND IsEnable=1 ";
 					ps.Add("FK_Node", nd.getNodeID());
-					if (currNode.getIsSubThread()== true)
+					if (currNode.getItIsSubThread() == true)
 					{
 						ps.Add("OID", gwf.getPFID());
 					}
@@ -928,7 +922,7 @@ public class WorkFlowBuessRole
 						for (DataRow row : dt_PWork.Rows)
 						{
 							DataRow dr = dt.NewRow();
-							dr.setValue(0, row.getValue(0).toString());
+							dr.setValue(0, row.get(0).toString());
 							dt.Rows.add(dr);
 						}
 						//此节点已找到数据则不向下找，继续下个节点
@@ -945,7 +939,7 @@ public class WorkFlowBuessRole
 					ps.Add("ActionType5", ActionType.Skip.getValue());
 					ps.Add("NDFrom", nd.getNodeID());
 
-					if (currNode.getIsSubThread()== true)
+					if (currNode.getItIsSubThread() == true)
 					{
 						ps.Add("OID", gwf.getPFID());
 					}
@@ -960,7 +954,7 @@ public class WorkFlowBuessRole
 						for (DataRow row : dt_PWork.Rows)
 						{
 							DataRow dr = dt.NewRow();
-							dr.setValue(0, row.getValue(0).toString());
+							dr.setValue(0, row.get(0).toString());
 							dt.Rows.add(dr);
 						}
 					}
@@ -1041,10 +1035,6 @@ public class WorkFlowBuessRole
 				{
 					continue;
 				}
-
-				//if (DBAccess.RunSQLReturnValInt("SELECT COUNT(NO) AS NUM FROM Port_Emp WHERE NO='" + s + "' or name='"+s+"'", 0) == 0)
-				//    continue;
-
 				DataRow dr = dt.NewRow();
 				dr.setValue(0, s);
 				dt.Rows.add(dr);
@@ -1052,9 +1042,12 @@ public class WorkFlowBuessRole
 			return dt;
 		}
 
-		//#region 按照上一个节点表单指定字段的【岗位】处理。
-		if (toNode.getHisDeliveryWay() == DeliveryWay.ByPreviousNodeFormStationsAI ||
-				toNode.getHisDeliveryWay() == DeliveryWay.ByPreviousNodeFormStationsOnly)
+			///#endregion 按照上一个节点表单指定字段的人员处理。
+
+
+
+			///#region 按照上一个节点表单指定字段的【角色】处理。
+		if (toNode.getHisDeliveryWay() == DeliveryWay.ByPreviousNodeFormStationsAI || toNode.getHisDeliveryWay() == DeliveryWay.ByPreviousNodeFormStationsOnly)
 		{
 			// 检查接受人员规则,是否符合设计要求.
 			String specEmpFields = toNode.getDeliveryParas();
@@ -1065,16 +1058,16 @@ public class WorkFlowBuessRole
 
 			if (enParas.getEnMap().getAttrs().contains(specEmpFields) == false)
 			{
-				throw new Exception("@您设置的接受人规则是按照表单指定的岗位字段，决定下一步的接受人员，该字段{" + specEmpFields + "}已经删除或者丢失。");
+				throw new RuntimeException("@您设置的接受人规则是按照表单指定的角色字段，决定下一步的接受人员，该字段{" + specEmpFields + "}已经删除或者丢失。");
 			}
 
-			String stas="";
-			//获取接受人并格式化接受人,
+			String stas = "";
+			//获取接受人并格式化接受人, 
 			String emps = enParas.GetValStringByKey(specEmpFields);
 			emps = emps.replace(" ", "");
 			if (emps.contains(",") && emps.contains(";"))
 			{
-				/*如果包含,; 例如 xx,岗位1;222,岗位2;*/
+				/*如果包含,; 例如 xx,角色1;222,角色2;*/
 				String[] myemps1 = emps.split("[;]", -1);
 				for (String str : myemps1)
 				{
@@ -1084,101 +1077,123 @@ public class WorkFlowBuessRole
 					}
 
 					String[] ss = str.split("[,]", -1);
-
-					stas+=",'"+ss[0];
-
+					stas += "," + ss[0];
 				}
 				if (DataType.IsNullOrEmpty(stas))
-					throw new Exception("@输入的接受人员的岗位信息错误;[" + emps + "]。");
-			}else {
+				{
+					throw new RuntimeException("@输入的接受人员的角色信息错误;[" + emps + "]。");
+				}
+			}
+			else
+			{
 				emps = emps.replace(";", ",");
 				emps = emps.replace("；", ",");
 				emps = emps.replace("，", ",");
 				emps = emps.replace("、", ",");
 				emps = emps.replace("@", ",");
 
-				if (DataType.IsNullOrEmpty(emps)) {
-					throw new RuntimeException("@没有在字段[" + enParas.getEnMap().getAttrs().GetAttrByKey(specEmpFields).getDesc() + "]中指定接受人的岗位，工作无法向下发送。");
+				if (DataType.IsNullOrEmpty(emps))
+				{
+					throw new RuntimeException("@没有在字段[" + enParas.getEnMap().getAttrs().GetAttrByKey(specEmpFields).getDesc() + "]中指定接受人的角色，工作无法向下发送。");
 				}
 
 				// 把它加入接受人员列表中.
 				String[] myemps = emps.split("[,]", -1);
-				for (String s : myemps) {
-					if (DataType.IsNullOrEmpty(s)) {
+				for (String s : myemps)
+				{
+					if (DataType.IsNullOrEmpty(s))
+					{
 						continue;
 					}
-					stas+=",'"+s;
+					stas += "," + s;
 				}
 			}
-
-			//根据岗位：集合获取信息.
+			//根据角色:集合获取信息.
 			stas = stas.substring(1);
-			// 仅按岗位计算.以下都有要重写.
+
+			// 仅按角色计算. 以下都有要重写.
 			if (toNode.getHisDeliveryWay() == DeliveryWay.ByPreviousNodeFormStationsOnly)
 			{
 				dt = WorkFlowBuessRole.FindWorker_GetEmpsByStations(stas);
 				if (dt.Rows.size() == 0 && toNode.getHisWhenNoWorker() == false)
 				{
-					throw new RuntimeException("err@按照字段岗位(仅按岗位计算)找接受人错误,当前部门下没有您选择的岗位人员.");
+					throw new RuntimeException("err@按照字段角色(仅按角色计算)找接受人错误,当前部门下没有您选择的角色人员.");
 				}
-
 				return dt;
 			}
 
-			///#region 按岗位智能计算, 集合模式.
+
+				///#region 按角色智能计算, 集合模式.
 			if (toNode.getDeliveryStationReqEmpsWay() == 0)
 			{
-				String deptNo = WebUser.getFK_Dept();
-				dt = WorkFlowBuessRole.FindWorker_GetEmpsByDeptAI(stas, deptNo);
+				String deptNo = WebUser.getDeptNo();
+				dt = FindWorker_GetEmpsByDeptAI(stas, deptNo);
 				if (dt.Rows.size() == 0 && toNode.getHisWhenNoWorker() == false)
 				{
-					throw new RuntimeException("err@按照字段岗位(智能)找接受人错误,当前部门与父级部门下没有您选择的岗位人员.");
+					throw new RuntimeException("err@按照字段角色(智能)找接受人错误,当前部门与父级部门下没有您选择的角色人员.");
 				}
 				return dt;
 			}
-			///#endregion 按岗位智能计算, 要判断切片模式,还是集合模式.
 
-			///#region 按岗位智能计算, 切片模式. 需要对每个岗位都要找到接受人，然后把这些接受人累加起来.
+				///#endregion 按角色智能计算, 要判断切片模式,还是集合模式.
+
+
+				///#region 按角色智能计算, 切片模式. 需要对每个角色都要找到接受人，然后把这些接受人累加起来.
 			if (toNode.getDeliveryStationReqEmpsWay() == 1 || toNode.getDeliveryStationReqEmpsWay() == 2)
 			{
-				String deptNo = WebUser.getFK_Dept();
+				String deptNo = WebUser.getDeptNo();
 				String[] temps = stas.split("[,]", -1);
 				for (String str : temps)
 				{
-					//求一个岗位下的人员.
-					DataTable mydt1 = WorkFlowBuessRole.FindWorker_GetEmpsByDeptAI(str, deptNo);
+					//求一个角色下的人员.
+					DataTable mydt = FindWorker_GetEmpsByDeptAI(str, deptNo);
 
 					//如果是严谨模式.
-					if (toNode.getDeliveryStationReqEmpsWay() == 1 && mydt1.Rows.size() == 0)
+					if (toNode.getDeliveryStationReqEmpsWay() == 1 && mydt.Rows.size() == 0)
 					{
 						Station st = new Station(str);
-						throw new RuntimeException("@岗位[" + st.getName() + "]下，没有找到人不能发送下去，请检查组织结构是否完整。");
+						throw new RuntimeException("@角色[" + st.getName() + "]下，没有找到人不能发送下去，请检查组织结构是否完整。");
 					}
 
-					//累加.
-					for (DataRow dr : mydt1.Rows)
+					//累加起来.
+					for (DataRow dr : mydt.Rows)
 					{
 						DataRow mydr = dt.NewRow();
-						mydr.setValue(0,dr.get(0).toString());
+						mydr.setValue(0, dr.getValue(0).toString());
 						dt.Rows.add(mydr);
 					}
 				}
+
 				if (dt.Rows.size() == 0 && toNode.getHisWhenNoWorker() == false)
-					throw new Exception("err@按照字段岗位(智能,切片)找接受人错误,当前部门与父级部门下没有您选择的岗位人员.");
+				{
+					throw new RuntimeException("err@按照字段角色(智能,切片)找接受人错误,当前部门与父级部门下没有您选择的角色人员.");
+				}
 
 				return dt;
 			}
- 			//#endregion 按岗位智能计算, 切片模式.
-			throw new Exception("err@没有判断的模式....");
-		}
-			///#endregion 按照上一个节点表单指定字段的【岗位】处理。
 
-			///#region 按部门与岗位的交集计算.
+				///#endregion 按角色智能计算, 切片模式.
+
+			throw new RuntimeException("err@没有判断的模式....");
+		}
+
+			///#endregion 按照上一个节点表单指定字段的人员处理 【角色】。
+
+
+
+			///#region 按部门与角色的交集计算.
 		if (toNode.getHisDeliveryWay() == DeliveryWay.ByDeptAndStation)
 		{
-
-			sql = "SELECT pdes.FK_Emp AS No" + " FROM   Port_DeptEmpStation pdes" + " INNER JOIN WF_NodeDept wnd ON wnd.FK_Dept = pdes.FK_Dept" + " AND wnd.FK_Node = " + toNode.getNodeID() + " INNER JOIN WF_NodeStation wns ON  wns.FK_Station = pdes.FK_Station" + " AND wns.FK_Node =" + toNode.getNodeID() + " ORDER BY pdes.FK_Emp";
-
+			sql = "SELECT pdes.fk_emp AS No"
+					+ " FROM   Port_DeptEmpStation pdes"
+					+ "        INNER JOIN WF_NodeDept wnd"
+					+ "             ON  wnd.fk_dept = pdes.fk_dept"
+					+ "             AND wnd.fk_node = " + toNode.getNodeID()
+					+ "        INNER JOIN WF_NodeStation wns"
+					+ "             ON  wns.FK_Station = pdes.fk_station"
+					+ "             AND wnd.fk_node =" + toNode.getNodeID()
+					+ " ORDER BY"
+					+ "        pdes.fk_emp";
 			dt = DBAccess.RunSQLReturnTable(sql);
 
 
@@ -1188,11 +1203,11 @@ public class WorkFlowBuessRole
 			}
 			else
 			{
-				throw new RuntimeException("@节点访问规则(" + toNode.getHisDeliveryWay().toString() + ")错误:节点(" + toNode.getNodeID() + "," + toNode.getName() + "), 按照岗位与部门的交集确定接受人的范围错误，没有找到人员:SQL=" + sql);
+				throw new RuntimeException("@节点访问规则(" + toNode.getHisDeliveryWay().toString() + ")错误:节点(" + toNode.getNodeID() + "," + toNode.getName() + "), 按照角色与部门的交集确定接受人的范围错误，没有找到人员:SQL=" + sql);
 			}
 		}
 
-			///#endregion 按部门与岗位的交集计算.
+			///#endregion 按部门与角色的交集计算.
 
 
 			///#region 判断节点部门里面是否设置了部门，如果设置了就按照它的部门处理。
@@ -1215,8 +1230,7 @@ public class WorkFlowBuessRole
 			///#region 仅按用户组计算
 		if (toNode.getHisDeliveryWay() == DeliveryWay.ByTeamOnly)
 		{
-			sql = "SELECT DISTINCT A.FK_Emp FROM Port_TeamEmp A, WF_NodeTeam B WHERE A.FK_Team=B.FK_Team AND B.FK_Node="+toNode.getNodeID();
-
+			sql = "SELECT DISTINCT A.FK_Emp FROM Port_TeamEmp A, WF_NodeTeam B WHERE A.FK_Team=B.FK_Team AND B.FK_Node=" + toNode.getNodeID();
 			dt = DBAccess.RunSQLReturnTable(sql);
 			if (dt.Rows.size() > 0)
 			{
@@ -1239,7 +1253,7 @@ public class WorkFlowBuessRole
 			ps.Add("FK_Node", toNode.getNodeID());
 			ps.Add("OrgNo", WebUser.getOrgNo(), false);
 
-			ps.SQL = sql;
+			ps.SQL =sql;
 			dt = DBAccess.RunSQLReturnTable(ps);
 			if (dt.Rows.size() > 0)
 			{
@@ -1260,7 +1274,7 @@ public class WorkFlowBuessRole
 			sql = "SELECT DISTINCT A.FK_Emp FROM Port_TeamEmp A, WF_NodeTeam B, Port_Emp C WHERE A.FK_Emp=C." + bp.sys.base.Glo.getUserNoWhitOutAS() + " AND A.FK_Team=B.FK_Team AND B.FK_Node=" + dbStr + "FK_Node AND C.FK_Dept=" + dbStr + "FK_Dept  ORDER BY A.FK_Emp";
 			ps = new Paras();
 			ps.Add("FK_Node", toNode.getNodeID());
-			ps.Add("FK_Dept", WebUser.getFK_Dept(), false);
+			ps.Add("FK_Dept", WebUser.getDeptNo(), false);
 
 			ps.SQL = sql;
 			dt = DBAccess.RunSQLReturnTable(ps);
@@ -1277,8 +1291,7 @@ public class WorkFlowBuessRole
 			///#endregion
 
 
-
-			///#region 仅按岗位计算
+			///#region 仅按角色计算
 		if (toNode.getHisDeliveryWay() == DeliveryWay.ByStationOnly)
 		{
 			ps = new Paras();
@@ -1287,13 +1300,13 @@ public class WorkFlowBuessRole
 				sql = "SELECT A.FK_Emp FROM Port_DeptEmpStation A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND A.OrgNo=" + dbStr + "OrgNo AND B.FK_Node=" + dbStr + "FK_Node ORDER BY A.FK_Emp";
 				ps.Add("OrgNo", WebUser.getOrgNo(), false);
 				ps.Add("FK_Node", toNode.getNodeID());
-				ps.SQL = sql;
+				ps.SQL=sql;
 			}
 			else
 			{
 				sql = "SELECT A.FK_Emp FROM Port_DeptEmpStation A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr + "FK_Node ORDER BY A.FK_Emp";
 				ps.Add("FK_Node", toNode.getNodeID());
-				ps.SQL = sql;
+				ps.SQL=sql;
 			}
 
 			dt = DBAccess.RunSQLReturnTable(ps);
@@ -1303,17 +1316,16 @@ public class WorkFlowBuessRole
 			}
 			else
 			{
-				throw new RuntimeException("@节点访问规则错误:节点(" + toNode.getNodeID() + "," + toNode.getName() + "), 仅按岗位计算，没有找到人员。");
+				throw new RuntimeException("@节点访问规则错误:节点(" + toNode.getNodeID() + "," + toNode.getName() + "), 仅按角色计算，没有找到人员。");
 			}
 		}
 
 			///#endregion
 
-
-			///#region 按岗位计算(以部门集合为纬度).
-		if (toNode.getHisDeliveryWay() == DeliveryWay.ByStationAndEmpDept)
-		{
-			/* 考虑当前操作人员的部门, 如果本部门没有这个岗位就不向上寻找. */
+	   /* #region 按角色计算(以部门集合为纬度).
+	    if (toNode.getHisDeliveryWay() == DeliveryWay.ByStationAndEmpDept)
+	    {
+	        *//* 考虑当前操作人员的部门, 如果本部门没有这个角色就不向上寻找. *//*
 
 			if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 			{
@@ -1335,27 +1347,28 @@ public class WorkFlowBuessRole
 			}
 			else
 			{
-				throw new RuntimeException("@节点访问规则(" + toNode.getHisDeliveryWay().toString() + ")错误:节点(" + toNode.getNodeID() + "," + toNode.getName() + "), 按岗位计算(以部门集合为纬度)。技术信息,执行的SQL=" + ps.getSQLNoPara());
+				throw new RuntimeException("@节点访问规则(" + toNode.getHisDeliveryWay().toString() + ")错误:节点(" + toNode.getNodeID() + "," + toNode.getName() + "), 按角色计算(以部门集合为纬度)。技术信息,执行的SQL=" + ps.getSQLNoPara());
 			}
-		}
+	}
 
-			///#endregion
+			///#endregion*/
 
 		String empNo = WebUser.getNo();
-		String empDept = WebUser.getFK_Dept();
+		String empDept = WebUser.getDeptNo();
 
 
-			///#region 按指定的节点的人员岗位，做为下一步骤的流程接受人。
+			///#region 按指定的节点的人员角色，做为下一步骤的流程接受人。
+//C# TO JAVA CONVERTER TASK: The following line could not be converted:
 		if (toNode.getHisDeliveryWay() == DeliveryWay.BySpecNodeEmpStation)
 		{
-			/* 按指定的节点的人员岗位 */
+			/* 按指定的节点的人员角色 */
 			String para = toNode.getDeliveryParas();
 			para = para.replace("@", "");
 
 			if (DataType.IsNumStr(para) == true)
 			{
 				ps = new Paras();
-				ps.SQL = "SELECT FK_Emp,FK_Dept FROM WF_GenerWorkerList WHERE WorkID=" + dbStr + "OID AND FK_Node=" + dbStr + "FK_Node ";
+				ps.SQL = "SELECT FK_Emp,FK_Dept FROM WF_GenerWorkerlist WHERE WorkID=" + dbStr + "OID AND FK_Node=" + dbStr + "FK_Node ";
 				ps.Add("OID", workid);
 				ps.Add("FK_Node", Integer.parseInt(para));
 
@@ -1381,16 +1394,16 @@ public class WorkFlowBuessRole
 					throw new RuntimeException("@字段{" + para + "}不能为空，没有取出来处理人员。");
 				}
 
-				Emp em = new Emp(empNo);
-				empDept = em.getFK_Dept();
+				Emp emp = new Emp(empNo);
+				empDept = emp.getDeptNo();
 			}
 		}
 
 			///#endregion 按指定的节点人员，做为下一步骤的流程接受人。
 
 
-			///#region 最后判断 - 按照岗位来执行。
-		if (currNode.isStartNode() == false)
+			///#region 最后判断 - 按照角色AI来执行。
+		if (currNode.getItIsStartNode() == false)
 		{
 			ps = new Paras();
 			dt = DBAccess.RunSQLReturnTable(ps);
@@ -1405,8 +1418,8 @@ public class WorkFlowBuessRole
 			}
 		}
 
-		/* 如果执行节点 与 接受节点岗位集合一致 */
-		if (currNode.getGroupStaNDs().equals(toNode.getGroupStaNDs()))
+		/* 如果执行节点 与 接受节点角色集合一致 */
+		if (currNode.getGroupStaNDs() == toNode.getGroupStaNDs())
 		{
 			/* 说明，就把当前人员做为下一个节点处理人。*/
 			DataRow dr = dt.NewRow();
@@ -1415,17 +1428,17 @@ public class WorkFlowBuessRole
 			return dt;
 		}
 
-		/* 如果执行节点 与 接受节点岗位集合不一致 */
-		if (!currNode.getGroupStaNDs().equals(toNode.getGroupStaNDs()))
+		/* 如果执行节点 与 接受节点角色集合不一致 */
+		if (currNode.getGroupStaNDs() != toNode.getGroupStaNDs())
 		{
 			/* 没有查询到的情况下, 先按照本部门计算。*/
 
 
-				sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B  WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr + "FK_Node AND A.FK_Dept=" + dbStr + "FK_Dept";
-				ps = new Paras();
-				ps.SQL = sql;
-				ps.Add("FK_Node", toNode.getNodeID());
-				ps.Add("FK_Dept", empDept, false);
+			sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B  WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr + "FK_Node AND A.FK_Dept=" + dbStr + "FK_Dept";
+			ps = new Paras();
+			ps.SQL=sql;
+			ps.Add("FK_Node", toNode.getNodeID());
+			ps.Add("FK_Dept", empDept);
 
 
 			dt = DBAccess.RunSQLReturnTable(ps);
@@ -1434,7 +1447,7 @@ public class WorkFlowBuessRole
 				NodeStations nextStations = toNode.getNodeStations();
 				if (nextStations.size() == 0)
 				{
-					throw new RuntimeException("@节点没有岗位:" + toNode.getNodeID() + "  " + toNode.getName());
+					throw new RuntimeException("@节点没有角色:" + toNode.getNodeID() + "  " + toNode.getName());
 				}
 			}
 			else
@@ -1442,27 +1455,25 @@ public class WorkFlowBuessRole
 				boolean isInit = false;
 				for (DataRow dr : dt.Rows)
 				{
-					if (dr.getValue(0).toString().equals(WebUser.getNo()))
+					if (Objects.equals(dr.getValue(0).toString(), WebUser.getNo()))
 					{
-						/* 如果岗位分组不一样，并且结果集合里还有当前的人员，就说明了出现了当前操作员，拥有本节点上的岗位也拥有下一个节点的工作岗位
+						/* 如果角色分组不一样，并且结果集合里还有当前的人员，就说明了出现了当前操作员，拥有本节点上的角色也拥有下一个节点的工作角色
 						 导致：节点的分组不同，传递到同一个人身上。 */
 						isInit = true;
 					}
 				}
 
 
-///#warning edit by peng, 用来确定不同岗位集合的传递包含同一个人的处理方式。
+///#warning edit by zhoupeng, 用来确定不同角色集合的传递包含同一个人的处理方式。
 
 				//  if (isInit == false || isInit == true)
 				return dt;
 			}
 		}
-
 		/*这里去掉了向下级别寻找的算法. */
 
-
 		/* 没有查询到的情况下, 按照最大匹配数 提高一个级别计算，递归算法未完成。
-		 * 因为:以上已经做的岗位的判断，就没有必要在判断其它类型的节点处理了。
+		 * 因为:以上已经做的角色的判断，就没有必要在判断其它类型的节点处理了。
 		 * */
 		Object tempVar = empDept;
 		String nowDeptID = tempVar instanceof String ? (String)tempVar : null;
@@ -1470,10 +1481,9 @@ public class WorkFlowBuessRole
 		{
 			Dept myDept = new Dept(nowDeptID);
 			nowDeptID = myDept.getParentNo();
-			if (nowDeptID.equals("-1") || nowDeptID.toString().equals("0"))
+			if (Objects.equals(nowDeptID, "-1") || Objects.equals(nowDeptID.toString(), "0"))
 			{
-				//break; //一直找到了最高级仍然没有发现，就跳出来循环从当前操作员人部门向下找。
-				throw new RuntimeException("@按岗位计算没有找到(" + toNode.getName() + ")接受人.");
+				break; //一直找到了最高级仍然没有发现，就跳出来循环从当前操作员人部门向下找。
 			}
 
 			//检查指定的部门下面是否有该人员.
@@ -1485,7 +1495,7 @@ public class WorkFlowBuessRole
 				myDepts.Retrieve(DeptAttr.ParentNo, myDept.getParentNo(), null);
 				for (Dept item : myDepts.ToJavaList())
 				{
-					if (item.getNo().equals(nowDeptID))
+					if (Objects.equals(item.getNo(), nowDeptID))
 					{
 						continue;
 					}
@@ -1508,484 +1518,208 @@ public class WorkFlowBuessRole
 			}
 		}
 
-		/*如果向上找没有找到，就考虑从本级部门上向下找。 */
-//		Object tempVar2 = empDept;
-//		nowDeptID = tempVar2 instanceof String ? (String)tempVar2 : null;
-//		bp.port.Depts subDepts = new bp.port.Depts(nowDeptID);
+		/* 如果向上找没有找到，就考虑从本级部门上向下找. */
+		Object tempVar2 = empDept;
+		nowDeptID = tempVar2 instanceof String ? (String)tempVar2 : null;
+		Depts subDepts = new Depts(nowDeptID);
 
-		//递归出来子部门下有该岗位的人员.
-//		DataTable mydt123 = RequetNextNodeWorkers_DiGui_ByDepts(subDepts, empNo, toNode);
-//		if (mydt123 == null)
-//		{
-//			throw new RuntimeException("@按岗位计算没有找到(" + toNode.getName() + ")接受人.");
-//		}
-//		return mydt123;
-
-			///#endregion  按照岗位来执行。
-	}
-	/** 
-	 递归出来子部门下有该岗位的人员
-	 
-	 param subDepts
-	 param empNo
-	 @return 
-	*/
-	private static DataTable RequetNextNodeWorkers_DiGui_ByDepts(Depts subDepts, String empNo, Node toNode) throws Exception {
-		for (Dept item : subDepts.ToJavaList())
+		//递归出来子部门下有该角色的人员.
+		DataTable mydt123 = RequetNextNodeWorkers_DiGui_ByDepts(subDepts, empNo, toNode);
+		if (mydt123 == null)
 		{
-			DataTable dt = RequetNextNodeWorkers_DiGui(item.getNo(), empNo, toNode);
-			if (dt != null)
-			{
-				return dt;
-			}
-
-			Depts MySubDepts = new Depts();
-			MySubDepts.Retrieve(DeptAttr.ParentNo, item.getNo(), null);
-
-			dt = RequetNextNodeWorkers_DiGui_ByDepts(MySubDepts, empNo, toNode);
-			if (dt != null)
-			{
-				return dt;
-			}
+			throw new RuntimeException("@按角色计算没有找到(" + toNode.getName() + ")接受人.");
 		}
-		return null;
-	}
-	/** 
+		return mydt123;
+
+			///#endregion  按照角色来执行。
+}
+	/**
+	 按照部门编号，与角色集合智能计算接受人.
+
+	 @param stas 角色编号
+	 @param deptNo 部门编号
+	 @return
+	*/
+//C# TO JAVA CONVERTER TASK: Local functions are not converted by C# to Java Converter:
+	public static DataTable FindWorker_GetEmpsByDeptAI(String stas, String deptNo) throws Exception {
+			DataTable dt = WorkFlowBuessRole.FindWorker_GetEmpsByStationsAndDepts(stas, deptNo);
+			if (dt.Rows.size() == 0)
+			{
+				//本部门的父级.
+				Dept deptMy = new Dept(deptNo);
+				dt = WorkFlowBuessRole.FindWorker_GetEmpsByStationsAndDepts(stas, deptMy.getParentNo());
+
+				//本级部门的祖父级,不在向上判断了.
+				if (dt.Rows.size() == 0 && deptMy.getParentNo().equals("0") == false)
+				{
+					Dept deptParent = new Dept(deptMy.getParentNo());
+					dt = WorkFlowBuessRole.FindWorker_GetEmpsByStationsAndDepts(stas, deptParent.getParentNo());
+				}
+
+				//扫描评级部门.
+				if (dt.Rows.size() == 0)
+				{
+					String deptNos = "";
+					Depts depts = new Depts();
+					depts.Retrieve(DeptAttr.ParentNo, deptMy.getParentNo());
+					for (Dept mydept : depts.ToJavaList())
+						deptNos += "," + mydept.getNo();
+
+					dt = WorkFlowBuessRole.FindWorker_GetEmpsByStationsAndDepts(stas, deptNos);
+				}
+				return dt;
+			}
+			return dt;
+		}
+
+	public static DataTable FindWorker_GetEmpsByStations(String stas)
+		{
+			String sqlEnd = "";
+			if (bp.difference.SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
+				sqlEnd = " AND OrgNo='" + bp.web.WebUser.getOrgNo() + "'";
+
+			//处理合法的 in 字段.
+			if (stas.contains("'") == false)
+			{
+				String[] temps = stas.split("[,]",-1);
+				String mystrs = "";
+				for (String temp : temps)
+					mystrs += ",'" + temp + "'";
+
+				mystrs = mystrs.substring(1);
+				stas = mystrs;
+			}
+
+			String sql = "SELECT FK_Emp FROM Port_DeptEmpStation WHERE FK_Station IN (" + stas + ") " + sqlEnd;
+			return DBAccess.RunSQLReturnTable(sql);
+		}
+	/**
+	 获取部门与角色的交集.
+
+	 @param stas 角色集合s
+	 @param depts 部门集合s
+	 @return
+	*/
+	public static DataTable FindWorker_GetEmpsByStationsAndDepts(String stas, String depts)
+		{
+			String sqlEnd = "";
+			if (bp.difference.SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
+				sqlEnd = " AND OrgNo='" + bp.web.WebUser.getOrgNo() + "'";
+
+			//是单个的.
+			if (stas.contains(",") == false && depts.contains(",") == false)
+			{
+				String sql1 = "SELECT FK_Emp FROM Port_DeptEmpStation WHERE FK_Station='" + stas + "' AND FK_Dept='" + depts + "' "; // + sqlEnd;
+				return DBAccess.RunSQLReturnTable(sql1);
+			}
+
+			//处理合法的 in 字段.
+			if (stas.contains("'") == false)
+			{
+				String[] temps = stas.split("[,]",-1);
+				String mystrs = "";
+				for (String temp : temps)
+					mystrs += ",'" + temp + "'";
+
+				mystrs = mystrs.substring(1);
+				stas = mystrs;
+			}
+
+			//处理合法的in 字段.
+			if (depts.contains("'") == false)
+			{
+				String[] temps = depts.split("[,]",-1);
+				String mystrs = "";
+				for (String temp : temps)
+					mystrs += ",'" + temp + "'";
+
+				mystrs = mystrs.substring(1);
+				depts = mystrs;
+			}
+
+			String sql = "SELECT FK_Emp FROM Port_DeptEmpStation WHERE FK_Station IN(" + stas + ") AND FK_Dept IN (" + depts + ") "; // + sqlEnd;
+			return DBAccess.RunSQLReturnTable(sql);
+		}
+	/**
+	 递归出来子部门下有该角色的人员
+
+	 @param subDepts
+	 @param empNo
+	 @return
+	*/
+	private static DataTable RequetNextNodeWorkers_DiGui_ByDepts(bp.port.Depts subDepts, String empNo, Node toNode) throws Exception {
+			for (bp.port.Dept item : subDepts.ToJavaList())
+			{
+				DataTable dt = RequetNextNodeWorkers_DiGui(item.getNo(), empNo, toNode);
+				if (dt != null)
+					return dt;
+
+				Depts MySubDepts = new Depts();
+				MySubDepts.Retrieve(DeptAttr.ParentNo, item.getNo());
+
+				dt = RequetNextNodeWorkers_DiGui_ByDepts(MySubDepts, empNo, toNode);
+				if (dt != null)
+					return dt;
+			}
+			return null;
+		}
+	/**
 	 根据部门获取下一步的操作员
-	 
-	 param deptNo
-	 param emp1
-	 @return 
+
+	 @param deptNo
+	 @return
 	*/
 	private static DataTable RequetNextNodeWorkers_DiGui(String deptNo, String empNo, Node toNode) throws Exception {
-		String sql;
-		String dbStr = bp.difference.SystemConfig.getAppCenterDBVarStr();
+			String sql;
+			String dbStr = bp.difference.SystemConfig.getAppCenterDBVarStr();
 
-		sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr + "FK_Node AND A.FK_Dept=" + dbStr + "FK_Dept AND A.FK_Emp!=" + dbStr + "FK_Emp";
-		Paras ps = new Paras();
-		ps.SQL = sql;
-		ps.Add("FK_Node", toNode.getNodeID());
-		ps.Add("FK_Dept", deptNo, false);
-		if(SystemConfig.getCCBPMRunModel()==CCBPMRunModel.SAAS && empNo.startsWith(WebUser.getOrgNo())==false)
-			ps.Add("FK_Emp", WebUser.getOrgNo()+"_"+empNo, false);
-		else
-			ps.Add("FK_Emp", empNo, false);
+			sql = "SELECT FK_Emp as No FROM Port_DeptEmpStation A, WF_NodeStation B WHERE A.FK_Station=B.FK_Station AND B.FK_Node=" + dbStr + "FK_Node AND A.FK_Dept=" + dbStr + "FK_Dept AND A.FK_Emp!=" + dbStr + "FK_Emp";
+			Paras ps = new Paras();
+			ps.SQL = sql;
+			ps.Add("FK_Node", toNode.getNodeID());
+			ps.Add("FK_Dept", deptNo);
+			if(bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS && StringUtils.startsWith(empNo,WebUser.getOrgNo()) == false)
+				ps.Add("FK_Emp", WebUser.getOrgNo()+"_"+empNo);
+			else
+				ps.Add("FK_Emp", empNo);
 
-		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		if (dt.Rows.size() == 0)
-		{
-			NodeStations nextStations = toNode.getNodeStations();
-			if (nextStations.size() == 0)
+			DataTable dt = DBAccess.RunSQLReturnTable(ps);
+			if (dt.Rows.size() == 0)
 			{
-				throw new RuntimeException("@节点没有岗位:" + toNode.getNodeID() + "  " + toNode.getName());
-			}
+				NodeStations nextStations = toNode.getNodeStations();
+				if (nextStations.size()== 0)
+					throw new Exception("@节点没有角色:" + toNode.getNodeID() + "  " + toNode.getName());
 
-			sql = "SELECT " + bp.sys.base.Glo.getUserNo() + " FROM Port_Emp WHERE No IN ";
-			sql += "(SELECT  FK_Emp  FROM Port_DeptEmpStation  WHERE FK_Station IN (SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + dbStr + "FK_Node ) )";
-			sql += " AND " + bp.sys.base.Glo.getUserNoWhitOutAS() + " IN ";
+				sql = "SELECT " + bp.sys.base.Glo.getUserNo() + " FROM Port_Emp WHERE No IN ";
+				sql += "(SELECT  FK_Emp  FROM Port_DeptEmpStation  WHERE FK_Station IN (SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + dbStr + "FK_Node ) )";
+				sql += " AND " + bp.sys.base.Glo.getUserNoWhitOutAS() + " IN ";
 
-			if (deptNo.equals("1"))
-			{
-				sql += "(SELECT " + bp.sys.base.Glo.getUserNoWhitOutAS() + " as FK_Emp FROM Port_Emp WHERE " + bp.sys.base.Glo.getUserNoWhitOutAS() + "!=" + dbStr + "FK_Emp ) ";
+				if (deptNo == "1")
+				{
+					sql += "(SELECT " + bp.sys.base.Glo.getUserNoWhitOutAS() + " as FK_Emp FROM Port_Emp WHERE " + bp.sys.base.Glo.getUserNoWhitOutAS() + "!=" + dbStr + "FK_Emp ) ";
+				}
+				else
+				{
+					bp.port.Dept deptP = new bp.port.Dept(deptNo);
+					sql += "(SELECT " + bp.sys.base.Glo.getUserNoWhitOutAS() + " as FK_Emp FROM Port_Emp WHERE " + bp.sys.base.Glo.getUserNoWhitOutAS() + "!=" + dbStr + "FK_Emp AND FK_Dept = '" + deptP.getParentNo() + "')";
+				}
+
+				ps = new Paras();
+				ps.SQL = sql;
+				ps.Add("FK_Node", toNode.getNodeID());
+				ps.Add("FK_Emp", empNo);
+				dt = DBAccess.RunSQLReturnTable(ps);
+
+				if (dt.Rows.size() == 0)
+					return null;
+				return dt;
 			}
 			else
 			{
-				Dept deptP = new Dept(deptNo);
-				sql += "(SELECT " + bp.sys.base.Glo.getUserNoWhitOutAS() + " as FK_Emp FROM Port_Emp WHERE " + bp.sys.base.Glo.getUserNoWhitOutAS() + "!=" + dbStr + "FK_Emp AND FK_Dept = '" + deptP.getParentNo() + "')";
+				return dt;
 			}
-
-			ps = new Paras();
-			ps.SQL = sql;
-			ps.Add("FK_Node", toNode.getNodeID());
-			ps.Add("FK_Emp", empNo, false);
-			dt = DBAccess.RunSQLReturnTable(ps);
-
-			if (dt.Rows.size() == 0)
-			{
-				return null;
-			}
-			return dt;
 		}
-		else
-		{
-			return dt;
-		}
-	}
 
 		///#endregion 找到下一个节点的接受人员
-
-
-		///#region 执行抄送.
-	/** 
-	 执行抄送.
-	 
-	 param rpt
-	 param workid
-	 @return 
-	*/
-	public static String DoCCAuto(Node node, bp.wf.data.GERpt rpt, long workid, long fid) throws Exception {
-
-		if (node.getHisCCRole() == CCRole.AutoCC || node.getHisCCRole() == CCRole.HandAndAuto)
-		{
-
-		}
-		else
-		{
-			return "";
-		}
-
-		CC ccEn = new CC(node.getNodeID());
-
-		/*如果是自动抄送*/
-
-		//执行抄送.
-		DataTable dt = ccEn.GenerCCers(rpt, workid);
-		if (dt.Rows.size() == 0)
-		{
-			return "@设置的抄送规则，没有找到抄送人员。";
-		}
-
-		String ccMsg = "@消息自动抄送给";
-		String basePath = bp.wf.Glo.getHostURL();
-
-		for (DataRow dr : dt.Rows)
-		{
-			String toUserNo = dr.getValue(0).toString();
-			String toUserName = dr.getValue(1).toString();
-
-			//生成标题与内容.
-			Object tempVar = ccEn.getCCTitle();
-			String ccTitle = tempVar instanceof String ? (String)tempVar : null;
-			ccTitle = bp.wf.Glo.DealExp(ccTitle, rpt);
-
-			Object tempVar2 = ccEn.getCCDoc();
-			String ccDoc = tempVar2 instanceof String ? (String)tempVar2 : null;
-			ccDoc = bp.wf.Glo.DealExp(ccDoc, rpt);
-
-			ccDoc = ccDoc.replace("@Accepter", toUserNo);
-			ccTitle = ccTitle.replace("@Accepter", toUserNo);
-
-			//抄送信息.
-			ccMsg += "(" + toUserNo + " - " + toUserName + ");";
-			CCList list = new CCList();
-			list.setMyPK(workid + "_" + node.getNodeID() + "_" + dr.getValue(0).toString());
-			list.setFK_Flow(node.getFK_Flow());
-			list.setFlowName(node.getFlowName());
-			list.setFK_Node(node.getNodeID());
-			list.setNodeName(node.getName());
-			list.setTitle(ccTitle);
-			list.setDoc(ccDoc);
-			list.setCCTo(dr.getValue(0).toString());
-			list.setCCToName(dr.getValue(1).toString());
-			list.setRDT(DataType.getCurrentDateTime());
-			list.setRec(WebUser.getNo());
-			list.setWorkID(workid);
-			list.setFID(fid);
-
-			// if (this.HisNode.CCWriteTo == CCWriteTo.Todolist)
-			list.setInEmpWorks(node.getCCWriteTo() == CCWriteTo.CCList ? false : true); //added by liuxc,2015.7.6
-
-			//写入待办和写入待办与抄送列表,状态不同
-			if (node.getCCWriteTo() == CCWriteTo.All || node.getCCWriteTo() == CCWriteTo.Todolist)
-			{
-				//如果为写入待办则抄送列表中置为已读，原因：只为不提示有未读抄送。
-				//list.HisSta = node.CCWriteTo == CCWriteTo.All ? CCSta.UnRead : CCSta.Read;
-				list.setHisSta(CCSta.UnRead);
-			}
-			//结束节点只写入抄送列表
-			if (node.isEndNode() == true)
-			{
-				list.setHisSta(CCSta.UnRead);
-				list.setInEmpWorks(false);
-			}
-			try
-			{
-				list.Insert();
-			}
-			catch (java.lang.Exception e)
-			{
-				list.Update();
-			}
-			PushMsgs pms = new PushMsgs();
-			pms.Retrieve(PushMsgAttr.FK_Node, node.getNodeID(), PushMsgAttr.FK_Event, EventListNode.CCAfter, null);
-
-			if (pms.size() > 0)
-			{
-				PushMsg pushMsg = pms.get(0) instanceof PushMsg ? (PushMsg)pms.get(0) : null;
-				//     //写入消息提示.
-				//     ccMsg += list.CCTo + "(" + dr[1].ToString() + ");";
-			//	bp.wf.port.WFEmp wfemp = new bp.wf.port.WFEmp(list.getCCTo());
-
-				String title = String.format("工作抄送:%1$s.工作:%2$s,发送人:%3$s,需您查阅", node.getFlowName(), node.getName(), WebUser.getName());
-				String mytemp = pushMsg.getSMSDoc();
-				mytemp = mytemp.replace("{Title}", title);
-				mytemp = mytemp.replace("@WebUser.No", WebUser.getNo());
-				mytemp = mytemp.replace("@WebUser.Name", WebUser.getName());
-				mytemp = mytemp.replace("@WorkID", String.valueOf(workid));
-				mytemp = mytemp.replace("@OID", String.valueOf(workid));
-
-				/*如果仍然有没有替换下来的变量.*/
-				if (mytemp.contains("@") == true)
-				{
-					mytemp = bp.wf.Glo.DealExp(mytemp, rpt, null);
-				}
-				bp.wf.Dev2Interface.Port_SendMsg( list.getCCTo(), title, mytemp, null, bp.wf.SMSMsgType.CC, list.getFK_Flow(), list.getFK_Node(), list.getWorkID(), list.getFID(), pushMsg.getSMSPushModel());
-			}
-		}
-
-
-		//写入日志.
-
-		return ccMsg;
-	}
-	/** 
-	 按照指定的字段执行抄送.
-	 
-	 param nd
-	 param rptGE
-	 param workid
-	 param fid
-	 @return 
-	*/
-	public static String DoCCByEmps(Node nd, bp.wf.data.GERpt rptGE, long workid, long fid) throws Exception {
-		if (nd.getHisCCRole() != CCRole.BySysCCEmps)
-		{
-			return "";
-		}
-
-		CC cc = nd.getHisCC();
-
-		//生成标题与内容.
-		Object tempVar = cc.getCCTitle();
-		String ccTitle = tempVar instanceof String ? (String)tempVar : null;
-		ccTitle = bp.wf.Glo.DealExp(ccTitle, rptGE, null);
-
-		Object tempVar2 = cc.getCCDoc();
-		String ccDoc = tempVar2 instanceof String ? (String)tempVar2 : null;
-		ccDoc = bp.wf.Glo.DealExp(ccDoc, rptGE, null);
-
-		//取出抄送人列表
-		String ccers = rptGE.GetValStrByKey("SysCCEmps");
-		if (DataType.IsNullOrEmpty(ccers) == true)
-		{
-			return "";
-		}
-
-		String[] cclist = ccers.split("[|]", -1);
-		Hashtable ht = new Hashtable();
-		for (String item : cclist)
-		{
-			String[] tmp = item.split("[,]", -1);
-			ht.put(tmp[0], tmp[1]);
-		}
-		String ccMsg = "@消息自动抄送给";
-		String basePath = bp.wf.Glo.getHostURL();
-
-		PushMsgs pms = new PushMsgs();
-		pms.Retrieve(PushMsgAttr.FK_Node, nd.getNodeID(), PushMsgAttr.FK_Event, EventListNode.CCAfter, null);
-
-		String mailTemp = DataType.ReadTextFile2Html(bp.difference.SystemConfig.getPathOfDataUser() + "EmailTemplete/CC_" + WebUser.getSysLang() + ".txt");
-		for (Object item : ht.keySet())
-		{
-			ccDoc = ccDoc.replace("@Accepter", ht.get(item).toString());
-			ccTitle = ccTitle.replace("@Accepter", ht.get(item).toString());
-			//抄送信息.
-			ccMsg += "(" + ht.get(item).toString() + " - " +ht.get(item).toString() + ");";
-
-				///#region 如果是写入抄送列表.
-			CCList list = new CCList();
-			list.setMyPK(DBAccess.GenerGUID(0, null, null)); // workid + "_" + node.NodeID + "_" + item.getKey().ToString();
-			list.setFK_Flow(nd.getFK_Flow());
-			list.setFlowName(nd.getFlowName());
-			list.setFK_Node(nd.getNodeID());
-			list.setNodeName(nd.getName());
-			list.setTitle(ccTitle);
-			list.setDoc(ccDoc);
-			list.setCCTo(item.toString());
-			list.setCCToName(ht.get(item).toString());
-			list.setRDT(DataType.getCurrentDataTime());
-			list.setRec(WebUser.getNo());
-			list.setWorkID(workid);
-			list.setFID(fid);
-			list.setInEmpWorks(nd.getCCWriteTo() == CCWriteTo.CCList ? false : true); //added by liuxc,2015.7.6
-			//写入待办和写入待办与抄送列表,状态不同
-			if (nd.getCCWriteTo() == CCWriteTo.All || nd.getCCWriteTo() == CCWriteTo.Todolist)
-			{
-				//如果为写入待办则抄送列表中置为已读，原因：只为不提示有未读抄送。
-				list.setHisSta(nd.getCCWriteTo() == CCWriteTo.All ? CCSta.UnRead : CCSta.Read);
-			}
-			//如果为结束节点，只写入抄送列表
-			if (nd.isEndNode() == true)
-			{
-				list.setHisSta(CCSta.UnRead);
-				list.setInEmpWorks(false);
-			}
-
-			//执行保存或更新
-			try
-			{
-				list.Insert();
-			}
-			catch (java.lang.Exception e)
-			{
-				list.CheckPhysicsTable();
-				list.Update();
-			}
-
-				///#endregion 如果要写入抄送
-
-
-				///#region 写入消息机制.
-
-
-			if (pms.size() > 0)
-			{
-				ccMsg += list.getCCTo() + "(" + ht.get(item).toString() + ");";
-			//	bp.wf.port.WFEmp wfemp = new bp.wf.port.WFEmp(list.getCCTo());
-
-
-				String sid = list.getCCTo() + "_" + list.getWorkID() + "_" + list.getFK_Node() + "_" + list.getRDT();
-				String url = basePath + "WF/Do.htm?DoType=DoOpenCC&Token=" + sid;
-				url = url.replace("//", "/");
-				url = url.replace("//", "/");
-
-				String urlWap = basePath + "WF/Do.htm?DoType=DoOpenCC&Token=" + sid + "&IsWap=1";
-				urlWap = urlWap.replace("//", "/");
-				urlWap = urlWap.replace("//", "/");
-
-				Object tempVar3 = mailTemp;
-				String mytemp = tempVar3 instanceof String ? (String)tempVar3 : null;
-				mytemp = String.format(mytemp, list.getCCTo(), WebUser.getName() , url, urlWap);
-
-				String title = String.format("工作抄送:%1$s.工作:%2$s,发送人:%3$s,需您查阅", nd.getFlowName(), nd.getName(), WebUser.getName());
-
-				bp.wf.Dev2Interface.Port_SendMsg(list.getCCTo(), title, mytemp, null, bp.wf.SMSMsgType.CC, list.getFK_Flow(), list.getFK_Node(), list.getWorkID(), list.getFID(), ((PushMsg)pms.get(0)).getSMSPushModel());
-			}
-
-				///#endregion 写入消息机制.
-		}
-
-		return ccMsg;
-	}
-
-		///#endregion 执行抄送.
-	/**
-	 按照部门编号，与岗位集合智能计算接受人.
-
-	 @param stas 岗位编号
-	 @param deptNo 部门编号
-	 @return
-	 */
-	public static DataTable FindWorker_GetEmpsByDeptAI(String stas, String deptNo) throws Exception {
-		DataTable dt = WorkFlowBuessRole.FindWorker_GetEmpsByStationsAndDepts(stas, deptNo);
-		if (dt.Rows.size() == 0)
-		{
-			//本部门的父级.
-			Dept deptMy = new Dept(deptNo);
-			dt = WorkFlowBuessRole.FindWorker_GetEmpsByStationsAndDepts(stas, deptMy.getParentNo());
-
-			//本级部门的祖父级,不在向上判断了.
-			if (dt.Rows.size() == 0 && deptMy.getParentNo().equals("0") == false)
-			{
-				Dept deptParent = new Dept(deptMy.getParentNo());
-				dt = WorkFlowBuessRole.FindWorker_GetEmpsByStationsAndDepts(stas, deptParent.getParentNo());
-			}
-
-			//扫描评级部门.
-			if (dt.Rows.size() == 0)
-			{
-				String deptNos = "";
-				Depts depts = new Depts();
-				depts.Retrieve(DeptAttr.ParentNo, deptMy.getParentNo());
-				for (Dept mydept : depts.ToJavaList())
-				{
-					deptNos += "," + mydept.getNo();
-				}
-
-				dt = WorkFlowBuessRole.FindWorker_GetEmpsByStationsAndDepts(stas, deptNos);
-			}
-			return dt;
-		}
-		return dt;
-	}
-
-	public static DataTable FindWorker_GetEmpsByStations(String stas)
-	{
-		String sqlEnd = "";
-		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
-		{
-			sqlEnd = " AND OrgNo='" + WebUser.getOrgNo() + "'";
-		}
-		//处理合法的 in 字段.
-		if (stas.contains("'") == false)
-		{
-			String[] temps = stas.split("[,]", -1);
-			String mystrs = "";
-			for (String temp : temps)
-			{
-				mystrs += ",'" + temp + "'";
-			}
-
-			mystrs = mystrs.substring(1);
-			stas = mystrs;
-		}
-
-		String sql = "SELECT FK_Emp FROM Port_DeptEmpStation WHERE FK_Station IN (" + stas + ") " + sqlEnd;
-		return DBAccess.RunSQLReturnTable(sql);
-	}
-	/**
-	 获取部门与岗位的交集.
-
-	 @param stas 岗位集合s
-	 @param depts 部门集合s
-	 @return
-	 */
-	public static DataTable FindWorker_GetEmpsByStationsAndDepts(String stas, String depts)
-	{
-		String sqlEnd = "";
-		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
-		{
-			sqlEnd = " AND OrgNo='" + WebUser.getOrgNo() + "'";
-		}
-
-		//是单个的.
-		if (stas.contains(",") == false && depts.contains(",") == false)
-		{
-			String sql1 = "SELECT FK_Emp FROM Port_DeptEmpStation WHERE FK_Station='" + stas + "' AND FK_Dept='" + depts + "' ";// + sqlEnd;
-			return DBAccess.RunSQLReturnTable(sql1);
-		}
-
-		//处理合法的 in 字段.
-		if (stas.contains("'") == false)
-		{
-			String[] temps = stas.split("[,]", -1);
-			String mystrs = "";
-			for (String temp : temps)
-			{
-				mystrs += ",'" + temp + "'";
-			}
-
-			mystrs = mystrs.substring(1);
-			stas = mystrs;
-		}
-
-		//处理合法的in 字段.
-		if (depts.contains("'") == false)
-		{
-			String[] temps = depts.split("[,]", -1);
-			String mystrs = "";
-			for (String temp : temps)
-			{
-				mystrs += ",'" + temp + "'";
-			}
-
-			mystrs = mystrs.substring(1);
-			depts = mystrs;
-		}
-
-		String sql = "SELECT FK_Emp FROM Port_DeptEmpStation WHERE FK_Station IN(" + stas + ") AND FK_Dept IN (" + depts + ") ";// + sqlEnd;
-		return DBAccess.RunSQLReturnTable(sql);
-	}
-
 
 }

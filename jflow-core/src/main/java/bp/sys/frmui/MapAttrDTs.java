@@ -1,11 +1,12 @@
 package bp.sys.frmui;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
 import bp.*;
 import bp.sys.*;
 import java.util.*;
+import java.time.*;
 
 /** 
  实体属性s
@@ -17,13 +18,15 @@ public class MapAttrDTs extends EntitiesMyPK
 	/** 
 	 实体属性s
 	*/
-	public MapAttrDTs() throws Exception {
+	public MapAttrDTs()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new MapAttrDT();
 	}
 
@@ -36,7 +39,8 @@ public class MapAttrDTs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<MapAttrDT> ToJavaList() {
+	public final java.util.List<MapAttrDT> ToJavaList()
+	{
 		return (java.util.List<MapAttrDT>)(Object)this;
 	}
 	/** 
@@ -44,7 +48,8 @@ public class MapAttrDTs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<MapAttrDT> Tolist()  {
+	public final ArrayList<MapAttrDT> Tolist()
+	{
 		ArrayList<MapAttrDT> list = new ArrayList<MapAttrDT>();
 		for (int i = 0; i < this.size(); i++)
 		{

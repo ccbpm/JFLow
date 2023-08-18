@@ -14,7 +14,7 @@ public class SelectAccpers extends EntitiesMyPK
 	/** 
 	 是否记忆下次选择
 	*/
-	public final boolean isSetNextTime() throws Exception {
+	public final boolean getItIsSetNextTime() throws Exception {
 		if (this.size() == 0)
 		{
 			return false;
@@ -22,9 +22,9 @@ public class SelectAccpers extends EntitiesMyPK
 
 		for (SelectAccper item : this.ToJavaList())
 		{
-			if (item.isRemember() == true)
+			if (item.getItIsRemember() == true)
 			{
-				return item.isRemember();
+				return item.getItIsRemember();
 			}
 		}
 		return false;
@@ -32,8 +32,8 @@ public class SelectAccpers extends EntitiesMyPK
 	/** 
 	 查询接收人,如果没有设置就查询历史记录设置的接收人.
 	 
-	 param fk_node
-	 param Rec
+	 @param fk_node
+	 @param rec
 	 @return 
 	*/
 	public final int QueryAccepter(int fk_node, String rec, long workid) throws Exception {
@@ -59,10 +59,7 @@ public class SelectAccpers extends EntitiesMyPK
 	}
 	/** 
 	 查询上次的设置
-	 
-	 param fk_node 节点编号
-	 param rec 当前人员
-	 param workid 工作ID
+	 @param fk_node 节点编号
 	 @return 
 	*/
 	public final int QueryAccepterPriSetting(int fk_node) throws Exception {
@@ -86,7 +83,7 @@ public class SelectAccpers extends EntitiesMyPK
 		Emps ens = new Emps();
 		for (SelectAccper ns : this.ToJavaList())
 		{
-			ens.AddEntity(new Emp(ns.getFK_Emp()));
+			ens.AddEntity(new Emp(ns.getEmpNo()));
 		}
 		return ens;
 	}
@@ -97,20 +94,19 @@ public class SelectAccpers extends EntitiesMyPK
 		Nodes ens = new Nodes();
 		for (SelectAccper ns : this.ToJavaList())
 		{
-			ens.AddEntity(new Node(ns.getFK_Node()));
+			ens.AddEntity(new Node(ns.getNodeID()));
 		}
 		return ens;
 	}
 	/** 
 	 选择接受人
 	*/
-	public SelectAccpers()  {
+	public SelectAccpers()
+	{
 	}
 	/** 
 	 查询出来选择的人员
-	 
-	 param fk_flow
-	 param workid
+	 @param workid
 	*/
 	public SelectAccpers(long workid) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -122,7 +118,8 @@ public class SelectAccpers extends EntitiesMyPK
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new SelectAccper();
 	}
 
@@ -133,7 +130,8 @@ public class SelectAccpers extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<SelectAccper> ToJavaList() {
+	public final java.util.List<SelectAccper> ToJavaList()
+	{
 		return (java.util.List<SelectAccper>)(Object)this;
 	}
 	/** 
@@ -141,7 +139,8 @@ public class SelectAccpers extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<SelectAccper> Tolist()  {
+	public final ArrayList<SelectAccper> Tolist()
+	{
 		ArrayList<SelectAccper> list = new ArrayList<SelectAccper>();
 		for (int i = 0; i < this.size(); i++)
 		{

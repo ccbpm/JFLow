@@ -1,7 +1,4 @@
 package bp.wf;
-
-import bp.*;
-
 /** 
  用户信息显示格式
 */
@@ -24,7 +21,8 @@ public enum UserInfoShowModel
 
 	private int intValue;
 	private static java.util.HashMap<Integer, UserInfoShowModel> mappings;
-	private static java.util.HashMap<Integer, UserInfoShowModel> getMappings()  {
+	private static java.util.HashMap<Integer, UserInfoShowModel> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (UserInfoShowModel.class)
@@ -39,15 +37,18 @@ public enum UserInfoShowModel
 	}
 
 	private UserInfoShowModel(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue() {
+	public int getValue()
+	{
 		return intValue;
 	}
 
-	public static UserInfoShowModel forValue(int value) 
-	{return getMappings().get(value);
+	public static UserInfoShowModel forValue(int value)
+	{
+		return getMappings().get(value);
 	}
 }

@@ -1,8 +1,5 @@
 package bp.wf.template;
 
-import bp.*;
-import bp.wf.*;
-
 /** 
  流程设计模式-
 */
@@ -29,9 +26,13 @@ public enum FlowDevModel
 	*/
 	FrmTree(4),
 	/** 
-	 SDK表单
+	 SDK表单-WorkID模式
 	*/
-	SDKFrm(5),
+	SDKFrmWorkID(5),
+	/** 
+	 SDK表单-自定义主键模式.
+	*/
+	SDKFrmSelfPK(7),
 	/** 
 	 嵌入式表单
 	*/
@@ -39,13 +40,14 @@ public enum FlowDevModel
 	/** 
 	 物联网流程
 	*/
-	InternetOfThings(7);
+	InternetOfThings(10);
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
 	private int intValue;
 	private static java.util.HashMap<Integer, FlowDevModel> mappings;
-	private static java.util.HashMap<Integer, FlowDevModel> getMappings()  {
+	private static java.util.HashMap<Integer, FlowDevModel> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (FlowDevModel.class)
@@ -60,15 +62,18 @@ public enum FlowDevModel
 	}
 
 	private FlowDevModel(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return intValue;
 	}
 
 	public static FlowDevModel forValue(int value)
-	{return getMappings().get(value);
+	{
+		return getMappings().get(value);
 	}
 }

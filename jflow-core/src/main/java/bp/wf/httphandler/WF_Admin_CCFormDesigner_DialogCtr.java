@@ -1,7 +1,6 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
-import bp.difference.handler.WebContralBase;
 import bp.sys.*;
 import bp.*;
 import bp.sys.CCFormAPI;
@@ -11,12 +10,13 @@ import java.util.*;
 /** 
  初始化函数
 */
-public class WF_Admin_CCFormDesigner_DialogCtr extends WebContralBase
+public class WF_Admin_CCFormDesigner_DialogCtr extends bp.difference.handler.DirectoryPageBase
 {
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_CCFormDesigner_DialogCtr() throws Exception {
+	public WF_Admin_CCFormDesigner_DialogCtr()
+	{
 	}
 
 	/** 
@@ -25,14 +25,15 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends WebContralBase
 	 @return 
 	*/
 	public final String Hiddenfielddata() throws Exception {
-		return CCFormAPI.DB_Hiddenfielddata(this.getFK_MapData());
+		return CCFormAPI.DB_Hiddenfielddata(this.getFrmID());
 	}
 	/** 
 	 
 	 
 	 @return 
 	*/
-	public final String PublicNoName_InitFieldVal() throws Exception {
+	public final String PublicNoName_InitFieldVal()
+	{
 		String sql = "";
 		Hashtable ht = new Hashtable();
 
@@ -43,67 +44,67 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends WebContralBase
 		{
 			case "Dtl":
 				ps.SQL = "SELECT COUNT(*) FROM Sys_MapDtl WHERE FK_MapData=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "FK_MapData";
-				ps.Add("FK_MapData", this.getFK_MapData(), false);
-				//sql = "SELECT COUNT(*) FROM Sys_MapDtl WHERE FK_MapData='" + this.FK_MapData + "'";
+				ps.Add("FK_MapData", this.getFrmID(), false);
+				//sql = "SELECT COUNT(*) FROM Sys_MapDtl WHERE FK_MapData='" + this.getFrmID() + "'";
 				num = DBAccess.RunSQLReturnValInt(ps) + 1;
-				ht.put("No", this.getFK_MapData() + "Dtl" + num);
+				ht.put("No", this.getFrmID() + "Dtl" + num);
 				ht.put("Name", "从表" + num);
 				break;
 			case "AthMulti":
 				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmAttachment WHERE FK_MapData=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "FK_MapData";
-				ps.Add("FK_MapData", this.getFK_MapData(), false);
-				//sql = "SELECT COUNT(*) FROM Sys_FrmAttachment WHERE FK_MapData='" + this.FK_MapData + "'";
+				ps.Add("FK_MapData", this.getFrmID(), false);
+				//sql = "SELECT COUNT(*) FROM Sys_FrmAttachment WHERE FK_MapData='" + this.getFrmID() + "'";
 				num = DBAccess.RunSQLReturnValInt(ps) + 1;
 				ht.put("No", "AthMulti" + num);
 				ht.put("Name", "多附件" + num);
 				break;
 			case "ImgAth":
 				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmImgAth WHERE FK_MapData=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "FK_MapData";
-				ps.Add("FK_MapData", this.getFK_MapData(), false);
-				//sql = "SELECT COUNT(*) FROM Sys_FrmImgAth WHERE FK_MapData='" + this.FK_MapData + "'";
+				ps.Add("FK_MapData", this.getFrmID(), false);
+				//sql = "SELECT COUNT(*) FROM Sys_FrmImgAth WHERE FK_MapData='" + this.getFrmID() + "'";
 				num = DBAccess.RunSQLReturnValInt(ps) + 1;
 				ht.put("No", "ImgAth" + num);
 				ht.put("Name", "图片附件" + num);
 				break;
 			case "AthSingle":
 				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmAttachment WHERE FK_MapData=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "FK_MapData";
-				ps.Add("FK_MapData", this.getFK_MapData(), false);
-				//sql = "SELECT COUNT(*) FROM Sys_FrmAttachment WHERE FK_MapData='" + this.FK_MapData + "'";
+				ps.Add("FK_MapData", this.getFrmID(), false);
+				//sql = "SELECT COUNT(*) FROM Sys_FrmAttachment WHERE FK_MapData='" + this.getFrmID() + "'";
 				num = DBAccess.RunSQLReturnValInt(ps) + 1;
 				ht.put("No", "AthSingle" + num);
 				ht.put("Name", "单附件" + num);
 				break;
 			case "AthImg":
 				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmImgAth WHERE FK_MapData=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "FK_MapData";
-				ps.Add("FK_MapData", this.getFK_MapData(), false);
-				//sql = "SELECT COUNT(*) FROM Sys_FrmImgAth WHERE FK_MapData='" + this.FK_MapData + "'";
+				ps.Add("FK_MapData", this.getFrmID(), false);
+				//sql = "SELECT COUNT(*) FROM Sys_FrmImgAth WHERE FK_MapData='" + this.getFrmID() + "'";
 				num = DBAccess.RunSQLReturnValInt(ps) + 1;
 				ht.put("No", "AthImg" + num);
 				ht.put("Name", "图片附件" + num);
 				break;
 			case "HandSiganture": //手写板.
 				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "FK_MapData" + " AND EleType=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "EleType";
-				ps.Add("FK_MapData", this.getFK_MapData(), false);
+				ps.Add("FK_MapData", this.getFrmID(), false);
 				ps.Add("EleType", ctrlType, false);
-				//sql = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData='" + this.FK_MapData + "' AND EleType='"+ctrlType+"'";
+				//sql = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData='" + this.getFrmID() + "' AND EleType='"+ctrlType+"'";
 				num = DBAccess.RunSQLReturnValInt(ps) + 1;
 				ht.put("No", "HandSiganture" + num);
 				ht.put("Name", "签字板" + num);
 				break;
 			case "iFrame": //框架
 				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "FK_MapData" + " AND EleType=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "EleType";
-				ps.Add("FK_MapData", this.getFK_MapData(), false);
+				ps.Add("FK_MapData", this.getFrmID(), false);
 				ps.Add("EleType", ctrlType, false);
-				//sql = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData='" + this.FK_MapData + "' AND EleType='" + ctrlType + "'";
+				//sql = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData='" + this.getFrmID() + "' AND EleType='" + ctrlType + "'";
 				num = DBAccess.RunSQLReturnValInt(ps) + 1;
 				ht.put("No", "iFrame" + num);
 				ht.put("Name", "框架" + num);
 				break;
 			case "Fieldset": //分组
 				ps.SQL = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "FK_MapData" + " AND EleType=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "EleType";
-				ps.Add("FK_MapData", this.getFK_MapData(), false);
+				ps.Add("FK_MapData", this.getFrmID(), false);
 				ps.Add("EleType", ctrlType, false);
-				//sql = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData='" + this.FK_MapData + "' AND EleType='" + ctrlType + "'";
+				//sql = "SELECT COUNT(*) FROM Sys_FrmEle WHERE FK_MapData='" + this.getFrmID() + "' AND EleType='" + ctrlType + "'";
 				num = DBAccess.RunSQLReturnValInt(ps) + 1;
 				ht.put("No", "Fieldset" + num);
 				ht.put("Name", "分组" + num);
@@ -141,7 +142,8 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends WebContralBase
 	 @return 
 	*/
 	@Override
-	protected String DoDefaultMethod() throws Exception {
+	protected String DoDefaultMethod()
+	{
 		//找不不到标记就抛出异常.
 		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到.");
 	}
@@ -156,14 +158,15 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends WebContralBase
 	 
 	 @return 返回转换后的拼音
 	*/
-	public final String FrmTextBox_ParseStringToPinyin() throws Exception {
+	public final String FrmTextBox_ParseStringToPinyin()
+	{
 		String name = GetRequestVal("name");
 
 		String flag = this.GetRequestVal("flag");
 		flag = DataType.IsNullOrEmpty(flag) == true ? "true" : flag.toLowerCase();
 
 		//此处配置最大长度为20，edited by liuxc,2017-9-25
-		return CCFormAPI.ParseStringToPinyinField(name, flag.equals("true")==true?true:false, true, 20);
+		return CCFormAPI.ParseStringToPinyinField(name, Objects.equals(flag, "true"), true, 20);
 	}
 
 		///#endregion 功能界面方法.
@@ -174,7 +177,7 @@ public class WF_Admin_CCFormDesigner_DialogCtr extends WebContralBase
 	 @return 
 	*/
 	public final String FrmTextBoxChoseOneField_Init() throws Exception {
-		DataTable mydt = MapData.GetFieldsOfPTableMode2(this.getFK_MapData());
+		DataTable mydt = MapData.GetFieldsOfPTableMode2(this.getFrmID());
 		mydt.TableName = "dt";
 		return bp.tools.Json.ToJson(mydt);
 	}

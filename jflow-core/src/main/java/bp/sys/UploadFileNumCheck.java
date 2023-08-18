@@ -1,7 +1,4 @@
 package bp.sys;
-
-import bp.*;
-
 /** 
  上传校验,方式.
 */
@@ -22,11 +19,13 @@ public enum UploadFileNumCheck
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue() {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
 	public static UploadFileNumCheck forValue(int value)
-	{return values()[value];
+	{
+		return values()[value];
 	}
 }

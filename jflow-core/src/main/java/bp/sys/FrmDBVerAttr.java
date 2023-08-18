@@ -1,10 +1,5 @@
 package bp.sys;
 
-import bp.da.*;
-import bp.en.*;
-import bp.*;
-import bp.*;
-import java.util.*;
 
 /** 
  数据版本
@@ -47,5 +42,8 @@ public class FrmDBVerAttr
 	 修改的字段数量
 	*/
 	public static final String ChangeNum = "ChangeNum";
-	public static final String KeyOfEn= "KeyOfEn";
+	/** 
+	 字段（章节表单有效）
+	*/
+	public static final String KeyOfEn = "KeyOfEn";
 }

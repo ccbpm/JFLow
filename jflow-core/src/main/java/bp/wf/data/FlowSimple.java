@@ -12,8 +12,7 @@ public class FlowSimple extends EntityNoName
 	/** 
 	 发起时间点
 	*/
-	public final String getStartDT() throws Exception
-	{
+	public final String getStartDT()  {
 		return this.GetValStringByKey(FlowSimpleAttr.StartDT);
 	}
 	public final void setStartDT(String value)  throws Exception
@@ -23,8 +22,7 @@ public class FlowSimple extends EntityNoName
 	/** 
 	 执行的时间点.
 	*/
-	public final String getDots() throws Exception
-	{
+	public final String getDots()  {
 		return this.GetValStringByKey(FlowSimpleAttr.Dots);
 	}
 	public final void setDots(String value)  throws Exception
@@ -34,8 +32,7 @@ public class FlowSimple extends EntityNoName
 	/** 
 	 执行时间
 	*/
-	public final String getDTOfExe() throws Exception
-	{
+	public final String getDTOfExe()  {
 		return this.GetValStringByKey(FlowSimpleAttr.DTOfExe);
 	}
 	public final void setDTOfExe(String value)  throws Exception
@@ -45,16 +42,14 @@ public class FlowSimple extends EntityNoName
 	/** 
 	 到达的人员
 	*/
-	public final String getToEmps() throws Exception
-	{
+	public final String getToEmps()  {
 		return this.GetValStringByKey(FlowSimpleAttr.ToEmps);
 	}
 	public final void setToEmps(String value)  throws Exception
 	 {
 		this.SetValByKey(FlowSimpleAttr.ToEmps, value);
 	}
-	public final String getToEmpOfSQLs() throws Exception
-	{
+	public final String getToEmpOfSQLs()  {
 		return this.GetValStringByKey(FlowSimpleAttr.ToEmpOfSQLs);
 	}
 	public final void setToEmpOfSQLs(String value)  throws Exception
@@ -76,7 +71,7 @@ public class FlowSimple extends EntityNoName
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap()  {
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();

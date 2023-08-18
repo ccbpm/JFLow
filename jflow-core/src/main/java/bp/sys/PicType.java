@@ -1,7 +1,5 @@
 package bp.sys;
 
-import bp.*;
-
 public enum PicType
 {
 	/** 
@@ -15,11 +13,13 @@ public enum PicType
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
 	public static PicType forValue(int value)
-	{return values()[value];
+	{
+		return values()[value];
 	}
 }

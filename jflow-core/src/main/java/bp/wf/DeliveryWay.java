@@ -1,6 +1,5 @@
 package bp.wf;
 
-import bp.*;
 
 /** 
  投递方式
@@ -8,7 +7,7 @@ import bp.*;
 public enum DeliveryWay
 {
 	/** 
-	 按岗位(以部门为纬度)
+	 按角色(以部门为纬度)
 	*/
 	ByStation(0),
 	/** 
@@ -32,6 +31,14 @@ public enum DeliveryWay
 	*/
 	BySelected(4),
 	/** 
+	 所有人员都可以发起
+	*/
+	BySelected_1(41),
+	/** 
+	 固定范围的选择
+	*/
+	BySelected_2(60),
+	/** 
 	 按表单选择人员
 	*/
 	ByPreviousNodeFormEmpsField(5),
@@ -48,15 +55,15 @@ public enum DeliveryWay
 	*/
 	BySpecNodeEmp(8),
 	/** 
-	 按岗位与部门交集计算
+	 按角色与部门交集计算
 	*/
 	ByDeptAndStation(9),
 	/** 
-	 按岗位计算(以部门集合为纬度)
+	 按角色计算(以部门集合为纬度)
 	*/
-	ByStationAndEmpDept(10),
+	//ByStationAndEmpDept = 10,
 	/** 
-	 按指定节点的人员或者指定字段作为人员的岗位计算
+	 按指定节点的人员或者指定字段作为人员的角色计算
 	*/
 	BySpecNodeEmpStation(11),
 	/** 
@@ -68,7 +75,7 @@ public enum DeliveryWay
 	*/
 	ByDtlAsSubThreadEmps(13),
 	/** 
-	 仅按岗位计算
+	 仅按角色计算
 	*/
 	ByStationOnly(14),
 	/** 
@@ -88,7 +95,7 @@ public enum DeliveryWay
 	*/
 	ByFromEmpToEmp(18),
 	/** 
-	 按照岗位计算-范围内的
+	 按照角色计算-范围内的
 	*/
 	ByStationForPrj(20),
 	/** 
@@ -124,7 +131,7 @@ public enum DeliveryWay
 	*/
 	ByTeamDeptOnly(26),
 	/** 
-	 按照绑定岗位的用户组人员
+	 按照绑定角色的用户组人员
 	*/
 	ByBindTeamEmp(27),
 	/** 
@@ -145,29 +152,41 @@ public enum DeliveryWay
 	*/
 	BySenderParentDeptLeader(46),
 	/** 
-	 发送人上级部门指定的岗位
+	 发送人上级部门指定的角色
 	*/
 	BySenderParentDeptStations(47),
 	/** 
 	 外部用户
 	*/
 	ByGuest(51),
-	/// <summary>
-	/// 按照部门计算
-	/// </summary>
+	/** 
+	 按照部门计算
+	*/
 	ByPreviousNodeFormDepts(52),
-	/// <summary>
-	/// 按照岗位计算
-	/// </summary>
+	/** 
+	 按照角色计算
+	*/
 	ByPreviousNodeFormStationsAI(53),
-	/// <summary>
-	/// 智能计算
-	/// </summary>
-	ByPreviousNodeFormStationsOnly (54),
-	/// <summary>
-	/// 选择其他组织的联络员
-	/// </summary>
+	/** 
+	 智能计算
+	*/
+	ByPreviousNodeFormStationsOnly(54),
+	/** 
+	 选择其他组织的联络员
+	*/
 	BySelectEmpByOfficer(55),
+	/** 
+	 绑定字典表
+	*/
+	BySFTable(52),
+	/** 
+	 按指定的部门集合与设置的岗位交集
+	*/
+	ByStationSpecDepts(56),
+	/** 
+	 按指定的角色集合与设置的部门交集
+	*/
+	ByStationSpecStas(57),
 	/** 
 	 按照ccflow的BPM模式处理
 	*/
@@ -177,7 +196,8 @@ public enum DeliveryWay
 
 	private int intValue;
 	private static java.util.HashMap<Integer, DeliveryWay> mappings;
-	private static java.util.HashMap<Integer, DeliveryWay> getMappings()  {
+	private static java.util.HashMap<Integer, DeliveryWay> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (DeliveryWay.class)
@@ -192,15 +212,18 @@ public enum DeliveryWay
 	}
 
 	private DeliveryWay(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return intValue;
 	}
 
 	public static DeliveryWay forValue(int value)
-	{return getMappings().get(value);
+	{
+		return getMappings().get(value);
 	}
 }

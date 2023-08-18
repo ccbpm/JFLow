@@ -1,7 +1,4 @@
 package bp.wf;
-
-import bp.*;
-
 /** 
  运行模式
 */
@@ -27,17 +24,17 @@ public enum RunModel
 	 同表单子线程
 	*/
 	SubThreadSameWorkID(4),
-	/**
-	 * 异表单子线程
-	 */
+	/** 
+	 异表单子线程
+	*/
 	SubThreadUnSameWorkID(5);
-
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
 	private int intValue;
 	private static java.util.HashMap<Integer, RunModel> mappings;
-	private static java.util.HashMap<Integer, RunModel> getMappings() {
+	private static java.util.HashMap<Integer, RunModel> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (RunModel.class)
@@ -52,15 +49,18 @@ public enum RunModel
 	}
 
 	private RunModel(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return intValue;
 	}
 
 	public static RunModel forValue(int value)
-	{return getMappings().get(value);
+	{
+		return getMappings().get(value);
 	}
 }

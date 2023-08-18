@@ -1,9 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
-import java.util.*;
 
 /** 
  单选框
@@ -13,15 +10,7 @@ public class FrmRBAttr extends EntityMyPKAttr
 	/** 
 	 主表
 	*/
-	public static final String FK_MapData = "FK_MapData";
-	/** 
-	 X
-	*/
-	public static final String X = "X";
-	/** 
-	 Y
-	*/
-	public static final String Y = "Y";
+	public static final String FrmID = "FK_MapData";
 	/** 
 	 KeyOfEn
 	*/
@@ -47,12 +36,9 @@ public class FrmRBAttr extends EntityMyPKAttr
 	*/
 	public static final String FieldsCfg = "FieldsCfg";
 	/** 
-	 GUID
+	 提示信息
 	*/
-	public static final String GUID = "GUID";
 	public static final String Tip = "Tip";
-
-	public static final String AtPara = "AtPara";
 	/** 
 	 字体大小，AtPara中属性，added by liuxc,2017-05-22
 	*/
@@ -61,5 +47,4 @@ public class FrmRBAttr extends EntityMyPKAttr
 	 设置的值
 	*/
 	public static final String SetVal = "SetVal";
-
 }

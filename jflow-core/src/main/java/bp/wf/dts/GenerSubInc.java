@@ -1,8 +1,9 @@
 package bp.wf.dts;
 
 import bp.da.*;
-import bp.en.*;
-
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.wf.*;
 
 /** 
  升级ccflow6 要执行的调度
@@ -12,7 +13,7 @@ public class GenerSubInc extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public GenerSubInc()throws Exception
+	public GenerSubInc()
 	{
 		this.Title = "为子公司生成表单树，流程树目录.";
 		this.Help = "实施初始化.";
@@ -47,8 +48,7 @@ public class GenerSubInc extends Method
 	 @return 返回执行结果
 	*/
 	@Override
-	public Object Do()throws Exception
-	{
+	public Object Do() throws Exception {
 		//找到根目录.
 		String sql = "SELECT No FROM WF_FlowSort where ParentNo='0'";
 		String rootNo = DBAccess.RunSQLReturnString(sql, null);

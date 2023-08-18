@@ -1,7 +1,7 @@
 package bp.ccbill;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.*;
 import java.util.*;
 
@@ -15,10 +15,12 @@ public class FrmBBSs extends EntitiesNoName
 	/** 
 	 评论组件集合
 	*/
-	public FrmBBSs() throws Exception {
+	public FrmBBSs()
+	{
 	}
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FrmBBS();
 	}
 
@@ -31,7 +33,8 @@ public class FrmBBSs extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmBBS> ToJavaList() {
+	public final java.util.List<FrmBBS> ToJavaList()
+	{
 		return (java.util.List<FrmBBS>)(Object)this;
 	}
 	/** 
@@ -39,7 +42,8 @@ public class FrmBBSs extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmBBS> Tolist()  {
+	public final ArrayList<FrmBBS> Tolist()
+	{
 		ArrayList<FrmBBS> list = new ArrayList<FrmBBS>();
 		for (int i = 0; i < this.size(); i++)
 		{

@@ -14,7 +14,8 @@ public class SubFlowYanXus extends EntitiesMyPK
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new SubFlowYanXu();
 	}
 
@@ -25,12 +26,13 @@ public class SubFlowYanXus extends EntitiesMyPK
 	/** 
 	 延续子流程集合
 	*/
-	public SubFlowYanXus() throws Exception {
+	public SubFlowYanXus()
+	{
 	}
 	/** 
 	 延续子流程集合.
 	 
-	 param fk_node
+	 @param fk_node
 	*/
 	public SubFlowYanXus(int fk_node) throws Exception {
 		this.Retrieve(SubFlowYanXuAttr.FK_Node, fk_node, SubFlowYanXuAttr.SubFlowType, SubFlowType.YanXuFlow.getValue(), null);
@@ -45,7 +47,8 @@ public class SubFlowYanXus extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<SubFlowYanXu> ToJavaList() {
+	public final java.util.List<SubFlowYanXu> ToJavaList()
+	{
 		return (java.util.List<SubFlowYanXu>)(Object)this;
 	}
 	/** 
@@ -53,7 +56,8 @@ public class SubFlowYanXus extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<SubFlowYanXu> Tolist()  {
+	public final ArrayList<SubFlowYanXu> Tolist()
+	{
 		ArrayList<SubFlowYanXu> list = new ArrayList<SubFlowYanXu>();
 		for (int i = 0; i < this.size(); i++)
 		{

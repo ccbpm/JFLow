@@ -2,8 +2,9 @@ package bp.ccoa.ccinfo;
 
 import bp.da.*;
 import bp.web.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
+
 
 /** 
  信息
@@ -12,74 +13,55 @@ public class Info extends EntityNoName
 {
 
 		///#region 基本属性
-	public final String getDocs()
-	{
+	public final String getDocs()  {
 		return this.GetValStrByKey(InfoAttr.Docs);
 	}
-	public final void setDocs(String value)
-	 {
+	public final void setDocs(String value) {
 		this.SetValByKey(InfoAttr.Docs, value);
 	}
-	public final String getRec()
-	{
+	public final String getRec()  {
 		return this.GetValStrByKey(InfoAttr.Rec);
 	}
-	public final void setRec(String value)
-	{
+	public final void setRec(String value)  {
 		this.SetValByKey(InfoAttr.Rec, value);
 	}
-	public final String getRecName()
-	{
+	public final String getRecName()  {
 		return this.GetValStrByKey(InfoAttr.RecName);
 	}
-	public final void setRecName(String value)
-	{
+	public final void setRecName(String value)  {
 		this.SetValByKey(InfoAttr.RecName, value);
 	}
-	public final String getRecDeptNo()
-	{
+	public final String getRecDeptNo()  {
 		return this.GetValStrByKey(InfoAttr.RecDeptNo);
 	}
-	public final void setRecDeptNo(String value)
-	{
+	public final void setRecDeptNo(String value)  {
 		this.SetValByKey(InfoAttr.RecDeptNo, value);
 	}
-	public final String getRecDeptName()
-	{
+	public final String getRecDeptName()  {
 		return this.GetValStrByKey(InfoAttr.RecDeptName);
 	}
-	public final void setRecDeptName(String value)
-	{
+	public final void setRecDeptName(String value)  {
 		this.SetValByKey(InfoAttr.RecDeptName, value);
 	}
-		///#endregion
 
-
-		///#region 构造方法
 	/** 
 	 权限控制
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.IsUpdate = true;
 		uac.IsInsert = true;
 		return uac;
-
-			////if (WebUser.getIsAdmin())
-			////{
-			////    uac.IsUpdate = true;
-			////    return uac;
-			////}
-			//return base.HisUAC;
 	}
 	/** 
 	 信息
 	*/
-	public Info()  {
+	public Info()
+	{
 	}
-	public Info(String no)  throws Exception
-	 {
+	public Info(String no) throws Exception {
 		this.SetValByKey(InfoAttr.No, no);
 		this.Retrieve();
 	}
@@ -87,7 +69,7 @@ public class Info extends EntityNoName
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -96,14 +78,13 @@ public class Info extends EntityNoName
 		Map map = new Map("OA_Info", "信息");
 
 		map.AddTBStringPK(InfoAttr.No, null, "编号", false, true, 1, 59, 59);
-		map.AddTBString(InfoAttr.Name, null, "标题", true, false, 0, 100, 10, true);
+		map.AddTBString(InfoAttr.Name, null, "标题", true, false, 0, 300, 10, true);
 
 		map.AddTBStringDoc("Docs", "Docs", null, "内容", true, false, 0, 4000, 20, true, true);
 
 		map.AddDDLSysEnum(InfoAttr.InfoPRI, 0, "重要性", true, true, "InfoPRI", "@0=普通@1=紧急@2=火急");
-
-		map.AddDDLSysEnum(InfoAttr.InfoSta, 0, "状态", true, true, "InfoSta", "@0=发布中@1=禁用");
 		map.AddDDLEntities(InfoAttr.InfoType, null, "类型", new InfoTypes(), true);
+		map.AddDDLSysEnum(InfoAttr.InfoSta, 0, "状态", true, true, InfoAttr.InfoSta, "@0=发布中@1=禁用");
 
 
 		map.AddTBString(InfoAttr.Rec, null, "记录人", false, false, 0, 100, 10);
@@ -125,8 +106,9 @@ public class Info extends EntityNoName
 			map.AddTBString(InfoAttr.OrgNo, null, "组织", true, true, 0, 100, 10);
 		}
 
-			//增加附件.
-		map.AddMyFileS();
+		//增加附件.
+		map.AddMyFile(null, null, null);
+
 
 
 			///#region 设置查询条件.
@@ -175,28 +157,33 @@ public class Info extends EntityNoName
 		return "";
 	}
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 
 		this.SetValByKey(InfoAttr.No, DBAccess.GenerGUID(0, null, null));
 
 		this.SetValByKey(InfoAttr.Rec, WebUser.getNo());
 		this.SetValByKey(InfoAttr.RecName, WebUser.getName());
-		this.SetValByKey(InfoAttr.RecDeptNo, WebUser.getFK_Dept());
+		this.SetValByKey(InfoAttr.RecDeptNo, WebUser.getDeptNo());
 
 		this.SetValByKey(InfoAttr.RDT, DataType.getCurrentDateTime()); //记录日期.
 		this.SetValByKey(InfoAttr.NianYue, DataType.getCurrentYearMonth()); //隶属年月.
 
 		this.SetValByKey(InfoAttr.RelerName, WebUser.getName());
-		this.SetValByKey(InfoAttr.RelDeptName, WebUser.getFK_DeptName());
+		this.SetValByKey(InfoAttr.RelDeptName, WebUser.getDeptName());
 
 		if (bp.difference.SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
 		{
 			this.SetValByKey(InfoAttr.OrgNo, WebUser.getOrgNo());
 		}
 
+		this.setNo(DBAccess.GenerGUID(0, null, null));
+
 
 		return super.beforeInsert();
 	}
 
 		///#endregion 执行方法.
+
+
 }

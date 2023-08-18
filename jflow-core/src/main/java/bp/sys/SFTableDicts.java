@@ -1,8 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -15,13 +13,15 @@ public class SFTableDicts extends EntitiesNoName
 	/** 
 	 系统字典表s
 	*/
-	public SFTableDicts()  {
+	public SFTableDicts()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new SFTableDict();
 	}
 
@@ -34,7 +34,8 @@ public class SFTableDicts extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<SFTableDict> ToJavaList() {
+	public final java.util.List<SFTableDict> ToJavaList()
+	{
 		return (java.util.List<SFTableDict>)(Object)this;
 	}
 	/** 
@@ -42,7 +43,8 @@ public class SFTableDicts extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<SFTableDict> Tolist()  {
+	public final ArrayList<SFTableDict> Tolist()
+	{
 		ArrayList<SFTableDict> list = new ArrayList<SFTableDict>();
 		for (int i = 0; i < this.size(); i++)
 		{

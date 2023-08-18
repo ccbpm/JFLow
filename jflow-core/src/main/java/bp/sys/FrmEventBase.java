@@ -2,11 +2,7 @@ package bp.sys;
 
 import bp.da.*;
 import bp.en.*;
-import bp.web.*;
-import bp.sys.*;
 import bp.difference.*;
-import bp.*;
-import java.time.*;
 import java.math.*;
 import java.util.Date;
 
@@ -30,8 +26,7 @@ public abstract class FrmEventBase
 	/** 
 	 工作ID
 	*/
-	public final int getOID() throws Exception
-	{
+	public final int getOID()  {
 		return this.GetValInt("OID");
 	}
 	/** 
@@ -47,33 +42,32 @@ public abstract class FrmEventBase
 	/** 
 	 流程ID
 	*/
-	public final long getFID() throws Exception
-	{
+	public final long getFID()  {
 		return this.GetValInt64("FID");
 	}
 	/** 
 	 传过来的WorkIDs集合，子流程.
 	*/
-	public final String getWorkIDs() throws Exception
-	{
+	public final String getWorkIDs()  {
 		return this.GetValStr("WorkIDs");
 	}
 	/** 
 	 编号集合s
 	*/
-	public final String getNos() throws Exception
-	{
+	public final String getNos()  {
 		return this.GetValStr("Nos");
 	}
 	/** 
 	  行数据
 	*/
 	private Row Row;
-	public final Row getRow()  {
+	public final Row getRow()
+	{
 		return Row;
 	}
 	public final void setRow(Row value)
-	{Row = value;
+	{
+		Row = value;
 	}
 
 		///#endregion 常用属性.
@@ -83,10 +77,11 @@ public abstract class FrmEventBase
 	/** 
 	 时间参数
 	 
-	 param key 时间字段
+	 @param key 时间字段
 	 @return 根据字段返回一个时间,如果为Null,或者不存在就抛出异常.
 	*/
-	public final Date GetValDateTime(String key) throws Exception {
+	public final Date GetValDateTime(String key)
+	{
 		try
 		{
 			String str = this.getRow().GetValByKey(key).toString();
@@ -100,7 +95,7 @@ public abstract class FrmEventBase
 	/** 
 	 获取字符串参数
 	 
-	 param key key
+	 @param key key
 	 @return 如果为Null,或者不存在就抛出异常
 	*/
 	public final String GetValStr(String key)
@@ -117,7 +112,7 @@ public abstract class FrmEventBase
 	/** 
 	 获取Int64的数值
 	 
-	 param key 键值
+	 @param key 键值
 	 @return 如果为Null,或者不存在就抛出异常
 	*/
 	public final long GetValInt64(String key)
@@ -127,7 +122,7 @@ public abstract class FrmEventBase
 	/** 
 	 获取int的数值
 	 
-	 param key 键值
+	 @param key 键值
 	 @return 如果为Null,或者不存在就抛出异常
 	*/
 	public final int GetValInt(String key)
@@ -137,7 +132,7 @@ public abstract class FrmEventBase
 	/** 
 	 获取Boolen值
 	 
-	 param key 字段
+	 @param key 字段
 	 @return 如果为Null,或者不存在就抛出异常
 	*/
 	public final boolean GetValBoolen(String key)
@@ -151,12 +146,12 @@ public abstract class FrmEventBase
 	/** 
 	 获取decimal的数值
 	 
-	 param key 字段
+	 @param key 字段
 	 @return 如果为Null,或者不存在就抛出异常
 	*/
 	public final BigDecimal GetValDecimal(String key)
 	{
-		return  new BigDecimal(this.GetValStr(key));
+		return new BigDecimal(this.GetValStr(key));
 	}
 
 		///#endregion 获取参数方法
@@ -166,17 +161,20 @@ public abstract class FrmEventBase
 	/** 
 	 表单事件基类
 	*/
-	public FrmEventBase() throws Exception {
+	public FrmEventBase()
+	{
 	}
 
 		///#endregion 构造方法
 
 
 		///#region 节点表单事件
-	public String FrmLoadAfter() throws Exception {
+	public String FrmLoadAfter()
+	{
 		return null;
 	}
-	public String FrmLoadBefore() throws Exception {
+	public String FrmLoadBefore()
+	{
 		return null;
 	}
 
@@ -187,13 +185,15 @@ public abstract class FrmEventBase
 	/** 
 	 保存后
 	*/
-	public String SaveAfter() throws Exception {
+	public String SaveAfter()
+	{
 		return null;
 	}
 	/** 
 	 保存前
 	*/
-	public String SaveBefore() throws Exception {
+	public String SaveBefore()
+	{
 		return null;
 	}
 	/** 
@@ -201,7 +201,8 @@ public abstract class FrmEventBase
 	 
 	 @return 
 	*/
-	public String CreateOID() throws Exception {
+	public String CreateOID()
+	{
 		return null;
 	}
 
@@ -212,8 +213,8 @@ public abstract class FrmEventBase
 	/** 
 	 执行事件
 	 
-	 param eventType 事件类型
-	 param en 实体参数
+	 @param eventType 事件类型
+	 @param en 实体参数
 	*/
 	public final String DoIt(String eventType, Entity en, Row row, String atPara) throws Exception {
 		this.setRow(row);
@@ -247,7 +248,7 @@ public abstract class FrmEventBase
 			}
 		}
 
-		if (SystemConfig.getIsBSsystem() == true)
+		if (SystemConfig.isBSsystem() == true)
 		{
 			/*如果是bs系统, 就加入外部url的变量.*/
 			for (String key : ContextHolderUtils.getRequest().getParameterMap().keySet())
@@ -283,9 +284,7 @@ public abstract class FrmEventBase
 			default:
 				throw new RuntimeException("@没有判断的事件类型:" + eventType);
 		}
-
 			///#endregion 执行事件.
-
 	}
 
 		///#endregion 基类方法.

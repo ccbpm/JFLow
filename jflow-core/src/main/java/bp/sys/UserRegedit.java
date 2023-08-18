@@ -2,12 +2,9 @@ package bp.sys;
 
 import bp.da.*;
 import bp.en.*;
-import bp.*;
 import bp.en.Map;
 import bp.web.*;
-import bp.*;
 import java.util.*;
-import java.time.*;
 
 /** 
  用户注册表
@@ -23,11 +20,13 @@ public class UserRegedit extends EntityMyPK
 	 是否使用自动的MyPK,即FK_Emp + CfgKey
 	*/
 	private boolean AutoMyPK;
-	public final boolean getAutoMyPK() throws Exception {
+	public final boolean getAutoMyPK()
+	{
 		return AutoMyPK;
 	}
 	public final void setAutoMyPK(boolean value)
-	{AutoMyPK = value;
+	{
+		AutoMyPK = value;
 	}
 
 
@@ -35,34 +34,28 @@ public class UserRegedit extends EntityMyPK
 	/** 
 	 是否显示图片
 	*/
-	public final boolean isPic() throws Exception
-	{
+	public final boolean getItIsPic()  {
 		return this.GetValBooleanByKey(UserRegeditAttr.IsPic);
 	}
-	public final void setPic(boolean value)  throws Exception
-	 {
+	public final void setItIsPic(boolean value){
 		this.SetValByKey(UserRegeditAttr.IsPic, value);
 	}
 	/** 
 	 数值键
 	*/
-	public final String getNumKey() throws Exception
-	{
+	public final String getNumKey()  {
 		return this.GetValStringByKey(UserRegeditAttr.NumKey);
 	}
-	public final void setNumKey(String value)  throws Exception
-	 {
+	public final void setNumKey(String value){
 		this.SetValByKey(UserRegeditAttr.NumKey, value);
 	}
 	/** 
 	 参数
 	*/
-	public final String getParas() throws Exception
-	{
+	public final String getParas()  {
 		return this.GetValStringByKey(UserRegeditAttr.Paras);
 	}
-	public final void setParas(String value)  throws Exception
-	 {
+	public final void setParas(String value){
 		this.SetValByKey(UserRegeditAttr.Paras, value);
 	}
 	/** 
@@ -73,28 +66,24 @@ public class UserRegedit extends EntityMyPK
 		GenerSQL = GenerSQL.replace("~", "'");
 		return GenerSQL;
 	}
-	public final void setGenerSQL(String value)  throws Exception
-	 {
+	public final void setGenerSQL(String value){
 		this.SetValByKey(UserRegeditAttr.GenerSQL, value);
 	}
 	/** 
 	 排序方式
 	*/
-	public final String getOrderWay() throws Exception
-	{
+	public final String getOrderWay()  {
 		return this.GetValStringByKey(UserRegeditAttr.OrderWay);
 	}
 
-	public final String getOrderBy() throws Exception
-	{
+	public final String getOrderBy()  {
 		return this.GetValStringByKey(UserRegeditAttr.OrderBy);
 	}
 
 	/** 
 	 FK_Emp
 	*/
-	public final String getFK_Emp() throws Exception
-	{
+	public final String getEmpNo()  {
 		return this.GetValStringByKey(UserRegeditAttr.FK_Emp);
 	}
 
@@ -103,7 +92,7 @@ public class UserRegedit extends EntityMyPK
 	*/
 	public final String getDTFromData() throws Exception {
 		String s = this.GetValStringByKey(UserRegeditAttr.DTFrom);
-		if (DataType.IsNullOrEmpty(s))
+		if (DataType.IsNullOrEmpty(s) || 1 == 1)
 		{
 			Date dt = new Date();
 			return DataType.dateToStr(DataType.AddDays(dt, -14), "yyyy-MM-dd");
@@ -127,34 +116,19 @@ public class UserRegedit extends EntityMyPK
 	/** 
 	 查询时间从
 	*/
-	public final String getDTFrom() throws Exception
-	{
+	public final String getDTFrom()  {
 		return this.GetValStringByKey(UserRegeditAttr.DTFrom);
-			//string s = this.GetValStringByKey(UserRegeditAttr.DTFrom);
-			//if (DataType.IsNullOrEmpty(s) || 1==1)
-			//{
-			//    DateTime dt = DateTime.Now.AddDays(-14);
-			//    return dt.ToString(DataType.SysDataFormat);
-			//}
-			//return s.Substring(0, 10);
+
 	}
 
 	/** 
 	 到
 	*/
-	public final String getDTTo() throws Exception
-	{
+	public final String getDTTo()  {
 		return this.GetValStringByKey(UserRegeditAttr.DTTo);
-			//string s = this.GetValStringByKey(UserRegeditAttr.DTTo);
-			//if (DataType.IsNullOrEmpty(s) || 1 == 1 )
-			//{
-			//    DateTime dt = DateTime.Now;
-			//    return dt.ToString(DataType.SysDataFormat);
-			//}
-			//return s.Substring(0, 10);
+
 	}
-	public final void setDTTo(String value)  throws Exception
-	 {
+	public final void setDTTo(String value){
 		this.SetValByKey(UserRegeditAttr.DTTo, value);
 	}
 	public final String getDTFromDatatime() throws Exception {
@@ -167,8 +141,7 @@ public class UserRegedit extends EntityMyPK
 		}
 		return s;
 	}
-	public final void setDTFromDatatime(String value)  throws Exception
-	 {
+	public final void setDTFromDatatime(String value){
 		this.SetValByKey(UserRegeditAttr.DTFrom, value);
 	}
 	/** 
@@ -179,46 +152,38 @@ public class UserRegedit extends EntityMyPK
 		if (DataType.IsNullOrEmpty(s))
 		{
 			Date dt = new Date();
-			//return dt.toString(DataType.getSysDateTimeFormat());
 			return DataType.getCurrentDataTime();
 		}
 		return s;
 	}
-	public final void setDTToDatatime(String value)  throws Exception
-	 {
+	public final void setDTToDatatime(String value){
 		this.SetValByKey(UserRegeditAttr.DTTo, value);
 	}
 	/** 
 	 CfgKey
 	*/
-	public final String getCfgKey() throws Exception
-	{
+	public final String getCfgKey()  {
 		return this.GetValStringByKey(UserRegeditAttr.CfgKey);
 	}
 
-	public final String getSearchKey() throws Exception
-	{
+	public final String getSearchKey()  {
 		return this.GetValStringByKey(UserRegeditAttr.SearchKey);
 	}
-	public final void setSearchKey(String value)  throws Exception
-	 {
+	public final void setSearchKey(String value){
 		this.SetValByKey(UserRegeditAttr.SearchKey, value);
 	}
 	/** 
 	 Vals
 	*/
-	public final String getVals() throws Exception
-	{
+	public final String getVals()  {
 		return this.GetValStringByKey(UserRegeditAttr.Vals);
 	}
 
-	public final String getMVals() throws Exception
-	{
+	public final String getMVals()  {
 		return this.GetValStringByKey(UserRegeditAttr.MVals);
 	}
 
-	public final String getMyPK()
-	{
+	public final String getMyPK()  {
 		return this.GetValStringByKey(UserRegeditAttr.MyPK);
 	}
 
@@ -230,27 +195,25 @@ public class UserRegedit extends EntityMyPK
 	/** 
 	 用户注册表
 	*/
-	public UserRegedit()  {
+	public UserRegedit()
+	{
 		setAutoMyPK(true);
 	}
-	public final void setMyPK(String val)
-	 {
+	public final void setMyPK(String val){
 		this.SetValByKey("MyPK", val);
 	}
-	public final void setFK_Emp(String val)  throws Exception
-	 {
+	public final void setFK_Emp(String val){
 		this.SetValByKey("FK_Emp", val);
 	}
-	public final void setCfgKey(String val)  throws Exception
-	 {
+	public final void setCfgKey(String val){
 		this.SetValByKey("CfgKey", val);
 	}
 
 	/** 
 	 用户注册表
 	 
-	 param fk_emp 人员
-	 param cfgkey 配置
+	 @param fk_emp 人员
+	 @param cfgkey 配置
 	*/
 	public UserRegedit(String fk_emp, String cfgkey) throws Exception {
 		this();
@@ -264,7 +227,7 @@ public class UserRegedit extends EntityMyPK
 			this.SetValByKey("CfgKey", cfgkey);
 			this.SetValByKey("FK_Emp", fk_emp);
 			//this.CfgKey = cfgkey;
-			//this.FK_Emp = fk_emp;
+			//this.setEmpNo(fk_emp;
 			this.DirectInsert();
 			// this.DirectInsert();
 		}
@@ -273,7 +236,7 @@ public class UserRegedit extends EntityMyPK
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -297,10 +260,10 @@ public class UserRegedit extends EntityMyPK
 		map.AddTBString(UserRegeditAttr.DTFrom, null, "查询时间从", true, false, 0, 20, 20);
 		map.AddTBString(UserRegeditAttr.DTTo, null, "到", true, false, 0, 20, 20);
 
-		map.AddTBString("OrgNo", null, "OrgNo", true, false, 0, 32, 32);
+		map.AddTBString("OrgNo", null, "OrgNo", true, false, 0, 100, 32);
 
 
-			//增加属性.
+		//增加属性.
 		map.AddTBAtParas(4000);
 
 		this.set_enMap(map);
@@ -311,13 +274,13 @@ public class UserRegedit extends EntityMyPK
 
 
 		///#region 重写
-
-	public Entities getNewEntities()  {
+	@Override
+	public Entities GetNewEntities()
+	{
 		return new UserRegedits();
 	}
 	@Override
-	protected boolean beforeUpdateInsertAction()  throws Exception
-	 {
+	protected boolean beforeUpdateInsertAction() throws Exception{
 		this.SetValByKey("OrgNo", WebUser.getOrgNo());
 		return super.beforeUpdateInsertAction();
 	}
@@ -336,7 +299,6 @@ public class UserRegedit extends EntityMyPK
 		}
 
 		String[] arr = null;
-		//String[] strs = this.getVals().split("@".toCharArray(), StringSplitOptions.RemoveEmptyEntries);
 		String[] strs = this.getVals().split("@");
 		int idx = -1;
 		HashMap<String, String> kvs = new HashMap<String, String>();
@@ -361,7 +323,7 @@ public class UserRegedit extends EntityMyPK
 	 <p>added by liuxc,2017-04-30</p>
 	 注意：此权限数据保存于Sys_Regedit.Paras字段中，为@ImpEmpNos=liyan,liping,ligen格式
 	 
-	 param ensName 集合类全名，如bp.port.Emps
+	 @param ensName 集合类全名，如bp.port.Emps
 	 @return 
 	*/
 	public static boolean HaveRoleForImp(String ensName) throws Exception {
@@ -384,7 +346,7 @@ public class UserRegedit extends EntityMyPK
 	 <p>added by liuxc,2017-04-30</p>
 	 注意：此权限数据保存于Sys_Regedit.Paras字段中，为@ExpEmpNos=liyan,liping,ligen格式
 	 
-	 param ensName 集合类全名，如bp.port.Emps
+	 @param ensName 集合类全名，如bp.port.Emps
 	 @return 
 	*/
 	public static boolean HaveRoleForExp(String ensName) throws Exception {

@@ -2,7 +2,7 @@ package bp.wf;
 
 import bp.da.*;
 import bp.difference.handler.CommonUtils;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.difference.*;
 import bp.web.*;
 import bp.sys.*;
@@ -41,10 +41,22 @@ public abstract class FlowEventBase
 	 实体，一般是工作实体
 	*/
 	public Entity HisEn = null;
+	private Node _hisNode = null;
 	/** 
 	 当前节点
 	*/
-	public Node HisNode = null;
+	public final Node getHisNode()
+	{
+		return _hisNode;
+	}
+	public final void setHisNode(Node value)
+	{
+		_hisNode = value;
+	}
+	/** 
+	 流程注册表
+	*/
+	public GenerWorkFlow HisGenerWorkFlow = null;
 	/** 
 	 参数对象.
 	*/
@@ -52,15 +64,17 @@ public abstract class FlowEventBase
 	/** 
 	 参数
 	*/
-	public final Row getSysPara() throws Exception {
+	public final Row getSysPara()
+	{
 		if (_SysPara == null)
 		{
 			_SysPara = new Row();
 		}
 		return _SysPara;
 	}
-	public final void setSysPara(Row value)throws Exception
-	{_SysPara = value;
+	public final void setSysPara(Row value)
+	{
+		_SysPara = value;
 	}
 	/** 
 	 成功信息
@@ -75,26 +89,30 @@ public abstract class FlowEventBase
 	 要跳转的节点.(开发人员可以设置该参数,改变发送到的节点转向.)
 	*/
 	private int _JumpToNodeID = 0;
-	public final int getJumpToNodeID() throws Exception {
+	public final int getJumpToNodeID()
+	{
 		return _JumpToNodeID;
 	}
-	public final void setJumpToNodeID(int value)throws Exception
-	{this._JumpToNodeID = value;
+	public final void setJumpToNodeID(int value)
+	{
+		this._JumpToNodeID = value;
 	}
 	/** 
 	 接受人, (开发人员可以设置该参数,改变接受人的范围.)
 	*/
 	private String _JumpToEmps = null;
-	public final String getJumpToEmps() throws Exception {
+	public final String getJumpToEmps()
+	{
 		return _JumpToEmps;
 	}
-	public final void setJumpToEmps(String value)throws Exception
-	{this._JumpToEmps = value;
+	public final void setJumpToEmps(String value)
+	{
+		this._JumpToEmps = value;
 	}
 	/** 
 	 是否停止流程？
 	*/
-	public boolean IsStopFlow = false;
+	public boolean ItIsStopFlow = false;
 
 		///#endregion 在发送前的事件里可以改变参数
 
@@ -103,8 +121,7 @@ public abstract class FlowEventBase
 	/** 
 	 表单ID
 	*/
-	public final String getFKMapdata() throws Exception
-	{
+	public final String getFKMapdata()  {
 		return this.GetValStr("FK_MapData");
 	}
 
@@ -115,8 +132,7 @@ public abstract class FlowEventBase
 	/** 
 	 工作ID
 	*/
-	public final int getOID() throws Exception
-	{
+	public final int getOID()  {
 		return this.GetValInt("OID");
 	}
 	/** 
@@ -135,43 +151,37 @@ public abstract class FlowEventBase
 	/** 
 	 流程ID
 	*/
-	public final long getFID() throws Exception
-	{
+	public final long getFID()  {
 		return this.GetValInt64("FID");
 	}
 	/** 
 	 传过来的WorkIDs集合，子流程.
 	*/
-	public final String getWorkIDs() throws Exception
-	{
+	public final String getWorkIDs()  {
 		return this.GetValStr("WorkIDs");
 	}
 	/** 
 	 编号集合s
 	*/
-	public final String getNos() throws Exception
-	{
+	public final String getNos()  {
 		return this.GetValStr("Nos");
 	}
 	/** 
 	 项目编号
 	*/
-	public final String getPrjNo() throws Exception
-	{
+	public final String getPrjNo()  {
 		return this.GetValStr("PrjNo");
 	}
 	/** 
 	 项目名称
 	*/
-	public final String getPrjName() throws Exception
-	{
+	public final String getPrjName()  {
 		return this.GetValStr("PrjName");
 	}
 	/** 
 	 流程标题
 	*/
-	public final String getTitle() throws Exception
-	{
+	public final String getTitle()  {
 		return this.GetValStr(GERptAttr.Title);
 	}
 
@@ -182,10 +192,11 @@ public abstract class FlowEventBase
 	/** 
 	 事件参数
 	 
-	 param key 时间字段
+	 @param key 时间字段
 	 @return 根据字段返回一个时间,如果为Null,或者不存在就抛出异常.
 	*/
-	public final Date GetValDateTime(String key) throws Exception {
+	public final Date GetValDateTime(String key)
+	{
 		try
 		{
 			String str = this.getSysPara().GetValByKey(key).toString();
@@ -199,10 +210,11 @@ public abstract class FlowEventBase
 	/** 
 	 获取字符串参数
 	 
-	 param key key
+	 @param key key
 	 @return 如果为Null,或者不存在就抛出异常
 	*/
-	public final String GetValStr(String key) throws Exception {
+	public final String GetValStr(String key)
+	{
 		if (this.getSysPara().containsKey(key) == false)
 		{
 			throw new RuntimeException("@流程事件实体在获取参数期间出现错误，请确认字段(" + key + ")是否拼写正确.");
@@ -213,28 +225,31 @@ public abstract class FlowEventBase
 	/** 
 	 获取Int64的数值
 	 
-	 param key 键值
+	 @param key 键值
 	 @return 如果为Null,或者不存在就抛出异常
 	*/
-	public final long GetValInt64(String key) throws Exception {
+	public final long GetValInt64(String key)
+	{
 		return Long.parseLong(this.GetValStr(key));
 	}
 	/** 
 	 获取int的数值
 	 
-	 param key 键值
+	 @param key 键值
 	 @return 如果为Null,或者不存在就抛出异常
 	*/
-	public final int GetValInt(String key) throws Exception {
+	public final int GetValInt(String key)
+	{
 		return Integer.parseInt(this.GetValStr(key));
 	}
 	/** 
 	 获取Boolen值
 	 
-	 param key 字段
+	 @param key 字段
 	 @return 如果为Null,或者不存在就抛出异常
 	*/
-	public final boolean GetValBoolen(String key) throws Exception {
+	public final boolean GetValBoolen(String key)
+	{
 		if (Integer.parseInt(this.GetValStr(key)) == 0)
 		{
 			return false;
@@ -244,11 +259,12 @@ public abstract class FlowEventBase
 	/** 
 	 获取decimal的数值
 	 
-	 param key 字段
+	 @param key 字段
 	 @return 如果为Null,或者不存在就抛出异常
 	*/
-	public final BigDecimal GetValDecimal(String key) throws Exception {
-		return  new BigDecimal(this.GetValStr(key));
+	public final BigDecimal GetValDecimal(String key)
+	{
+		return new BigDecimal(this.GetValStr(key));
 	}
 
 		///#endregion 获取参数方法
@@ -258,17 +274,20 @@ public abstract class FlowEventBase
 	/** 
 	 流程事件基类
 	*/
-	public FlowEventBase() throws Exception {
+	public FlowEventBase()
+	{
 	}
 
 		///#endregion 构造方法
 
 
 		///#region 节点表单事件
-	public String FrmLoadAfter() throws Exception {
+	public String FrmLoadAfter()
+	{
 		return null;
 	}
-	public String FrmLoadBefore() throws Exception {
+	public String FrmLoadBefore()
+	{
 		return null;
 	}
 
@@ -281,7 +300,8 @@ public abstract class FlowEventBase
 	 
 	 @return 创建WorkID所执行的操作
 	*/
-	public String FlowOnCreateWorkID() throws Exception {
+	public String FlowOnCreateWorkID()
+	{
 		return null;
 	}
 	/** 
@@ -289,7 +309,8 @@ public abstract class FlowEventBase
 	 
 	 @return 返回null，不提示信息，返回string提示结束信息,抛出异常就阻止流程删除.
 	*/
-	public String FlowOverBefore() throws Exception {
+	public String FlowOverBefore()
+	{
 		return null;
 	}
 	/** 
@@ -297,7 +318,8 @@ public abstract class FlowEventBase
 	 
 	 @return 返回null，不提示信息，返回string提示结束信息,抛出异常不处理。
 	*/
-	public String FlowOverAfter() throws Exception {
+	public String FlowOverAfter()
+	{
 		return null;
 	}
 	/** 
@@ -305,7 +327,8 @@ public abstract class FlowEventBase
 	 
 	 @return 返回null,不提示信息,返回信息，提示删除警告/提示信息, 抛出异常阻止删除操作.
 	*/
-	public String BeforeFlowDel() throws Exception {
+	public String BeforeFlowDel()
+	{
 		return null;
 	}
 	/** 
@@ -313,7 +336,8 @@ public abstract class FlowEventBase
 	 
 	 @return 返回null,不提示信息,返回信息，提示删除警告/提示信息, 抛出异常不处理.
 	*/
-	public String AfterFlowDel() throws Exception {
+	public String AfterFlowDel()
+	{
 		return null;
 	}
 
@@ -324,13 +348,15 @@ public abstract class FlowEventBase
 	/** 
 	 保存后
 	*/
-	public String SaveAfter() throws Exception {
+	public String SaveAfter()
+	{
 		return null;
 	}
 	/** 
 	 保存前
 	*/
-	public String SaveBefore() throws Exception {
+	public String SaveBefore()
+	{
 		return null;
 	}
 	/** 
@@ -338,19 +364,20 @@ public abstract class FlowEventBase
 	 
 	 @return 
 	*/
-	public String CreateWorkID() throws Exception {
+	public String CreateWorkID()
+	{
 		return null;
 	}
 	/** 
 	发送前  @Info=xxxx@ToNodeID=xxxx@ToEmps=xxxx
 	*/
-	public String SendWhen() throws Exception {
+	public String SendWhen() {
 		return null;
 	}
 	/** 
 	 发送成功时
 	*/
-	public String SendSuccess() throws Exception {
+	public String SendSuccess() {
 		return null;
 	}
 	/** 
@@ -358,7 +385,8 @@ public abstract class FlowEventBase
 	 
 	 @return 
 	*/
-	public String SendError() throws Exception {
+	public String SendError()
+	{
 		return null;
 	}
 	/** 
@@ -366,7 +394,8 @@ public abstract class FlowEventBase
 	 
 	 @return 
 	*/
-	public String ReturnBefore() throws Exception {
+	public String ReturnBefore()
+	{
 		return null;
 	}
 	/** 
@@ -374,7 +403,8 @@ public abstract class FlowEventBase
 	 
 	 @return 
 	*/
-	public String ReturnAfter() throws Exception {
+	public String ReturnAfter()
+	{
 		return null;
 	}
 	/** 
@@ -382,7 +412,8 @@ public abstract class FlowEventBase
 	 
 	 @return 
 	*/
-	public String UndoneBefore() throws Exception {
+	public String UndoneBefore()
+	{
 		return null;
 	}
 	/** 
@@ -390,7 +421,8 @@ public abstract class FlowEventBase
 	 
 	 @return 
 	*/
-	public String UndoneAfter() throws Exception {
+	public String UndoneAfter()
+	{
 		return null;
 	}
 	/** 
@@ -398,7 +430,8 @@ public abstract class FlowEventBase
 	 
 	 @return 
 	*/
-	public String ShiftAfter() throws Exception {
+	public String ShiftAfter()
+	{
 		return null;
 	}
 	/** 
@@ -406,7 +439,8 @@ public abstract class FlowEventBase
 	 
 	 @return 
 	*/
-	public String AskerAfter() throws Exception {
+	public String AskerAfter()
+	{
 		return null;
 	}
 	/** 
@@ -414,7 +448,8 @@ public abstract class FlowEventBase
 	 
 	 @return 
 	*/
-	public String AskerReAfter() throws Exception {
+	public String AskerReAfter()
+	{
 		return null;
 	}
 	/** 
@@ -422,7 +457,8 @@ public abstract class FlowEventBase
 	 
 	 @return 
 	*/
-	public String QueueSendAfter() throws Exception {
+	public String QueueSendAfter()
+	{
 		return null;
 	}
 	/** 
@@ -430,7 +466,8 @@ public abstract class FlowEventBase
 	 
 	 @return 
 	*/
-	public String WorkArrive() throws Exception {
+	public String WorkArrive()
+	{
 		return null;
 	}
 
@@ -441,27 +478,31 @@ public abstract class FlowEventBase
 	/** 
 	 执行事件
 	 
-	 param eventType 事件类型
-	 param en 实体参数
+	 @param eventType 事件类型
+	 @param en 实体参数
 	*/
 
+	public final String DoIt(String eventType, Node currNode, Entity en, String atPara, int jumpToNodeID, String toEmps) throws Exception {
+		return DoIt(eventType, currNode, en, atPara, jumpToNodeID, toEmps, null);
+	}
+
 	public final String DoIt(String eventType, Node currNode, Entity en, String atPara, int jumpToNodeID) throws Exception {
-		return DoIt(eventType, currNode, en, atPara, jumpToNodeID, null);
+		return DoIt(eventType, currNode, en, atPara, jumpToNodeID, null, null);
 	}
 
 	public final String DoIt(String eventType, Node currNode, Entity en, String atPara) throws Exception {
-		return DoIt(eventType, currNode, en, atPara, 0, null);
+		return DoIt(eventType, currNode, en, atPara, 0, null, null);
 	}
 
-//ORIGINAL LINE: public string DoIt(string eventType, Node currNode, Entity en, string atPara, int jumpToNodeID = 0, string toEmps = null)
-	public final String DoIt(String eventType, Node currNode, Entity en, String atPara, int jumpToNodeID, String toEmps) throws Exception {
+	public final String DoIt(String eventType, Node currNode, Entity en, String atPara, int jumpToNodeID, String toEmps, GenerWorkFlow hisGWF) throws Exception {
 		this.HisEn = en;
-		this.HisNode = currNode;
+		this.setHisNode(currNode);
+		this.HisGenerWorkFlow = hisGWF;
 		//  this.WorkID = en.GetValInt64ByKey("OID");
 		this.setJumpToEmps(toEmps);
 		this.setJumpToNodeID(jumpToNodeID);
 		this.setSysPara(null);
-		this.IsStopFlow = false;
+		this.ItIsStopFlow = false;
 
 
 			///#region 处理参数.
@@ -484,16 +525,16 @@ public abstract class FlowEventBase
 			{
 				try
 				{
-					r.SetValByKey(s, ap.GetValStrByKey(s));
+					r.put(s, ap.GetValStrByKey(s));
 				}
 				catch (java.lang.Exception e)
 				{
-					r.put(s, ap.GetValStrByKey(s));
+					r.SetValByKey(s, ap.GetValStrByKey(s));
 				}
 			}
 		}
 
-		if (SystemConfig.getIsBSsystem() == true)
+		if (SystemConfig.isBSsystem() == true)
 		{
 			/*如果是bs系统, 就加入外部url的变量.*/
 			for (String key : CommonUtils.getRequest().getParameterMap().keySet())
@@ -518,15 +559,15 @@ public abstract class FlowEventBase
 				}
 
 
-				String val = ContextHolderUtils.getRequest().getParameter((String) key); //BP.Sys.Base.Glo.Request.QueryString[key];
+				String val = ContextHolderUtils.getRequest().getParameter(key); //BP.Sys.Base.Glo.Request.QueryString[key];
 
 				if (r.containsKey(key) == true)
 				{
-					r.SetValByKey((String) key, val);
+					r.SetValByKey(key, val);
 				}
 				else
 				{
-					r.put((String) key, val);
+					r.put(key, val);
 				}
 			}
 		}
@@ -550,11 +591,11 @@ public abstract class FlowEventBase
 				return this.SaveBefore();
 			case EventListNode.SendWhen: // 节点事件 - 发送前。
 
-				this.IsStopFlow = false;
+				this.ItIsStopFlow = false;
 
 				String str = this.SendWhen();
 
-				if (this.IsStopFlow == true)
+				if (this.ItIsStopFlow == true)
 				{
 					return "@Info=" + str + "@IsStopFlow=1";
 				}

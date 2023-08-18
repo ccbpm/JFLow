@@ -9,8 +9,7 @@ public abstract class NDXRptBase extends bp.en.EntityOID
 {
 
 		///#region 属性
-	public final void setOID(long value)
-	{
+	public final void setOID(long value){
 		this.SetValByKey(NDXRptBaseAttr.OID, value);
 	}
 	/** 
@@ -20,8 +19,7 @@ public abstract class NDXRptBase extends bp.en.EntityOID
 	{
 		return this.GetValFloatByKey(NDXRptBaseAttr.FlowDaySpan);
 	}
-	public final void setFlowDaySpan(float value) throws Exception
-	{
+	public final void setFlowDaySpan(float value){
 		this.SetValByKey(NDXRptBaseAttr.FlowDaySpan, value);
 	}
 	/** 
@@ -31,8 +29,7 @@ public abstract class NDXRptBase extends bp.en.EntityOID
 	{
 		return this.GetValInt64ByKey(NDXRptBaseAttr.FID);
 	}
-	public final void setFID(long value) throws Exception
-	{
+	public final void setFID(long value){
 		this.SetValByKey(NDXRptBaseAttr.FID, value);
 	}
 	/** 
@@ -42,8 +39,7 @@ public abstract class NDXRptBase extends bp.en.EntityOID
 	{
 		return this.GetValStringByKey(NDXRptBaseAttr.FlowEmps);
 	}
-	public final void setFlowEmps(String value) throws Exception
-	{
+	public final void setFlowEmps(String value){
 		this.SetValByKey(NDXRptBaseAttr.FlowEmps, value);
 	}
 	/** 
@@ -53,8 +49,7 @@ public abstract class NDXRptBase extends bp.en.EntityOID
 	{
 		return this.GetValStringByKey(NDXRptBaseAttr.GuestNo);
 	}
-	public final void setGuestNo(String value) throws Exception
-	{
+	public final void setGuestNo(String value){
 		this.SetValByKey(NDXRptBaseAttr.GuestNo, value);
 	}
 	/** 
@@ -64,8 +59,7 @@ public abstract class NDXRptBase extends bp.en.EntityOID
 	{
 		return this.GetValStringByKey(NDXRptBaseAttr.GuestName);
 	}
-	public final void setGuestName(String value) throws Exception
-	{
+	public final void setGuestName(String value){
 		this.SetValByKey(NDXRptBaseAttr.GuestName, value);
 	}
 	/** 
@@ -75,8 +69,7 @@ public abstract class NDXRptBase extends bp.en.EntityOID
 	{
 		return this.GetValStringByKey(NDXRptBaseAttr.BillNo);
 	}
-	public final void setBillNo(String value) throws Exception
-	{
+	public final void setBillNo(String value){
 		this.SetValByKey(NDXRptBaseAttr.BillNo, value);
 	}
 	/** 
@@ -86,8 +79,7 @@ public abstract class NDXRptBase extends bp.en.EntityOID
 	{
 		return this.GetValStringByKey(NDXRptBaseAttr.FlowStarter);
 	}
-	public final void setFlowStarter(String value) throws Exception
-	{
+	public final void setFlowStarter(String value){
 		this.SetValByKey(NDXRptBaseAttr.FlowStarter, value);
 	}
 	/** 
@@ -97,8 +89,7 @@ public abstract class NDXRptBase extends bp.en.EntityOID
 	{
 		return this.GetValStringByKey(NDXRptBaseAttr.FlowStartRDT);
 	}
-	public final void setFlowStartRDT(String value) throws Exception
-	{
+	public final void setFlowStartRDT(String value){
 		this.SetValByKey(NDXRptBaseAttr.FlowStartRDT, value);
 	}
 	/** 
@@ -108,8 +99,7 @@ public abstract class NDXRptBase extends bp.en.EntityOID
 	{
 		return this.GetValStringByKey(NDXRptBaseAttr.FlowEnder);
 	}
-	public final void setFlowEnder(String value) throws Exception
-	{
+	public final void setFlowEnder(String value){
 		this.SetValByKey(NDXRptBaseAttr.FlowEnder, value);
 	}
 	/** 
@@ -119,8 +109,7 @@ public abstract class NDXRptBase extends bp.en.EntityOID
 	{
 		return this.GetValStringByKey(NDXRptBaseAttr.FlowEnderRDT);
 	}
-	public final void setFlowEnderRDT(String value) throws Exception
-	{
+	public final void setFlowEnderRDT(String value){
 		this.SetValByKey(NDXRptBaseAttr.FlowEnderRDT, value);
 	}
 	/** 
@@ -138,8 +127,7 @@ public abstract class NDXRptBase extends bp.en.EntityOID
 	{
 		return this.GetValIntByKey(NDXRptBaseAttr.FlowEndNode);
 	}
-	public final void setFlowEndNode(int value) throws Exception
-	{
+	public final void setFlowEndNode(int value){
 		this.SetValByKey(NDXRptBaseAttr.FlowEndNode, value);
 	}
 	/** 
@@ -149,8 +137,7 @@ public abstract class NDXRptBase extends bp.en.EntityOID
 	{
 		return this.GetValStringByKey(NDXRptBaseAttr.Title);
 	}
-	public final void setTitle(String value) throws Exception
-	{
+	public final void setTitle(String value){
 		this.SetValByKey(NDXRptBaseAttr.Title, value);
 	}
 	/** 
@@ -160,8 +147,7 @@ public abstract class NDXRptBase extends bp.en.EntityOID
 	{
 		return this.GetValStringByKey(NDXRptBaseAttr.FK_NY);
 	}
-	public final void setFK_Ny(String value) throws Exception
-	{
+	public final void setFK_Ny(String value){
 		this.SetValByKey(NDXRptBaseAttr.FK_NY, value);
 	}
 	/** 
@@ -171,8 +157,7 @@ public abstract class NDXRptBase extends bp.en.EntityOID
 	{
 		return this.GetValStringByKey(NDXRptBaseAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value) throws Exception
-	{
+	public final void setFK_Dept(String value){
 		this.SetValByKey(NDXRptBaseAttr.FK_Dept, value);
 	}
 	/** 
@@ -182,8 +167,7 @@ public abstract class NDXRptBase extends bp.en.EntityOID
 	{
 		return WFState.forValue(this.GetValIntByKey(NDXRptBaseAttr.WFState));
 	}
-	public final void setWFState(WFState value) throws Exception
-	{
+	public final void setWFState(WFState value){
 		this.SetValByKey(NDXRptBaseAttr.WFState, value.getValue());
 	}
 	/** 
@@ -208,8 +192,7 @@ public abstract class NDXRptBase extends bp.en.EntityOID
 	{
 		return this.GetValInt64ByKey(NDXRptBaseAttr.PWorkID);
 	}
-	public final void setPWorkID(long value) throws Exception
-	{
+	public final void setPWorkID(long value){
 		this.SetValByKey(NDXRptBaseAttr.PWorkID, value);
 	}
 	/** 
@@ -219,8 +202,7 @@ public abstract class NDXRptBase extends bp.en.EntityOID
 	{
 		return this.GetValStringByKey(NDXRptBaseAttr.PFlowNo);
 	}
-	public final void setPFlowNo(String value) throws Exception
-	{
+	public final void setPFlowNo(String value){
 		this.SetValByKey(NDXRptBaseAttr.PFlowNo, value);
 	}
 	/** 
@@ -230,16 +212,14 @@ public abstract class NDXRptBase extends bp.en.EntityOID
 	{
 		return this.GetValStringByKey(NDXRptBaseAttr.PNodeID);
 	}
-	public final void setPNodeID(String value) throws Exception
-	{
+	public final void setPNodeID(String value){
 		this.SetValByKey(NDXRptBaseAttr.PNodeID, value);
 	}
 	public final String getPEmp()  throws Exception
 	{
 		return this.GetValStringByKey(NDXRptBaseAttr.PEmp);
 	}
-	public final void setPEmp(String value) throws Exception
-	{
+	public final void setPEmp(String value){
 		this.SetValByKey(NDXRptBaseAttr.PEmp, value);
 	}
 

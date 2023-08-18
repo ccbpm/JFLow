@@ -39,13 +39,15 @@ public class Notepads extends EntitiesMyPK
 	/** 
 	 记事本
 	*/
-	public Notepads(){
+	public Notepads()
+	{
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new Notepad();
 	}
 
@@ -56,7 +58,8 @@ public class Notepads extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<Notepad> ToJavaList() {
+	public final java.util.List<Notepad> ToJavaList()
+	{
 		return (java.util.List<Notepad>)(Object)this;
 	}
 	/** 
@@ -64,7 +67,8 @@ public class Notepads extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<Notepad> Tolist()  {
+	public final ArrayList<Notepad> Tolist()
+	{
 		ArrayList<Notepad> list = new ArrayList<Notepad>();
 		for (int i = 0; i < this.size(); i++)
 		{

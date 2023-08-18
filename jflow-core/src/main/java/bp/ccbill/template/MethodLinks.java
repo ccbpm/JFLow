@@ -1,6 +1,10 @@
 package bp.ccbill.template;
 
-import bp.en.*;
+import bp.da.*;
+import bp.web.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.ccbill.*;
 import java.util.*;
 
 /** 
@@ -11,13 +15,15 @@ public class MethodLinks extends EntitiesNoName
 	/** 
 	 连接方法
 	*/
-	public MethodLinks()  {
+	public MethodLinks()
+	{
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new MethodLink();
 	}
 
@@ -27,7 +33,8 @@ public class MethodLinks extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<MethodLink> ToJavaList() {
+	public final java.util.List<MethodLink> ToJavaList()
+	{
 		return (java.util.List<MethodLink>)(Object)this;
 	}
 	/** 
@@ -35,7 +42,8 @@ public class MethodLinks extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<MethodLink> Tolist()  {
+	public final ArrayList<MethodLink> Tolist()
+	{
 		ArrayList<MethodLink> list = new ArrayList<MethodLink>();
 		for (int i = 0; i < this.size(); i++)
 		{

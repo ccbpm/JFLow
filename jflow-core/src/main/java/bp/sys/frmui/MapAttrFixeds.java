@@ -1,7 +1,7 @@
 package bp.sys.frmui;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
 import bp.*;
 import bp.sys.*;
@@ -17,13 +17,15 @@ public class MapAttrFixeds extends EntitiesMyPK
 	/** 
 	 系统定位组件s
 	*/
-	public MapAttrFixeds() throws Exception {
+	public MapAttrFixeds()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new MapAttrFixed();
 	}
 
@@ -36,7 +38,8 @@ public class MapAttrFixeds extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<MapAttrFixed> ToJavaList() {
+	public final java.util.List<MapAttrFixed> ToJavaList()
+	{
 		return (java.util.List<MapAttrFixed>)(Object)this;
 	}
 	/** 
@@ -44,7 +47,8 @@ public class MapAttrFixeds extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<MapAttrFixed> Tolist()  {
+	public final ArrayList<MapAttrFixed> Tolist()
+	{
 		ArrayList<MapAttrFixed> list = new ArrayList<MapAttrFixed>();
 		for (int i = 0; i < this.size(); i++)
 		{

@@ -1,6 +1,7 @@
 package bp.wf.template;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+
 
 /** 
  这里存放每个接受人规则的信息.	 
@@ -13,7 +14,8 @@ public class AccepterRole extends EntityOID
 	 UI界面上的访问控制
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.IsUpdate = true;
 		return uac;
@@ -21,12 +23,12 @@ public class AccepterRole extends EntityOID
 	/** 
 	 节点编号
 	*/
-	public final String getFK_Node() throws Exception
-	{
+	public final String getFKNode()  {
 		return this.GetValStringByKey(AccepterRoleAttr.FK_Node);
 	}
-	public final void setFK_Node(String value)throws Exception
-	{SetValByKey(AccepterRoleAttr.FK_Node, value);
+	public final void setFKNode(String value) throws Exception
+	{
+		SetValByKey(AccepterRoleAttr.FK_Node, value);
 	}
 
 		///#endregion
@@ -36,14 +38,16 @@ public class AccepterRole extends EntityOID
 	/** 
 	 接受人规则
 	*/
-	public AccepterRole()  {
+	public AccepterRole()
+	{
 	}
 	/** 
 	 接受人规则
 	 
-	 param oid 接受人规则ID	
+	 @param oid 接受人规则ID	
 	*/
-	public AccepterRole(int oid) throws Exception {
+	public AccepterRole(int oid) throws Exception
+	{
 		this.setOID(oid);
 		this.Retrieve();
 	}
@@ -51,7 +55,7 @@ public class AccepterRole extends EntityOID
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();

@@ -1,9 +1,11 @@
 package bp.port;
 
-import bp.difference.SystemConfig;
-import bp.en.*;
-import bp.sys.CCBPMRunModel;
-
+import bp.da.*;
+import bp.difference.*;
+import bp.en.*; import bp.en.Map;
+import bp.sys.*;
+import bp.web.*;
+import bp.*;
 import java.util.*;
 
 /** 
@@ -11,44 +13,60 @@ import java.util.*;
 */
 public class TeamTypes extends EntitiesNoName
 {
+
+		///#region 构造.
 	/** 
 	 用户组类型s
 	*/
-	public TeamTypes()  {
+	public TeamTypes()
+	{
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new TeamType();
 	}
 
+		///#endregion 构造.
 
-	/**
+
+
+		///#region 查询..
+	/** 
 	 查询全部
-	 @return
-	 */
+	 
+	 @return 
+	*/
 	@Override
 	public int RetrieveAll() throws Exception {
 		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
-			return super.RetrieveAll();
+		{
+			return super.RetrieveAll("Idx");
+		}
 
-		//集团模式下的岗位体系: @0=每套组织都有自己的岗位体系@1=所有的组织共享一套岗则体系.
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+		{
+			return this.Retrieve("OrgNo", WebUser.getOrgNo(), "Idx");
+		}
+
+		//集团模式下的角色体系: @0=每套组织都有自己的角色体系@1=所有的组织共享一套岗则体系.
 		if (SystemConfig.getGroupStationModel() == 1)
-			return super.RetrieveAll();
+		{
+			return super.RetrieveAll("Idx");
+		}
+
 		//按照orgNo查询.
-		return this.Retrieve("OrgNo", bp.web.WebUser.getOrgNo());
+		return this.Retrieve("OrgNo", WebUser.getOrgNo(), "Idx");
 	}
 	@Override
-	public int RetrieveAllFromDBSource()  throws Exception
-	{
+	public int RetrieveAllFromDBSource() throws Exception {
 		return this.RetrieveAll();
 	}
-	@Override
-	public int RetrieveAllFromDBSource(String orderBY) throws Exception {
-		return this.RetrieveAll(orderBY);
-	}
+
+		///#endregion 查询..
 
 
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
@@ -57,7 +75,8 @@ public class TeamTypes extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<TeamType> ToJavaList() {
+	public final java.util.List<TeamType> ToJavaList()
+	{
 		return (java.util.List<TeamType>)(Object)this;
 	}
 	/** 
@@ -65,7 +84,8 @@ public class TeamTypes extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<TeamType> Tolist()  {
+	public final ArrayList<TeamType> Tolist()
+	{
 		ArrayList<TeamType> list = new ArrayList<TeamType>();
 		for (int i = 0; i < this.size(); i++)
 		{

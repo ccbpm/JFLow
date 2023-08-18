@@ -1,12 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.web.*;
 import bp.en.*;
-import bp.port.*;
-import bp.sys.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -17,13 +11,15 @@ public class PowerModels extends EntitiesMyPK
 	/** 
 	 权限模型
 	*/
-	public PowerModels() throws Exception {
+	public PowerModels()
+	{
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new PowerModel();
 	}
 
@@ -33,7 +29,8 @@ public class PowerModels extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<PowerModel> ToJavaList() {
+	public final java.util.List<PowerModel> ToJavaList()
+	{
 		return (java.util.List<PowerModel>)(Object)this;
 	}
 	/** 
@@ -41,7 +38,8 @@ public class PowerModels extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<PowerModel> Tolist()  {
+	public final ArrayList<PowerModel> Tolist()
+	{
 		ArrayList<PowerModel> list = new ArrayList<PowerModel>();
 		for (int i = 0; i < this.size(); i++)
 		{

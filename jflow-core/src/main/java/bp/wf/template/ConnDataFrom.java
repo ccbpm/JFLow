@@ -15,7 +15,7 @@ public enum ConnDataFrom
 	*/
 	StandAloneFrm(1),
 	/** 
-	 岗位数据
+	 角色数据
 	*/
 	Stas(2),
 	/** 
@@ -55,7 +55,8 @@ public enum ConnDataFrom
 
 	private int intValue;
 	private static java.util.HashMap<Integer, ConnDataFrom> mappings;
-	private static java.util.HashMap<Integer, ConnDataFrom> getMappings()  {
+	private static java.util.HashMap<Integer, ConnDataFrom> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (ConnDataFrom.class)
@@ -70,15 +71,18 @@ public enum ConnDataFrom
 	}
 
 	private ConnDataFrom(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue() {
+	public int getValue()
+	{
 		return intValue;
 	}
 
 	public static ConnDataFrom forValue(int value)
-	{return getMappings().get(value);
+	{
+		return getMappings().get(value);
 	}
 }

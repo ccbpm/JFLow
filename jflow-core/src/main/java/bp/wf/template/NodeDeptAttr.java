@@ -1,11 +1,5 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.en.*;
-import bp.wf.port.*;
-import bp.*;
-import bp.wf.*;
-import java.util.*;
 
 /** 
  节点部门属性	  

@@ -1,8 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -15,12 +13,13 @@ public class MapFrames extends EntitiesMyPK
 	/** 
 	 框架s
 	*/
-	public MapFrames()  {
+	public MapFrames()
+	{
 	}
 	/** 
 	 框架s
 	 
-	 param fk_mapdata s
+	 @param fk_mapdata s
 	*/
 	public MapFrames(String fk_mapdata) throws Exception {
 		this.Retrieve(MapFrameAttr.FK_MapData, fk_mapdata);
@@ -29,7 +28,8 @@ public class MapFrames extends EntitiesMyPK
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new MapFrame();
 	}
 
@@ -42,7 +42,8 @@ public class MapFrames extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<MapFrame> ToJavaList() {
+	public final java.util.List<MapFrame> ToJavaList()
+	{
 		return (java.util.List<MapFrame>)(Object)this;
 	}
 	/** 
@@ -50,7 +51,8 @@ public class MapFrames extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<MapFrame> Tolist()  {
+	public final ArrayList<MapFrame> Tolist()
+	{
 		ArrayList<MapFrame> list = new ArrayList<MapFrame>();
 		for (int i = 0; i < this.size(); i++)
 		{

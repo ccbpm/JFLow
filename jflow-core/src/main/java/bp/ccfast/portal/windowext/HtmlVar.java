@@ -1,7 +1,10 @@
 package bp.ccfast.portal.windowext;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.ccfast.*;
 import bp.ccfast.portal.*;
+import java.util.*;
 
 /** 
  信息块
@@ -14,7 +17,8 @@ public class HtmlVar extends EntityNoName
 	 控制权限
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (bp.web.WebUser.getIsAdmin() == true)
 		{
@@ -38,23 +42,19 @@ public class HtmlVar extends EntityNoName
 	/** 
 	 跨度
 	*/
-	public final int getColSpan()
-	{
+	public final int getColSpan() {
 		return this.GetValIntByKey(WindowTemplateAttr.ColSpan);
 	}
-	public final void setColSpan(int value)
-	 {
+	public final void setColSpan(int value)  {
 		this.SetValByKey(WindowTemplateAttr.ColSpan, value);
 	}
 	/** 
 	 页面ID
 	*/
-	public final String getPageID()
-	{
+	public final String getPageID() {
 		return this.GetValStringByKey(WindowTemplateAttr.PageID);
 	}
-	public final void setPageID(String value)
-	 {
+	public final void setPageID(String value)  {
 		this.SetValByKey(WindowTemplateAttr.PageID, value);
 	}
 
@@ -65,27 +65,23 @@ public class HtmlVar extends EntityNoName
 	/** 
 	 信息块
 	*/
-	public HtmlVar() {
+	public HtmlVar()
+	{
 	}
 	/** 
 	 信息块
 	 
-	 param no
+	 @param no
 	*/
-	public HtmlVar(String no)
-	{
+	public HtmlVar(String no) throws Exception  {
 		this.setNo(no);
-		try {
-			this.Retrieve();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.Retrieve();
 	}
 	/** 
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -111,7 +107,7 @@ public class HtmlVar extends EntityNoName
 
 			///#endregion 更多链接.
 
-		map.AddDtl(new HtmlVarDtls(), DtlAttr.RefPK, null);
+		map.AddDtl(new HtmlVarDtls(), DtlAttr.RefPK);
 
 		RefMethod rm = new RefMethod();
 		rm.Title = "样例";
@@ -139,13 +135,16 @@ public class HtmlVar extends EntityNoName
 
 
 		///#region 方法.
-	public final String AddTemplate() throws Exception {
+	public final String AddTemplate()
+	{
 		return "../../GPM/Window/HtmlVar.png";
 	}
-	public final String RefSQL() throws Exception {
+	public final String RefSQL()
+	{
 		return "../../GPM/Window/RefSQL.htm";
 	}
-	public final String AddDBSrc() throws Exception {
+	public final String AddDBSrc()
+	{
 		return "../../Comm/Search.htm?EnsName=BP.Sys.SFDBSrcs";
 	}
 

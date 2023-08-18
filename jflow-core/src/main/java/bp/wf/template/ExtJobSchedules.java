@@ -1,11 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.sys.*;
-import bp.sys.frmui.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -18,13 +13,15 @@ public class ExtJobSchedules extends EntitiesMyPK
 	/** 
 	 流程进度图s
 	*/
-	public ExtJobSchedules() throws Exception {
+	public ExtJobSchedules()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new ExtJobSchedule();
 	}
 
@@ -37,7 +34,8 @@ public class ExtJobSchedules extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<ExtJobSchedule> ToJavaList() {
+	public final java.util.List<ExtJobSchedule> ToJavaList()
+	{
 		return (java.util.List<ExtJobSchedule>)(Object)this;
 	}
 	/** 
@@ -45,7 +43,8 @@ public class ExtJobSchedules extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<ExtJobSchedule> Tolist()  {
+	public final ArrayList<ExtJobSchedule> Tolist()
+	{
 		ArrayList<ExtJobSchedule> list = new ArrayList<ExtJobSchedule>();
 		for (int i = 0; i < this.size(); i++)
 		{

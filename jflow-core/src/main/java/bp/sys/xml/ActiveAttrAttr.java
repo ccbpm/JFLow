@@ -1,5 +1,11 @@
 package bp.sys.xml;
 
+import bp.da.*;
+import bp.en.*; import bp.en.Map;
+import bp.sys.xml.*;
+import bp.*;
+import bp.sys.*;
+
 /** 
  属性
 */

@@ -1,7 +1,8 @@
 package bp.ccfast.ccmenu;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.en.Map;
 
 /** 
  查询条件
@@ -11,7 +12,8 @@ public class SearchAttr extends EntityNoName
 
 		///#region 属性
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (bp.web.WebUser.getIsAdmin() == true)
 		{
@@ -34,17 +36,20 @@ public class SearchAttr extends EntityNoName
 	/** 
 	 查询条件
 	*/
-	public SearchAttr()  {
+	public SearchAttr()
+	{
 	}
 	@Override
-	protected boolean beforeDelete() throws Exception {
+	protected boolean beforeDelete() throws Exception
+	{
 		return super.beforeDelete();
 	}
-	/** 
-	 EnMap
-	*/
+	/**
+	 * EnMap
+	 */
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -61,7 +66,7 @@ public class SearchAttr extends EntityNoName
 		map.AddTBString(SearchAttrAttr.UrlExt, null, "SQL/标记/枚举值", true, false, 0, 500, 500, true);
 
 		map.AddTBInt(SearchAttrAttr.Idx, 0, "Idx", true, false);
-		map.AddDtl(new SearchAttrs(), SearchAttrAttr.RefMenuNo, null);
+		map.AddDtl(new SearchAttrs(), SearchAttrAttr.RefMenuNo);
 
 		this.set_enMap(map);
 		return this.get_enMap();
@@ -70,13 +75,15 @@ public class SearchAttr extends EntityNoName
 		///#endregion
 
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		this.setNo(DBAccess.GenerGUID(0, null, null));
 		return super.beforeInsert();
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception {
+	protected boolean beforeUpdateInsertAction() throws Exception
+	{
 		return super.beforeUpdateInsertAction();
 	}
 }

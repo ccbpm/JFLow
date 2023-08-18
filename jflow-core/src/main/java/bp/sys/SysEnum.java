@@ -2,10 +2,8 @@ package bp.sys;
 
 import bp.da.*;
 import bp.en.*;
-import bp.difference.*;
-import bp.*;
 import bp.en.Map;
-
+import bp.difference.*;
 import java.util.*;
 
 /** 
@@ -16,8 +14,8 @@ public class SysEnum extends EntityMyPK
 	/** 
 	 得到一个String By LabKey.
 	 
-	 param EnumKey
-	 param intKey
+	 @param EnumKey
+	 @param intKey
 	 @return 
 	*/
 	public static String GetLabByPK(String EnumKey, int intKey) throws Exception {
@@ -27,71 +25,58 @@ public class SysEnum extends EntityMyPK
 
 
 		///#region 实现基本的方法
-	public final String getOrgNo() throws Exception
-	{
+	public final String getOrgNo()  {
 		return this.GetValStringByKey(SysEnumAttr.OrgNo);
 	}
-	public final void setOrgNo(String value)  throws Exception
-	 {
+	public final void setOrgNo(String value){
 		this.SetValByKey(SysEnumAttr.OrgNo, value);
 	}
 
 	/** 
 	 标签
 	*/
-	public final String getLab() throws Exception
-	{
+	public final String getLab()  {
 		return this.GetValStringByKey(SysEnumAttr.Lab);
 	}
-	public final void setLab(String value)
-	 {
+	public final void setLab(String value){
 		this.SetValByKey(SysEnumAttr.Lab, value);
 	}
 	/** 
 	 标签
 	*/
-	public final String getLang()
-	{
+	public final String getLang()  {
 		return this.GetValStringByKey(SysEnumAttr.Lang);
 	}
-	public final void setLang(String value)
-	 {
+	public final void setLang(String value){
 		this.SetValByKey(SysEnumAttr.Lang, value);
 	}
 	/** 
 	 Int val
 	*/
-	public final int getIntKey()
-	{
+	public final int getIntKey()  {
 		return this.GetValIntByKey(SysEnumAttr.IntKey);
 	}
-	public final void setIntKey(int value)
-	 {
+	public final void setIntKey(int value){
 		this.SetValByKey(SysEnumAttr.IntKey, value);
 	}
 	/** 
 	 EnumKey
 	*/
-	public final String getEnumKey()
-	{
+	public final String getEnumKey()  {
 		return this.GetValStringByKey(SysEnumAttr.EnumKey);
 	}
-	public final void setEnumKey(String value)
-	 {
+	public final void setEnumKey(String value){
 		this.SetValByKey(SysEnumAttr.EnumKey, value);
 	}
-	/**
+	/** 
 	 StrKey
 	*/
-	public final String getStrKey()
-	{
+	public final String getStrKey()  {
 		return this.GetValStringByKey(SysEnumAttr.StrKey);
 	}
-	public final void setStrKey(String value)
-	 {
+	public final void setStrKey(String value){
 		this.SetValByKey(SysEnumAttr.StrKey, value);
 	}
-
 
 		///#endregion
 
@@ -100,12 +85,13 @@ public class SysEnum extends EntityMyPK
 	/** 
 	 SysEnum
 	*/
-	public SysEnum()  {
+	public SysEnum()
+	{
 	}
 	/** 
 	 税务编号
 	 
-	 param enumKey 编号
+	 @param enumKey 编号
 	*/
 	public SysEnum(String enumKey, int val) throws Exception {
 		this.setEnumKey(enumKey);
@@ -149,7 +135,7 @@ public class SysEnum extends EntityMyPK
 	 Map
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -157,23 +143,22 @@ public class SysEnum extends EntityMyPK
 
 		Map map = new Map(bp.sys.base.Glo.SysEnum(), "枚举数据");
 
-			/*
-			* 为了能够支持 cloud 我们做了如下变更.
-			* 1. 增加了OrgNo 字段.
-			* 2. 如果是单机版用户,原来的业务逻辑不变化. MyPK= EnumKey+"_"+IntKey+'_'+Lang 
-			* 3. 如果是SAAS模式, MyPK= EnumKey+"_"+IntKey+'_'+Lang +"_"+OrgNo 
-			*/
+		/*
+		* 为了能够支持 cloud 我们做了如下变更.
+		* 1. 增加了OrgNo 字段.
+		* 2. 如果是单机版用户,原来的业务逻辑不变化. MyPK= EnumKey+"_"+IntKey+'_'+Lang 
+		* 3. 如果是SAAS模式, MyPK= EnumKey+"_"+IntKey+'_'+Lang +"_"+OrgNo 
+		*/
 
 		map.AddMyPK();
 		map.AddTBString(SysEnumAttr.Lab, null, "Lab", true, false, 1, 300, 8);
 
-			//不管是那个模式  就是短号. 
+		//不管是那个模式  就是短号. 
 		map.AddTBString(SysEnumAttr.EnumKey, null, "EnumKey", true, false, 1, 100, 8);
 		map.AddTBInt(SysEnumAttr.IntKey, 0, "Val", true, false);
 		map.AddTBString(SysEnumAttr.Lang, "CH", "语言", true, false, 0, 10, 8);
 
 		map.AddTBString(SysEnumMainAttr.OrgNo, null, "OrgNo", true, false, 0, 50, 8);
-
 		map.AddTBString(SysEnumAttr.StrKey, null, "StrKey", true, false, 1, 100, 8);
 
 		this.set_enMap(map);
@@ -183,7 +168,7 @@ public class SysEnum extends EntityMyPK
 		///#endregion
 
 	public final void ResetPK() throws Exception {
-		if (this.getLang() == null && this.getLang().equals(""))
+		if (this.getLang() == null && Objects.equals(this.getLang(), ""))
 		{
 			this.setLang(bp.web.WebUser.getSysLang());
 		}
@@ -200,7 +185,8 @@ public class SysEnum extends EntityMyPK
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception {
+	protected boolean beforeUpdateInsertAction() throws Exception
+	{
 		ResetPK();
 
 		return super.beforeUpdateInsertAction();
@@ -210,7 +196,8 @@ public class SysEnum extends EntityMyPK
 	 枚举类型新增保存后在Frm_RB中增加新的枚举值
 	*/
 	@Override
-	protected void afterInsert() throws Exception {
+	protected void afterInsert() throws Exception
+	{
 		//获取引用枚举的表单
 		String sql = " select  distinct(FK_MapData)from Sys_FrmRB where EnumKey='" + this.getEnumKey() + "'";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
@@ -246,7 +233,7 @@ public class SysEnum extends EntityMyPK
 				FrmRB frmrb1 = new FrmRB();
 				frmrb1.setMyPK(fk_mapdata + "_" + this.getEnumKey() + "_" + this.getIntKey());
 
-				frmrb.setFK_MapData(fk_mapdata);
+				frmrb.setFrmID(fk_mapdata);
 				frmrb.setKeyOfEn(this.getEnumKey());
 				frmrb.setEnumKey(this.getEnumKey());
 				frmrb.setLab(this.getLab());

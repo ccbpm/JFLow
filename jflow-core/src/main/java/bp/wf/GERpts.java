@@ -1,9 +1,6 @@
 package bp.wf;
 
 import bp.en.*;
-import bp.wf.template.*;
-import bp.sys.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -14,14 +11,16 @@ public class GERpts extends bp.en.EntitiesOID
 	/** 
 	 报表s
 	*/
-	public GERpts() throws Exception {
+	public GERpts()
+	{
 	}
 
 	/** 
 	 获得一个实例.
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new GERpt();
 	}
 
@@ -32,7 +31,8 @@ public class GERpts extends bp.en.EntitiesOID
 	 
 	 @return List
 	*/
-	public final java.util.List<GERpt> ToJavaList() {
+	public final java.util.List<GERpt> ToJavaList()
+	{
 		return (java.util.List<GERpt>)(Object)this;
 	}
 	/** 
@@ -40,7 +40,8 @@ public class GERpts extends bp.en.EntitiesOID
 	 
 	 @return List
 	*/
-	public final ArrayList<GERpt> Tolist()  {
+	public final ArrayList<GERpt> Tolist()
+	{
 		ArrayList<GERpt> list = new ArrayList<GERpt>();
 		for (int i = 0; i < this.size(); i++)
 		{

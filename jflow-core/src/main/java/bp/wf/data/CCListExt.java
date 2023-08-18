@@ -53,8 +53,7 @@ public class CCListExt extends EntityMyPK
 	{
 		return this.GetValStringByKey(CCListAttr.Domain);
 	}
-	public final void setDomain(String value) throws Exception
-	{
+	public final void setDomain(String value){
 		this.SetValByKey(CCListAttr.Domain, value);
 	}
 	/** 
@@ -64,16 +63,14 @@ public class CCListExt extends EntityMyPK
 	{
 		return this.GetValStringByKey(CCListAttr.CCTo);
 	}
-	public final void setCCTo(String value) throws Exception
-	{
+	public final void setCCTo(String value){
 		this.SetValByKey(CCListAttr.CCTo, value);
 	}
 	public final String getOrgNo()  throws Exception
 	{
 		return this.GetValStringByKey(CCListAttr.OrgNo);
 	}
-	public final void setOrgNo(String value) throws Exception
-	{
+	public final void setOrgNo(String value){
 		this.SetValByKey(CCListAttr.OrgNo, value);
 	}
 	/** 
@@ -88,49 +85,10 @@ public class CCListExt extends EntityMyPK
 		}
 		return s;
 	}
-	public final void setCCToName(String value) throws Exception
-	{
+	public final void setCCToName(String value){
 		this.SetValByKey(CCListAttr.CCToName, value);
 	}
-	/** 
-	 读取时间
-	*/
-	public final String getCDT()  throws Exception
-	{
-		return this.GetValStringByKey(CCListAttr.CDT);
-	}
-	public final void setCDT(String value) throws Exception
-	{
-		this.SetValByKey(CCListAttr.CDT, value);
-	}
-	/** 
-	 抄送人所在的节点编号
-	*/
-	public final int getFK_Node()  throws Exception
-	{
-		return this.GetValIntByKey(CCListAttr.FK_Node);
-	}
-	public final void setFK_Node(int value) throws Exception
-	{
-		this.SetValByKey(CCListAttr.FK_Node, value);
-	}
 
-	public final long getWorkID()  throws Exception
-	{
-		return this.GetValInt64ByKey(CCListAttr.WorkID);
-	}
-	public final void setWorkID(long value) throws Exception
-	{
-		this.SetValByKey(CCListAttr.WorkID, value);
-	}
-	public final long getFID()  throws Exception
-	{
-		return this.GetValInt64ByKey(CCListAttr.FID);
-	}
-	public final void setFID(long value) throws Exception
-	{
-		this.SetValByKey(CCListAttr.FID, value);
-	}
 	/** 
 	 父流程工作ID
 	*/
@@ -138,8 +96,7 @@ public class CCListExt extends EntityMyPK
 	{
 		return this.GetValInt64ByKey(CCListAttr.PWorkID);
 	}
-	public final void setPWorkID(long value) throws Exception
-	{
+	public final void setPWorkID(long value){
 		this.SetValByKey(CCListAttr.PWorkID, value);
 	}
 	/** 
@@ -149,31 +106,22 @@ public class CCListExt extends EntityMyPK
 	{
 		return this.GetValStringByKey(CCListAttr.PFlowNo);
 	}
-	public final void setPFlowNo(String value) throws Exception
-	{
+	public final void setPFlowNo(String value){
 		this.SetValByKey(CCListAttr.PFlowNo, value);
 	}
-	/** 
-	 流程编号
-	*/
-	public final String getFK_FlowT()  throws Exception
-	{
-		return this.GetValRefTextByKey(CCListAttr.FK_Flow);
-	}
+
 	public final String getFlowName()  throws Exception
 	{
 		return this.GetValStringByKey(CCListAttr.FlowName);
 	}
-	public final void setFlowName(String value) throws Exception
-	{
+	public final void setFlowName(String value){
 		this.SetValByKey(CCListAttr.FlowName, value);
 	}
 	public final String getNodeName()  throws Exception
 	{
 		return this.GetValStringByKey(CCListAttr.NodeName);
 	}
-	public final void setNodeName(String value) throws Exception
-	{
+	public final void setNodeName(String value){
 		this.SetValByKey(CCListAttr.NodeName, value);
 	}
 	/** 
@@ -183,8 +131,7 @@ public class CCListExt extends EntityMyPK
 	{
 		return this.GetValStringByKey(CCListAttr.Title);
 	}
-	public final void setTitle(String value) throws Exception
-	{
+	public final void setTitle(String value){
 		this.SetValByKey(CCListAttr.Title, value);
 	}
 	/** 
@@ -194,8 +141,7 @@ public class CCListExt extends EntityMyPK
 	{
 		return this.GetValStringByKey(CCListAttr.Doc);
 	}
-	public final void setDoc(String value) throws Exception
-	{
+	public final void setDoc(String value){
 		this.SetValByKey(CCListAttr.Doc, value);
 	}
 	public final String getDocHtml()  throws Exception
@@ -205,21 +151,19 @@ public class CCListExt extends EntityMyPK
 	/** 
 	 抄送对象
 	*/
-	public final String getFK_Flow()  throws Exception
+	public final String getFlowNo()  throws Exception
 	{
-		return this.GetValStringByKey(CCListAttr.FK_Flow);
+		return this.GetValStringByKey(CCListAttr.FlowNo);
 	}
-	public final void setFK_Flow(String value) throws Exception
-	{
-		this.SetValByKey(CCListAttr.FK_Flow, value);
+	public final void setFlowNo(String value){
+		this.SetValByKey(CCListAttr.FlowNo, value);
 	}
-	public final String getRec()  throws Exception
+	public final String getRecEmpNo()  throws Exception
 	{
-		return this.GetValStringByKey(CCListAttr.Rec);
+		return this.GetValStringByKey(CCListAttr.RecEmpNo);
 	}
-	public final void setRec(String value) throws Exception
-	{
-		this.SetValByKey(CCListAttr.Rec, value);
+	public final void setRecEmpNo(String value){
+		this.SetValByKey(CCListAttr.RecEmpNo, value);
 	}
 	/** 
 	 读取日期
@@ -228,8 +172,7 @@ public class CCListExt extends EntityMyPK
 	{
 		return this.GetValStringByKey(CCListAttr.ReadDT);
 	}
-	public final void setReadDT(String value) throws Exception
-	{
+	public final void setReadDT(String value){
 		this.SetValByKey(CCListAttr.ReadDT, value);
 	}
 	/** 
@@ -239,8 +182,7 @@ public class CCListExt extends EntityMyPK
 	{
 		return this.GetValStringByKey(CCListAttr.RDT);
 	}
-	public final void setRDT(String value) throws Exception
-	{
+	public final void setRDT(String value){
 		this.SetValByKey(CCListAttr.RDT, value);
 	}
 	/** 
@@ -250,8 +192,7 @@ public class CCListExt extends EntityMyPK
 	{
 		return this.GetValBooleanByKey(CCListAttr.InEmpWorks);
 	}
-	public final void setInEmpWorks(boolean value) throws Exception
-	{
+	public final void setInEmpWorks(boolean value){
 		this.SetValByKey(CCListAttr.InEmpWorks, value);
 	}
 
@@ -278,54 +219,43 @@ public class CCListExt extends EntityMyPK
 
 		Map map = new Map("WF_CCList", "抄送");
 
-		map.AddMyPK(true); //组合主键 WorkID+"_"+FK_Node+"_"+FK_Emp
+		map.AddMyPK(); //组合主键 WorkID+"_"+FK_Node+"_"+FK_Emp
+		map.AddTBInt(CCListAttr.WorkID, 0, "工作ID", false, true);
+		map.AddTBInt(CCListAttr.NodeIDCC, 0, "节点", false, false);
+		map.AddTBInt(CCListAttr.NodeIDWork, 0, "节点", false, false);
+		map.AddTBInt(CCListAttr.FID, 0, "FID", false, false);
+		map.AddTBString(CCListAttr.FlowNo, null, "流程编号", false, false, 0, 5, 10, true);
 
 		map.AddTBString(CCListAttr.Title, null, "标题", true, true, 0, 500, 10, true);
-
 		map.AddDDLSysEnum(CCListAttr.Sta, 0, "状态", true, false, "CCSta", "@0=未读@1=已读@2=已回复@3=删除");
 
-			//状态  @0=抄送@1=已读@2=已回复@3=已删除
-			//map.AddTBInt(CCListAttr.Sta, 0, "状态", true, true);
-			//map.AddTBInt(CCListAttr.IsRepaly, 0, "是否回复？", true, true);
-
-		map.AddTBString(CCListAttr.FK_Flow, null, "流程编号", false, false, 0, 5, 10, true);
-		map.AddTBString(CCListAttr.FlowName, null, "流流程", true, true, 0, 200, 10, true);
-
-		map.AddTBInt(CCListAttr.FK_Node, 0, "节点", false, false);
+		map.AddTBString(CCListAttr.FlowName, null, "流程", true, true, 0, 200, 10, true);
 		map.AddTBString(CCListAttr.NodeName, null, "节点", true, true, 0, 500, 10, true);
-
-		map.AddTBInt(CCListAttr.WorkID, 0, "工作ID", false, true);
-		map.AddTBInt(CCListAttr.FID, 0, "FID", false, false);
-
-		map.AddTBString(CCListAttr.Rec, null, "抄送人员", true, false, 0, 50, 10, true);
-		map.AddTBDateTime(CCListAttr.RDT, null, "抄送日期", true, false);
+		map.AddTBString(CCListAttr.RecEmpNo, null, "抄送人", false, false, 0, 50, 10, false);
+		map.AddTBString(CCListAttr.RecEmpName, null, "抄送人", true, false, 0, 50, 10, true);
+		map.AddTBDateTime(CCListAttr.RDT, null, "抄送日期", true, true);
 
 		map.AddTBString(CCListAttr.CCTo, null, "抄送给", false, false, 0, 50, 10, true);
 		map.AddTBString(CCListAttr.CCToName, null, "抄送给(人员名称)", false, false, 0, 50, 10, true);
 
-			//map.AddTBString(CCListAttr.CCToDept, null, "抄送到部门", true, false, 0, 50, 10, true);
-			//map.AddTBString(CCListAttr.CCToDeptName, null, "抄送给部门名称", true, false, 0, 600, 10, true);
-
 		map.AddTBString(CCListAttr.OrgNo, null, "组织", false, false, 0, 50, 10, true);
+		map.AddTBDateTime(CCListAttr.CDT, null, "打开时间", true, true);
+		map.AddTBDateTime(CCListAttr.ReadDT, null, "阅读时间", true, true);
 
-		map.AddTBDateTime(CCListAttr.CDT, null, "打开时间", true, false);
-		map.AddTBDateTime(CCListAttr.ReadDT, null, "阅读时间", true, false);
-
-			//add by zhoupeng  
+		//add by zhoupeng
 		map.AddTBString(CCListAttr.Domain, null, "Domain", false, true, 0, 50, 10, true);
 		map.AddTBString(CCListAttr.OrgNo, null, "OrgNo", false, true, 0, 50, 10, true);
 
-
-			///#region 查询条件.
-
+         //#region 查询条件.
 		map.DTSearchLabel = "抄送日期";
-		map.DTSearchKey=CCListAttr.RDT;
-		map.DTSearchWay= DTSearchWay.ByDate;
+		map.DTSearchKey = CCListAttr.RDT;
+		map.DTSearchWay = bp.sys.DTSearchWay.ByDate;
 
-		map.AddSearchAttr(CCListAttr.Sta, 130);
+		map.AddSearchAttr(CCListAttr.Sta); //按状态.
 
-			//增加隐藏条件.
-		if (SystemConfig.getCCBPMRunModel() ==  bp.sys.CCBPMRunModel.Single || SystemConfig.getCCBPMRunModel() ==  bp.sys.CCBPMRunModel.GroupInc)
+		//增加隐藏条件.
+		if (bp.difference.SystemConfig.getCCBPMRunModel() == bp.sys.CCBPMRunModel.Single
+				|| bp.difference.SystemConfig.getCCBPMRunModel() == bp.sys.CCBPMRunModel.GroupInc)
 		{
 			map.AddHidden(CCListAttr.CCTo, "=", "@WebUser.No");
 		}
@@ -334,8 +264,7 @@ public class CCListExt extends EntityMyPK
 			map.AddHidden(CCListAttr.OrgNo, "=", "@WebUser.OrgNo");
 			map.AddHidden(CCListAttr.CCTo, "=", "@WebUser.No");
 		}
-
-			///#endregion 查询条件.
+        //#endregion 查询条件.
 
 
 		this.set_enMap(map);

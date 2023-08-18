@@ -1,6 +1,6 @@
 package bp.ccfast.portal.windowext;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.*;
 import bp.ccfast.*;
 import bp.ccfast.portal.*;

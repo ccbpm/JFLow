@@ -1,6 +1,7 @@
 package bp.ccbill.template;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.en.Map;
 
 /** 
  单据可创建的人员
@@ -15,27 +16,22 @@ public class EmpCreate extends EntityMM
 	/** 
 	表单ID
 	*/
-	public final int getFrmID()
-	{
+	public final int getFrmID() {
 		return this.GetValIntByKey(EmpCreateAttr.FrmID);
 	}
-	public final void setFrmID(int value)
-	 {
+	public final void setFrmID(int value)  {
 		this.SetValByKey(EmpCreateAttr.FrmID, value);
 	}
 	/** 
 	 到人员
 	*/
-	public final String getFK_Emp()
-	{
+	public final String getEmpNo() {
 		return this.GetValStringByKey(EmpCreateAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)
-	 {
+	public final void setEmpNo(String value)  {
 		this.SetValByKey(EmpCreateAttr.FK_Emp, value);
 	}
-	public final String getFK_EmpT()
-	{
+	public final String getEmpNoT() {
 		return this.GetValRefTextByKey(EmpCreateAttr.FK_Emp);
 	}
 
@@ -46,13 +42,15 @@ public class EmpCreate extends EntityMM
 	/** 
 	 单据可创建的人员
 	*/
-	public EmpCreate() {
+	public EmpCreate()
+	{
 	}
-	/** 
-	 重写基类方法
-	*/
+	/**
+	 * 重写基类方法
+	 */
 	@Override
-	public bp.en.Map getEnMap()  {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();

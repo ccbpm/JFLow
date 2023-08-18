@@ -2,11 +2,7 @@ package bp.sys;
 
 import bp.da.*;
 import bp.en.*;
-import bp.*;
-import bp.*;
 import bp.en.Map;
-
-import java.util.*;
 
 /** 
  数据批阅
@@ -19,53 +15,44 @@ public class FrmDBRemark extends EntityMyPK
 	 权限控制
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.Readonly();
 		uac.IsView = false;
 		return uac;
 	}
-	public final String getRemark() throws Exception
-	{
+	public final String getRemark()  {
 		return this.GetValStringByKey(FrmDBRemarkAttr.Remark);
 	}
-	public final void setRemark(String value)  throws Exception
-	 {
+	public final void setRemark(String value){
 		this.SetValByKey(FrmDBRemarkAttr.Remark, value);
 	}
-	public final String getFrmID() throws Exception
-	{
+	public final String getFrmID()  {
 		return this.GetValStringByKey(FrmDBRemarkAttr.FrmID);
 	}
-	public final void setFrmID(String value)  throws Exception
-	 {
+	public final void setFrmID(String value){
 		this.SetValByKey(FrmDBRemarkAttr.FrmID, value);
 	}
 	/** 
 	 FK_Emp
 	*/
-	public final String getRecNo() throws Exception
-	{
+	public final String getRecNo()  {
 		return this.GetValStringByKey(FrmDBRemarkAttr.RecNo);
 	}
-	public final void setRecNo(String value)  throws Exception
-	 {
+	public final void setRecNo(String value){
 		this.SetValByKey(FrmDBRemarkAttr.RecNo, value);
 	}
-	public final String getRecName() throws Exception
-	{
+	public final String getRecName()  {
 		return this.GetValStringByKey(FrmDBRemarkAttr.RecName);
 	}
-	public final void setRecName(String value)  throws Exception
-	 {
+	public final void setRecName(String value){
 		this.SetValByKey(FrmDBRemarkAttr.RecName, value);
 	}
-	public final String getRDT() throws Exception
-	{
+	public final String getRDT()  {
 		return this.GetValStringByKey(FrmDBRemarkAttr.RDT);
 	}
-	public final void setRDT(String value)  throws Exception
-	 {
+	public final void setRDT(String value){
 		this.SetValByKey(FrmDBRemarkAttr.RDT, value);
 	}
 
@@ -76,13 +63,15 @@ public class FrmDBRemark extends EntityMyPK
 	/** 
 	 数据批阅
 	*/
-	public FrmDBRemark()  {
+	public FrmDBRemark()
+	{
 	}
 	/** 
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -108,7 +97,8 @@ public class FrmDBRemark extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		this.setMyPK(DBAccess.GenerGUID());
 		this.setRDT(DataType.getCurrentDateTime());
 		if (DataType.IsNullOrEmpty(this.getRecNo()) == true)
@@ -121,8 +111,9 @@ public class FrmDBRemark extends EntityMyPK
 
 
 		///#region 重写
-
-	public Entities getNewEntities() throws Exception {
+	@Override
+	public Entities GetNewEntities()
+	{
 		return new FrmDBRemarks();
 	}
 

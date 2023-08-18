@@ -1,5 +1,4 @@
 package bp.sys;
-
 import bp.en.*;
 
 /** 
@@ -22,7 +21,7 @@ public class DefValAttr extends EntityMyPKAttr
 	/** 
 	 节点表编号
 	*/
-	public static final String FK_MapData = "FK_MapData";
+	public static final String FrmID = "FrmID";
 	/** 
 	 节点对应字段
 	*/
@@ -34,7 +33,7 @@ public class DefValAttr extends EntityMyPKAttr
 	/** 
 	 人员编号
 	*/
-	public static final String FK_Emp = "FK_Emp";
+	public static final String EmpNo = "EmpNo";
 	/** 
 	 节点文本
 	*/

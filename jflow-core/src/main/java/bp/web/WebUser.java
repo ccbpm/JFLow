@@ -7,10 +7,6 @@ import bp.sys.*;
 import bp.pub.*;
 import bp.difference.*;
 import bp.tools.StringUtils;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URLDecoder;
@@ -90,7 +86,7 @@ public class WebUser {
             SystemConfig.setIsBSsystem(true);
         }
 
-        if (SystemConfig.getIsBSsystem()) {
+        if (SystemConfig.isBSsystem()) {
             bp.sys.base.Glo.WriteUserLog(em.getNo(), "登录");
         }
         HashMap<String, String> ht = new HashMap<>();
@@ -112,7 +108,7 @@ public class WebUser {
         }
 
         //解决没有部门编号的问题.
-        if (DataType.IsNullOrEmpty(em.getOrgNo()) == false && DataType.IsNullOrEmpty(em.getFK_Dept()) == true)
+        if (DataType.IsNullOrEmpty(em.getOrgNo()) == false && DataType.IsNullOrEmpty(em.getDeptNo()) == true)
         {
             bp.port.DeptEmp de = new bp.port.DeptEmp();
             de.SetValByKey("FK_Dept", em.getOrgNo());
@@ -123,7 +119,7 @@ public class WebUser {
         }
 
         /// 解决部门的问题.
-        if (DataType.IsNullOrEmpty(em.getFK_Dept()) == true) {
+        if (DataType.IsNullOrEmpty(em.getDeptNo()) == true) {
             String sql = "";
 
                 sql = "SELECT FK_Dept FROM Port_DeptEmp WHERE FK_Emp='" + em.getNo() + "'";
@@ -153,15 +149,15 @@ public class WebUser {
         }
 
         bp.port.Dept dept = new Dept();
-        dept.SetValByKey("No", em.getFK_Dept());
+        dept.SetValByKey("No", em.getDeptNo());
         if (dept.RetrieveFromDBSources() == 0) {
             throw new RuntimeException(
-                    "@登录人员(" + em.getUserID() + "," + em.getName() + ")没有维护部门,或者部门编号{" + em.getFK_Dept() + "}不存在.");
+                    "@登录人员(" + em.getUserID() + "," + em.getName() + ")没有维护部门,或者部门编号{" + em.getDeptNo() + "}不存在.");
         }
         /// 解决部门的问题.
 
-        ht.put("FK_Dept", em.getFK_Dept());
-        ht.put("FK_DeptName", em.getFK_DeptText());
+        ht.put("FK_Dept", em.getDeptNo());
+        ht.put("FK_DeptName", em.getDeptText());
 
         ht.put("SysLang", lang);
 
@@ -178,7 +174,7 @@ public class WebUser {
             }
         }
 
-        if (SystemConfig.getIsBSsystem()) {
+        if (SystemConfig.isBSsystem()) {
 
             // cookie操作，为适应不同平台，统一使用HttpContextHelper
             ContextHolderUtils.addCookie("No", em.getUserID());
@@ -188,7 +184,7 @@ public class WebUser {
                 ContextHolderUtils.addCookie("IsRememberMe", "0");
             }
 
-            ContextHolderUtils.addCookie("FK_Dept", em.getFK_Dept());
+            ContextHolderUtils.addCookie("FK_Dept", em.getDeptNo());
 
             //设置组织编号.
             if (bp.difference.SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
@@ -281,13 +277,13 @@ public class WebUser {
             if(SystemConfig.getRedisIsEnable()==false){
                 WebUser.setNo("");
                 WebUser.setName("");
-                WebUser.setFK_Dept("");
-                WebUser.setFK_DeptName("");
+                WebUser.setDeptNo("");
+                WebUser.setDeptName("");
                 WebUser.setSID("");
                 WebUser.setAuth("");
                 WebUser.setSysLang("");
             }
-            if (SystemConfig.getIsBSsystem()) {
+            if (SystemConfig.isBSsystem()) {
 
                 ContextHolderUtils.addCookie("No", "");
                 ContextHolderUtils.addCookie("Name", "");
@@ -361,18 +357,18 @@ public class WebUser {
     /**
      * 部门名称
      */
-    public static String getFK_DeptName() {
+    public static String getDeptName() {
         return getItemValue("FK_DeptName");
     }
 
-    public static void setFK_DeptName(String value) throws Exception {
+    public static void setDeptName(String value) throws Exception {
         setItemValue("FK_DeptName", value);
     }
 
     /**
      * 部门全称
      */
-    public static String getFK_DeptNameOfFull() {
+    public static String getDeptNameOfFull() {
         String val = getItemValue("FK_DeptNameOfFull");
 		if (DataType.IsNullOrEmpty(val))
 		{
@@ -381,23 +377,23 @@ public class WebUser {
 
 				Paras ps = new Paras();
 				ps.SQL = "SELECT NameOfPath FROM Port_Dept WHERE No =" + ps.getDBStr() + "No";
-				ps.Add("No", WebUser.getFK_Dept());
+				ps.Add("No", WebUser.getDeptNo());
 				val = DBAccess.RunSQLReturnStringIsNull(ps, null);
 				if (DataType.IsNullOrEmpty(val))
-					val = WebUser.getFK_DeptName();
+					val = WebUser.getDeptName();
 
-				WebUser.setFK_DeptNameOfFull(val);
+				WebUser.setDeptNameOfFull(val);
 				return val;
 			}
 			catch (java.lang.Exception e)
 			{
-				val = WebUser.getFK_DeptName();
+				val = WebUser.getDeptName();
 			}
 		}
 		return val;
     }
 
-    public static void setFK_DeptNameOfFull(String value) throws Exception {
+    public static void setDeptNameOfFull(String value) throws Exception {
         setItemValue("FK_DeptNameOfFull", value);
     }
 
@@ -405,8 +401,9 @@ public class WebUser {
      * 令牌
      */
     public static String getToken() {
-        return getIp();
-        //return GetValFromCookie("Token", null, false);
+        if(SystemConfig.getRedisIsEnable())
+            return getIp();
+        return getItemValue("Token");
     }
 
     public static void setToken(String value) throws Exception {
@@ -429,7 +426,7 @@ public class WebUser {
     /**
      * 当前登录人员的部门
      */
-    public static String getFK_Dept() {
+    public static String getDeptNo() {
         String val =  getItemValue("FK_Dept");
 		if (val == null)
 		{
@@ -452,7 +449,7 @@ public class WebUser {
 		return val;
     }
 
-    public static void setFK_Dept(String value){
+    public static void setDeptNo(String value){
         setItemValue("FK_Dept", value);
     }
 
@@ -462,11 +459,11 @@ public class WebUser {
     public static String getDeptParentNo() throws Exception {
         String val = getItemValue("DeptParentNo");
         if (DataType.IsNullOrEmpty(val)) {
-            if (bp.web.WebUser.getFK_Dept() == null) {
+            if (bp.web.WebUser.getDeptNo() == null) {
                 throw new RuntimeException("@err-001 DeptParentNo, FK_Dept 登录信息丢失。");
             }
 
-            Dept dept = new Dept(bp.web.WebUser.getFK_Dept());
+            Dept dept = new Dept(bp.web.WebUser.getDeptNo());
             bp.web.WebUser.setDeptParentNo(dept.getParentNo());
             return dept.getParentNo();
         }
@@ -542,7 +539,7 @@ public class WebUser {
      * param keyVals
      */
     public static void SetValToCookie(String keyVals) {
-        if (SystemConfig.getIsBSsystem() == false) {
+        if (SystemConfig.isBSsystem() == false) {
             return;
         }
         AtPara ap = new AtPara(keyVals);
@@ -558,7 +555,7 @@ public class WebUser {
         try{
             if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single) {
                 GloVar gloVar = new GloVar();
-                gloVar.setNo(WebUser.getFK_Dept() + "_" + WebUser.getNo() + "_Adminer");
+                gloVar.setNo(WebUser.getDeptNo() + "_" + WebUser.getNo() + "_Adminer");
                 if(gloVar.RetrieveFromDBSources()==0)
                     return false; //单机版.
                 return true;
@@ -638,10 +635,10 @@ public class WebUser {
     public static void UpdateSIDAndOrgNoSQL() throws Exception {
         String sql = "";
         if (DBAccess.IsView("Port_Emp") == false) {
-            sql = "UPDATE Port_Emp SET OrgNo='" + WebUser.getOrgNo() + "', FK_Dept='" + WebUser.getFK_Dept() + "' WHERE No='" + WebUser.getNo() + "'";
+            sql = "UPDATE Port_Emp SET OrgNo='" + WebUser.getOrgNo() + "', FK_Dept='" + WebUser.getDeptNo() + "' WHERE No='" + WebUser.getNo() + "'";
             DBAccess.RunSQL(sql);
 
-            sql = "UPDATE WF_Emp SET OrgNo='" + WebUser.getOrgNo() + "', FK_Dept='" + WebUser.getFK_Dept() + "' WHERE No='" + WebUser.getNo() + "'";
+            sql = "UPDATE WF_Emp SET OrgNo='" + WebUser.getOrgNo() + "', FK_Dept='" + WebUser.getDeptNo() + "' WHERE No='" + WebUser.getNo() + "'";
             DBAccess.RunSQL(sql);
             return;
         }
@@ -653,7 +650,7 @@ public class WebUser {
         }
         //      throw new Exception("err@系统管理员缺少全局配置变量 AppSetting UpdateSIDAndOrgNoSQL ");
 
-        sql = sql.replace("@FK_Dept", WebUser.getFK_Dept());
+        sql = sql.replace("@FK_Dept", WebUser.getDeptNo());
         sql = sql.replace("@OrgNo", WebUser.getOrgNo());
         sql = sql.replace("@Token", WebUser.getToken());
         sql = sql.replace("@No", WebUser.getNo());

@@ -1,6 +1,7 @@
 package bp.wf.template.frm;
 
-import bp.en.*;
+import bp.da.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
 import java.util.*;
 
@@ -14,12 +15,13 @@ public class MapDtlExts extends EntitiesNoName
 	/** 
 	 明细s
 	*/
-	public MapDtlExts() throws Exception {
+	public MapDtlExts()
+	{
 	}
 	/** 
 	 明细s
 	 
-	 param fk_mapdata s
+	 @param fk_mapdata s
 	*/
 	public MapDtlExts(String fk_mapdata) throws Exception {
 		this.Retrieve(MapDtlAttr.FK_MapData, fk_mapdata, MapDtlAttr.FK_Node, 0, MapDtlAttr.No);
@@ -28,7 +30,8 @@ public class MapDtlExts extends EntitiesNoName
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new MapDtlExt();
 	}
 
@@ -42,7 +45,8 @@ public class MapDtlExts extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<MapDtlExt> ToJavaList() {
+	public final java.util.List<MapDtlExt> ToJavaList()
+	{
 		return (java.util.List<MapDtlExt>)(Object)this;
 	}
 	/** 
@@ -50,7 +54,8 @@ public class MapDtlExts extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<MapDtlExt> Tolist()  {
+	public final ArrayList<MapDtlExt> Tolist()
+	{
 		ArrayList<MapDtlExt> list = new ArrayList<MapDtlExt>();
 		for (int i = 0; i < this.size(); i++)
 		{

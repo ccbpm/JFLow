@@ -38,8 +38,7 @@ public abstract class EntityOID extends Entity
 			return 0;
 		}
 	}
-	public  void setOID(long value)
-	{
+	public  void setOID(long value)  {
 		this.SetValByKey(EntityOIDAttr.OID, value);
 	}
 
@@ -59,8 +58,7 @@ public abstract class EntityOID extends Entity
 	 param oid oid
 	 * @throws Exception 
 	*/
-	protected EntityOID(int oid) throws Exception
-	{
+	protected EntityOID(int oid) throws Exception {
 		this.SetValByKey(EntityOIDAttr.OID, oid);
 		this.Retrieve();
 	}
@@ -112,7 +110,7 @@ public abstract class EntityOID extends Entity
 
 			/* DEL BY PENG 2008-04-27
 			// 生成数据库判断语句。
-			string selectSQL="SELECT "+this.PKField + " FROM "+ this.getEnMap().getPhysicsTable() + " WHERE " ;
+			String selectSQL="SELECT "+this.PKField + " FROM "+ this.getEnMap().getPhysicsTable() + " WHERE " ;
 			switch(this.getEnMap().EnDBUrl.DBType )
 			{
 				case MSSQL:
@@ -132,7 +130,7 @@ public abstract class EntityOID extends Entity
 			switch(this.getEnMap().EnDBUrl.DBUrlType )
 			{
 				case DBUrlType.AppCenterDSN:
-					return DBAccess.IsExits()( selectSQL) ;
+					return DBAccess.getIsExits()( selectSQL) ;
 				case DBUrlType.DBAccessOfMSSQL:
 					return DBAccessOfMSSQL.getIsExits()( selectSQL) ;
 				case DBUrlType.DBAccessOfOLE:
@@ -255,8 +253,7 @@ public abstract class EntityOID extends Entity
 	 按照指定的OID Insert.
 	 * @throws Exception 
 	*/
-	public final void InsertAsOID(int oid) throws Exception
-	{
+	public final void InsertAsOID(int oid) throws Exception {
 		this.SetValByKey("OID", oid);
 		try
 		{
@@ -297,10 +294,9 @@ public abstract class EntityOID extends Entity
 	 param oid
 	 * @throws Exception 
 	*/
-	public final void SaveAsOID(long oid) throws Exception
-	{
+	public final void SaveAsOID(long oid) throws Exception {
 		this.SetValByKey("OID", oid);
-		if (this.getIsExits() == false)
+		if (this.IsExits() == false)
 		{
 			this.InsertAsOID(oid);
 		}

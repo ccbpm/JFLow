@@ -1,6 +1,7 @@
 package bp.ccfast.portal.windowext;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.en.Map;
 
 /** 
  折线图
@@ -13,7 +14,8 @@ public class ChartLine extends EntityNoName
 	 控制权限
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (bp.web.WebUser.getIsAdmin() == true)
 		{
@@ -40,27 +42,24 @@ public class ChartLine extends EntityNoName
 	/** 
 	 折线图
 	*/
-	public ChartLine()  {
+	public ChartLine()
+	{
 	}
 	/** 
 	 折线图
 	 
-	 param no
+	 @param no
 	*/
-	public ChartLine(String no)
-	{
+	public ChartLine(String no) throws Exception  {
 		this.setNo(no);
-		try {
-			this.Retrieve();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.Retrieve();
 	}
-	/** 
-	 EnMap
-	*/
+	/**
+	 * EnMap
+	 */
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();

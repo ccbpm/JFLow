@@ -1,12 +1,12 @@
 package bp.ccfast.ccmenu;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.*;
 import bp.ccfast.*;
 import java.util.*;
 
 /** 
- 权限组岗位s
+ 权限组角色s
 */
 public class GroupStations extends EntitiesMM
 {
@@ -15,13 +15,15 @@ public class GroupStations extends EntitiesMM
 	/** 
 	 权限组s
 	*/
-	public GroupStations()  {
+	public GroupStations()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new GroupStation();
 	}
 
@@ -34,7 +36,8 @@ public class GroupStations extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final java.util.List<GroupStation> ToJavaList()  {
+	public final java.util.List<GroupStation> ToJavaList()
+	{
 		return (java.util.List<GroupStation>)(Object)this;
 	}
 	/** 
@@ -42,7 +45,8 @@ public class GroupStations extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final ArrayList<GroupStation> Tolist()  {
+	public final ArrayList<GroupStation> Tolist()
+	{
 		ArrayList<GroupStation> list = new ArrayList<GroupStation>();
 		for (int i = 0; i < this.size(); i++)
 		{

@@ -1,12 +1,8 @@
 package bp.wf.template;
 
 import bp.da.*;
-import bp.en.*;
-import bp.en.Map;
-import bp.wf.port.*;
-import bp.*;
-import bp.wf.*;
-import java.util.*;
+import bp.en.*; import bp.en.Map;
+
 
 /** 
  节点部门
@@ -21,27 +17,24 @@ public class NodeDept extends EntityMyPK
 	/** 
 	节点
 	*/
-	public final int getFK_Node() throws Exception
-	{
+	public final int getNodeID()  {
 		return this.GetValIntByKey(NodeDeptAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)  throws Exception
-	 {
+	public final void setNodeID(int value){
 		this.SetValByKey(NodeDeptAttr.FK_Node, value);
 	}
 	/** 
 	 工作部门
 	*/
-	public final String getFK_Dept() throws Exception
-	{
+	public final String getDeptNo()  {
 		return this.GetValStringByKey(NodeDeptAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)  throws Exception
-	 {
+	public final void setDeptNo(String value){
 		this.SetValByKey(NodeDeptAttr.FK_Dept, value);
 	}
 	@Override
-	public UAC getHisUAC() {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.OpenAll();
 		return super.getHisUAC();
@@ -54,38 +47,44 @@ public class NodeDept extends EntityMyPK
 	/** 
 	 节点部门
 	*/
-	public NodeDept()  {
+	public NodeDept()
+	{
 	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_NodeDept", "节点部门");
-
-		map.setDepositaryOfEntity( Depositary.None);
-		map.setDepositaryOfMap( Depositary.Application);
-
+		map.setDepositaryOfEntity(Depositary.None);
+		map.setDepositaryOfMap(Depositary.Application);
 		map.IndexField = NodeEmpAttr.FK_Node;
 
-		map.AddMyPK();
+		map.AddMyPK(true);
 		map.AddTBInt(NodeStationAttr.FK_Node, 0, "节点", false, false);
+		map.AddDDLEntities(NodeDeptAttr.FK_Dept, null, "部门", new bp.port.Depts(), true);
 
-		map.AddDDLEntities(NodeDeptAttr.FK_Dept,null,"部门",new bp.port.Depts(),true);
+		//            map.AddTBIntPK(NodeStationAttr.FK_Node, 0, "节点", false, false);
+		//map.AddDDLEntitiesPK( NodeDeptAttr.FK_Dept,null,"部门",new bp.port.Depts(),true);
 
 		this.set_enMap(map);
 
 		return this.get_enMap();
 	}
+
+		///#endregion
+
+
 	@Override
-	protected  boolean beforeUpdateInsertAction() throws Exception
+	protected boolean beforeUpdateInsertAction() throws Exception
 	{
-		this.setMyPK(this.getFK_Node() + "_" + this.getFK_Dept());
+		this.setMyPK(this.getNodeID() + "_" + this.getDeptNo());
 		return super.beforeUpdateInsertAction();
 	}
 

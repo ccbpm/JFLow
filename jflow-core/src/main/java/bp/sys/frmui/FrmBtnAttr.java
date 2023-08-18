@@ -1,6 +1,10 @@
 package bp.sys.frmui;
 
+import bp.da.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
 import bp.sys.*;
+import java.util.*;
 
 public class FrmBtnAttr extends MapAttrAttr
 {

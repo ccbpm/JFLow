@@ -1,6 +1,7 @@
 package bp.ccfast.ccmenu;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.en.Map;
 import bp.port.*;
 
 /** 
@@ -10,20 +11,16 @@ public class GroupEmp extends EntityMM
 {
 
 		///#region 属性
-	public final String getFK_Emp()
-	{
+	public final String getEmpNo() {
 		return this.GetValStringByKey(GroupEmpAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)
-	 {
+	public final void setEmpNo(String value)  {
 		this.SetValByKey(GroupEmpAttr.FK_Emp, value);
 	}
-	public final String getFKGroup()
-	{
+	public final String getFKGroup() {
 		return this.GetValStringByKey(GroupEmpAttr.FK_Group);
 	}
-	public final void setFKGroup(String value)
-	 {
+	public final void setFKGroup(String value)  {
 		this.SetValByKey(GroupEmpAttr.FK_Group, value);
 	}
 
@@ -34,14 +31,16 @@ public class GroupEmp extends EntityMM
 	/** 
 	 权限组人员
 	*/
-	public GroupEmp() {
+	public GroupEmp()
+	{
 	}
 
-	/** 
-	 权限组人员
-	*/
+	/**
+	 * 权限组人员
+	 */
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();

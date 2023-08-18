@@ -1,12 +1,7 @@
 package bp.wf;
 
-import bp.da.*;
 import bp.en.*;
-import bp.sys.*;
-import bp.wf.template.*;
-import bp.*;
 import java.util.*;
-import java.time.*;
 
 /** 
  轨迹集合s
@@ -21,7 +16,7 @@ public class Tracks extends bp.en.Entities
 	public Tracks() throws Exception {
 	}
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity() {
 		return new Track();
 	}
 

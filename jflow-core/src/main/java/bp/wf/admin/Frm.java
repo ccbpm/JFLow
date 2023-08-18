@@ -1,14 +1,10 @@
 package bp.wf.admin;
 
-import bp.da.*;
-import bp.en.Map;
-import bp.port.*;
 import bp.en.*;
+import bp.en.Map;
 import bp.web.*;
 import bp.sys.*;
-import bp.wf.data.*;
-import bp.wf.template.frm.*;
-import java.util.*;
+
 
 /** 
  流程
@@ -20,12 +16,10 @@ public class Frm extends EntityNoName
 	/** 
 	 存储表
 	*/
-	public final String getPTable()
-	{
+	public final String getPTable()  {
 		return this.GetValStringByKey(FrmAttr.PTable);
 	}
-	public final void setPTable(String value)
-	{
+	public final void setPTable(String value){
 		this.SetValByKey(FrmAttr.PTable, value);
 	}
 
@@ -59,8 +53,7 @@ public class Frm extends EntityNoName
 	 重写基类方法
 	*/
 	@Override
-	public Map getEnMap()
-	{
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -96,13 +89,13 @@ public class Frm extends EntityNoName
 		else
 		{
 			map.AddTBString(MapDataAttr.DBSrc, null, "数据源", false, false, 0, 500, 20);
-			map.AddDDLEntities(MapDataAttr.FK_FormTree, "01", "目录", new FrmSorts(), true);
+			map.AddDDLEntities(MapDataAttr.FK_FormTree, "01", "目录", new bp.wf.template.SysFormTrees(), true);
 		}
 
-			//表单的运行类型.
+		//表单的运行类型.
 		map.AddDDLSysEnum(MapDataAttr.FrmType, FrmType.FoolForm.getValue(), "表单类型", true, true, MapDataAttr.FrmType);
 
-			//表单解析 0 普通 1 页签展示
+		//表单解析 0 普通 1 页签展示
 		map.AddDDLSysEnum(MapDataAttr.FrmShowType, 0, "表单展示方式", true, true, "表单展示方式", "@0=普通方式@1=页签方式");
 
 
@@ -120,13 +113,13 @@ public class Frm extends EntityNoName
 		map.AddTBString(MapDataAttr.GUID, null, "GUID", true, true, 0, 128, 20, false);
 		map.AddTBString(MapDataAttr.Ver, null, "版本号", true, true, 0, 30, 20);
 		map.AddTBString(MapDataAttr.Note, null, "备注", true, false, 0, 400, 100, true);
-			//增加参数字段.
+		//增加参数字段.
 		map.AddTBAtParas(4000);
 		map.AddTBInt(MapDataAttr.Idx, 100, "顺序号", false, false);
 
 			///#endregion 设计者信息.
 
-		map.AddSearchAttr(MapDataAttr.FK_FormTree);
+		map.AddSearchAttr(MapDataAttr.FK_FormTree, 130);
 
 		this.set_enMap(map);
 		return this.get_enMap();

@@ -1,11 +1,6 @@
 package bp.wf;
 
-import bp.da.*;
-import bp.web.*;
 import bp.en.*;
-import bp.port.*;
-import bp.sys.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -16,13 +11,15 @@ public class Auths extends EntitiesMyPK
 	/** 
 	 授权
 	*/
-	public Auths() throws Exception {
+	public Auths()
+	{
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new Auth();
 	}
 
@@ -32,7 +29,8 @@ public class Auths extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<Auth> ToJavaList() {
+	public final java.util.List<Auth> ToJavaList()
+	{
 		return (java.util.List<Auth>)(Object)this;
 	}
 	/** 
@@ -40,7 +38,8 @@ public class Auths extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<Auth> Tolist()  {
+	public final ArrayList<Auth> Tolist()
+	{
 		ArrayList<Auth> list = new ArrayList<Auth>();
 		for (int i = 0; i < this.size(); i++)
 		{

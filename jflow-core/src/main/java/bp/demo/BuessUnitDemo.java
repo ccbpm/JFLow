@@ -11,7 +11,7 @@ public class BuessUnitDemo extends BuessUnitBase {
 	}
 
 	@Override
-	public String DoIt() throws Exception {
+	public String DoIt()  {
 		return null;
 	}
 

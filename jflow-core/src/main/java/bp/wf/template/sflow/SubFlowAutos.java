@@ -1,6 +1,9 @@
 package bp.wf.template.sflow;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.wf.*;
+import bp.wf.template.*;
 import java.util.*;
 
 /** 
@@ -14,7 +17,8 @@ public class SubFlowAutos extends EntitiesMyPK
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new SubFlowAuto();
 	}
 
@@ -25,12 +29,13 @@ public class SubFlowAutos extends EntitiesMyPK
 	/** 
 	 自动触发子流程集合
 	*/
-	public SubFlowAutos()  {
+	public SubFlowAutos()
+	{
 	}
 	/** 
 	 自动触发子流程集合.
 	 
-	 param fk_node 节点
+	 @param fk_node 节点
 	*/
 	public SubFlowAutos(int fk_node) throws Exception {
 		this.Retrieve(SubFlowYanXuAttr.FK_Node, fk_node, SubFlowYanXuAttr.SubFlowType, SubFlowType.AutoSubFlow.getValue(), SubFlowYanXuAttr.Idx);
@@ -45,7 +50,8 @@ public class SubFlowAutos extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<SubFlowAuto> ToJavaList() {
+	public final java.util.List<SubFlowAuto> ToJavaList()
+	{
 		return (java.util.List<SubFlowAuto>)(Object)this;
 	}
 	/** 
@@ -53,7 +59,8 @@ public class SubFlowAutos extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<SubFlowAuto> Tolist()  {
+	public final ArrayList<SubFlowAuto> Tolist()
+	{
 		ArrayList<SubFlowAuto> list = new ArrayList<SubFlowAuto>();
 		for (int i = 0; i < this.size(); i++)
 		{

@@ -1,7 +1,8 @@
 package bp.port;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
 import java.util.*;
 
 /** 
@@ -14,7 +15,8 @@ public class DeptEmps extends EntitiesMyPK
 	/** 
 	 工作部门人员信息
 	*/
-	public DeptEmps()  {
+	public DeptEmps()
+	{
 	}
 
 		///#endregion
@@ -25,7 +27,8 @@ public class DeptEmps extends EntitiesMyPK
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		return new DeptEmp();
 	}
 
@@ -38,7 +41,8 @@ public class DeptEmps extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<DeptEmp> ToJavaList() {
+	public final java.util.List<DeptEmp> ToJavaList()
+	{
 		return (java.util.List<DeptEmp>)(Object)this;
 	}
 	/** 
@@ -46,7 +50,8 @@ public class DeptEmps extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<DeptEmp> Tolist()  {
+	public final ArrayList<DeptEmp> Tolist()
+	{
 		ArrayList<DeptEmp> list = new ArrayList<DeptEmp>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -59,7 +64,8 @@ public class DeptEmps extends EntitiesMyPK
 
 
 		///#region 删除方法
-	public final String DelteNotInEmp() throws Exception {
+	public final String DelteNotInEmp()
+	{
 		String sql = "DELETE FROM Port_DeptEmp WHERE FK_Emp NOT IN (SELECT No FROM Port_Emp)";
 		DBAccess.RunSQL(sql);
 		return "删除成功";

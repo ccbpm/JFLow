@@ -28,7 +28,7 @@ public class GETree extends EntityNoName
 	 param no 编号
 	 * @throws Exception 
 	*/
-	public GETree(String no) throws Exception {
+	public GETree(String no) throws Exception  {
 		super(no);
 
 	}
@@ -41,7 +41,7 @@ public class GETree extends EntityNoName
 	public bp.en.Map getEnMap()
 	{
 		Map map = new Map(this.PhysicsTable, this.Desc);
-		map.setIsAutoGenerNo(true);
+		map.setItIsAutoGenerNo(true);
 
 		map.AddTBStringPK(GETreeAttr.No, null, "编号", true, true, 1, 30, 3);
 		map.AddTBString(GETreeAttr.Name, null, "名称", true, false, 1, 60, 500);

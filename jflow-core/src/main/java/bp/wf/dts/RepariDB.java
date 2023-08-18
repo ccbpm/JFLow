@@ -1,8 +1,9 @@
 package bp.wf.dts;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
+import bp.*;
 import bp.wf.*;
 
 /** 
@@ -13,7 +14,7 @@ public class RepariDB extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public RepariDB()throws Exception
+	public RepariDB()
 	{
 		this.Title = "修复数据库";
 		this.Help = "把最新的版本的与当前的数据表结构，做一个自动修复, 修复内容：缺少列，缺少列注释，列注释不完整或者有变化。";
@@ -46,16 +47,15 @@ public class RepariDB extends Method
 	 @return 返回执行结果
 	*/
 	@Override
-	public Object Do()throws Exception
-	{
+	public Object Do() throws Exception {
 		String rpt = bp.pub.PubClass.DBRpt(DBCheckLevel.High);
 
 
 		//// 手动升级. 2011-07-08 补充节点字段分组.
-		//string sql = "DELETE FROM Sys_EnCfg WHERE No='bp.wf.template.NodeSheet'";
+		//String sql = "DELETE FROM Sys_EnCfg WHERE No='BP.WF.Template.NodeSheet'";
 		//DBAccess.RunSQL(sql);
 
-		//sql = "INSERT INTO Sys_EnCfg(No,GroupTitle) VALUES ('bp.wf.template.NodeSheet','NodeID=基本配置@WarningHour=考核属性@SendLab=功能按钮标签与状态')";
+		//sql = "INSERT INTO Sys_EnCfg(No,GroupTitle) VALUES ('BP.WF.Template.NodeSheet','NodeID=基本配置@WarningHour=考核属性@SendLab=功能按钮标签与状态')";
 		//DBAccess.RunSQL(sql);
 
 		// 修复因bug丢失的字段.
@@ -63,7 +63,7 @@ public class RepariDB extends Method
 		mds.RetrieveAll();
 		for (MapData md : mds.ToJavaList())
 		{
-			String nodeid = md.getNo().replace("ND","");
+			String nodeid =md.getNo().replace("ND","");
 			try
 			{
 				Node nd = new Node(Integer.parseInt(nodeid));
@@ -77,7 +77,7 @@ public class RepariDB extends Method
 			MapAttr attr = new MapAttr();
 			if (attr.IsExit(MapAttrAttr.KeyOfEn, "OID", MapAttrAttr.FK_MapData, md.getNo()) == false)
 			{
-				attr.setFK_MapData(md.getNo());
+				attr.setFrmID(md.getNo());
 				attr.setKeyOfEn("OID");
 				attr.setName("OID");
 				attr.setMyDataType(DataType.AppInt);

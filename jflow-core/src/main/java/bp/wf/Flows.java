@@ -1,26 +1,19 @@
 package bp.wf;
 
-import bp.da.*;
 import bp.sys.*;
-import bp.port.*;
 import bp.en.*;
 import bp.wf.template.*;
-import bp.difference.*;
 import bp.web.*;
-import bp.wf.template.sflow.*;
-import bp.wf.template.ccen.*;
-import bp.wf.template.frm.*;
-import bp.*;
+
 import java.util.*;
-import java.io.*;
-import java.nio.file.*;
-import java.time.*;
 
 /** 
  流程集合
 */
 public class Flows extends EntitiesNoName
 {
+
+
 		///#region 查询
 	/** 
 	 查出来全部的自动流程
@@ -31,23 +24,22 @@ public class Flows extends EntitiesNoName
 		qo.addOrderBy(FlowAttr.No);
 		qo.DoQuery();
 	}
-	/** 
-	 查询出来全部的在生存期间内的流程
-	 
-	 param flowSort 流程类别
-	 param IsCountInLifeCycle 是不是计算在生存期间内 true 查询出来全部的 
-	*/
-	public final int Retrieve(String flowSort) throws Exception
-	{
+	/**
+	 * 查询出来全部的在生存期间内的流程
+	 *
+	 * @param flowSort           流程类别
+	 * @return
+	 */
+	public final int Retrieve(String flowSort) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(FlowAttr.FK_FlowSort, flowSort);
 		qo.addOrderBy(FlowAttr.No);
 		qo.DoQuery();
-		return this.size();
+		return 0;
 	}
 	@Override
 	public int RetrieveAll() throws Exception {
-		if (Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
+		if (bp.wf.Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
 		{
 			return this.Retrieve(FlowSortAttr.OrgNo, WebUser.getOrgNo(), FlowSortAttr.Idx);
 		}
@@ -62,12 +54,13 @@ public class Flows extends EntitiesNoName
 	/** 
 	 工作流程
 	*/
-	public Flows()  {
+	public Flows()
+	{
 	}
 	/** 
 	 工作流程
 	 
-	 param fk_sort
+	 @param fk_sort
 	*/
 	public Flows(String fk_sort) throws Exception {
 		this.Retrieve(FlowAttr.FK_FlowSort, fk_sort, null);
@@ -81,7 +74,7 @@ public class Flows extends EntitiesNoName
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity(){
 		return new Flow();
 	}
 
@@ -94,7 +87,8 @@ public class Flows extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<Flow> ToJavaList() {
+	public final java.util.List<Flow> ToJavaList()
+	{
 		return (java.util.List<Flow>)(Object)this;
 	}
 	/** 
@@ -102,7 +96,8 @@ public class Flows extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<Flow> Tolist()  {
+	public final ArrayList<Flow> Tolist()
+	{
 		ArrayList<Flow> list = new ArrayList<Flow>();
 		for (int i = 0; i < this.size(); i++)
 		{

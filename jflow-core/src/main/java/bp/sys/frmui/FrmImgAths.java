@@ -1,6 +1,9 @@
 package bp.sys.frmui;
 
-import bp.en.*;
+import bp.da.*;
+import bp.en.*; import bp.en.Map;
+import bp.sys.*;
+import bp.*;
 import bp.sys.*;
 import java.util.*;
 
@@ -14,28 +17,23 @@ public class FrmImgAths extends EntitiesMyPK
 	/** 
 	 图片附件s
 	*/
-	public FrmImgAths() {
+	public FrmImgAths()
+	{
 	}
 	/** 
 	 图片附件s
 	 
-	 param fk_mapdata s
+	 @param frmID s
 	*/
-	public FrmImgAths(String fk_mapdata) throws Exception {
-		if (bp.difference.SystemConfig.getIsDebug())
-		{
-			this.Retrieve(MapAttrAttr.FK_MapData, fk_mapdata);
-		}
-		else
-		{
-			this.RetrieveFromCash(MapAttrAttr.FK_MapData, (Object)fk_mapdata);
-		}
+	public FrmImgAths(String frmID) throws Exception {
+		this.Retrieve(MapAttrAttr.FK_MapData, frmID);
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FrmImgAth();
 	}
 
@@ -48,7 +46,8 @@ public class FrmImgAths extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmImgAth> ToJavaList() {
+	public final java.util.List<FrmImgAth> ToJavaList()
+	{
 		return (java.util.List<FrmImgAth>)(Object)this;
 	}
 	/** 
@@ -56,7 +55,8 @@ public class FrmImgAths extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmImgAth> Tolist()  {
+	public final ArrayList<FrmImgAth> Tolist()
+	{
 		ArrayList<FrmImgAth> list = new ArrayList<FrmImgAth>();
 		for (int i = 0; i < this.size(); i++)
 		{

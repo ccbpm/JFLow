@@ -20,12 +20,13 @@ import java.io.OutputStream;
 /** 
  页面功能实体
 */
-public class WF_Admin_FoolFormDesigner_PrintTemplate extends bp.difference.handler.WebContralBase
+public class WF_Admin_FoolFormDesigner_PrintTemplate extends bp.difference.handler.DirectoryPageBase
 {
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_FoolFormDesigner_PrintTemplate() throws Exception {
+	public WF_Admin_FoolFormDesigner_PrintTemplate()
+	{
 	}
 
 
@@ -76,8 +77,8 @@ public class WF_Admin_FoolFormDesigner_PrintTemplate extends bp.difference.handl
 
 		bt.SaveFileToDB("DBFile", filepath); //把文件保存到数据库里.
 
-		Cash.ClearCash(fileName);
-		Cash.ClearCash(fileName+ "Para");
+		Cache.ClearCache(fileName);
+		Cache.ClearCache(fileName+ "Para");
 
 		return "保存成功.";
 	}
@@ -86,7 +87,7 @@ public class WF_Admin_FoolFormDesigner_PrintTemplate extends bp.difference.handl
 
 		this.response = response;
 	}
-	/**
+	/** 
 	 下载文件.
 	*/
 	public final void Bill_Download() throws Exception {
@@ -114,7 +115,6 @@ public class WF_Admin_FoolFormDesigner_PrintTemplate extends bp.difference.handl
 		os.close();
 		inputStream.close();
 	}
-
 		///#endregion
 
 }

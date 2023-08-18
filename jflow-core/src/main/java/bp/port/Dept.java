@@ -1,63 +1,74 @@
 package bp.port;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.en.Map;
 import bp.web.*;
 import bp.sys.*;
+import bp.*;
+import java.util.*;
 
 /** 
  部门
 */
 public class Dept extends EntityTree
 {
+
 		///#region 属性
+	public final String getOrgNo()  {
+		return this.GetValStrByKey(DeptAttr.OrgNo);
+	}
+	public final void setOrgNo(String value){
+		this.SetValByKey(DeptAttr.OrgNo, value);
+	}
 	/** 
 	 父节点的ID
 	*/
-	public final String getParentNo()
-	{
+	public final String getParentNo()  {
 		return this.GetValStrByKey(DeptAttr.ParentNo);
 	}
-	public final void setParentNo(String value)
-	 {
+	public final void setParentNo(String value){
 		this.SetValByKey(DeptAttr.ParentNo, value);
 	}
-	public final String getNameOfPath()
-	{
+	public final String getNameOfPath()  {
 		return this.GetValStrByKey(DeptAttr.NameOfPath);
 	}
-	public final void setNameOfPath(String value)
-	 {
+	public final void setNameOfPath(String value){
 		this.SetValByKey(DeptAttr.NameOfPath, value);
 	}
-	public final String getOrgNo()
-	{
-		return this.GetValStringByKey(DeptAttr.OrgNo);
+	public final String getLeader()  {
+		return this.GetValStrByKey(DeptAttr.Leader);
 	}
-	public final void setOrgNo(String value)
-	{
-		SetValByKey(DeptAttr.OrgNo, value);
+	public final void setLeader(String value){
+		this.SetValByKey(DeptAttr.Leader, value);
 	}
 
 		///#endregion
-	///#region 构造函数
+
+
+		///#region 构造函数
 	/** 
 	 部门
 	*/
-	public Dept()  {
+	public Dept()
+	{
 	}
 	/** 
 	 部门
 	 
-	 param no 编号
+	 @param no 编号
 	*/
-	public Dept(String no) throws Exception {
+	public Dept(String no) throws Exception  {
 		super(no);
 	}
+
 		///#endregion
+
+
 		///#region 重写方法
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		return uac;
@@ -66,13 +77,15 @@ public class Dept extends EntityTree
 	 Map
 	*/
 	@Override
-	public bp.en.Map getEnMap()  {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
 		}
+
 		Map map = new Map("Port_Dept", "部门");
-		map.IsEnableVer = true;
+		map.ItIsEnableVer = true;
 
 		map.AddTBStringPK(DeptAttr.No, null, "编号", true, false, 1, 50, 20);
 		map.AddTBString(DeptAttr.Name, null, "名称", true, false, 0, 100, 30);
@@ -83,13 +96,21 @@ public class Dept extends EntityTree
 		map.AddDDLEntities(DeptAttr.Leader, null, "部门领导", new bp.port.Emps(), true);
 		map.AddTBInt(DeptAttr.Idx, 0, "序号", false, true);
 
+
+		if (bp.difference.SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
+		{
+			map.AddHidden("OrgNo", "=", "@WebUser.OrgNo");
+		}
+
 		RefMethod rm = new RefMethod();
-			//rm.Title = "历史变更";
-			//rm.ClassMethodName = this.ToString() + ".History";
-			//rm.refMethodType = RefMethodType.RightFrameOpen;
-			//map.AddRefMethod(rm);
+		//rm.Title = "历史变更";
+		//rm.ClassMethodName = this.ToString() + ".History";
+		//rm.refMethodType = RefMethodType.RightFrameOpen;
+		//map.AddRefMethod(rm);
+
+
 			///#region 增加点对多属性
-		rm.Title = "重置该部门一下的部门路径";
+		rm.Title = "重置该部门以下的部门路径";
 		rm.ClassMethodName = this.toString() + ".DoResetPathName";
 		rm.refMethodType = RefMethodType.Func;
 
@@ -100,24 +121,24 @@ public class Dept extends EntityTree
 
 		map.AddRefMethod(rm);
 
-			//rm = new RefMethod();
-			//rm.Title = "增加同级部门";
-			//rm.ClassMethodName = this.ToString() + ".DoSameLevelDept";
-			//rm.HisAttrs.AddTBString("No", null, "同级部门编号", true, false, 0, 100, 100);
-			//rm.HisAttrs.AddTBString("Name", null, "部门名称", true, false, 0, 100, 100);
-			//map.AddRefMethod(rm);
+		//rm = new RefMethod();
+		//rm.Title = "增加同级部门";
+		//rm.ClassMethodName = this.ToString() + ".DoSameLevelDept";
+		//rm.getHisAttrs().AddTBString("No", null, "同级部门编号", true, false, 0, 100, 100);
+		//rm.getHisAttrs().AddTBString("Name", null, "部门名称", true, false, 0, 100, 100);
+		//map.AddRefMethod(rm);
 
-			//rm = new RefMethod();
-			//rm.Title = "增加下级部门";
-			//rm.ClassMethodName = this.ToString() + ".DoSubDept";
-			//rm.HisAttrs.AddTBString("No", null, "同级部门编号", true, false, 0, 100, 100);
-			//rm.HisAttrs.AddTBString("Name", null, "部门名称", true, false, 0, 100, 100);
-			//map.AddRefMethod(rm);
+		//rm = new RefMethod();
+		//rm.Title = "增加下级部门";
+		//rm.ClassMethodName = this.ToString() + ".DoSubDept";
+		//rm.getHisAttrs().AddTBString("No", null, "同级部门编号", true, false, 0, 100, 100);
+		//rm.getHisAttrs().AddTBString("Name", null, "部门名称", true, false, 0, 100, 100);
+		//map.AddRefMethod(rm);
 
 
-			//节点绑定人员. 使用树杆与叶子的模式绑定.
+		//节点绑定人员. 使用树杆与叶子的模式绑定.
 		String rootNo = "0";
-		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single && (DataType.IsNullOrEmpty(WebUser.getNo()) == true || WebUser.getIsAdmin() == false))
+		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single && (DataType.IsNullOrEmpty(WebUser.getNo()) == true || WebUser.getIsAdmin()  == false))
 		{
 			rootNo = "@WebUser.FK_Dept";
 		}
@@ -127,11 +148,75 @@ public class Dept extends EntityTree
 		}
 		map.getAttrsOfOneVSM().AddBranchesAndLeaf(new DeptEmps(), new bp.port.Emps(), DeptEmpAttr.FK_Dept, DeptEmpAttr.FK_Emp, "对应人员", bp.port.EmpAttr.FK_Dept, bp.port.EmpAttr.Name, bp.port.EmpAttr.No, rootNo);
 
+
+
+			///#endregion
+
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 
 		///#endregion
+
+	@Override
+	protected boolean beforeUpdateInsertAction() throws Exception
+	{
+		bp.sys.base.Glo.WriteUserLog("新建/修改部门:" + this.ToJson(), "组织数据操作");
+		return super.beforeUpdateInsertAction();
+	}
+
+	@Override
+	protected boolean beforeDelete() throws Exception
+	{
+		this.CheckIsCanDelete();
+
+		bp.sys.base.Glo.WriteUserLog("删除部门:" + this.ToJson(), "组织数据操作");
+		return super.beforeDelete();
+	}
+
+	public final boolean CheckIsCanDelete() throws Exception {
+		String err = "";
+		String sql = "select count(*) FROM Port_Emp WHERE FK_Dept='" + this.getNo() + "'";
+		int num = DBAccess.RunSQLReturnValInt(sql);
+		if (num != 0)
+		{
+			err += "err@该部门下有" + num + "个人员数据，您不能删除.";
+		}
+
+		sql = "select count(*) FROM Port_DeptEmp WHERE FK_Dept='" + this.getNo() + "'";
+		num = DBAccess.RunSQLReturnValInt(sql);
+		if (num != 0)
+		{
+			err += "err@该部门在人员部门信息表里有" + num + "笔数据,您不能删除.";
+		}
+
+		sql = "select count(*) FROM Port_DeptEmpStation WHERE FK_Dept='" + this.getNo() + "'";
+		num = DBAccess.RunSQLReturnValInt(sql);
+		if (num != 0)
+		{
+			err += "err@该部门在人员部门角色表里有" + num + "笔数据,您不能删除.";
+		}
+
+		//检查是否有子级部门.
+		sql = "select count(*) FROM Port_Dept WHERE ParentNo='" + this.getNo() + "'";
+		if (num != 0)
+		{
+			err += "err@该部门有" + num + "个子部门,您不能删除.";
+		}
+
+		//是不是组织？.
+		sql = "select count(*) FROM Port_Org WHERE OrgNo='" + this.getNo() + "'";
+		if (num != 0)
+		{
+			err += "err@该部门是一个组织,您不能删除.";
+		}
+
+		if (DataType.IsNullOrEmpty(err) == false)
+		{
+			throw new RuntimeException(err);
+		}
+		return true;
+	}
 
 	/** 
 	 重置部门
@@ -150,7 +235,7 @@ public class Dept extends EntityTree
 		String name = this.getName();
 
 		//根目录不再处理
-		if (this.getIsRoot() == true)
+		if (this.getItIsRoot() == true)
 		{
 			this.setNameOfPath(name);
 			this.DirectUpdate();
@@ -167,7 +252,7 @@ public class Dept extends EntityTree
 
 		while (true)
 		{
-			if (dept.getIsRoot())
+			if (dept.getItIsRoot())
 			{
 				break;
 			}
@@ -183,81 +268,42 @@ public class Dept extends EntityTree
 		this.GenerChildNameOfPath(this.getNo());
 
 		//更新人员路径信息.
-		Emps emps = new bp.port.Emps();
+		bp.port.Emps emps = new bp.port.Emps();
 		emps.Retrieve(bp.port.EmpAttr.FK_Dept, this.getNo());
-		for (Emp emp : emps.ToJavaList())
+		for (bp.port.Emp emp : emps.ToJavaList())
 		{
-			emp.Update();
+			emp.DirectUpdate();
 		}
 	}
 
 	/** 
 	 处理子部门全名称
 	 
-	 param
+	 @param deptNo
 	*/
 	public final void GenerChildNameOfPath(String deptNo) throws Exception {
 		Depts depts = new Depts(deptNo);
-		if (depts != null && depts.size() > 0)
+		if (depts != null && depts.size()> 0)
 		{
 			for (Dept dept : depts.ToJavaList())
 			{
 				dept.GenerNameOfPath();
 				GenerChildNameOfPath(dept.getNo());
 
-
 				//更新人员路径信息.
-				Emps emps = new bp.port.Emps();
+				bp.port.Emps emps = new bp.port.Emps();
 				emps.Retrieve(bp.port.EmpAttr.FK_Dept, this.getNo());
-				for (Emp emp : emps.ToJavaList())
+				for (bp.port.Emp emp : emps.ToJavaList())
 				{
 					emp.Update();
 				}
 			}
 		}
 	}
-
-	public void CheckIsCanDelete() throws Exception {
-		String err = "";
-		String sql = "select count(*) FROM Port_Emp WHERE FK_Dept='" + this.getNo() + "'";
-		int num = DBAccess.RunSQLReturnValInt(sql);
-		if (num != 0)
-			err += "err@该部门下有" + num + "个人员数据，您不能删除.";
-
-		sql = "select count(*) FROM Port_DeptEmp WHERE FK_Dept='" + this.getNo() + "'";
-		num = DBAccess.RunSQLReturnValInt(sql);
-		if (num != 0)
-			err += "err@该部门在人员部门信息表里有" + num + "笔数据,您不能删除.";
-
-		sql = "select count(*) FROM Port_DeptEmpStation WHERE FK_Dept='" + this.getNo() + "'";
-		num = DBAccess.RunSQLReturnValInt(sql);
-		if (num != 0)
-			err += "err@该部门在人员部门岗位表里有" + num + "笔数据,您不能删除.";
-
-		//检查是否有子级部门.
-		sql = "select count(*) FROM Port_Dept WHERE ParentNo='" + this.getNo() + "'";
-		if (num != 0)
-			err += "err@该部门有" + num + "个子部门,您不能删除.";
-
-		//是不是组织？.
-		sql = "select count(*) FROM Port_Org WHERE OrgNo='" + this.getNo() + "'";
-		if (num != 0)
-			err += "err@该部门是一个组织,您不能删除.";
-
-		if (DataType.IsNullOrEmpty(err) == false)
-			 throw new Exception(err);
-	}
-
-	@Override
-	protected boolean beforeDelete() throws Exception {
-		this.CheckIsCanDelete();
-		return super.beforeDelete();
-	}
-
-	/**
+	/** 
 	 执行排序
 	 
-	 param deptIDs
+	 @param deptIDs
 	 @return 
 	*/
 	public final String DoOrder(String deptIDs)
@@ -268,15 +314,13 @@ public class Dept extends EntityTree
 		{
 			String id = ids[i];
 			if (DataType.IsNullOrEmpty(id) == true)
-			{
 				continue;
-			}
 			DBAccess.RunSQL("UPDATE Port_Dept SET Idx=" + i + " WHERE No='" + id + "'");
 		}
 		return "排序成功.";
 	}
 
-	public final String History() throws Exception {
+	public final String History() {
 		return "EnVerDtl.htm?EnName=" + this.toString() + "&PK=" + this.getNo();
 	}
 
@@ -288,15 +332,8 @@ public class Dept extends EntityTree
 	 @return 
 	*/
 	@Override
-	public int Retrieve()  {
-
-		try {
-			return super.Retrieve();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return 0;
+	public int Retrieve() throws Exception {
+		return super.Retrieve();
 	}
 	/** 
 	 查询.

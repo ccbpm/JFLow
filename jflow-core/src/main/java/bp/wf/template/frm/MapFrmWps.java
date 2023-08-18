@@ -1,13 +1,11 @@
 package bp.wf.template.frm;
 
 import bp.da.*;
-import bp.en.*;
-import bp.en.Map;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
 import bp.*;
 import bp.sys.CCFormAPI;
 import bp.wf.*;
-import bp.wf.Glo;
 import bp.wf.template.*;
 import java.util.*;
 
@@ -18,18 +16,16 @@ public class MapFrmWps extends EntityNoName
 {
 
 		///#region 属性
-	public final String getMyFileExt() throws Exception
-	{
+	public final String getMyFileExt()  {
 		return this.GetValStringByKey("MyFileExt");
 	}
-	public final String getMyFilePath() throws Exception
-	{
+	public final String getMyFilePath()  {
 		return this.GetValStringByKey("MyFilePath");
 	}
 	/** 
 	 是否是节点表单?
 	*/
-	public final boolean isNodeFrm() throws Exception {
+	public final boolean getItIsNodeFrm() throws Exception {
 		if (this.getNo().contains("ND") == false)
 		{
 			return false;
@@ -40,7 +36,7 @@ public class MapFrmWps extends EntityNoName
 			return false;
 		}
 
-		if (this.getNo().substring(0, 2).equals("ND") && this.getNo().contains("Dtl") == false)
+		if (Objects.equals(this.getNo().substring(0, 2), "ND") && this.getNo().contains("Dtl") == false)
 		{
 			return true;
 		}
@@ -50,18 +46,16 @@ public class MapFrmWps extends EntityNoName
 	/** 
 	 物理存储表
 	*/
-	public final String getPTable() throws Exception
-	{
+	public final String getPTable()  {
 		return this.GetValStrByKey(MapDataAttr.PTable);
 	}
-	public final void setPTable(String value)  throws Exception
-	 {
+	public final void setPTable(String value){
 		this.SetValByKey(MapDataAttr.PTable, value);
 	}
 	/** 
 	 节点ID.
 	*/
-	public final int getNodeID() throws Exception {
+	public final int getNodeID() {
 		if (this.getNo().indexOf("ND") != 0)
 		{
 			return 0;
@@ -72,34 +66,25 @@ public class MapFrmWps extends EntityNoName
 	/** 
 	 表格显示的列
 	*/
-	public final int getTableCol() throws Exception {
-		//return 4;
-		int i = this.GetValIntByKey(MapDataAttr.TableCol);
-		if (i == 0 || i == 1)
-		{
-			return 4;
-		}
-		return i;
+	public final int getTableCol() {
+		return 4;
+	 
 	}
-	public final void setTableCol(int value)  throws Exception
-	 {
+	public final void setTableCol(int value){
 		this.SetValByKey(MapDataAttr.TableCol, value);
 	}
 
-	public final String getFKFormTree() throws Exception
-	{
+	public final String getFormTreeNo()  {
 		return this.GetValStringByKey(MapDataAttr.FK_FormTree);
 	}
-	public final void setFK_FormTree(String value)  throws Exception
-	 {
+	public final void setFormTreeNo(String value){
 		this.SetValByKey(MapDataAttr.FK_FormTree, value);
 	}
 
-	public final FrmType getHisFrmType() throws Exception {
+	public final FrmType getHisFrmType() {
 		return FrmType.forValue(this.GetValIntByKey(MapDataAttr.FrmType));
 	}
-	public final void setHisFrmType(FrmType value)  throws Exception
-	 {
+	public final void setHisFrmType(FrmType value){
 		this.SetValByKey(MapDataAttr.FrmType, value.getValue());
 	}
 
@@ -109,9 +94,10 @@ public class MapFrmWps extends EntityNoName
 
 		///#region 权限控制.
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
-			//uac.OpenForSysAdmin();
+		//uac.OpenForSysAdmin();
 		uac.OpenForAppAdmin(); //2020.6.22zsy修改.
 		uac.IsInsert = false;
 		return uac;
@@ -124,14 +110,15 @@ public class MapFrmWps extends EntityNoName
 	/** 
 	 Wps表单属性
 	*/
-	public MapFrmWps() {
+	public MapFrmWps()
+	{
 	}
 	/** 
 	 Wps表单属性
 	 
-	 param no 表单ID
+	 @param no 表单ID
 	*/
-	public MapFrmWps(String no)
+	public MapFrmWps(String no) throws Exception
 	{
 		super(no);
 	}
@@ -139,7 +126,7 @@ public class MapFrmWps extends EntityNoName
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -152,7 +139,7 @@ public class MapFrmWps extends EntityNoName
 		map.AddTBStringPK(MapDataAttr.No, null, "表单编号", true, true, 1, 190, 20);
 		map.SetHelperUrl(MapDataAttr.No, "xxxx");
 
-		if (Glo.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+		if (bp.wf.Glo.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 		{
 			map.AddTBString(MapDataAttr.PTable, null, "存储表", false, false, 0, 100, 20);
 		}
@@ -170,22 +157,21 @@ public class MapFrmWps extends EntityNoName
 		map.AddTBInt(MapDataAttr.TableCol, 0, "显示列数", false, false);
 
 		map.AddTBInt(MapDataAttr.FrmW, 900, "表单宽度", true, false);
-		map.AddTBInt(MapDataAttr.FrmH, 900, "表单高度", true, false);
 
-		if (Glo.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+		if (bp.wf.Glo.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 		{
 		}
 		else
 		{
 			map.AddTBString(MapDataAttr.DBSrc, null, "数据源", false, false, 0, 500, 20);
-				// map.AddDDLEntities(MapDataAttr.DBSrc, "local", "数据源", new BP.Sys.SFDBSrcs(), true);
+			// map.AddDDLEntities(MapDataAttr.DBSrc, "local", "数据源", new BP.Sys.SFDBSrcs(), true);
 			map.AddDDLEntities(MapDataAttr.FK_FormTree, "01", "表单类别", new SysFormTrees(), true);
 		}
 
-			//表单的运行类型.
+		//表单的运行类型.
 		map.AddDDLSysEnum(MapDataAttr.FrmType, FrmType.FoolForm.getValue(), "表单类型", true, true, MapDataAttr.FrmType);
 
-			//表单解析 0 普通 1 页签展示
+		//表单解析 0 普通 1 页签展示
 		map.AddDDLSysEnum(MapDataAttr.FrmShowType, 0, "表单展示方式", true, true, "表单展示方式", "@0=普通方式@1=页签方式");
 		map.AddBoolean("IsEnableJs", false, "是否启用自定义js函数？", true, true, true);
 
@@ -199,7 +185,7 @@ public class MapFrmWps extends EntityNoName
 		map.AddTBString(MapDataAttr.GUID, null, "GUID", true, true, 0, 128, 20, false);
 		map.AddTBString(MapDataAttr.Ver, null, "版本号", true, true, 0, 30, 20);
 		map.AddTBString(MapDataAttr.Note, null, "备注", true, false, 0, 400, 100, true);
-			//增加参数字段.
+		//增加参数字段.
 		map.AddTBAtParas(4000);
 
 			///#endregion 设计者信息.
@@ -214,11 +200,11 @@ public class MapFrmWps extends EntityNoName
 		rm = new RefMethod();
 		rm.Title = "装载填充"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoPageLoadFull";
-			// rm.Icon = "../../WF/Img/FullData.png";
+		// rm.Icon = "../../WF/Img/FullData.png";
 		rm.Icon = "icon-reload";
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-			// rm.Target = "_blank";
+		// rm.Target = "_blank";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -262,7 +248,7 @@ public class MapFrmWps extends EntityNoName
 		rm.Icon = "icon-social-spotify";
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-			//rm.Target = "_blank";
+		//rm.Target = "_blank";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -276,7 +262,7 @@ public class MapFrmWps extends EntityNoName
 		rm.Icon = "icon-social-spotify";
 		map.AddRefMethod(rm);
 
-			//带有参数的方法.
+		//带有参数的方法.
 		rm = new RefMethod();
 		rm.Title = "重命名字段";
 		rm.getHisAttrs().AddTBString("FieldOld", null, "旧字段英文名", true, false, 0, 100, 100);
@@ -320,7 +306,7 @@ public class MapFrmWps extends EntityNoName
 		rm.Icon = "../../WF/Img/FileType/doc.gif";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Icon = "icon-printer";
-			//  map.AddRefMethod(rm);
+		//  map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "参考面板";
@@ -345,7 +331,7 @@ public class MapFrmWps extends EntityNoName
 		rm.Title = "Wps表单设计";
 		rm.GroupName = "高级功能";
 		rm.ClassMethodName = this.toString() + ".DoDesignerFool";
-			//rm.Icon = "../../WF/Img/FileType/xlsx.gif";
+		//rm.Icon = "../../WF/Img/FileType/xlsx.gif";
 		rm.Icon = "icon-note";
 		rm.Visable = true;
 		rm.Target = "_blank";
@@ -353,8 +339,8 @@ public class MapFrmWps extends EntityNoName
 		map.AddRefMethod(rm);
 
 
-			//平铺模式.
-		if (Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
+		//平铺模式.
+		if (bp.wf.Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
 		{
 			map.getAttrsOfOneVSM().AddGroupPanelModel(new FrmOrgs(), new bp.wf.port.admin2group.Orgs(), FrmOrgAttr.FrmID, FrmOrgAttr.OrgNo, "适用组织", null, "Name", "No");
 		}
@@ -367,7 +353,7 @@ public class MapFrmWps extends EntityNoName
 		rm.Title = "一键设置表单元素只读";
 		rm.Warning = "您确定要设置吗？所有的元素，包括字段、从表、附件以及其它组件都将会被设置为只读的.";
 		rm.GroupName = "实验中的功能";
-			//rm.Icon = "../../WF/Img/RegularExpression.png";
+		//rm.Icon = "../../WF/Img/RegularExpression.png";
 		rm.ClassMethodName = this.toString() + ".DoOneKeySetReadonly";
 		rm.refMethodType = RefMethodType.Func;
 		rm.Icon = "icon-settings";
@@ -383,7 +369,8 @@ public class MapFrmWps extends EntityNoName
 	 删除后清缓存
 	*/
 	@Override
-	protected void afterDelete() throws Exception {
+	protected void afterDelete() throws Exception
+	{
 		//调用frmEditAction, 完成其他的操作.
 		CCFormAPI.AfterFrmEditAction(this.getNo());
 		super.afterDelete();
@@ -405,7 +392,7 @@ public class MapFrmWps extends EntityNoName
 	/** 
 	 改变表单类型 @李国文 ，需要搬到jflow.并测试.
 	 
-	 param val 要改变的类型
+	 @param val 要改变的类型
 	 @return 
 	*/
 	public final String DoChangeFrmType(int val) throws Exception {
@@ -421,16 +408,18 @@ public class MapFrmWps extends EntityNoName
 		///#endregion 高级设置.
 
 	@Override
-	protected boolean beforeUpdate() throws Exception {
+	protected boolean beforeUpdate() throws Exception
+	{
 		if (this.getNodeID() != 0)
 		{
-			this.setFK_FormTree("");
+			this.setFormTreeNo("");
 		}
 
 		return super.beforeUpdate();
 	}
 	@Override
-	protected void afterUpdate() throws Exception {
+	protected void afterUpdate() throws Exception
+	{
 		//修改关联明细表,, 如果是从表.
 		MapDtl dtl = new MapDtl();
 		dtl.setNo(this.getNo());
@@ -443,7 +432,7 @@ public class MapFrmWps extends EntityNoName
 			MapData map = new MapData(this.getNo());
 			//避免显示在表单库中
 			// map.FK_FrmSort = "";
-			map.setFK_FormTree("");
+			map.setFormTreeNo("");
 			map.DirectUpdate();
 		}
 
@@ -454,25 +443,25 @@ public class MapFrmWps extends EntityNoName
 	}
 
 		///#region 节点表单方法.
-	public final String DoTabIdx() throws Exception {
-		return bp.difference.SystemConfig.getCCFlowWebPath() + "WF/Admin/FoolFormDesigner/TabIdx.htm?FK_MapData=" + this.getNo();
+	public final String DoTabIdx() {
+		return "../../Admin/FoolFormDesigner/TabIdx.htm?FK_MapData=" + this.getNo();
 	}
 	/** 
 	 单据打印
 	 
 	 @return 
 	*/
-	public final String DoBill() throws Exception {
+	public final String DoBill() {
 		return "../../Admin/FoolFormDesigner/PrintTemplate/Default.htm?FK_MapData=" + this.getNo() + "&FrmID=" + this.getNo() + "&NodeID=" + this.getNodeID() + "&FK_Node=" + this.getNodeID();
 
-	   // return "../../Admin/AttrNode/Bill.htm?FK_MapData=" + this.No + "&NodeID=" + this.NodeID + "&FK_Node=" + this.NodeID;
+	   // return "../../Admin/AttrNode/Bill.htm?FK_MapData=" + this.getNo() + "&NodeID=" + this.getNodeID() + "&FK_Node=" + this.getNodeID();
 	}
 	/** 
 	 隐藏字段.
 	 
 	 @return 
 	*/
-	public final String FrmHiddenField() throws Exception {
+	public final String FrmHiddenField() {
 		return "../../Admin/CCFormDesigner/DialogCtr/FrmHiddenField.htm?FK_MapData=" + this.getNo() + "&NodeID=" + this.getNodeID() + "&FK_Node=" + this.getNodeID();
 	}
 	/** 
@@ -480,7 +469,7 @@ public class MapFrmWps extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoBill2019() throws Exception {
+	public final String DoBill2019() {
 		return "../../Admin/AttrNode/Bill2019.htm?FK_MapData=" + this.getNo() + "&FrmID=" + this.getNo() + "&NodeID=" + this.getNodeID() + "&FK_Node=" + this.getNodeID();
 	}
 
@@ -489,7 +478,7 @@ public class MapFrmWps extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoDesignerFool() throws Exception {
+	public final String DoDesignerFool() {
 		return "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.getNo() + "&MyPK=" + this.getNo() + "&IsFirst=1&IsEditMapData=True";
 	}
 
@@ -516,9 +505,9 @@ public class MapFrmWps extends EntityNoName
 	/** 
 	 替换名称
 	 
-	 param fieldOldName 旧名称
-	 param newField 新字段
-	 param newFieldName 新字段名称(可以为空)
+	 @param fieldOldName 旧名称
+	 @param newField 新字段
+	 @param newFieldName 新字段名称(可以为空)
 	 @return 
 	*/
 	public final String DoChangeFieldName(String fieldOld, String newField, String newFieldName) throws Exception {
@@ -530,7 +519,7 @@ public class MapFrmWps extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoRegularExpressionBatch() throws Exception {
+	public final String DoRegularExpressionBatch() {
 		return "../../Admin/FoolFormDesigner/MapExt/RegularExpressionBatch.htm?FK_Flow=&FK_MapData=" + this.getNo() + "&t=" + DataType.getCurrentDateTime();
 	}
 	/** 
@@ -538,7 +527,7 @@ public class MapFrmWps extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoBatchEditAttr() throws Exception {
+	public final String DoBatchEditAttr() {
 		return "../../Admin/FoolFormDesigner/FieldTypeListBatch.htm?FK_MapData=" + this.getNo() + "&t=" + DataType.getCurrentDateTime();
 	}
 	/** 
@@ -546,7 +535,7 @@ public class MapFrmWps extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String MobileFrmDesigner() throws Exception {
+	public final String MobileFrmDesigner() {
 		return "../../Admin/MobileFrmDesigner/Default.htm?FK_Flow=&FK_MapData=" + this.getNo() + "&t=" + DataType.getCurrentDateTime();
 	}
 	/** 
@@ -572,7 +561,7 @@ public class MapFrmWps extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoSearch() throws Exception {
+	public final String DoSearch() {
 		return "../../Comm/Search.htm?s=34&FK_MapData=" + this.getNo() + "&EnsName=" + this.getNo();
 	}
 	/** 
@@ -580,7 +569,7 @@ public class MapFrmWps extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoRefPanel() throws Exception {
+	public final String DoRefPanel() {
 		return "../../Comm/RefFunc/EnOnly.htm?EnName=BP.WF.Template.Frm.MapFrmReferencePanel&PKVal=" + this.getNo();
 	}
 	/** 
@@ -588,7 +577,7 @@ public class MapFrmWps extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoGroup() throws Exception {
+	public final String DoGroup() {
 		return "../../Comm/Group.htm?s=34&FK_MapData=" + this.getNo() + "&EnsName=" + this.getNo();
 	}
 	/** 
@@ -596,14 +585,14 @@ public class MapFrmWps extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoDBSrc() throws Exception {
+	public final String DoDBSrc() {
 		return "../../Comm/Search.htm?s=34&FK_MapData=" + this.getNo() + "&EnsName=BP.Sys.SFDBSrcs";
 	}
 
-	public final String DoPageLoadFull() throws Exception {
+	public final String DoPageLoadFull() {
 		return "../../Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData=" + this.getNo() + "&ExtType=PageLoadFull&RefNo=";
 	}
-	public final String DoInitScript() throws Exception {
+	public final String DoInitScript() {
 		return "../../Admin/FoolFormDesigner/MapExt/InitScript.htm?s=34&FK_MapData=" + this.getNo() + "&ExtType=PageLoadFull&RefNo=";
 	}
 	/** 
@@ -611,7 +600,7 @@ public class MapFrmWps extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoBodyAttr() throws Exception {
+	public final String DoBodyAttr() {
 		return "../../Admin/FoolFormDesigner/MapExt/BodyAttr.htm?s=34&FK_MapData=" + this.getNo() + "&ExtType=BodyAttr&RefNo=";
 	}
 	/** 
@@ -619,7 +608,7 @@ public class MapFrmWps extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoEvent() throws Exception {
+	public final String DoEvent() {
 		return "../../Admin/CCFormDesigner/Action.htm?FK_MapData=" + this.getNo() + "&T=sd&FK_Node=0";
 	}
 
@@ -628,7 +617,7 @@ public class MapFrmWps extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoExp() throws Exception {
+	public final String DoExp() {
 		return "../../Admin/FoolFormDesigner/ImpExp/Exp.htm?FK_MapData=" + this.getNo();
 	}
 

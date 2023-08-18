@@ -1,7 +1,5 @@
 package bp.wf;
 
-import bp.*;
-
 /** 
  分流规则
 */
@@ -16,17 +14,19 @@ public enum FLRole
 	*/
 	ByDept,
 	/** 
-	 按照岗位
+	 按照角色
 	*/
 	ByStation;
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue() {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
-	public static FLRole forValue(int value) 
-	{return values()[value];
+	public static FLRole forValue(int value)
+	{
+		return values()[value];
 	}
 }

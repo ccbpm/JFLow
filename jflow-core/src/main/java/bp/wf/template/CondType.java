@@ -27,7 +27,8 @@ public enum CondType
 
 	private int intValue;
 	private static java.util.HashMap<Integer, CondType> mappings;
-	private static java.util.HashMap<Integer, CondType> getMappings()  {
+	private static java.util.HashMap<Integer, CondType> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (CondType.class)
@@ -42,15 +43,18 @@ public enum CondType
 	}
 
 	private CondType(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return intValue;
 	}
 
 	public static CondType forValue(int value)
-	{return getMappings().get(value);
+	{
+		return getMappings().get(value);
 	}
 }

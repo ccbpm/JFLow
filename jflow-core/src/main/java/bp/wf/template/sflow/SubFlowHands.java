@@ -1,6 +1,9 @@
 package bp.wf.template.sflow;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.wf.*;
+import bp.wf.template.*;
 import java.util.*;
 
 /** 
@@ -14,7 +17,8 @@ public class SubFlowHands extends EntitiesMyPK
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new SubFlowHand();
 	}
 
@@ -25,12 +29,13 @@ public class SubFlowHands extends EntitiesMyPK
 	/** 
 	 手工启动子流程集合
 	*/
-	public SubFlowHands()  {
+	public SubFlowHands()
+	{
 	}
 	/** 
 	 手工启动子流程集合
 	 
-	 param fk_node 节点ID
+	 @param fk_node 节点ID
 	*/
 	public SubFlowHands(int fk_node) throws Exception {
 		this.Retrieve(SubFlowYanXuAttr.FK_Node, fk_node, SubFlowYanXuAttr.SubFlowType, SubFlowType.HandSubFlow.getValue(), SubFlowYanXuAttr.Idx);
@@ -45,7 +50,8 @@ public class SubFlowHands extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<SubFlowHand> ToJavaList() {
+	public final java.util.List<SubFlowHand> ToJavaList()
+	{
 		return (java.util.List<SubFlowHand>)(Object)this;
 	}
 	/** 
@@ -53,7 +59,8 @@ public class SubFlowHands extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<SubFlowHand> Tolist()  {
+	public final ArrayList<SubFlowHand> Tolist()
+	{
 		ArrayList<SubFlowHand> list = new ArrayList<SubFlowHand>();
 		for (int i = 0; i < this.size(); i++)
 		{

@@ -110,7 +110,7 @@ public class LoadTemplete extends Method
 				try
 				{
 					MapData md = MapData.ImpMapData(ds);
-					md.setFK_FormTree(fs.getNo());
+					md.setFormTreeNo(fs.getNo());
 					md.setAppType("0");
 					md.Update();
 				}

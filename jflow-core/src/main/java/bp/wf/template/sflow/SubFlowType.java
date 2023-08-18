@@ -1,5 +1,12 @@
 package bp.wf.template.sflow;
 
+import bp.da.*;
+import bp.en.*; import bp.en.Map;
+import bp.sys.*;
+import bp.*;
+import bp.wf.*;
+import bp.wf.template.*;
+import java.util.*;
 
 /** 
  子流程类型
@@ -23,7 +30,8 @@ public enum SubFlowType
 
 	private int intValue;
 	private static java.util.HashMap<Integer, SubFlowType> mappings;
-	private static java.util.HashMap<Integer, SubFlowType> getMappings()  {
+	private static java.util.HashMap<Integer, SubFlowType> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (SubFlowType.class)
@@ -38,15 +46,18 @@ public enum SubFlowType
 	}
 
 	private SubFlowType(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return intValue;
 	}
 
 	public static SubFlowType forValue(int value)
-	{return getMappings().get(value);
+	{
+		return getMappings().get(value);
 	}
 }

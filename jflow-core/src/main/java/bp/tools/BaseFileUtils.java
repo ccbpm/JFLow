@@ -1113,7 +1113,7 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
     * @throws IOException
     */
     public static String[] getFiles(String folder) throws Exception {
-        if(SystemConfig.getIsJarRun()){
+        if(SystemConfig.isJarRun()){
             if(folder.endsWith("/")==false)
                 folder +="/";
             Resource[] resources =  new PathMatchingResourcePatternResolver().getResources(ResourceUtils.CLASSPATH_URL_PREFIX+folder + "*.*");
@@ -1140,7 +1140,7 @@ public class BaseFileUtils extends org.apache.commons.io.FileUtils {
      }
 
     public static String[] getFileNames(String folder) throws Exception {
-        if(SystemConfig.getIsJarRun()){
+        if(SystemConfig.isJarRun()){
             if(folder.endsWith("/")==false)
                 folder +="/";
             Resource[] resources =  new PathMatchingResourcePatternResolver().getResources(ResourceUtils.CLASSPATH_URL_PREFIX+folder + "*.*");

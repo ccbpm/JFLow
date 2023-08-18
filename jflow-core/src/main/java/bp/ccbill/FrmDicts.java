@@ -1,12 +1,6 @@
 package bp.ccbill;
 
-import bp.da.*;
 import bp.en.*;
-import bp.wf.*;
-import bp.wf.template.*;
-import bp.sys.*;
-import bp.ccbill.template.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -19,13 +13,15 @@ public class FrmDicts extends EntitiesNoName
 	/** 
 	 实体表单s
 	*/
-	public FrmDicts() throws Exception {
+	public FrmDicts()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FrmDict();
 	}
 
@@ -38,7 +34,8 @@ public class FrmDicts extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmDict> ToJavaList() {
+	public final java.util.List<FrmDict> ToJavaList()
+	{
 		return (java.util.List<FrmDict>)(Object)this;
 	}
 	/** 
@@ -46,7 +43,8 @@ public class FrmDicts extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmDict> Tolist()  {
+	public final ArrayList<FrmDict> Tolist()
+	{
 		ArrayList<FrmDict> list = new ArrayList<FrmDict>();
 		for (int i = 0; i < this.size(); i++)
 		{

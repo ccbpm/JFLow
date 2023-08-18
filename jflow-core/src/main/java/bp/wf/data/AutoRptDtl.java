@@ -16,8 +16,7 @@ public class AutoRptDtl extends EntityOIDName
 	{
 		return this.GetValStringByKey(AutoRptDtlAttr.AutoRptNo);
 	}
-	public final void setAutoRptNo(String value) throws Exception
-	{
+	public final void setAutoRptNo(String value){
 		this.SetValByKey(AutoRptDtlAttr.AutoRptNo, value);
 	}
 	/** 
@@ -27,27 +26,25 @@ public class AutoRptDtl extends EntityOIDName
 		String str = this.GetValStringByKey(AutoRptDtlAttr.SQLExp);
 		return Glo.DealExp(str, null);
 	}
-	public final void setSQLExp(String value) throws Exception
-	{
+	public final void setSQLExp(String value){
 		this.SetValByKey(AutoRptDtlAttr.SQLExp, value);
 	}
 	public final String getUrlExp() throws Exception {
 		String str = this.GetValStringByKey(AutoRptDtlAttr.UrlExp);
 		return Glo.DealExp(str, null);
 	}
-	public final void setUrlExp(String value) throws Exception
-	{
+	public final void setUrlExp(String value){
 		this.SetValByKey(AutoRptDtlAttr.UrlExp, value);
 	}
 
 	/** 
 	 发起时间（可以为空）
 	*/
-	public final String getBeiZhu()  throws Exception
+	public final String getBeiZhu()
 	{
 		return this.GetValStringByKey(AutoRptDtlAttr.BeiZhu);
 	}
-	public final void setBeiZhu(String value) throws Exception
+	public final void setBeiZhu(String value)
 	{
 		this.SetValByKey(AutoRptDtlAttr.BeiZhu, value);
 	}

@@ -1,7 +1,7 @@
 package bp.ccbill.template;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.*;
 import bp.ccbill.*;
 import java.util.*;
@@ -14,12 +14,13 @@ public class Methods extends EntitiesNoName
 	/** 
 	 实体方法
 	*/
-	public Methods() {
+	public Methods()
+	{
 	}
 	/** 
 	 实体方法
 	 
-	 param nodeid 方法IDID
+	 @param nodeid 方法IDID
 	*/
 	public Methods(int nodeid) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -30,7 +31,8 @@ public class Methods extends EntitiesNoName
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		return new Method();
 	}
 
@@ -40,7 +42,8 @@ public class Methods extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<Method> ToJavaList() {
+	public final java.util.List<Method> ToJavaList()
+	{
 		return (java.util.List<Method>)(Object)this;
 	}
 	/** 
@@ -48,7 +51,8 @@ public class Methods extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<Method> Tolist()  {
+	public final ArrayList<Method> Tolist()
+	{
 		ArrayList<Method> list = new ArrayList<Method>();
 		for (int i = 0; i < this.size(); i++)
 		{

@@ -1,7 +1,8 @@
 package bp.wf.dts;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
 import bp.wf.*;
 
 /** 
@@ -12,7 +13,7 @@ public class DTS_SendMsgToWarningWorker extends Method
 	/** 
 	 向预期的工作人员发送提醒消息
 	*/
-	public DTS_SendMsgToWarningWorker()throws Exception
+	public DTS_SendMsgToWarningWorker()
 	{
 		this.Title = "向预期的工作人员发送提醒消息";
 		this.Help = "该方法每天的8点自动执行";
@@ -48,11 +49,10 @@ public class DTS_SendMsgToWarningWorker extends Method
 	 @return 返回执行结果
 	*/
 	@Override
-	public Object Do()throws Exception
-	{
+	public Object Do() throws Exception {
 
 		/*查找一天预警1次的消息记录，并执行推送。*/
-		String sql = "SELECT A.WorkID, A.Title, A.FlowName, A.TodoSta, B.FK_Emp, b.FK_EmpText, C.WAlertWay  FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B, WF_Node C  ";
+		String sql = "SELECT A.WorkID, A.Title, A.FlowName, A.TodoSta, B.FK_Emp, b.EmpName, C.WAlertWay  FROM WF_GenerWorkFlow A, WF_GenerWorkerlist B, WF_Node C  ";
 		sql += " WHERE A.WorkID=B.WorkID AND A.FK_Node=C.NodeID AND a.TodoSta=1 AND ( C.WAlertRole=1 OR C.WAlertRole=2 ) ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		for (DataRow dr : dt.Rows)
@@ -62,7 +62,7 @@ public class DTS_SendMsgToWarningWorker extends Method
 			String title = dr.getValue("Title").toString();
 			String flowName = dr.getValue("FlowName").toString();
 			String empNo = dr.getValue("FK_Emp").toString();
-			String empName = dr.getValue("FK_EmpText").toString();
+			String empName = dr.getValue("EmpName").toString();
 
 			bp.wf.port.WFEmp emp = new bp.wf.port.WFEmp(empNo);
 
@@ -70,14 +70,14 @@ public class DTS_SendMsgToWarningWorker extends Method
 			{
 				String titleMail = "";
 				String docMail = "";
-				//  bp.wf.Dev2Interface.Port_SendEmail(emp.Email, titleMail, "");
+				//  BP.WF.Dev2Interface.Port_SendEmail(emp.getEmail(), titleMail, "");
 			}
 
 			if (way == CHAlertWay.BySMS)
 			{
 				String titleMail = "";
 				String docMail = "";
-				//bp.wf.Dev2Interface.Port_SendMsg(emp.Email, titleMail, "");
+				//BP.WF.Dev2Interface.Port_SendMsg(emp.getEmail(), titleMail, "");
 			}
 		}
 		return "执行成功...";

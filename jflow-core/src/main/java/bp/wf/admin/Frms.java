@@ -1,12 +1,6 @@
 package bp.wf.admin;
 
-import bp.da.*;
-import bp.port.*;
 import bp.en.*;
-import bp.web.*;
-import bp.sys.*;
-import bp.wf.data.*;
-import bp.wf.template.frm.*;
 import java.util.*;
 
 /** 
@@ -28,11 +22,10 @@ public class Frms extends EntitiesNoName
 
 
 		///#region 得到实体
-	/** 
-	 得到它的 Entity 
-	*/
-	@Override
-	public Entity getGetNewEntity()
+	/**
+	 * 得到它的 Entity
+	 */
+	public Entity getNewEntity()
 	{
 		return new Frm();
 	}
@@ -46,9 +39,9 @@ public class Frms extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final List<Frm> ToJavaList()
+	public final java.util.List<Frm> ToJavaList()
 	{
-		return (List<Frm>)(Object)this;
+		return (java.util.List<Frm>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -64,6 +57,5 @@ public class Frms extends EntitiesNoName
 		}
 		return list;
 	}
-
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

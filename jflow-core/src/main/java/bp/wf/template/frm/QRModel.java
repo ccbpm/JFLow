@@ -1,5 +1,8 @@
 package bp.wf.template.frm;
 
+import bp.*;
+import bp.wf.*;
+import bp.wf.template.*;
 
 /** 
  二维码生成方式
@@ -17,11 +20,13 @@ public enum QRModel
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue() {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
 	public static QRModel forValue(int value)
-	{return values()[value];
+	{
+		return values()[value];
 	}
 }

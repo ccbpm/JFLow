@@ -1,7 +1,10 @@
 package bp.ccfast.portal.windowext;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.ccfast.*;
 import bp.ccfast.portal.*;
+import java.util.*;
 
 /** 
  表格
@@ -14,7 +17,8 @@ public class Table extends EntityNoName
 	 控制权限
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (bp.web.WebUser.getIsAdmin() == true)
 		{
@@ -41,27 +45,24 @@ public class Table extends EntityNoName
 	/** 
 	 表格
 	*/
-	public Table()  {
+	public Table()
+	{
 	}
 	/** 
 	 表格
 	 
-	 param no
+	 @param no
 	*/
-	public Table(String no)
+	public Table(String no) throws Exception
 	{
 		this.setNo(no);
-		try {
-			this.Retrieve();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.Retrieve();
 	}
 	/** 
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -90,7 +91,6 @@ public class Table extends EntityNoName
 		map.AddDDLEntities(WindowTemplateAttr.DBSrc, null, "数据源", new bp.sys.SFDBSrcs(), true);
 
 		map.AddTBStringDoc(WindowTemplateAttr.Docs, null, "SQL内容表达式", true, false, true, 10);
-
 
 			///#endregion 数据源.
 

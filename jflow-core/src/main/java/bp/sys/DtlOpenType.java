@@ -1,6 +1,5 @@
 package bp.sys;
 
-
 public enum DtlOpenType
 {
 	/** 

@@ -19,17 +19,19 @@ public enum FindLeaderModel
 	*/
 	DutyLeader,
 	/** 
-	 特定岗位
+	 特定角色
 	*/
 	SpecStation;
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue() {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
-	public static FindLeaderModel forValue(int value) 
-	{return values()[value];
+	public static FindLeaderModel forValue(int value)
+	{
+		return values()[value];
 	}
 }

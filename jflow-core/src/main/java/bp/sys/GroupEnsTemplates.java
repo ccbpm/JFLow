@@ -1,7 +1,6 @@
 package bp.sys;
 
 import bp.en.*;
-
 import java.util.*;
 
 /** 
@@ -11,13 +10,13 @@ public class GroupEnsTemplates extends EntitiesOID
 {
 
 		///#region 构造
-	public GroupEnsTemplates()throws Exception
+	public GroupEnsTemplates()
 	{
 	}
 	/** 
 	 
 	 
-	 param emp
+	 @param emp
 	*/
 	public GroupEnsTemplates(String emp) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -31,17 +30,28 @@ public class GroupEnsTemplates extends EntitiesOID
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new GroupEnsTemplate();
 	}
 
+
+		///#endregion
+
+
+		///#region 查询方法
+
+
+		///#endregion
+
+
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<GroupEnsTemplate> ToJavaList()throws Exception
+	public final java.util.List<GroupEnsTemplate> ToJavaList()
 	{
 		return (java.util.List<GroupEnsTemplate>)(Object)this;
 	}
@@ -50,7 +60,7 @@ public class GroupEnsTemplates extends EntitiesOID
 	 
 	 @return List
 	*/
-	public final ArrayList<GroupEnsTemplate> Tolist()throws Exception
+	public final ArrayList<GroupEnsTemplate> Tolist()
 	{
 		ArrayList<GroupEnsTemplate> list = new ArrayList<GroupEnsTemplate>();
 		for (int i = 0; i < this.size(); i++)

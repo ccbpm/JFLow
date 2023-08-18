@@ -1,12 +1,5 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.en.*;
-import bp.wf.port.*;
-import bp.*;
-import bp.wf.*;
-import java.util.*;
-
 /** 
  流程对应组织属性
 */

@@ -4,9 +4,6 @@ import bp.da.*;
 import bp.en.*;
 import bp.en.Map;
 import bp.web.*;
-import bp.*;
-import java.util.*;
-
 /** 
  常用语
 */
@@ -17,52 +14,44 @@ public class FastInput extends EntityMyPK
 	/** 
 	 表单ID
 	*/
-	public final String getEnsName() throws Exception
-	{
+	public final String getEnsName()  {
 		return this.GetValStringByKey(FastInputAttr.EnsName);
 	}
-	public final void setEnsName(String value)  throws Exception
-	 {
+	public final void setEnsName(String value){
 		this.SetValByKey(FastInputAttr.EnsName, value);
 	}
 	/** 
 	 属性
 	*/
-	public final String getAttrKey() throws Exception
-	{
+	public final String getAttrKey()  {
 		return this.GetValStringByKey(FastInputAttr.AttrKey);
 	}
-	public final void setAttrKey(String value)  throws Exception
-	 {
+	public final void setAttrKey(String value){
 		this.SetValByKey(FastInputAttr.AttrKey, value);
 	}
 	/** 
 	 配置的变量
 	*/
-	public final String getCfgKey() throws Exception {
+	public final String getCfgKey()
+	{
 		return "CYY";
 	}
-	public final void setCfgKey(String value)  throws Exception
-	 {
+	public final void setCfgKey(String value){
 		this.SetValByKey(FastInputAttr.CfgKey, value);
 	}
 	/** 
 	 人员
 	*/
-	public final String getFK_Emp() throws Exception
-	{
+	public final String getEmpNo()  {
 		return this.GetValStringByKey(FastInputAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)  throws Exception
-	 {
+	public final void setEmpNo(String value){
 		this.SetValByKey(FastInputAttr.FK_Emp, value);
 	}
-	public final String getVals() throws Exception
-	{
+	public final String getVals()  {
 		return this.GetValStringByKey(FastInputAttr.Vals);
 	}
-	public final void setVals(String value)  throws Exception
-	 {
+	public final void setVals(String value){
 		this.SetValByKey(FastInputAttr.Vals, value);
 	}
 
@@ -73,15 +62,15 @@ public class FastInput extends EntityMyPK
 	/** 
 	 常用语
 	*/
-	public FastInput()  {
+	public FastInput()
+	{
 	}
 	/** 
 	 常用语
 	 
-	 param no
+	 @param mypk
 	*/
-	public FastInput(String mypk)throws Exception
-	{
+	public FastInput(String mypk) throws Exception {
 		super(mypk);
 	}
 	/** 
@@ -91,7 +80,8 @@ public class FastInput extends EntityMyPK
 	*/
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception {
+	protected boolean beforeUpdateInsertAction() throws Exception
+	{
 		if (DataType.IsNullOrEmpty(this.getMyPK()) == true)
 		{
 			this.setMyPK(DBAccess.GenerGUID());
@@ -103,7 +93,8 @@ public class FastInput extends EntityMyPK
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -111,20 +102,20 @@ public class FastInput extends EntityMyPK
 
 		Map map = new Map("Sys_UserRegedit", "常用语");
 
-			/*
-			 * 常用语分为两个模式: 流程的常用语，与表单字段的常用语. 
-			 * 这两个模式都存储在同一个表里.
-			 * 
-			 * 流程的常用语存储格式为: 
-			 *  CfgKey=Flow,  EnsName=Flow,  AttrKey=WorkCheck,FlowBBS,WorkReturn 三种类型.
-			 *  
-			 * 表单的常用语为存储格式为:
-			 *  CfgKey=Frm,  EnsName=myformID, AttrKey=myFieldName, 
-			 * 
-			 */
+		/*
+		 * 常用语分为两个模式: 流程的常用语，与表单字段的常用语. 
+		 * 这两个模式都存储在同一个表里.
+		 * 
+		 * 流程的常用语存储格式为: 
+		 *  CfgKey=Flow,  EnsName=Flow,  AttrKey=WorkCheck,FlowBBS,WorkReturn 三种类型.
+		 *  
+		 * 表单的常用语为存储格式为:
+		 *  CfgKey=Frm,  EnsName=myformID, AttrKey=myFieldName, 
+		 * 
+		 */
 
-			//该表单对应的表单ID ， 
-			//CfgKey=Flow, EnsName=Flow 是流程的常用语.   Filed
+		//该表单对应的表单ID ， 
+		//CfgKey=Flow, EnsName=Flow 是流程的常用语.   Filed
 
 		map.AddMyPK();
 		map.AddTBString(FastInputAttr.CfgKey, null, "类型Flow,Frm", true, false, 0, 20, 20);
@@ -146,8 +137,9 @@ public class FastInput extends EntityMyPK
 	 
 	 @return 
 	*/
-	public final String DoUp() throws Exception {
-		  this.DoOrderUp(FastInputAttr.CfgKey, "CYY", FastInputAttr.EnsName, this.getEnsName(), FastInputAttr.AttrKey, this.getAttrKey(), FastInputAttr.FK_Emp, WebUser.getNo(), "Idx");
+	public final String DoUp() throws Exception
+	{
+		this.DoOrderUp(FastInputAttr.CfgKey, "CYY", FastInputAttr.EnsName, this.getEnsName(), FastInputAttr.AttrKey, this.getAttrKey(), FastInputAttr.FK_Emp, WebUser.getNo(), "Idx");
 
 		return "移动成功.";
 	}
@@ -156,7 +148,8 @@ public class FastInput extends EntityMyPK
 	 
 	 @return 
 	*/
-	public final String DoDown() throws Exception {
+	public final String DoDown() throws Exception
+	{
 		this.DoOrderDown(FastInputAttr.CfgKey, "CYY", FastInputAttr.EnsName, this.getEnsName(), FastInputAttr.AttrKey, this.getAttrKey(), FastInputAttr.FK_Emp, WebUser.getNo(), "Idx");
 		return "移动成功.";
 	}

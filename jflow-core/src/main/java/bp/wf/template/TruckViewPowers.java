@@ -1,11 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.sys.*;
 import bp.en.*;
-import bp.wf.port.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -16,13 +11,15 @@ public class TruckViewPowers extends EntitiesNoName
 	/** 
 	 流程轨迹权限s
 	*/
-	public TruckViewPowers() throws Exception {
+	public TruckViewPowers()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new TruckViewPower();
 	}
 
@@ -33,7 +30,8 @@ public class TruckViewPowers extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<TruckViewPower> ToJavaList() {
+	public final java.util.List<TruckViewPower> ToJavaList()
+	{
 		return (java.util.List<TruckViewPower>)(Object)this;
 	}
 	/** 
@@ -41,7 +39,8 @@ public class TruckViewPowers extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<TruckViewPower> Tolist()  {
+	public final ArrayList<TruckViewPower> Tolist()
+	{
 		ArrayList<TruckViewPower> list = new ArrayList<TruckViewPower>();
 		for (int i = 0; i < this.size(); i++)
 		{

@@ -116,6 +116,21 @@ public class ClassFactory {
 				return new GEEntity(className); // 表单实体.
 			}
 		}
+		if (className.startsWith("TS."))
+		{
+			Map map = bp.ents.Glo.GenerMap(className);
+			if (map.getAttrs().contains("No"))
+				return new TSEntityNoName(className);
+			if (map.getAttrs().contains("OID"))
+				return new TSEntityOID(className);
+			if (map.getAttrs().contains("MyPK"))
+				return new TSEntityMyPK(className);
+			if (map.getAttrs().contains("WorkID"))
+				return new TSEntityWorkID(className);
+			if (map.getAttrs().contains("NodeID"))
+				return new TSEntityNodeID(className);
+			throw new Exception("err@没有判断的类型.");
+		}
 		className = bp.sys.base.Glo.DealClassEntityName(className);
 
 		if (Htable_En == null || Htable_En.size()==0) {
@@ -171,9 +186,21 @@ public class ClassFactory {
 
 	public static Entities GetEns(String className)  {
 
-		if (className.contains(".") == false) {
-			bp.sys.GEEntitys myens = new bp.sys.GEEntitys(className);
-			return myens;
+		if (!className.contains(".")) {
+			return new bp.sys.GEEntitys(className);
+		}
+		if (className.startsWith("TS."))
+		{
+			Map map = bp.ents.Glo.GenerMap(className);
+			if (map.getAttrs().contains("No"))
+				return new TSEntitiesNoName(className);
+			if (map.getAttrs().contains("MyPK"))
+				return new TSEntitiesMyPK(className);
+			if (map.getAttrs().contains("WorkID"))
+				return new TSEntitiesWorkID(className);
+			if (map.getAttrs().contains("NodeID"))
+				return new TSEntitiesNodeID(className);
+			return null;
 		}
 		className = bp.sys.base.Glo.DealClassEntityName(className);
 		if (Htable_Ens == null || Htable_Ens.isEmpty()) {
@@ -234,7 +261,7 @@ public class ClassFactory {
 //		// }
 //		Entities ens = (Entities) ((Htable_Ens.get(className) instanceof Entities) ? Htable_Ens.get(className) : null);
 //
-//		// /#warning 会清除 cash 中的数据。
+//		// /#warning 会清除 Cache 中的数据。
 //		return ens;
 	}
 
@@ -321,7 +348,7 @@ public class ClassFactory {
 		className = bp.sys.base.Glo.DealClassEntityName(className);
 		if (Htable_HandlerPage == null) {
 			Htable_HandlerPage = new Hashtable();
-			String cl = "bp.difference.handler.WebContralBase";
+			String cl = "bp.difference.handler.DirectoryPageBase";
 			ArrayList al = ClassFactory.GetObjects(cl);
 			for (Object en : al) {
 				String key = "";

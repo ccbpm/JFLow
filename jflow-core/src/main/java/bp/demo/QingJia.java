@@ -11,117 +11,99 @@ public class QingJia extends EntityOID
 	/**
 	 * 请假人部门名称
 	 */
-	public final String getQingJiaRenDeptName()
-	{
+	public final String getQingJiaRenDeptName() {
 		return this.GetValStringByKey(QingJiaAttr.QingJiaRenDeptName);
 	}
 	
-	public final void setQingJiaRenDeptName(String value)
-	{
+	public final void setQingJiaRenDeptName(String value)  {
 		this.SetValByKey(QingJiaAttr.QingJiaRenDeptName, value);
 	}
 	
 	/**
 	 * 请假人编号
 	 */
-	public final String getQingJiaRenNo()
-	{
+	public final String getQingJiaRenNo() {
 		return this.GetValStringByKey(QingJiaAttr.QingJiaRenNo);
 	}
 	
-	public final void setQingJiaRenNo(String value)
-	{
+	public final void setQingJiaRenNo(String value)  {
 		this.SetValByKey(QingJiaAttr.QingJiaRenNo, value);
 	}
 	
 	/**
 	 * 请假人名称
 	 */
-	public final String getQingJiaRenName()
-	{
+	public final String getQingJiaRenName() {
 		return this.GetValStringByKey(QingJiaAttr.QingJiaRenName);
 	}
 	
-	public final void setQingJiaRenName(String value)
-	{
+	public final void setQingJiaRenName(String value)  {
 		this.SetValByKey(QingJiaAttr.QingJiaRenName, value);
 	}
 	
 	/**
 	 * 请假人部门编号
 	 */
-	public final String getQingJiaRenDeptNo()
-	{
+	public final String getQingJiaRenDeptNo() {
 		return this.GetValStringByKey(QingJiaAttr.QingJiaRenDeptNo);
 	}
 	
-	public final void setQingJiaRenDeptNo(String value)
-	{
+	public final void setQingJiaRenDeptNo(String value)  {
 		this.SetValByKey(QingJiaAttr.QingJiaRenDeptNo, value);
 	}
 	
 	/**
 	 * 请假原因
 	 */
-	public final String getQingJiaYuanYin()
-	{
+	public final String getQingJiaYuanYin() {
 		return this.GetValStringByKey(QingJiaAttr.QingJiaYuanYin);
 	}
 	
-	public final void setQingJiaYuanYin(String value)
-	{
+	public final void setQingJiaYuanYin(String value)  {
 		this.SetValByKey(QingJiaAttr.QingJiaYuanYin, value);
 	}
 	
 	/**
 	 * 请假天数
 	 */
-	public final float getQingJiaTianShu()
-	{
+	public final float getQingJiaTianShu() {
 		return this.GetValIntByKey(QingJiaAttr.QingJiaTianShu);
 	}
 	
-	public final void setQingJiaTianShu(float value)
-	{
+	public final void setQingJiaTianShu(float value)  {
 		this.SetValByKey(QingJiaAttr.QingJiaTianShu, value);
 	}
 	
 	/**
 	 * 部门审批意见
 	 */
-	public final String getNoteBM()
-	{
+	public final String getNoteBM() {
 		return this.GetValStringByKey(QingJiaAttr.NoteBM);
 	}
 	
-	public final void setNoteBM(String value)
-	{
+	public final void setNoteBM(String value)  {
 		this.SetValByKey(QingJiaAttr.NoteBM, value);
 	}
 	
 	/**
 	 * 总经理意见
 	 */
-	public final String getNoteZJL()
-	{
+	public final String getNoteZJL() {
 		return this.GetValStringByKey(QingJiaAttr.NoteZJL);
 	}
 	
-	public final void setNoteZJL(String value)
-	{
+	public final void setNoteZJL(String value)  {
 		this.SetValByKey(QingJiaAttr.NoteZJL, value);
 	}
 	
 	/**
 	 * 人力资源意见
 	 */
-	public final String getNoteRL()
-	{
+	public final String getNoteRL() {
 		return this.GetValStringByKey(QingJiaAttr.NoteRL);
 	}
 	
-	public final void setNoteRL(String value)
-	{
+	public final void setNoteRL(String value)  {
 		this.SetValByKey(QingJiaAttr.NoteRL, value);
 	}
 	

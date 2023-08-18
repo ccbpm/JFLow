@@ -13,7 +13,7 @@ public class GEDtls extends EntitiesOID
 	/** 
 	 节点ID
 	*/
-	public String FK_MapDtl = null;
+	public String MapDtlNo = null;
 
 		///#endregion
 
@@ -23,13 +23,13 @@ public class GEDtls extends EntitiesOID
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
-		if (this.FK_MapDtl == null)
+		if (this.MapDtlNo == null)
 		{
 			return new GEDtl();
 		}
-		return new GEDtl(this.FK_MapDtl);
+		return new GEDtl(this.MapDtlNo);
 	}
 	/** 
 	 通用从表ID
@@ -40,15 +40,15 @@ public class GEDtls extends EntitiesOID
 	/** 
 	 通用从表ID
 	 
-	 param fk_mapdtl
+	 @param fk_mapdtl
 	*/
 	public GEDtls(String fk_mapdtl)
 	{
-		this.FK_MapDtl = fk_mapdtl;
+		this.MapDtlNo = fk_mapdtl;
 	}
 	public GEDtls(String fk_mapdtl, Object pkval)
 	{
-		this.FK_MapDtl = fk_mapdtl;
+		this.MapDtlNo = fk_mapdtl;
 	}
 
 		///#endregion
@@ -60,7 +60,7 @@ public class GEDtls extends EntitiesOID
 	 
 	 @return List
 	*/
-	public final java.util.List<GEDtl> ToJavaList()throws Exception
+	public final java.util.List<GEDtl> ToJavaList()
 	{
 		return (java.util.List<GEDtl>)(Object)this;
 	}
@@ -69,7 +69,7 @@ public class GEDtls extends EntitiesOID
 	 
 	 @return List
 	*/
-	public final ArrayList<GEDtl> Tolist()throws Exception
+	public final ArrayList<GEDtl> Tolist()
 	{
 		ArrayList<GEDtl> list = new ArrayList<GEDtl>();
 		for (int i = 0; i < this.size(); i++)

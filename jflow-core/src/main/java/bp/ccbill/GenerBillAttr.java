@@ -1,10 +1,5 @@
 package bp.ccbill;
 
-import bp.en.*;
-import bp.wf.*;
-import bp.*;
-import java.util.*;
-
 /** 
  单据控制表 - Attr
 */

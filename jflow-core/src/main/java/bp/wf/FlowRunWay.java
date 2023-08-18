@@ -1,6 +1,5 @@
 package bp.wf;
 
-import bp.*;
 
 /** 
  流程启动类型
@@ -36,7 +35,8 @@ public enum FlowRunWay
 
 	private int intValue;
 	private static java.util.HashMap<Integer, FlowRunWay> mappings;
-	private static java.util.HashMap<Integer, FlowRunWay> getMappings()  {
+	private static java.util.HashMap<Integer, FlowRunWay> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (FlowRunWay.class)
@@ -51,15 +51,18 @@ public enum FlowRunWay
 	}
 
 	private FlowRunWay(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return intValue;
 	}
 
 	public static FlowRunWay forValue(int value)
-	{return getMappings().get(value);
+	{
+		return getMappings().get(value);
 	}
 }

@@ -1,6 +1,11 @@
 package bp.wf.template.frm;
 
-import bp.en.*;
+import bp.da.*;
+import bp.en.*; import bp.en.Map;
+import bp.sys.*;
+import bp.*;
+import bp.wf.*;
+import bp.wf.template.*;
 import java.util.*;
 
 /** 
@@ -13,13 +18,15 @@ public class MapFrmWords extends EntitiesNoName
 	/** 
 	 Word表单属性s
 	*/
-	public MapFrmWords() throws Exception {
+	public MapFrmWords()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new MapFrmWord();
 	}
 
@@ -32,7 +39,8 @@ public class MapFrmWords extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<MapFrmWord> ToJavaList() {
+	public final java.util.List<MapFrmWord> ToJavaList()
+	{
 		return (java.util.List<MapFrmWord>)(Object)this;
 	}
 	/** 
@@ -40,7 +48,8 @@ public class MapFrmWords extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<MapFrmWord> Tolist()  {
+	public final ArrayList<MapFrmWord> Tolist()
+	{
 		ArrayList<MapFrmWord> list = new ArrayList<MapFrmWord>();
 		for (int i = 0; i < this.size(); i++)
 		{

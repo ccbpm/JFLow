@@ -1,6 +1,10 @@
 package bp.wf.template.frm;
 
-import bp.en.*;
+import bp.sys.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.wf.*;
+import bp.wf.template.*;
 import java.util.*;
 
 /** 
@@ -11,12 +15,13 @@ public class CCFrms extends EntitiesNoName
 	/** 
 	 CCFrm
 	*/
-	public CCFrms() throws Exception {
+	public CCFrms()
+	{
 	}
 	/** 
 	 CCFrm
 	 
-	 param fk_flow
+	 @param fk_flow
 	*/
 	public CCFrms(String fk_flow) throws Exception {
 		this.Retrieve(CCFrmAttr.FK_Flow, fk_flow, null);
@@ -30,7 +35,8 @@ public class CCFrms extends EntitiesNoName
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new CCFrm();
 	}
 
@@ -41,7 +47,8 @@ public class CCFrms extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<CCFrm> ToJavaList() {
+	public final java.util.List<CCFrm> ToJavaList()
+	{
 		return (java.util.List<CCFrm>)(Object)this;
 	}
 	/** 
@@ -49,7 +56,8 @@ public class CCFrms extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<CCFrm> Tolist()  {
+	public final ArrayList<CCFrm> Tolist()
+	{
 		ArrayList<CCFrm> list = new ArrayList<CCFrm>();
 		for (int i = 0; i < this.size(); i++)
 		{

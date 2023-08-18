@@ -1,7 +1,5 @@
 package bp.wf;
 
-import bp.*;
-
 /** 
  自动发起
 */
@@ -28,7 +26,8 @@ public enum AutoStart
 
 	private int intValue;
 	private static java.util.HashMap<Integer, AutoStart> mappings;
-	private static java.util.HashMap<Integer, AutoStart> getMappings()  {
+	private static java.util.HashMap<Integer, AutoStart> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (AutoStart.class)
@@ -43,15 +42,18 @@ public enum AutoStart
 	}
 
 	private AutoStart(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue() {
+	public int getValue()
+	{
 		return intValue;
 	}
 
-	public static AutoStart forValue(int value) 
-	{return getMappings().get(value);
+	public static AutoStart forValue(int value)
+	{
+		return getMappings().get(value);
 	}
 }

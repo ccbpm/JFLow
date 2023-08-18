@@ -11,15 +11,16 @@ public class GEEntityMyPKs extends Entities
 
 		///#region 重载基类方法
 	@Override
-	public String toString()  {
-		//if (this.FK_MapData == null)
+	public String toString()
+	{
+		//if (this.FrmID == null)
 		//    throw new Exception("@没有能 FK_MapData 给值。");
-		return this.FK_MapData;
+		return this.FrmID;
 	}
 	/** 
 	 主键
 	*/
-	public String FK_MapData = null;
+	public String FrmID = null;
 
 		///#endregion
 
@@ -29,13 +30,13 @@ public class GEEntityMyPKs extends Entities
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
-		if (this.FK_MapData == null)
+		if (this.FrmID == null)
 		{
 			return new GEEntityMyPK();
 		}
-		return new GEEntityMyPK(this.FK_MapData);
+		return new GEEntityMyPK(this.FrmID);
 	}
 	/** 
 	 通用OID实体ID
@@ -43,14 +44,10 @@ public class GEEntityMyPKs extends Entities
 	public GEEntityMyPKs()
 	{
 	}
-	/** 
-	 通用OID实体ID
-	 
-	 param fk_mapdata
-	*/
-	public GEEntityMyPKs(String fk_mapdata)
+
+	public GEEntityMyPKs(String frmID)
 	{
-		this.FK_MapData=fk_mapdata;
+		this.FrmID= frmID;
 	}
 
 		///#endregion
@@ -62,7 +59,7 @@ public class GEEntityMyPKs extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.List<GEEntityMyPK> ToJavaList()throws Exception
+	public final java.util.List<GEEntityMyPK> ToJavaList()
 	{
 		return (java.util.List<GEEntityMyPK>)(Object)this;
 	}
@@ -71,7 +68,7 @@ public class GEEntityMyPKs extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<GEEntityMyPK> Tolist()throws Exception
+	public final ArrayList<GEEntityMyPK> Tolist()
 	{
 		ArrayList<GEEntityMyPK> list = new ArrayList<GEEntityMyPK>();
 		for (int i = 0; i < this.size(); i++)

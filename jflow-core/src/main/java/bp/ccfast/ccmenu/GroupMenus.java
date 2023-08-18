@@ -1,6 +1,6 @@
 package bp.ccfast.ccmenu;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.*;
 import bp.ccfast.*;
 import java.util.*;
@@ -8,20 +8,22 @@ import java.util.*;
 /** 
  权限组菜单s
 */
-public class GroupMenus extends EntitiesMM
+public class GroupMenus extends EntitiesMyPK
 {
 
 		///#region 构造
 	/** 
 	 权限组s
 	*/
-	public GroupMenus()  {
+	public GroupMenus()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new GroupMenu();
 	}
 
@@ -34,7 +36,8 @@ public class GroupMenus extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final java.util.List<GroupMenu> ToJavaList() {
+	public final java.util.List<GroupMenu> ToJavaList()
+	{
 		return (java.util.List<GroupMenu>)(Object)this;
 	}
 	/** 
@@ -42,7 +45,8 @@ public class GroupMenus extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final ArrayList<GroupMenu> Tolist()  {
+	public final ArrayList<GroupMenu> Tolist()
+	{
 		ArrayList<GroupMenu> list = new ArrayList<GroupMenu>();
 		for (int i = 0; i < this.size(); i++)
 		{

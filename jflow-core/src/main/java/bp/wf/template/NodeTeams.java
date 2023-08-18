@@ -1,10 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.wf.port.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -15,12 +11,13 @@ public class NodeTeams extends EntitiesMyPK
 	/** 
 	 节点用户组s
 	*/
-	public NodeTeams()  {
+	public NodeTeams()
+	{
 	}
 	/** 
 	 节点用户组s
 	 
-	 param nodeID 节点ID
+	 @param nodeID 节点ID
 	*/
 	public NodeTeams(int nodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -30,7 +27,7 @@ public class NodeTeams extends EntitiesMyPK
 	/** 
 	 节点用户组
 	 
-	 param StationNo StationNo
+	 @param StationNo StationNo 
 	*/
 	public NodeTeams(String StationNo) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -41,7 +38,8 @@ public class NodeTeams extends EntitiesMyPK
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new NodeTeam();
 	}
 
@@ -52,7 +50,8 @@ public class NodeTeams extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<NodeTeam> ToJavaList() {
+	public final java.util.List<NodeTeam> ToJavaList()
+	{
 		return (java.util.List<NodeTeam>)(Object)this;
 	}
 	/** 
@@ -60,7 +59,8 @@ public class NodeTeams extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<NodeTeam> Tolist()  {
+	public final ArrayList<NodeTeam> Tolist()
+	{
 		ArrayList<NodeTeam> list = new ArrayList<NodeTeam>();
 		for (int i = 0; i < this.size(); i++)
 		{

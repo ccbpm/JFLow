@@ -1,9 +1,6 @@
 package bp.sys.frmui;
 
-import bp.da.*;
-import bp.en.*;
-import bp.*;
-import bp.sys.*;
+import bp.en.*; import bp.en.Map;
 import java.util.*;
 
 /** 
@@ -16,13 +13,15 @@ public class AthSingles extends EntitiesMyPK
 	/** 
 	 字段单附件s
 	*/
-	public AthSingles() throws Exception {
+	public AthSingles()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new AthSingle();
 	}
 
@@ -35,7 +34,8 @@ public class AthSingles extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<AthSingle> ToJavaList() {
+	public final java.util.List<AthSingle> ToJavaList()
+	{
 		return (java.util.List<AthSingle>)(Object)this;
 	}
 	/** 
@@ -43,7 +43,8 @@ public class AthSingles extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<AthSingle> Tolist()  {
+	public final ArrayList<AthSingle> Tolist()
+	{
 		ArrayList<AthSingle> list = new ArrayList<AthSingle>();
 		for (int i = 0; i < this.size(); i++)
 		{

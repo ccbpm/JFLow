@@ -17,8 +17,7 @@ public abstract class EntitiesNoName extends EntitiesNo
 	 param entity 要添加的对象
 	 @return 返回添加到的地方
 	*/
-	public int AddEntity(Entity entity)
-	{
+	public int AddEntity(Entity entity)  {
 		for (Entity en : this)
 		{
 			if (en.GetValStrByKey("No").equals(entity.GetValStrByKey("No")))
@@ -37,7 +36,7 @@ public abstract class EntitiesNoName extends EntitiesNo
 	 @return 返回添加到的地方
 	 * @throws Exception 
 	*/
-	public void Insert(int index, EntityNoName entity) throws Exception
+	public void Insert(int index, EntityNoName entity)
 	{
 		for (EntityNoName en : convertEntityNoName(this))
 		{
@@ -81,6 +80,6 @@ public abstract class EntitiesNoName extends EntitiesNo
 	}
 	public List<EntityNoName> ToJavaListEnNo()throws Exception
 	{
-		return (List<EntityNoName>)(Object)this;
+		return (List<EntityNoName>)(Object)(Object)this;
 	}
 }

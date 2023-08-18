@@ -1,11 +1,6 @@
 package bp.wf;
 
-import bp.da.*;
 import bp.en.*;
-import bp.wf.*;
-import bp.port.*;
-import bp.wf.template.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -19,18 +14,20 @@ public class TransferCustoms extends EntitiesMyPK
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new TransferCustom();
 	}
 	/** 
 	 自定义运行路径
 	*/
-	public TransferCustoms()  {
+	public TransferCustoms()
+	{
 	}
 	/** 
 	 自定义运行路径
 	 
-	 param workid 工作ID
+	 @param workid 工作ID
 	*/
 	public TransferCustoms(long workid) throws Exception {
 		this.Retrieve(TransferCustomAttr.WorkID, workid, TransferCustomAttr.Idx);
@@ -38,8 +35,8 @@ public class TransferCustoms extends EntitiesMyPK
 	/** 
 	 自定义运行路径
 	 
-	 param nodeID 节点ID
-	 param workid 工作ID
+	 @param nodeID 节点ID
+	 @param workid 工作ID
 	*/
 	public TransferCustoms(int nodeID, long workid) throws Exception {
 		this.Retrieve(TransferCustomAttr.WorkID, workid, TransferCustomAttr.FK_Node, nodeID, TransferCustomAttr.Idx);
@@ -54,7 +51,8 @@ public class TransferCustoms extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<TransferCustom> ToJavaList() {
+	public final java.util.List<TransferCustom> ToJavaList()
+	{
 		return (java.util.List<TransferCustom>)(Object)this;
 	}
 	/** 
@@ -62,7 +60,8 @@ public class TransferCustoms extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<TransferCustom> Tolist()  {
+	public final ArrayList<TransferCustom> Tolist()
+	{
 		ArrayList<TransferCustom> list = new ArrayList<TransferCustom>();
 		for (int i = 0; i < this.size(); i++)
 		{

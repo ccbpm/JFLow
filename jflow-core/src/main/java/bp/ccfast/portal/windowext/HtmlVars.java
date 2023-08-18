@@ -1,6 +1,9 @@
 package bp.ccfast.portal.windowext;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.ccfast.*;
+import bp.ccfast.portal.*;
 import java.util.*;
 
 /** 
@@ -13,13 +16,15 @@ public class HtmlVars extends EntitiesNoName
 	/** 
 	 信息块s
 	*/
-	public HtmlVars() {
+	public HtmlVars()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new HtmlVar();
 	}
 
@@ -32,7 +37,8 @@ public class HtmlVars extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<HtmlVar> ToJavaList() {
+	public final java.util.List<HtmlVar> ToJavaList()
+	{
 		return (java.util.List<HtmlVar>)(Object)this;
 	}
 	/** 
@@ -40,7 +46,8 @@ public class HtmlVars extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<HtmlVar> Tolist()  {
+	public final ArrayList<HtmlVar> Tolist()
+	{
 		ArrayList<HtmlVar> list = new ArrayList<HtmlVar>();
 		for (int i = 0; i < this.size(); i++)
 		{

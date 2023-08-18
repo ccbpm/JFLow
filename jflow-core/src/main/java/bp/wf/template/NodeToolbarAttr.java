@@ -1,12 +1,5 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.en.*;
-import bp.port.*;
-import bp.*;
-import bp.wf.*;
-import java.util.*;
-
 /** 
  工具栏属性
 */
@@ -37,7 +30,7 @@ public class NodeToolbarAttr extends bp.en.EntityOIDNameAttr
 	/** 
 	 显示在那里？
 	*/
-	public static final String ShowWhere = "ShowWhere";
+	//public const String ShowWhere = "ShowWhere";
 	/** 
 	 在工作处理器显示
 	*/

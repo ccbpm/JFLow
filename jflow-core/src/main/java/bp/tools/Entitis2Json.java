@@ -3,17 +3,17 @@ package bp.tools;
 import bp.da.DataRow;
 import bp.da.DataTable;
 import bp.da.DataType;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.en.Map;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.en.Map;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.en.Map;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.en.Map;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.en.Map;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.en.Map;
 
 public class Entitis2Json {
@@ -171,13 +171,13 @@ public class Entitis2Json {
 	 * @throws Exception
 	 */
 	public final String TranslateEntitiesToListJson(bp.en.Entities ens, String hidenKeys) throws Exception {
-		Attrs attrs = ens.getGetNewEntity().getEnMap().getAttrs();
+		Attrs attrs = ens.getNewEntity().getEnMap().getAttrs();
 		StringBuilder append = new StringBuilder();
 		append.append("[");
 
 		for (Entity en : ens) {
 			append.append("{");
-			for (Attr attr : attrs.ToJavaList()) {
+			for (Attr attr : attrs) {
 				if (!DataType.IsNullOrEmpty(hidenKeys) && hidenKeys.contains("@" + attr.getKey())) {
 					continue;
 				}
@@ -208,13 +208,13 @@ public class Entitis2Json {
 	 */
 	public final String TranslateEntitiesToGridJsonOnlyData(bp.en.Entities ens, int totalRows, String hidenKeys)
 			throws Exception {
-		Attrs attrs = ens.getGetNewEntity().getEnMap().getAttrs();
+		Attrs attrs = ens.getNewEntity().getEnMap().getAttrs();
 		StringBuilder append = new StringBuilder();
 		append.append("{rows:[");
 
 		for (Entity en : ens) {
 			append.append("{");
-			for (Attr attr : attrs.ToJavaList()) {
+			for (Attr attr : attrs) {
 				if (!DataType.IsNullOrEmpty(hidenKeys) && hidenKeys.contains("@" + attr.getKey())) {
 					continue;
 				}
@@ -253,19 +253,19 @@ public class Entitis2Json {
 	 */
 	public final String TranslateEntitiesToGridJsonColAndData(Entities ens, int totalRows, String hidenKeys)
 			throws Exception {
-		Attrs attrs = ens.getGetNewEntity().getEnMap().getAttrs();
+		Attrs attrs = ens.getNewEntity().getEnMap().getAttrs();
 		StringBuilder append = new StringBuilder();
 		append.append("{");
 		// 整理列名
 		append.append("columns:[");
-		for (Attr attr : attrs.ToJavaList()) {
+		for (Attr attr : attrs) {
 			if (!attr.getUIVisible()) {
 				continue;
 			}
 			if (!DataType.IsNullOrEmpty(hidenKeys) && hidenKeys.contains("@" + attr.getKey())) {
 				continue;
 			}
-			if (attr.getIsRefAttr() || attr.getIsFK() || attr.getIsEnum()) {
+			if (attr.getItIsRefAttr()  || attr.getItIsFK() || attr.getItIsEnum()) {
 				append.append("{");
 				append.append(String.format("field:'%1$s',title:'%2$s',width:%3$s,sortable:true",
 						attr.getKey() + "Text", attr.getDesc(), attr.getUIWidth() * 2));
@@ -288,8 +288,8 @@ public class Entitis2Json {
 		for (Entity en : ens) {
 			bHaveData = true;
 			append.append("{");
-			for (Attr attr : attrs.ToJavaList()) {
-				if (attr.getIsRefAttr() || attr.getIsFK() || attr.getIsEnum()) {
+			for (Attr attr : attrs) {
+				if (attr.getItIsRefAttr()  || attr.getItIsFK() || attr.getItIsEnum()) {
 					append.append(attr.getKey() + "Text:'" + ((Entity) en).GetValRefTextByKey(attr.getKey()) + "',");
 					continue;
 				}

@@ -13,12 +13,13 @@ public class DeptFlowSearchs extends EntitiesMyPK
 	/** 
 	 流程部门数据查询权限
 	*/
-	public DeptFlowSearchs() throws Exception {
+	public DeptFlowSearchs()
+	{
 	}
 	/** 
 	 流程部门数据查询权限
 	 
-	 param FK_Emp FK_Emp
+	 @param FK_Emp FK_Emp
 	*/
 	public DeptFlowSearchs(String FK_Emp) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -34,7 +35,8 @@ public class DeptFlowSearchs extends EntitiesMyPK
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new DeptFlowSearch();
 	}
 
@@ -52,7 +54,8 @@ public class DeptFlowSearchs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<DeptFlowSearch> ToJavaList() {
+	public final java.util.List<DeptFlowSearch> ToJavaList()
+	{
 		return (java.util.List<DeptFlowSearch>)(Object)this;
 	}
 	/** 
@@ -60,7 +63,8 @@ public class DeptFlowSearchs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<DeptFlowSearch> Tolist()  {
+	public final ArrayList<DeptFlowSearch> Tolist()
+	{
 		ArrayList<DeptFlowSearch> list = new ArrayList<DeptFlowSearch>();
 		for (int i = 0; i < this.size(); i++)
 		{

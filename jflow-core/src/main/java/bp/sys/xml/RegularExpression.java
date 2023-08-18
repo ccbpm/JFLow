@@ -1,5 +1,6 @@
 package bp.sys.xml;
 
+
 /** 
   RegularExpression 正则表达模版
 */
@@ -10,27 +11,22 @@ public class RegularExpression extends XmlEn
 	/** 
 	 编号
 	*/
-	public final String getNo()  throws Exception
-	{
+	public final String getNo()  {
 		return this.GetValStringByKey("No");
 	}
 	/** 
 	 名称
 	*/
-	public final String getName()  throws Exception
-	{
+	public final String getName()  {
 		return this.GetValStringByKey("Name");
 	}
-	public final String getNote()  throws Exception
-	{
+	public final String getNote()  {
 		return this.GetValStringByKey("Note");
 	}
-	public final String getForCtrl()  throws Exception
-	{
+	public final String getForCtrl()  {
 		return this.GetValStringByKey("ForCtrl");
 	}
-	public final String getExp()  throws Exception
-	{
+	public final String getExp()  {
 		return this.GetValStringByKey("Exp");
 	}
 
@@ -48,7 +44,7 @@ public class RegularExpression extends XmlEn
 	 获取一个实例
 	*/
 	@Override
-	public XmlEns getGetNewEntities()
+	public XmlEns getNewEntities()
 	{
 		return new RegularExpressions();
 	}

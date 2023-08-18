@@ -1,10 +1,6 @@
 package bp.wf.weixin;
 
-import bp.da.*;
 import bp.en.*;
-import bp.port.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -16,13 +12,15 @@ public class Emps extends EntitiesNoName
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new Emp();
 	}
 	/** 
 	 工作人员s
 	*/
-	public Emps()  {
+	public Emps()
+	{
 	}
 
 		///#region 为了适应自动翻译成java的需要,把实体转换成List.
@@ -31,7 +29,8 @@ public class Emps extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<Emp> ToJavaList() {
+	public final java.util.List<Emp> ToJavaList()
+	{
 		return (java.util.List<Emp>)(Object)this;
 	}
 	/** 
@@ -39,7 +38,8 @@ public class Emps extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<Emp> Tolist()  {
+	public final ArrayList<Emp> Tolist()
+	{
 		ArrayList<Emp> list = new ArrayList<Emp>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -47,8 +47,4 @@ public class Emps extends EntitiesNoName
 		}
 		return list;
 	}
-
-		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
-
-
 }

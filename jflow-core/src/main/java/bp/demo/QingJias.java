@@ -10,7 +10,7 @@ public class QingJias extends EntitiesOID
 	private static final long serialVersionUID = 1L;
 	
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new QingJia();
 	}
@@ -19,4 +19,5 @@ public class QingJias extends EntitiesOID
 	public QingJias()
 	{
 	}
+
 }

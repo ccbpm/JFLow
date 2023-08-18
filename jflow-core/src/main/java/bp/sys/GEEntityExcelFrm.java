@@ -14,34 +14,28 @@ public class GEEntityExcelFrm extends EntityOID
 	/** 
 	 最后修改人
 	*/
-	public final String getLastEditer()  throws Exception
-	{
+	public final String getLastEditer()  {
 		return this.GetValStringByKey(GEEntityExcelFrmAttr.LastEditer);
 	}
-	public final void setLastEditer(String value) throws Exception
-	{
+	public final void setLastEditer(String value){
 		this.SetValByKey(GEEntityExcelFrmAttr.LastEditer, value);
 	}
 	/** 
 	 记录时间
 	*/
-	public final String getRDT()  throws Exception
-	{
+	public final String getRDT()  {
 		return this.GetValStringByKey(GEEntityExcelFrmAttr.RDT);
 	}
-	public final void setRDT(String value) throws Exception
-	{
+	public final void setRDT(String value){
 		this.SetValByKey(GEEntityExcelFrmAttr.RDT, value);
 	}
 	/** 
 	 文件路径
 	*/
-	public final String getFilePath()  throws Exception
-	{
+	public final String getFilePath()  {
 		return this.GetValStringByKey(GEEntityExcelFrmAttr.FilePath);
 	}
-	public final void setFilePath(String value) throws Exception
-	{
+	public final void setFilePath(String value){
 		this.SetValByKey(GEEntityExcelFrmAttr.FilePath, value);
 	}
 
@@ -55,23 +49,24 @@ public class GEEntityExcelFrm extends EntityOID
 		return "OID";
 	}
 	@Override
-	public String getPK_Field()throws Exception
+	public String getPKField()
 	{
 		return "OID";
 	}
 	@Override
-	public String toString()  {
-		return this.FK_MapData;
+	public String toString()
+	{
+		return this.FrmID;
 	}
 	@Override
 	public String getClassID()
 	{
-		return this.FK_MapData;
+		return this.FrmID;
 	}
 	/** 
 	 主键
 	*/
-	public String FK_MapData = null;
+	public String FrmID = null;
 	/** 
 	 通用实体
 	*/
@@ -81,21 +76,20 @@ public class GEEntityExcelFrm extends EntityOID
 	/** 
 	 通用实体
 	 
-	 param fk_mapdata
+	 @param fk_mapdata 节点ID
 	*/
 	public GEEntityExcelFrm(String fk_mapdata)
 	{
-		this.FK_MapData=fk_mapdata;
+		this.FrmID=fk_mapdata;
 	}
 	/** 
 	 通用实体
 	 
-	 param fk_mapdata
-	 param oid
+	 @param fk_mapdata 节点ID
+	 @param oid OID
 	*/
-	public GEEntityExcelFrm(String fk_mapdata, int oid)throws Exception
-	{
-		this.FK_MapData=fk_mapdata;
+	public GEEntityExcelFrm(String fk_mapdata, int oid) throws Exception {
+		this.FrmID=fk_mapdata;
 		this.setOID(oid);
 		int i = this.RetrieveFromDBSources();
 	}
@@ -108,22 +102,22 @@ public class GEEntityExcelFrm extends EntityOID
 	 重写基类方法=
 	*/
 	@Override
-	public bp.en.Map getEnMap()
+	public Map getEnMap()
 	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
 		}
 
-		if (this.FK_MapData == null)
+		if (this.FrmID == null)
 		{
-			throw new RuntimeException("没有给" + this.FK_MapData + "值，您不能获取它的Map。");
+			throw new RuntimeException("没有给" + this.FrmID + "值，您不能获取它的Map。");
 		}
 
 		try {
-			this.set_enMap(MapData.GenerHisMap(this.FK_MapData));
+			this.set_enMap(MapData.GenerHisMap(this.FrmID));
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		return this.get_enMap();
 	}
@@ -131,13 +125,13 @@ public class GEEntityExcelFrm extends EntityOID
 	 GEEntitys
 	*/
 	@Override
-	public Entities getGetNewEntities()
+	public Entities GetNewEntities()
 	{
-		if (this.FK_MapData == null)
+		if (this.FrmID == null)
 		{
 			return new GEEntityExcelFrms();
 		}
-		return new GEEntityExcelFrms(this.FK_MapData);
+		return new GEEntityExcelFrms(this.FrmID);
 	}
 
 		///#endregion
@@ -145,7 +139,7 @@ public class GEEntityExcelFrm extends EntityOID
 
 		///#region 其他属性.
 	private ArrayList _Dtls = null;
-	public final ArrayList getDtls()throws Exception
+	public final ArrayList getDtls()
 	{
 		if (_Dtls == null)
 		{

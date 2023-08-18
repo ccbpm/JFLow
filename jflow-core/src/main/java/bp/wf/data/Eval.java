@@ -18,8 +18,7 @@ public class Eval extends EntityMyPK
 	{
 		return this.GetValStringByKey(EvalAttr.Title);
 	}
-	public final void setTitle(String value) throws Exception
-	{
+	public final void setTitle(String value){
 		this.SetValByKey(EvalAttr.Title, value);
 	}
 	/** 
@@ -29,19 +28,17 @@ public class Eval extends EntityMyPK
 	{
 		return this.GetValInt64ByKey(EvalAttr.WorkID);
 	}
-	public final void setWorkID(long value) throws Exception
-	{
+	public final void setWorkID(long value){
 		this.SetValByKey(EvalAttr.WorkID, value);
 	}
 	/** 
 	 节点编号
 	*/
-	public final int getFK_Node()  throws Exception
+	public final int getNodeID()  throws Exception
 	{
 		return this.GetValIntByKey(EvalAttr.FK_Node);
 	}
-	public final void setFK_Node(int value) throws Exception
-	{
+	public final void setNodeID(int value){
 		this.SetValByKey(EvalAttr.FK_Node, value);
 	}
 	/** 
@@ -51,8 +48,7 @@ public class Eval extends EntityMyPK
 	{
 		return this.GetValStringByKey(EvalAttr.NodeName);
 	}
-	public final void setNodeName(String value) throws Exception
-	{
+	public final void setNodeName(String value){
 		this.SetValByKey(EvalAttr.NodeName, value);
 	}
 	/** 
@@ -62,8 +58,7 @@ public class Eval extends EntityMyPK
 	{
 		return this.GetValStringByKey(EvalAttr.EvalEmpName);
 	}
-	public final void setEvalEmpName(String value) throws Exception
-	{
+	public final void setEvalEmpName(String value){
 		this.SetValByKey(EvalAttr.EvalEmpName, value);
 	}
 	/** 
@@ -73,19 +68,17 @@ public class Eval extends EntityMyPK
 	{
 		return this.GetValStringByKey(EvalAttr.RDT);
 	}
-	public final void setRDT(String value) throws Exception
-	{
+	public final void setRDT(String value){
 		this.SetValByKey(EvalAttr.RDT, value);
 	}
 	/** 
 	 流程隶属部门
 	*/
-	public final String getFK_Dept()  throws Exception
+	public final String getDeptNo()  throws Exception
 	{
 		return this.GetValStringByKey(EvalAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value) throws Exception
-	{
+	public final void setDeptNo(String value){
 		this.SetValByKey(EvalAttr.FK_Dept, value);
 	}
 	/** 
@@ -95,30 +88,27 @@ public class Eval extends EntityMyPK
 	{
 		return this.GetValStringByKey(EvalAttr.DeptName);
 	}
-	public final void setDeptName(String value) throws Exception
-	{
+	public final void setDeptName(String value){
 		this.SetValByKey(EvalAttr.DeptName, value);
 	}
 	/** 
 	 隶属年月
 	*/
-	public final String getFK_Ny()  throws Exception
+	public final String getNY()  throws Exception
 	{
 		return this.GetValStringByKey(EvalAttr.FK_NY);
 	}
-	public final void setFK_Ny(String value) throws Exception
-	{
+	public final void setNY(String value){
 		this.SetValByKey(EvalAttr.FK_NY, value);
 	}
 	/** 
 	 流程编号
 	*/
-	public final String getFK_Flow()  throws Exception
+	public final String getFlowNo()  throws Exception
 	{
 		return this.GetValStringByKey(EvalAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value) throws Exception
-	{
+	public final void setFlowNo(String value){
 		this.SetValByKey(EvalAttr.FK_Flow, value);
 	}
 	/** 
@@ -128,8 +118,7 @@ public class Eval extends EntityMyPK
 	{
 		return this.GetValStringByKey(EvalAttr.FlowName);
 	}
-	public final void setFlowName(String value) throws Exception
-	{
+	public final void setFlowName(String value){
 		this.SetValByKey(EvalAttr.FlowName, value);
 	}
 	/** 
@@ -139,8 +128,7 @@ public class Eval extends EntityMyPK
 	{
 		return this.GetValStringByKey(EvalAttr.Rec);
 	}
-	public final void setRec(String value) throws Exception
-	{
+	public final void setRec(String value){
 		this.SetValByKey(EvalAttr.Rec, value);
 	}
 	/** 
@@ -150,8 +138,7 @@ public class Eval extends EntityMyPK
 	{
 		return this.GetValStringByKey(EvalAttr.RecName);
 	}
-	public final void setRecName(String value) throws Exception
-	{
+	public final void setRecName(String value){
 		this.SetValByKey(EvalAttr.RecName, value);
 	}
 	/** 
@@ -161,8 +148,7 @@ public class Eval extends EntityMyPK
 	{
 		return this.GetValStringByKey(EvalAttr.EvalNote);
 	}
-	public final void setEvalNote(String value) throws Exception
-	{
+	public final void setEvalNote(String value){
 		this.SetValByKey(EvalAttr.EvalNote, value);
 	}
 	/** 
@@ -172,8 +158,7 @@ public class Eval extends EntityMyPK
 	{
 		return this.GetValStringByKey(EvalAttr.EvalEmpNo);
 	}
-	public final void setEvalEmpNo(String value) throws Exception
-	{
+	public final void setEvalEmpNo(String value){
 		this.SetValByKey(EvalAttr.EvalEmpNo, value);
 	}
 	/** 
@@ -183,8 +168,7 @@ public class Eval extends EntityMyPK
 	{
 		return this.GetValStringByKey(EvalAttr.EvalCent);
 	}
-	public final void setEvalCent(String value) throws Exception
-	{
+	public final void setEvalCent(String value){
 		this.SetValByKey(EvalAttr.EvalCent, value);
 	}
 
@@ -206,7 +190,7 @@ public class Eval extends EntityMyPK
 	*/
 	public Eval(int workid, int FK_Node) throws Exception {
 		this.setWorkID(workid);
-		this.setFK_Node(FK_Node);
+		this.setNodeID(FK_Node);
 		this.Retrieve();
 	}
 	/** 

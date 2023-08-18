@@ -1,12 +1,5 @@
 package bp.wf.weixin;
 
-import bp.da.*;
-import bp.en.*;
-import bp.port.*;
-import bp.*;
-import bp.wf.*;
-import java.util.*;
-
 /** 
  工作人员属性
 */

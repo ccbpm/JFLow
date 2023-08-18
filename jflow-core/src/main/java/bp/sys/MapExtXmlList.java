@@ -1,9 +1,5 @@
 package bp.sys;
 
-import bp.da.*;
-import bp.en.*;
-import bp.sys.xml.*;
-import bp.*;
 
 public class MapExtXmlList
 {
@@ -60,6 +56,14 @@ public class MapExtXmlList
 	 表单装载填充
 	*/
 	public static final String PageLoadFull = "PageLoadFull";
+	/** 
+	 主表的装载填充
+	*/
+	public static final String PageLoadFullMainTable = "PageLoadFullMainTable";
+	/** 
+	 从表的装载填充
+	*/
+	public static final String PageLoadFullDtl = "PageLoadFullDtl";
 	/** 
 	 发起流程
 	*/

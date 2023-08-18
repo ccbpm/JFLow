@@ -1,13 +1,5 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.sys.*;
-import bp.en.*;
-import bp.wf.data.*;
-import bp.web.*;
-import bp.*;
-import bp.wf.*;
-
 /** 
  指定操作员方式
 */
@@ -32,11 +24,13 @@ public enum SpecOperWay
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue() {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
-	public static SpecOperWay forValue(int value) 
-	{return values()[value];
+	public static SpecOperWay forValue(int value)
+	{
+		return values()[value];
 	}
 }

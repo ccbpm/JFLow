@@ -1,7 +1,4 @@
 package bp.wf;
-
-import bp.*;
-
 /** 
  根据子流程运行模式控制父流程的运行到下一个节点/结束
 */
@@ -22,11 +19,13 @@ public enum SubFlowRunModel
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue() {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
-	public static SubFlowRunModel forValue(int value) 
-	{return values()[value];
+	public static SubFlowRunModel forValue(int value)
+	{
+		return values()[value];
 	}
 }

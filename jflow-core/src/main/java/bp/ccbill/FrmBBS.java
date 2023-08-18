@@ -1,7 +1,9 @@
 package bp.ccbill;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import java.util.*;
 
 /** 
  评论组件
@@ -13,109 +15,90 @@ public class FrmBBS extends EntityNoName
 	/** 
 	 参数数据.
 	*/
-	public final String getDocs() throws Exception
-	{
+	public final String getDocs() {
 		return this.GetValStringByKey(FrmBBSAttr.Docs);
 	}
-	public final void setDocs(String value)  throws Exception
-	 {
+	public final void setDocs(String value)  {
 		this.SetValByKey(FrmBBSAttr.Docs, value);
 	}
 	/** 
 	 表单ID
 	*/
-	public final String getFrmID() throws Exception
-	{
+	public final String getFrmID() {
 		return this.GetValStringByKey(FrmBBSAttr.FrmID);
 	}
-	public final void setFrmID(String value)  throws Exception
-	 {
+	public final void setFrmID(String value)  {
 		this.SetValByKey(FrmBBSAttr.FrmID, value);
 	}
 	/** 
 	 表单名称
 	*/
-	public final String getFrmName() throws Exception
-	{
+	public final String getFrmName() {
 		return this.GetValStringByKey(FrmBBSAttr.FrmName);
 	}
-	public final void setFrmName(String value)  throws Exception
-	 {
+	public final void setFrmName(String value)  {
 		this.SetValByKey(FrmBBSAttr.FrmName, value);
 	}
 	/** 
 	 记录日期
 	*/
-	public final String getRDT() throws Exception
-	{
+	public final String getRDT() {
 		return this.GetValStringByKey(FrmBBSAttr.RDT);
 	}
-	public final void setRDT(String value)  throws Exception
-	 {
+	public final void setRDT(String value)  {
 		this.SetValByKey(FrmBBSAttr.RDT, value);
 	}
 
 	/** 
 	 工作ID
 	*/
-	public final long getWorkID() throws Exception
-	{
+	public final long getWorkID() {
 		return this.GetValInt64ByKey(FrmBBSAttr.WorkID);
 	}
-	public final void setWorkID(long value)  throws Exception
-	 {
+	public final void setWorkID(long value)  {
 		this.SetValByKey(FrmBBSAttr.WorkID, value);
 	}
 
 	/** 
 	 活动名称
 	*/
-	public final String getActionTypeText() throws Exception
-	{
+	public final String getActionTypeText() {
 		return this.GetValStringByKey(FrmBBSAttr.ActionTypeText);
 	}
-	public final void setActionTypeText(String value)  throws Exception
-	 {
+	public final void setActionTypeText(String value)  {
 		this.SetValByKey(FrmBBSAttr.ActionTypeText, value);
 	}
 	/** 
 	 记录人
 	*/
-	public final String getRec() throws Exception
-	{
+	public final String getRec() {
 		return this.GetValStringByKey(FrmBBSAttr.Rec);
 	}
-	public final void setRec(String value)  throws Exception
-	 {
+	public final void setRec(String value)  {
 		this.SetValByKey(FrmBBSAttr.Rec, value);
 	}
 	/** 
 	 记录人名字
 	*/
-	public final String getRecName() throws Exception
-	{
+	public final String getRecName() {
 		return this.GetValStringByKey(FrmBBSAttr.RecName);
 	}
-	public final void setRecName(String value)  throws Exception
-	 {
+	public final void setRecName(String value)  {
 		this.SetValByKey(FrmBBSAttr.RecName, value);
 	}
 	/** 
 	 消息
 	*/
-	public final String getMsg() throws Exception
-	{
+	public final String getMsg() {
 		return this.GetValStringByKey(FrmBBSAttr.Msg);
 	}
-	public final void setMsg(String value)  throws Exception
-	 {
+	public final void setMsg(String value)  {
 		this.SetValByKey(FrmBBSAttr.Msg, value);
 	}
 	/** 
 	 消息
 	*/
-	public final String getMsgHtml() throws Exception
-	{
+	public final String getMsgHtml() throws Exception {
 		return this.GetValHtmlStringByKey(FrmBBSAttr.Msg);
 	}
 
@@ -123,20 +106,16 @@ public class FrmBBS extends EntityNoName
 
 
 		///#region 流程属性.
-	public final String getDeptNo() throws Exception
-	{
+	public final String getDeptNo() {
 		return this.GetValStringByKey(FrmBBSAttr.DeptNo);
 	}
-	public final void setDeptNo(String value)  throws Exception
-	 {
+	public final void setDeptNo(String value)  {
 		this.SetValByKey(FrmBBSAttr.DeptNo, value);
 	}
-	public final String getDeptName() throws Exception
-	{
+	public final String getDeptName() {
 		return this.GetValStringByKey(FrmBBSAttr.DeptName);
 	}
-	public final void setDeptName(String value)  throws Exception
-	 {
+	public final void setDeptName(String value)  {
 		this.SetValByKey(FrmBBSAttr.DeptName, value);
 	}
 
@@ -148,7 +127,7 @@ public class FrmBBS extends EntityNoName
 	 表单评论组件表
 	*/
 	@Override
-	public bp.en.Map getEnMap()  {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -167,8 +146,8 @@ public class FrmBBS extends EntityNoName
 
 		map.AddTBString(FrmBBSAttr.Docs, null, "内容", true, false, 0, 50, 200);
 
-			//map.AddTBInt(FrmBBSAttr.ActionType, 0, "类型", true, false);
-			// map.AddTBString(FrmBBSAttr.ActionTypeText, null, "类型(名称)", true, false, 0, 30, 100);
+		//map.AddTBInt(FrmBBSAttr.ActionType, 0, "类型", true, false);
+		// map.AddTBString(FrmBBSAttr.ActionTypeText, null, "类型(名称)", true, false, 0, 30, 100);
 
 		map.AddTBString(FrmBBSAttr.Rec, null, "记录人", true, false, 0, 200, 100);
 		map.AddTBString(FrmBBSAttr.RecName, null, "名称", true, false, 0, 200, 100);
@@ -189,9 +168,11 @@ public class FrmBBS extends EntityNoName
 	/** 
 	 评论组件
 	*/
-	public FrmBBS()  {
+	public FrmBBS()
+	{
 	}
-	public FrmBBS(String no) throws Exception {
+	public FrmBBS(String no) throws Exception
+	{
 		this.setNo(no);
 		this.Retrieve();
 	}
@@ -199,20 +180,22 @@ public class FrmBBS extends EntityNoName
 		///#endregion 构造.
 
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		this.setNo(DBAccess.GenerGUID(0, null, null));
 
 		this.SetValByKey(FrmBBSAttr.Rec, bp.web.WebUser.getNo());
 		this.SetValByKey(FrmBBSAttr.RecName, bp.web.WebUser.getName());
 		this.SetValByKey(FrmBBSAttr.RDT, DataType.getCurrentDateTime());
 
-		this.SetValByKey(FrmBBSAttr.DeptNo, bp.web.WebUser.getFK_Dept());
-		this.SetValByKey(FrmBBSAttr.DeptName, bp.web.WebUser.getFK_DeptName());
+		this.SetValByKey(FrmBBSAttr.DeptNo, bp.web.WebUser.getDeptNo());
+		this.SetValByKey(FrmBBSAttr.DeptName, bp.web.WebUser.getDeptName());
 
 		return super.beforeInsert();
 	}
 	@Override
-	protected void afterDelete() throws Exception {
+	protected void afterDelete() throws Exception
+	{
 		FrmBBSs ens = new FrmBBSs();
 		ens.Delete(FrmBBSAttr.ParentNo, this.getNo());
 		super.afterDelete();

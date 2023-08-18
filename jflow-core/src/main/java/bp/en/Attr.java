@@ -67,7 +67,7 @@ public class Attr {
                 attr.setUIContralType(this.getUIContralType());
                 attr.setLGType(FieldTypeS.Normal);
 
-                if (this.getIsSupperText() == 1)
+                if (this.getItIsSupperText() == 1)
                     attr.setTextModel(3);
                 switch (this.getMyDataType()) {
                     case DataType.AppBoolean:
@@ -86,7 +86,7 @@ public class Attr {
         return attr;
     }
 
-    public final boolean getIsFK() {
+    public final boolean getItIsFK() {
         if (this.getMyFieldType() == FieldType.FK || this.getMyFieldType() == FieldType.PKFK) {
             return true;
         } else {
@@ -94,7 +94,7 @@ public class Attr {
         }
     }
 
-    public final boolean getIsFKorEnum() {
+    public final boolean getItIsFKorEnum() {
         if (this.getMyFieldType() == FieldType.Enum || this.getMyFieldType() == FieldType.PKEnum || this.getMyFieldType() == FieldType.FK || this.getMyFieldType() == FieldType.PKFK) {
             return true;
         } else {
@@ -112,7 +112,7 @@ public class Attr {
         return false;
     }
 
-    public final boolean getIsNum() {
+    public final boolean getItIsNum() {
         if (getMyDataType() == DataType.AppBoolean || getMyDataType() == DataType.AppDouble || getMyDataType() == DataType.AppFloat || getMyDataType() == DataType.AppInt || getMyDataType() == DataType.AppMoney) {
             return true;
         } else {
@@ -120,7 +120,7 @@ public class Attr {
         }
     }
 
-    public final boolean getIsEnum() {
+    public final boolean getItIsEnum() {
         if (getMyFieldType() == FieldType.Enum || getMyFieldType() == FieldType.PKEnum) {
             return true;
         } else {
@@ -128,7 +128,7 @@ public class Attr {
         }
     }
 
-    public final boolean getIsRefAttr() {
+    public final boolean getItIsRefAttr() {
         if (this.getMyFieldType() == FieldType.RefText) {
             return true;
         }
@@ -138,7 +138,7 @@ public class Attr {
     /**
      * 计算属性是不是PK
      */
-    public final boolean getIsPK() {
+    public final boolean getItIsPK() {
         if (getMyFieldType() == FieldType.PK || getMyFieldType() == FieldType.PKFK || getMyFieldType() == FieldType.PKEnum) {
             return true;
         } else {
@@ -148,7 +148,7 @@ public class Attr {
 
     private int _IsKeyEqualField = -1;
 
-    public final boolean getIsKeyEqualField() {
+    public final boolean getItIsKeyEqualField() {
         if (_IsKeyEqualField == -1) {
             if (this.getKey().equals(this.getField())) {
                 _IsKeyEqualField = 1;
@@ -172,7 +172,7 @@ public class Attr {
                 return "此字段只读";
             } else {
                 if (this.getMyDataType() == DataType.AppDate) {
-                    return "输入日期类型" + DataType.getSysDataFormat();
+                    return "输入日期类型" + DataType.getSysDateFormat();
                 } else if (this.getMyDataType() == DataType.AppDateTime) {
                     return "输入日期时间类型" + DataType.getSysDateTimeFormat();
                 } else if (this.getMyDataType() == DataType.AppString) {
@@ -246,7 +246,7 @@ public class Attr {
     /**
      * 属性名称
      */
-    private String _key = null;
+    public String _key = null;
 
     /**
      * 属性名称
@@ -482,7 +482,7 @@ public class Attr {
             case DataType.AppDateTime:
                 return 50;
             case DataType.AppString:
-                if (this.getIsFK()) {
+                if (this.getItIsFK()) {
                     return 100;
                 } else {
                     if (this._maxLength == 0) {
@@ -491,7 +491,7 @@ public class Attr {
                     return this._maxLength;
                 }
             default:
-                if (this.getIsFK()) {
+                if (this.getItIsFK()) {
                     return 100;
                 } else {
                     return this._maxLength;
@@ -629,11 +629,11 @@ public class Attr {
 
     private int _IsSupperText = 0;
 
-    public final int getIsSupperText() {
+    public final int getItIsSupperText() {
         return this._IsSupperText;
     }
 
-    public final void setIsSupperText(int value) {
+    public final void setItIsSupperText(int value) {
         this._IsSupperText = value;
     }
 
@@ -651,7 +651,7 @@ public class Attr {
     public final Entity getHisFKEn() throws Exception {
         Entities hisFKEns = this.getHisFKEns();
         if (hisFKEns != null) {
-            return hisFKEns.getGetNewEntity();
+            return hisFKEns.getNewEntity();
         }
         return null;
     }
@@ -670,7 +670,16 @@ public class Attr {
             if (this.getMyFieldType() == FieldType.Enum || this.getMyFieldType() == FieldType.PKEnum) {
                 return null;
             } else if (this.getMyFieldType() == FieldType.FK || this.getMyFieldType() == FieldType.PKFK) {
-                if (this.getUIBindKey().contains(".")) {
+                if (this.getUIBindKey().contains(",TS."))
+                {
+                    int idx = this.getUIBindKey().lastIndexOf(",TS.");
+                    String className = this.getUIBindKey().substring(idx + 1);
+
+                    TSEntitiesNoName ens = new TSEntitiesNoName(className);
+                    if (ens == null)
+                        throw new RuntimeException("err@ClassID=" + className + " 没有注册.");
+                    _HisFKEns = ens; // BP.EnTS ClassFactory.GetEns(className);
+                }else if (this.getUIBindKey().contains(".")) {
                     _HisFKEns = ClassFactory.GetEns(this.getUIBindKey());
                 } else {
                     _HisFKEns = new GENoNames(this.getUIBindKey(), this.getDesc()); // ClassFactory.GetEns(this.getUIBindKey());

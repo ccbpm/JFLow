@@ -1,7 +1,7 @@
 package bp.ccbill.template;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.*;
 import bp.ccbill.*;
 import java.util.*;

@@ -1,13 +1,13 @@
 package bp.wf;
 
 import bp.da.*;
-import bp.difference.ContextHolderUtils;
-import bp.difference.SystemConfig;
 import bp.sys.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.wf.template.*;
-import bp.wf.template.ccen.*;
 import bp.wf.template.sflow.*;
+import bp.web.*;
+import bp.*;
+import java.util.*;
 import java.math.*;
 
 /** 
@@ -16,106 +16,232 @@ import java.math.*;
 public class Node extends Entity
 {
 
+		///#region 参数属性-AR 部门集合与岗位集合.
+	/** 
+	 模式.
+	*/
+	public final int getARStaModel() {
+		return this.GetParaInt("ARStaModel", 0);
+	}
+	/** 
+	 参数
+	*/
+	public final String getARStaPara() {
+		return this.GetParaString("ARStaPara");
+	}
+	/** 
+	 生成SQL
+	 
+	 @param workID
+	 @return 
+	 @exception Exception
+	*/
+	public final String ARStaModelStasSQL(long workID) throws Exception {
+		String sql = "";
+		String ARStaPara = this.getARStaPara(); //参数.
+		switch (this.getARStaModel())
+		{
+			case 0: //提交人所有的角色.
+				sql = "SELECT FK_Station FROM Port_DeptEmpStation WHERE FK_Emp='" + WebUser.getNo() + "'";
+				break;
+			case 1: //提交人使用的角色.
+				sql = "SELECT FK_Station FROM WF_GenerWorkerList WHERE FK_Emp='" + WebUser.getNo() + "' AND WorkID=" + workID;
+				break;
+			case 10: //指定节点提交人的使用角色.
+				sql = "SELECT FK_Station FROM WF_GenerWorkerList WHERE  FK_Node=" + ARStaPara + " AND WorkID=" + workID;
+				break;
+			case 11: //指定节点提交人的所有角色.
+				sql = "SELECT B.FK_Station FROM WF_GenerWorkerList A, Port_DeptEmpStation B WHERE  A.FK_Node=" + ARStaPara + " AND A.WorkID=" + workID + " AND A.FK_Emp=B.FK_Emp ";
+				break;
+			case 20: //字段(参数)值是人员编号-所有角色
+			case 21: // 字段(参数)值是角色编号
+				Flow fl = new Flow(this.getFlowNo());
+				String ptable = fl.getPTable();
+				MapAttr attr = new MapAttr(ARStaPara);
+				String mysql = "SELECT " + attr.getKeyOfEn() + " FROM " + fl.getPTable() + " WHERE OID=" + workID;
+				String val = DBAccess.RunSQLReturnString(mysql); //获得字段值.
+				if (this.getARStaModel() == 20)
+				{
+					sql = "SELECT FK_Station FROM Port_DeptEmpStation WHERE FK_Emp='" + val + "'";
+				}
+				if (this.getARStaModel() == 21)
+				{
+					sql = "SELECT No FROM Port_Station WHERE No='" + val + "'";
+				}
+				break;
+			default:
+				throw new RuntimeException("err@没有判断的模式：" + this.getARStaModel());
+		}
+		return sql;
+	}
+
+		///#endregion 参数属性-AR 部门集合与岗位集合.
+
+
+		///#region 参数属性-AR 部门集合与岗位集合.
+	/** 
+	 模式.
+	*/
+	public final int getARDeptModel() {
+		return this.GetParaInt("ARDeptModel", 0);
+	}
+	/** 
+	 参数
+	*/
+	public final String getARDeptPara() {
+		return this.GetParaString("ARDeptPara");
+	}
+	/** 
+	 生成SQL
+	 
+	 @param workID
+	 @return 
+	 @exception Exception
+	*/
+	public final String ARDeptModelDeptsSQL(long workID) throws Exception {
+		String sql = "";
+		String ARDeptPara = this.getARDeptPara(); //参数.
+		switch (this.getARDeptModel())
+		{
+			case 0: //提交人所有的部门.
+				sql = "SELECT FK_Dept FROM Port_DeptEmp WHERE FK_Emp='" + WebUser.getNo() + "'";
+				break;
+			case 1: //提交人登陆部门.
+				sql = "SELECT FK_Dept FROM Port_DeptEmp WHERE FK_Emp='" + WebUser.getNo() + "' AND FK_Dept='" + WebUser.getDeptNo() + "'";
+				break;
+			case 2: //提交人使用部门.
+				sql = "SELECT FK_Dept FROM WF_GenerWorkerList WHERE FK_Emp='" + WebUser.getNo() + "' AND WorkID=" + workID;
+				break;
+			case 10: //指定节点提交人的使用部门.
+				sql = "SELECT FK_Dept FROM WF_GenerWorkerList WHERE  FK_Node=" + ARDeptPara + " AND WorkID=" + workID;
+				break;
+			case 11: //指定节点提交人的所有部门.
+				sql = "SELECT B.FK_Dept FROM WF_GenerWorkerList A, Port_DeptEmp B WHERE  A.FK_Node=" + ARDeptPara + " AND A.WorkID=" + workID + " AND A.FK_Emp=B.FK_Emp ";
+				break;
+			case 12: //指定节点提交人的所有部门.
+				sql = "SELECT B.FK_Dept FROM WF_GenerWorkerList A, Port_Emp B WHERE  A.FK_Node=" + ARDeptPara + " AND A.WorkID=" + workID + " AND A.FK_Emp=B.No ";
+				break;
+			case 20: //字段(参数)值是人员编号-主部门
+			case 21: //字段(参数)值是人员编号-所有部门
+			case 22: //字段(参数)值是部门编号.
+				Flow fl = new Flow(this.getFlowNo());
+				String ptable = fl.getPTable();
+				MapAttr attr = new MapAttr(ARDeptPara);
+				String mysql = "SELECT " + attr.getKeyOfEn() + " FROM " + fl.getPTable() + " WHERE OID=" + workID;
+				String val = DBAccess.RunSQLReturnString(mysql); //获得字段值.
+				if (this.getARDeptModel() == 20)
+				{
+					sql = "SELECT FK_Dept FROM Port_Emp WHERE No='" + val + "'";
+				}
+				if (this.getARDeptModel() == 21)
+				{
+					sql = "SELECT FK_Dept FROM Port_DeptEmp WHERE FK_Emp='" + val + "'";
+				}
+				if (this.getARDeptModel() == 22)
+				{
+					sql = "SELECT No FROM Port_Dept WHERE No='" + val + "'";
+				}
+				break;
+			default:
+				throw new RuntimeException("err@没有判断的模式：" + this.getARDeptModel());
+		}
+		return sql;
+	}
+
+		///#endregion 参数属性-AR 部门集合与岗位集合.
+
+
 		///#region 参数属性
 	/** 
 	 方向条件控制规则
 	*/
-	public final DirCondModel getCondModel()  {
-			//if (this.TodolistModel == TodolistModel.Teamup
-			//      && this.IsEndNode == false)
-			//    return DirCondModel.ByUserSelected;
+	public final DirCondModel getCondModel() throws Exception {
+		//if (this.TodolistModel == TodolistModel.Teamup
+		//      && this.getItIsEndNode() == false)
+		//    return DirCondModel.ByUserSelected;
 
 		DirCondModel model = DirCondModel.forValue(this.GetValIntByKey(NodeAttr.CondModel));
 		return model;
 	}
-	public final void setCondModel(DirCondModel value)
-	{//DirCondModel model = (DirCondModel)value;
-			//if (this.TodolistModel == TodolistModel.Teamup
-			//  && model == DirCondModel.SendButtonSileSelect
-			//  && this.IsEndNode == false)
-			//    model = DirCondModel.ByUserSelected;
+	public final void setCondModel(DirCondModel value) throws Exception {
+		//var model = (DirCondModel)value;
+		//if (this.TodolistModel == TodolistModel.Teamup
+		//  && model == DirCondModel.SendButtonSileSelect
+		//  && this.getItIsEndNode() == false)
+		//    model = DirCondModel.ByUserSelected;
 
 		this.SetValByKey(NodeAttr.CondModel, value.getValue());
 	}
 	/** 
 	 抢办发送后处理规则
 	*/
-	public final QiangBanSendAfterRole getQiangBanSendAfterRole()  {
+	public final QiangBanSendAfterRole getQiangBanSendAfterRole() {
 		return QiangBanSendAfterRole.forValue(this.GetParaInt(NodeAttr.QiangBanSendAfterRole, 0));
 	}
 	/** 
 	 超时处理方式
 	*/
-	public final OutTimeDeal getHisOutTimeDeal()  {
+	public final OutTimeDeal getHisOutTimeDeal() {
 		return OutTimeDeal.forValue(this.GetValIntByKey(NodeAttr.OutTimeDeal));
 	}
-	public final void setHisOutTimeDeal(OutTimeDeal value)  
-	 {
+	public final void setHisOutTimeDeal(OutTimeDeal value){
 		this.SetValByKey(NodeAttr.OutTimeDeal, value.getValue());
 	}
-	public final String getDoOutTimeCond() 
-	{
+	public final String getDoOutTimeCond()  {
 		return this.GetValStringByKey(NodeAttr.DoOutTimeCond);
 	}
-	public final void setDoOutTimeCond(String value)  
-	 {
+	public final void setDoOutTimeCond(String value){
 		this.SetValByKey(NodeAttr.DoOutTimeCond, value);
 	}
 	/** 
 	 待办删除规则
 	*/
-	public final int getGenerWorkerListDelRole()  {
+	public final int getGenerWorkerListDelRole() {
 		return this.GetParaInt("GenerWorkerListDelRole", 0);
 	}
-	public final void setGenerWorkerListDelRole(int value)
-	{this.SetPara("GenerWorkerListDelRole", value);
+	public final void setGenerWorkerListDelRole(int value)  {
+		this.SetPara("GenerWorkerListDelRole", value);
 	}
 	/** 
 	 超时处理内容.
 	*/
-	public final String getDoOutTime() 
-	{
+	public final String getDoOutTime()  {
 		return this.GetValStrByKey(NodeAttr.DoOutTime);
 	}
-	public final void setDoOutTime(String value)  
-	 {
+	public final void setDoOutTime(String value){
 		this.SetValByKey(NodeAttr.DoOutTime, value);
 	}
 	/** 
-	 子线程类型
-	*/
-	/*public final SubThreadType getHisSubThreadType()  {
-		return SubThreadType.forValue(this.GetValIntByKey(NodeAttr.SubThreadType));
-	}
-	public final void setHisSubThreadType(SubThreadType value)  
-	 {
-		this.SetValByKey(NodeAttr.SubThreadType, value.getValue());
-	}*/
-	/** 
 	 手工启动的子流程个数
 	*/
-	public final int getSubFlowHandNum()  {
+	public final int getSubFlowHandNum() {
 		return this.GetParaInt("SubFlowHandNum", 0);
 	}
 	/** 
 	 是否是发送返回节点？
 	*/
-	public final boolean isSendBackNode()  {
+	public final boolean getItIsSendBackNode() {
 		return this.GetParaBoolen(NodeAttr.IsSendBackNode, false);
 	}
-	public final void setSendBackNode(boolean value)
-	{this.SetPara(NodeAttr.IsSendBackNode, value);
+	public final void setItIsSendBackNode(boolean value)  {
+		this.SetPara(NodeAttr.IsSendBackNode, value);
+	}
+	/** 
+	 抄送数量
+	*/
+	public final int getCCRoleNum() {
+		return this.GetParaInt("CCRoleNum", 0);
 	}
 	/** 
 	 自动启动的子流程个数
 	*/
-	public final int getSubFlowAutoNum()  {
+	public final int getSubFlowAutoNum() {
 		return this.GetParaInt("SubFlowAutoNum", 0);
 	}
 	/** 
 	 延续子流程个数
 	*/
-	public final int getSubFlowYanXuNum()  {
+	public final int getSubFlowYanXuNum() {
 		return this.GetParaInt("SubFlowYanXuNum", 0);
 	}
 
@@ -123,46 +249,38 @@ public class Node extends Entity
 
 	public static void ClearNodeAutoNum(int nodeID) throws Exception {
 		Node nd = new Node(nodeID);
-		nd.ClearAutoNumCash(true);
+		nd.ClearAutoNumCache(true);
 	}
 
-	/**
-	 * 是否是分流
-	 *
-	 * @throws Exception
-	 */
-	public final boolean getIsFL() throws Exception {
-		switch (this.getHisNodeWorkType()) {
-			case WorkFL:
-			case WorkFHL:
-			case StartWorkFL:
-				return true;
-			default:
-				return false;
-		}
-	}
-		///#region 外键属性.
-	/** 
-	 它的抄送规则.
-	*/
-	public final CC getHisCC() throws Exception {
-
-		Object tempVar = this.GetRefObject("HisCC");
-		CC obj = tempVar instanceof CC ? (CC)tempVar : null;
-		if (obj == null)
+	public void CleanObject() throws Exception {
+		this.getRow().SetValByKey("FrmNodes", null);
+		this.getRow().SetValByKey("HisToNodesSipm", null);
+		this.getRow().SetValByKey("Flow", null);
+		this.getRow().SetValByKey("PushMsg", null);
+		this.getRow().SetValByKey("HisFromNodes", null);
+		this.getRow().SetValByKey("NodeStations", null);
+		this.getRow().SetValByKey("NodeDepts", null);
+		this.getRow().SetValByKey("NodeEmps", null);
+		this.getRow().SetValByKey("MapData", null);
+		Directions mydirs = new Directions(this.getNodeID());
+		String strs = "";
+		for(Direction dir : mydirs.ToJavaList())
 		{
-			obj = new CC();
-			obj.setNodeID(this.getNodeID());
-			obj.Retrieve();
-			this.SetRefObject("HisCC", obj);
+			strs += "@" + dir.getToNode();
 		}
-		return obj;
+		this.setHisToNDs(strs);
+		this.Update();
+		return;
 	}
+
+
+		///#region 外键属性.
+
 	/** 
 	 流程完成条件
 	*/
 	public final Conds getCondsOfFlowComplete() throws Exception {
-		Entities ens =this.GetEntitiesAttrFromAutoNumCash(new Conds(), CondAttr.FK_Node, this.getNodeID(), CondAttr.CondType, CondType.Flow.getValue(), CondAttr.Idx);
+		Conds ens = (Conds) this.GetEntitiesAttrFromAutoNumCache(new Conds(), CondAttr.FK_Node, this.getNodeID(), CondAttr.CondType, CondType.Flow.getValue(), CondAttr.Idx);
 		return ens instanceof Conds ? (Conds)ens : null;
 	}
 	/** 
@@ -170,29 +288,37 @@ public class Node extends Entity
 	 如果他没有到转向方向,他就是结束节点.
 	 没有生命周期的概念,全部的节点.
 	*/
-	public final Nodes getHisToNodes() throws Exception {
+	public final Nodes getHisToNodes() {
 		Object tempVar = this.GetRefObject("HisToNodes");
 		Nodes obj = tempVar instanceof Nodes ? (Nodes)tempVar : null;
-		int hisToNDNum = this.getHisToNDNum();
 		if (obj == null)
 		{
 			obj = new Nodes();
-			if (hisToNDNum == 0)
+			if (this.getHisToNDNum() == 0)
 			{
 				obj = new Nodes();
 			}
-			if (hisToNDNum == 1)
+			if (this.getHisToNDNum() == 1)
 			{
-				obj.AddEntities(this.getHisToNDs());
+				try {
+					obj.AddEntities(this.getHisToNDs());
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+
 			}
-			if (hisToNDNum > 1)
+			if (this.getHisToNDNum() > 1)
 			{
 				String toNodes = this.getHisToNDs().replace("@", ",");
 				if (toNodes.length() > 1)
 				{
 					toNodes = toNodes.substring(1);
 				}
-				obj.RetrieveInOrderBy("NodeID", toNodes, "Step");
+				try {
+					obj.RetrieveInOrderBy("NodeID", toNodes, "Step");
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
 			}
 			this.SetRefObject("HisToNodes", obj);
 		}
@@ -201,26 +327,25 @@ public class Node extends Entity
 	public final NodeSimples getHisToNodeSimples() throws Exception {
 		Object tempVar = this.GetRefObject("HisToNodesSipm");
 		NodeSimples obj = tempVar instanceof NodeSimples ? (NodeSimples)tempVar : null;
-		int hisToNDNum = this.getHisToNDNum();
 		if (obj == null)
 		{
 			obj = new NodeSimples();
-			if (hisToNDNum == 0)
+			if (this.getHisToNDNum() == 0)
 			{
 				obj = new NodeSimples();
 			}
-			if (hisToNDNum == 1)
+			if (this.getHisToNDNum() == 1)
 			{
 				obj.AddEntities(this.getHisToNDs());
 			}
 
-			if (hisToNDNum > 1)
+			if (this.getHisToNDNum() > 1)
 			{
 				String inStrs = this.getHisToNDs().replace('@', ',');
 				inStrs = inStrs.substring(1);
-				obj.RetrieveIn("NodeID", inStrs);
+				obj.RetrieveIn("NodeID", inStrs, null);
 
-					//@101@102@103.
+				//@101@102@103.
 				String[] ndStrs = this.getHisToNDs().split("[@]", -1);
 
 				NodeSimples myobjs = new NodeSimples();
@@ -244,7 +369,7 @@ public class Node extends Entity
 	*/
 	public final Work getHisWork() throws Exception {
 		Work wk = null;
-		if (this.getFormType() != NodeFormType.FoolTruck || this.WorkID == 0 || this.isStartNode() == true)
+		if (this.getFormType() != NodeFormType.FoolTruck || this.WorkID == 0 || this.getItIsStartNode() == true)
 		{
 			wk = new bp.wf.GEWork(this.getNodeID(), this.getNodeFrmID());
 			wk.setHisNode(this);
@@ -252,36 +377,36 @@ public class Node extends Entity
 			return wk;
 		}
 
-			//如果是累加表单.
+		//如果是累加表单.
 		wk = new bp.wf.GEWork(this.getNodeID(), this.getNodeFrmID());
 
 		Map ma = wk.getEnMap();
 
-			/* 求出来走过的表单集合 */
-		String sql = "SELECT NDFrom FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track A, WF_Node B ";
+		/* 求出来走过的表单集合 */
+		String sql = "SELECT NDFrom FROM ND" + Integer.parseInt(this.getFlowNo()) + "Track A, WF_Node B ";
 		sql += " WHERE A.NDFrom=B.NodeID  ";
 		sql += "  AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.Start.getValue() + "  OR ActionType=" + ActionType.Skip.getValue() + ")  ";
 		sql += "  AND B.FormType=" + NodeFormType.FoolTruck.getValue() + " "; // 仅仅找累加表单.
 		sql += "  AND NDFrom!=" + this.getNodeID() + " "; //排除当前的表单.
 
-			//if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
-			//    sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+CONVERT(varchar(10),B.NodeID) ) ";
+		//if (bp.difference.SystemConfig.getAppCenterDBType() == DBType.MSSQL)
+		//    sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+CONVERT(varchar(10),B.NodeID) ) ";
 
-			//if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MySQL)
-			//    sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+cast(B.NodeID as varchar(10)) ) ";
+		//if (bp.difference.SystemConfig.getAppCenterDBType() == DBType.MySQL)
+		//    sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+cast(B.NodeID as varchar(10)) ) ";
 
-			//if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.Oracle)
-			//    sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+to_char(B.NodeID) ) ";
+		//if (bp.difference.SystemConfig.getAppCenterDBType() == DBType.Oracle)
+		//    sql += "  AND (B.NodeFrmID='' OR B.NodeFrmID IS NULL OR B.NodeFrmID='ND'+to_char(B.NodeID) ) ";
 
 		sql += "  AND (A.WorkID=" + this.WorkID + ") ";
 		sql += " ORDER BY A.RDT ";
 
-			// 获得已经走过的节点IDs.
+		// 获得已经走过的节点IDs.
 		DataTable dtNodeIDs = DBAccess.RunSQLReturnTable(sql);
 		String frmIDs = "";
 		if (dtNodeIDs.Rows.size() > 0)
 		{
-				//把所有的节点字段.
+			//把所有的节点字段.
 			for (DataRow dr : dtNodeIDs.Rows)
 			{
 				if (frmIDs.contains("ND" + dr.getValue(0).toString()) == true)
@@ -299,36 +424,34 @@ public class Node extends Entity
 			qo.AddWhere(MapAttrAttr.FK_MapData, " IN ", "(" + frmIDs + ")");
 			qo.DoQuery();
 
-				//设置成不可以用.
+			//设置成不可以用.
 			for (MapAttr item : attrs.ToJavaList())
 			{
 				item.setUIIsEnable(false); //设置为只读的.
 				item.setDefValReal(""); //设置默认值为空.
 
-				ma.getAttrs().add(item.getHisAttr());
+				ma.getAttrs().Add(item.getHisAttr(), false);
 			}
 
-				//设置为空.
-			wk.setSQLCash(null);
+			//设置为空.
+			wk.setSQLCache(null);
 		}
 
 		wk.setHisNode(this);
 		wk.setNodeID(this.getNodeID());
-		wk.setSQLCash(null);
+		wk.setSQLCache(null);
 
-		Cash.getSQL_Cash().remove("ND" + this.getNodeID());
+		Cache.getSQL_Cache().remove("ND" + this.getNodeID());
 		return wk;
-			//this.SetRefObject("HisWork", obj);
 
 	}
 	/** 
 	 他的工作s
 	*/
 	public final Works getHisWorks() throws Exception {
-		bp.en.Entities tempVar = this.getHisWork().getGetNewEntities();
+		bp.en.Entities tempVar = this.getHisWork().GetNewEntities();
 		Works obj = tempVar instanceof Works ? (Works)tempVar : null;
-		if(obj!=null)
-			obj.clear();
+		obj.clear();
 		return obj;
 	}
 	/** 
@@ -352,7 +475,7 @@ public class Node extends Entity
 		Flow obj = tempVar instanceof Flow ? (Flow)tempVar : null;
 		if (obj == null)
 		{
-			obj = new Flow(this.getFK_Flow());
+			obj = new Flow(this.getFlowNo());
 			this.SetRefObject("Flow", obj);
 		}
 		return obj;
@@ -365,24 +488,24 @@ public class Node extends Entity
 		PushMsgs obj = tempVar instanceof PushMsgs ? (PushMsgs)tempVar : null;
 		if (obj == null)
 		{
-			Entities ens = this.GetEntitiesAttrFromAutoNumCash(new PushMsgs(), PushMsgAttr.FK_Node, this.getNodeID(), null, null, null);
+			Object ens = this.GetEntitiesAttrFromAutoNumCache(new PushMsgs(), PushMsgAttr.FK_Node, this.getNodeID(), null, null, null);
 
 			obj = ens instanceof PushMsgs ? (PushMsgs)ens : null;
 
 			if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 			{
 
-					//检查是否有默认的发送？如果没有就增加上他。
+				//检查是否有默认的发送？如果没有就增加上他。
 				boolean isHaveSend = false;
 				boolean isHaveReturn = false;
 				for (PushMsg item : obj.ToJavaList())
 				{
-					if (item.getFK_Event().equals(EventListNode.SendSuccess))
+					if (Objects.equals(item.getFK_Event(), EventListNode.SendSuccess))
 					{
 						isHaveSend = true;
 					}
 
-					if (item.getFK_Event().equals(EventListNode.ReturnAfter))
+					if (Objects.equals(item.getFK_Event(), EventListNode.ReturnAfter))
 					{
 						isHaveReturn = true;
 					}
@@ -420,9 +543,9 @@ public class Node extends Entity
 		Nodes obj = tempVar instanceof Nodes ? (Nodes)tempVar : null;
 		if (obj == null)
 		{
-				// 根据方向生成到达此节点的节点。
+			// 根据方向生成到达此节点的节点。
 			Directions ens = new Directions();
-			if (this.isStartNode())
+			if (this.getItIsStartNode())
 			{
 				obj = new Nodes();
 			}
@@ -471,7 +594,7 @@ public class Node extends Entity
 		FrmNodes obj = tempVar instanceof FrmNodes ? (FrmNodes)tempVar : null;
 		if (obj == null)
 		{
-			obj = new FrmNodes(this.getFK_Flow(), this.getNodeID());
+			obj = new FrmNodes(this.getFlowNo(), this.getNodeID());
 			this.SetRefObject("FrmNodes", obj);
 		}
 		return obj;
@@ -490,7 +613,7 @@ public class Node extends Entity
 	 获得事件
 	*/
 	public final FrmEvents getFrmEvents() throws Exception {
-		Entities ens = this.GetEntitiesAttrFromAutoNumCash(new FrmEvents(), FrmEventAttr.FK_Node, this.getNodeID(), null, null, null);
+		FrmEvents ens = (FrmEvents) this.GetEntitiesAttrFromAutoNumCache(new FrmEvents(), FrmEventAttr.FK_Node, this.getNodeID(), null, null, null);
 		return ens instanceof FrmEvents ? (FrmEvents)ens : null;
 	}
 
@@ -500,16 +623,18 @@ public class Node extends Entity
 
 		///#region 初试化全局的 Node
 	@Override
-	public String getPK()  {
+	public String getPK()
+	{
 		return "NodeID";
 	}
 	/** 
 	 UI界面上的访问控制
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
-		if (bp.web.WebUser.getNo().equals("admin") == true)
+		if (WebUser.getNo().equals("admin") == true)
 		{
 			uac.IsUpdate = true;
 		}
@@ -520,8 +645,8 @@ public class Node extends Entity
 	 
 	 @return 
 	*/
-	public final NodePosType GetHisNodePosType() throws Exception {
-		if (this.isSendBackNode())
+	public final NodePosType GetHisNodePosType() {
+		if (this.getItIsSendBackNode())
 		{
 			return NodePosType.Mid;
 		}
@@ -532,37 +657,54 @@ public class Node extends Entity
 			return NodePosType.Start;
 		}
 
-		if (this.getHisToNodes().isEmpty())
+		// 结束节点.
+		if (this.getHisToNodes().isEmpty() && this.getHisNodeType() == NodeType.UserNode)
 		{
 			return NodePosType.End;
 		}
 
+		// 结束节点，是不是路由节点。
+		if (this.getHisToNodes().isEmpty() && this.getHisNodeType() == NodeType.RouteNode)
+		{
+			throw new RuntimeException("err@流程设计错误:节点[" + this.getNodeID() + "," + this.getName() + "]是一个路由节点，但是没有链接到的节点。");
+		}
+
+		if (!this.getHisToNodes().isEmpty())
+		{
+			for (Node toNode : this.getHisToNodes().ToJavaList())
+			{
+				if (toNode.getHisNodeType() == NodeType.UserNode)
+				{
+					return NodePosType.Mid;
+				}
+			}
+			//判断最后节点.
+			return NodePosType.End;
+		}
 		return NodePosType.Mid;
 	}
 
-	public final FWCAth getFWCAth()  {
+	public final FWCAth getFWCAth() {
 		return FWCAth.forValue(this.GetValIntByKey(NodeWorkCheckAttr.FWCAth));
 	}
-	public final void setFWCAth(FWCAth value)  
-	 {
+	public final void setFWCAth(FWCAth value){
 		this.SetValByKey(NodeWorkCheckAttr.FWCAth, value.getValue());
 	}
 
 	/** 
 	 检查流程，修复必要的计算字段信息.
-	 
-	 param flowNo 流程
+	 @param nds
+	 @param flowNo 流程
 	 @return 返回检查信息
 	*/
 	public static String CheckFlow(Nodes nds, String flowNo) throws Exception {
 		String sql = "";
 		DataTable dt = null;
 
-		// 单据信息，岗位，节点信息。
+		// 单据信息，角色，节点信息。
 		for (Node nd : nds.ToJavaList())
 		{
-
-			// 工作岗位。
+			// 工作角色。
 			sql = "SELECT FK_Station FROM WF_NodeStation WHERE FK_Node=" + nd.getNodeID();
 			dt = DBAccess.RunSQLReturnTable(sql);
 			String strs = "";
@@ -593,13 +735,13 @@ public class Node extends Entity
 
 			// 检查节点的位置属性。
 			nd.setHisNodePosType(nd.GetHisNodePosType());
-			if (nd.isSendBackNode() == true)
+			if (nd.getItIsSendBackNode() == true)
 			{
 				nd.setNodePosType(NodePosType.Mid);
 			}
 			try
 			{
-				nd.Update();
+				nd.DirectUpdate();
 			}
 			catch (RuntimeException ex)
 			{
@@ -607,7 +749,7 @@ public class Node extends Entity
 			}
 		}
 
-		// 处理岗位分组.
+		// 处理角色分组.
 		sql = "SELECT HisStas, COUNT(*) as NUM FROM WF_Node WHERE FK_Flow='" + flowNo + "' GROUP BY HisStas";
 		dt = DBAccess.RunSQLReturnTable(sql);
 		for (DataRow dr : dt.Rows)
@@ -616,7 +758,7 @@ public class Node extends Entity
 			String nodes = "";
 			for (Node nd : nds.ToJavaList())
 			{
-				if (nd.getHisStas().equals(stas))
+				if (Objects.equals(nd.getHisStas(), stas))
 				{
 					nodes += "@" + nd.getNodeID();
 				}
@@ -624,7 +766,7 @@ public class Node extends Entity
 
 			for (Node nd : nds.ToJavaList())
 			{
-				if (nodes.contains("@" + String.valueOf(nd.getNodeID())) == false)
+				if (nodes.contains("@" + nd.getNodeID()) == false)
 				{
 					continue;
 				}
@@ -637,15 +779,16 @@ public class Node extends Entity
 	}
 
 	@Override
-	protected boolean beforeUpdate() throws Exception {
+	protected boolean beforeUpdate() throws Exception
+	{
 		//检查设计流程权限,集团模式下，不是自己创建的流程，不能设计流程.
-		TemplateGlo.CheckPower(this.getFK_Flow());
+		TemplateGlo.CheckPower(this.getFlowNo());
 
 		//删除自动数量的缓存数据.
-		this.ClearAutoNumCash(false);
+		this.ClearAutoNumCache(false);
 
 
-		if (this.isStartNode())
+		if (this.getItIsStartNode())
 		{
 			//this.SetValByKey(BtnAttr.ReturnRole, (int)ReturnRole.CanNotReturn);
 			this.SetValByKey(BtnAttr.ShiftEnable, 0);
@@ -667,14 +810,12 @@ public class Node extends Entity
 						String sql = "";
 						sql = "ALTER TABLE WF_Emp ADD StartFlows text ";
 
-						if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.Oracle
-							|| bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR3
-							||bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR6)
+						if (bp.difference.SystemConfig.getAppCenterDBType() == DBType.Oracle || bp.difference.SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 || bp.difference.SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 						{
 							sql = "ALTER TABLE WF_Emp ADD StartFlows blob";
 						}
 
-						if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.HGDB)
+						if (bp.difference.SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || bp.difference.SystemConfig.getAppCenterDBType() == DBType.HGDB || bp.difference.SystemConfig.getAppCenterDBType() == DBType.UX)
 						{
 							sql = "ALTER TABLE  WF_Emp ADD StartFlows bytea NULL ";
 						}
@@ -690,32 +831,31 @@ public class Node extends Entity
 		}
 
 		//给icon设置默认值.
-		if (this.GetValStrByKey(NodeAttr.ICON).equals(""))
+		if (Objects.equals(this.GetValStrByKey(NodeAttr.Icon), ""))
 		{
-			this.setICON("审核.png");
+			this.setIcon("审核.png");
 		}
 
 
 			///#region 如果是数据合并模式，就要检查节点中是否有子线程，如果有子线程就需要单独的表.
-		if (this.getIsSubThread()== true)
+		if (this.getItIsSubThread() == true)
 		{
 			MapData md = new MapData();
 			md.setNo("ND" + this.getNodeID());
-			if(md.RetrieveFromDBSources()!=0){
-				if (!md.getPTable().equals("ND" + this.getNodeID()))
-				{
-					md.setPTable ( "ND" + this.getNodeID());
-					md.Update();
-				}
+
+			if (md.RetrieveFromDBSources() != 0 && md.getPTable().equals("ND" + this.getNodeID()) == false)
+			{
+				md.setPTable("ND" + this.getNodeID());
+				md.Update();
 			}
 		}
 
 			///#endregion 如果是数据合并模式，就要检查节点中是否有子线程，如果有子线程就需要单独的表.
 
 		//更新版本号.
-		Flow.UpdateVer(this.getFK_Flow());
+		Flow.UpdateVer(this.getFlowNo());
 
-		Flow fl = new Flow(this.getFK_Flow());
+		Flow fl = new Flow(this.getFlowNo());
 
 		this.setFlowName(fl.getName());
 
@@ -724,7 +864,7 @@ public class Node extends Entity
 		switch (this.getHisRunModel())
 		{
 			case Ordinary:
-				if (this.isStartNode())
+				if (this.getItIsStartNode())
 				{
 					this.setHisNodeWorkType(NodeWorkType.StartWork);
 				}
@@ -734,7 +874,7 @@ public class Node extends Entity
 				}
 				break;
 			case FL:
-				if (this.isStartNode())
+				if (this.getItIsStartNode())
 				{
 					this.setHisNodeWorkType(NodeWorkType.StartWorkFL);
 				}
@@ -744,27 +884,26 @@ public class Node extends Entity
 				}
 				break;
 			case HL:
-				//if (this.IsStartNode)
+				//if (this.ItIsStartNode)
 				//    throw new Exception("@您不能设置开始节点为合流节点。");
 				//else
-				//    this.HisNodeWorkType = NodeWorkType.WorkHL;
+				//    this.setHisNodeWorkType(NodeWorkType.Work)HL;
 				break;
 			case FHL:
-				//if (this.IsStartNode)
+				//if (this.ItIsStartNode)
 				//    throw new Exception("@您不能设置开始节点为分合流节点。");
 				//else
-				//    this.HisNodeWorkType = NodeWorkType.WorkFHL;
+				//    this.setHisNodeWorkType(NodeWorkType.Work)FHL;
 				break;
-			case SubThreadSameWorkID:
 			case SubThreadUnSameWorkID:
+			case SubThreadSameWorkID:
 				this.setHisNodeWorkType(NodeWorkType.SubThreadWork);
 				break;
 			default:
 				throw new RuntimeException("eeeee");
-
 		}
 		//断头路节点
-		if (this.isSendBackNode() == true)
+		if (this.getItIsSendBackNode() == true)
 		{
 			this.setNodePosType(NodePosType.Mid);
 		}
@@ -778,18 +917,18 @@ public class Node extends Entity
 			workCheckAth = new FrmAttachment();
 			/*如果没有查询到它,就有可能是没有创建.*/
 			workCheckAth.setMyPK("ND" + this.getNodeID() + "_FrmWorkCheck");
-			workCheckAth.setFK_MapData("ND" + String.valueOf(this.getNodeID()));
+			workCheckAth.setFrmID("ND" + String.valueOf(this.getNodeID()));
 			workCheckAth.setNoOfObj("FrmWorkCheck");
 			workCheckAth.setExts("*.*");
 
 			//存储路径.
 			//  workCheckAth.SaveTo = "/DataUser/UploadFile/";
-			workCheckAth.setIsNote( false); //不显示note字段.
-			workCheckAth.setIsVisable( false); // 让其在form 上不可见.
+			workCheckAth.setItIsNote(false); //不显示note字段.
+			workCheckAth.setItIsVisable(false); // 让其在form 上不可见.
 
 			//位置.
 
-			workCheckAth.setH ((float)150);
+			workCheckAth.setH((float)150);
 
 			//多附件.
 			workCheckAth.setUploadType(AttachmentUploadType.Multi);
@@ -804,15 +943,16 @@ public class Node extends Entity
 		///#endregion
 
 	@Override
-	protected void afterInsertUpdateAction() throws Exception {
+	protected void afterInsertUpdateAction() throws Exception
+	{
 		Flow fl = new Flow();
-		fl.setNo(this.getFK_Flow());
+		fl.setNo(this.getFlowNo());
 		fl.RetrieveFromDBSources();
 		MapData mapData = new MapData();
 		mapData.setNo("ND" + this.getNodeID());
 		if (mapData.RetrieveFromDBSources() != 0)
 		{
-			if (this.getIsSubThread()== true)
+			if (this.getItIsSubThread() == true)
 			{
 				mapData.setPTable(mapData.getNo());
 			}
@@ -827,10 +967,10 @@ public class Node extends Entity
 		if (this.getFormType() == NodeFormType.RefOneFrmTree)
 		{
 			GEEntity en = new GEEntity(this.getNodeFrmID());
-			if (this.getIsSubThread()== true && en.getEnMap().getAttrs().contains("FID") == false)
+			if (this.getItIsSubThread() == true && en.getEnMap().getAttrs().contains("FID") == false)
 			{
 				MapAttr attr = new MapAttr();
-				attr.setFK_MapData(this.getNodeFrmID());
+				attr.setFrmID( this.getNodeFrmID());
 				attr.setKeyOfEn("FID");
 				attr.setName("干流程ID");
 				attr.setMyDataType(DataType.AppInt);
@@ -838,14 +978,14 @@ public class Node extends Entity
 				attr.setLGType(FieldTypeS.Normal);
 				attr.setUIVisible(false);
 				attr.setUIIsEnable(false);
-				attr.setDefVal( "0");
-				attr.setHisEditType( EditType.Readonly);
+				attr.setDefVal("0");
+				attr.setHisEditType(EditType.Readonly);
 				attr.Insert();
 			}
 			if (en.getEnMap().getAttrs().contains("Rec") == false)
 			{
 				MapAttr attr = new MapAttr();
-				attr.setFK_MapData(this.getNodeFrmID());
+				attr.setFrmID( this.getNodeFrmID());
 				attr.setKeyOfEn("Rec");
 				attr.setName("记录人");
 				attr.setMyDataType(DataType.AppString);
@@ -853,9 +993,9 @@ public class Node extends Entity
 				attr.setLGType(FieldTypeS.Normal);
 				attr.setUIVisible(false);
 				attr.setUIIsEnable(false);
-				attr.setDefVal( "0");
 				attr.setMaxLen(100);
-				attr.setHisEditType( EditType.Readonly);
+				attr.setDefVal("0");
+				attr.setHisEditType(EditType.Readonly);
 				attr.Insert();
 			}
 
@@ -868,60 +1008,34 @@ public class Node extends Entity
 
 		///#region 基本属性
 	/** 
-	 是否启动自动运行？
-	*/
-	public final boolean getAutoRunEnable() 
-	{
-		return this.GetValBooleanByKey(NodeAttr.AutoRunEnable);
-	}
-	public final void setAutoRunEnable(boolean value)  
-	 {
-		this.SetValByKey(NodeAttr.AutoRunEnable, value);
-	}
-	/** 
-	 自动运行参数
-	*/
-	public final String getAutoRunParas() 
-	{
-		return this.GetValStringByKey(NodeAttr.AutoRunParas);
-	}
-	public final void setAutoRunParas(String value)  
-	 {
-		this.SetValByKey(NodeAttr.AutoRunParas, value);
-	}
-	/** 
 	 审核组件
 	*/
-	public final FrmWorkCheckSta getFrmWorkCheckSta()  {
+	public final FrmWorkCheckSta getFrmWorkCheckSta() {
 		return FrmWorkCheckSta.forValue(this.GetValIntByKey(NodeAttr.FWCSta));
 	}
-	public final void setFrmWorkCheckSta(FrmWorkCheckSta value)  
-	 {
+	public final void setFrmWorkCheckSta(FrmWorkCheckSta value){
 		this.SetValByKey(NodeAttr.FWCSta, value.getValue());
 	}
 
-	public final FrmSubFlowSta getSFSta()  {
+	public final FrmSubFlowSta getSFSta() {
 		return FrmSubFlowSta.forValue(this.GetValIntByKey(FrmSubFlowAttr.SFSta));
 	}
-	public final void setSFSta(FrmSubFlowSta value)  
-	 {
+	public final void setSFSta(FrmSubFlowSta value){
 		this.SetValByKey(FrmSubFlowAttr.SFSta, value.getValue());
 	}
 	/** 
 	 审核组件版本
 	*/
-	public final int getFWCVer() 
-	{
+	public final int getFWCVer()  {
 		return this.GetValIntByKey(NodeWorkCheckAttr.FWCVer, 0);
 	}
-	public final void setFWCVer(int value)  
-	 {
+	public final void setFWCVer(int value){
 		this.SetValByKey(NodeWorkCheckAttr.FWCVer, value);
 	}
 	/** 
 	 内部编号
 	*/
-	public final String getNo()  {
+	public final String getNo() {
 		try
 		{
 			return String.valueOf(this.getNodeID()).substring(String.valueOf(this.getNodeID()).length() - 2);
@@ -935,72 +1049,55 @@ public class Node extends Entity
 	/** 
 	 自动跳转规则0-处理人就是提交人
 	*/
-	public final boolean getAutoJumpRole0() 
-	{
+	public final boolean getAutoJumpRole0()  {
 		return this.GetValBooleanByKey(NodeAttr.AutoJumpRole0);
 	}
-	public final void setAutoJumpRole0(boolean value)  
-	 {
+	public final void setAutoJumpRole0(boolean value){
 		this.SetValByKey(NodeAttr.AutoJumpRole0, value);
 	}
 	/** 
 	 自动跳转规则1-处理人已经出现过
 	*/
-	public final boolean getAutoJumpRole1() 
-	{
+	public final boolean getAutoJumpRole1()  {
 		return this.GetValBooleanByKey(NodeAttr.AutoJumpRole1);
 	}
 
 	/** 
 	 自动跳转规则2-处理人与上一步相同
 	*/
-	public final boolean getAutoJumpRole2() 
-	{
+	public final boolean getAutoJumpRole2()  {
 		return this.GetValBooleanByKey(NodeAttr.AutoJumpRole2);
 	}
 	/** 
 	 跳转的表达式.
 	*/
-	public final String getAutoJumpExp() 
-	{
+	public final String getAutoJumpExp()  {
 		return this.GetValStringByKey(NodeAttr.AutoJumpExp);
 	}
 	/** 
 	 执行跳转时间 0=上节点发送时，1=打开时.
 	*/
-	public final int getSkipTime() 
-	{
+	public final int getSkipTime()  {
 		return this.GetValIntByKey(NodeAttr.SkipTime);
 	}
 	/** 
-	 启动参数
+	 是不是节点表单.
 	*/
-	public final String getSubFlowStartParas() 
-	{
-		return this.GetValStringByKey(NodeAttr.SubFlowStartParas);
-	}
-	public final void setSubFlowStartParas(String value)  
-	 {
-		this.SetValByKey(NodeAttr.SubFlowStartParas, value);
-	}
-	/** 
-	 子线程启动方式
-	*/
-	public final SubFlowStartWay getSubFlowStartWay()  {
-		return SubFlowStartWay.forValue(this.GetValIntByKey(NodeAttr.SubFlowStartWay));
-	}
-	public final void setSubFlowStartWay(SubFlowStartWay value)  
-	 {
-		this.SetValByKey(NodeAttr.SubFlowStartWay, value.getValue());
+	public final boolean getItIsNodeFrm() throws Exception {
+		if (this.getHisFormType() == NodeFormType.FoolForm || this.getHisFormType() == NodeFormType.Develop || this.getHisFormType() == NodeFormType.RefNodeFrm || this.getHisFormType() == NodeFormType.FoolTruck)
+		{
+			return true;
+		}
+
+		return false;
 	}
 	/** 
 	 表单方案类型
 	*/
-	public final NodeFormType getHisFormType() throws Exception {
+	public final NodeFormType getHisFormType() {
 		return NodeFormType.forValue(this.GetValIntByKey(NodeAttr.FormType));
 	}
-	public final void setHisFormType(NodeFormType value)  
-	 {
+	public final void setHisFormType(NodeFormType value){
 		this.SetValByKey(NodeAttr.FormType, value.getValue());
 	}
 	public final String getHisFormTypeText() throws Exception {
@@ -1024,10 +1121,14 @@ public class Node extends Entity
 			return "傻瓜轨迹表单";
 		}
 
-
 		if (this.getHisFormType() == NodeFormType.Develop)
 		{
 			return "开发者表单";
+		}
+
+		if (this.getHisFormType() == NodeFormType.RefNodeFrm)
+		{
+			return "引用" + this.getNodeFrmID();
 		}
 
 		if (this.getHisFormType() == NodeFormType.SDKForm)
@@ -1050,15 +1151,13 @@ public class Node extends Entity
 	/** 
 	 节点编号
 	*/
-	public final int getNodeID() 
-	{
+	public final int getNodeID()  {
 		return this.GetValIntByKey(NodeAttr.NodeID);
 	}
-	public final void setNodeID(int value)
-	 {
+	public final void setNodeID(int value){
 		this.SetValByKey(NodeAttr.NodeID, value);
 	}
-	public final boolean isEnableTaskPool()  {
+	public final boolean getItIsEnableTaskPool() throws Exception {
 		if (this.getTodolistModel() == bp.wf.TodolistModel.Sharing)
 		{
 			return true;
@@ -1071,11 +1170,11 @@ public class Node extends Entity
 	/** 
 	 节点头像
 	*/
-	public final String getICON()  {
-		String s = this.GetValStrByKey(NodeAttr.ICON);
+	public final String getIcon() throws Exception {
+		String s = this.GetValStrByKey(NodeAttr.Icon);
 		if (DataType.IsNullOrEmpty(s))
 		{
-			if (this.isStartNode())
+			if (this.getItIsStartNode())
 			{
 				return "审核.png";
 			}
@@ -1086,107 +1185,99 @@ public class Node extends Entity
 		}
 		return s;
 	}
-	public final void setICON(String value)  
-	 {
-		this.SetValByKey(NodeAttr.ICON, value);
+	public final void setIcon(String value){
+		this.SetValByKey(NodeAttr.Icon, value);
 	}
 	/** 
 	 FormUrl 
 	*/
-	public final String getFormUrl()  {
+	public final String getFormUrl() throws Exception {
 		String str = this.GetValStrByKey(NodeAttr.FormUrl);
-		str = str.replace("@SDKFromServHost",bp.difference.SystemConfig.getAppSettings().get("SDKFromServHost").toString());
+		str = str.replace("@SDKFromServHost", bp.difference.SystemConfig.getAppSettings().get("SDKFromServHost").toString());
 		return str;
 	}
-	public final void setFormUrl(String value)  
-	 {
+	public final void setFormUrl(String value){
 		this.SetValByKey(NodeAttr.FormUrl, value);
 	}
 	/** 
 	 表单类型
 	*/
-	public final NodeFormType getFormType()  {
+	public final NodeFormType getFormType() {
 		return NodeFormType.forValue(this.GetValIntByKey(NodeAttr.FormType));
 	}
-	public final void setFormType(NodeFormType value)  
-	 {
+	public final void setFormType(NodeFormType value){
 		this.SetValByKey(NodeAttr.FormType, value.getValue());
 	}
 
 	/** 
 	 名称
 	*/
-	public final String getName() 
-	{
+	public final String getName()  {
 		return this.GetValStrByKey(EntityOIDNameAttr.Name);
 	}
-	public final void setName(String value)  
-	 {
+	public final void setName(String value){
 		this.SetValByKey(EntityOIDNameAttr.Name, value);
 	}
 	/** 
 	 限期天
 	*/
-	public final int getTimeLimit()  {
+	public final int getTimeLimit() throws Exception
+	{
 		return (int)this.GetValFloatByKey(NodeAttr.TimeLimit);
 	}
-	public final void setTimeLimit(int value)  
-	 {
+	public final void setTimeLimit(int value){
 		this.SetValByKey(NodeAttr.TimeLimit, value);
 	}
 	/** 
 	 限期小时
 	*/
-	public final int getTimeLimitHH()  {
+	public final int getTimeLimitHH() {
 		return this.GetParaInt("TimeLimitHH", 0);
 	}
-	public final void setTimeLimitHH(int value)
-	{this.SetPara("TimeLimitHH", value);
+	public final void setTimeLimitHH(int value)  {
+		this.SetPara("TimeLimitHH", value);
 	}
 	/** 
 	 限期分钟
 	*/
-	public final int getTimeLimitMM()  {
+	public final int getTimeLimitMM() {
 		return this.GetParaInt("TimeLimitMM", 0);
 	}
-	public final void setTimeLimitMM(int value)
-	{this.SetPara("TimeLimitMM", value);
+	public final void setTimeLimitMM(int value)  {
+		this.SetPara("TimeLimitMM", value);
 	}
 
 	/** 
 	 逾期提醒规则
 	*/
-	public final CHAlertRole getTAlertRole()  {
+	public final CHAlertRole getTAlertRole() {
 		return CHAlertRole.forValue(this.GetValIntByKey(NodeAttr.TAlertRole));
 	}
-	public final void setTAlertRole(CHAlertRole value)  
-	 {
+	public final void setTAlertRole(CHAlertRole value){
 		this.SetValByKey(NodeAttr.TAlertRole, value.getValue());
 	}
 	/** 
 	 时间计算方式
 	*/
-	public final TWay getTWay()  {
+	public final TWay getTWay() {
 		return TWay.forValue(this.GetValIntByKey(NodeAttr.TWay));
 	}
-	public final void setTWay(TWay value)  
-	 {
+	public final void setTWay(TWay value){
 		this.SetValByKey(NodeAttr.TWay, value.getValue());
 	}
 	/** 
 	 逾期 - 提醒方式
 	*/
-	public final CHAlertWay getTAlertWay()  {
+	public final CHAlertWay getTAlertWay() {
 		return CHAlertWay.forValue(this.GetValIntByKey(NodeAttr.TAlertWay));
 	}
-	public final void setTAlertWay(CHAlertWay value)  
-	 {
+	public final void setTAlertWay(CHAlertWay value){
 		this.SetValByKey(NodeAttr.TAlertWay, value.getValue());
 	}
 	/** 
 	 预警天
 	*/
-	public final float getWarningDay()  {
+	public final float getWarningDay() throws Exception {
 		float i = this.GetValFloatByKey(NodeAttr.WarningDay);
 		if (i == 0)
 		{
@@ -1194,50 +1285,44 @@ public class Node extends Entity
 		}
 		return i;
 	}
-	public final void setWarningDay(float value)  
-	 {
+	public final void setWarningDay(float value){
 		this.SetValByKey(NodeAttr.WarningDay, value);
 	}
 
 	/** 
 	 预警 - 提醒规则
 	*/
-	public final CHAlertRole getWAlertRole()  {
+	public final CHAlertRole getWAlertRole() {
 		return CHAlertRole.forValue(this.GetValIntByKey(NodeAttr.WAlertRole));
 	}
-	public final void setWAlertRole(CHAlertRole value)  
-	 {
+	public final void setWAlertRole(CHAlertRole value){
 		this.SetValByKey(NodeAttr.WAlertRole, value.getValue());
 	}
 	/** 
 	 预警 - 提醒方式
 	*/
-	public final CHAlertWay getWAlertWay()  {
+	public final CHAlertWay getWAlertWay() {
 		return CHAlertWay.forValue(this.GetValIntByKey(NodeAttr.WAlertWay));
 	}
-	public final void setWAlertWay(CHAlertWay value)  
-	 {
+	public final void setWAlertWay(CHAlertWay value){
 		this.SetValByKey(NodeAttr.WAlertWay, value.getValue());
 	}
 	/** 
 	 保存方式 @0=仅节点表 @1=节点与NDxxxRtp表.
 	*/
-	public final SaveModel getSaveModel()  {
+	public final SaveModel getSaveModel() {
 		return SaveModel.forValue(this.GetValIntByKey(NodeAttr.SaveModel));
 	}
-	public final void setSaveModel(SaveModel value)  
-	 {
+	public final void setSaveModel(SaveModel value){
 		this.SetValByKey(NodeAttr.SaveModel, value.getValue());
 	}
 	/** 
 	 流程步骤
 	*/
-	public final int getStep() 
-	{
+	public final int getStep()  {
 		return this.GetValIntByKey(NodeAttr.Step);
 	}
-	public final void setStep(int value)  
-	 {
+	public final void setStep(int value){
 		this.SetValByKey(NodeAttr.Step, value);
 	}
 
@@ -1245,23 +1330,19 @@ public class Node extends Entity
 	/** 
 	 扣分率（分/天）
 	*/
-	public final float getTCent() 
-	{
+	public final float getTCent()  {
 		return this.GetValFloatByKey(NodeAttr.TCent);
 	}
-	public final void setTCent(float value)  
-	 {
+	public final void setTCent(float value){
 		this.SetValByKey(NodeAttr.TCent, value);
 	}
 	/** 
 	 是否是客户执行节点？
 	*/
-	public final boolean isGuestNode() 
-	{
+	public final boolean getItIsGuestNode()  {
 		return this.GetValBooleanByKey(NodeAttr.IsGuestNode);
 	}
-	public final void setGuestNode(boolean value)  
-	 {
+	public final void setItIsGuestNode(boolean value){
 		this.SetValByKey(NodeAttr.IsGuestNode, value);
 	}
 
@@ -1269,22 +1350,26 @@ public class Node extends Entity
 	/** 
 	 是否是开始节点
 	*/
-	public final boolean isStartNode()  {
-		if (this.getNo().equals("01"))
+	public final boolean getItIsStartNode()  {
+		if (Objects.equals(this.getNo(), "01"))
 		{
 			return true;
 		}
 		return false;
+
+		//if (this.HisNodePosType == NodePosType.Start)
+		//    return true;
+		//else
+		//    return false;
 	}
 	/** 
 	 x
 	*/
-	public final int getX() 
-	{
+	public final int getX()  {
 		return this.GetValIntByKey(NodeAttr.X);
 	}
-	public final void setX(int value)
-	{if (value <= 0)
+	public final void setX(int value) throws Exception {
+		if (value <= 0)
 		{
 			this.SetValByKey(NodeAttr.X, 5);
 		}
@@ -1296,12 +1381,11 @@ public class Node extends Entity
 	/** 
 	 y
 	*/
-	public final int getY() 
-	{
+	public final int getY()  {
 		return this.GetValIntByKey(NodeAttr.Y);
 	}
-	public final void setY(int value)
-	{if (value <= 0)
+	public final void setY(int value) throws Exception {
+		if (value <= 0)
 		{
 			this.SetValByKey(NodeAttr.Y, 5);
 		}
@@ -1313,98 +1397,92 @@ public class Node extends Entity
 	/** 
 	 水执行它？
 	*/
-	public final int getWhoExeIt() 
-	{
+	public final int getWhoExeIt()  {
 		return this.GetValIntByKey(NodeAttr.WhoExeIt);
 	}
 	/** 
 	 位置
 	*/
-	public final NodePosType getNodePosType()  {
+	public final NodePosType getNodePosType() {
 		return NodePosType.forValue(this.GetValIntByKey(NodeAttr.NodePosType));
 	}
-	public final void setNodePosType(NodePosType value)  
-	 {
+	public final void setNodePosType(NodePosType value){
 		this.SetValByKey(NodeAttr.NodePosType, value.getValue());
 	}
 	/** 
 	 运行模式
 	*/
-	public final RunModel getHisRunModel()  {
+	public final RunModel getHisRunModel() {
 		return RunModel.forValue(this.GetValIntByKey(NodeAttr.RunModel));
 	}
-	public final void setHisRunModel(RunModel value)  
-	 {
+	public final void setHisRunModel(RunModel value){
 		this.SetValByKey(NodeAttr.RunModel, value.getValue());
 	}
-	/**
-	 节点类型
-	 */
-	public final NodeType getHisNodeType()  {
+	public final NodeType getHisNodeType() {
 		return NodeType.forValue(this.GetValIntByKey(NodeAttr.NodeType));
 	}
-	public final void setHisNodeType(NodeType value)
-	{
+	public final void setHisNodeType(NodeType value){
 		this.SetValByKey(NodeAttr.NodeType, value.getValue());
+	}
+	/** 
+	 是不是子线程?
+	*/
+	public final boolean getItIsSubThread() throws Exception {
+		if (this.getHisRunModel() == RunModel.SubThreadSameWorkID || this.getHisRunModel() == RunModel.SubThreadUnSameWorkID)
+		{
+			return true;
+		}
+		return false;
 	}
 	/** 
 	 操纵提示
 	*/
-	public final String getTip() 
-	{
+	public final String getTip()  {
 		return this.GetValStrByKey(NodeAttr.Tip);
 	}
-	public final void setTip(String value)  
-	 {
+	public final void setTip(String value){
 		this.SetValByKey(NodeAttr.Tip, value);
 	}
 	/** 
 	 焦点字段
 	*/
-	public final String getFocusField() 
-	{
+	public final String getFocusField()  {
 		return this.GetValStrByKey(NodeAttr.FocusField);
 	}
-	public final void setFocusField(String value)  
-	 {
+	public final void setFocusField(String value){
 		this.SetValByKey(NodeAttr.FocusField, value);
 	}
 	/** 
 	 被退回节点退回信息地步.
 	*/
-	public final String getReturnAlert() 
-	{
+	public final String getReturnAlert()  {
 		return this.GetValStrByKey(NodeAttr.ReturnAlert);
 	}
-	public final void setReturnAlert(String value)  
-	 {
+	public final void setReturnAlert(String value){
 		this.SetValByKey(NodeAttr.ReturnAlert, value);
 	}
 
-	public final boolean getReturnCHEnable() 
-	{
+	public final boolean getReturnCHEnable()  {
 		return this.GetValBooleanByKey(NodeAttr.ReturnCHEnable);
 	}
-	public final void setReturnCHEnable(boolean value)  
-	 {
+	public final void setReturnCHEnable(boolean value){
 		this.SetValByKey(NodeAttr.ReturnCHEnable, value);
 	}
 	/** 
 	 退回原因
 	*/
-	public final String getReturnReasonsItems() 
-	{
+	public final String getReturnReasonsItems()  {
 		return this.GetValStrByKey(NodeAttr.ReturnReasonsItems);
 	}
 	/** 
 	 节点的事务编号
 	*/
-	public final String getFK_Flow() 
-	{
+	public final String getFlowNo()  {
 		return this.GetValStrByKey(NodeAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
-	{SetValByKey(NodeAttr.FK_Flow, value);
+	public final void setFlowNo(String value) throws Exception
+	{
+		SetValByKey(NodeAttr.FK_Flow, value);
 	}
 	/** 
 	 获取它的上一步的分流点
@@ -1412,7 +1490,7 @@ public class Node extends Entity
 	private Node _GetHisPriFLNode(Nodes nds) throws Exception {
 		for (Node mynd : nds.ToJavaList())
 		{
-			if (mynd.isFL())
+			if (mynd.getItIsFL())
 			{
 				return mynd;
 			}
@@ -1429,7 +1507,7 @@ public class Node extends Entity
 	public final Node getHisPriFLNode() throws Exception {
 		return _GetHisPriFLNode(this.getFromNodes());
 	}
-	public final String getTurnToDealDoc()  {
+	public final String getTurnToDealDoc() throws Exception {
 		String s = this.GetValStrByKey(NodeAttr.TurnToDealDoc);
 		if (this.getHisTurnToDeal() == TurnToDeal.SpecUrl)
 		{
@@ -1449,21 +1527,22 @@ public class Node extends Entity
 		s = s.replace("~", "'");
 		return s;
 	}
-	public final void setTurnToDealDoc(String value)
-	{SetValByKey(NodeAttr.TurnToDealDoc, value);
+	public final void setTurnToDealDoc(String value) throws Exception
+	{
+		SetValByKey(NodeAttr.TurnToDealDoc, value);
 	}
 	/** 
 	 可跳转的节点
 	*/
-	public final String getJumpToNodes() 
-	{
+	public final String getJumpToNodes()  {
 		return this.GetValStrByKey(NodeAttr.JumpToNodes);
 	}
-	public final void setJumpToNodes(String value)
-	{SetValByKey(NodeAttr.JumpToNodes, value);
+	public final void setJumpToNodes(String value) throws Exception
+	{
+		SetValByKey(NodeAttr.JumpToNodes, value);
 	}
 
-	public final JumpWay getJumpWay()  {
+	public final JumpWay getJumpWay() {
 		return JumpWay.forValue(this.GetValIntByKey(NodeAttr.JumpWay));
 	}
 	/** 
@@ -1474,6 +1553,13 @@ public class Node extends Entity
 	 节点表单ID
 	*/
 	public final String getNodeFrmID() throws Exception {
+
+		if (this.getHisFlow().getFlowDevModel() != FlowDevModel.JiJian && this.getHisFormType() == NodeFormType.FoolForm || this.getHisFormType() == NodeFormType.ChapterFrm || this.getHisFormType() == NodeFormType.FoolTruck || this.getHisFormType() == NodeFormType.Develop)
+		{
+			return "ND" + this.getNodeID(); //@hongyan.
+		}
+
+
 		String str = this.GetValStrByKey(NodeAttr.NodeFrmID);
 		if (DataType.IsNullOrEmpty(str) == true)
 		{
@@ -1485,17 +1571,17 @@ public class Node extends Entity
 			return "ND" + this.getNodeID();
 		}
 
-			//与指定的节点相同 =  Pri 
+		//与指定的节点相同 =  Pri 
 		if (str.equals("Pri") == true && (this.getHisFormType() == NodeFormType.FoolForm || this.getHisFormType() == NodeFormType.Develop))
 		{
 			if (this.WorkID == 0)
 			{
 				return "ND" + this.getNodeID();
 			}
-				// throw new Exception("err@获得当前节点的上一个节点表单出现错误,没有给参数WorkID赋值.");
+			// throw new Exception("err@获得当前节点的上一个节点表单出现错误,没有给参数WorkID赋值.");
 
-				/* 要引擎上一个节点表单 */
-			String sql = "SELECT NDFrom FROM ND" + Integer.parseInt(this.getFK_Flow()) + "Track A, WF_Node B ";
+			/* 要引擎上一个节点表单 */
+			String sql = "SELECT NDFrom FROM ND" + Integer.parseInt(this.getFlowNo()) + "Track A, WF_Node B ";
 			sql += " WHERE A.NDFrom=B.NodeID AND (ActionType=" + ActionType.Forward.getValue() + " OR ActionType=" + ActionType.Start.getValue() + ")  ";
 			sql += "  AND (FormType=0 OR FormType=1) ";
 
@@ -1512,29 +1598,28 @@ public class Node extends Entity
 			return "ND" + nodeID;
 		}
 
-			//返回设置的表单ID.
+		//返回设置的表单ID.
 		return str;
 	}
-	public final void setNodeFrmID(String value)
-	{SetValByKey(NodeAttr.NodeFrmID, value);
+	public final void setNodeFrmID(String value) throws Exception
+	{
+		SetValByKey(NodeAttr.NodeFrmID, value);
 	}
 
-	public final String getFlowName() 
-	{
+	public final String getFlowName()  {
 		return this.GetValStrByKey(NodeAttr.FlowName);
 	}
-	public final void setFlowName(String value)
-	{SetValByKey(NodeAttr.FlowName, value);
+	public final void setFlowName(String value) throws Exception
+	{
+		SetValByKey(NodeAttr.FlowName, value);
 	}
 	/** 
 	 打印方式
 	*/
-	public final boolean getHisPrintDocEnable() 
-	{
+	public final boolean getHisPrintDocEnable()  {
 		return this.GetValBooleanByKey(NodeAttr.PrintDocEnable);
 	}
-	public final void setHisPrintDocEnable(boolean value)  
-	 {
+	public final void setHisPrintDocEnable(boolean value){
 		this.SetValByKey(NodeAttr.PrintDocEnable, value);
 	}
 
@@ -1542,78 +1627,72 @@ public class Node extends Entity
 	/** 
 	 PDF打印规则
 	*/
-	public final int getHisPrintPDFModle() 
-	{
+	public final int getHisPrintPDFModle()  {
 		return this.GetValIntByKey(BtnAttr.PrintPDFModle);
 	}
-	public final void setHisPrintPDFModle(int value)  
-	 {
+	public final void setHisPrintPDFModle(int value){
 		this.SetValByKey(BtnAttr.PrintPDFModle, (int)value);
 	}
 	/** 
 	 打印水印设置规则
 	*/
-	public final String getShuiYinModle() 
-	{
+	public final String getShuiYinModle()  {
 		return this.GetValStringByKey(BtnAttr.ShuiYinModle);
 	}
-	public final void setShuiYinModle(String value)  
-	 {
+	public final void setShuiYinModle(String value){
 		this.SetValByKey(BtnAttr.ShuiYinModle, value);
 	}
 	/** 
 	 批处理规则
 	*/
-	public final BatchRole getHisBatchRole()  {
+	public final BatchRole getHisBatchRole() {
 		return BatchRole.forValue(this.GetValIntByKey(NodeAttr.BatchRole));
 	}
-	public final void setHisBatchRole(BatchRole value)  
-	 {
+	public final void setHisBatchRole(BatchRole value){
 		this.SetValByKey(NodeAttr.BatchRole, value.getValue());
 	}
 	/** 
 	 批量处理规则
 	 @显示的字段.
 	*/
-	public final String getBatchParas()  {
+	public final String getBatchParas() {
 		return this.GetParaString("BatchFields");
 	}
-	public final void setBatchParas(String value)
-	{this.SetPara("BatchFields", value);
+	public final void setBatchParas(String value)  {
+		this.SetPara("BatchFields", value);
 	}
 	/** 
 	 批量审核数量
 	*/
-	public final int getBatchListCount()  {
+	public final int getBatchListCount() {
 		return this.GetParaInt("BatchCheckListCount", 0);
 	}
-	public final void setBatchListCount(int value)
-	{this.SetPara("BatchCheckListCount", value);
+	public final void setBatchListCount(int value)  {
+		this.SetPara("BatchCheckListCount", value);
 	}
-	public final String getPTable()  {
+	public final String getPTable() throws Exception {
 
 		return "ND" + this.getNodeID();
 	}
-	public final void setPTable(String value)
-	{SetValByKey(NodeAttr.PTable, value);
+	public final void setPTable(String value) throws Exception
+	{
+		SetValByKey(NodeAttr.PTable, value);
 	}
 
 	/** 
 	 Doc
 	*/
-	public final String getDoc() 
-	{
+	public final String getDoc()  {
 		return this.GetValStrByKey(NodeAttr.Doc);
 	}
-	public final void setDoc(String value)
-	{SetValByKey(NodeAttr.Doc, value);
-	}
-	public final String getGroupStaNDs() 
+	public final void setDoc(String value) throws Exception
 	{
+		SetValByKey(NodeAttr.Doc, value);
+	}
+	public final String getGroupStaNDs()  {
 		return this.GetValStrByKey(NodeAttr.GroupStaNDs);
 	}
-	public final void setGroupStaNDs(String value)  
-	 {
+	public final void setGroupStaNDs(String value){
 		this.SetValByKey(NodeAttr.GroupStaNDs, value);
 	}
 	/** 
@@ -1626,42 +1705,34 @@ public class Node extends Entity
 	/** 
 	 到达的节点
 	*/
-	public final String getHisToNDs() 
-	{
+	public final String getHisToNDs()  {
 		return this.GetValStrByKey(NodeAttr.HisToNDs);
 	}
-	public final void setHisToNDs(String value)
-	 {
+	public final void setHisToNDs(String value){
 		this.SetValByKey(NodeAttr.HisToNDs, value);
 	}
 	/** 
 	 部门Strs
 	*/
-	public final String getHisDeptStrs() 
-	{
+	public final String getHisDeptStrs()  {
 		return this.GetValStrByKey(NodeAttr.HisDeptStrs);
 	}
-	public final void setHisDeptStrs(String value)  
-	 {
+	public final void setHisDeptStrs(String value){
 		this.SetValByKey(NodeAttr.HisDeptStrs, value);
 	}
-	public final String getHisStas() 
-	{
+	public final String getHisStas()  {
 		return this.GetValStrByKey(NodeAttr.HisStas);
 	}
-	public final void setHisStas(String value)  
-	 {
+	public final void setHisStas(String value){
 		this.SetValByKey(NodeAttr.HisStas, value);
 	}
 	/** 
 	 单据IDs
 	*/
-	public final String getHisBillIDs() 
-	{
+	public final String getHisBillIDs()  {
 		return this.GetValStrByKey(NodeAttr.HisBillIDs);
 	}
-	public final void setHisBillIDs(String value)  
-	 {
+	public final void setHisBillIDs(String value){
 		this.SetValByKey(NodeAttr.HisBillIDs, value);
 	}
 
@@ -1669,23 +1740,19 @@ public class Node extends Entity
 
 
 		///#region 退回信息.
-	public final String getReturnField() 
-	{
+	public final String getReturnField()  {
 		return this.GetValStrByKey(BtnAttr.ReturnField);
 	}
-	public final void setReturnField(String value)  
-	 {
+	public final void setReturnField(String value){
 		this.SetValByKey(BtnAttr.ReturnField, value);
 	}
 	/** 
 	 单节点退回规则
 	*/
-	public final int getReturnOneNodeRole() 
-	{
+	public final int getReturnOneNodeRole()  {
 		return this.GetValIntByKey(NodeAttr.ReturnOneNodeRole);
 	}
-	public final void setReturnOneNodeRole(int value)  
-	 {
+	public final void setReturnOneNodeRole(int value){
 		this.SetValByKey(NodeAttr.ReturnOneNodeRole, value);
 	}
 
@@ -1697,7 +1764,7 @@ public class Node extends Entity
 	/** 
 	 得到一个工作data实体
 	 
-	 param workId 工作ID
+	 @param workId 工作ID
 	 @return 如果没有就返回null
 	*/
 	public final Work GetWork(long workId) throws Exception {
@@ -1721,21 +1788,19 @@ public class Node extends Entity
 	/** 
 	 转向处理
 	*/
-	public final TurnToDeal getHisTurnToDeal()  {
+	public final TurnToDeal getHisTurnToDeal() {
 		return TurnToDeal.forValue(this.GetValIntByKey(NodeAttr.TurnToDeal));
 	}
-	public final void setHisTurnToDeal(TurnToDeal value)  
-	 {
+	public final void setHisTurnToDeal(TurnToDeal value){
 		this.SetValByKey(NodeAttr.TurnToDeal, value.getValue());
 	}
 	/** 
 	 访问规则
 	*/
-	public final DeliveryWay getHisDeliveryWay()  {
+	public final DeliveryWay getHisDeliveryWay() {
 		return DeliveryWay.forValue(this.GetValIntByKey(NodeAttr.DeliveryWay));
 	}
-	public final void setHisDeliveryWay(DeliveryWay value)  
-	 {
+	public final void setHisDeliveryWay(DeliveryWay value){
 		this.SetValByKey(NodeAttr.DeliveryWay, value.getValue());
 	}
 	/** 
@@ -1748,21 +1813,19 @@ public class Node extends Entity
 	/** 
 	 考核规则
 	*/
-	public final CHWay getHisCHWay()  {
+	public final CHWay getHisCHWay() {
 		return CHWay.forValue(this.GetValIntByKey(NodeAttr.CHWay));
 	}
-	public final void setHisCHWay(CHWay value)  
-	 {
+	public final void setHisCHWay(CHWay value){
 		this.SetValByKey(NodeAttr.CHWay, value.getValue());
 	}
 	/** 
 	 抄送规则
 	*/
-	public final CCRole getHisCCRole()  {
-		return CCRole.forValue(this.GetValIntByKey(NodeAttr.CCRole));
+	public final CCRoleEnum getHisCCRole() {
+		return CCRoleEnum.forValue(this.GetValIntByKey(NodeAttr.CCRole));
 	}
-	public final void setHisCCRole(CCRole value)  
-	 {
+	public final void setHisCCRole(CCRoleEnum value){
 		this.SetValByKey(BtnAttr.CCRole, value.getValue());
 	}
 	public final String getHisCCRoleText() throws Exception {
@@ -1772,71 +1835,54 @@ public class Node extends Entity
 	/** 
 	 删除流程规则
 	*/
-	public final DelWorkFlowRole getHisDelWorkFlowRole()  {
+	public final DelWorkFlowRole getHisDelWorkFlowRole() {
 		return DelWorkFlowRole.forValue(this.GetValIntByKey(BtnAttr.DelEnable));
 	}
 	/** 
 	 未找到处理人时是否跳转.
 	*/
-	public final boolean getHisWhenNoWorker() 
-	{
+	public final boolean getHisWhenNoWorker()  {
 		return this.GetValBooleanByKey(NodeAttr.WhenNoWorker);
 	}
-	public final void setHisWhenNoWorker(boolean value)  
-	 {
+	public final void setHisWhenNoWorker(boolean value){
 		this.SetValByKey(NodeAttr.WhenNoWorker, value);
 	}
 	/** 
 	 撤销规则
 	*/
-	public final CancelRole getHisCancelRole()  {
+	public final CancelRole getHisCancelRole() {
 		return CancelRole.forValue(this.GetValIntByKey(NodeAttr.CancelRole));
 	}
-	public final void setHisCancelRole(CancelRole value)  
-	 {
+	public final void setHisCancelRole(CancelRole value){
 		this.SetValByKey(NodeAttr.CancelRole, value.getValue());
 	}
 	/** 
 	 对方已读不能撤销
 	*/
-	public final boolean getCancelDisWhenRead() 
-	{
+	public final boolean getCancelDisWhenRead()  {
 		return this.GetValBooleanByKey(NodeAttr.CancelDisWhenRead);
 	}
-	public final void setCancelDisWhenRead(boolean value)  
-	 {
+	public final void setCancelDisWhenRead(boolean value){
 		this.SetValByKey(NodeAttr.CancelDisWhenRead, value);
 	}
 	/** 
 	 数据写入规则
 	*/
-	public final CCWriteTo getCCWriteTo()  {
+	public final CCWriteTo getCCWriteTo() {
 		return CCWriteTo.forValue(this.GetValIntByKey(NodeAttr.CCWriteTo));
 	}
-	public final void setCCWriteTo(CCWriteTo value)  
-	 {
+	public final void setCCWriteTo(CCWriteTo value){
 		this.SetValByKey(NodeAttr.CCWriteTo, value.getValue());
 	}
-
-	/**
-	 按照岗位智能获取人员模式
-	 0=集合模式,1=切片-严谨模式. 2=切片-宽泛模式
-	 */
-	public final int getDeliveryStationReqEmpsWay()
-	{
-		int val = this.GetParaInt("StationReqEmpsWay", 0);
-		return val;
-	}
-
 	/** 
 	 Int type
 	*/
-	public final NodeWorkType getHisNodeWorkType()  {
-			///#warning 2012-01-24修订,没有自动计算出来属性。
+	public final NodeWorkType getHisNodeWorkType() {
+		///#warning 2012-01-24修订,没有自动计算出来属性。
 		switch (this.getHisRunModel())
 		{
 			case Ordinary:
-				if (this.isStartNode())
+				if (this.getItIsStartNode())
 				{
 					return NodeWorkType.StartWork;
 				}
@@ -1845,7 +1891,7 @@ public class Node extends Entity
 					return NodeWorkType.Work;
 				}
 			case FL:
-				if (this.isStartNode())
+				if (this.getItIsStartNode())
 				{
 					return NodeWorkType.StartWorkFL;
 				}
@@ -1864,8 +1910,7 @@ public class Node extends Entity
 				throw new RuntimeException("@没有判断类型NodeWorkType.");
 		}
 	}
-	public final void setHisNodeWorkType(NodeWorkType value)  
-	 {
+	public final void setHisNodeWorkType(NodeWorkType value){
 		this.SetValByKey(NodeAttr.NodeWorkType, value.getValue());
 	}
 	public final String getHisRunModelT() throws Exception {
@@ -1880,14 +1925,14 @@ public class Node extends Entity
 	/** 
 	 类型
 	*/
-	public final NodePosType getHisNodePosType() throws Exception {
+	public final NodePosType getHisNodePosType()  {
 		this.SetValByKey(NodeAttr.NodePosType, this.GetHisNodePosType().getValue());
 		return NodePosType.forValue(this.GetValIntByKey(NodeAttr.NodePosType));
 	}
-	public final void setHisNodePosType(NodePosType value)
-	{if (value == NodePosType.Start)
+	public final void setHisNodePosType(NodePosType value) throws Exception {
+		if (value == NodePosType.Start)
 		{
-			if (!this.getNo().equals("01"))
+			if (!Objects.equals(this.getNo(), "01"))
 			{
 				value = NodePosType.Mid;
 			}
@@ -1898,8 +1943,8 @@ public class Node extends Entity
 	/** 
 	 是不是结束节点
 	*/
-	public final boolean isEndNode() throws Exception {
-		if (this.isSendBackNode() == true)
+	public final boolean getItIsEndNode() throws Exception {
+		if (this.getItIsSendBackNode() == true)
 		{
 			return false;
 		}
@@ -1916,130 +1961,116 @@ public class Node extends Entity
 	/** 
 	 异表单子线程WorkID生成规则
 	*/
-	public final int getUSSWorkIDRole() 
-	{
+	public final int getUSSWorkIDRole()  {
 		return this.GetValIntByKey(NodeAttr.USSWorkIDRole);
 	}
-	public final void setUSSWorkIDRole(int value)  
-	 {
+	public final void setUSSWorkIDRole(int value){
 		this.SetValByKey(NodeAttr.USSWorkIDRole, value);
 	}
 	/** 
 	 是否可以在退回后原路返回？
 	*/
-	public final boolean isBackTracking() 
-	{
+	public final boolean getItIsBackTracking()  {
 		return this.GetValBooleanByKey(NodeAttr.IsBackTracking);
 	}
 	/** 
 	 原路返回后是否自动计算接收人
 	*/
-	public final boolean isBackResetAccepter() 
-	{
+	public final boolean getItIsBackResetAccepter()  {
 		return this.GetValBooleanByKey(NodeAttr.IsBackResetAccepter);
 	}
-	public final boolean isSendDraftSubFlow() 
-	{
+	public final boolean getItIsSendDraftSubFlow()  {
 		return this.GetValBooleanByKey(NodeAttr.IsSendDraftSubFlow);
 	}
 	/** 
 	 是否杀掉全部的子线程
 	*/
-	public final boolean getThreadIsCanDel() 
-	{
+	public final boolean getThreadIsCanDel()  {
 		return this.GetValBooleanByKey(BtnAttr.ThreadIsCanDel);
 	}
 
-	public final boolean getThreadIsCanAdd() 
-	{
+	public final boolean getThreadIsCanAdd()  {
 		return this.GetValBooleanByKey(BtnAttr.ThreadIsCanAdd);
 	}
 	/** 
 	 是否启用自动记忆功能
 	*/
-	public final boolean isRememberMe() 
-	{
-		return this.GetValBooleanByKey(NodeAttr.IsRM);
+	public final boolean getItIsRememberMe() {
+		return this.GetParaBoolen(NodeAttr.IsRM, true);
 	}
-	public final void setRememberMe(boolean value)  
-	 {
-		this.SetValByKey(NodeAttr.IsRM, value);
+
+	public final String getMark()  {
+		return this.GetValStrByKey(NodeAttr.Mark);
+	}
+	public final void setMark(String value){
+		this.SetValByKey(NodeAttr.Mark, value);
 	}
 	/** 
 	 是否打开即审批
 	*/
-	public final boolean isOpenOver() 
-	{
+	public final boolean getItIsOpenOver()  {
 		return this.GetValBooleanByKey(NodeAttr.IsOpenOver);
 	}
-	public final void setOpenOver(boolean value)  
-	 {
+	public final void setItIsOpenOver(boolean value){
 		this.SetValByKey(NodeAttr.IsOpenOver, value);
 	}
 	/** 
 	 是否可以删除
 	*/
-	public final boolean isCanDelFlow() 
-	{
+	public final boolean getItIsCanDelFlow()  {
 		return this.GetValBooleanByKey(NodeAttr.IsCanDelFlow);
 	}
 	/** 
 	 普通工作节点处理模式
 	*/
-	public final TodolistModel getTodolistModel()  {
-		if (this.isStartNode() == true)
+	public final TodolistModel getTodolistModel() throws Exception {
+		if (this.getItIsStartNode() == true)
 		{
 			return bp.wf.TodolistModel.QiangBan;
 		}
 
 		return TodolistModel.forValue(this.GetValIntByKey(NodeAttr.TodolistModel));
 	}
-	public final void setTodolistModel(TodolistModel value)  
-	 {
+	public final void setTodolistModel(TodolistModel value){
 		this.SetValByKey(NodeAttr.TodolistModel, value.getValue());
 	}
 	/** 
 	 组长确认规则
 	*/
-	public final TeamLeaderConfirmRole getTeamLeaderConfirmRole()  {
+	public final TeamLeaderConfirmRole getTeamLeaderConfirmRole() {
 		return TeamLeaderConfirmRole.forValue(this.GetValIntByKey(NodeAttr.TeamLeaderConfirmRole));
 	}
-	public final void setTeamLeaderConfirmRole(TeamLeaderConfirmRole value)  
-	 {
+	public final void setTeamLeaderConfirmRole(TeamLeaderConfirmRole value){
 		this.SetValByKey(NodeAttr.TeamLeaderConfirmRole, value.getValue());
 	}
 	/** 
 	 组长确认规则内容.
 	*/
-	public final String getTeamLeaderConfirmDoc() 
-	{
+	public final String getTeamLeaderConfirmDoc()  {
 		return this.GetValStringByKey(NodeAttr.TeamLeaderConfirmDoc);
 	}
-	public final void setTeamLeaderConfirmDoc(String value)  
-	 {
+	public final void setTeamLeaderConfirmDoc(String value){
 		this.SetValByKey(NodeAttr.TeamLeaderConfirmDoc, value);
 	}
-	public final HuiQianLeaderRole getHuiQianLeaderRole()  {
+	public final HuiQianLeaderRole getHuiQianLeaderRole() {
 		return HuiQianLeaderRole.forValue(this.GetValIntByKey(BtnAttr.HuiQianLeaderRole));
 	}
-	public final void setHuiQianLeaderRole(HuiQianLeaderRole value)  
-	 {
+	public final void setHuiQianLeaderRole(HuiQianLeaderRole value){
 		this.SetValByKey(BtnAttr.HuiQianLeaderRole, value.getValue());
 	}
 	/** 
 	 阻塞模式
 	*/
-	public final BlockModel getBlockModel()  {
+	public final BlockModel getBlockModel() {
 		return BlockModel.forValue(this.GetValIntByKey(NodeAttr.BlockModel));
 	}
-	public final void setBlockModel(BlockModel value)  
-	 {
+	public final void setBlockModel(BlockModel value){
 		this.SetValByKey(NodeAttr.BlockModel, value.getValue());
 	}
 	/** 
 	 阻塞的表达式
 	*/
-	public final String getBlockExp()  {
+	public final String getBlockExp() throws Exception {
 		String str = this.GetValStringByKey(NodeAttr.BlockExp);
 
 		if (DataType.IsNullOrEmpty(str))
@@ -2056,81 +2087,62 @@ public class Node extends Entity
 		}
 		return str;
 	}
-	public final void setBlockExp(String value)  
-	 {
+	public final void setBlockExp(String value){
 		this.SetValByKey(NodeAttr.BlockExp, value);
 	}
 	/** 
 	 被阻塞时提示信息
 	*/
-	public final String getBlockAlert() 
-	{
+	public final String getBlockAlert()  {
 		return this.GetValStringByKey(NodeAttr.BlockAlert);
 	}
-	public final void setBlockAlert(String value)  
-	 {
+	public final void setBlockAlert(String value){
 		this.SetValByKey(NodeAttr.BlockAlert, value);
 	}
 	/** 
 	 子线程删除规则
 	*/
-	public final ThreadKillRole getThreadKillRole()  {
+	public final ThreadKillRole getThreadKillRole() {
 		return ThreadKillRole.forValue(this.GetValIntByKey(NodeAttr.ThreadKillRole));
 	}
-	/** 
+	/**
 	 完成通过率
 	*/
-	public final BigDecimal getPassRate()  {
+	public final BigDecimal getPassRate() throws Exception {
 		BigDecimal val = this.GetValDecimalByKey(NodeAttr.PassRate, 4);
-		if (val.intValue() == 0) {
-			return new BigDecimal(100);
+		if (val.compareTo(BigDecimal.valueOf(0)) == 0)
+		{
+			return new BigDecimal("100");
 		}
 		return val;
 	}
 	/** 
 	 是否允许分配工作
 	*/
-	public final boolean isTask() 
-	{
-		return this.GetValBooleanByKey(NodeAttr.IsTask);
+	public final boolean getItIsTask() {
+		return this.GetParaBoolen(NodeAttr.IsTask);
 	}
-	public final void setTask(boolean value)  
-	 {
-		this.SetValByKey(NodeAttr.IsTask, value);
+	public final void setItIsTask(boolean value)  {
+		this.SetPara(NodeAttr.IsTask, value);
 	}
-	///// <summary>
-	///// 是否是业务单元
-	///// </summary>
-	//public bool IsBUnit
-	//{
-	//    get
-	//    {
-	//        return this.GetValBooleanByKey(NodeAttr.IsBUnit);
-	//    }
-	//    set
-	//    {
-	//        this.SetValByKey(NodeAttr.IsBUnit, value);
-	//    }
-	//}
 	/** 
 	 是否可以移交
 	*/
-	public final boolean isHandOver()  {
-		if (this.isStartNode())
+	public final boolean getItIsHandOver() throws Exception {
+		if (this.getItIsStartNode())
 		{
 			return false;
 		}
 
 		return this.GetValBooleanByKey(NodeAttr.IsHandOver);
 	}
-	public final void setHandOver(boolean value)  
-	 {
+	public final void setItIsHandOver(boolean value){
 		this.SetValByKey(NodeAttr.IsHandOver, value);
 	}
 	/** 
 	 是否可以退回？
 	*/
-	public final boolean isCanReturn()  {
+	public final boolean getItIsCanReturn() throws Exception {
 		if (this.getHisReturnRole() == ReturnRole.CanNotReturn)
 		{
 			return false;
@@ -2140,27 +2152,25 @@ public class Node extends Entity
 	/** 
 	 已读回执
 	*/
-	public final ReadReceipts getReadReceipts()  {
+	public final ReadReceipts getReadReceipts() {
 		return ReadReceipts.forValue(this.GetValIntByKey(NodeAttr.ReadReceipts));
 	}
-	public final void setReadReceipts(ReadReceipts value)  
-	 {
+	public final void setReadReceipts(ReadReceipts value){
 		this.SetValByKey(NodeAttr.ReadReceipts, value.getValue());
 	}
 	/** 
 	 退回规则
 	*/
-	public final ReturnRole getHisReturnRole()  {
+	public final ReturnRole getHisReturnRole() {
 		return ReturnRole.forValue(this.GetValIntByKey(NodeAttr.ReturnRole));
 	}
-	public final void setHisReturnRole(ReturnRole value)  
-	 {
+	public final void setHisReturnRole(ReturnRole value){
 		this.SetValByKey(NodeAttr.ReturnRole, value.getValue());
 	}
 	/** 
 	 是不是中间节点
 	*/
-	public final boolean isMiddleNode() throws Exception {
+	public final boolean getItIsMiddleNode() throws Exception {
 		if (this.getHisNodePosType() == NodePosType.Mid)
 		{
 			return true;
@@ -2173,31 +2183,25 @@ public class Node extends Entity
 	/** 
 	 是否是工作质量考核点
 	*/
-	public final boolean isEval() 
-	{
+	public final boolean getItIsEval()  {
 		return this.GetValBooleanByKey(NodeAttr.IsEval);
 	}
-	public final void setEval(boolean value)  
-	 {
+	public final void setItIsEval(boolean value){
 		this.SetValByKey(NodeAttr.IsEval, value);
 	}
-	public final String getHisSubFlows11() 
-	{
+	public final String getHisSubFlows11()  {
 		return this.GetValStringByKey(NodeAttr.HisSubFlows);
 	}
-	public final void setHisSubFlows11(String value)  
-	 {
+	public final void setHisSubFlows11(String value){
 		this.SetValByKey(NodeAttr.HisSubFlows, value);
 	}
-	public final String getFrmAttr() 
-	{
+	public final String getFrmAttr()  {
 		return this.GetValStringByKey(NodeAttr.FrmAttr);
 	}
-	public final void setFrmAttr(String value)  
-	 {
+	public final void setFrmAttr(String value){
 		this.SetValByKey(NodeAttr.FrmAttr, value);
 	}
-	public final boolean isHL()  {
+	public final boolean getItIsHL() throws Exception {
 		switch (this.getHisNodeWorkType())
 		{
 			case WorkHL:
@@ -2210,7 +2214,7 @@ public class Node extends Entity
 	/** 
 	 是否是分流
 	*/
-	public final boolean isFL()  {
+	public final boolean getItIsFL()  {
 		switch (this.getHisNodeWorkType())
 		{
 			case WorkFL:
@@ -2224,7 +2228,7 @@ public class Node extends Entity
 	/** 
 	 是否分流合流
 	*/
-	public final boolean isFLHL()  {
+	public final boolean getItIsFLHL() throws Exception {
 		switch (this.getHisNodeWorkType())
 		{
 			case WorkHL:
@@ -2236,11 +2240,18 @@ public class Node extends Entity
 				return false;
 		}
 	}
-
+	/** 
+	 按照角色智能获取人员模式 
+	 0=集合模式,1=切片-严谨模式. 2=切片-宽泛模式
+	*/
+	public final int getDeliveryStationReqEmpsWay() throws Exception {
+		int val = this.GetParaInt("StationReqEmpsWay", 0);
+		return val;
+	}
 	/** 
 	 接受人sql
 	*/
-	public final String getDeliveryParas()  {
+	public final String getDeliveryParas() throws Exception {
 		String s = this.GetValStringByKey(NodeAttr.DeliveryParas);
 		s = s.replace("~", "'");
 
@@ -2250,41 +2261,37 @@ public class Node extends Entity
 		}
 		return s;
 	}
-	public final void setDeliveryParas(String value)  
-	 {
+	public final void setDeliveryParas(String value){
 		this.SetValByKey(NodeAttr.DeliveryParas, value);
 	}
 	/** 
 	 接受人员集合里,是否排除当前操作员?
 	*/
-	public final boolean isExpSender() 
-	{
-		return this.GetValBooleanByKey(NodeAttr.IsExpSender);
+	public final boolean getItIsExpSender() {
+		return this.GetParaBoolen(NodeAttr.IsExpSender, true);
 	}
-	public final void setExpSender(boolean value)  
-	 {
-		this.SetValByKey(NodeAttr.IsExpSender, value);
+	public final void setItIsExpSender(boolean value)  {
+		this.SetPara(NodeAttr.IsExpSender, value);
 	}
 	/** 
 	 是不是PC工作节点
 	*/
-	public final boolean isPCNode()  {
+	public final boolean getItIsPCNode()
+	{
 		return false;
 	}
 	/** 
 	 工作性质
 	*/
-	public final String getNodeWorkTypeText()  {
+	public final String getNodeWorkTypeText() {
 		return this.getHisNodeWorkType().toString();
 	}
 
 
-	public final int getCHRole() 
-	{
+	public final int getCHRole()  {
 		return this.GetValIntByKey(BtnAttr.CHRole);
 	}
-	public final void setCHRole(int value)  
-	 {
+	public final void setCHRole(int value){
 		this.SetValByKey(BtnAttr.CHRole, value);
 	}
 
@@ -2297,7 +2304,8 @@ public class Node extends Entity
 	 
 	 @return 返回消息,运行的消息
 	*/
-	public final String AfterDoTask()  {
+	public final String AfterDoTask()
+	{
 		return "";
 	}
 
@@ -2308,18 +2316,19 @@ public class Node extends Entity
 	/** 
 	 节点
 	*/
-	public Node()  {
+	public Node()
+	{
 	}
 	/** 
 	 节点
 	 
-	 param _oid 节点ID
+	 @param _oid 节点ID	
 	*/
 	public Node(int _oid) throws Exception {
 		this.setNodeID(_oid);
 		this.Retrieve();
 
-		//if (bp.difference.SystemConfig.getIsDebug())
+		//if (bp.difference.SystemConfig.isDebug)
 		//{
 		//    if (this.RetrieveFromDBSources() <= 0)
 		//        throw new Exception("Node Retrieve 错误没有ID=" + _oid);
@@ -2330,7 +2339,7 @@ public class Node extends Entity
 		//    int i = this.RetrieveFromDBSources();
 		//    if (i == 0)
 		//    {
-		//        string err = "err@NodeID=" + this.NodeID + "不存在";
+		//        String err = "err@NodeID=" + this.getNodeID() + "不存在";
 		//        err += "可能出现错误的原因如下:";
 		//        err += "1.你在FEE中或者SDK模式中使用了节点跳转,跳转到的节点已经不存在.";
 		//        throw new Exception(err);
@@ -2340,35 +2349,41 @@ public class Node extends Entity
 		//    //    throw new Exception("Node Retrieve 错误没有ID=" + _oid);
 		//}
 	}
+	/** 
+	 
+	 
+	 @param ndName 表单ID,或者是Mark标记.
+	 @exception Exception
+	*/
 	public Node(String ndName) throws Exception {
-		ndName = ndName.replace("ND", "");
-		this.setNodeID(Integer.parseInt(ndName));
-
-		if (bp.difference.SystemConfig.getIsDebug())
+		if (ndName.indexOf("ND") == 0)
 		{
-			if (this.RetrieveFromDBSources() <= 0)
-			{
-				throw new RuntimeException("Node Retrieve 错误没有ID=" + ndName);
-			}
-		}
-		else
-		{
+			ndName = ndName.replace("ND", "");
+			this.setNodeID(Integer.parseInt(ndName));
 			if (this.Retrieve() <= 0)
 			{
 				throw new RuntimeException("Node Retrieve 错误没有ID=" + ndName);
 			}
+			return;
 		}
+
+		if (this.Retrieve("Mark", ndName) == 0)
+		{
+			throw new RuntimeException("err@标记:" + ndName + "不存在.");
+		}
+
+
 	}
-	public final String getEnName()  {
+	public final String getEnName() {
 		return "ND" + this.getNodeID();
 	}
-	public final String getEnsName()  {
+	public final String getEnsName() {
 		return "ND" + this.getNodeID() + "s";
 	}
 	/** 
 	 节点意见名称，如果为空则取节点名称.
 	*/
-	public final String getFWCNodeName()  {
+	public final String getFWCNodeName() throws Exception {
 		String str = this.GetValStringByKey(NodeWorkCheckAttr.FWCNodeName);
 		if (DataType.IsNullOrEmpty(str))
 		{
@@ -2381,40 +2396,28 @@ public class Node extends Entity
 	 0= 按照审批时间.
 	 1= 按照接受人员列表(官职大小)
 	*/
-	public final int getFWCOrderModel() 
-	{
+	public final int getFWCOrderModel()  {
 		return this.GetValIntByKey(NodeWorkCheckAttr.FWCOrderModel);
 	}
-	public final float getFwcH() 
-	{
+	public final float getFwcH()  {
 		return this.GetValFloatByKey(NodeWorkCheckAttr.FWC_H);
 	}
 
-	public final HuiQianRole getHuiQianRole()  {
+	public final HuiQianRole getHuiQianRole() {
 		return HuiQianRole.forValue(this.GetValIntByKey(BtnAttr.HuiQianRole));
 	}
-	public final void setHuiQianRole(HuiQianRole value)  
-	 {
+	public final void setHuiQianRole(HuiQianRole value){
 		this.SetValByKey(BtnAttr.HuiQianRole, value.getValue());
 	}
-
-	public final boolean isResetAccepter()
-	{
+	public final boolean getItIsResetAccepter()  {
 		return this.GetValBooleanByKey(NodeAttr.IsResetAccepter);
 	}
-	public final boolean getIsSubThread()
-	{
-		if (this.getHisRunModel() == RunModel.SubThreadSameWorkID
-				|| this.getHisRunModel() == RunModel.SubThreadUnSameWorkID)
-			return true;
-		return false;
 
-	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap()  {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -2422,9 +2425,9 @@ public class Node extends Entity
 
 		Map map = new Map("WF_Node", "节点");
 
-			//出现 缓存问题.现在把缓存取消了.
-		map.setDepositaryOfEntity( Depositary.Application);
-		map.setDepositaryOfMap( Depositary.Application);
+		//出现 缓存问题.现在把缓存取消了.
+		map.setDepositaryOfEntity(Depositary.Application);
+		map.setDepositaryOfMap(Depositary.Application);
 
 
 			///#region 基本属性.
@@ -2433,28 +2436,24 @@ public class Node extends Entity
 		map.AddTBString(NodeAttr.Tip, null, "操作提示", true, true, 0, 100, 10, false);
 		map.AddTBString(NodeAttr.Mark, null, "标记", true, true, 0, 100, 10, false);
 
+
 		map.AddTBInt(NodeAttr.Step, NodeWorkType.Work.getValue(), "流程步骤", true, false);
 
-		map.AddTBString(NodeAttr.ICON, null, "节点ICON图片路径", true, false, 0, 70, 10);
+		map.AddTBString(NodeAttr.Icon, null, "节点ICON图片路径", true, false, 0, 70, 10);
 
 		map.AddTBInt(NodeAttr.NodeWorkType, 0, "节点类型", false, false);
-		//map.AddTBInt(NodeAttr.SubThreadType, 0, "子线程ID", false, false);
+		// map.AddTBInt(NodeAttr.SubThreadType, 0, "子线程ID", false, false);
 
 		map.AddTBString(NodeAttr.FK_Flow, null, "FK_Flow", false, false, 0, 3, 10);
 		map.AddTBInt(NodeAttr.IsGuestNode, 0, "是否是客户执行节点", false, false);
 
 		map.AddTBString(NodeAttr.FlowName, null, "流程名", false, true, 0, 200, 10);
 
-			//为铁路局,会签子流程. 增加
+		//为铁路局,会签子流程. 增加
 		map.AddTBInt(NodeAttr.IsSendDraftSubFlow, 0, "是否发送草稿子流程？", false, false);
 		map.AddTBInt(NodeAttr.IsResetAccepter, 0, "可逆节点时是否重新计算接收人", false, false);
-
-			//map.AddTBString(NodeAttr.FK_FlowSort, null, "FK_FlowSort", false, true, 0, 4, 10);
-			//map.AddTBString(NodeAttr.FK_FlowSortT, null, "FK_FlowSortT", false, true, 0, 100, 10);
-
 		map.AddTBString(NodeAttr.FrmAttr, null, "FrmAttr", false, true, 0, 300, 10);
-			//  map.AddTBInt(NodeAttr.IsBUnit, 0, "是否是节点模版(业务单元)", true, false);
-
+		map.AddTBInt(NodeAttr.FlowNo,0, "流程编号", true, true);
 			///#endregion 基本属性.
 
 
@@ -2468,12 +2467,15 @@ public class Node extends Entity
 		map.AddTBString(NodeWorkCheckAttr.FWCDefInfo, null, "默认意见", true, false, 0, 50, 10);
 
 			///#endregion 审核组件.
-
+		map.AddTBInt(NodeAttr.UIWidth, 140, "宽度", false, false);
+		map.AddTBInt(NodeAttr.UIHeight, 30, "高度", false, false);
+		map.AddTBInt(NodeAttr.UIAngle, 0, "旋转角度", false, false);
 
 			///#region 子流程信息
 		map.AddTBInt(FrmSubFlowAttr.SFSta, 0, "父子流程组件", false, false);
 		map.AddTBInt(NodeAttr.SubFlowX, 0, "子流程设计器位置X", false, false);
 		map.AddTBInt(NodeAttr.SubFlowY, 0, "子流程设计器位置Y", false, false);
+
 			///#endregion 子流程信息
 
 
@@ -2483,17 +2485,13 @@ public class Node extends Entity
 
 		map.AddTBString(BtnAttr.HelpLab, "帮助提示", "帮助", true, false, 0, 50, 10);
 		map.AddTBInt(BtnAttr.HelpRole, 0, "帮助提示规则", true, false);
-
 		map.AddTBFloat(NodeAttr.TimeLimit, 2, "限期(天)", true, false); //"限期(天)".
-																		 //  map.AddTBFloat(NodeAttr.TSpanHour, 0, "小时", true, false); //"限期(分钟)".
+																	 //  map.AddTBFloat(NodeAttr.TSpanHour, 0, "小时", true, false); //"限期(分钟)".
 		map.AddTBInt(NodeAttr.TWay, 0, "时间计算方式", true, false); //0=不计算节假日,1=计算节假日.
-
 		map.AddTBInt(NodeAttr.TAlertRole, 0, "逾期提醒规则", false, false); //"限期(天)"
 		map.AddTBInt(NodeAttr.TAlertWay, 0, "逾期提醒方式", false, false); //"限期(天)"
 
 		map.AddTBFloat(NodeAttr.WarningDay, 1, "工作预警(天)", true, false); // "警告期限(0不警告)"
-			//  map.AddTBFloat(NodeAttr.WarningHour, 0, "工作预警(小时)", true, false); // "警告期限(0不警告)"
-			//  map.SetHelperUrl(NodeAttr.WarningHour, "http://ccbpm.mydoc.io/?v=5404&t=17999");
 
 		map.AddTBInt(NodeAttr.WAlertRole, 0, "预警提醒规则", false, false); //"限期(天)"
 		map.AddTBInt(NodeAttr.WAlertWay, 0, "预警提醒方式", false, false); //"限期(天)"
@@ -2501,20 +2499,19 @@ public class Node extends Entity
 		map.AddTBFloat(NodeAttr.TCent, 2, "扣分(每延期1小时)", false, false);
 		map.AddTBInt(NodeAttr.CHWay, 0, "考核方式", false, false); //"限期(天)"
 
-			//考核相关.
+		//考核相关.
 		map.AddTBInt(NodeAttr.IsEval, 0, "是否工作质量考核", true, true);
 		map.AddTBInt(NodeAttr.OutTimeDeal, 0, "超时处理方式", false, false);
 		map.AddTBString(NodeAttr.DoOutTime, null, "超时处理内容", true, false, 0, 300, 10, true);
-			//map.AddTBString(NodeAttr.DoOutTime, null, "超时处理内容", true, false, 0, 300, 10, true);
+		//map.AddTBString(NodeAttr.DoOutTime, null, "超时处理内容", true, false, 0, 300, 10, true);
 		map.AddTBString(NodeAttr.DoOutTimeCond, null, "执行超时的条件", false, false, 0, 200, 100);
 
 			///#endregion 考核属性.
 
 		map.AddTBString(NodeWorkCheckAttr.FWCNodeName, null, "节点意见名称", true, false, 0, 100, 10);
 		map.AddTBString(NodeAttr.Doc, null, "描述", true, false, 0, 100, 10);
-		map.AddBoolean(NodeAttr.IsTask, true, "允许分配工作否?", true, true);
 
-			//退回相关.
+		//退回相关.
 		map.AddTBInt(NodeAttr.ReturnRole, 2, "退回规则", true, true);
 		map.AddTBString(NodeAttr.ReturnReasonsItems, null, "退回原因", true, false, 0, 50, 10, true);
 		map.AddTBString(NodeAttr.ReturnAlert, null, "被退回后信息提示", true, false, 0, 50, 10, true);
@@ -2524,7 +2521,6 @@ public class Node extends Entity
 		map.AddTBString(BtnAttr.ReturnField, null, "退回信息填写字段", true, false, 0, 50, 10, true);
 
 		map.AddTBInt(NodeAttr.DeliveryWay, 0, "访问规则", true, true);
-		map.AddTBInt(NodeAttr.IsExpSender, 1, "本节点接收人不允许包含上一步发送人", true, true);
 
 		map.AddTBInt(NodeAttr.CancelRole, 0, "撤销规则", true, true);
 		map.AddTBInt(NodeAttr.CancelDisWhenRead, 0, "对方已读不能撤销", true, true);
@@ -2545,7 +2541,7 @@ public class Node extends Entity
 
 		map.AddTBInt(NodeAttr.TodolistModel, 0, "多人处理规则", true, true);
 
-			//add.
+		//add.
 		map.AddTBInt(BtnAttr.HuiQianRole, 0, "会签模式", true, true);
 		map.AddTBInt(NodeAttr.TeamLeaderConfirmRole, 0, "组长确认规则", true, true);
 		map.AddTBString(NodeAttr.TeamLeaderConfirmDoc, null, "组长确认设置内容", true, false, 0, 100, 10);
@@ -2561,10 +2557,9 @@ public class Node extends Entity
 
 		map.AddTBInt(NodeAttr.IsKillEtcThread, 0, "是否允许删除所有的子线程(对于子线程向分流节点退回有效)", true, true);
 
-		map.AddTBInt(NodeAttr.IsRM, 1, "是否启用投递路径自动记忆功能?", true, true);
 		map.AddTBInt(NodeAttr.IsOpenOver, 0, "是否打开即审批?", true, true);
 		map.AddBoolean(NodeAttr.IsHandOver, false, "是否可以移交", true, true);
-		map.AddTBDecimal(NodeAttr.PassRate, new BigDecimal(100), "通过率", true, true);
+		map.AddTBFloat(NodeAttr.PassRate, 100, "通过率", true, true);
 		map.AddTBInt(NodeAttr.RunModel, 0, "运行模式(对普通节点有效)", true, true);
 		map.AddTBInt(NodeAttr.NodeType, 0, "节点类型", true, true); //2023.06.
 		map.AddTBInt(NodeAttr.BlockModel, 0, "阻塞模式", true, true);
@@ -2575,51 +2570,54 @@ public class Node extends Entity
 		map.AddTBInt(NodeAttr.ReadReceipts, 0, "已读回执", true, true);
 		map.AddTBInt(NodeAttr.CondModel, 0, "方向条件控制规则", true, true);
 
-			// 自动跳转.
+		// 自动跳转.
 		map.AddTBInt(NodeAttr.AutoJumpRole0, 0, "处理人就是提交人0", false, false);
 		map.AddTBInt(NodeAttr.AutoJumpRole1, 0, "处理人已经出现过1", false, false);
 		map.AddTBInt(NodeAttr.AutoJumpRole2, 0, "处理人与上一步相同2", false, false);
 
 		map.AddTBString(NodeAttr.AutoJumpExp, null, "表达式", true, false, 0, 200, 10, true);
-			//@0=上一个节点发送时@1=当前节点工作打开时.
+		//@0=上一个节点发送时@1=当前节点工作打开时.
 		map.AddTBInt(NodeAttr.SkipTime, 0, "执行跳转事件", false, false);
 
-
-			// 批处理规则， 2021.1.20 为福建人寿重构.
-			// @0=不启用，1=审核组件模式，2=审核分组字段模式,3=自定义url模式.
+		// 批处理规则， 2021.1.20 为福建人寿重构.
+		// @0=不启用，1=审核组件模式，2=审核分组字段模式,3=自定义url模式.
 		map.AddTBInt(NodeAttr.BatchRole, 0, "批处理", true, true);
 
-			//map.AddTBInt(NodeAttr.BatchListCount, 12, "批处理数量", true, true);
-			//map.AddTBString(NodeAttr.BatchParas, null, "参数", true, false, 0, 500, 10);
+		//map.AddTBInt(NodeAttr.BatchListCount, 12, "批处理数量", true, true);
+		//map.AddTBString(NodeAttr.BatchParas, null, "参数", true, false, 0, 500, 10);
 
 		map.AddTBInt(NodeAttr.PrintDocEnable, 0, "打印方式", true, true);
-			//打印PDF的处理
+		//打印PDF的处理
 		map.AddTBInt(BtnAttr.PrintPDFModle, 0, "PDF打印规则", true, true);
 		map.AddTBInt(BtnAttr.PRIEnable, 0, "重要性规则", true, true);
 		map.AddTBString(BtnAttr.ShuiYinModle, null, "打印水印规则", true, false, 20, 100, 100, true);
 
-			//与未来处理人有关系.
-			//map.AddTBInt(NodeAttr.IsFullSA, 1, "是否计算未来处理人?", false, false);
-			//map.AddTBInt(NodeAttr.IsFullSATime, 0, "是否计算未来接受与处理时间?", false, false);
-			//map.AddTBInt(NodeAttr.IsFullSAAlert, 0, "是否接受未来工作到达消息提醒?", false, false);
+		//与未来处理人有关系.
+		//map.AddTBInt(NodeAttr.IsFullSA, 1, "是否计算未来处理人?", false, false);
+		//map.AddTBInt(NodeAttr.IsFullSATime, 0, "是否计算未来接受与处理时间?", false, false);
+		//map.AddTBInt(NodeAttr.IsFullSAAlert, 0, "是否接受未来工作到达消息提醒?", false, false);
 
-			//表单相关.
+		//表单相关.
 		map.AddTBInt(NodeAttr.FormType, 1, "表单类型", false, false);
 		map.AddTBString(NodeAttr.FormUrl, "http://", "表单URL", true, false, 0, 300, 10);
 		map.AddTBInt(NodeAttr.TurnToDeal, 0, "转向处理", false, false);
 		map.AddTBString(NodeAttr.TurnToDealDoc, null, "发送后提示信息", true, false, 0, 200, 10, true);
 		map.AddTBInt(NodeAttr.NodePosType, 0, "位置", false, false);
-		map.AddTBString(NodeAttr.HisStas, null, "岗位", false, false, 0, 300, 10);
-		map.AddTBString(NodeAttr.HisDeptStrs, null, "部门", false, false, 0, 300, 10);
-		map.AddTBString(NodeAttr.HisToNDs, null, "转到的节点", false, false, 0, 50, 10);
+		map.AddTBString(NodeAttr.HisStas, null, "角色", false, false, 0, 300, 10);
+		map.AddTBString(NodeAttr.HisDeptStrs, null, "部门", false, false, 0, 600, 10);
+		map.AddTBString(NodeAttr.HisToNDs, null, "转到的节点", false, false, 0, 80, 10);
 		map.AddTBString(NodeAttr.HisBillIDs, null, "单据IDs", false, false, 0, 50, 10);
-			//  map.AddTBString(NodeAttr.HisEmps, null, "HisEmps", false, false, 0, 3000, 10);
+		//  map.AddTBString(NodeAttr.HisEmps, null, "HisEmps", false, false, 0, 3000, 10);
 		map.AddTBString(NodeAttr.HisSubFlows, null, "HisSubFlows", false, false, 0, 30, 10);
 		map.AddTBString(NodeAttr.PTable, null, "物理表", false, false, 0, 100, 10);
 
-		map.AddTBString(NodeAttr.GroupStaNDs, null, "岗位分组节点", false, false, 0, 200, 10);
+		map.AddTBString(NodeAttr.GroupStaNDs, null, "角色分组节点", false, false, 0, 200, 10);
 		map.AddTBInt(NodeAttr.X, 0, "X坐标", false, false);
 		map.AddTBInt(NodeAttr.Y, 0, "Y坐标", false, false);
+		map.AddTBInt(NodeAttr.UIWidth, 120, "宽度", false, false);
+		map.AddTBInt(NodeAttr.UIHeight, 60, "高度", false, false);
+		map.AddTBInt(NodeAttr.UIAngle, 0, "旋转角度", false, false);
+
 
 		map.AddTBString(NodeAttr.FocusField, null, "焦点字段", false, false, 0, 30, 10);
 		map.AddTBString(NodeAttr.JumpToNodes, null, "可跳转的节点", true, false, 0, 100, 10, true);
@@ -2628,18 +2626,13 @@ public class Node extends Entity
 
 		map.AddTBString(NodeAttr.DoOutTimeCond, null, "执行超时的条件", false, false, 0, 200, 100);
 
-			//按钮控制部分.
-			// map.AddTBString(BtnAttr.ReturnField, "", "退回信息填写字段", true, false, 0, 50, 10, true);
+		//按钮控制部分.
+		// map.AddTBString(BtnAttr.ReturnField, "", "退回信息填写字段", true, false, 0, 50, 10, true);
 		map.AddTBAtParas(500);
 
-			// 启动子线程参数 2013-01-04
-		map.AddTBInt(NodeAttr.SubFlowStartWay, 0, "子线程启动方式", true, false);
-		map.AddTBString(NodeAttr.SubFlowStartParas, null, "启动参数", true, false, 0, 100, 10);
-
-			// 启动自动运行. 2013-01-04
-		map.AddTBInt(NodeAttr.AutoRunEnable, 0, "是否启动自动运行？", true, false);
-		map.AddTBString(NodeAttr.AutoRunParas, null, "自动运行参数", true, false, 0, 100, 10);
-
+		// 启动自动运行. 2013-01-04
+		//map.AddTBInt(NodeAttr.AutoRunEnable, 0, "是否启动自动运行？", true, false);
+		//map.AddTBString(NodeAttr.AutoRunParas, null, "自动运行参数", true, false, 0, 100, 10);
 		map.AddTBString(NodeAttr.SelfParas, null, "自定义参数(如果太小可以手动扩大)", true, false, 0, 1000, 10);
 
 
@@ -2651,17 +2644,17 @@ public class Node extends Entity
 
 			///#endregion 子流程相关的参数
 
-			//map.AddDDLSysEnum(FrmEventAttr.MsgCtrl, 0, "消息发送控制", true, true, FrmEventAttr.MsgCtrl,
-			//  "@0=不发送@1=按设置的发送范围自动发送@2=由本节点表单系统字段(IsSendEmail,IsSendSMS)来决定@3=由SDK开发者参数(IsSendEmail,IsSendSMS)来决定", true);
+		//map.AddDDLSysEnum(FrmEventAttr.MsgCtrl, 0, "消息发送控制", true, true, FrmEventAttr.MsgCtrl,
+		//  "@0=不发送@1=按设置的发送范围自动发送@2=由本节点表单系统字段(IsSendEmail,IsSendSMS)来决定@3=由SDK开发者参数(IsSendEmail,IsSendSMS)来决定", true);
 
-			//map.AddBoolean(FrmEventAttr.MailEnable, true, "是否启用邮件发送？(如果启用就要设置邮件模版，支持ccflow表达式。)", true, true, true);
-			//map.AddTBString(FrmEventAttr.MailTitle, null, "邮件标题模版", true, false, 0, 200, 20, true);
-			//map.AddTBStringDoc(FrmEventAttr.MailDoc, null, "邮件内容模版", true, false, true);
+		//map.AddBoolean(FrmEventAttr.MailEnable, true, "是否启用邮件发送？(如果启用就要设置邮件模版，支持ccflow表达式。)", true, true, true);
+		//map.AddTBString(FrmEventAttr.MailTitle, null, "邮件标题模版", true, false, 0, 200, 20, true);
+		//map.AddTBStringDoc(FrmEventAttr.MailDoc, null, "邮件内容模版", true, false, true);
 
-			////是否启用手机短信？
-			//map.AddBoolean(FrmEventAttr.SMSEnable, false, "是否启用短信发送？(如果启用就要设置短信模版，支持ccflow表达式。)", true, true, true);
-			//map.AddTBStringDoc(FrmEventAttr.SMSDoc, null, "短信内容模版", true, false, true);
-			//map.AddBoolean(FrmEventAttr.MobilePushEnable, true, "是否推送到手机、pad端。", true, true, true);
+		////是否启用手机短信？
+		//map.AddBoolean(FrmEventAttr.SMSEnable, false, "是否启用短信发送？(如果启用就要设置短信模版，支持ccflow表达式。)", true, true, true);
+		//map.AddTBStringDoc(FrmEventAttr.SMSDoc, null, "短信内容模版", true, false, true);
+		//map.AddBoolean(FrmEventAttr.MobilePushEnable, true, "是否推送到手机、pad端。", true, true, true);
 
 			///#endregion
 
@@ -2678,36 +2671,36 @@ public class Node extends Entity
 	*/
 	@Override
 	protected boolean beforeDelete() throws Exception {
-		//检查设计流程权限,集团模式下，不是自己创建的流程，不能设计流程.
-		TemplateGlo.CheckPower(this.getFK_Flow());
+		// 检查设计流程权限,集团模式下，不是自己创建的流程，不能设计流程.
+		TemplateGlo.CheckPower(this.getFlowNo());
 
 		int num = 0;
-		//如果是结束节点，则自动结束流程
-		/*if (this.getNodePosType() == NodePosType.End)
-		{
-			GenerWorkFlows gwfs = new GenerWorkFlows();
-			gwfs.Retrieve("FK_Flow", this.getFK_Flow(), null);
-			for (GenerWorkFlow gwf :  gwfs.ToJavaList())
-			{
-				try
-				{
-					bp.wf.Dev2Interface.Flow_DoFlowOver(gwf.getWorkID(), "流程成功结束");
-				}
-				catch (RuntimeException ex)
-				{
-					//删除错误，有可能是删除该流程.
-					continue;
-				}
-			}
-		}*/
-		//判断是否可以被删除. 
+		//如果是结束节点，则自动结束流程.
+		//if (this.NodePosType == NodePosType.End)
+		//{
+		//    GenerWorkFlows gwfs = new GenerWorkFlows();
+		//    gwfs.Retrieve("FK_Flow", this.FlowNo);
+		//    foreach (GenerWorkFlow gwf in gwfs)
+		//    {
+		//        try
+		//        {
+		//            BP.WF.Dev2Interface.Flow_DoFlowOver(gwf.WorkID, "流程成功结束");
+		//        }
+		//        catch (Exception ex)
+		//        {
+		//            //删除错误，有可能是删除该流程.
+		//            continue;
+		//        }
+		//    }
+		//}
+		// 判断是否可以被删除. 
 		num = DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM WF_GenerWorkerlist WHERE FK_Node=" + this.getNodeID() + " AND IsPass=0 ");
 		if (num != 0)
 		{
 			throw new RuntimeException("@该节点[" + this.getNodeID() + "," + this.getName() + "]有待办工作存在，您不能删除它.");
 		}
 
-		// 删除它的节点。
+		// 删除它的节点
 		MapData md = new MapData();
 		md.setNo("ND" + this.getNodeID());
 		md.Delete();
@@ -2716,39 +2709,35 @@ public class Node extends Entity
 		GroupFields gfs = new GroupFields();
 		gfs.Delete(GroupFieldAttr.FrmID, md.getNo());
 
-		//删除它的明细。
+		// 删除它的明细
 		MapDtls dtls = new MapDtls(md.getNo());
 		dtls.Delete();
 
-		//删除框架
+		//删除框架.
 		MapFrames frams = new MapFrames(md.getNo());
 		frams.Delete();
 
-		// 删除扩展
+		//删除扩展.
 		MapExts exts = new MapExts(md.getNo());
 		exts.Delete();
 
-		//删除节点与岗位的对应.
+		//删除节点与角色的对应.
 		DBAccess.RunSQL("DELETE FROM WF_NodeStation WHERE FK_Node=" + this.getNodeID());
 		DBAccess.RunSQL("DELETE FROM WF_NodeEmp  WHERE FK_Node=" + this.getNodeID());
 		DBAccess.RunSQL("DELETE FROM WF_NodeDept WHERE FK_Node=" + this.getNodeID());
 		DBAccess.RunSQL("DELETE FROM WF_FrmNode  WHERE FK_Node=" + this.getNodeID());
-		DBAccess.RunSQL("DELETE FROM WF_CCEmp  WHERE FK_Node=" + this.getNodeID());
-		DBAccess.RunSQL("DELETE FROM WF_CH  WHERE FK_Node=" + this.getNodeID());
+	  //  DBAccess.RunSQL("DELETE FROM WF_CCEmp  WHERE FK_Node=" + this.getNodeID());
+		DBAccess.RunSQL("DELETE FROM WF_CH WHERE FK_Node=" + this.getNodeID());
 
 		//删除附件.
-		DBAccess.RunSQL("DELETE FROM Sys_FrmAttachment  WHERE FK_MapData='" + this.getNodeID() + "'");
+		DBAccess.RunSQL("DELETE FROM Sys_FrmAttachment WHERE FK_MapData='" + this.getNodeID() + "'");
 
 		//删除节点后，把关联该节点表单的ID也要删除掉. 同步过去.
-		DBAccess.RunSQL("UPDATE WF_Node SET NodeFrmID='' WHERE NodeFrmID='ND" + this.getNodeID() + "' AND FK_Flow='" + this.getFK_Flow() + "'");
-
+		DBAccess.RunSQL("UPDATE WF_Node SET NodeFrmID='' WHERE NodeFrmID='ND" + this.getNodeID() + "' AND FK_Flow='" + this.getFlowNo() + "'");
 
 		//写入日志.
-		bp.sys.base.Glo.WriteUserLog("删除节点：" + this.getName() + " - " + this.getNodeID(), "通用操作");
+		bp.sys.base.Glo.WriteUserLog("删除节点:" + this.getName() + " - " + this.getNodeID(), "通用操作");
 
-		//清除缓存
-		if(SystemConfig.getRedisIsEnable())
-			ContextHolderUtils.getRedisUtils().removeByKey(false,String.valueOf(this.getNodeID()));
 		return super.beforeDelete();
 	}
 
@@ -2772,7 +2761,7 @@ public class Node extends Entity
 		MapAttr attr = new MapAttr();
 		if (attrs.contains(MapAttrAttr.KeyOfEn, "OID", MapAttrAttr.FK_MapData, md.getNo()) == false)
 		{
-			attr.setFK_MapData(md.getNo());
+			attr.setFrmID(md.getNo());
 			attr.setKeyOfEn("OID");
 			attr.setName("WorkID");
 			attr.setMyDataType(DataType.AppInt);
@@ -2780,12 +2769,12 @@ public class Node extends Entity
 			attr.setLGType(FieldTypeS.Normal);
 			attr.setUIVisible(false);
 			attr.setUIIsEnable(false);
-			attr.setDefVal( "0");
-			attr.setHisEditType( EditType.Readonly);
+			attr.setDefVal("0");
+			attr.setHisEditType(EditType.Readonly);
 			attr.Insert();
 		}
 
-		if (this.getIsSubThread()== false)
+		if (this.getItIsSubThread() == false)
 		{
 			return "修复成功.";
 		}
@@ -2794,7 +2783,7 @@ public class Node extends Entity
 		if (attrs.contains(MapAttrAttr.KeyOfEn, "FID", MapAttrAttr.FK_MapData, md.getNo()) == false)
 		{
 			attr = new MapAttr();
-			attr.setFK_MapData(md.getNo());
+			attr.setFrmID(md.getNo());
 			attr.setKeyOfEn("FID");
 			attr.setName("FID");
 			attr.setMyDataType(DataType.AppInt);
@@ -2803,14 +2792,14 @@ public class Node extends Entity
 			attr.setUIVisible(false);
 			attr.setUIIsEnable(false);
 			attr.setEditType(EditType.UnDel);
-			attr.setDefVal( "0");
+			attr.setDefVal("0");
 			attr.Insert();
 		}
 
 		if (attrs.contains(MapAttrAttr.KeyOfEn, GERptAttr.RDT, MapAttrAttr.FK_MapData, md.getNo()) == false)
 		{
 			attr = new MapAttr();
-			attr.setFK_MapData(md.getNo());
+			attr.setFrmID(md.getNo());
 			attr.setEditType(EditType.UnDel);
 			attr.setKeyOfEn(GERptAttr.RDT);
 			attr.setName("接受时间"); //"接受时间";
@@ -2819,17 +2808,17 @@ public class Node extends Entity
 			attr.setLGType(FieldTypeS.Normal);
 			attr.setUIVisible(false);
 			attr.setUIIsEnable(false);
-			attr.setTag ( "1");
+			attr.setTag("1");
 			attr.Insert();
 		}
 
 		if (attrs.contains(MapAttrAttr.KeyOfEn, GERptAttr.CDT, MapAttrAttr.FK_MapData, md.getNo()) == false)
 		{
 			attr = new MapAttr();
-			attr.setFK_MapData(md.getNo());
+			attr.setFrmID(md.getNo());
 			attr.setEditType(EditType.UnDel);
 			attr.setKeyOfEn(GERptAttr.CDT);
-			if (this.isStartNode())
+			if (this.getItIsStartNode())
 			{
 				attr.setName("发起时间"); //"发起时间";
 			}
@@ -2843,18 +2832,18 @@ public class Node extends Entity
 			attr.setLGType(FieldTypeS.Normal);
 			attr.setUIVisible(false);
 			attr.setUIIsEnable(false);
-			attr.setDefVal( "@RDT");
-			attr.setTag ( "1");
+			attr.setDefVal("@RDT");
+			attr.setTag("1");
 			attr.Insert();
 		}
 
 		if (attrs.contains(MapAttrAttr.KeyOfEn, WorkAttr.Rec, MapAttrAttr.FK_MapData, md.getNo()) == false)
 		{
 			attr = new MapAttr();
-			attr.setFK_MapData(md.getNo());
+			attr.setFrmID(md.getNo());
 			attr.setEditType(EditType.UnDel);
 			attr.setKeyOfEn(WorkAttr.Rec);
-			if (this.isStartNode() == false)
+			if (this.getItIsStartNode() == false)
 			{
 				attr.setName("记录人"); // "记录人";
 			}
@@ -2870,14 +2859,14 @@ public class Node extends Entity
 			attr.setUIIsEnable(false);
 			attr.setMaxLen(100);
 			attr.setMinLen(0);
-			attr.setDefVal( "@WebUser.No");
+			attr.setDefVal("@WebUser.No");
 			attr.Insert();
 		}
 
 		if (attrs.contains(MapAttrAttr.KeyOfEn, WorkAttr.Emps, MapAttrAttr.FK_MapData, md.getNo()) == false)
 		{
 			attr = new MapAttr();
-			attr.setFK_MapData(md.getNo());
+			attr.setFrmID(md.getNo());
 			attr.setEditType(EditType.UnDel);
 			attr.setKeyOfEn(WorkAttr.Emps);
 			attr.setName(WorkAttr.Emps);
@@ -2894,7 +2883,7 @@ public class Node extends Entity
 		if (attrs.contains(MapAttrAttr.KeyOfEn, GERptAttr.FK_Dept, MapAttrAttr.FK_MapData, md.getNo()) == false)
 		{
 			attr = new MapAttr();
-			attr.setFK_MapData(md.getNo());
+			attr.setFrmID(md.getNo());
 			attr.setEditType(EditType.UnDel);
 			attr.setKeyOfEn(GERptAttr.FK_Dept);
 			attr.setName("操作员部门"); //"操作员部门";
@@ -2910,11 +2899,11 @@ public class Node extends Entity
 		}
 
 
-		if (fl.isMD5() && attrs.contains(MapAttrAttr.KeyOfEn, WorkAttr.MD5, MapAttrAttr.FK_MapData, md.getNo()) == false)
+		if (fl.getItIsMD5() && attrs.contains(MapAttrAttr.KeyOfEn, WorkAttr.MD5, MapAttrAttr.FK_MapData, md.getNo()) == false)
 		{
 			/* 如果是MD5加密流程. */
 			attr = new MapAttr();
-			attr.setFK_MapData(md.getNo());
+			attr.setFrmID(md.getNo());
 			attr.setEditType(EditType.UnDel);
 			attr.setKeyOfEn(WorkAttr.MD5);
 			attr.setUIBindKey(attr.getKeyOfEn());
@@ -2923,11 +2912,11 @@ public class Node extends Entity
 			attr.setUIContralType(UIContralType.TB);
 			attr.setLGType(FieldTypeS.Normal);
 			attr.setUIIsEnable(false);
-			attr.setUIIsLine(false);
+			attr.setUIIsLine (false);
 			attr.setUIVisible(false);
 			attr.setMinLen(0);
 			attr.setMaxLen(40);
-			attr.setIdx( -100);
+			attr.setIdx(-1);
 			attr.Insert();
 		}
 
@@ -2937,7 +2926,7 @@ public class Node extends Entity
 			if (attrs.contains(MapAttrAttr.KeyOfEn, GERptAttr.Title, MapAttrAttr.FK_MapData, md.getNo()) == false)
 			{
 				attr = new MapAttr();
-				attr.setFK_MapData(md.getNo());
+				attr.setFrmID(md.getNo());
 				attr.setEditType(EditType.UnDel);
 				attr.setKeyOfEn(GERptAttr.Title);
 				attr.setName("标题"); // "流程标题";
@@ -2951,7 +2940,7 @@ public class Node extends Entity
 
 				attr.setMinLen(0);
 				attr.setMaxLen(200);
-				attr.setIdx( -100);
+				attr.setIdx(-1);
 				//attr.X = (float)171.2;
 				//attr.Y = (float)68.4;
 				attr.Insert();
@@ -2964,7 +2953,7 @@ public class Node extends Entity
 		md.RepairMap();
 
 		String msg = "";
-		if (!this.getFocusField().equals(""))
+		if (!Objects.equals(this.getFocusField(), ""))
 		{
 			if (attr.IsExit(MapAttrAttr.KeyOfEn, this.getFocusField(), MapAttrAttr.FK_MapData, md.getNo()) == false)
 			{
@@ -2983,7 +2972,7 @@ public class Node extends Entity
 		md.setNo("ND" + this.getNodeID());
 		md.Delete();
 
-		md.setName( this.getName());
+		md.setName(this.getName());
 
 		if (this.getHisFormType() == NodeFormType.FoolForm || this.getHisFormType() == NodeFormType.FoolTruck)
 		{
@@ -2992,17 +2981,14 @@ public class Node extends Entity
 
 		if (this.getHisFormType() == NodeFormType.Develop)
 		{
-			md.setHisFrmType( FrmType.Develop);
+			md.setHisFrmType(FrmType.Develop);
 		}
 
-		if (this.getHisFlow().getHisDataStoreModel() == DataStoreModel.SpecTable)
-		{
-			md.setPTable ( this.getHisFlow().getPTable());
-		}
+		md.setPTable(this.getHisFlow().getPTable());
 		md.Insert();
 
 		MapAttr attr = new MapAttr();
-		attr.setFK_MapData(md.getNo());
+		attr.setFrmID(md.getNo());
 		attr.setKeyOfEn("OID");
 		attr.setName("WorkID");
 		attr.setMyDataType(DataType.AppInt);
@@ -3010,13 +2996,13 @@ public class Node extends Entity
 		attr.setLGType(FieldTypeS.Normal);
 		attr.setUIVisible(false);
 		attr.setUIIsEnable(false);
-		attr.setDefVal( "0");
-		attr.setHisEditType( EditType.Readonly);
+		attr.setDefVal("0");
+		attr.setHisEditType(EditType.Readonly);
 		attr.Insert();
 
 
 		attr = new MapAttr();
-		attr.setFK_MapData(md.getNo());
+		attr.setFrmID(md.getNo());
 		attr.setKeyOfEn("FID");
 		attr.setName("FID");
 		attr.setMyDataType(DataType.AppInt);
@@ -3025,7 +3011,7 @@ public class Node extends Entity
 		attr.setUIVisible(false);
 		attr.setUIIsEnable(false);
 		attr.setEditType(EditType.UnDel);
-		attr.setDefVal( "0");
+		attr.setDefVal("0");
 		attr.Insert();
 
 		attr = new MapAttr();
@@ -3049,7 +3035,7 @@ public class Node extends Entity
 		attr.setEditType(EditType.UnDel);
 		attr.SetValByKey(MapAttrAttr.KeyOfEn, "Rec");
 
-		if (this.isStartNode() == false)
+		if (this.getItIsStartNode() == false)
 		{
 			attr.SetValByKey(MapAttrAttr.Name, "发起时间");
 		}
@@ -3074,7 +3060,7 @@ public class Node extends Entity
 		attr.setEditType(EditType.UnDel);
 		attr.SetValByKey(MapAttrAttr.KeyOfEn, "Rec");
 
-		if (this.isStartNode() == false)
+		if (this.getItIsStartNode() == false)
 		{
 			attr.SetValByKey(MapAttrAttr.Name, "记录人");
 		}
@@ -3115,6 +3101,20 @@ public class Node extends Entity
 		attr.setEditType(EditType.UnDel);
 		attr.SetValByKey(MapAttrAttr.KeyOfEn, "FK_Dept");
 		attr.SetValByKey(MapAttrAttr.Name, "操作员部门");
+		attr.SetValByKey(MapAttrAttr.MyDataType, DataType.AppString);
+		attr.setUIContralType(UIContralType.TB);
+		attr.SetValByKey(MapAttrAttr.UIVisible, false);
+		attr.SetValByKey(MapAttrAttr.UIIsEnable, false);
+		attr.setLGType(FieldTypeS.Normal);
+		attr.SetValByKey(MapAttrAttr.MinLen, 0);
+		attr.SetValByKey(MapAttrAttr.MaxLen, 50);
+		attr.Insert();
+
+		attr = new MapAttr();
+		attr.SetValByKey(MapAttrAttr.FK_MapData, md.getNo());
+		attr.setEditType(EditType.UnDel);
+		attr.SetValByKey(MapAttrAttr.KeyOfEn, "FK_DeptName");
+		attr.SetValByKey(MapAttrAttr.Name, "操作员部门名称");
 		attr.SetValByKey(MapAttrAttr.MyDataType, DataType.AppString);
 		attr.setUIContralType(UIContralType.TB);
 		attr.SetValByKey(MapAttrAttr.UIVisible, false);

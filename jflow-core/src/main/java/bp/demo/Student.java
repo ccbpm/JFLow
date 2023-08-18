@@ -17,156 +17,132 @@ public class Student extends EntityNoName
 	/** 
 	 登录系统密码
 	*/
-	public final String getPWD()
-	{
+	public final String getPWD() {
 		return this.GetValStringByKey(StudentAttr.PWD);
 	}
-	public final void setPWD(String value)
-	{
+	public final void setPWD(String value)  {
 		this.SetValByKey(StudentAttr.PWD, value);
 	}
 
 	/**
 	 * 年龄
 	 */
-	public final int getAge()
-	{
+	public final int getAge() {
 		return this.GetValIntByKey(StudentAttr.Age);
 	}
 	
-	public final void setAge(int value)
-	{
+	public final void setAge(int value)  {
 		this.SetValByKey(StudentAttr.Age, value);
 	}
 	
 	/**
 	 * 地址
 	 */
-	public final String getAddr()
-	{
+	public final String getAddr() {
 		return this.GetValStringByKey(StudentAttr.Addr);
 	}
 	
-	public final void setAddr(String value)
-	{
+	public final void setAddr(String value)  {
 		this.SetValByKey(StudentAttr.Addr, value);
 	}
 	
 	/**
 	 * 性别
 	 */
-	public final int getXB()
-	{
+	public final int getXB() {
 		return this.GetValIntByKey(StudentAttr.XB);
 	}
 	
-	public final void setXB(int value)
-	{
+	public final void setXB(int value)  {
 		this.SetValByKey(StudentAttr.XB, value);
 	}
 	
 	/**
 	 * 性别名称
 	 */
-	public final String getXBText()
-	{
+	public final String getXBText() {
 		return this.GetValRefTextByKey(StudentAttr.XB);
 	}
 	
 	/**
 	 * 班级编号
 	 */
-	public final String getFJ_BanJi()
-	{
+	public final String getFJ_BanJi() {
 		return this.GetValStringByKey(StudentAttr.FK_BanJi);
 	}
 	
-	public final void setFJ_BanJi(String value)
-	{
+	public final void setFJ_BanJi(String value)  {
 		this.SetValByKey(StudentAttr.FK_BanJi, value);
 	}
 	
 	/**
 	 * 班级名称
 	 */
-	public final String getFJ_BanJiText()
-	{
+	public final String getFJ_BanJiText() {
 		return this.GetValRefTextByKey(StudentAttr.FK_BanJi);
 	}
 	
 	/**
 	 * 邮件
 	 */
-	public final String getEmail()
-	{
+	public final String getEmail() {
 		return this.GetValStringByKey(StudentAttr.Email);
 	}
 	
-	public final void setEmail(String value)
-	{
+	public final void setEmail(String value)  {
 		this.SetValByKey(StudentAttr.Email, value);
 	}
 	
 	/**
 	 * 是否特困生？
 	 */
-	public final String getIsTeKunSheng()
-	{
+	public final String getIsTeKunSheng() {
 		return this.GetValStringByKey(StudentAttr.IsTeKunSheng);
 	}
 	
-	public final void setIsTeKunSheng(String value)
-	{
+	public final void setIsTeKunSheng(String value)  {
 		this.SetValByKey(StudentAttr.IsTeKunSheng, value);
 	}
 	
 	/**
 	 * 是否有重大疾病史？
 	 */
-	public final String getIsJiBing()
-	{
+	public final String getIsJiBing() {
 		return this.GetValStringByKey(StudentAttr.IsJiBing);
 	}
 	
-	public final void setIsJiBing(String value)
-	{
+	public final void setIsJiBing(String value)  {
 		this.SetValByKey(StudentAttr.IsJiBing, value);
 	}
 	/**
 	 * 是否偏远山区？
 	 */
-	public final String getIsPianYuanShanQu()
-	{
+	public final String getIsPianYuanShanQu() {
 		return this.GetValStringByKey(StudentAttr.IsPianYuanShanQu);
 	}
 	
-	public final void setIsPianYuanShanQu(String value)
-	{
+	public final void setIsPianYuanShanQu(String value)  {
 		this.SetValByKey(StudentAttr.IsPianYuanShanQu, value);
 	}
 	/**
 	 * 是否独生子
 	 */
 	
-	public final String getIsDuShengZi()
-	{
+	public final String getIsDuShengZi() {
 		return this.GetValStringByKey(StudentAttr.IsDuShengZi);
 	}
 	
-	public final void setIsDuShengZi(String value)
-	{
+	public final void setIsDuShengZi(String value)  {
 		this.SetValByKey(StudentAttr.IsDuShengZi, value);
 	}
 	/**
 	 * 政治面貌
 	 */
-	public final String getZZMM()
-	{
+	public final String getZZMM() {
 		return this.GetValStringByKey(StudentAttr.ZZMM);
 	}
 	
-	public final void setZZMM(String value)
-	{
+	public final void setZZMM(String value)  {
 		this.SetValByKey(StudentAttr.ZZMM, value);
 	}
 	
@@ -174,26 +150,22 @@ public class Student extends EntityNoName
 	/**
 	 * 电话
 	 */
-	public final String getTel()
-	{
+	public final String getTel() {
 		return this.GetValStringByKey(StudentAttr.Tel);
 	}
 	
-	public final void setTel(String value)
-	{
+	public final void setTel(String value)  {
 		this.SetValByKey(StudentAttr.Tel, value);
 	}
 	
 	/**
 	 * 注册日期
 	 */
-	public final String getRegDate()
-	{
+	public final String getRegDate() {
 		return this.GetValStringByKey(StudentAttr.RegDate);
 	}
 	
-	public final void setRegDate(String value)
-	{
+	public final void setRegDate(String value)  {
 		this.SetValByKey(StudentAttr.RegDate, value);
 	}
 	/** 
@@ -251,7 +223,7 @@ public class Student extends EntityNoName
 		map.setEnDesc("学生");
 		map.setPhysicsTable("Demo_Student");
 		map.setIsAllowRepeatName(true); // 是否允许名称重复.
-		map.setIsAutoGenerNo(true); // 是否自动生成编号.
+		map.setItIsAutoGenerNo(true); // 是否自动生成编号.
 		map.setCodeStruct("4"); // 4位数的编号，从0001 开始，到 9999.
 		
 		// 普通字段
@@ -320,15 +292,19 @@ public class Student extends EntityNoName
 		////不带有参数的方法.
 		RefMethod rm = new RefMethod();
 		rm.Title = "缴纳班费";
-		rm.getHisAttrs().AddTBDecimal("JinE", new BigDecimal(100), "缴纳金额",true, false);
-		rm.getHisAttrs().AddTBString("Note", null, "备注", true, false, 0, 100, 100);
+		try{
+			rm.getHisAttrs().AddTBDecimal("JinE", new BigDecimal(100), "缴纳金额",true, false);
+			rm.getHisAttrs().AddTBString("Note", null, "备注", true, false, 0, 100, 100);
+		}catch(Exception e){
+
+		}
 		rm.ClassMethodName = this.toString() + ".DoJiaoNaBanFei";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "批量打印学生证";
 		rm.ClassMethodName = this.toString() + ".EnsMothed";
-		rm.IsForEns = true; //是否可以批处理？
+		//rm.ItIsForEns = true; //是否可以批处理？
 		rm.refMethodType = RefMethodType.RightFrameOpen; //是否可以批处理？
 		map.AddRefMethod(rm);
 
@@ -349,8 +325,7 @@ public class Student extends EntityNoName
 	 * 
 	 * @return
 	 */
-	public final String DoJiaoNaBanFei(java.math.BigDecimal jine, String note)
-	{
+	public final String DoJiaoNaBanFei(java.math.BigDecimal jine, String note) throws Exception {
 		return "学号:" + this.getNo() + ",姓名:" + this.getName() + ",缴纳了:" + jine
 				+ "元,说明:" + note;
 	}
@@ -367,6 +342,12 @@ public class Student extends EntityNoName
 		this.SetValByKey(StudentAttr.RecName,WebUser.getName()); //设置记录人.
 		return super.beforeInsert();
 	}
+
+	@Override
+	public Entities GetNewEntities() {
+		return null;
+	}
+
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception {
 		if (this.getEmail().length() == 0)
@@ -386,8 +367,7 @@ public class Student extends EntityNoName
 	 * 
 	 * @return
 	 */
-	public final String DoZhuXiao()
-	{
+	public final String DoZhuXiao() {
 		return "学号:" + this.getNo() + ",姓名:" + this.getName() + ",已经注销.";
 	}
 }

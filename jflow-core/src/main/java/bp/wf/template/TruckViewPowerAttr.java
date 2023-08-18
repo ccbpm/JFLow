@@ -1,13 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.sys.*;
 import bp.en.*;
-import bp.wf.port.*;
-import bp.*;
-import bp.wf.*;
-import java.util.*;
-
 /** 
  流程轨迹权限属性
 */
@@ -56,11 +49,11 @@ public class TruckViewPowerAttr extends EntityNoNameAttr
 	*/
 	public static final String PSpecDept = "PSpecDept";
 	/** 
-	 指定的岗位可看
+	 指定的角色可看
 	*/
 	public static final String PSpecSta = "PSpecSta";
 	/** 
-	 岗位编号
+	 角色编号
 	*/
 	public static final String PSpecStaExt = "PSpecStaExt";
 

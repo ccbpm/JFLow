@@ -1,7 +1,7 @@
 package bp.sys.frmui;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
 import bp.*;
 import bp.sys.*;
@@ -17,13 +17,15 @@ public class MapAttrDocWordReceives extends EntitiesMyPK
 	/** 
 	 收文字号s
 	*/
-	public MapAttrDocWordReceives() throws Exception {
+	public MapAttrDocWordReceives()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new MapAttrDocWordReceive();
 	}
 
@@ -36,7 +38,8 @@ public class MapAttrDocWordReceives extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<MapAttrDocWordReceive> ToJavaList() {
+	public final java.util.List<MapAttrDocWordReceive> ToJavaList()
+	{
 		return (java.util.List<MapAttrDocWordReceive>)(Object)this;
 	}
 	/** 
@@ -44,7 +47,8 @@ public class MapAttrDocWordReceives extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<MapAttrDocWordReceive> Tolist()  {
+	public final ArrayList<MapAttrDocWordReceive> Tolist()
+	{
 		ArrayList<MapAttrDocWordReceive> list = new ArrayList<MapAttrDocWordReceive>();
 		for (int i = 0; i < this.size(); i++)
 		{

@@ -1,6 +1,9 @@
 package bp.ccfast.portal.windowext;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.ccfast.*;
+import bp.ccfast.portal.*;
 import java.util.*;
 
 /** 
@@ -13,13 +16,15 @@ public class Tables extends EntitiesNoName
 	/** 
 	 表格s
 	*/
-	public Tables() {
+	public Tables()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new Table();
 	}
 
@@ -32,7 +37,8 @@ public class Tables extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<Table> ToJavaList() {
+	public final java.util.List<Table> ToJavaList()
+	{
 		return (java.util.List<Table>)(Object)this;
 	}
 	/** 
@@ -40,7 +46,8 @@ public class Tables extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<Table> Tolist()  {
+	public final ArrayList<Table> Tolist()
+	{
 		ArrayList<Table> list = new ArrayList<Table>();
 		for (int i = 0; i < this.size(); i++)
 		{

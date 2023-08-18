@@ -1,7 +1,4 @@
 package bp.wf;
-
-import bp.*;
-
 /** 
  节点完成转向处理
 */
@@ -30,11 +27,13 @@ public enum TurnToDeal
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue() {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
 	public static TurnToDeal forValue(int value)
-	{return values()[value];
+	{
+		return values()[value];
 	}
 }

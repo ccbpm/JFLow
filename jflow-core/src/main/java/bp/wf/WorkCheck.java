@@ -1,7 +1,6 @@
 package bp.wf;
 
 import bp.da.*;
-import bp.*;
 
 /** 
  审核工作节点
@@ -23,7 +22,7 @@ public class WorkCheck
 	public String FlowNo = null;
 	public WorkCheck(String flowNo, int nodeID, long workid, long fid)
 	{
-		this.FlowNo = flowNo;
+		this.FlowNo= flowNo;
 		this.NodeID = nodeID;
 		this.WorkID = workid;
 		this.FID = fid;
@@ -33,12 +32,13 @@ public class WorkCheck
 	 
 	 @return 
 	*/
-	public final int GetMyPK32() throws Exception {
+	public final int GetMyPK32()
+	{
 		try
 		{
 			int newPK = Integer.parseInt(String.valueOf(this.WorkID)) + this.NodeID + Integer.parseInt(this.FlowNo);
 			String myPk = "";
-			String sql = "SELECT TOP 1 RDT FROM WF_GenerWorkerlist WHERE WorkID=%1$s AND FK_Node=%2$s AND FK_Flow='%3$s' ORDER BY RDT DESC";
+			String sql = "SELECT TOP 1 RDT FROM WF_GenerWorkerlist WHERE WorkID=%d AND FK_Node=%d AND FK_Flow='%s' ORDER BY RDT DESC";
 			DataTable dt = DBAccess.RunSQLReturnTable(String.format(sql, this.WorkID, this.NodeID, this.FlowNo));
 			if (dt != null && dt.Rows.size() > 0)
 			{
@@ -59,12 +59,13 @@ public class WorkCheck
 	 
 	 @return 
 	*/
-	public final long GetMyPK() throws Exception {
+	public final long GetMyPK()
+	{
 		try
 		{
 			long newPK = Long.parseLong(String.valueOf(this.WorkID)) + this.NodeID + Long.parseLong(this.FlowNo);
 			String myPk = "";
-			String sql = "SELECT TOP 1 RDT FROM WF_GenerWorkerlist WHERE WorkID=%1$s AND FK_Node=%2$s AND FK_Flow='%3$s' ORDER BY RDT DESC";
+			String sql = "SELECT TOP 1 RDT FROM WF_GenerWorkerlist WHERE WorkID=%d AND FK_Node=%d AND FK_Flow='%s' ORDER BY RDT DESC";
 
 
 			DataTable dt = DBAccess.RunSQLReturnTable(String.format(sql, this.WorkID, this.NodeID, this.FlowNo));
@@ -82,7 +83,7 @@ public class WorkCheck
 			return 0;
 		}
 	}
-		public final Tracks getHisWorkChecks() throws Exception {
+	public final Tracks getHisWorkChecks() throws Exception {
 		if (_HisWorkChecks == null)
 		{
 			_HisWorkChecks = new Tracks();
@@ -111,7 +112,7 @@ public class WorkCheck
 			sql = sql.replace("WF_Track", "ND" + Integer.parseInt(this.FlowNo) + "Track");
 			DataTable dt = null;
 
-				//修复track 表.
+			//修复track 表.
 			try
 			{
 				dt = DBAccess.RunSQLReturnTable(sql, qo.getMyParas());
@@ -122,7 +123,7 @@ public class WorkCheck
 				dt = DBAccess.RunSQLReturnTable(sql, qo.getMyParas());
 			}
 
-			//dt.DefaultView.Sort = "RDT desc";
+			//dt.DefaultView.setSort("RDT desc");
 
 			//放入到track里面.
 			bp.en.QueryObject.InitEntitiesByDataTable(_HisWorkChecks, dt, null);

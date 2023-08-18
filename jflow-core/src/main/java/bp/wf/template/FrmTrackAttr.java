@@ -1,18 +1,11 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.wf.template.*;
-import bp.wf.*;
-import bp.sys.*;
-import bp.*;
-import bp.wf.*;
-import java.util.*;
 
 /** 
  轨迹图标组件
 */
-public class FrmTrackAttr extends EntityNoAttr
+public class FrmTrackAttr extends EntityNoNameAttr
 {
 	/** 
 	 显示标签

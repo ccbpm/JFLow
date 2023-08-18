@@ -1,49 +1,48 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
-import bp.difference.ContextHolderUtils;
-import bp.difference.SystemConfig;
 import bp.difference.handler.CommonUtils;
-import bp.difference.handler.WebContralBase;
+import bp.difference.handler.DirectoryPageBase;
 import bp.en.*;
-import bp.en.Map;
 import bp.sys.*;
 import bp.sys.xml.ActiveAttrAttr;
 import bp.sys.xml.ActiveAttrs;
+import bp.sys.xml.EnumInfoXml;
 import bp.sys.xml.SQLList;
-import bp.tools.*;
-import bp.tools.DataTableConvertJson;
+import bp.tools.AuthV3Util;
+import bp.tools.DateUtils;
+import bp.tools.HttpUtil;
+import bp.tools.Json;
 import bp.web.GuestUser;
 import bp.web.WebUser;
-import bp.wf.Dev2Interface;
-import bp.wf.Glo;
-import bp.wf.Node;
-import bp.wf.NodeFormType;
-import net.sf.json.JSONObject;
+import bp.wf.*;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.io.*;
+import java.nio.file.*;
+import java.time.*;
+import java.math.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
+import bp.en.Map;
+import bp.wf.Glo;
+import bp.difference.*;
+import net.sf.json.JSONObject;
+
+/** 
  页面功能实体
- */
-public class WF_Comm extends WebContralBase
+*/
+public class WF_Comm extends bp.difference.handler.DirectoryPageBase
 {
-
-	public ConcurrentHashMap<String, Object> ClsCache = new ConcurrentHashMap<>();
-	///#region 树的实体.
-	/**
+		///#region 树的实体.
+	/** 
 	 获得树的结构
-
-	 @return
-	 */
+	 
+	 @return 
+	*/
 	public final String Tree_Init() throws Exception {
 		Object tempVar = ClassFactory.GetEns(this.getEnsName());
 		EntitiesTree ens = tempVar instanceof EntitiesTree ? (EntitiesTree)tempVar : null;
@@ -54,33 +53,29 @@ public class WF_Comm extends WebContralBase
 		//获取ParentNo
 		ens.RetrieveAll(EntityTreeAttr.Idx);
 
-		return Json.ToJson(ens.ToDataTableField("TreeTable"));
+		return bp.tools.Json.ToJson(ens.ToDataTableField("TreeTable"));
 	}
-
-	///#endregion 树的实体
-
-
 	///#region 部门-人员关系.
 
 	public final String Tree_MapBaseInfo() throws Exception {
 		Object tempVar = ClassFactory.GetEns(this.getTreeEnsName());
 		EntitiesTree enTrees = tempVar instanceof EntitiesTree ? (EntitiesTree)tempVar : null;
-		bp.en.Entity tempVar2 = enTrees.getGetNewEntity();
+		bp.en.Entity tempVar2 = enTrees.getNewEntity();
 		EntityTree enenTree = tempVar2 instanceof EntityTree ? (EntityTree)tempVar2 : null;
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
-		Entity en = ens.getGetNewEntity();
+		Entity en = ens.getNewEntity();
 		Hashtable ht = new Hashtable();
 		ht.put("TreeEnsDesc", enenTree.getEnDesc());
 		ht.put("EnsDesc", en.getEnDesc());
 		ht.put("EnPK", en.getPK());
-		return Json.ToJson(ht);
+		return bp.tools.Json.ToJson(ht);
 	}
 
-	/**
+	/** 
 	 获得树的结构
-
-	 @return
-	 */
+	 
+	 @return 
+	*/
 	public final String TreeEn_Init() throws Exception {
 		Object tempVar = ClassFactory.GetEns(this.getTreeEnsName());
 		EntitiesTree ens = tempVar instanceof EntitiesTree ? (EntitiesTree)tempVar : null;
@@ -88,11 +83,11 @@ public class WF_Comm extends WebContralBase
 		return ens.ToJsonOfTree("0");
 	}
 
-	/**
+	/** 
 	 获取树关联的集合
-
-	 @return
-	 */
+	 
+	 @return 
+	*/
 	public final String TreeEmp_Init() throws Exception {
 		DataSet ds = new DataSet();
 		String RefPK = this.GetRequestVal("RefPK");
@@ -104,7 +99,7 @@ public class WF_Comm extends WebContralBase
 		ds.Tables.add(dt);
 
 		//获取实体对应的列明
-		Entity en = ens.getGetNewEntity();
+		Entity en = ens.getNewEntity();
 		Map map = en.getEnMapInTime();
 		MapAttrs attrs = map.getAttrs().ToMapAttrs();
 		//属性集合.
@@ -116,7 +111,7 @@ public class WF_Comm extends WebContralBase
 		dt.Columns.Add("title", String.class);
 		dt.Columns.Add("Width", Integer.class);
 		dt.Columns.Add("UIContralType", Integer.class);
-		DataRow row = null;
+		bp.da.DataRow row = null;
 		for (MapAttr attr : attrs.ToJavaList())
 		{
 			if (attr.getUIVisible() == false)
@@ -124,7 +119,7 @@ public class WF_Comm extends WebContralBase
 				continue;
 			}
 
-			if (this.getRefPK().equals(attr.getKeyOfEn()))
+			if (Objects.equals(attr.getKeyOfEn(), this.getRefPK()))
 			{
 				continue;
 			}
@@ -135,7 +130,7 @@ public class WF_Comm extends WebContralBase
 			row.setValue("Width", attr.getUIWidthInt() * 2);
 			row.setValue("UIContralType", attr.getUIContralType().getValue());
 
-			if (attr.getHisAttr().getIsFKorEnum())
+			if (attr.getHisAttr().getItIsFKorEnum())
 			{
 				row.setValue("field", attr.getKeyOfEn() + "Text");
 			}
@@ -144,59 +139,50 @@ public class WF_Comm extends WebContralBase
 
 		ds.Tables.add(dt);
 
-		return Json.ToJson(ds);
+		return bp.tools.Json.ToJson(ds);
 	}
-
-	///#endregion 部门-人员关系
-	/**
+		///#endregion 部门-人员关系
+	/** 
 	 构造函数
-	 */
-	public WF_Comm() throws Exception {
+	*/
+	public WF_Comm()
+	{
 	}
 
-	/**
-	 部门编号
-	 */
-	public final String getFK_Dept()  {
-		String str = this.GetRequestVal("FK_Dept");
-		if (str == null || str.equals("") || str.equals("null"))
-		{
-			return null;
-		}
-		return str;
-	}
-	public final void setFK_Dept(String value)throws Exception
-	{String val = value;
-		if (val.equals("all"))
+	
+	public final void setDeptNo(String value)
+	{
+		String val = value;
+		if (Objects.equals(val, "all"))
 		{
 			return;
 		}
 
-		if (this.getFK_Dept() == null)
+		if (this.getDeptNo() == null)
 		{
-			this.setFK_Dept(value);
+			this.setDeptNo(value);
 			return;
 		}
 	}
 
 
-
-	///#region 统计分析组件.
-	/**
+//C# TO JAVA CONVERTER TASK: There is no preprocessor in Java:
+		///#region 统计分析组件.
+	/** 
 	 初始化数据
-
-	 @return
-	 */
+	 
+	 @return 
+	*/
 	public final String ContrastDtl_Init() throws Exception {
 		//获得.
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
-		Entity en = ens.getGetNewEntity();
+		Entity en = ens.getNewEntity();
 		Map map = en.getEnMapInTime();
 
 		MapAttrs attrs = map.getAttrs().ToMapAttrs();
 
 		//属性集合.
-		DataTable dtAttrs = attrs.ToDataTableField();
+		DataTable dtAttrs = attrs.ToDataTableField("dt");
 		dtAttrs.TableName = "Sys_MapAttrs";
 
 		DataSet ds = new DataSet();
@@ -210,14 +196,18 @@ public class WF_Comm extends WebContralBase
 		String vals = "";
 		for (String str : ap.getHisHT().keySet())
 		{
-			String val =  this.GetRequestVal(str);
+			String val = this.GetRequestVal(str);
 			if (DataType.IsNullOrEmpty(val) == false)
+			{
 				vals += "@" + str + "=" + val;
+			}
 			else
+			{
 				vals += "@" + str + "=" + ap.getHisHT().get(str);
+			}
 		}
 		ur.SetValByKey(UserRegeditAttr.Vals, vals);
-		//查询结果@HongYan
+		//查询结果
 		QueryObject qo = Search_Data(ens, en, map, ur);
 		//获取配置信息
 		EnCfg encfg = new EnCfg();
@@ -238,7 +228,7 @@ public class WF_Comm extends WebContralBase
 			orderBy = encfg.GetValStrByKey("OrderBy");
 			if (orderBy.indexOf(",") != -1)
 			{
-				String[] str = orderBy.split(",");
+				String[] str = orderBy.split("[,]", -1);
 				orderBy = str[0];
 			}
 			isDesc = encfg.GetValBooleanByKey("IsDeSc");
@@ -249,11 +239,15 @@ public class WF_Comm extends WebContralBase
 			try
 			{
 				if (isDesc)
+				{
 					qo.addOrderByDesc(orderBy);
+				}
 				else
+				{
 					qo.addOrderBy(orderBy);
+				}
 			}
-			catch (Exception ex)
+			catch (RuntimeException ex)
 			{
 				encfg.SetValByKey("OrderBy", orderBy);
 			}
@@ -261,23 +255,24 @@ public class WF_Comm extends WebContralBase
 
 
 		qo.DoQuery();
-		DataTable dt = ens.ToDataTableField();
+
+		DataTable dt = ens.ToDataTableField("dt");
 		dt.TableName = "Group_Dtls";
 		ds.Tables.add(dt);
 
 		return bp.tools.Json.ToJson(ds);
 	}
 
-	/**
+	/** 
 	 执行导出
-
-	 @return
-	 */
+	 
+	 @return 
+	*/
 	//public string GroupDtl_Exp()
 	//{
 	//    //获得.
 	//    Entities ens = ClassFactory.GetEns(this.EnsName);
-	//    Entity en = ens.getGetNewEntity();
+	//    Entity en = ens.getNewEntity();
 
 	//    //查询结果
 	//    QueryObject qo = new QueryObject(ens);
@@ -295,7 +290,7 @@ public class WF_Comm extends WebContralBase
 
 	//        if (key == "FK_Dept")
 	//        {
-	//            this.FK_Dept = mykey[1];
+	//            this.DeptNo = mykey[1];
 	//            continue;
 	//        }
 
@@ -342,7 +337,7 @@ public class WF_Comm extends WebContralBase
 	//                if (key == "FK_Dept" || key == "FK_Unit")
 	//                {
 	//                    if (key == "FK_Dept")
-	//                        val = WebUser.getFK_Dept();
+	//                        val = WebUser.DeptNo;
 	//                }
 	//                else
 	//                {
@@ -374,23 +369,23 @@ public class WF_Comm extends WebContralBase
 	//        qo.addAnd();
 	//    }
 
-	//    if (this.FK_Dept != null && (this.GetRequestVal("FK_Emp") == null
+	//    if (this.DeptNo != null && (this.GetRequestVal("FK_Emp") == null
 	//        || this.GetRequestVal("FK_Emp") == "all"))
 	//    {
-	//        if (this.FK_Dept.Length == 2)
+	//        if (this.DeptNo.Length == 2)
 	//        {
 	//            qo.AddWhere("FK_Dept", " = ", "all");
 	//            qo.addAnd();
 	//        }
 	//        else
 	//        {
-	//            if (this.FK_Dept.Length == 8)
+	//            if (this.DeptNo.Length == 8)
 	//            {
-	//                qo.AddWhere("FK_Dept", " = ", this.getFK_Dept());
+	//                qo.AddWhere("FK_Dept", " = ", this.DeptNo);
 	//            }
 	//            else
 	//            {
-	//                qo.AddWhere("FK_Dept", " like ", this.FK_Dept + "%");
+	//                qo.AddWhere("FK_Dept", " like ", this.DeptNo + "%");
 	//            }
 
 	//            qo.addAnd();
@@ -401,27 +396,28 @@ public class WF_Comm extends WebContralBase
 
 	//    DataTable dt = qo.DoQueryToTable();
 
-	//    string filePath = ExportDGToExcel(dt, en, en.EnDesc);
+	//    string filePath = ExportDGToExcel(dt, en, en.getEnDesc());
 
 
 	//    return filePath;
 	//}
+//C# TO JAVA CONVERTER TASK: There is no preprocessor in Java:
+		///#endregion 统计分析组件.
 
-	///#endregion 统计分析组件.
-
-
-	///#region Entity 公共类库.
-	/**
+//C# TO JAVA CONVERTER TASK: There is no preprocessor in Java:
+		///#region Entity 公共类库.
+	/** 
 	 实体类名
-	 */
-	public final String getEnName() throws Exception {
+	*/
+	public final String getEnName()
+	{
 		return this.GetRequestVal("EnName");
 	}
-	/**
+	/** 
 	 获得实体
-
-	 @return
-	 */
+	 
+	 @return 
+	*/
 	public final String Entity_Init() throws Exception {
 		Entity en = ClassFactory.GetEn(this.getEnName());
 		try
@@ -446,11 +442,11 @@ public class WF_Comm extends WebContralBase
 			{
 				en.setPKVal(pkval);
 				en.Retrieve();
-
 				//int i=en.RetrieveFromDBSources();
 				//if (i == 0)
 				//  return "err@实体:["+"]";
 			}
+
 			return en.ToJson(false);
 		}
 		catch (RuntimeException ex)
@@ -459,12 +455,13 @@ public class WF_Comm extends WebContralBase
 			return "err@" + ex.getMessage();
 		}
 	}
-	/**
+	/** 
 	 删除
-
-	 @return
-	 */
-	public final String Entity_Delete() throws Exception {
+	 
+	 @return 
+	*/
+	public final String Entity_Delete()
+	{
 		try
 		{
 			Entity en = ClassFactory.GetEn(this.getEnName());
@@ -472,35 +469,43 @@ public class WF_Comm extends WebContralBase
 			{
 				return "err@类" + this.getEnName() + "不存在,请检查是不是拼写错误";
 			}
-			Attrs attrs = en.getEnMap().getAttrs();
-			///#region 首先判断参数删除.
+				///#region 首先判断参数删除.
 			String key1 = this.GetRequestVal("Key1");
 			String val1 = this.GetRequestVal("Val1");
 
 			String key2 = this.GetRequestVal("Key2");
 			String val2 = this.GetRequestVal("Val2");
+			Attrs attrs = en.getEnMap().getAttrs();
 
 			if (DataType.IsNullOrEmpty(key1) == false && key1.equals("undefined") == false)
 			{
 				int num = 0;
 				if (DataType.IsNullOrEmpty(key2) == false && key2.equals("undefined") == false)
 				{
-					if(SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB)
-						num = en.Delete(key1, bp.sys.base.Glo.GenerRealType(attrs,key1, val1), key2, bp.sys.base.Glo.GenerRealType(attrs,key2, val2));
+					if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB)
+					{
+						num = en.Delete(key1, bp.sys.base.Glo.GenerRealType(attrs, key1, val1), key2, bp.sys.base.Glo.GenerRealType(attrs, key2, val2));
+					}
 					else
+					{
 						num = en.Delete(key1, val1, key2, val2);
+					}
 				}
 				else
 				{
-					if(SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB)
-						num = en.Delete(key1, bp.sys.base.Glo.GenerRealType(attrs,key1, val1));
+					if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB)
+					{
+						num = en.Delete(key1, bp.sys.base.Glo.GenerRealType(attrs, key1, val1));
+					}
 					else
-					num = en.Delete(key1, val1);
+					{
+						num = en.Delete(key1, val1);
+					}
 				}
 				return String.valueOf(num);
 			}
-
-			///#endregion 首先判断参数删除.
+//C# TO JAVA CONVERTER TASK: There is no preprocessor in Java:
+				///#endregion 首先判断参数删除.
 
 			/* 不管是个主键，还是单个主键，都需要循环赋值。*/
 			for (Attr attr : en.getEnMap().getAttrs())
@@ -520,22 +525,31 @@ public class WF_Comm extends WebContralBase
 				{
 					en.setPKVal(this.getPKVal());
 				}
+
 				int num = en.RetrieveFromDBSources();
 				en.Delete();
+
 				return "删除成功.";
+				// int i = en.RetrieveFromDBSources(); //查询出来再删除.
+				//return en.Delete().ToString(); //返回影响行数.
 			}
+
+
+			// int i = en.RetrieveFromDBSources(); //查询出来再删除.
+			//return en.Delete().ToString(); //返回影响行数.
 		}
-		catch (RuntimeException ex)
+		catch (Exception ex)
 		{
 			return "err@" + ex.getMessage();
 		}
 	}
-	/**
+	/** 
 	 更新
-
-	 @return
-	 */
-	public final String Entity_Update() throws Exception {
+	 
+	 @return 
+	*/
+	public final String Entity_Update()
+	{
 		try
 		{
 			Entity en = ClassFactory.GetEn(this.getEnName());
@@ -549,29 +563,27 @@ public class WF_Comm extends WebContralBase
 			//遍历属性，循环赋值.
 			for (Attr attr : en.getEnMap().getAttrs())
 			{
-				String val = this.GetRequestVal(attr.getKey());
-				if(DataType.IsNullOrEmpty(val))
-					en.SetValByKey(attr.getKey(),"");
-				else
-					en.SetValByKey(attr.getKey(),  URLDecoder.decode(val,"UTF-8"));
+				en.SetValByKey(attr.getKey(), this.GetRequestVal(attr.getKey()));
 			}
 
 			//返回数据.
 			//return en.ToJson(false);
+			en.setPKVal(this.getPKVal());
 
 			return String.valueOf(en.Update()); //返回影响行数.
 		}
-		catch (RuntimeException ex)
+		catch (Exception ex)
 		{
 			return "err@" + ex.getMessage();
 		}
 	}
-	/**
+	/** 
 	 从数据源查询.
-
-	 @return
-	 */
-	public final String Entity_RetrieveFromDBSources() throws Exception {
+	 
+	 @return 
+	*/
+	public final String Entity_RetrieveFromDBSources()
+	{
 		try
 		{
 			Entity en = ClassFactory.GetEn(this.getEnName());
@@ -599,17 +611,18 @@ public class WF_Comm extends WebContralBase
 
 			return en.ToJson(false);
 		}
-		catch (RuntimeException ex)
+		catch (Exception ex)
 		{
 			return "err@" + ex.getMessage();
 		}
 	}
-	/**
+	/** 
 	 从数据源查询.
-
-	 @return
-	 */
-	public final String Entity_Retrieve() throws Exception {
+	 
+	 @return 
+	*/
+	public final String Entity_Retrieve()
+	{
 		try
 		{
 			Entity en = ClassFactory.GetEn(this.getEnName());
@@ -633,17 +646,18 @@ public class WF_Comm extends WebContralBase
 
 			return en.ToJson(false);
 		}
-		catch (RuntimeException ex)
+		catch (Exception ex)
 		{
 			return "err@" + ex.getMessage();
 		}
 	}
-	/**
+	/** 
 	 是否存在
-
-	 @return
-	 */
-	public final String Entity_IsExits() throws Exception {
+	 
+	 @return 
+	*/
+	public final String Entity_IsExits()
+	{
 		try
 		{
 			Entity en = ClassFactory.GetEn(this.getEnName());
@@ -660,17 +674,18 @@ public class WF_Comm extends WebContralBase
 			}
 			return "0";
 		}
-		catch (RuntimeException ex)
+		catch (Exception ex)
 		{
 			return "err@" + ex.getMessage();
 		}
 	}
-	/**
+	/** 
 	 执行保存
-
+	 
 	 @return 返回保存影响的行数
-	 */
-	public final String Entity_Save() throws Exception {
+	*/
+	public final String Entity_Save()
+	{
 		try
 		{
 			Entity en = ClassFactory.GetEn(this.getEnName());
@@ -685,15 +700,11 @@ public class WF_Comm extends WebContralBase
 			//遍历属性，循环赋值.
 			for (Attr attr : en.getEnMap().getAttrs())
 			{
-				String val = this.GetValFromFrmByKey(attr.getKey());
-				if(DataType.IsNullOrEmpty(val))
-					en.SetValByKey(attr.getKey(),"");
-				else
-					en.SetValByKey(attr.getKey(), URLDecoder.decode(val,"UTF-8"));
+				en.SetValByKey(attr.getKey(), this.GetRequestVal(attr.getKey()));
 			}
 
 			//保存参数属性.
-			String frmParas = this.GetValFromFrmByKey("frmParas", "");
+			String frmParas = URLDecoder.decode(this.GetValFromFrmByKey("frmParas", ""),"UTF-8");
 			if (DataType.IsNullOrEmpty(frmParas) == false)
 			{
 				AtPara ap = new AtPara(frmParas);
@@ -705,17 +716,18 @@ public class WF_Comm extends WebContralBase
 
 			return String.valueOf(en.Save());
 		}
-		catch (RuntimeException ex)
+		catch (Exception ex)
 		{
 			return "err@保存错误:" + ex.getMessage();
 		}
 	}
-	/**
+	/** 
 	 执行插入.
-
-	 @return
-	 */
-	public final String Entity_Insert() throws Exception {
+	 
+	 @return 
+	*/
+	public final String Entity_Insert()
+	{
 		try
 		{
 			Entity en = ClassFactory.GetEn(this.getEnName());
@@ -723,11 +735,7 @@ public class WF_Comm extends WebContralBase
 			//遍历属性，循环赋值.
 			for (Attr attr : en.getEnMap().getAttrs())
 			{
-				String val = this.GetRequestVal(attr.getKey());
-				if(DataType.IsNullOrEmpty(val))
-					en.SetValByKey(attr.getKey(),"");
-				else
-					en.SetValByKey(attr.getKey(), URLDecoder.decode(val,"UTF-8"));
+				en.SetValByKey(attr.getKey(), this.GetRequestVal(attr.getKey()));
 			}
 
 			//插入数据库.
@@ -740,18 +748,19 @@ public class WF_Comm extends WebContralBase
 			//返回数据.
 			return en.ToJson(false);
 		}
-		catch (RuntimeException ex)
+		catch (Exception ex)
 		{
 			return "err@" + ex.getMessage();
 		}
 	}
 
-	/**
+	/** 
 	 执行插入.
-
-	 @return
-	 */
-	public final String Entity_DirectInsert() throws Exception {
+	 
+	 @return 
+	*/
+	public final String Entity_DirectInsert()
+	{
 		try
 		{
 			Entity en = ClassFactory.GetEn(this.getEnName());
@@ -762,10 +771,7 @@ public class WF_Comm extends WebContralBase
 			//遍历属性，循环赋值.
 			for (Attr attr : en.getEnMap().getAttrs())
 			{
-				String val = this.GetRequestVal(attr.getKey());
-				if(DataType.IsNullOrEmpty(val))
-					en.SetValByKey(attr.getKey(),"");
-				en.SetValByKey(attr.getKey(), URLDecoder.decode(val,"UTF-8"));
+				en.SetValByKey(attr.getKey(), this.GetRequestVal(attr.getKey()));
 			}
 
 			//插入数据库.
@@ -778,23 +784,22 @@ public class WF_Comm extends WebContralBase
 			//返回数据.
 			return en.ToJson(false);
 		}
-		catch (RuntimeException ex)
+		catch (Exception ex)
 		{
 			return "err@" + ex.getMessage();
 		}
 	}
-	/**
-	 查询
 
-	 @return
-	 */
+	/** 
+	 查询
+	 
+	 @return 
+	*/
 	public final String Entity_DoMethodReturnString() throws Exception {
 		//创建类实体.
 		Entity en = ClassFactory.GetEn(this.getEnName());
 		if (en == null)
-		{
 			return "err@类" + this.getEnName() + "不存在,请检查是不是拼写错误";
-		}
 		en.setPKVal(this.getPKVal());
 		en.RetrieveFromDBSources();
 
@@ -857,7 +862,6 @@ public class WF_Comm extends WebContralBase
 						else
 							myparas[idx] = false;
 					}
-
 				}
 				catch (Exception e)
 				{
@@ -866,32 +870,24 @@ public class WF_Comm extends WebContralBase
 
 				idx++;
 			}
-
-
 		}
-
-
-
 		Object tempVar = mp.invoke(en, myparas);
 		String result = tempVar instanceof String ? (String)tempVar : null; //调用由此 MethodInfo 实例反射的方法或构造函数。
 		return result;
 	}
-
-	///#endregion
-
-
 	///#region Entities 公共类库.
-	/**
+	/** 
 	 调用参数.
-	 */
-	public final String getParas() throws Exception {
+	*/
+	public final String getParas()
+	{
 		return this.GetRequestVal("Paras");
 	}
-	/**
+	/** 
 	 查询全部
-
-	 @return
-	 */
+	 
+	 @return 
+	*/
 	public final String Entities_RetrieveAll() throws Exception {
 		try
 		{
@@ -903,17 +899,18 @@ public class WF_Comm extends WebContralBase
 			ens.RetrieveAll();
 			return ens.ToJson("dt");
 		}
-		catch (RuntimeException e)
+		catch (Exception e)
 		{
 			return "err@[Entities_RetrieveAll][" + this.getEnsName() + "]类名错误，或者其他异常:" + e.getMessage();
 		}
 	}
-	/**
+	/** 
 	 获得实体集合s
-
-	 @return
-	 */
-	public final String Entities_Init() throws Exception {
+	 
+	 @return 
+	*/
+	public final String Entities_Init()
+	{
 		try
 		{
 			Entities ens = ClassFactory.GetEns(this.getEnsName());
@@ -925,187 +922,209 @@ public class WF_Comm extends WebContralBase
 			{
 				return "0";
 			}
-			ens.clear();
-			Entity en = ens.getGetNewEntity();
-
-			QueryObject qo = new QueryObject(ens);
-			String[] myparas = this.getParas().split("[@]", -1);
-
-			int idx = 0;
-			for (int i = 0; i < myparas.length; i++)
-			{
-				String para = myparas[i];
-				if (DataType.IsNullOrEmpty(para) || para.contains("=") == false)
-				{
-					continue;
-				}
-
-				String[] strs = para.split("[=]", -1);
-				String key = strs[0];
-				String val = strs[1];
-
-
-				if (key.toLowerCase().equals("orderby") == true)
-				{
-					//多重排序
-					if (val.indexOf(",") != -1)
-					{
-						String[] strs1 = val.split("[,]", -1);
-						for (String str : strs1)
-						{
-							if (DataType.IsNullOrEmpty(str) == true)
-							{
-								continue;
-							}
-							if (str.toUpperCase().indexOf("DESC") != -1)
-							{
-								String str1 = str.replace("DESC", "").replace("desc", "");
-								qo.addOrderByDesc(str1.trim());
-							}
-							else
-							{
-								if (str.toUpperCase().indexOf("ASC") != -1)
-								{
-									String str1 = str.replace("ASC", "").replace("asc", "");
-									qo.addOrderBy(str1.trim());
-								}
-								else
-								{
-									qo.addOrderBy(str.trim());
-								}
-							}
-
-						}
-					}
-					else
-					{
-						qo.addOrderBy(val);
-					}
-
-					continue;
-				}
-
-				Object valObj = val;
-
-				if (SystemConfig.getAppCenterDBFieldIsParaDBType() == true)
-				{
-					valObj = bp.sys.base.Glo.GenerRealType(en.getEnMap().getAttrs(), key, val);
-				}
-
-				if (idx == 0)
-				{
-					qo.AddWhere(key, valObj);
-				}
-				else
-				{
-					qo.addAnd();
-					qo.AddWhere(key, valObj);
-				}
-				idx++;
-			}
-
-			qo.DoQuery();
-			return ens.ToJson("dt");
+			return Entities_Init_Ext(ens, ens.getNewEntity(), this.getParas());
 		}
-		catch (RuntimeException ex)
+		catch (Exception ex)
 		{
 			return "err@" + ex.getMessage();
 		}
 	}
+	public final String Entities_Init_Ext(Entities ens, Entity en, String paras) throws Exception {
 
-	/**
-	 获得实体集合s
+		QueryObject qo = new QueryObject(ens);
+		String[] myparas = this.getParas().split("[@]", -1);
 
-	 @return
-	 */
-	public final String Entities_RetrieveCond() throws Exception {
-		try
+		Attrs attrs = en.getEnMap().getAttrs();
+
+		int idx = 0;
+		for (int i = 0; i < myparas.length; i++)
 		{
-			Entities ens = ClassFactory.GetEns(this.getEnsName());
-			if (ens == null)
+			String para = myparas[i];
+			if (DataType.IsNullOrEmpty(para) || para.contains("=") == false)
 			{
-				return "err@类" + this.getEnsName() + "不存在,请检查是不是拼写错误";
-			}
-			if (this.getParas() == null)
-			{
-				return "0";
+				continue;
 			}
 
-			QueryObject qo = new QueryObject(ens);
-			String[] myparas = this.getParas().replace("[%]", "%").split("[@]", -1);
+			String[] strs = para.split("[=]", -1);
+			String key = strs[0];
+			String val = strs[1];
 
-			Attrs attrs = ens.getGetNewEntity().getEnMap().getAttrs();
 
-			int idx = 0;
-			for (int i = 0; i < myparas.length; i++)
+			if (key.toLowerCase().equals("orderby") == true)
 			{
-				String para = myparas[i];
-				if (DataType.IsNullOrEmpty(para))
+				//多重排序
+				if (val.indexOf(",") != -1)
 				{
-					continue;
-				}
-
-				String[] strs = para.split("[|]", -1);
-				String key = strs[0];
-				String oper = strs[1];
-				String val = strs[2];
-
-				if (key.toLowerCase().equals("orderby") == true)
-				{
-					qo.addOrderBy(val);
-					continue;
-				}
-
-				//获得真实的数据类型.
-				Object typeVal = val;
-				if (SystemConfig.getAppCenterDBFieldIsParaDBType() == true)
-				{
-					typeVal = bp.sys.base.Glo.GenerRealType(attrs, key, val);
-				}
-
-				String[] keys = key.trim().split("[,]", -1);
-				int count = 0;
-				for (String str : keys)
-				{
-					count++;
-					if (DataType.IsNullOrEmpty(str) == true)
+					String[] strs1 = val.split("[,]", -1);
+					for (String str : strs1)
 					{
-						continue;
-					}
-					if (idx == 0 && count == 1)
-					{
-						qo.AddWhere(str, oper, typeVal);
-					}
-					else
-					{
-						if (count != 1)
+						if (DataType.IsNullOrEmpty(str) == true)
 						{
-							qo.addOr();
+							continue;
+						}
+						if (str.toUpperCase().indexOf("DESC") != -1)
+						{
+							String str1 = str.replace("DESC", "").replace("desc", "");
+							qo.addOrderByDesc(str1.trim());
 						}
 						else
 						{
-							qo.addAnd();
+							if (str.toUpperCase().indexOf("ASC") != -1)
+							{
+								String str1 = str.replace("ASC", "").replace("asc", "");
+								qo.addOrderBy(str1.trim());
+							}
+							else
+							{
+								qo.addOrderBy(str.trim());
+							}
 						}
-						qo.AddWhere(str, oper, typeVal);
-					}
 
+					}
 				}
-				idx++;
+				else
+				{
+					qo.addOrderBy(val);
+				}
+
+				continue;
 			}
 
+			if (attrs.contains(key) == false)
+			{
+				continue;
+			}
+
+			Object valObj = val;
+
+			if (SystemConfig.getAppCenterDBFieldIsParaDBType() == true)
+			{
+				valObj = bp.sys.base.Glo.GenerRealType(en.getEnMap().getAttrs(), key, val);
+			}
+
+			if (idx == 0)
+			{
+				qo.AddWhere(key, valObj);
+			}
+			else
+			{
+				qo.addAnd();
+				qo.AddWhere(key, valObj);
+			}
+			idx++;
+		}
+		try
+		{
 			qo.DoQuery();
-			return ens.ToJson("dt");
 		}
 		catch (RuntimeException ex)
+		{
+			if (ex.getMessage().contains("exist"))
+			{
+				qo.DoQuery();
+			}
+		}
+		return ens.ToJson("dt");
+	}
+
+	/** 
+	 获得实体集合s
+	 
+	 @return 
+	*/
+	public final String Entities_RetrieveCond()
+	{
+		try
+		{
+			Entities ens = ClassFactory.GetEns(this.getEnsName());
+			if (ens == null)
+			{
+				return "err@类" + this.getEnsName() + "不存在,请检查是不是拼写错误";
+			}
+			if (this.getParas() == null)
+			{
+				return "0";
+			}
+
+			return Entities_RetrieveCond_Ext(ens, this.getParas());
+		}
+		catch (Exception ex)
 		{
 			return "err@" + ex.getMessage();
 		}
 	}
-	/**
-	 执行方法
+	public final String Entities_RetrieveCond_Ext(Entities ens, String paras) throws Exception {
 
-	 @return
-	 */
+		QueryObject qo = new QueryObject(ens);
+		String[] myparas = paras.replace("[%]", "%").split("[@]", -1);
+
+		Attrs attrs = ens.getNewEntity().getEnMap().getAttrs();
+
+		int idx = 0;
+		for (int i = 0; i < myparas.length; i++)
+		{
+			String para = myparas[i];
+			if (DataType.IsNullOrEmpty(para))
+			{
+				continue;
+			}
+
+			String[] strs = para.split("[|]", -1);
+			String key = strs[0];
+			String oper = strs[1];
+			String val = strs[2];
+
+			if (key.toLowerCase().equals("orderby") == true)
+			{
+				qo.addOrderBy(val);
+				continue;
+			}
+
+			//获得真实的数据类型.
+			Object typeVal = val;
+			if (SystemConfig.getAppCenterDBFieldIsParaDBType() == true)
+			{
+				typeVal = bp.sys.base.Glo.GenerRealType(attrs, key, val);
+			}
+
+			String[] keys = key.trim().split("[,]", -1);
+			int count = 0;
+			for (String str : keys)
+			{
+				count++;
+				if (DataType.IsNullOrEmpty(str) == true)
+				{
+					continue;
+				}
+				if (idx == 0 && count == 1)
+				{
+					qo.AddWhere(str, oper, typeVal);
+				}
+				else
+				{
+					if (count != 1)
+					{
+						qo.addOr();
+					}
+					else
+					{
+						qo.addAnd();
+					}
+					qo.AddWhere(str, oper, typeVal);
+				}
+
+			}
+			idx++;
+		}
+
+		qo.DoQuery();
+		return ens.ToJson("dt");
+	}
+	/** 
+	 执行方法
+	 
+	 @return 
+	*/
 	public final String Entities_DoMethodReturnString() throws Exception {
 
 		//创建类实体.
@@ -1116,14 +1135,8 @@ public class WF_Comm extends WebContralBase
 		{
 			return "err@没有找到实体类";
 		}
-		java.lang.Class tp = ens.getClass();
-		java.lang.reflect.Method mp = null;
-		for (java.lang.reflect.Method m : tp.getMethods()) {
-			if (m.getName().equals(methodName)==true) {
-				mp = m;
-				break;
-			}
-		}
+		Class tp = ens.getClass();
+		java.lang.reflect.Method mp = tp.getMethod(methodName);
 		if (mp == null)
 		{
 			return "err@没有找到类[" + this.getEnsName() + "]方法[" + methodName + "].";
@@ -1152,7 +1165,6 @@ public class WF_Comm extends WebContralBase
 			}
 			Class[] paramInfos =mp.getParameterTypes();
 			int idx = 0;
-			//	ParameterInfo[] paramInfos = mp.GetParameters();
 			for (Class paramInfo : paramInfos)
 			{
 				myparas[idx] = str[idx];
@@ -1198,8 +1210,6 @@ public class WF_Comm extends WebContralBase
 
 				idx++;
 			}
-
-
 		}
 
 		if (DataType.IsNullOrEmpty(atPara) == false)
@@ -1214,23 +1224,16 @@ public class WF_Comm extends WebContralBase
 				myparas[myparas.length - 1] = atPara;
 			}
 		}
-
-
 		Object tempVar = mp.invoke(ens, myparas);
 		String result = tempVar instanceof String ? (String)tempVar : null; //调用由此 MethodInfo 实例反射的方法或构造函数。
 		return result;
 
 	}
-
-	///#endregion
-
-
-	///#region 功能执行.
-	/**
+	/** 
 	 初始化.
-
-	 @return
-	 */
+	 
+	 @return 
+	*/
 	public final String Method_Init() throws Exception {
 		String ensName = this.GetRequestVal("M");
 		Method rm = ClassFactory.GetMethod(ensName);
@@ -1246,7 +1249,7 @@ public class WF_Comm extends WebContralBase
 			ht.put("Title", rm.Title);
 			ht.put("Help", rm.Help);
 			ht.put("Warning", rm.Warning == null ? "" : rm.Warning);
-			return Json.ToJson(ht);
+			return bp.tools.Json.ToJson(ht);
 		}
 
 		DataTable dt = new DataTable();
@@ -1256,7 +1259,8 @@ public class WF_Comm extends WebContralBase
 
 		return "";
 	}
-	public final String Method_Done() throws Exception {
+	public final String Method_Done()
+	{
 		String ensName = this.GetRequestVal("M");
 		Method rm = ClassFactory.GetMethod(ensName);
 		// rm.Init();
@@ -1322,7 +1326,7 @@ public class WF_Comm extends WebContralBase
 							// string str = this.UCEn1.GetDDLByKey("DDL_" + attr.getKey()).SelectedItemStringVal;
 							rm.SetValByKey(attr.getKey(), str);
 						}
-						catch (java.lang.Exception e)
+						catch (Exception e)
 						{
 							rm.SetValByKey(attr.getKey(), "");
 						}
@@ -1354,12 +1358,13 @@ public class WF_Comm extends WebContralBase
 				return "err@执行完成没有返回信息.";
 			}
 		}
-		catch (RuntimeException ex)
+		catch (Exception ex)
 		{
 			return "err@执行错误:" + ex.getMessage();
 		}
 	}
-	public final String MethodLink_Init() throws Exception {
+	public final String MethodLink_Init()
+	{
 		ArrayList<Method> al = ClassFactory.GetObjects("bp.en.Method");
 		int i = 1;
 		String html = "";
@@ -1374,7 +1379,7 @@ public class WF_Comm extends WebContralBase
 		DataRow dr;
 		for (Method en : al)
 		{
-			if (en.getIsCanDo() == false || en.IsVisable == false)
+			if (en.getIsCanDo() == false || en.ItIsVisable == false)
 			{
 				continue;
 			}
@@ -1389,18 +1394,13 @@ public class WF_Comm extends WebContralBase
 
 		}
 
-		return Json.ToJson(dt);
+		return bp.tools.Json.ToJson(dt);
 	}
-
-	///#endregion
-
-
-	///#region 查询.
-	/**
+	/** 
 	 获得查询的基本信息.
-
-	 @return
-	 */
+	 
+	 @return 
+	*/
 	public final String Search_MapBaseInfo() throws Exception {
 		//获得
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
@@ -1409,7 +1409,7 @@ public class WF_Comm extends WebContralBase
 			return "err@类名:" + this.getEnsName() + "错误";
 		}
 
-		Entity en = ens.getGetNewEntity();
+		Entity en = ens.getNewEntity();
 		Map map = en.getEnMapInTime();
 
 		Hashtable ht = new Hashtable();
@@ -1430,10 +1430,10 @@ public class WF_Comm extends WebContralBase
 		//把map信息放入
 		ht.put("PhysicsTable", map.getPhysicsTable());
 		ht.put("CodeStruct", map.getCodeStruct());
-		ht.put("CodeLength", map.getCodeLength());
+		//ht.Add("CodeLength", map.CodeLength);
 
 		//查询条件.
-		if (map.IsShowSearchKey == true)
+		if (map.ItIsShowSearchKey == true)
 		{
 			ht.put("IsShowSearchKey", 1);
 		}
@@ -1451,16 +1451,31 @@ public class WF_Comm extends WebContralBase
 		ht.put("DTSearchKey", map.DTSearchKey);
 
 		//把实体类中的主键放在hashtable中
-		ht.put("EntityPK", en.getPK_Field());
+		ht.put("EntityPK", en.getPKField());
 
+		///#region 把配置的信息增加里面去.
+		//EnCfg cfg = new EnCfg();
+		//cfg.No = this.EnsName;
+		//if (cfg.RetrieveFromDBSources() == 0)
+		//{
+		//    cfg.Insert();
+		//}
+		//foreach (string key in cfg.Row.Keys)
+		//{
+		//    if (ht.containsKey(key) == true)
+		//        continue;
+		//    //设置值.
+		//    ht.Add(key, cfg.GetValByKey(key));
+		//}
+		///#endregion 把配置的信息增加里面去. 
 
-		return Json.ToJson(ht);
+		return bp.tools.Json.ToJson(ht);
 	}
-	/**
+	/** 
 	 外键或者枚举的查询.
-
-	 @return
-	 */
+	   
+	 @return 
+	*/
 	public final String Search_SearchAttrs() throws Exception {
 		//获得
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
@@ -1469,8 +1484,8 @@ public class WF_Comm extends WebContralBase
 			return "err@类名错误:" + this.getEnsName();
 		}
 
-		Entity en = ens.getGetNewEntity();
-		Map map = ens.getGetNewEntity().getEnMapInTime();
+		Entity en = ens.getNewEntity();
+		Map map = ens.getNewEntity().getEnMapInTime();
 
 		DataSet ds = new DataSet();
 
@@ -1482,10 +1497,9 @@ public class WF_Comm extends WebContralBase
 		dt.Columns.Add("UIContralType");
 		dt.Columns.Add("IsTree");
 		dt.TableName = "Attrs";
-
-		AttrSearchs attrs = map.getSearchAttrs();
+		SearchFKEnums attrs = map.getSearchFKEnums();
 		Attr attr = null;
-		for (AttrSearch item : attrs)
+		for (SearchFKEnum item : attrs)
 		{
 			attr = item.HisAttr;
 			DataRow dr = dt.NewRow();
@@ -1493,23 +1507,30 @@ public class WF_Comm extends WebContralBase
 			dr.setValue("Name", item.HisAttr.getDesc());
 			dr.setValue("Width", item.Width); //下拉框显示的宽度.
 			dr.setValue("UIContralType", item.HisAttr.getUIContralType().getValue());
-			if (attr.getIsFK() && attr.getHisFKEn().getIsTreeEntity() == true){
+			if (attr.getItIsFK() && attr.getHisFKEn().getItIsTreeEntity() == true)
+			{
 				if (attr.getKey().equals("FK_Dept") && WebUser.getIsAdmin() == false)
-					dr.setValue("IsTree",1);
+				{
+					dr.setValue("IsTree", 0);
+				}
 				else
-					dr.setValue("IsTree",0);
+				{
+					dr.setValue("IsTree", 1);
+				}
 			}
 			else
-				dr.setValue("IsTree",0);
+			{
+				dr.setValue("IsTree", 0);
+			}
 			dt.Rows.add(dr);
 		}
 		ds.Tables.add(dt);
 
 		//把外键枚举增加到里面.
-		for (AttrSearch item : attrs)
+		for (SearchFKEnum item : attrs)
 		{
 			attr = item.HisAttr;
-			if (attr.getIsEnum() == true)
+			if (attr.getItIsEnum() == true)
 			{
 				SysEnums ses = new SysEnums(attr.getUIBindKey());
 				DataTable dtEnum = ses.ToDataTableField("dt");
@@ -1518,7 +1539,7 @@ public class WF_Comm extends WebContralBase
 				continue;
 			}
 
-			if (attr.getIsFK() == true)
+			if (attr.getItIsFK() == true)
 			{
 				Entities ensFK = attr.getHisFKEns();
 				ensFK.RetrieveAll();
@@ -1529,10 +1550,17 @@ public class WF_Comm extends WebContralBase
 				continue;
 			}
 			//绑定SQL的外键
-			if (DataType.IsNullOrEmpty(attr.getUIBindKey()) == false && ds.contains(attr.getKey()) == false)
+			if (DataType.IsNullOrEmpty(attr.getUIBindKey()) == false && ds.Tables.contains(attr.getKey()) == false)
 			{
-				//获取SQl
-				String sql = Glo.DealExp(attr.getUIBindKey(), null, null);
+				//获取SQL
+				String sql = attr.getUIBindKey();
+				if (attr.getUIBindKey().contains("SELECT") == false)
+				{
+					SFTable sf = new SFTable(attr.getUIBindKey());
+					sql = sf.getSelectStatement();
+				}
+
+				sql = Glo.DealExp(sql, null, null);
 				DataTable dtSQl = DBAccess.RunSQLReturnTable(sql);
 				for (DataColumn col : dtSQl.Columns)
 				{
@@ -1557,28 +1585,42 @@ public class WF_Comm extends WebContralBase
 			}
 
 		}
+
 		//获取查询条件的扩展属性
 		MapExts exts = new MapExts(this.getEnsName());
-		if (exts.size() != 0)
+		if (!exts.isEmpty())
+		{
 			ds.Tables.add(exts.ToDataTableField("Sys_MapExt"));
+		}
 
-		return Json.ToJson(ds);
+
+		return bp.tools.Json.ToJson(ds);
 	}
-	/**
+	/** 
 	 执行查询 - 初始化查找数据
-
-	 @return
-	 */
+	 
+	 @return 
+	*/
 	public final String Search_SearchIt() throws Exception {
 		//取出来查询条件.
 		UserRegedit ur = new UserRegedit();
+		ur.setRow(null);
 		ur.setMyPK(WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs");
 		ur.RetrieveFromDBSources();
 
 		DataSet ds = new DataSet();
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
-		Entity en = ens.getGetNewEntity();
-		Map map = en.getEnMapInTime();
+		Entity en = ens.getNewEntity();
+		Map map = null;
+		if (this.getEnsName().indexOf("TS.") == 0)
+		{
+			map = en.getEnMap();
+		}
+		else
+		{
+			map = en.getEnMapInTime();
+		}
+
 
 		MapAttrs attrs = new MapAttrs();
 
@@ -1606,7 +1648,7 @@ public class WF_Comm extends WebContralBase
 		for (MapAttr attr : attrs.ToJavaList())
 		{
 			String searchVisable = attr.getatPara().GetValStrByKey("SearchVisable");
-			if (searchVisable.equals("0"))
+			if (Objects.equals(searchVisable, "0"))
 			{
 				continue;
 			}
@@ -1619,14 +1661,14 @@ public class WF_Comm extends WebContralBase
 			row.setValue("Name", attr.getName());
 			row.setValue("Width", attr.getUIWidthInt());
 			row.setValue("UIContralType", attr.getUIContralType().getValue());
-			row.setValue("IsRichText", attr.getTextModel() == 3?1:0);
-			row.setValue("MyDataType",attr.getMyDataType());
+			row.setValue("IsRichText", attr.getTextModel() == 3 ? 1 : 0);
+			row.setValue("MyDataType", attr.getMyDataType());
 			dtAttrs.Rows.add(row);
 		}
 
 		ds.Tables.add(dtAttrs); //把描述加入.
 
-		md.setName( map.getEnDesc());
+		md.setName(map.getEnDesc());
 
 		//附件类型.
 		md.SetPara("BPEntityAthType", map.HisBPEntityAthType.getValue());
@@ -1660,7 +1702,9 @@ public class WF_Comm extends WebContralBase
 			for (String str : strs)
 			{
 				if (DataType.IsNullOrEmpty(str) == true)
+				{
 					continue;
+				}
 				String[] item = str.split("[=]", -1);
 				if (item.length == 2)
 				{
@@ -1670,7 +1714,7 @@ public class WF_Comm extends WebContralBase
 						for (String s : ss)
 						{
 							dr = dt.NewRow();
-							dr.setValue("Field", ((MapAttr)attrs.GetEntityByKey("KeyOfEn",s)).getName());
+							dr.setValue("Field", ((MapAttr)attrs.GetEntityByKey("KeyOfEn", s)).getName());
 							dr.setValue("Type", item[0]);
 							dt.Rows.add(dr);
 
@@ -1680,7 +1724,7 @@ public class WF_Comm extends WebContralBase
 					else
 					{
 						dr = dt.NewRow();
-						dr.setValue("Field", ((MapAttr)attrs.GetEntityByKey("KeyOfEn",item[1])).getName());
+						dr.setValue("Field", ((MapAttr)attrs.GetEntityByKey("KeyOfEn", item[1])).getName());
 						dr.setValue("Type", item[0]);
 						dt.Rows.add(dr);
 
@@ -1698,7 +1742,6 @@ public class WF_Comm extends WebContralBase
 			}
 			ds.Tables.add(dt);
 		}
-
 		//增加排序
 		String orderBy = "";
 		boolean isDesc = false;
@@ -1713,7 +1756,7 @@ public class WF_Comm extends WebContralBase
 			orderBy = encfg.GetValStrByKey("OrderBy");
 			if (orderBy.indexOf(",") != -1)
 			{
-				String[] str = orderBy.split(",");
+				String[] str = orderBy.split("[,]", -1);
 				orderBy = str[0];
 			}
 			isDesc = encfg.GetValBooleanByKey("IsDeSc");
@@ -1724,35 +1767,29 @@ public class WF_Comm extends WebContralBase
 			try
 			{
 				if (isDesc)
+				{
 					qo.addOrderByDesc(orderBy);
+				}
 				else
+				{
 					qo.addOrderBy(orderBy);
+				}
 			}
-			catch (Exception ex)
+			catch (RuntimeException ex)
 			{
 				encfg.SetValByKey("OrderBy", orderBy);
 			}
 		}
 
-
-//		if (GetRequestVal("DoWhat") != null && GetRequestVal("DoWhat").equals("Batch"))
-//		{
-//			qo.DoQuery(en.getPK(), 500, 1);
-//		}
-//		else
-//		{
 		qo.DoQuery(en.getPK(), this.getPageSize(), this.getPageIdx());
-//		}
-
-		///#endregion 获得查询数据.
+			///#endregion 获得查询数据.
 
 		DataTable mydt = ens.ToDataTableField("dt");
 		mydt.TableName = "DT";
 
 		ds.Tables.add(mydt); //把数据加入里面.
 
-
-		///#region 获得方法的集合
+			///#region 获得方法的集合
 		DataTable dtM = new DataTable("dtM");
 		dtM.Columns.Add("No");
 		dtM.Columns.Add("Title");
@@ -1776,7 +1813,7 @@ public class WF_Comm extends WebContralBase
 		RefMethods rms = map.getHisRefMethods();
 		for (RefMethod item : rms)
 		{
-			if (item.IsForEns == false)
+			if (item.ItIsForEns == false)
 			{
 				continue;
 			}
@@ -1788,7 +1825,7 @@ public class WF_Comm extends WebContralBase
 
 			String myurl = "";
 
-			myurl = "RefMethod.htm?Index=" + item.Index + "&EnName=" + en.toString() + "&EnsName=" + en.getGetNewEntities().toString() + "&PKVal=";
+			myurl = "RefMethod.htm?Index=" + item.Index + "&EnName=" + en.toString() + "&EnsName=" + en.GetNewEntities().toString() + "&PKVal=";
 
 			DataRow dr = dtM.NewRow();
 
@@ -1803,7 +1840,7 @@ public class WF_Comm extends WebContralBase
 			dr.setValue("W", item.Width);
 			dr.setValue("H", item.Height);
 			dr.setValue("Icon", item.Icon);
-			dr.setValue("IsCanBatch", item.IsCanBatch);
+			dr.setValue("IsCanBatch", item.ItIsCanBatch);
 			dr.setValue("GroupName", item.GroupName);
 			dr.setValue("ClassMethodName", item.ClassMethodName);
 			dr.setValue("IsShowForEnsCondtion", item.IsShowForEnsCondtion);
@@ -1812,17 +1849,16 @@ public class WF_Comm extends WebContralBase
 			dtM.Rows.add(dr); //增加到rows.
 		}
 		ds.Tables.add(dtM); //把数据加入里面.
+			///#endregion
 
-		///#endregion
-
-		return Json.ToJson(ds);
+		return bp.tools.Json.ToJson(ds);
 	}
 	/**
 	 执行查询.这个方法也会被导出调用.
 
 	 @return
-	 */
-		public final QueryObject Search_Data(Entities ens, Entity en, Map map, UserRegedit ur) throws Exception {
+	*/
+	public final QueryObject Search_Data(Entities ens, Entity en, Map map, UserRegedit ur) throws Exception {
 
 		//获得关键字.
 		AtPara ap = new AtPara(ur.getVals());
@@ -1831,9 +1867,8 @@ public class WF_Comm extends WebContralBase
 		String keyWord = ur.getSearchKey();
 		QueryObject qo = new QueryObject(ens);
 		boolean isFirst = true; //是否第一次拼接SQL
-
-
-		///#region 关键字字段.
+		Attrs attrs = map.getAttrs();
+			///#region 关键字字段.
 		if (DataType.IsNullOrEmpty(map.SearchFields) == false)
 		{
 			String field = ""; //字段名
@@ -1923,12 +1958,13 @@ public class WF_Comm extends WebContralBase
 		}
 		else
 		{
-			if (en.getEnMap().IsShowSearchKey && DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1)
+
+			if (en.getEnMap().ItIsShowSearchKey && DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1)
 			{
 				Attr attrPK = new Attr();
-				for (Attr attr : map.getAttrs())
+				for (Attr attr : attrs)
 				{
-					if (attr.getIsPK())
+					if (attr.getItIsPK())
 					{
 						attrPK = attr;
 						break;
@@ -1938,89 +1974,129 @@ public class WF_Comm extends WebContralBase
 				String enumKey = ","; //求出枚举值外键.
 				keyWord = keyWord.replace(",", ";").replace(" ", ";");
 				String[] strVals = keyWord.split("[;]", -1);
-				for (Attr attr : map.getAttrs())
+				if (strVals.length > 1)
 				{
-					switch (attr.getMyFieldType())
+					//判断是否存在SKeWord
+					Attr keyAttr = attrs.GetAttrByKeyOfEn("SKeyWords");
+					if (keyAttr == null)
 					{
-						case Enum:
-							enumKey = "," + attr.getKey() + "Text,";
-							break;
-						case FK:
-							//enumKey = "," + attr.getKey() + "Text,";
-							// case FieldType.PKFK:
-							continue;
-						default:
-							break;
+						throw new RuntimeException("err@没有关键字SKeyWords不能按照多关键字查询");
 					}
-
-					if (attr.getMyDataType() != DataType.AppString)
-					{
-						continue;
-					}
-
-					//排除枚举值关联refText.
-					if (attr.getMyFieldType() == FieldType.RefText)
-					{
-						if (enumKey.contains("," + attr.getKey() + ",") == true)
-						{
-							continue;
-						}
-					}
-
-					if (attr.getKey().equals("FK_Dept"))
-					{
-						continue;
-					}
-					int valIdx = 0;
 					for (String val : strVals)
 					{
 						i++;
-						valIdx++;
 						if (i == 1)
 						{
 							isFirst = false;
 							/* 第一次进来。 */
 							qo.addLeftBracket();
-							if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
+							if (Objects.equals(SystemConfig.getAppCenterDBVarStr(), "@") || Objects.equals(SystemConfig.getAppCenterDBVarStr(), "?"))
 							{
-								qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + ", '%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "+'%'"));
+								qo.AddWhere("SKeyWords", " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKeyWords" + i + ", '%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKeyWords" + i + "+'%'"));
 							}
 							else
 							{
-								qo.AddWhere(attr.getKey(), " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "|| '%'");
+								qo.AddWhere("SKeyWords", " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKeyWords" + i + "|| '%'");
 							}
 
-							qo.getMyParas().Add("SKey" + valIdx, val, false);
+							qo.getMyParas().Add("SKeyWords" + i, val, false);
 
 							continue;
 						}
-						qo.addOr();
+						qo.addAnd();
 
-						if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
+						if (Objects.equals(SystemConfig.getAppCenterDBVarStr(), "@") || Objects.equals(SystemConfig.getAppCenterDBVarStr(), "?"))
 						{
-							qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + ", '%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "+'%'"));
+							qo.AddWhere("SKeyWords", " LIKE ", SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKeyWords" + i + ", '%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKeyWords" + i + "+'%'"));
 						}
 						else
 						{
-							qo.AddWhere(attr.getKey(), " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "|| '%'");
+							qo.AddWhere("SKeyWords", " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKeyWords" + i + "|| '%'");
 						}
 
-						qo.getMyParas().Add("SKey" + valIdx, val, false);
+						qo.getMyParas().Add("SKeyWords" + i, val, false);
 					}
-
 				}
+				else
+				{
+					for (Attr attr : map.getAttrs())
+					{
+						switch (attr.getMyFieldType())
+						{
+							case Enum:
+								enumKey = "," + attr.getKey() + "Text,";
+								break;
+							case FK:
+								//enumKey = "," + attr.getKey() + "Text,";
+								// case FieldType.PKFK:
+								continue;
+							default:
+								break;
+						}
 
+						if (attr.getMyDataType() != DataType.AppString)
+						{
+							continue;
+						}
+
+						//排除枚举值关联refText.
+						if (attr.getMyFieldType() == FieldType.RefText)
+						{
+							if (enumKey.contains("," + attr.getKey() + ",") == true)
+							{
+								continue;
+							}
+						}
+
+						if (Objects.equals(attr.getKey(), "FK_Dept"))
+						{
+							continue;
+						}
+						int valIdx = 0;
+						for (String val : strVals)
+						{
+							i++;
+							valIdx++;
+							if (i == 1)
+							{
+								isFirst = false;
+								/* 第一次进来。 */
+								qo.addLeftBracket();
+								if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
+								{
+									qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + ", '%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "+'%'"));
+								}
+								else
+								{
+									qo.AddWhere(attr.getKey(), " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "|| '%'");
+								}
+
+								qo.getMyParas().Add("SKey" + valIdx, val, false);
+
+								continue;
+							}
+							qo.addOr();
+
+							if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
+							{
+								qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + ", '%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "+'%'"));
+							}
+							else
+							{
+								qo.AddWhere(attr.getKey(), " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "|| '%'");
+							}
+
+							qo.getMyParas().Add("SKey" + valIdx, val, false);
+						}
+
+					}
+				}
 				qo.addRightBracket();
 
 			}
 
 		}
-
-
-		///#endregion
-
-
-		///#region 增加数值型字段的查询
+			///#region 增加数值型字段的查询
 		if (DataType.IsNullOrEmpty(map.SearchFieldsOfNum) == false)
 		{
 			String field = ""; //字段名
@@ -2087,8 +2163,7 @@ public class WF_Comm extends WebContralBase
 
 
 		}
-
-		///#endregion
+			///#endregion
 
 		if (map.DTSearchWay != DTSearchWay.None && DataType.IsNullOrEmpty(ur.getDTFrom()) == false)
 		{
@@ -2098,11 +2173,16 @@ public class WF_Comm extends WebContralBase
 			if (map.DTSearchWay == DTSearchWay.ByYearMonth || map.DTSearchWay == DTSearchWay.ByYear)
 			{
 				if (isFirst == false)
+				{
 					qo.addAnd();
+				}
 				else
+				{
 					isFirst = false;
+				}
 				qo.AddWhere(map.DTSearchKey, dtFrom);
 			}
+
 
 			if (DataType.IsNullOrEmpty(dtTo) == true)
 			{
@@ -2139,7 +2219,6 @@ public class WF_Comm extends WebContralBase
 					qo.addRightBracket();
 
 				}
-
 			}
 
 			if (map.DTSearchWay == DTSearchWay.ByDateTime)
@@ -2155,7 +2234,6 @@ public class WF_Comm extends WebContralBase
 				}
 
 				dtFrom = DateUtils.addDay(DateUtils.parse(dtFrom, "yyyy-MM-dd"), -1) + " 24:00";
-
 				if (dtTo.trim().length() < 11 || dtTo.trim().indexOf(' ') == -1)
 				{
 					dtTo += " 24:00";
@@ -2187,14 +2265,11 @@ public class WF_Comm extends WebContralBase
 		}
 
 		ArrayList<String> keys = new ArrayList<String>();
-
-		///#region 普通属性
+			///#region 普通属性
 		String opkey = ""; // 操作符号。
 		for (SearchNormal attr : en.getEnMap().getSearchNormals())
 		{
-
-
-			if (attr.getIsHidden())
+			if (attr.getItIsHidden())
 			{
 				if (isFirst == false)
 				{
@@ -2212,20 +2287,24 @@ public class WF_Comm extends WebContralBase
 					continue;
 
 				}
-
 				//如果传参上有这个值的查询
 				String val = this.GetRequestVal(attr.getRefAttrKey());
 				if (DataType.IsNullOrEmpty(val) == false)
 				{
 					attr.setDefaultSymbol("=");
-					attr.setDefaultVal(val);
+					attr.setDefaultVal( val);
 				}
 
 				//获得真实的数据类型.
-				if (SystemConfig.getAppCenterDBFieldIsParaDBType() == true && (attr.getDefaultSymbol().equals("=")||attr.getDefaultSymbol().equals("!=")))
-					qo.AddWhere(attr.getRefAttrKey(), attr.getDefaultSymbol(), bp.sys.base.Glo.GenerRealType(en.getEnMap().getAttrs(), attr.getRefAttrKey(), attr.getDefaultValRun()));
+				if (SystemConfig.getAppCenterDBFieldIsParaDBType() == true && (attr.getDefaultSymbol().equals("=") || attr.getDefaultSymbol().equals("!=")))
+				{
+					Object valType = bp.sys.base.Glo.GenerRealType(en.getEnMap().getAttrs(), attr.getRefAttrKey(), attr.getDefaultValRun());
+					qo.AddWhere(attr.getRefAttrKey(), attr.getDefaultSymbol(), valType);
+				}
 				else
+				{
 					qo.AddWhere(attr.getRefAttrKey(), attr.getDefaultSymbol(), attr.getDefaultValRun());
+				}
 				qo.addRightBracket();
 				if (keys.contains(attr.getRefAttrKey()) == false)
 				{
@@ -2236,8 +2315,9 @@ public class WF_Comm extends WebContralBase
 
 			if (attr.getSymbolEnable() == true)
 			{
+
 				opkey = ap.GetValStrByKey("DDL_" + attr.getKey());
-				if (opkey.equals("all"))
+				if (Objects.equals(opkey, "all"))
 				{
 					continue;
 				}
@@ -2268,13 +2348,13 @@ public class WF_Comm extends WebContralBase
 					String d = ap.GetValStrByKey("DDL_" + attr.getKey() + "_Day");
 					date = y + "-" + m + "-" + d;
 
-					if (opkey.equals("<="))
+					if (Objects.equals(opkey, "<="))
 					{
 						Date dt = DateUtils.addDay(DataType.ParseSysDate2DateTime(date), 1);
-						date = DateUtils.format(dt, DataType.getSysDataFormat());
+						date = DateUtils.format(dt,"yyyy-MM-dd");
 					}
 				}
-				catch (java.lang.Exception e)
+				catch (Exception e)
 				{
 				}
 
@@ -2290,42 +2370,66 @@ public class WF_Comm extends WebContralBase
 				keys.add(attr.getRefAttrKey());
 			}
 		}
-
-		///#endregion
-
-
-		///#region 获得查询数据.
-		Attrs attrs = en.getEnMap().getAttrs();
+			///#region 获得查询数据.
 		for (String str : ap.getHisHT().keySet())
 		{
 			if (keys.contains(str) == false)
+			{
 				keys.add(str);
+			}
+
 			String val = ap.GetValStrByKey(str);
 			if (DataType.IsNullOrEmpty(val) == true || val.equals("null") == true)
+			{
 				val = "all";
+			}
 			if (val.equals("all"))
+			{
 				continue;
+			}
 
 			if (isFirst == false)
+			{
 				qo.addAnd();
+			}
 			else
+			{
 				isFirst = false;
+			}
 			isFirst = false;
 			qo.addLeftBracket();
 			Attr attr = attrs.GetAttrByKeyOfEn(str);
-			//树形结构，获取该节点及子节点的数据
-			if (attr != null && attr.getIsFK() && attr.getHisFKEn().getIsTreeEntity() == true && !(attr.getKey().equals("FK_Dept")&&WebUser.getIsAdmin()==false))
+			if (attr != null && attr.getItIsFK() && attr.getUIBindKey().contains(",TS.") == false && attr.getHisFKEn().getItIsTreeEntity() == true && !(attr.getKey().equals("FK_Dept") && WebUser.getIsAdmin() == false))
 			{
 				//需要获取当前数据选中的数据和子级(先阶段只处理部门信息)
-				DataTable dt = DBAccess.RunSQLReturnTable(bp.wf.Dev2Interface.GetDeptNoSQLByParentNo(val,attr.getHisFKEn().getEnMap().getPhysicsTable()));
-				qo.AddWhereIn(attr.getKey(), dt);
+				DataTable dt = null;
+				try
+				{
+					dt = DBAccess.RunSQLReturnTable(Dev2Interface.GetDeptNoSQLByParentNo(val, attr.getHisFKEn().getEnMap().getPhysicsTable()));
+				}
+				catch (RuntimeException ex)
+				{
+					if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
+					{
+						throw new RuntimeException("err@请在web.config中数据库连接配置中增加Allow User Variables=True;");
+					}
+					throw new RuntimeException(ex.getMessage());
+				}
+				if (dt.Rows.size() == 0)
+				{
+					qo.AddWhere(attr.getKey(), val);
+				}
+				else
+				{
+					qo.AddWhereIn(attr.getKey(), dt);
+				}
 				qo.addRightBracket();
 				continue;
 			}
 			//多选
 			if (val.indexOf(",") != -1)
 			{
-				if (attr.getIsNum() == true)
+				if (attr.getItIsNum() == true)
 				{
 					qo.AddWhere(str, "IN", "(" + val + ")");
 					qo.addRightBracket();
@@ -2336,50 +2440,64 @@ public class WF_Comm extends WebContralBase
 				qo.addRightBracket();
 				continue;
 			}
-			//获得真实的数据类型.
-			Object valType = bp.sys.base.Glo.GenerRealType(en.getEnMap().getAttrs(), str, ap.GetValStrByKey(str));
 
+			Object valType = bp.sys.base.Glo.GenerRealType(attrs, str, val);
 			qo.AddWhere(str, valType);
 			qo.addRightBracket();
-
-
 		}
-
-
 
 		for (Attr attr : map.getAttrs())
 		{
+//			if (1 == 1)
+//			{
+//				continue;
+//			}
 			if(DataType.IsNullOrEmpty(attr.getField()))
 				continue;
-			if (DataType.IsNullOrEmpty(this.GetRequestVal(attr.getField())))
-				continue;
-
-			if (keys.contains(attr.getField()))
-				continue;
-
-			if(attr.getField().equals("Token"))
-				continue;
-
 			String val = this.GetRequestVal(attr.getField());
+			if (DataType.IsNullOrEmpty(val))
+			{
+				continue;
+			}
+			if (keys.contains(attr.getField()))
+			{
+				continue;
+			}
+			if (attr.getField().equals("Token"))
+			{
+				continue;
+			}
+			if (attr.getField().equals("No"))
+			{
+				continue;
+			}
 
 			switch (attr.getMyDataType())
 			{
 				case DataType.AppBoolean:
 					if (isFirst == false)
+					{
 						qo.addAnd();
+					}
 					else
+					{
 						isFirst = false;
+					}
 					qo.addLeftBracket();
-					qo.AddWhere(attr.getField(), Integer.parseInt(val));
+					qo.AddWhere(attr.getField(), Boolean.getBoolean(val));
 					qo.addRightBracket();
 					break;
 				case DataType.AppDate:
 				case DataType.AppDateTime:
 				case DataType.AppString:
 					if (isFirst == false)
+					{
 						qo.addAnd();
+					}
 					else
+					{
 						isFirst = false;
+					}
 					qo.addLeftBracket();
 					qo.AddWhere(attr.getField(), val);
 					qo.addRightBracket();
@@ -2388,22 +2506,31 @@ public class WF_Comm extends WebContralBase
 				case DataType.AppFloat:
 				case DataType.AppMoney:
 					if (isFirst == false)
+					{
 						qo.addAnd();
+					}
 					else
+					{
 						isFirst = false;
+					}
 					qo.addLeftBracket();
 					qo.AddWhere(attr.getField(), Double.parseDouble(val));
 					qo.addRightBracket();
 					break;
 				case DataType.AppInt:
-					if (val.equals("all") || val.equals("-1"))
+					if (Objects.equals(val, "all") || Objects.equals(val, "-1"))
 					{
 						continue;
 					}
 					if (isFirst == false)
+					{
 						qo.addAnd();
+					}
 					else
+					{
 						isFirst = false;
+					}
+					;
 					qo.addLeftBracket();
 					qo.AddWhere(attr.getField(), Integer.parseInt(val));
 					qo.addRightBracket();
@@ -2411,9 +2538,6 @@ public class WF_Comm extends WebContralBase
 				default:
 					break;
 			}
-
-
-
 			if (keys.contains(attr.getField()) == false)
 			{
 				keys.add(attr.getField());
@@ -2432,484 +2556,6 @@ public class WF_Comm extends WebContralBase
 		QueryObject qo = new QueryObject(ens);
 
 		qo.AddWhere("RefPK", "=", workId);
-		//qo.addAnd();
-		//qo.AddWhere("FID", "=", fid);
-
-
-		///#endregion 获得查询数据.
-		return qo.DoQueryToTable();
-	}
-
-	private DataTable Search_Data(Entities ens, Entity en) throws Exception {
-		//获得.
-		Map map = en.getEnMapInTime();
-
-		MapAttrs attrs = map.getAttrs().ToMapAttrs();
-		//取出来查询条件.
-		UserRegedit ur = new UserRegedit();
-		ur.setMyPK(WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs");
-		ur.RetrieveFromDBSources();
-
-		//获得关键字.
-		AtPara ap = new AtPara(ur.getVals());
-		//关键字.
-		String keyWord = ur.getSearchKey();
-		QueryObject qo = new QueryObject(ens);
-		boolean isFirst = true; //是否第一次拼接SQL
-
-
-		///#region 关键字字段.
-		if (DataType.IsNullOrEmpty(map.SearchFields) == false)
-		{
-			String field = ""; //字段名
-			String fieldValue = ""; //字段值
-			int idx = 0;
-
-			//获取查询的字段
-			String[] searchFields = map.SearchFields.split("[@]", -1);
-			for (String str : searchFields)
-			{
-				if (DataType.IsNullOrEmpty(str) == true)
-				{
-					continue;
-				}
-
-				//字段名
-				field = str.split("[=]", -1)[1];
-				if (DataType.IsNullOrEmpty(field) == true)
-				{
-					continue;
-				}
-
-				//字段名对应的字段值
-				fieldValue = ur.GetParaString(field);
-				if (DataType.IsNullOrEmpty(fieldValue) == true)
-				{
-					continue;
-				}
-				fieldValue = fieldValue.trim();
-				fieldValue = fieldValue.replace(",", ";").replace(" ", ";");
-				String[] fieldValues = fieldValue.split("[;]", -1);
-				int valIdx = 0;
-				idx++;
-				for (String val : fieldValues)
-				{
-					valIdx++;
-
-					if (idx == 1 && valIdx == 1)
-					{
-						isFirst = false;
-						/* 第一次进来。 */
-						qo.addLeftBracket();
-						if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
-						{
-							qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + valIdx + ",'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "+'%'"));
-						}
-						else
-						{
-							qo.AddWhere(field, " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "||'%'");
-						}
-						qo.getMyParas().Add(field + valIdx, val, false);
-
-						if (valIdx == fieldValues.length)
-						{
-							qo.addRightBracket();
-						}
-
-						continue;
-					}
-					if (valIdx == 1 && idx != 1)
-					{
-						qo.addAnd();
-						qo.addLeftBracket();
-					}
-					else
-					{
-						qo.addOr();
-					}
-
-					if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
-					{
-						qo.AddWhere(field, " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + field + ",'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "+'%'"));
-					}
-					else
-					{
-						qo.AddWhere(field, " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + field + valIdx + "||'%'");
-					}
-					qo.getMyParas().Add(field + valIdx, val, false);
-
-					if (valIdx == fieldValues.length)
-					{
-						qo.addRightBracket();
-					}
-				}
-			}
-		}
-
-		if (DataType.IsNullOrEmpty(map.SearchFields) == true)
-		{
-			if (en.getEnMap().IsShowSearchKey && DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1)
-			{
-				Attr attrPK = new Attr();
-				for (Attr attr : map.getAttrs())
-				{
-					if (attr.getIsPK())
-					{
-						attrPK = attr;
-						break;
-					}
-				}
-				int i = 0;
-				String enumKey = ","; //求出枚举值外键.
-				keyWord = keyWord.replace(",", ";").replace(" ", ";");
-				String[] strVals = keyWord.split("[;]", -1);
-				for (Attr attr : map.getAttrs())
-				{
-					switch (attr.getMyFieldType())
-					{
-						case Enum:
-							enumKey = "," + attr.getKey() + "Text,";
-							break;
-						case FK:
-							// case FieldType.PKFK:
-							continue;
-						default:
-							break;
-					}
-
-					if (attr.getMyDataType() != DataType.AppString)
-					{
-						continue;
-					}
-
-					//排除枚举值关联refText.
-					if (attr.getMyFieldType() == FieldType.RefText)
-					{
-						if (enumKey.contains("," + attr.getKey() + ",") == true)
-						{
-							continue;
-						}
-					}
-
-					if (attr.getKey().equals("FK_Dept"))
-					{
-						continue;
-					}
-					int valIdx = 0;
-					for (String val : strVals)
-					{
-						i++;
-						valIdx++;
-						if (i == 1)
-						{
-							isFirst = false;
-							/* 第一次进来。 */
-							qo.addLeftBracket();
-							if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
-							{
-								qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + ", '%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "+'%'"));
-							}
-							else
-							{
-								qo.AddWhere(attr.getKey(), " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "|| '%'");
-							}
-
-							qo.getMyParas().Add("SKey" + valIdx, val, false);
-
-							continue;
-						}
-						qo.addOr();
-
-						if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
-						{
-							qo.AddWhere(attr.getKey(), " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + ", '%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "+'%'"));
-						}
-						else
-						{
-							qo.AddWhere(attr.getKey(), " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey" + valIdx + "|| '%'");
-						}
-
-						qo.getMyParas().Add("SKey" + valIdx, val, false);
-					}
-				}
-				qo.addRightBracket();
-			}
-		}
-
-		///#endregion
-
-
-		///#region 增加数值型字段的查询
-		if (DataType.IsNullOrEmpty(map.SearchFieldsOfNum) == false)
-		{
-			String field = ""; //字段名
-			String fieldValue = ""; //字段值
-			int idx = 0;
-
-			//获取查询的字段
-			String[] searchFieldsOfNum = map.SearchFieldsOfNum.split("[@]", -1);
-			for (String str : searchFieldsOfNum)
-			{
-				if (DataType.IsNullOrEmpty(str) == true)
-				{
-					continue;
-				}
-
-				//字段名
-				field = str.split("[=]", -1)[1];
-				if (DataType.IsNullOrEmpty(field) == true)
-				{
-					continue;
-				}
-
-				//字段名对应的字段值
-				fieldValue = ur.GetParaString(field);
-				if (DataType.IsNullOrEmpty(fieldValue) == true)
-				{
-					continue;
-				}
-				String[] strVals = fieldValue.split("[,]", -1);
-
-				//判断是否是第一次进入
-				if (isFirst == false)
-				{
-					qo.addAnd();
-				}
-				else
-				{
-					isFirst = false;
-				}
-				qo.addLeftBracket();
-				if (DataType.IsNullOrEmpty(strVals[0]) == false)
-				{
-
-					if (DataType.IsNullOrEmpty(strVals[1]) == true)
-					{
-						qo.AddWhere(field, ">=", strVals[0]);
-					}
-					else
-					{
-						qo.AddWhere(field, ">=", strVals[0], field + "1");
-						qo.addAnd();
-						qo.AddWhere(field, "<=", strVals[1], field + "2");
-					}
-
-				}
-				else
-				{
-					qo.AddWhere(field, "<=", strVals[1]);
-				}
-
-				qo.addRightBracket();
-
-			}
-
-
-		}
-
-		///#endregion
-
-		if (map.DTSearchWay != DTSearchWay.None && DataType.IsNullOrEmpty(ur.getDTFrom()) == false)
-		{
-			String dtFrom = ur.getDTFrom(); // this.GetTBByID("TB_S_From").Text.Trim().Replace("/", "-");
-			String dtTo = ur.getDTTo(); // this.GetTBByID("TB_S_To").Text.Trim().Replace("/", "-");
-
-			if (DataType.IsNullOrEmpty(dtTo) == true)
-			{
-				dtTo = DataType.getCurrentDate();
-			}
-
-			//按日期查询
-			if (map.DTSearchWay == DTSearchWay.ByDate)
-			{
-				if (isFirst == false)
-				{
-					qo.addAnd();
-				}
-				else
-				{
-					isFirst = false;
-				}
-				qo.addLeftBracket();
-				dtTo += " 23:59:59";
-				qo.setSQL(map.DTSearchKey + " >= '" + dtFrom + "'");
-				qo.addAnd();
-				qo.setSQL(map.DTSearchKey + " <= '" + dtTo + "'");
-				qo.addRightBracket();
-			}
-
-			if (map.DTSearchWay == DTSearchWay.ByDateTime)
-			{
-				//取前一天的24：00
-				if (dtFrom.trim().length() == 10) //2017-09-30
-				{
-					dtFrom += " 00:00:00";
-				}
-				if (dtFrom.trim().length() == 16) //2017-09-30 00:00
-				{
-					dtFrom += ":00";
-				}
-
-				dtFrom = DateUtils.addDay(DateUtils.parse(dtFrom, "yyyy-MM-dd"), -1) + " 24:00";
-
-				if (dtTo.trim().length() < 11 || dtTo.trim().indexOf(' ') == -1)
-				{
-					dtTo += " 24:00";
-				}
-				if (isFirst == false)
-				{
-					qo.addAnd();
-				}
-				else
-				{
-					isFirst = false;
-				}
-
-				qo.addLeftBracket();
-				qo.setSQL(map.DTSearchKey + " >= '" + dtFrom + "'");
-				qo.addAnd();
-				qo.setSQL(map.DTSearchKey + " <= '" + dtTo + "'");
-				qo.addRightBracket();
-			}
-		}
-
-
-		///#region 普通属性
-		String opkey = ""; // 操作符号。
-		for (SearchNormal attr : en.getEnMap().getSearchNormals())
-		{
-			if (attr.getIsHidden())
-			{
-				if (isFirst == false)
-				{
-					qo.addAnd();
-				}
-				else
-				{
-					isFirst = false;
-				}
-				qo.addLeftBracket();
-
-				//获得真实的数据类型.
-				if (SystemConfig.getAppCenterDBFieldIsParaDBType() == true)
-				{
-					Object valType = bp.sys.base.Glo.GenerRealType(en.getEnMap().getAttrs(), attr.getRefAttrKey(), attr.getDefaultValRun());
-					qo.AddWhere(attr.getRefAttrKey(), attr.getDefaultSymbol(), valType);
-				}
-				else
-				{
-					qo.AddWhere(attr.getRefAttrKey(), attr.getDefaultSymbol(), attr.getDefaultValRun());
-				}
-				qo.addRightBracket();
-				continue;
-			}
-
-			if (attr.getSymbolEnable() == true)
-			{
-				opkey = ap.GetValStrByKey("DDL_" + attr.getKey());
-				if (opkey.equals("all"))
-				{
-					continue;
-				}
-			}
-			else
-			{
-				opkey = attr.getDefaultSymbol();
-			}
-
-			if (isFirst == false)
-			{
-				qo.addAnd();
-			}
-			else
-			{
-				isFirst = false;
-			}
-			qo.addLeftBracket();
-
-			if (attr.getDefaultVal().length() >= 8)
-			{
-				String date = "2005-09-01";
-				try
-				{
-					/* 就可能是年月日。 */
-					String y = ap.GetValStrByKey("DDL_" + attr.getKey() + "_Year");
-					String m = ap.GetValStrByKey("DDL_" + attr.getKey() + "_Month");
-					String d = ap.GetValStrByKey("DDL_" + attr.getKey() + "_Day");
-					date = y + "-" + m + "-" + d;
-
-					if (opkey.equals("<="))
-					{
-						Date dt = DateUtils.addDay(DataType.ParseSysDate2DateTime(date), 1);
-						date = DateUtils.format(dt, DataType.getSysDataFormat());
-					}
-				}
-				catch (java.lang.Exception e)
-				{
-				}
-
-				qo.AddWhere(attr.getRefAttrKey(), opkey, date);
-			}
-			else
-			{
-				qo.AddWhere(attr.getRefAttrKey(), opkey, ap.GetValStrByKey("TB_" + attr.getKey()));
-			}
-			qo.addRightBracket();
-		}
-
-		///#endregion
-
-
-		///#region 隐藏字段的查询.
-		for (String str : ap.getHisHT().keySet())
-		{
-			String val = ap.GetValStrByKey(str);
-			if (val.equals("all"))
-			{
-				continue;
-			}
-
-			if (isFirst == false)
-			{
-				qo.addAnd();
-			}
-			else
-			{
-				isFirst = false;
-			}
-			isFirst = false;
-			qo.addLeftBracket();
-
-			//获得真实的数据类型.
-			Object valType = bp.sys.base.Glo.GenerRealType(en.getEnMap().getAttrs(), str, ap.GetValStrByKey(str));
-
-			qo.AddWhere(str, valType);
-			qo.addRightBracket();
-		}
-
-		///#endregion 隐藏字段的查询
-
-		//获取配置信息
-		EnCfg encfg = new EnCfg(this.getEnsName());
-		//增加排序
-		if (encfg != null)
-		{
-			String orderBy = encfg.GetValStrByKey("OrderBy");
-			boolean isDesc = encfg.GetValBooleanByKey("IsDeSc");
-
-			if (DataType.IsNullOrEmpty(orderBy) == false)
-			{
-				if (isDesc)
-				{
-					qo.addOrderByDesc(orderBy);
-				}
-				else
-				{
-					qo.addOrderBy(orderBy);
-				}
-			}
-
-		}
 		return qo.DoQueryToTable();
 	}
 
@@ -2952,50 +2598,49 @@ public class WF_Comm extends WebContralBase
 
 		int to = getPageIdx() < 1 ? pageSize : getPageIdx() * pageSize;// 到
 
-		for (int i = 1; i <= pageNum; i++) {
-			if (i >= from && i < to) {
-			} else {
-				continue;
-			}
-
-			if (getPageIdx() == i) {
-				html += "&nbsp;<font style='font-weight:bloder;color:#f00'>" + i + "</font>&nbsp;";
-			} else {
-				html += "&nbsp;<a href='" + url + "&PageIdx=" + i + "'>" + i + "</a>";
+		for (int i = 1; i <= pageNum; i++)
+		{
+			if (i >= from && i <= to)
+			{
+				if (getPageIdx() == i)
+				{
+					html += "<li class='active' ><a href='#'><b>" + i + "</b></a></li>";
+				}
+				else
+				{
+					html += "<li><a href='" + url + "&PageIdx=" + i + "'>" + i + "</a></li>";
+				}
 			}
 		}
 
-		if (getPageIdx() != pageNum) {
+		if (getPageIdx() != pageNum)
+		{
 			myidx = getPageIdx() + 1;
-			html += "&nbsp;<a href='" + url + "&PageIdx=" + myidx + "'><img style='vertical-align:middle' src='"
-					+ Glo.getCCFlowAppPath() + "WF/Img/Arr/Right.png' border=0/></a>&nbsp;<a href='" + url + "&PageIdx="
-					+ pageNum + "'><img style='vertical-align:middle' src='" + Glo.getCCFlowAppPath()
-					+ "WF/Img/Arr/RightEnd.png' border=0/></a>&nbsp;&nbsp;页数:" + getPageIdx() + "/" + pageNum
-					+ "&nbsp;&nbsp;总数:" + recNum;
-		} else {
-			html += "&nbsp;<img style='vertical-align:middle' src='" + Glo.getCCFlowAppPath()
-					+ "WF/Img/Arr/Right.png' border=0/>&nbsp;&nbsp;";
-			html += "&nbsp;<img style='vertical-align:middle' src='" + Glo.getCCFlowAppPath()
-					+ "WF/Img/Arr/RightEnd.png' border=0/>&nbsp;&nbsp;页数:" + getPageIdx() + "/" + pageNum
-					+ "&nbsp;&nbsp;总数:" + recNum;
+			html += "<li><a href='" + url + "&PageIdx=" + myidx + "'><img style='vertical-align:middle' src='" + Glo.getCCFlowAppPath() + "WF/Img/Arr/Right.png' border=0/></a>&nbsp;<a href='" + url + "&PageIdx=" + pageNum + "'><img style='vertical-align:middle' src='" + Glo.getCCFlowAppPath() + "WF/Img/Arr/RightEnd.png' border=0/></a> &nbsp;&nbsp;页数:" + getPageIdx() + "/" + pageNum + "&nbsp;&nbsp;总数:" + recNum + "</li>";
 		}
-		html += "</div>";
+		else
+		{
+			html += "<li><img style='vertical-align:middle' src='" + Glo.getCCFlowAppPath() + "WF/Img/Arr/Right.png' border=0/></li>";
+			html += "<li><img style='vertical-align:middle' src='" + Glo.getCCFlowAppPath() + "WF/Img/Arr/RightEnd.png' border=0/>&nbsp;&nbsp;页数:" + getPageIdx() + "/" + pageNum + "&nbsp;&nbsp;总数:" + recNum + "</li>";
+		}
+		html += "</ul>";
 		return html;
 	}
 	/**
 	 执行导出
 
 	 @return
-	 */
+	*/
 	public final String Search_Exp() throws Exception {
-		bp.sys.UserRegedit ur = new UserRegedit();
+		//取出来查询条件.
+		UserRegedit ur = new UserRegedit();
 		ur.setMyPK(WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs");
 		ur.RetrieveFromDBSources();
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
-		Entity en = ens.getGetNewEntity();
+		Entity en = ens.getNewEntity();
 		QueryObject qo = Search_Data(ens, en, en.getEnMap(), ur);
 		EnCfg encfg = new EnCfg();
-		encfg.setNo( this.getEnsName());
+		encfg.setNo(this.getEnsName());
 		//增加排序
 		if (encfg.RetrieveFromDBSources() != 0)
 		{
@@ -3007,89 +2652,80 @@ public class WF_Comm extends WebContralBase
 				try
 				{
 					if (isDesc)
+					{
 						qo.addOrderByDesc(orderBy);
+					}
 					else
+					{
 						qo.addOrderBy(orderBy);
+					}
 				}
-				catch (Exception ex)
+				catch (RuntimeException ex)
 				{
 					encfg.SetValByKey("OrderBy", orderBy);
 				}
 			}
 		}
 		if (encfg.RetrieveFromDBSources() != 0)
+		{
 			qo.addOrderBy(en.getPK());
+		}
 		qo.DoQuery();
-		return bp.tools.Json.ToJson(ens.ToDataTableField());
+		return bp.tools.Json.ToJson(ens.ToDataTableField("dt"));
+		//string name = "数据导出";
+		//MapAttrs mapAttrs = new MapAttrs();
+		//Attrs attrs = null;
+		//MapData md = new MapData();
+		//md.setNo(this.EnsName;
+		//int count = md.RetrieveFromDBSources();
+		//if (count == 1)
+		//{
+		//    mapAttrs.Retrieve(MapAttrAttr.FK_MapData, this.EnsName, MapAttrAttr.Idx);
+		//    attrs = new Attrs();
+		//    Attr attr = null;
+		//    foreach (MapAttr mapAttr in mapAttrs)
+		//    {
+		//        string searchVisable = mapAttr.atPara.GetValStrByKey("SearchVisable");
+		//        if (searchVisable == "0")
+		//            continue;
+		//        if ((count != 0 && DataType.IsNullOrEmpty(searchVisable)) || (count == 0 && mapattr.getUIVisible()== false))
+		//            continue;
+		//        attr = mapAttr.getHisAttr();
+		//        attr.UIVisible = true;
+		//        attrs.Add(attr);
 
-		//取出来查询条件.
-//		bp.sys.UserRegedit ur = new UserRegedit();
-//		ur.setMyPK(WebUser.getNo() + "_" + this.getEnsName() + "_SearchAttrs");
-//		ur.RetrieveFromDBSources();
-//
-//		Entities ens = ClassFactory.GetEns(this.getEnsName());
-//		Entity en = ens.getGetNewEntity();
-//		String name = "数据导出";
-//		MapAttrs mapAttrs = new MapAttrs();
-//		Attrs attrs = null;
-//		MapData md = new MapData();
-//		md.setNo(this.getEnsName());
-//		int count = md.RetrieveFromDBSources();
-//		if (count == 1)
-//		{
-//			mapAttrs.Retrieve(MapAttrAttr.FK_MapData, this.getEnsName(), MapAttrAttr.Idx);
-//			attrs = new Attrs();
-//			Attr attr = null;
-//			for (MapAttr mapAttr : mapAttrs.ToJavaList())
-//			{
-//				String searchVisable = mapAttr.getatPara().GetValStrByKey("SearchVisable");
-//				if (searchVisable.equals("0"))
-//				{
-//					continue;
-//				}
-//				if ((count != 0 && DataType.IsNullOrEmpty(searchVisable)) || (count == 0 && mapAttr.getUIVisible() == false))
-//				{
-//					continue;
-//				}
-//				attr = mapAttr.getHisAttr();
-//				attr.setUIVisible( true);
-//				attrs.add(attr);
-//
-//			}
-//
-//		}
-//
-//		//String filename = name + "_" + DataType.getCurrentDateTimeCNOfLong() + "_" + WebUser.getName() + ".xls";
-//		String filePath = bp.tools.ExportExcelUtil.ExportDGToExcel(Search_Data(ens, en), en,  en.getEnDesc(), attrs);
-//
-//		return filePath;
+		//    }
+
+		//}
+
+		//string filename = name + "_" + DataType.CurrentDateTimeCNOfLong + "_" + WebUser.getName() + ".xls";
+		//string filePath = BP.Tools.ExportExcelUtil.ExportDGToExcel(Search_Data(ens, en), en, name, attrs);
+
+		//return filePath;
 	}
 	/**
 	 从表执行导出
 
 	 @return
-	 */
+	*/
 	public final String SearchDtl_Exp() throws Exception {
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
-		Entity en = ens.getGetNewEntity();
+		Entity en = ens.getNewEntity();
 
 		String workId = this.GetRequestVal("WorkId");
 		String fid = this.GetRequestVal("FID");
 		String name = "从表数据导出";
 		String filename = name + "_" + DataType.getCurrentDateTimeCNOfLong() + "_" + WebUser.getName() + ".xls";
-		String filePath = bp.tools.ExportExcelUtil.ExportTempToExcel(SearchDtl_Data(ens, en, workId, fid), en, name,null);
+		String filePath = bp.tools.ExportExcelUtil.ExportDGToExcel(SearchDtl_Data(ens, en, workId, fid), en, name, null, null);
 
 		return filePath;
 	}
-
-
-
 	///#region Refmethod.htm 相关功能.
 	public final String Refmethod_Init() throws Exception {
 		String ensName = this.getEnsName();
 		int index = this.getIndex();
 		Entities ens = ClassFactory.GetEns(ensName);
-		Entity en = ens.getGetNewEntity();
+		Entity en = ens.getNewEntity();
 		RefMethod rm = en.getEnMap().getHisRefMethods().get(index);
 
 		String pk = this.getPKVal();
@@ -3114,36 +2750,43 @@ public class WF_Comm extends WebContralBase
 		//获取主键集合
 		String[] pks = pk.split("[,]", -1);
 
-
 		///#region 处理无参数的方法.
 		if (rm.getHisAttrs() == null || rm.getHisAttrs().isEmpty())
 		{
+			String infos = "";
 			int count = 0;
 			int sucCount = 0;
 			int errCount = 0;
-			String infos = "";
-			if(pks.length==1){
+			if (pks.length == 1)
+			{
 				rm.HisEn = en;
+
 				// 如果是link.
 				if (rm.refMethodType == RefMethodType.LinkModel || rm.refMethodType == RefMethodType.LinkeWinOpen || rm.refMethodType == RefMethodType.RightFrameOpen)
 				{
 					Object tempVar = rm.Do(null);
 					String url = tempVar instanceof String ? (String)tempVar : null;
 					if (DataType.IsNullOrEmpty(url))
+					{
 						return "err@应该返回的url.";
+					}
 					return "url@" + url;
 				}
 
 				Object obj = rm.Do(null);
 				if (obj == null)
+				{
 					return "close@info";
+				}
 
 				String result = obj.toString();
-				if (result.indexOf("url@") != -1)
+				if (result.indexOf("url@") != -1 || result.indexOf("err@") != -1)
+				{
 					return result;
+				}
 
-				result = result.replace("@", "\t\n");
-				return "info@" + result;
+				result = "info@" + result;
+				return result;
 			}
 			for (String mypk : pks)
 			{
@@ -3159,8 +2802,8 @@ public class WF_Comm extends WebContralBase
 				// 如果是link.
 				if (rm.refMethodType == RefMethodType.LinkModel || rm.refMethodType == RefMethodType.LinkeWinOpen || rm.refMethodType == RefMethodType.RightFrameOpen)
 				{
-					Object tempVar = rm.Do(null);
-					String url = tempVar instanceof String ? (String)tempVar : null;
+					Object tempVar2 = rm.Do(null);
+					String url = tempVar2 instanceof String ? (String)tempVar2 : null;
 					if (DataType.IsNullOrEmpty(url))
 					{
 						infos += "err@应该返回的url.";
@@ -3185,31 +2828,35 @@ public class WF_Comm extends WebContralBase
 					break;
 				}
 				if (result.indexOf("err@") != -1)
+				{
 					errCount++;
+				}
 				else
+				{
 					sucCount++;
+				}
 				result = result.replace("err@", "");
 				infos += "close@" + result + "<br/>";
 			}
 			if (pk.indexOf(",") != -1)
+			{
 				infos = "一共选择" + count + "笔数据,其中[" + sucCount + "]执行成功,[" + errCount + "]执行失败.<br/>" + infos;
+			}
 			return infos;
 		}
-
-		///#endregion 处理无参数的方法.
+			///#endregion 处理无参数的方法.
 
 		DataSet ds = new DataSet();
 
 		//转化为json 返回到前台解析. 处理有参数的方法.
 		Attrs attrs = rm.getHisAttrs();
-		MapAttrs mapAttrs = attrs.ToMapAttrs();
+		MapAttrs mapAttrs = rm.getHisAttrs().ToMapAttrs();
 
 		//属性.
 		DataTable attrDt = mapAttrs.ToDataTableField("Sys_MapAttrs");
 		ds.Tables.add(attrDt);
 
-
-		///#region 该方法的默认值.
+			///#region 该方法的默认值.
 		DataTable dtMain = new DataTable();
 		dtMain.TableName = "MainTable";
 		for (MapAttr attr : mapAttrs.ToJavaList())
@@ -3223,41 +2870,46 @@ public class WF_Comm extends WebContralBase
 			String v = item.getDefValReal();
 			if (v.indexOf('@') == -1)
 			{
-				if(en.getRow().containsKey(item.getKeyOfEn()) == true)
+				if (en.getRow().containsKey(item.getKeyOfEn()) == true)
+				{
 					mydrMain.setValue(item.getKeyOfEn(), en.GetValByKey(item.getKeyOfEn()));
+				}
 				else
+				{
 					mydrMain.setValue(item.getKeyOfEn(), item.getDefValReal());
+				}
 			}
+
 			//替换默认值的@的
 			else
 			{
-				if (v.equals("@WebUser.No"))
+				if (v.equals("@WebUser.getNo()"))
 				{
-					mydrMain.setValue(item.getKeyOfEn(), bp.web.WebUser.getNo());
+					mydrMain.setValue(item.getKeyOfEn(), WebUser.getNo());
 				}
-				else if (v.equals("@WebUser.Name"))
+				else if (v.equals("@WebUser.getName()"))
 				{
-					mydrMain.setValue(item.getKeyOfEn(), bp.web.WebUser.getName());
+					mydrMain.setValue(item.getKeyOfEn(), WebUser.getName());
 				}
 				else if (v.equals("@WebUser.FK_Dept"))
 				{
-					mydrMain.setValue(item.getKeyOfEn(), bp.web.WebUser.getFK_Dept());
+					mydrMain.setValue(item.getKeyOfEn(), WebUser.getDeptNo());
 				}
 				else if (v.equals("@WebUser.FK_DeptName"))
 				{
-					mydrMain.setValue(item.getKeyOfEn(), bp.web.WebUser.getFK_DeptName());
+					mydrMain.setValue(item.getKeyOfEn(), WebUser.getDeptName());
 				}
 				else if (v.equals("@WebUser.FK_DeptNameOfFull") || v.equals("@WebUser.FK_DeptFullName"))
 				{
-					mydrMain.setValue(item.getKeyOfEn(), bp.web.WebUser.getFK_DeptNameOfFull());
+					mydrMain.setValue(item.getKeyOfEn(), WebUser.getDeptNameOfFull());
 				}
 				else if (v.equals("@RDT"))
 				{
-					if (item.getMyDataType() == DataType.AppDate)
+					if (item.getMyDataType()== DataType.AppDate)
 					{
 						mydrMain.setValue(item.getKeyOfEn(), DataType.getCurrentDate());
 					}
-					if (item.getMyDataType() == DataType.AppDateTime)
+					if (item.getMyDataType()== DataType.AppDateTime)
 					{
 						mydrMain.setValue(item.getKeyOfEn(), DataType.getCurrentDateTime());
 					}
@@ -3271,44 +2923,39 @@ public class WF_Comm extends WebContralBase
 					}
 
 				}
-
-
 			}
-
 		}
 		dtMain.Rows.add(mydrMain);
 		ds.Tables.add(dtMain);
-
 		///#endregion 该方法的默认值.
-
 
 		///#region 加入该方法的外键.
 		for (DataRow dr : attrDt.Rows)
 		{
-			String lgType = dr.getValue("LGType").toString();
+			String lgType = dr.get("LGType").toString();
 			if (lgType.equals("2") == false)
 			{
 				continue;
 			}
 
-			String UIIsEnable = dr.getValue("UIVisible").toString();
-			if (UIIsEnable.equals("0"))
+			String UIIsEnable = dr.get("UIVisible").toString();
+			if (Objects.equals(UIIsEnable, "0"))
 			{
 				continue;
 			}
 
-			String uiBindKey = dr.getValue("UIBindKey").toString();
+			String uiBindKey = dr.get("UIBindKey").toString();
 			if (DataType.IsNullOrEmpty(uiBindKey) == true)
 			{
-				String myPK = dr.getValue("MyPK").toString();
+				String myPK = dr.get("MyPK").toString();
 				/*如果是空的*/
 				//   throw new Exception("@属性字段数据不完整，流程:" + fl.No + fl.Name + ",节点:" + nd.NodeID + nd.Name + ",属性:" + myPK + ",的UIBindKey IsNull ");
 			}
 
 			// 检查是否有下拉框自动填充。
-			String keyOfEn = dr.getValue("KeyOfEn").toString();
-			String fk_mapData = dr.getValue("FK_MapData").toString();
-			if (ds.contains(uiBindKey) == false)
+			String keyOfEn = dr.get("KeyOfEn").toString();
+			String fk_mapData = dr.get("FK_MapData").toString();
+			if (ds.Tables.contains(uiBindKey) == false)
 			{
 				ds.Tables.add(bp.pub.PubClass.GetDataTableByUIBineKey(uiBindKey, null));
 			}
@@ -3316,9 +2963,9 @@ public class WF_Comm extends WebContralBase
 		}
 
 		//加入sql模式的外键.
-		for (Attr attr :attrs)
+		for (Attr attr : attrs)
 		{
-			if (attr.getIsRefAttr() == true)
+			if (attr.getItIsRefAttr() == true)
 			{
 				continue;
 			}
@@ -3336,37 +2983,32 @@ public class WF_Comm extends WebContralBase
 			if (attr.getUIBindKey().contains("SELECT") == true || attr.getUIBindKey().contains("select") == true)
 			{
 				/*是一个sql*/
-				Object tempVar2 = attr.getUIBindKey();
-				String sqlBindKey = tempVar2 instanceof String ? (String)tempVar2 : null;
+				Object tempVar3 = attr.getUIBindKey();
+				String sqlBindKey = tempVar3 instanceof String ? (String)tempVar3 : null;
 				sqlBindKey = Glo.DealExp(sqlBindKey, en, null);
 
 				DataTable dt1 = DBAccess.RunSQLReturnTable(sqlBindKey);
 				dt1.TableName = attr.getKey();
 
 				//@杜. 翻译当前部分.
-				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
+				if (SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 				{
 					dt1.Columns.get("NO").ColumnName = "No";
 					dt1.Columns.get("NAME").ColumnName = "Name";
 				}
-				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+				if (SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
 				{
 					dt1.Columns.get("no").ColumnName = "No";
 					dt1.Columns.get("name").ColumnName = "Name";
 				}
 
-				if (ds.contains(attr.getKey()) == false)
+				if (ds.Tables.contains(attr.getKey()) == false)
 				{
 					ds.Tables.add(dt1);
 				}
 
 			}
 		}
-
-
-		///#endregion 加入该方法的外键.
-
-
 		///#region 加入该方法的枚举.
 		DataTable dtEnum = new DataTable();
 		dtEnum.Columns.Add("Lab", String.class);
@@ -3374,14 +3016,14 @@ public class WF_Comm extends WebContralBase
 		dtEnum.Columns.Add("IntKey", String.class);
 		dtEnum.TableName = "Sys_Enum";
 
-		for (Attr item : attrs.ToJavaList())
+		for (Attr item : attrs)
 		{
-			if (item.getIsEnum()==false)
+			if (item.getItIsEnum() == false)
 			{
 				continue;
 			}
 
-			SysEnums ses = new SysEnums(item.getUIBindKey(),item.UITag);
+			SysEnums ses = new SysEnums(item.getUIBindKey(), item.UITag);
 			for (SysEnum se : ses.ToJavaList())
 			{
 				DataRow drEnum = dtEnum.NewRow();
@@ -3394,11 +3036,11 @@ public class WF_Comm extends WebContralBase
 		}
 
 		ds.Tables.add(dtEnum);
+//C# TO JAVA CONVERTER TASK: There is no preprocessor in Java:
+			///#endregion 加入该方法的枚举.
 
-		///#endregion 加入该方法的枚举.
-
-
-		///#region 增加该方法的信息
+//C# TO JAVA CONVERTER TASK: There is no preprocessor in Java:
+			///#region 增加该方法的信息
 		DataTable dt = new DataTable();
 		dt.TableName = "RM";
 		dt.Columns.Add("Title", String.class);
@@ -3408,13 +3050,13 @@ public class WF_Comm extends WebContralBase
 		mydr.setValue("Title", rm.Title);
 		mydr.setValue("Warning", rm.Warning);
 		dt.Rows.add(mydr);
-
-		///#endregion 增加该方法的信息
+//C# TO JAVA CONVERTER TASK: There is no preprocessor in Java:
+			///#endregion 增加该方法的信息
 
 		//增加到里面.
 		ds.Tables.add(dt);
 
-		return Json.ToJson(ds);
+		return bp.tools.Json.ToJson(ds);
 	}
 
 	public final String Ens_Init() throws Exception {
@@ -3424,21 +3066,20 @@ public class WF_Comm extends WebContralBase
 		//查询出来从表数据.
 		Entities dtls = ClassFactory.GetEns(this.getEnsName());
 		dtls.RetrieveAll();
-		Entity en = dtls.getGetNewEntity();
+		Entity en = dtls.getNewEntity();
 		//QueryObject qo = new QueryObject(dtls);
-		//qo.addOrderBy(en.getPK());
+		//qo.addOrderBy(en.PK);
 		//qo.DoQuery();
 		ds.Tables.add(dtls.ToDataTableField("Ens"));
 
 		//实体.
-		Entity dtl = dtls.getGetNewEntity();
+		Entity dtl = dtls.getNewEntity();
 		//定义Sys_MapData.
 		MapData md = new MapData();
 		md.setNo(this.getEnName());
-		md.setName( dtl.getEnDesc());
+		md.setName(dtl.getEnDesc());
 
-
-		///#region 加入权限信息.
+			///#region 加入权限信息.
 		//把权限加入参数里面.
 		if (dtl.getHisUAC().IsInsert)
 		{
@@ -3452,12 +3093,10 @@ public class WF_Comm extends WebContralBase
 		{
 			md.SetPara("IsDelete", "1");
 		}
-
 		///#endregion 加入权限信息.
 
-
 		///#region 判断主键是否为自增长
-		if (en.getIsNoEntity() == true && en.getEnMap().getIsAutoGenerNo())
+		if (en.getItIsNoEntity() == true && en.getEnMap().getItIsAutoGenerNo())
 		{
 			md.SetPara("IsNewRow", "0");
 		}
@@ -3465,28 +3104,17 @@ public class WF_Comm extends WebContralBase
 		{
 			md.SetPara("IsNewRow", "1");
 		}
-
-		///#endregion
-
-
-		///#region 添加EN的主键
+			///#region 添加EN的主键
 		md.SetPara("PK", en.getPK());
-
-
-		///#endregion
+			///#endregion
 
 		ds.Tables.add(md.ToDataTableField("Sys_MapData"));
 
-
-		///#region 字段属性.
+			///#region 字段属性.
 		MapAttrs attrs = dtl.getEnMap().getAttrs().ToMapAttrs();
 		DataTable sys_MapAttrs = attrs.ToDataTableField("Sys_MapAttr");
 		ds.Tables.add(sys_MapAttrs);
-
-		///#endregion 字段属性.
-
-
-		///#region 把外键与枚举放入里面去.
+			///#region 把外键与枚举放入里面去.
 		for (MapAttr mapAttr : attrs.ToJavaList())
 		{
 			String uiBindKey = mapAttr.getUIBindKey();
@@ -3497,7 +3125,7 @@ public class WF_Comm extends WebContralBase
 			}
 
 			// 判断是否存在.
-			if (ds.contains(uiBindKey) == true)
+			if (ds.Tables.contains(uiBindKey) == true)
 			{
 				continue;
 			}
@@ -3507,12 +3135,12 @@ public class WF_Comm extends WebContralBase
 
 				DataTable dt = DBAccess.RunSQLReturnTable(sqlBindKey);
 				dt.TableName = mapAttr.getKeyOfEn();
-				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
+				if (SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 				{
 					dt.Columns.get("NO").ColumnName = "No";
 					dt.Columns.get("NAME").ColumnName = "Name";
 				}
-				if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+				if (SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
 				{
 					dt.Columns.get("no").ColumnName = "No";
 					dt.Columns.get("name").ColumnName = "Name";
@@ -3543,12 +3171,12 @@ public class WF_Comm extends WebContralBase
 		{
 			enumKeys = enumKeys.substring(0, enumKeys.length() - 1);
 
-			String sqlEnum = "SELECT * FROM "+bp.sys.base.Glo.SysEnum()+" WHERE EnumKey IN (" + enumKeys + ")";
+			String sqlEnum = "SELECT * FROM " + bp.sys.base.Glo.SysEnum() + " WHERE EnumKey IN (" + enumKeys + ")";
 			DataTable dtEnum = DBAccess.RunSQLReturnTable(sqlEnum);
 
 			dtEnum.TableName = "Sys_Enum";
 
-			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
+			if (SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 			{
 				dtEnum.Columns.get("MYPK").ColumnName = "MyPK";
 				dtEnum.Columns.get("LAB").ColumnName = "Lab";
@@ -3556,7 +3184,7 @@ public class WF_Comm extends WebContralBase
 				dtEnum.Columns.get("INTKEY").ColumnName = "IntKey";
 				dtEnum.Columns.get("LANG").ColumnName = "Lang";
 			}
-			if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+			if (SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
 			{
 				dtEnum.Columns.get("mypk").ColumnName = "MyPK";
 				dtEnum.Columns.get("lab").ColumnName = "Lab";
@@ -3566,33 +3194,36 @@ public class WF_Comm extends WebContralBase
 			}
 			ds.Tables.add(dtEnum);
 		}
-
 		///#endregion 把外键与枚举放入里面去.
-
-		return Json.ToJson(ds);
+		return bp.tools.Json.ToJson(ds);
 	}
-
 
 	///#region 实体集合的保存.
 	/**
 	 实体集合的删除
 
 	 @return
-	 */
+	*/
 	public final String Entities_Delete() throws Exception {
+
+		if (this.getParas() == null)
+		{
+			return "err@删除实体，参数不能为空";
+		}
+		String[] myparas = this.getParas().split("[@]", -1);
+
+		Entities ens = ClassFactory.GetEns(this.getEnsName());
+		if (ens == null)
+		{
+			return "err@类" + this.getEnsName() + "不存在,请检查是不是拼写错误";
+		}
+		return Entities_Delete_Ext(ens);
+	}
+	public final String Entities_Delete_Ext(Entities ens)
+	{
 		try
 		{
-			if (this.getParas() == null)
-			{
-				return "err@删除实体，参数不能为空";
-			}
 			String[] myparas = this.getParas().split("[@]", -1);
-
-			Entities ens = ClassFactory.GetEns(this.getEnsName());
-			if (ens == null)
-			{
-				return "err@类" + this.getEnsName() + "不存在,请检查是不是拼写错误";
-			}
 			ArrayList<String[]> paras = new ArrayList<String[]>();
 			int idx = 0;
 			for (int i = 0; i < myparas.length; i++)
@@ -3634,21 +3265,20 @@ public class WF_Comm extends WebContralBase
 
 			return "删除成功";
 		}
-		catch (RuntimeException ex)
+		catch (Exception ex)
 		{
 			return "err@" + ex.getMessage();
 		}
-
 	}
 	/**
 	 初始化
 
 	 @return
-	 */
-	public final String Entities_Save() throws Exception {
+	*/
+	public final String Entities_Save()
+	{
 		try
 		{
-
 			///#region  查询出来s实体数据.
 			Entities dtls = ClassFactory.GetEns(this.getEnsName());
 			if (dtls == null)
@@ -3657,7 +3287,7 @@ public class WF_Comm extends WebContralBase
 			}
 
 			dtls.RetrieveAll();
-			Entity en = dtls.getGetNewEntity();
+			Entity en = dtls.getNewEntity();
 
 			Map map = en.getEnMap();
 			for (Entity item : dtls)
@@ -3666,7 +3296,7 @@ public class WF_Comm extends WebContralBase
 
 				for (Attr attr : map.getAttrs())
 				{
-					if (attr.getIsRefAttr() == true)
+					if (attr.getItIsRefAttr() == true)
 					{
 						continue;
 					}
@@ -3697,10 +3327,10 @@ public class WF_Comm extends WebContralBase
 						continue;
 					}
 
-					if (attr.getUIContralType() == UIContralType.CheckBok && attr.getUIIsReadonly() == true)
+					if (attr.getUIContralType() == UIContralType.CheckBok && attr.getUIIsReadonly() == false)
 					{
 						String val = this.GetValFromFrmByKey("CB_" + key, "-1");
-						if (val.equals("-1"))
+						if (Objects.equals(val, "-1"))
 						{
 							item.SetValByKey(attr.getKey(), 0);
 						}
@@ -3714,14 +3344,10 @@ public class WF_Comm extends WebContralBase
 
 				item.Update(); //执行更新.
 			}
-
-			///#endregion  查询出来实体数据.
-
-
-			///#region 保存新加行.
+				///#region 保存新加行.
 			String strs = this.GetRequestVal("NewPKVals");
 			//没有新增行
-			if (this.GetRequestValBoolen("InsertFlag") == false || (en.getEnMap().getIsAutoGenerNo() == true && DataType.IsNullOrEmpty(strs) == true))
+			if (this.GetRequestValBoolen("InsertFlag") == false || (en.getEnMap().getItIsAutoGenerNo() == true && DataType.IsNullOrEmpty(strs) == true))
 			{
 				return "更新成功.";
 			}
@@ -3756,17 +3382,17 @@ public class WF_Comm extends WebContralBase
 						continue;
 					}
 
-					if (attr.getUIContralType() == UIContralType.DDL && attr.getUIIsReadonly() == true)
+					if (attr.getUIContralType() == UIContralType.DDL && attr.getUIIsReadonly() == false)
 					{
 						valValue = this.GetValFromFrmByKey("DDL_" + pkval + "_" + attr.getKey());
 						en.SetValByKey(attr.getKey(), valValue);
 						continue;
 					}
 
-					if (attr.getUIContralType() == UIContralType.CheckBok && attr.getUIIsReadonly() == true)
+					if (attr.getUIContralType() == UIContralType.CheckBok && attr.getUIIsReadonly() == false)
 					{
 						valValue = this.GetValFromFrmByKey("CB_" + pkval + "_" + attr.getKey(), "-1");
-						if (valValue.equals("-1"))
+						if (Objects.equals(valValue, "-1"))
 						{
 							en.SetValByKey(attr.getKey(), 0);
 						}
@@ -3778,9 +3404,9 @@ public class WF_Comm extends WebContralBase
 					}
 				}
 
-				if (en.getIsNoEntity())
+				if (en.getItIsNoEntity())
 				{
-					if (en.getEnMap().getIsAutoGenerNo())
+					if (en.getEnMap().getItIsAutoGenerNo())
 					{
 						en.SetValByKey("No", en.GenerNewNoByKey("No", null));
 					}
@@ -3788,7 +3414,7 @@ public class WF_Comm extends WebContralBase
 
 				try
 				{
-					if (en.getPKVal().toString().equals("0"))
+					if (Objects.equals(en.getPKVal().toString(), "0"))
 					{
 					}
 					else
@@ -3807,25 +3433,21 @@ public class WF_Comm extends WebContralBase
 
 
 
-
-			///#endregion 保存新加行.
+//C# TO JAVA CONVERTER TASK: There is no preprocessor in Java:
+				///#endregion 保存新加行.
 
 			return "保存成功.";
 		}
-		catch (RuntimeException ex)
+		catch (Exception ex)
 		{
 			return "err@" + ex.getMessage();
 		}
 	}
-
-	///#endregion
-
-
 	///#region 获取批处理的方法.
 	public final String Refmethod_BatchInt() throws Exception {
 		String ensName = this.getEnsName();
 		Entities ens = ClassFactory.GetEns(ensName);
-		Entity en = ens.getGetNewEntity();
+		Entity en = ens.getNewEntity();
 		RefMethods rms = en.getEnMap().getHisRefMethods();
 		DataTable dt = new DataTable();
 		dt.TableName = "RM";
@@ -3844,14 +3466,15 @@ public class WF_Comm extends WebContralBase
 		dt.Columns.Add("Icon");
 		dt.Columns.Add("IsCanBatch");
 		dt.Columns.Add("RefAttrKey");
+		dt.Columns.Add("IsHaveFuncPara");
 		for (RefMethod item : rms)
 		{
-			if (item.IsCanBatch == false)
+			if (item.ItIsCanBatch == false)
 			{
 				continue;
 			}
 			DataRow mydr = dt.NewRow();
-			item.HisEn = en;
+			item.HisEn = en; // 增加上.
 			String myurl = "";
 			if (item.refMethodType != RefMethodType.Func)
 			{
@@ -3864,7 +3487,7 @@ public class WF_Comm extends WebContralBase
 			}
 			else
 			{
-				myurl = "../Comm/RefMethod.htm?Index=" + item.Index + "&EnName=" + en.toString() + "&EnsName=" + en.getGetNewEntities().toString() + "&PKVal=" + this.getPKVal();
+				myurl = "../Comm/RefMethod.htm?Index=" + item.Index + "&EnName=" + en.toString() + "&EnsName=" + en.GetNewEntities().toString() + "&PKVal=" + this.getPKVal();
 			}
 
 			DataRow dr = dt.NewRow();
@@ -3881,19 +3504,20 @@ public class WF_Comm extends WebContralBase
 			dr.setValue("W", item.Width);
 			dr.setValue("H", item.Height);
 			dr.setValue("Icon", item.Icon);
-			dr.setValue("IsCanBatch", item.IsCanBatch);
+			dr.setValue("IsCanBatch", item.ItIsCanBatch);
 			dr.setValue("GroupName", item.GroupName);
+			dr.setValue("IsHaveFuncPara", item.getHisAttrs().isEmpty() ? 0 : 1);
 			dt.Rows.add(dr);
 		}
 
-		return Json.ToJson(dt);
+		return bp.tools.Json.ToJson(dt);
 	}
-
-	///#endregion
+//C# TO JAVA CONVERTER TASK: There is no preprocessor in Java:
+		///#endregion
 
 	public final String Refmethod_Done() throws Exception {
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
-		Entity en = ens.getGetNewEntity();
+		Entity en = ens.getNewEntity();
 		String msg = "";
 
 		String pk = this.getPKVal();
@@ -3906,11 +3530,17 @@ public class WF_Comm extends WebContralBase
 			en.RetrieveFromDBSources();
 			msg = DoOneEntity(en, this.getIndex());
 			if (msg == null)
+			{
 				return "close@info";
+			}
 			else if (msg.indexOf("@") != -1)
+			{
 				return msg;
+			}
 			else
+			{
 				return "info@" + msg;
+			}
 		}
 
 		//如果是批处理.
@@ -3921,7 +3551,9 @@ public class WF_Comm extends WebContralBase
 		for (String mypk : pks)
 		{
 			if (DataType.IsNullOrEmpty(mypk) == true)
+			{
 				continue;
+			}
 			count++;
 			en.setPKVal(mypk);
 			en.RetrieveFromDBSources();
@@ -3930,28 +3562,45 @@ public class WF_Comm extends WebContralBase
 			if (DataType.IsNullOrEmpty(s) == false)
 			{
 				if (s.indexOf("err@") != -1)
+				{
 					errCount++;
+				}
 				else
+				{
 					sucCount++;
-				if (en.getIsNoEntity())
+				}
+				if (en.getItIsNoEntity())
+				{
 					msg += "编号:" + en.GetValByKey("No") + ",名称:" + en.GetValByKey("Name") + ",执行结果:" + s + "<br/>";
-				else if (en.getIsOIDEntity())
+				}
+				else if (en.getItIsOIDEntity())
 				{
 					if (DataType.IsNullOrEmpty(en.GetValStringByKey("PrjNo")) == false)
+					{
 						msg += "编号:" + en.GetValStringByKey("PrjNo") + " 名称:" + en.GetValStringByKey("PrjName") + " 执行结果:" + s + "<br/>";
+					}
 					else
+					{
 						msg += "编号:" + en.GetValByKey("OID") + " 名称:" + en.GetValByKey("Title") + " 执行结果:" + s + "<br/>";
+					}
 
 				}
 				else
+				{
 					msg += "主键:" + en.GetValStringByKey(en.getPK()) + s + "<br/>";
+				}
 			}
+
 		}
 
 		if (DataType.IsNullOrEmpty(msg) == true)
+		{
 			return "close@info";
+		}
 		if (pk.indexOf(",") != -1)
+		{
 			msg = "一共选择" + count + "笔数据,其中[" + sucCount + "]执行成功,[" + errCount + "]执行失败.<br/>" + msg;
+		}
 		return "info@" + msg;
 	}
 	public final String DoOneEntity(Entity en, int rmIdx) throws Exception {
@@ -4007,7 +3656,7 @@ public class WF_Comm extends WebContralBase
 							break;
 						case DataType.AppBoolean:
 							objs[idx] = this.GetValBoolenFromFrmByKey(attr.getKey());
-							attr.setDefaultVal(false);
+							attr.setDefaultVal( false);
 							break;
 						default:
 							throw new RuntimeException("没有判断的字段 - 数据类型．");
@@ -4021,17 +3670,17 @@ public class WF_Comm extends WebContralBase
 						{
 							String str = this.GetValFromFrmByKey(attr.getKey());
 							objs[idx] = str;
-							attr.setDefaultVal(str);
+							attr.setDefaultVal( str);
 						}
 						else
 						{
 							int enumVal = this.GetValIntFromFrmByKey(attr.getKey());
 							objs[idx] = enumVal;
-							attr.setDefaultVal(enumVal);
+							attr.setDefaultVal( enumVal);
 						}
 
 					}
-					catch (java.lang.Exception e)
+					catch (Exception e)
 					{
 						objs[idx] = null;
 					}
@@ -4039,7 +3688,7 @@ public class WF_Comm extends WebContralBase
 				case CheckBok:
 					objs[idx] = this.GetValBoolenFromFrmByKey(attr.getKey());
 
-					attr.setDefaultVal(objs[idx].toString());
+					attr.setDefaultVal( objs[idx].toString());
 
 					break;
 				default:
@@ -4058,7 +3707,7 @@ public class WF_Comm extends WebContralBase
 
 			return null;
 		}
-		catch (RuntimeException ex)
+		catch (Exception ex)
 		{
 			String msg = "";
 			for (Object obj : objs)
@@ -4069,27 +3718,22 @@ public class WF_Comm extends WebContralBase
 			return "<font color=red>" + err + "</font>";
 		}
 	}
-
-	///#endregion 相关功能.
-
-
-	///#region  公共方法。
 	public final String SFTable() throws Exception {
 		SFTable sftable = new SFTable(this.GetRequestVal("SFTable"));
 		DataTable dt = sftable.GenerHisDataTable(null);
-		return Json.ToJson(dt);
+		return bp.tools.Json.ToJson(dt);
 	}
-	/**
+	/** 
 	 获得一个实体的数据
-
-	 @return
-	 */
+	 
+	 @return 
+	*/
 	public final String EnsData() throws Exception {
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
 
 		String filter = this.GetRequestVal("Filter");
 
-		if (filter == null || filter.equals("") || filter.contains("=") == false)
+		if (filter == null || Objects.equals(filter, "") || filter.contains("=") == false)
 		{
 			ens.RetrieveAll();
 		}
@@ -4102,12 +3746,12 @@ public class WF_Comm extends WebContralBase
 		}
 		return ens.ToJson("dt");
 	}
-	/**
+	/** 
 	 执行一个SQL，然后返回一个列表.
 	 用于gener.js 的公共方法.
-
-	 @return
-	 */
+	 
+	 @return 
+	*/
 	public final String SQLList() throws Exception {
 		String sqlKey = this.GetRequestVal("SQLKey"); //SQL的key.
 		String paras = this.GetRequestVal("Paras"); //参数. 格式为 @para1=paraVal@para2=val2
@@ -4119,7 +3763,7 @@ public class WF_Comm extends WebContralBase
 		String[] strs = paras.split("[@]", -1);
 		for (String str : strs)
 		{
-			if (str == null || str.equals(""))
+			if (str == null || Objects.equals(str, ""))
 			{
 				continue;
 			}
@@ -4130,31 +3774,37 @@ public class WF_Comm extends WebContralBase
 		}
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		return Json.ToJson(dt);
+		return bp.tools.Json.ToJson(dt);
 	}
 	public final String EnumList() throws Exception {
-		SysEnums ses = new SysEnums(this.getEnumKey());
+		SysEnums ses = new SysEnums();
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+		{
+			ses.Retrieve(SysEnumAttr.EnumKey, this.getEnumKey(), SysEnumAttr.OrgNo, WebUser.getOrgNo(), null);
+			if (ses.isEmpty())
+			{
+				EnumInfoXml xml = new EnumInfoXml(this.getEnumKey());
+				ses.RegIt(this.getEnumKey(), xml.getVals());
+			}
+		}
+		else
+		{
+			ses = new SysEnums(this.getEnumKey());
+		}
 		return ses.ToJson("dt");
 	}
-
-	///#endregion  公共方法。
-
-
-	///#region 执行方法.
-	/**
+		///#region 执行方法.
+	/** 
 	 执行方法
-
-	 param clsName 类名称
-	 param monthodName 方法名称
-	 param paras 参数，可以为空.
+	 
+	 @param clsName 类名称
+	 @param methodName 方法名称
 	 @return 执行结果
-	 */
-
+	*/
 	public final String Exec(String clsName, String methodName) throws Exception {
 		return Exec(clsName, methodName, null);
 	}
 
-	//ORIGINAL LINE: public string Exec(string clsName, string methodName, string paras = null)
 	public final String Exec(String clsName, String methodName, String paras) throws Exception {
 
 		///#region 处理 HttpHandler 类.
@@ -4166,8 +3816,6 @@ public class WF_Comm extends WebContralBase
 
 			Object tempVar = java.lang.Class.forName(baseName).newInstance();
 			DirectoryPageBase ctrl = tempVar instanceof DirectoryPageBase ? (DirectoryPageBase)tempVar : null;
-			//ctrl.context = this.context;
-
 			try
 			{
 				//执行方法返回json.
@@ -4184,11 +3832,6 @@ public class WF_Comm extends WebContralBase
 				return "err@" + ex.getMessage() + " 参数:" + parasStr;
 			}
 		}
-
-		///#endregion 处理 page 类.
-
-
-		///#region 执行entity类的方法.
 		try
 		{
 			//创建类实体.
@@ -4220,25 +3863,14 @@ public class WF_Comm extends WebContralBase
 		{
 			return "err@执行实体类的方法错误:" + ex.getMessage();
 		}
-
-		///#endregion 执行entity类的方法.
 	}
-
-	///#endregion
-
-
-	///#region 数据库相关.
-	/**
+	/** 
 	 运行SQL
-
+	 
 	 @return 返回影响行数
-	 */
+	*/
 	public final String DBAccess_RunSQL() throws Exception {
 		String sql = this.GetRequestVal("SQL");
-		if(DataType.IsNullOrEmpty(sql))
-			throw new RuntimeException("err@SQL语句不能为空");
-		sql = URLDecoder.decode(sql,"UTF8");
-
 		String dbSrc = this.GetRequestVal("DBSrc");
 		sql = sql.replace("~", "'");
 		sql = sql.replace("[%]", "%"); //防止URL编码
@@ -4250,35 +3882,26 @@ public class WF_Comm extends WebContralBase
 
 		return String.valueOf(DBAccess.RunSQL(sql));
 	}
-	/**
+	/** 
 	 运行SQL返回DataTable
-
+	 
 	 @return DataTable转换的json
-	 */
+	*/
 	public final String DBAccess_RunSQLReturnTable() throws Exception {
 		String sql = this.GetRequestVal("SQL");
-		if(DataType.IsNullOrEmpty(sql))
-			throw new RuntimeException("err@SQL语句不能为空");
-		sql = URLDecoder.decode(sql, "UTF8");
 		String dbSrc = this.GetRequestVal("DBSrc");
 		sql = sql.replace("~", "'");
 		sql = sql.replace("[%]", "%"); //防止URL编码
 
-		sql = sql.replace("@WebUser.No", WebUser.getNo()); //替换变量.
-		sql = sql.replace("@WebUser.Name", WebUser.getName()); //替换变量.
-		sql = sql.replace("@WebUser.FK_Dept", WebUser.getFK_Dept()); //替换变量.
+		sql = sql.replace("@WebUser.getNo()", WebUser.getNo()); //替换变量.
+		sql = sql.replace("@WebUser.getName()", WebUser.getName()); //替换变量.
+		sql = sql.replace("@WebUser.FK_Dept", WebUser.getDeptNo()); //替换变量.
 		sql = sql.replace("@WebUser.DeptParentNo)", WebUser.getDeptParentNo()); //替换变量.
-
-
-
-///#warning zhoupeng把这个去掉了. 2018.10.24
-
-		// sql = sql.Replace("-", "%"); //为什么？
 
 		sql = sql.replace("/#", "+"); //为什么？
 		sql = sql.replace("/$", "-"); //为什么？
 
-		if (sql.equals(null) || sql.equals(""))
+		if (Objects.equals(null, sql) || Objects.equals("", sql))
 		{
 			return "err@查询sql为空";
 		}
@@ -4294,7 +3917,7 @@ public class WF_Comm extends WebContralBase
 		}
 
 		//暂定
-		if (SystemConfig.getAppCenterDBType( ) == DBType.Oracle || SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX || SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR3 ||SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR6 || SystemConfig.getAppCenterDBType() == DBType.HGDB)
+		if (SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			//获取SQL的字段
 			//获取 from 的位置
@@ -4313,66 +3936,76 @@ public class WF_Comm extends WebContralBase
 				}
 				if (dt.Columns.get(realkey.toUpperCase()) != null)
 				{
-					dt.Columns.get(realkey.toUpperCase()).setColumnName( realkey);
+					dt.Columns.get(realkey.toUpperCase()).ColumnName = realkey;
+				}
+			}
+
+		}
+		if (SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+		{
+			//获取SQL的字段
+			//获取 from 的位置
+			sql = sql.replace(" ", "");
+			int index = sql.toUpperCase().indexOf("FROM");
+			int indexAs = 0;
+			sql = sql.substring(6, index);
+			String[] keys = sql.split("[,]", -1);
+			for (String key : keys)
+			{
+				String realkey = key.replace("Case", "").replace("case", "").replace("CASE", "");
+				indexAs = realkey.toUpperCase().indexOf("AS");
+				if (indexAs != -1)
+				{
+					realkey = realkey.substring(indexAs + 2);
+				}
+				if (dt.Columns.get(realkey.toLowerCase()) != null)
+				{
+					dt.Columns.get(realkey.toLowerCase()).ColumnName = realkey;
 				}
 			}
 
 		}
 
-		return Json.ToJson(dt);
+		return bp.tools.Json.ToJson(dt);
 	}
-	public final String RunUrlCrossReturnString() throws Exception {
+	public final String RunUrlCrossReturnString()
+	{
 		String url = this.GetRequestVal("urlExt");
 		String strs = DataType.ReadURLContext(url, 9999);
 		return strs;
 	}
-	/**
+	/** 
 	 通过接口返回JSON数据
+	 
+	 @return 
+	*/
+	public final String RunWebAPIReturnString()
+	{
+		//设置请求头
+		Hashtable headerMap = new Hashtable();
 
-	 @return
-	 */
-	public final String RunWebAPIReturnString() throws Exception {
-
+		//设置返回值格式
+		headerMap.put("Content-Type", "application/json");
+		//设置token，用于接口校验
+		headerMap.put("Authorization", WebUser.getToken());
 
 		String url = this.GetRequestVal("url");
-		String postData = HttpClientUtil.doPost(url, "", null);
-		JSONObject j = JSONObject.fromObject(postData);
-		return j.get("data").toString();
+	   String postData = bp.tools.HttpClientUtil.doPost(url,null, headerMap);
+
+		JSONObject res = JSONObject.fromObject(postData);
+		if (res.get("code").toString().equals("200"))
+		{
+			return res.get("data").toString();
+		}
+		else
+		{
+			return "[]";
+		}
 	}
-
-	///#endregion
-
+		///#endregion
+	public ConcurrentHashMap<String, Object> ClsCache = new ConcurrentHashMap<>();
 	//执行方法.
 	public final String HttpHandler() throws Exception {
-
-		//@樊雷伟 , 这个方法需要同步.
-
-		//获得两个参数.
-//		String httpHandlerName = this.GetRequestVal("HttpHandlerName");
-//		httpHandlerName = httpHandlerName.replace("BP.WF.HttpHandler","bp.wf.httphandler");
-//		httpHandlerName = httpHandlerName.replace("BP.CCBill","bp.ccbill");
-//		//httpHandlerName = httpHandlerName.replace("BP.IC","bp.ic");
-//		String methodName = this.GetRequestVal("DoMethod");
-//
-//		Object tempVar = ClassFactory.GetHandlerPage(httpHandlerName);
-//		if(tempVar!=null){
-//			WebContralBase en = tempVar instanceof WebContralBase ? (WebContralBase)tempVar : null;
-//			if (en == null)
-//			{
-//				return "err@页面处理类名[" + httpHandlerName + "],没有获取到，请检查拼写错误？";
-//			}
-//			en.context = this.context;
-//			en.setWorkID(0); //从缓存中获取时，WorkID的初始值有可能不为0
-//			return en.DoMethod(en, methodName);
-//		}
-//
-//
-//		Object type = java.lang.Class.forName(httpHandlerName);
-//		Object tempVar2 = ((Class) type).newInstance();
-//		WebContralBase en = tempVar2 instanceof WebContralBase ? (WebContralBase)tempVar2 : null;
-//		//en.context = this.context;
-//		return en.DoMethod(en, methodName);
-		//获得两个参数.
 		String httpHandlerName = this.GetRequestVal("HttpHandlerName");
 		httpHandlerName = httpHandlerName.replace("BP.WF.HttpHandler", "bp.wf.httphandler");
 		httpHandlerName = httpHandlerName.replace("BP.CCBill", "bp.ccbill");
@@ -4384,7 +4017,7 @@ public class WF_Comm extends WebContralBase
 			tempVar = ClassFactory.GetHandlerPage(httpHandlerName);
 		}
 		if (tempVar != null) {
-			WebContralBase en = tempVar instanceof WebContralBase ? (WebContralBase) tempVar : null;
+			DirectoryPageBase en = tempVar instanceof DirectoryPageBase ? (DirectoryPageBase) tempVar : null;
 			if (en == null) {
 				return "err@页面处理类名[" + httpHandlerName + "],没有获取到，请检查拼写错误？";
 			}
@@ -4395,21 +4028,20 @@ public class WF_Comm extends WebContralBase
 		}
 		Class<?> type = java.lang.Class.forName(httpHandlerName);
 		Object tempVar2 = type.newInstance();
-		WebContralBase en = tempVar2 instanceof WebContralBase ? (WebContralBase) tempVar2 : null;
+		DirectoryPageBase en = tempVar2 instanceof DirectoryPageBase ? (DirectoryPageBase) tempVar2 : null;
 		ClsCache.putIfAbsent(httpHandlerName, en);
 		if (en == null) {
 			return "err@页面处理类名[" + httpHandlerName + "],没有获取到，请检查拼写错误？";
 		}
-		//en.context = this.context;
 		return en.DoMethod(en, methodName);
 	}
-
-	/**
+	/** 
 	 当前登录人员信息
-
-	 @return
-	 */
-	public final String GuestUser_Init() throws Exception {
+	 
+	 @return 
+	*/
+	public final String GuestUser_Init()
+	{
 		Hashtable ht = new Hashtable();
 
 		String userNo = GuestUser.getNo();
@@ -4417,40 +4049,53 @@ public class WF_Comm extends WebContralBase
 		{
 			ht.put("No", "");
 			ht.put("Name", "");
-			return Json.ToJson(ht);
+			return bp.tools.Json.ToJson(ht);
 		}
 
 		ht.put("No", GuestUser.getNo());
 		ht.put("Name", GuestUser.getName());
-		return Json.ToJson(ht);
+		return bp.tools.Json.ToJson(ht);
 	}
 
-	/**
+	/** 
 	 当前登录人员信息
-
-	 @return
-	 */
+	 
+	 @return 
+	*/
 	public final String WebUser_Init() throws Exception {
 		Hashtable ht = new Hashtable();
-
 		String token = this.GetRequestVal("Token");
-		if(DataType.IsNullOrEmpty(token)==false || token.equals("undefined") == true ||  token.equals("null") == true)
-			token="";
-		if(DataType.IsNullOrEmpty(token) == false)
-			bp.wf.Dev2Interface.Port_LoginByToken(token);
+		if (DataType.IsNullOrEmpty(token) == false)
+		{
+			if (DataType.IsNullOrEmpty(WebUser.getToken()) == false && token.equals(WebUser.getToken()) == true)
+			{
 
-		if (DataType.IsNullOrEmpty(token)==true)
+			}
+			else
+			{
+				Dev2Interface.Port_LoginByToken(token);
+			}
+		}
+		if (DataType.IsNullOrEmpty(token) == true)
 		{
 			String userNo = WebUser.getNo();
 			if (DataType.IsNullOrEmpty(userNo) == true)
-					throw new Exception("err@ 登录已过期，请重新登录!");
-		}
+			{
+				token = WebUser.getToken();
+				if (DataType.IsNullOrEmpty(token) == true)
+				{
+					throw new RuntimeException("err@ 登录已过期，请重新登录!");
+				}
 
+				Dev2Interface.Port_LoginByToken(token);
+			}
+		}
+		//需要同步.
 		ht.put("No", WebUser.getNo());
 		ht.put("Name", WebUser.getName());
-		ht.put("FK_Dept", WebUser.getFK_Dept());
-		ht.put("FK_DeptName", WebUser.getFK_DeptName());
-		ht.put("FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
+		ht.put("FK_Dept", WebUser.getDeptNo());
+		ht.put("FK_DeptName", WebUser.getDeptName());
+		ht.put("FK_DeptNameOfFull", WebUser.getDeptNameOfFull());
 		ht.put("CustomerNo", SystemConfig.getCustomerNo());
 		ht.put("CustomerName", SystemConfig.getCustomerName());
 		ht.put("IsAdmin", WebUser.getIsAdmin() == true ? 1 : 0);
@@ -4473,27 +4118,26 @@ public class WF_Comm extends WebContralBase
 		}
 
 		//每次访问表很消耗资源.
-		//WFEmp emp = new WFEmp(WebUser.getNo());
-		//ht.put("Theme", emp.GetParaString("Theme"));
+		//Port.WFEmp emp = new BP.Port.WFEmp(WebUser.getNo());
+		//ht.Add("Theme", emp.GetParaString("Theme"));
 
 
 		//增加运行模式. add by zhoupeng 2020.03.10 适应saas模式.
 		ht.put("CCBPMRunModel", SystemConfig.GetValByKey("CCBPMRunModel", "0"));
 
-		return Json.ToJson(ht);
+		return bp.tools.Json.ToJson(ht);
 	}
 
 	public final String WebUser_BackToAuthorize() throws Exception {
 		Dev2Interface.Port_Login(WebUser.getAuth());
 		return "登录成功";
 	}
-
 	///#region 分组统计.
-	/**
+	/** 
 	 获得分组统计的查询条件.
-
-	 @return
-	 */
+	 
+	 @return 
+	*/
 	public final String Group_MapBaseInfo() throws Exception {
 		//获得
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
@@ -4502,8 +4146,8 @@ public class WF_Comm extends WebContralBase
 			return "err@类名:" + this.getEnsName() + "错误";
 		}
 
-		Entity en = ens.getGetNewEntity();
-		Map map = ens.getGetNewEntity().getEnMapInTime();
+		Entity en = ens.getNewEntity();
+		Map map = ens.getNewEntity().getEnMapInTime();
 
 		Hashtable ht = new Hashtable();
 
@@ -4534,9 +4178,9 @@ public class WF_Comm extends WebContralBase
 		MapData mapData = new MapData();
 		mapData.setNo(this.getEnsName());
 
-		///#region 查询条件
+			///#region 查询条件
 		//单据，实体单据
-		if (mapData.RetrieveFromDBSources() != 0 && DataType.IsNullOrEmpty(mapData.getFK_FormTree()) == false)
+		if (mapData.RetrieveFromDBSources() != 0 && DataType.IsNullOrEmpty(mapData.getFormTreeNo()) == false)
 		{
 			//查询条件.
 			ht.put("IsShowSearchKey", mapData.GetParaInt("IsSearchKey", 0));
@@ -4549,7 +4193,7 @@ public class WF_Comm extends WebContralBase
 		}
 		else
 		{
-			if (map.IsShowSearchKey == true)
+			if (map.ItIsShowSearchKey == true)
 			{
 				ht.put("IsShowSearchKey", 1);
 			}
@@ -4566,24 +4210,20 @@ public class WF_Comm extends WebContralBase
 			ht.put("DTSearchLabel", map.DTSearchLabel);
 			ht.put("DTSearchKey", map.DTSearchKey);
 		}
-
-		///#endregion  查询条件
+			///#endregion  查询条件
 
 		//把map信息放入
 		ht.put("PhysicsTable", map.getPhysicsTable());
 		ht.put("CodeStruct", map.getCodeStruct());
-		ht.put("CodeLength", map.getCodeLength());
-
-		return Json.ToJson(ht);
+		// ht.Add("CodeLength", map.CodeLength);
+		return bp.tools.Json.ToJson(ht);
 	}
 
-	///#endregion
-
-	/**
+	/** 
 	 外键或者枚举的分组查询条件.
-
-	 @return
-	 */
+	 
+	 @return 
+	*/
 	public final String Group_SearchAttrs() throws Exception {
 		//获得
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
@@ -4592,8 +4232,8 @@ public class WF_Comm extends WebContralBase
 			return "err@类名错误:" + this.getEnsName();
 		}
 
-		Entity en = ens.getGetNewEntity();
-		Map map = ens.getGetNewEntity().getEnMapInTime();
+		Entity en = ens.getNewEntity();
+		Map map = ens.getNewEntity().getEnMapInTime();
 
 		DataSet ds = new DataSet();
 
@@ -4604,8 +4244,8 @@ public class WF_Comm extends WebContralBase
 		dt.Columns.Add("MyFieldType");
 		dt.TableName = "Attrs";
 
-		AttrSearchs attrs = map.getSearchAttrs();
-		for (AttrSearch item : attrs)
+		SearchFKEnums attrs = map.getSearchFKEnums();
+		for (SearchFKEnum item : attrs)
 		{
 			DataRow dr = dt.NewRow();
 			dr.setValue("Field", item.Key);
@@ -4616,10 +4256,10 @@ public class WF_Comm extends WebContralBase
 		ds.Tables.add(dt);
 
 		//把外键枚举增加到里面.
-		for (AttrSearch item : attrs)
+		for (SearchFKEnum item : attrs)
 		{
 			Attr attr = item.HisAttr;
-			if (attr.getIsEnum() == true)
+			if (attr.getItIsEnum() == true)
 			{
 				SysEnums ses = new SysEnums(attr.getUIBindKey());
 				DataTable dtEnum = ses.ToDataTableField("dt");
@@ -4628,7 +4268,7 @@ public class WF_Comm extends WebContralBase
 				continue;
 			}
 
-			if (attr.getIsFK() == true)
+			if (attr.getItIsFK() == true)
 			{
 				Entities ensFK = item.HisAttr.getHisFKEns();
 				ensFK.RetrieveAll();
@@ -4639,7 +4279,7 @@ public class WF_Comm extends WebContralBase
 				ds.Tables.add(dtEn);
 			}
 			//绑定SQL的外键
-			if (DataType.IsNullOrEmpty(attr.getUIBindKey()) == false && ds.contains(attr.getKey()) == false)
+			if (DataType.IsNullOrEmpty(attr.getUIBindKey()) == false && ds.Tables.contains(attr.getKey()) == false)
 			{
 				String sql = attr.getUIBindKey();
 				DataTable dtSQl = null;
@@ -4679,14 +4319,14 @@ public class WF_Comm extends WebContralBase
 
 		}
 
-		return Json.ToJson(ds);
+		return bp.tools.Json.ToJson(ds);
 	}
 
-	/**
-	 获取分组的外键、枚举
-
-	 @return
-	 */
+	/** 
+	获取分组的外键、枚举
+	 
+	 @return 
+	*/
 	public final String Group_ContentAttrs() throws Exception {
 		//获得
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
@@ -4695,8 +4335,8 @@ public class WF_Comm extends WebContralBase
 			return "err@类名错误:" + this.getEnsName();
 		}
 
-		Entity en = ens.getGetNewEntity();
-		Map map = ens.getGetNewEntity().getEnMapInTime();
+		Entity en = ens.getNewEntity();
+		Map map = ens.getNewEntity().getEnMapInTime();
 		Attrs attrs = map.getAttrs();
 		DataTable dt = new DataTable();
 		dt.Columns.Add("Field");
@@ -4709,7 +4349,7 @@ public class WF_Comm extends WebContralBase
 
 		//判断是否已经选择分组
 		boolean contentFlag = false;
-		for (Attr attr : attrs.ToJavaList())
+		for (Attr attr : attrs)
 		{
 			if (attr.getUIContralType() == UIContralType.DDL || attr.getUIContralType() == UIContralType.RadioBtn)
 			{
@@ -4733,7 +4373,7 @@ public class WF_Comm extends WebContralBase
 			dt.Rows.get(0).setValue("Checked","true");
 		}
 
-		return Json.ToJson(dt);
+		return bp.tools.Json.ToJson(dt);
 	}
 
 	public final String Group_Analysis() throws Exception {
@@ -4744,8 +4384,8 @@ public class WF_Comm extends WebContralBase
 			return "err@类名错误:" + this.getEnsName();
 		}
 
-		Entity en = ens.getGetNewEntity();
-		Map map = ens.getGetNewEntity().getEnMapInTime();
+		Entity en = ens.getNewEntity();
+		Map map = ens.getNewEntity().getEnMapInTime();
 		DataSet ds = new DataSet();
 
 
@@ -4776,11 +4416,19 @@ public class WF_Comm extends WebContralBase
 		ddlDr.setValue("Name", "求和");
 		ddlDr.setValue("Selected", "true");
 		ddlDt.Rows.add(ddlDr);
+		ddlDr = ddlDt.NewRow();
+		ddlDr.setValue("No", "AVG");
+		ddlDr.setValue("Name", "求平均");
+		if (ur.getVals().indexOf("@Group_Number=AVG") != -1)
+		{
+			ddlDr.setValue("Selected", "true");
+		}
+		ddlDt.Rows.add(ddlDr);
 		ds.Tables.add(ddlDt);
 
 		for (Attr attr : map.getAttrs())
 		{
-			if (attr.getIsPK() || attr.getIsNum() == false)
+			if (attr.getItIsPK() || attr.getItIsNum() == false)
 			{
 				continue;
 			}
@@ -4800,7 +4448,7 @@ public class WF_Comm extends WebContralBase
 			{
 				continue;
 			}
-			if (attr.getKey().equals("OID") || attr.getKey().equals("WorkID") || attr.getKey().equals("MID"))
+			if (Objects.equals(attr.getKey(), "OID") || Objects.equals(attr.getKey(), "WorkID") || Objects.equals(attr.getKey(), "MID"))
 			{
 				continue;
 			}
@@ -4844,7 +4492,7 @@ public class WF_Comm extends WebContralBase
 			}
 			ddlDt.Rows.add(ddlDr);
 
-			if (this.isContainsNDYF())
+			if (this.getItIsContainsNDYF())
 			{
 				ddlDr = ddlDt.NewRow();
 				ddlDr.setValue("No", "AMOUNT");
@@ -4862,7 +4510,7 @@ public class WF_Comm extends WebContralBase
 		}
 
 		ds.Tables.add(dt);
-		return Json.ToJson(ds);
+		return bp.tools.Json.ToJson(ds);
 	}
 
 	public final String Group_Search() throws Exception {
@@ -4873,8 +4521,8 @@ public class WF_Comm extends WebContralBase
 			return "err@类名错误:" + this.getEnsName();
 		}
 
-		Entity en = ens.getGetNewEntity();
-		Map map = ens.getGetNewEntity().getEnMapInTime();
+		Entity en = ens.getNewEntity();
+		Map map = ens.getNewEntity().getEnMapInTime();
 		DataSet ds = new DataSet();
 
 		//获取注册信息表
@@ -4891,7 +4539,7 @@ public class WF_Comm extends WebContralBase
 		}
 
 		////不显示合计列。
-		/*string NoShowSum =  bp.difference.SystemConfig.GetConfigXmlEns("NoShowSum", this.EnsName);
+		/*string NoShowSum =  BP.Difference.SystemConfig.GetConfigXmlEns("NoShowSum", this.EnsName);
 		DataTable showSum = new DataTable("NoShowSum");
 		showSum.Columns.Add("NoShowSum");
 		DataRow sumdr = showSum.NewRow();
@@ -4903,7 +4551,7 @@ public class WF_Comm extends WebContralBase
 		ds.Tables.add(activeAttr);
 		ds.Tables.add(showSum);*/
 
-		return Json.ToJson(ds);
+		return bp.tools.Json.ToJson(ds);
 	}
 
 	private DataSet GroupSearchSet(Entities ens, Entity en, Map map, UserRegedit ur, DataSet ds, ActiveAttrs aas) throws Exception {
@@ -4925,25 +4573,20 @@ public class WF_Comm extends WebContralBase
 		String sql = "";
 		String selectSQL = "SELECT "; //select部分的组合
 		String groupBySQL = " GROUP BY "; //分组的组合
-
-
-		///#region SelectSQL语句的组合
-
-
 		///#region 分组条件的整合
 		if (DataType.IsNullOrEmpty(groupKey) == false)
 		{
 			boolean isSelected = false;
 			String[] SelectedGroupKeys = groupKey.split("[,]", -1);
-			for (Object key : SelectedGroupKeys)
+			for (String key : SelectedGroupKeys)
 			{
 				if (DataType.IsNullOrEmpty(key) == true)
 				{
 					continue;
 				}
-				Attr attr = map.GetAttrByKey(String.valueOf(key));
+				Attr attr = map.GetAttrByKey(key);
 				// 加入组里面。
-				mapAttrOfShows.add(map.GetAttrByKey(String.valueOf(key)));
+				mapAttrOfShows.Add(map.GetAttrByKey(key), false);
 
 				selectSQL += map.getPhysicsTable() + "." + key + " \"" + key + "\",";
 
@@ -4967,23 +4610,23 @@ public class WF_Comm extends WebContralBase
 					}
 
 					SysEnums ses = new SysEnums(attr.getUIBindKey(), attr.UITag);
-					selectSQL += ses.GenerCaseWhenForOracle(en.getEnMap().getPhysicsTable() + ".", attr.getKey(), attr.getField(), attr.getUIBindKey(), Integer.parseInt(attr.getDefaultVal().toString())) + ",";
+					selectSQL += ses.GenerCaseWhenForOracle(en.getEnMap().getPhysicsTable() + ".", attr.getKey(), attr.getField(), attr.getUIBindKey(), attr.getDefaultVal().toString().equals("") == true ? 0 : Integer.parseInt(attr.getDefaultVal().toString())) + ",";
 					continue;
 				}
 
 				//不是外键、枚举，就是外部数据源
-				selectSQL += key + "T" + " \"" + key + "T\",";
-
+				selectSQL += map.getPhysicsTable() + "." + key + "T" + " \"" + key + "T\",";
+				groupBySQL += map.getPhysicsTable() + "." + key + "T,";
 
 
 
 			}
 		}
+//C# TO JAVA CONVERTER TASK: There is no preprocessor in Java:
+			///#endregion 分组条件的整合
 
-		///#endregion 分组条件的整合
-
-
-		///#region 分析项的整合
+//C# TO JAVA CONVERTER TASK: There is no preprocessor in Java:
+			///#region 分析项的整合
 		Attrs AttrsOfNum = new Attrs();
 		String[] analyKeys = analyKey.split("[,]", -1);
 		for (String key : analyKeys)
@@ -5002,14 +4645,14 @@ public class WF_Comm extends WebContralBase
 			if (strs[0].equals("Group_Number"))
 			{
 				selectSQL += " count(*) \"" + strs[0] + "\",";
-				mapAttrOfShows.add(new Attr("Group_Number", "Group_Number", 1, DataType.AppInt, false, "数量(合计)"));
-				AttrsOfNum.add(new Attr("Group_Number", "Group_Number", 1, DataType.AppInt, false, "数量"));
+				mapAttrOfShows.Add(new Attr("Group_Number", "Group_Number", 1, DataType.AppInt, false, "数量(合计)"), false);
+				AttrsOfNum.Add(new Attr("Group_Number", "Group_Number", 1, DataType.AppInt, false, "数量"), false);
 				continue;
 			}
 
 			//判断分析项的数据类型
 			Attr attr = map.GetAttrByKey(strs[0]);
-			AttrsOfNum.add(attr);
+			AttrsOfNum.Add(attr, false);
 
 			int dataType = attr.getMyDataType();
 			switch (strs[1])
@@ -5017,47 +4660,47 @@ public class WF_Comm extends WebContralBase
 				case "SUM":
 					if (dataType == 2)
 					{
-						selectSQL += " SUM(" + strs[0] + ") \"" + strs[0] + "\",";
+						selectSQL += " SUM(" + map.getPhysicsTable() + "." + strs[0] + ") \"" + strs[0] + "\",";
 					}
 					else
 					{
-						if (SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.HGDB)
+						if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.UX)
 						{
-							selectSQL += " round ( cast (SUM(" + strs[0] + ") as  numeric), 4)  \"" + strs[0] + "\",";
+							selectSQL += " round ( cast (SUM(" + map.getPhysicsTable() + "." + strs[0] + ") as  numeric), 4)  \"" + strs[0] + "\",";
 						}
 						else
 						{
-							selectSQL += " round ( SUM(" + strs[0] + "), 4) \"" + strs[0] + "\",";
+							selectSQL += " round ( SUM(" + map.getPhysicsTable() + "." + strs[0] + "), 4) \"" + strs[0] + "\",";
 						}
 					}
 					attr.setDesc(attr.getDesc() + "(合计)");
 
 					break;
 				case "AVG":
-					if (SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.HGDB)
+					if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.UX)
 					{
-						selectSQL += " round ( cast (AVG(" + strs[0] + ") as  numeric), 4)  \"" + strs[0] + "\",";
+						selectSQL += " round ( cast (AVG(" + map.getPhysicsTable() + "." + strs[0] + ") as  numeric), 4)  \"" + strs[0] + "\",";
 					}
 					else
 					{
-						selectSQL += " round (AVG(" + strs[0] + "), 4)  \"" + strs[0] + "\",";
+						selectSQL += " round (AVG(" + map.getPhysicsTable() + "." + strs[0] + "), 4)  \"" + strs[0] + "\",";
 					}
 					attr.setDesc(attr.getDesc() + "(平均)");
 					break;
 				case "AMOUNT":
 					if (dataType == 2)
 					{
-						selectSQL += " SUM(" + strs[0] + ") \"" + strs[0] + "\",";
+						selectSQL += " SUM(" + map.getPhysicsTable() + "." + strs[0] + ") \"" + strs[0] + "\",";
 					}
 					else
 					{
-						if (SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || SystemConfig.getAppCenterDBType( ) == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.HGDB)
+						if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.UX)
 						{
-							selectSQL += " round ( cast (SUM(" + strs[0] + ") as  numeric), 4)  \"" + strs[0] + "\",";
+							selectSQL += " round ( cast (SUM(" + map.getPhysicsTable() + "." + strs[0] + ") as  numeric), 4)  \"" + strs[0] + "\",";
 						}
 						else
 						{
-							selectSQL += " round ( SUM(" + strs[0] + "), 4) \"" + strs[0] + "\",";
+							selectSQL += " round ( SUM(" + map.getPhysicsTable() + "." + strs[0] + "), 4) \"" + strs[0] + "\",";
 						}
 					}
 					attr.setDesc(attr.getDesc() + "(累计)");
@@ -5065,22 +4708,16 @@ public class WF_Comm extends WebContralBase
 				default:
 					throw new RuntimeException("没有判断的情况.");
 			}
-			mapAttrOfShows.add(attr);
+			mapAttrOfShows.Add(attr, false);
 
 		}
-
-		///#endregion 分析项的整合
+			///#endregion 分析项的整合
 		if (DataType.IsNullOrEmpty(selectSQL) == true || selectSQL.equals("SELECT ") == true)
 		{
 			return null;
 		}
 		selectSQL = selectSQL.substring(0, selectSQL.length() - 1);
 
-
-		///#endregion SelectSQL语句的组合
-
-
-		///#region WhereSQL语句的组合
 
 		//获取查询的注册表
 		UserRegedit searchUr = new UserRegedit();
@@ -5091,11 +4728,6 @@ public class WF_Comm extends WebContralBase
 
 		String whereSQL = " " + qo.getSQL().substring(qo.getSQL().indexOf("FROM "));
 
-
-		///#endregion WhereSQL语句的组合
-
-
-		///#region OrderBy语句组合
 
 		String orderbySQL = "";
 		String orderByKey = this.GetRequestVal("OrderBy");
@@ -5110,8 +4742,9 @@ public class WF_Comm extends WebContralBase
 
 		}
 
+//C# TO JAVA CONVERTER TASK: There is no preprocessor in Java:
+			///#endregion OrderBy语句组合
 
-		///#endregion OrderBy语句组合
 		sql = selectSQL + whereSQL + groupBySQL.substring(0, groupBySQL.length() - 1) + orderbySQL;
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql, qo.getMyParas());
@@ -5130,41 +4763,10 @@ public class WF_Comm extends WebContralBase
 		return d.toString();
 	}
 
-	/**
-	 执行导出
 
-	 @return
-	 */
-	//public string Group_Exp()
-	//{
-	//    //获得
-	//    Entities ens = ClassFactory.GetEns(this.EnsName);
-	//    if (ens == null)
-	//        return "err@类名错误:" + this.EnsName;
-
-	//    Entity en = ens.getGetNewEntity();
-	//    Map map = ens.getGetNewEntity().EnMapInTime;
-	//    DataSet ds = new DataSet();
-
-	//    //获取注册信息表
-	//    UserRegedit ur = new UserRegedit(WebUser.getNo(), this.EnsName + "_Group");
-
-	//    // 查询出来关于它的活动列配置.
-	//    ActiveAttrs aas = new ActiveAttrs();
-	//    aas.RetrieveBy(ActiveAttrAttr.For, this.EnsName);
-
-	//    ds = GroupSearchSet(ens, en, map, ur, ds, aas);
-	//    if (ds == null)
-	//        return "err@您没有选择分析的数据";
-
-	//    string filePath = BP.Tools.ExportExcelUtil.ExportGroupExcel(ds, en.EnDesc, ur.Vals);
-
-
-	//    return filePath;
-	//}
-
-	public final boolean isContainsNDYF() throws Exception {
-		if (this.GetValFromFrmByKey("IsContainsNDYF").toString().toUpperCase().equals("TRUE"))
+	public final boolean getItIsContainsNDYF()
+	{
+		if (Objects.equals(this.GetValFromFrmByKey("IsContainsNDYF").toString().toUpperCase(), "TRUE"))
 		{
 			return true;
 		}
@@ -5173,15 +4775,12 @@ public class WF_Comm extends WebContralBase
 			return false;
 		}
 	}
-
-
-
-	///#region 常用词汇功能开始
-	/**
+		///#region 常用词汇功能开始
+	/** 
 	 常用词汇
-
-	 @return
-	 */
+	 
+	 @return 
+	*/
 	public final String HelperWordsData() throws Exception {
 
 		String FK_MapData = this.GetRequestVal("FK_MapData");
@@ -5189,7 +4788,7 @@ public class WF_Comm extends WebContralBase
 		String lb = this.GetRequestVal("lb");
 
 		//读取txt文件
-		if (lb.equals("readWords"))
+		if (Objects.equals(lb, "readWords"))
 		{
 			return readTxt();
 		}
@@ -5197,7 +4796,7 @@ public class WF_Comm extends WebContralBase
 		//读取其他常用词汇
 		DataSet ds = new DataSet();
 		//我的词汇
-		if (lb.equals("myWords"))
+		if (Objects.equals(lb, "myWords"))
 		{
 			DefVals dvs = new DefVals();
 			QueryObject qo = new QueryObject(dvs);
@@ -5213,10 +4812,10 @@ public class WF_Comm extends WebContralBase
 			qo.AddWhere("LB", "=", "1");
 
 			String pageNumber = GetRequestVal("pageNumber");
-			int iPageNumber = DataType.IsNullOrEmpty(pageNumber) ? 1 : Integer.parseInt(pageNumber);
+			int iPageNumber =StringHelper.isNullOrEmpty(pageNumber) ? 1 : Integer.parseInt(pageNumber);
 			//每页多少行
 			String pageSize = GetRequestVal("pageSize");
-			int iPageSize = DataType.IsNullOrEmpty(pageSize) ? 9999 : Integer.parseInt(pageSize);
+			int iPageSize = StringHelper.isNullOrEmpty(pageSize) ? 9999 : Integer.parseInt(pageSize);
 
 			DataTable dt = new DataTable("DataCount");
 			dt.Columns.Add("DataCount", Integer.class);
@@ -5224,20 +4823,16 @@ public class WF_Comm extends WebContralBase
 			dr.setValue("DataCount", qo.GetCount());
 			dt.Rows.add(dr);
 			ds.Tables.add(dt);
-
 			qo.DoQuery("MyPK", iPageSize, iPageNumber);
-
-
-			String gg = Json.ToJson(dvs.ToDataTableField("MainTable"));
 			ds.Tables.add(dvs.ToDataTableField("MainTable")); //把描述加入.
 		}
-		if (lb.equals("hisWords"))
+		if (Objects.equals(lb, "hisWords"))
 		{
-			Node nd = new Node(this.getFK_Node());
-			String rptNo = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt";
+			Node nd = new Node(this.getNodeID());
+			String rptNo = "ND" + Integer.parseInt(this.getFlowNo()) + "Rpt";
 			if (nd.getHisFormType() == NodeFormType.SheetTree || nd.getHisFormType() == NodeFormType.RefOneFrmTree)
 			{
-				MapData mapData = new MapData(this.getFK_MapData());
+				MapData mapData = new MapData(this.getFrmID());
 				rptNo = mapData.getPTable();
 			}
 
@@ -5249,10 +4844,10 @@ public class WF_Comm extends WebContralBase
 			qo.addAnd();
 			qo.AddWhere(AttrKey, "!=", "");
 			String pageNumber = GetRequestVal("pageNumber");
-			int iPageNumber = DataType.IsNullOrEmpty(pageNumber) ? 1 : Integer.parseInt(pageNumber);
+			int iPageNumber = StringHelper.isNullOrEmpty(pageNumber) ? 1 : Integer.parseInt(pageNumber);
 			//每页多少行
 			String pageSize = GetRequestVal("pageSize");
-			int iPageSize = DataType.IsNullOrEmpty(pageSize) ? 9999 : Integer.parseInt(pageSize);
+			int iPageSize = StringHelper.isNullOrEmpty(pageSize) ? 9999 : Integer.parseInt(pageSize);
 
 			DataTable dt = new DataTable("DataCount");
 			dt.Columns.Add("DataCount", Integer.class);
@@ -5285,19 +4880,17 @@ public class WF_Comm extends WebContralBase
 		}
 
 		return DataTableConvertJson.DataTable2Json(ds.GetTableByName("MainTable"), Integer.parseInt(ds.GetTableByName("DataCount").Rows.get(0).getValue(0).toString()));
-		//return BP.Tools.Json.ToJson(ds);
 	}
 
-	/**
+	/** 
 	 注意特殊字符的处理
-
-	 @return
-	 */
+	 
+	 @return 
+	*/
 	private String readTxt() throws Exception {
 		try
 		{
 			String path = SystemConfig.getPathOfDataUser() + "Fastenter/" + getFK_MapData() + "/" + GetRequestVal("AttrKey");
-			;
 			if (!(new File(path)).isDirectory())
 			{
 				(new File(path)).mkdirs();
@@ -5351,11 +4944,11 @@ public class WF_Comm extends WebContralBase
 						e.printStackTrace();
 					}
 
-					liStr += String.format("%s},", DataTableConvertJson.GetFilteredStrForJSON(fileName),
-							DataTableConvertJson.GetFilteredStrForJSON(tempString));
+					liStr += String.format("%s},", bp.tools.DataTableConvertJson.GetFilteredStrForJSON(fileName),
+							bp.tools.DataTableConvertJson.GetFilteredStrForJSON(tempString));
 
-					dt.Rows.get(count).setValue("CurValue", DataTableConvertJson.GetFilteredStrForJSON(fileName));
-					dt.Rows.get(count).setValue("TxtStr", DataTableConvertJson.GetFilteredStrForJSON(tempString));
+					dt.Rows.get(count).setValue("CurValue", bp.tools.DataTableConvertJson.GetFilteredStrForJSON(fileName));
+					dt.Rows.get(count).setValue("TxtStr", bp.tools.DataTableConvertJson.GetFilteredStrForJSON(tempString));
 				}
 				count += 1;
 			}
@@ -5374,10 +4967,6 @@ public class WF_Comm extends WebContralBase
 			return "";
 		}
 	}
-
-	///#endregion 常用词汇结束
-
-
 	///#region 前台SQL转移处理
 	public final String RunSQL_Init() throws Exception {
 		String sql = GetRequestVal("SQL");
@@ -5392,13 +4981,14 @@ public class WF_Comm extends WebContralBase
 		{
 			dt = DBAccess.RunSQLReturnTable(sql);
 		}
-		return Json.ToJson(dt);
+		return bp.tools.Json.ToJson(dt);
 	}
-
 	///#endregion
 
-	private static final String APP_KEY = "447d8b671ee948b8";     // 您的应用ID
-	private static final String APP_SECRET = "rF1HBr3QjtPD1gXVFfIAGKtDRF6Q2HuB";  // 您的应用密钥
+	// 您的应用ID
+	private static String APP_KEY = "447d8b671ee948b8";
+	// 您的应用密钥
+	private static String APP_SECRET = "rF1HBr3QjtPD1gXVFfIAGKtDRF6Q2HuB";
 
 	public final String ToLang() throws NoSuchAlgorithmException {
 		// 添加请求参数
@@ -5413,7 +5003,6 @@ public class WF_Comm extends WebContralBase
 		}
 		return "";
 	}
-
 	private java.util.Map<String, String[]> createRequestParams() {
 		/*
 		 * note: 将下列变量替换为需要请求的参数

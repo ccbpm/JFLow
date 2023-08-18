@@ -28,7 +28,7 @@ public class GENoName extends EntityNoName
 	 param no 编号
 	 * @throws Exception 
 	*/
-	public GENoName(String no)
+	public GENoName(String no) throws Exception
 	{
 	}
 	public GENoName(String sftable, String tableDesc)
@@ -45,8 +45,7 @@ public class GENoName extends EntityNoName
 		}
 
 		Map map = new Map(this.PhysicsTable, this.Desc);
-		map.setIsAutoGenerNo(true);
-		map.setIsAutoGenerNo(true);
+		map.setItIsAutoGenerNo(true);
 
 		map.AddTBStringPK(GENoNameAttr.No, null, "编号", true, true, 1, 30, 3);
 		map.AddTBString(GENoNameAttr.Name, null, "名称", true, false, 1, 60, 500);

@@ -1,27 +1,28 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
-import bp.difference.handler.CommonUtils;
-import bp.difference.handler.WebContralBase;
 import bp.sys.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.difference.*;
 import bp.*;
 import bp.wf.*;
-import bp.wf.Glo;
 import bp.wf.rpt.RptDfine;
+
+import java.io.IOException;
+import java.util.*;
 
 /** 
  页面功能实体
 */
-public class WF_Admin_RptDfine extends WebContralBase
+public class WF_Admin_RptDfine extends bp.difference.handler.DirectoryPageBase
 {
 
 
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_RptDfine() throws Exception {
+	public WF_Admin_RptDfine()
+	{
 	}
 
 
@@ -32,7 +33,7 @@ public class WF_Admin_RptDfine extends WebContralBase
 	 @return 
 	*/
 	@Override
-	protected String DoDefaultMethod() throws Exception {
+	protected String DoDefaultMethod() throws IOException {
 		String msg = "";
 		try
 		{
@@ -48,15 +49,15 @@ public class WF_Admin_RptDfine extends WebContralBase
 					msg = "err@没有判断的执行类型：" + this.getDoType();
 					break;
 			}
-			return msg;
+			ContextHolderUtils.getResponse().getWriter().write(msg);
 		}
-		catch (RuntimeException ex)
+		catch (Exception ex)
 		{
-			throw new RuntimeException(
-					"@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + CommonUtils.getRequest().getRequestURI());
+			ContextHolderUtils.getResponse().getWriter().write("err@" + ex.getMessage());
 		}
 
 		//找不不到标记就抛出异常.
+		throw new RuntimeException("@标记[" + this.getDoType() + "]，没有找到. @RowURL:" + ContextHolderUtils.getRequest().getRequestURI());
 	}
 
 		///#endregion 执行父类的重写方法.
@@ -73,7 +74,7 @@ public class WF_Admin_RptDfine extends WebContralBase
 		String rptNo = this.GetRequestVal("RptNo");
 
 		//所有的字段.
-		String fk_mapdata = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt";
+		String fk_mapdata = "ND" + Integer.parseInt(this.getFlowNo()) + "Rpt";
 		MapAttrs mattrs = new MapAttrs(fk_mapdata);
 		ds.Tables.add(mattrs.ToDataTableField("Sys_MapAttrOfAll"));
 
@@ -82,7 +83,7 @@ public class WF_Admin_RptDfine extends WebContralBase
 		md.setNo(rptNo);
 		if (md.RetrieveFromDBSources() == 0)
 		{
-			RptDfine rd = new RptDfine(this.getFK_Flow());
+			RptDfine rd = new RptDfine(this.getFlowNo());
 
 			switch (rptNo.substring(fk_mapdata.length()))
 			{
@@ -111,7 +112,7 @@ public class WF_Admin_RptDfine extends WebContralBase
 
 		//系统字段.
 		MapAttrs mattrsOfSystem = new MapAttrs();
-		String sysFields = Glo.getFlowFields();
+		String sysFields = bp.wf.Glo.getFlowFields();
 		for (MapAttr item : mattrs.ToJavaList())
 		{
 			if (sysFields.contains(item.getKeyOfEn()))
@@ -155,7 +156,7 @@ public class WF_Admin_RptDfine extends WebContralBase
 		mrattrsOfRpt.Delete(MapAttrAttr.FK_MapData, rptNo);
 
 		//所有的字段.
-		String fk_mapdata = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt";
+		String fk_mapdata = "ND" + Integer.parseInt(this.getFlowNo()) + "Rpt";
 		MapAttrs allAttrs = new MapAttrs(fk_mapdata);
 
 		for (MapAttr attr : allAttrs.ToJavaList())
@@ -166,8 +167,8 @@ public class WF_Admin_RptDfine extends WebContralBase
 				continue;
 			}
 
-			attr.setFK_MapData(rptNo);
-			attr.setMyPK(attr.getFK_MapData() + "_" + attr.getKeyOfEn());
+			attr.setFrmID( rptNo);
+			attr.setMyPK(attr.getFrmID() + "_" + attr.getKeyOfEn());
 
 
 				///#region 判断特殊的字段.
@@ -178,7 +179,7 @@ public class WF_Admin_RptDfine extends WebContralBase
 					attr.setUIContralType(UIContralType.DDL);
 					attr.setLGType(FieldTypeS.Enum);
 					attr.setUIVisible(false);
-					attr.setDefVal( "0");
+					attr.setDefVal("0");
 					attr.setMaxLen(100);
 					attr.setUIVisible(true);
 					attr.Insert();
@@ -189,7 +190,7 @@ public class WF_Admin_RptDfine extends WebContralBase
 					attr.setUIContralType(UIContralType.TB);
 					attr.setLGType(FieldTypeS.Normal);
 					attr.setUIVisible(false);
-					attr.setDefVal( "");
+					attr.setDefVal("");
 					attr.setMaxLen(100);
 					attr.setUIVisible(false);
 					attr.Insert();
@@ -206,7 +207,7 @@ public class WF_Admin_RptDfine extends WebContralBase
 				case GERptAttr.Title:
 					attr.setUIWidth(120);
 					attr.setUIVisible(true);
-					attr.setIdx( 0);
+					attr.setIdx(0);
 					attr.Insert();
 					continue;
 				case GERptAttr.FlowStarter:
@@ -256,13 +257,13 @@ public class WF_Admin_RptDfine extends WebContralBase
 			//如果包含了指定的字段，就执行插入操作.
 			if (fields.contains("," + attr.getKeyOfEn() + ",") == true)
 			{
-				attr.setFK_MapData(rptNo);
-				attr.setMyPK(attr.getFK_MapData() + "_" + attr.getKeyOfEn());
+				attr.setFrmID( rptNo);
+				attr.setMyPK(attr.getFrmID() + "_" + attr.getKeyOfEn());
 				attr.DirectInsert();
 			}
 		}
 		MapData mapData = new MapData(rptNo);
-		mapData.ClearCash();
+		mapData.ClearCache();
 		return "保存成功.";
 	}
 
@@ -283,9 +284,9 @@ public class WF_Admin_RptDfine extends WebContralBase
 		md.setNo(rptNo);
 		if (md.RetrieveFromDBSources() == 0)
 		{
-			RptDfine rd = new RptDfine(this.getFK_Flow());
+			RptDfine rd = new RptDfine(this.getFlowNo());
 
-			switch (rptNo.substring(("ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt").length()))
+			switch (rptNo.substring(("ND" + Integer.parseInt(this.getFlowNo()) + "Rpt").length()))
 			{
 				case "My":
 					rd.DoReset_MyStartFlow();
@@ -350,21 +351,21 @@ public class WF_Admin_RptDfine extends WebContralBase
 			DBAccess.RunSQL("UPDATE Sys_MapAttr SET Idx=" + i + " WHERE No='" + mypk + "'");
 		}
 
-		//foreach (string item in strs)
+		//foreach (String item in strs)
 		//{
 		//    if (DataType.IsNullOrEmpty(item) == true)
 		//        continue;
 
 		//    string[] vals = item.Split(',');
 
-		//    string mypk = rptNo + "_" + vals[0];
+		//    String mypk = rptNo + "_" + vals[0];
 
 		//    MapAttr attr = new MapAttr();
 		//    attr.setMyPK(mypk);
 		//    attr.Retrieve();
 
 		//    attr.setName(vals[1];
-		//    attr.setIdx( int.Parse(vals[2]);
+		//    attr.setIdx(int.Parse(vals[2]);
 
 		//    attr.Update(); //执行更新.
 		//}
@@ -372,14 +373,14 @@ public class WF_Admin_RptDfine extends WebContralBase
 		MapAttr myattr = new MapAttr();
 		myattr.setMyPK(rptNo + "_OID");
 		myattr.RetrieveFromDBSources();
-		myattr.setIdx( 200);
+		myattr.setIdx(200);
 		myattr.setName("工作ID");
 		myattr.Update();
 
 		myattr = new MapAttr();
 		myattr.setMyPK(rptNo + "_Title");
 		myattr.RetrieveFromDBSources();
-		myattr.setIdx(-100);
+		myattr.setIdx(-1);
 		myattr.setName("标题");
 		myattr.Update();
 
@@ -402,9 +403,9 @@ public class WF_Admin_RptDfine extends WebContralBase
 		md.setNo(rptNo);
 		if (md.RetrieveFromDBSources() == 0)
 		{
-			RptDfine rd = new RptDfine(this.getFK_Flow());
+			RptDfine rd = new RptDfine(this.getFlowNo());
 
-			switch (rptNo.substring(("ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt").length()))
+			switch (rptNo.substring(("ND" + Integer.parseInt(this.getFlowNo()) + "Rpt").length()))
 			{
 				case "My":
 					rd.DoReset_MyStartFlow();
@@ -437,7 +438,7 @@ public class WF_Admin_RptDfine extends WebContralBase
 		boolean isHave = false;
 		for (MapAttr mattr : attrs.ToJavaList())
 		{
-			if (mattr.getUIVisible()== false)
+			if (mattr.getUIVisible() == false)
 			{
 				continue;
 			}
@@ -457,7 +458,7 @@ public class WF_Admin_RptDfine extends WebContralBase
 			{
 				if (mattr.getMyDataType() == DataType.AppDate || mattr.getMyDataType() == DataType.AppDateTime)
 				{
-					if (mattr.getUIVisible()== false)
+					if (mattr.getUIVisible() == false)
 					{
 						continue;
 					}
@@ -472,7 +473,8 @@ public class WF_Admin_RptDfine extends WebContralBase
 		//返回数据.
 		return bp.tools.Json.ToJson(ds);
 	}
-	public final String getRptNo() throws Exception {
+	public final String getRptNo()
+	{
 		return this.GetRequestVal("RptNo");
 	}
 	/** 
@@ -490,29 +492,28 @@ public class WF_Admin_RptDfine extends WebContralBase
 		md.setRptSearchKeys(fields + "*");
 
 		String IsSearchKey = this.GetRequestVal("IsSearchKey");
-		if (IsSearchKey.equals("0"))
+		if (Objects.equals(IsSearchKey, "0"))
 		{
-			md.setSearchKey(false);
+			md.setItIsSearchKey(false);
 		}
 		else
 		{
-			md.setSearchKey(true);
+			md.setItIsSearchKey(true);
 		}
 		md.SetPara("StringSearchKeys", this.GetRequestVal("StringSearchKeys"));
 		//查询方式.
-		int dtSearchWay = this.GetRequestValInt("DTSearchWay");
-		md.setDTSearchWay(DTSearchWay.forValue(dtSearchWay));
-
+		int DTSearchWay = this.GetRequestValInt("DTSearchWay");
+		md.setDTSearchWay(bp.sys.DTSearchWay.forValue(DTSearchWay));
 
 		//日期字段.
 		String DTSearchKey = this.GetRequestVal("DTSearchKey");
-		md.setDTSearchKey (DTSearchKey);
+		md.setDTSearchKey(DTSearchKey);
 
 		//是否查询自己部门发起
 		md.SetPara("IsSearchNextLeavel", this.GetRequestValBoolen("IsSearchNextLeavel"));
 		md.Save();
 
-		Cash.getMap_Cash().remove(this.getRptNo());
+		Cache.getMap_Cache().remove(this.getRptNo());
 		return "保存成功.";
 	}
 

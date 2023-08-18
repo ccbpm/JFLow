@@ -1,9 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
-import java.util.*;
 
 /** 
  明细
@@ -118,7 +115,6 @@ public class MapDtlAttr extends EntityNoNameAttr
 	 排序表达式.
 	*/
 	public static final String OrderBySQLExp = "OrderBySQLExp";
-
 	/** 
 	 列自动计算表达式
 	*/
@@ -131,23 +127,10 @@ public class MapDtlAttr extends EntityNoNameAttr
 	 是否可见
 	*/
 	public static final String IsView = "IsView";
-	/**
-	 x
-	 */
-	public static final String X = "X";
-	/**
-	 Y
-	 */
-	public static final String Y = "Y";
-	/**
+	/** 
 	 H高度
-	 */
+	*/
 	public static final String H = "H";
-	/**
-	 w宽度
-	 */
-	public static final String W = "W";
-
 	/** 
 	 宽度
 	*/
@@ -163,7 +146,7 @@ public class MapDtlAttr extends EntityNoNameAttr
 	/** 
 	 多表头列
 	*/
-	//public const string MTR = "MTR";
+	//public const String MTR = "MTR";
 	/** 
 	 GUID
 	*/

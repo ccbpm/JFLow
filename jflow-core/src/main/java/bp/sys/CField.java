@@ -1,5 +1,6 @@
 package bp.sys;
 
+import bp.da.*;
 import bp.en.*;
 import bp.en.Map;
 
@@ -14,34 +15,28 @@ public class CField extends EntityMyPK
 	/** 
 	 列选择
 	*/
-	public final String getAttrs()  throws Exception
-	{
+	public final String getAttrs()  {
 		return this.GetValStringByKey(CFieldAttr.Attrs);
 	}
-	public final void setAttrs(String value) throws Exception
-	{
+	public final void setAttrs(String value){
 		this.SetValByKey(CFieldAttr.Attrs, value);
 	}
 	/** 
 	 操作员ID
 	*/
-	public final String getFK_Emp()  throws Exception
-	{
-		return this.GetValStringByKey(CFieldAttr.FK_Emp);
+	public final String getEmpNo()  {
+		return this.GetValStringByKey(CFieldAttr.EmpNo);
 	}
-	public final void setFK_Emp(String value) throws Exception
-	{
-		this.SetValByKey(CFieldAttr.FK_Emp, value);
+	public final void setEmpNo(String value){
+		this.SetValByKey(CFieldAttr.EmpNo, value);
 	}
 	/** 
 	 属性
 	*/
-	public final String getEnsName()  throws Exception
-	{
+	public final String getEnsName()  {
 		return this.GetValStringByKey(CFieldAttr.EnsName);
 	}
-	public final void setEnsName(String value) throws Exception
-	{
+	public final void setEnsName(String value){
 		this.SetValByKey(CFieldAttr.EnsName, value);
 	}
 
@@ -56,26 +51,10 @@ public class CField extends EntityMyPK
 	{
 	}
 	/** 
-	 列选择
-	 
-	 param FK_Emp 工作人员ID
-	 param className 类名称
-	*/
-	public CField(String FK_Emp, String className) throws Exception {
-		int i = this.Retrieve(CFieldAttr.FK_Emp, FK_Emp, CFieldAttr.EnsName, className);
-		if (i == 0)
-		{
-			this.setEnsName(className);
-			this.setFK_Emp(FK_Emp);
-			this.Insert();
-		}
-	}
-	/** 
 	 map
 	*/
 	@Override
-	public bp.en.Map getEnMap()
-	{
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -84,7 +63,7 @@ public class CField extends EntityMyPK
 
 		map.AddMyPK();
 		map.AddTBString(CFieldAttr.EnsName, null, "实体类名称", false, true, 0, 100, 10);
-		map.AddTBString(CFieldAttr.FK_Emp, null, "工作人员", false, true, 0, 100, 10);
+		map.AddTBString(CFieldAttr.EmpNo, null, "工作人员", false, true, 0, 100, 10);
 		map.AddTBStringDoc(CFieldAttr.Attrs, null, "属性s", true, false);
 		this.set_enMap(map);
 		return this.get_enMap();
@@ -95,7 +74,10 @@ public class CField extends EntityMyPK
 	@Override
 	protected boolean beforeUpdateInsertAction() throws Exception
 	{
-		this.setMyPK(this.getEnsName() + "_" + this.getFK_Emp());
+		if (DataType.IsNullOrEmpty(this.getMyPK()) == true)
+		{
+			this.setMyPK(this.getEnsName() + "_" + this.getEmpNo());
+		}
 		return super.beforeUpdateInsertAction();
 	}
 

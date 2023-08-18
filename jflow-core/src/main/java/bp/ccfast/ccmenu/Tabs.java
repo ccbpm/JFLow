@@ -1,6 +1,8 @@
 package bp.ccfast.ccmenu;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.ccfast.*;
 import java.util.*;
 
 /** 
@@ -13,13 +15,15 @@ public class Tabs extends EntitiesNoName
 	/** 
 	 标签容器s
 	*/
-	public Tabs() throws Exception {
+	public Tabs()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new Tab();
 	}
 
@@ -32,7 +36,8 @@ public class Tabs extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<Tab> ToJavaList() {
+	public final java.util.List<Tab> ToJavaList()
+	{
 		return (java.util.List<Tab>)(Object)this;
 	}
 	/** 
@@ -40,7 +45,8 @@ public class Tabs extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<Tab> Tolist(){
+	public final ArrayList<Tab> Tolist()
+	{
 		ArrayList<Tab> list = new ArrayList<Tab>();
 		for (int i = 0; i < this.size(); i++)
 		{

@@ -1,9 +1,6 @@
 package bp.wf.rpt;
 
-import bp.da.DataType;
-
 import java.util.*;
-import java.io.*;
 import java.time.*;
 
 /** 
@@ -14,36 +11,38 @@ public class RptExportTemplate
 	/** 
 	 模板最后修改时间
 	*/
-	private Date LastModify = new Date(0);
-	public final Date getLastModify()throws Exception
+	private LocalDateTime LastModify = LocalDateTime.MIN;
+	public final LocalDateTime getLastModify()
 	{
 		return LastModify;
 	}
-	public final void setLastModify(Date value)throws Exception
-	{LastModify = value;
+	public final void setLastModify(LocalDateTime value)
+	{
+		LastModify = value;
 	}
 
 	/** 
 	 导出填充方向
 	*/
 	private FillDirection Direction = FillDirection.values()[0];
-	public final FillDirection getDirection()throws Exception
+	public final FillDirection getDirection()
 	{
 		return Direction;
 	}
-	public final void setDirection(FillDirection value)throws Exception
-	{Direction = value;
+	public final void setDirection(FillDirection value)
+	{
+		Direction = value;
 	}
 
 	/** 
 	 导出开始填充的行/列号
 	*/
 	private int BeginIdx;
-	public final int getBeginIdx()throws Exception
+	public final int getBeginIdx()
 	{
 		return BeginIdx;
 	}
-	public final void setBeginIdx(int value) throws Exception
+	public final void setBeginIdx(int value)
 	{
 		BeginIdx = value;
 	}
@@ -52,24 +51,26 @@ public class RptExportTemplate
 	 字段与单元格绑定信息集合
 	*/
 	private ArrayList<RptExportTemplateCell> Cells;
-	public final ArrayList<RptExportTemplateCell> getCells()throws Exception
+	public final ArrayList<RptExportTemplateCell> getCells()
 	{
 		return Cells;
 	}
-	public final void setCells(ArrayList<RptExportTemplateCell> value)throws Exception
-	{Cells = value;
+	public final void setCells(ArrayList<RptExportTemplateCell> value)
+	{
+		Cells = value;
 	}
 
 	/** 
 	 是否有单元格绑定了指定的表单中的字段
 	 
-	 param fk_mapdata 表单对应FK_MapData
+	 @param fk_mapdata 表单对应FK_MapData
 	 @return 
 	*/
-	public final boolean HaveCellInMapData(String fk_mapdata) throws Exception {
+	public final boolean HaveCellInMapData(String fk_mapdata)
+	{
 		for (RptExportTemplateCell cell : getCells())
 		{
-			if (cell.getFK_MapData().equals(fk_mapdata))
+			if (Objects.equals(cell.getFrmID(), fk_mapdata))
 			{
 				return true;
 			}
@@ -78,7 +79,8 @@ public class RptExportTemplate
 		return false;
 	}
 
-	public final RptExportTemplateCell GetBeginHeaderCell(FillDirection direction) throws Exception {
+	public final RptExportTemplateCell GetBeginHeaderCell(FillDirection direction)
+	{
 		if (getCells() == null || getCells().isEmpty())
 		{
 			return null;
@@ -111,19 +113,18 @@ public class RptExportTemplate
 	}
 
 
-
 	/** 
 	 获取定义的填充明细表NO
 	 
 	 @return 
 	*/
-	public final String GetDtl()throws Exception
+	public final String GetDtl()
 	{
 		for (RptExportTemplateCell cell : getCells())
 		{
-			if (!DataType.IsNullOrEmpty(cell.getDtlKeyOfEn()))
+			if (!(cell.getDtlKeyOfEn() == null || cell.getDtlKeyOfEn().isEmpty()))
 			{
-				return cell.getFK_DtlMapData();
+				return cell.getFKDtlMapData();
 			}
 		}
 

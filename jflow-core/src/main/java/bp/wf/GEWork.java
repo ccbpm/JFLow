@@ -2,6 +2,7 @@ package bp.wf;
 
 import bp.da.*;
 import bp.en.*;
+import bp.en.Map;
 
 /** 
  普通工作
@@ -9,24 +10,25 @@ import bp.en.*;
 public class GEWork extends Work
 {
 
-		///#region 与_SQLCash 操作有关
-	private SQLCash _SQLCash = null;
+		///#region 与_SQLCache 操作有关
+	private SQLCache _SQLCache = null;
 	@Override
-	public SQLCash getSQLCash() throws Exception {
-		if (_SQLCash == null)
+	public SQLCache getSQLCache() throws Exception {
+		if (_SQLCache == null)
 		{
-			_SQLCash = Cash.GetSQL(this.NodeFrmID.toString());
-			if (_SQLCash == null)
+			_SQLCache = Cache.GetSQL(this.NodeFrmID.toString());
+			if (_SQLCache == null)
 			{
-				_SQLCash = new SQLCash(this);
-				Cash.SetSQL(this.NodeFrmID.toString(), _SQLCash);
+				_SQLCache = new SQLCache(this);
+				Cache.SetSQL(this.NodeFrmID.toString(), _SQLCache);
 			}
 		}
-		return _SQLCash;
+		return _SQLCache;
 	}
 	@Override
-	public void setSQLCash(SQLCash value)
-	{_SQLCash = value;
+	public void setSQLCache(SQLCache value)
+	{
+		_SQLCache = value;
 	}
 
 		///#endregion
@@ -36,30 +38,31 @@ public class GEWork extends Work
 	/** 
 	 普通工作
 	*/
-	public GEWork()  {
+	public GEWork()
+	{
 	}
 	/** 
 	 普通工作
 	 
-	 param nodeid 节点ID
+	 @param nodeid 节点ID
 	*/
 	public GEWork(int nodeid, String nodeFrmID)
 	{
 		this.NodeFrmID = nodeFrmID;
 		this.setNodeID(nodeid);
-		this.setSQLCash(null);
+		this.setSQLCache(null);
 	}
 	/** 
 	 普通工作
 	 
-	 param nodeid 节点ID
-	 param _oid OID
+	 @param nodeid 节点ID
+	 @param _oid OID
 	*/
 	public GEWork(int nodeid, String nodeFrmID, long _oid) throws Exception {
 		this.NodeFrmID = nodeFrmID;
 		this.setNodeID(nodeid);
 		this.setOID(_oid);
-		this.setSQLCash(null);
+		this.setSQLCache(null);
 	}
 
 		///#endregion
@@ -70,11 +73,11 @@ public class GEWork extends Work
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap()  {
-		try {
+	public Map getEnMap(){
+		try{
 			this.set_enMap(bp.sys.MapData.GenerHisMap(this.NodeFrmID));
-		} catch (Exception e) {
-			e.printStackTrace();
+		}catch(Exception e){
+
 		}
 		return this.get_enMap();
 	}
@@ -82,7 +85,8 @@ public class GEWork extends Work
 	 GEWorks
 	*/
 	@Override
-	public Entities getGetNewEntities() throws Exception {
+	public Entities GetNewEntities()
+	{
 		if (this.getNodeID() == 0)
 		{
 			return new GEWorks();
@@ -93,12 +97,13 @@ public class GEWork extends Work
 		///#endregion
 
 	/** 
-	 重写tostring 返回fromID.
+	 重写toString 返回fromID.
 	 
 	 @return 
 	*/
 	@Override
-	public String toString()  {
+	public String toString()
+	{
 		return this.NodeFrmID;
 	}
 }

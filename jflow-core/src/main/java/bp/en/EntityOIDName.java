@@ -44,12 +44,10 @@ public abstract class EntityOIDName extends EntityOID
 	 名称
 	 * @throws Exception 
 	*/
-	public final String getName()
-	{
+	public final String getName()  {
 		return this.GetValStringByKey(EntityOIDNameAttr.Name);
 	}
-	public final void setName(String value)
-	{
+	public final void setName(String value){
 		this.SetValByKey(EntityOIDNameAttr.Name, value);
 	}
 	/** 
@@ -72,7 +70,7 @@ public abstract class EntityOIDName extends EntityOID
 	}
 
 	@Override
-	protected boolean beforeUpdate()throws Exception
+	protected boolean beforeUpdate() throws Exception
 	{
 		if (this.getEnMap().getIsAllowRepeatName() == false)
 		{

@@ -1,7 +1,7 @@
 package bp.wf.dts;
 
-import bp.en.*;
-
+import bp.en.*; import bp.en.Map;
+import bp.*;
 import bp.wf.*;
 
 /** 
@@ -12,7 +12,7 @@ public class CreateIndex extends Method
 	/** 
 	 创建索引
 	*/
-	public CreateIndex()throws Exception
+	public CreateIndex()
 	{
 		this.Title = "创建索引（为所有的流程,NDxxxTrack, NDxxRpt, 创建索引.）";
 		this.Help = "创建索引字段,调高流程的运行效率.";
@@ -44,8 +44,7 @@ public class CreateIndex extends Method
 	 @return 返回执行结果
 	*/
 	@Override
-	public Object Do()throws Exception
-	{
+	public Object Do() throws Exception {
 		String info = "开始为Track表创建索引.";
 
 		Flows fls = new Flows();

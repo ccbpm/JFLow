@@ -1,7 +1,4 @@
 package bp.wf;
-
-import bp.*;
-
 /** 
  节点工作类型
 */
@@ -37,7 +34,8 @@ public enum NodeWorkType
 
 	private int intValue;
 	private static java.util.HashMap<Integer, NodeWorkType> mappings;
-	private static java.util.HashMap<Integer, NodeWorkType> getMappings() {
+	private static java.util.HashMap<Integer, NodeWorkType> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (NodeWorkType.class)
@@ -52,15 +50,18 @@ public enum NodeWorkType
 	}
 
 	private NodeWorkType(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return intValue;
 	}
 
 	public static NodeWorkType forValue(int value)
-	{return getMappings().get(value);
+	{
+		return getMappings().get(value);
 	}
 }

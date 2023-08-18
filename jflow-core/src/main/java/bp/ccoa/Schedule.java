@@ -3,6 +3,7 @@ package bp.ccoa;
 import bp.da.*;
 import bp.web.*;
 import bp.en.*;
+import bp.en.Map;
 
 /** 
  日程
@@ -11,39 +12,31 @@ public class Schedule extends EntityMyPK
 {
 
 		///#region 基本属性
-	public final String getNianYue()
-	{
+	public final String getNianYue()  {
 		return this.GetValStrByKey(ScheduleAttr.NianYue);
 	}
-	public final void setNianYue(String value)
-	 {
+	public final void setNianYue(String value)  {
 		this.SetValByKey(ScheduleAttr.NianYue, value);
 	}
 	/** 
 	 组织编号
 	*/
-	public final String getOrgNo()
-	{
+	public final String getOrgNo()  {
 		return this.GetValStrByKey(ScheduleAttr.OrgNo);
 	}
-	public final void setOrgNo(String value)
-	 {
+	public final void setOrgNo(String value)  {
 		this.SetValByKey(ScheduleAttr.OrgNo, value);
 	}
-	public final String getRec()
-	{
+	public final String getRec()  {
 		return this.GetValStrByKey(ScheduleAttr.Rec);
 	}
-	public final void setRec(String value)
-	 {
+	public final void setRec(String value)  {
 		this.SetValByKey(ScheduleAttr.Rec, value);
 	}
-	public final String getRDT()
-	{
+	public final String getRDT()  {
 		return this.GetValStrByKey(ScheduleAttr.RDT);
 	}
-	public final void setRDT(String value)
-	 {
+	public final void setRDT(String value)  {
 		this.SetValByKey(ScheduleAttr.RDT, value);
 	}
 
@@ -55,7 +48,8 @@ public class Schedule extends EntityMyPK
 	 权限控制
 	*/
 	@Override
-	public UAC getHisUAC() {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (WebUser.getIsAdmin())
 		{
@@ -67,10 +61,10 @@ public class Schedule extends EntityMyPK
 	/** 
 	 日程
 	*/
-	public Schedule()  {
-	}
-	public Schedule(String mypk)throws Exception
+	public Schedule()
 	{
+	}
+	public Schedule(String mypk) throws Exception {
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
@@ -78,7 +72,8 @@ public class Schedule extends EntityMyPK
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -112,23 +107,23 @@ public class Schedule extends EntityMyPK
 		map.AddTBDateTime(ScheduleAttr.RDT, null, "记录时间", false, false);
 
 
-			//RefMethod rm = new RefMethod();
-			//rm.Title = "方法参数"; // "设计表单";
-			//rm.ClassMethodName = this.ToString() + ".DoParas";
-			//rm.Visable = true;
-			//rm.refMethodType = RefMethodType.RightFrameOpen;
-			//rm.Target = "_blank";
-			////rm.GroupName = "开发接口";
-			////  map.AddRefMethod(rm);
+		//RefMethod rm = new RefMethod();
+		//rm.Title = "方法参数"; // "设计表单";
+		//rm.ClassMethodName = this.ToString() + ".DoParas";
+		//rm.Visable = true;
+		//rm.refMethodType = RefMethodType.RightFrameOpen;
+		//rm.Target = "_blank";
+		////rm.GroupName = "开发接口";
+		////  map.AddRefMethod(rm);
 
-			//rm = new RefMethod();
-			//rm.Title = "方法内容"; // "设计表单";
-			//rm.ClassMethodName = this.ToString() + ".DoDocs";
-			//rm.Visable = true;
-			//rm.refMethodType = RefMethodType.RightFrameOpen;
-			//rm.Target = "_blank";
-			////rm.GroupName = "开发接口";
-			//map.AddRefMethod(rm);
+		//rm = new RefMethod();
+		//rm.Title = "方法内容"; // "设计表单";
+		//rm.ClassMethodName = this.ToString() + ".DoDocs";
+		//rm.Visable = true;
+		//rm.refMethodType = RefMethodType.RightFrameOpen;
+		//rm.Target = "_blank";
+		////rm.GroupName = "开发接口";
+		//map.AddRefMethod(rm);
 
 		this.set_enMap(map);
 		return this.get_enMap();
@@ -139,7 +134,8 @@ public class Schedule extends EntityMyPK
 
 		///#region 执行方法.
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		this.setMyPK(DBAccess.GenerGUID(0, null, null));
 		this.setRec(WebUser.getNo());
 		this.setOrgNo(WebUser.getOrgNo());

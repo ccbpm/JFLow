@@ -1,11 +1,12 @@
 package bp.sys.frmui;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
 import bp.*;
 import bp.sys.*;
 import java.util.*;
+import java.time.*;
 
 /** 
  实体属性s
@@ -17,13 +18,15 @@ public class MapAttrSFSQLs extends EntitiesMyPK
 	/** 
 	 实体属性s
 	*/
-	public MapAttrSFSQLs() throws Exception {
+	public MapAttrSFSQLs()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new MapAttrSFSQL();
 	}
 
@@ -36,7 +39,8 @@ public class MapAttrSFSQLs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<MapAttrSFSQL> ToJavaList() {
+	public final java.util.List<MapAttrSFSQL> ToJavaList()
+	{
 		return (java.util.List<MapAttrSFSQL>)(Object)this;
 	}
 	/** 
@@ -44,7 +48,8 @@ public class MapAttrSFSQLs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<MapAttrSFSQL> Tolist()  {
+	public final ArrayList<MapAttrSFSQL> Tolist()
+	{
 		ArrayList<MapAttrSFSQL> list = new ArrayList<MapAttrSFSQL>();
 		for (int i = 0; i < this.size(); i++)
 		{

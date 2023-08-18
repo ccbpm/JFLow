@@ -1,7 +1,7 @@
 package bp.ccbill.template;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.*;
 import bp.ccbill.*;
 import java.util.*;
@@ -90,8 +90,12 @@ public class CollectionAttr extends EntityNoNameAttr
 
 		///#endregion 外观.
 
+	/** 
+	 是否启用
+	*/
 	public static final String IsEnable = "IsEnable";
-
+	/** 
+	 流程编号
+	*/
 	public static final String FlowNo = "FlowNo";
-
 }

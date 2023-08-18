@@ -1,6 +1,11 @@
 package bp.wf.template.frm;
 
-import bp.en.*;
+import bp.da.*;
+import bp.en.*; import bp.en.Map;
+import bp.sys.*;
+import bp.*;
+import bp.wf.*;
+import bp.wf.template.*;
 import java.util.*;
 
 /** 
@@ -13,13 +18,15 @@ public class MapDataExts extends EntitiesNoName
 	/** 
 	 表单属性s
 	*/
-	public MapDataExts() throws Exception {
+	public MapDataExts()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new MapDataExt();
 	}
 
@@ -32,7 +39,8 @@ public class MapDataExts extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<MapDataExt> ToJavaList() {
+	public final java.util.List<MapDataExt> ToJavaList()
+	{
 		return (java.util.List<MapDataExt>)(Object)this;
 	}
 	/** 
@@ -40,7 +48,8 @@ public class MapDataExts extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<MapDataExt> Tolist()  {
+	public final ArrayList<MapDataExt> Tolist()
+	{
 		ArrayList<MapDataExt> list = new ArrayList<MapDataExt>();
 		for (int i = 0; i < this.size(); i++)
 		{

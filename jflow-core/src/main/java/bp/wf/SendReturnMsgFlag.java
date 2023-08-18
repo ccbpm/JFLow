@@ -1,7 +1,5 @@
 package bp.wf;
 
-import bp.*;
-
 /** 
  消息标记
 */

@@ -1,6 +1,9 @@
 package bp.ccfast.portal.windowext;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.ccfast.*;
+import bp.ccfast.portal.*;
 import java.util.*;
 
 /** 
@@ -13,13 +16,15 @@ public class ChartRings extends EntitiesNoName
 	/** 
 	 环形图s
 	*/
-	public ChartRings()  {
+	public ChartRings()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new ChartRing();
 	}
 
@@ -32,7 +37,8 @@ public class ChartRings extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<ChartRing> ToJavaList() {
+	public final java.util.List<ChartRing> ToJavaList()
+	{
 		return (java.util.List<ChartRing>)(Object)this;
 	}
 	/** 
@@ -40,7 +46,8 @@ public class ChartRings extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<ChartRing> Tolist()  {
+	public final ArrayList<ChartRing> Tolist()
+	{
 		ArrayList<ChartRing> list = new ArrayList<ChartRing>();
 		for (int i = 0; i < this.size(); i++)
 		{

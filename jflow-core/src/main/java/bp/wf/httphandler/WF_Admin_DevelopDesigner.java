@@ -1,7 +1,6 @@
 package bp.wf.httphandler;
 
 import bp.difference.handler.CommonFileUtils;
-import bp.difference.handler.WebContralBase;
 import bp.sys.*;
 import bp.da.*;
 import bp.ccbill.*;
@@ -9,25 +8,22 @@ import bp.difference.*;
 import bp.*;
 import bp.sys.CCFormAPI;
 import bp.tools.BaseFileUtils;
-import bp.tools.FileAccess;
 import bp.wf.*;
 import bp.wf.Dev2Interface;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 
-import static bp.difference.handler.WebContralBase.getRequest;
-
-public class WF_Admin_DevelopDesigner extends bp.difference.handler.WebContralBase
+public class WF_Admin_DevelopDesigner extends bp.difference.handler.DirectoryPageBase
 {
 
 		///#region 执行父类的重写方法.
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_DevelopDesigner() throws Exception {
+	public WF_Admin_DevelopDesigner()
+	{
 
 	}
 	/** 
@@ -37,7 +33,7 @@ public class WF_Admin_DevelopDesigner extends bp.difference.handler.WebContralBa
 	*/
 	public final String Designer_Init() throws Exception {
 		//获取htmlfrom 信息.
-		String htmlCode = DBAccess.GetBigTextFromDB("Sys_MapData", "No", this.getFK_MapData(), "HtmlTemplateFile");
+		String htmlCode = DBAccess.GetBigTextFromDB("Sys_MapData", "No", this.getFrmID(), "HtmlTemplateFile");
 
 		if (DataType.IsNullOrEmpty(htmlCode) == true)
 		{
@@ -50,7 +46,7 @@ public class WF_Admin_DevelopDesigner extends bp.difference.handler.WebContralBa
 		{
 			(new File(filePath)).mkdirs();
 		}
-		filePath = filePath + this.getFK_MapData() + ".htm";
+		filePath = filePath + this.getFrmID() + ".htm";
 
 		//写入到html 中
 		DataType.WriteFile(filePath, htmlCode);
@@ -74,9 +70,9 @@ public class WF_Admin_DevelopDesigner extends bp.difference.handler.WebContralBa
 			return "err@错误" + htmlCode;
 		}
 
-		htmlCode = URLDecoder.decode(htmlCode, "UTF8");
+		//htmlCode = HttpUtility.UrlDecode(htmlCode, Encoding.UTF8);
 
-		return Dev2Interface.SaveDevelopForm(htmlCode, this.getFK_MapData());
+		return Dev2Interface.SaveDevelopForm(htmlCode, this.getFrmID());
 
 	}
 
@@ -92,7 +88,10 @@ public class WF_Admin_DevelopDesigner extends bp.difference.handler.WebContralBa
 	public final String Template_Init() throws Exception {
 		DataSet ds = new DataSet();
 		String path = SystemConfig.getPathOfDataUser() + "Style/TemplateFoolDevelopDesigner/";
-
+		if(SystemConfig.isJarRun())
+			path = SystemConfig.getPhysicalPath()+"/DataUser/Style/TemplateFoolDevelopDesigner/";
+		File dirFile = new File(path);
+		File[] files = dirFile.listFiles(); //获取子文件夹
 		//模版类型
 		DataTable dt = new DataTable();
 		dt.TableName = "dirs";
@@ -106,58 +105,29 @@ public class WF_Admin_DevelopDesigner extends bp.difference.handler.WebContralBa
 		filesDt.Columns.Add("Name");
 		filesDt.Columns.Add("Dir");
 		DataRow tempdr = filesDt.NewRow();
-		if(SystemConfig.getIsJarRun()==true){
-			ArrayList<String> files = BaseFileUtils.GetDirectories(path);
-			for(String basePath : files){
-				//模版分类
-				String name =basePath.substring(0,basePath.length()-1);
-				name = name.substring(name.substring(0,name.length()-1).lastIndexOf("/")+1);
-				dr = dt.NewRow();
-				dr.setValue("No", name);
-				dr.setValue("Name", name);
-				dt.Rows.add(dr);
-				//获取子目录下的文件集合
-				String[] childrens = BaseFileUtils.getFileNames(path+name+"/");
-				if(childrens.length==0)
-					continue;
-				for (String item : childrens)
-				{
-					if(item.endsWith(".htm")==false)
-						continue;
-					tempdr = filesDt.NewRow();
-					tempdr.setValue("No", item);
-					tempdr.setValue("Name", item);
-					tempdr.setValue("Dir", name);
-					filesDt.Rows.add(tempdr);
-				}
-			}
-		}else{
-			File dirFile = new File(path);
-			File[] files = dirFile.listFiles(); //获取子文件夹
-			for (File item : files)
+
+		for (File item : files)
+		{
+			//模版分类
+			dr = dt.NewRow();
+			dr.setValue("No", item);
+			dr.setValue("Name", item.getName());
+			;
+			dt.Rows.add(dr);
+
+			//获取模版
+			File[] itemfiles = item.listFiles();
+			if(itemfiles==null)
+				continue;
+			for (File temp : itemfiles)
 			{
-				//模版分类
-				dr = dt.NewRow();
-				dr.setValue("No", item);
-				dr.setValue("Name", item.getName());
-				dt.Rows.add(dr);
-
-				//获取模版
-				File[] itemfiles = item.listFiles();
-				if(itemfiles==null)
+				if(temp.getName().endsWith(".htm")==false)
 					continue;
-
-
-				for (File temp : itemfiles)
-				{
-					if(temp.getName().endsWith(".htm")==false)
-						continue;
-					tempdr = filesDt.NewRow();
-					tempdr.setValue("No", temp);
-					tempdr.setValue("Name", temp.getName());
-					tempdr.setValue("Dir", item.getName());
-					filesDt.Rows.add(tempdr);
-				}
+				tempdr = filesDt.NewRow();
+				tempdr.setValue("No", temp);
+				tempdr.setValue("Name", temp.getName());
+				tempdr.setValue("Dir", item.getName());
+				filesDt.Rows.add(tempdr);
 			}
 		}
 
@@ -175,13 +145,10 @@ public class WF_Admin_DevelopDesigner extends bp.difference.handler.WebContralBa
 		String fileName = this.GetRequestVal("DevTempName");
 		String fielDir = this.GetRequestVal("DevTempDir");
 		String path = SystemConfig.getPathOfDataUser() + "Style/TemplateFoolDevelopDesigner/" + fielDir + "/";
-
-
 		String filePath = path + fileName;
 		String strHtml = DataType.ReadTextFile(filePath);
 		return strHtml;
 	}
-
 	public final String Template_Imp() throws Exception {
 		//File files = HttpContextHelper.RequestFiles(); //context.Request.Files;
 		File xmlFile = null;
@@ -214,7 +181,7 @@ public class WF_Admin_DevelopDesigner extends bp.difference.handler.WebContralBa
 	}
 
 
-		///#endregion 插入模版.
+	///#endregion 插入模版.
 
 	public final String Fields_Init() throws Exception {
 		String html = DBAccess.GetBigTextFromDB("Sys_MapData", "No", this.getFrmID(), "HtmlTemplateFile");
@@ -238,22 +205,23 @@ public class WF_Admin_DevelopDesigner extends bp.difference.handler.WebContralBa
 	 
 	 @return 
 	*/
-	public final String ResetFrm_Init() throws Exception {
+	public final String ResetFrm_Init()
+	{
 		//删除html
-		String filePath = SystemConfig.getPathOfDataUser() + "CCForm/HtmlTemplateFile/" + this.getFK_MapData() + ".htm";
+		String filePath = SystemConfig.getPathOfDataUser() + "CCForm/HtmlTemplateFile/" + this.getFrmID() + ".htm";
 		if ((new File(filePath)).isFile() == true)
 		{
 			(new File(filePath)).delete();
 		}
 
 		//删除存储的html代码
-		String sql = "UPDATE Sys_MapData SET HtmlTemplateFile='' WHERE No='" + this.getFK_MapData() + "'";
+		String sql = "UPDATE Sys_MapData SET HtmlTemplateFile='' WHERE No='" + this.getFrmID() + "'";
 		DBAccess.RunSQL(sql);
 		//删除MapAttr中的数据
-		sql = "Delete Sys_MapAttr WHERE FK_MapData='" + this.getFK_MapData() + "'";
+		sql = "Delete Sys_MapAttr WHERE FK_MapData='" + this.getFrmID() + "'";
 		DBAccess.RunSQL(sql);
 		//删除MapExt中的数据
-		sql = "Delete Sys_MapExt WHERE FK_MapData='" + this.getFK_MapData() + "'";
+		sql = "Delete Sys_MapExt WHERE FK_MapData='" + this.getFrmID() + "'";
 		DBAccess.RunSQL(sql);
 
 		return "重置成功";
@@ -313,7 +281,7 @@ public class WF_Admin_DevelopDesigner extends bp.difference.handler.WebContralBa
 
 		//清空缓存
 		toMapData.RepairMap();
-		SystemConfig.DoClearCash();
+		SystemConfig.DoClearCache();
 
 
 	}

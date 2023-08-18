@@ -1,7 +1,10 @@
 package bp.ccfast.portal.windowext;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.ccfast.*;
 import bp.ccfast.portal.*;
+import java.util.*;
 
 /** 
  标签页
@@ -14,7 +17,8 @@ public class Tab extends EntityNoName
 	 控制权限
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (bp.web.WebUser.getIsAdmin() == true)
 		{
@@ -43,27 +47,24 @@ public class Tab extends EntityNoName
 	/** 
 	 标签页
 	*/
-	public Tab()  {
+	public Tab()
+	{
 	}
 	/** 
 	 标签页
 	 
-	 param no
+	 @param no
 	*/
-	public Tab(String no)
+	public Tab(String no) throws Exception
 	{
 		this.setNo(no);
-		try {
-			this.Retrieve();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.Retrieve();
 	}
 	/** 
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -89,7 +90,7 @@ public class Tab extends EntityNoName
 
 			///#endregion 更多链接.
 
-		map.AddDtl(new TabDtls(), DtlAttr.RefPK, null);
+		map.AddDtl(new TabDtls(), DtlAttr.RefPK);
 
 		RefMethod rm = new RefMethod();
 		rm.Title = "样例";
@@ -117,13 +118,16 @@ public class Tab extends EntityNoName
 
 
 		///#region 方法.
-	public final String AddTemplate()  {
+	public final String AddTemplate()
+	{
 		return "../../GPM/Window/Tab.png";
 	}
-	public final String RefSQL() {
+	public final String RefSQL()
+	{
 		return "../../GPM/Window/RefSQL.htm";
 	}
-	public final String AddDBSrc()  {
+	public final String AddDBSrc()
+	{
 		return "../../Comm/Search.htm?EnsName=BP.Sys.SFDBSrcs";
 	}
 

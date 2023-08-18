@@ -1,6 +1,10 @@
 package bp.ccbill.template;
 
-import bp.en.*;
+import bp.da.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.ccbill.*;
+import java.util.*;
 
 /** 
  实体工具栏按钮属性

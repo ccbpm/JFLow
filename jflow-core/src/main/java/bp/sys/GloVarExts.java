@@ -14,14 +14,14 @@ public class GloVarExts extends EntitiesNoName
 	/** 
 	 全局变量s
 	*/
-	public GloVarExts()throws Exception
+	public GloVarExts()
 	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new GloVarExt();
 	}
@@ -35,7 +35,7 @@ public class GloVarExts extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<GloVarExt> ToJavaList()throws Exception
+	public final java.util.List<GloVarExt> ToJavaList()
 	{
 		return (java.util.List<GloVarExt>)(Object)this;
 	}
@@ -44,7 +44,7 @@ public class GloVarExts extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<GloVarExt> Tolist()throws Exception
+	public final ArrayList<GloVarExt> Tolist()
 	{
 		ArrayList<GloVarExt> list = new ArrayList<GloVarExt>();
 		for (int i = 0; i < this.size(); i++)

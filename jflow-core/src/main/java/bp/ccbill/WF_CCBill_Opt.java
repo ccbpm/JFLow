@@ -1,24 +1,27 @@
 package bp.ccbill;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
-import bp.difference.handler.WebContralBase;
 import bp.sys.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.tools.DateUtils;
 import bp.wf.*;
+import bp.wf.httphandler.*;
+import bp.*;
+import java.util.*;
+import java.time.*;
 
 /** 
  页面功能实体
 */
-public class WF_CCBill_Opt extends WebContralBase
+public class WF_CCBill_Opt extends bp.difference.handler.DirectoryPageBase
 {
 
 		///#region 构造方法.
 	/** 
 	 构造函数
 	*/
-	public WF_CCBill_Opt() throws Exception {
+	public WF_CCBill_Opt()
+	{
 	}
 
 		///#endregion 构造方法.
@@ -86,11 +89,11 @@ public class WF_CCBill_Opt extends WebContralBase
 		for (MapAttr attr : mattrs.ToJavaList())
 		{
 			String searchVisable = attr.getatPara().GetValStrByKey("SearchVisable");
-			if (searchVisable.equals("0"))
+			if (Objects.equals(searchVisable, "0"))
 			{
 				continue;
 			}
-			if (attr.getUIVisible()== false)
+			if (attr.getUIVisible() == false)
 			{
 				continue;
 			}
@@ -113,7 +116,7 @@ public class WF_CCBill_Opt extends WebContralBase
 
 		GEEntitys rpts = new GEEntitys(this.getFrmID());
 
-		Attrs attrs = rpts.getGetNewEntity().getEnMap().getAttrs();
+		Attrs attrs = rpts.getNewEntity().getEnMap().getAttrs();
 
 		QueryObject qo = new QueryObject(rpts);
 
@@ -124,22 +127,22 @@ public class WF_CCBill_Opt extends WebContralBase
 		if (DataType.IsNullOrEmpty(keyWord) == false && keyWord.length() >= 1)
 		{
 			qo.addLeftBracket();
-			if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
+			if (Objects.equals(bp.difference.SystemConfig.getAppCenterDBVarStr(), "@") || Objects.equals(bp.difference.SystemConfig.getAppCenterDBVarStr(), "?"))
 			{
-				qo.AddWhere("Title", " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? (" CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+				qo.AddWhere("Title", " LIKE ", bp.difference.SystemConfig.getAppCenterDBType() == DBType.MySQL ? (" CONCAT('%'," + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : (" '%'+" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 			}
 			else
 			{
-				qo.AddWhere("Title", " LIKE ", " '%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+				qo.AddWhere("Title", " LIKE ", " '%'||" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 			}
 			qo.addOr();
-			if (SystemConfig.getAppCenterDBVarStr().equals("@") || SystemConfig.getAppCenterDBType( ) == DBType.MySQL || SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
+			if (Objects.equals(bp.difference.SystemConfig.getAppCenterDBVarStr(), "@") || Objects.equals(bp.difference.SystemConfig.getAppCenterDBVarStr(), "?"))
 			{
-				qo.AddWhere("BillNo", " LIKE ", SystemConfig.getAppCenterDBType( ) == DBType.MySQL ? ("CONCAT('%'," + SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
+				qo.AddWhere("BillNo", " LIKE ", bp.difference.SystemConfig.getAppCenterDBType() == DBType.MySQL ? ("CONCAT('%'," + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey,'%')") : ("'%'+" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey+'%'"));
 			}
 			else
 			{
-				qo.AddWhere("BillNo", " LIKE ", "'%'||" + SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
+				qo.AddWhere("BillNo", " LIKE ", "'%'||" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "SKey||'%'");
 			}
 
 			qo.getMyParas().Add("SKey", keyWord, false);
@@ -179,7 +182,7 @@ public class WF_CCBill_Opt extends WebContralBase
 
 			qo.addAnd();
 			qo.addLeftBracket();
-			qo.setSQL(" RDT>= '" + dtFrom + "'");
+			qo.setSQL( " RDT>= '" + dtFrom + "'");
 			qo.addAnd();
 			qo.setSQL("RDT <= '" + dtTo + "'");
 			qo.addRightBracket();
@@ -193,7 +196,7 @@ public class WF_CCBill_Opt extends WebContralBase
 			///#endregion
 
 		DataTable mydt = rpts.ToDataTableField("dt");
-		mydt.TableName = "DT";
+		mydt.setTableName("DT");
 
 		ds.Tables.add(mydt); //把数据加入里面.
 

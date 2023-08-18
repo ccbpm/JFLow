@@ -1,10 +1,7 @@
 package bp.wf;
 
-import bp.da.*;
 import bp.en.*;
-import bp.wf.*;
-import bp.port.*;
-import bp.*;
+import bp.web.*;
 import java.util.*;
 
 /** 
@@ -18,13 +15,15 @@ public class GenerWorkerLists extends Entities
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new GenerWorkerList();
 	}
 	/** 
 	 GenerWorkerList
 	*/
-	public GenerWorkerLists()  {
+	public GenerWorkerLists()
+	{
 	}
 	public GenerWorkerLists(long workId) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -36,8 +35,8 @@ public class GenerWorkerLists extends Entities
 	/** 
 	 
 	 
-	 param workId
-	 param nodeId
+	 @param workId
+	 @param nodeId
 	*/
 	public GenerWorkerLists(long workId, int nodeId) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -60,9 +59,9 @@ public class GenerWorkerLists extends Entities
 	/** 
 	 构造工作人员集合
 	 
-	 param workId 工作ID
-	 param nodeId 节点ID
-	 param isWithEmpExts 是否包含为分配的人员
+	 @param workId 工作ID
+	 @param nodeId 节点ID
+	 @param isWithEmpExts 是否包含为分配的人员
 	*/
 	public GenerWorkerLists(long workId, int nodeId, boolean isWithEmpExts) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -86,8 +85,8 @@ public class GenerWorkerLists extends Entities
 		}
 
 		RememberMe rm = new RememberMe();
-		rm.setFK_Emp(bp.web.WebUser.getNo());
-		rm.setFK_Node(nodeId);
+		rm.setEmpNo(WebUser.getNo());
+		rm.setNodeID(nodeId);
 		if (rm.RetrieveFromDBSources() == 0)
 		{
 			return;
@@ -97,7 +96,7 @@ public class GenerWorkerLists extends Entities
 		String[] myEmpStrs = rm.getEmps().split("[@]", -1);
 		for (String emp : myEmpStrs)
 		{
-			if (emp == null || emp.equals(""))
+			if (emp == null || Objects.equals(emp, ""))
 			{
 				continue;
 			}
@@ -109,10 +108,10 @@ public class GenerWorkerLists extends Entities
 
 			GenerWorkerList mywl = new GenerWorkerList();
 			mywl.Copy(wl);
-			mywl.setEnable(false);
-			mywl.setFK_Emp(emp);
+			mywl.setItIsEnable(false);
+			mywl.setEmpNo(emp);
 			bp.wf.port.WFEmp myEmp = new bp.wf.port.WFEmp(emp);
-			mywl.setFK_EmpText(myEmp.getName());
+			mywl.setEmpName(myEmp.getName());
 			try
 			{
 				mywl.Insert();
@@ -129,8 +128,8 @@ public class GenerWorkerLists extends Entities
 	/** 
 	 工作者
 	 
-	 param workId 工作者ID
-	 param flowNo 流程编号
+	 @param workId 工作者ID
+	 @param flowNo 流程编号
 	*/
 	public GenerWorkerLists(long workId, String flowNo) throws Exception {
 		if (workId == 0)
@@ -155,7 +154,8 @@ public class GenerWorkerLists extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.List<GenerWorkerList> ToJavaList() {
+	public final java.util.List<GenerWorkerList> ToJavaList()
+	{
 		return (java.util.List<GenerWorkerList>)(Object)this;
 	}
 	/** 
@@ -163,7 +163,8 @@ public class GenerWorkerLists extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<GenerWorkerList> Tolist()  {
+	public final ArrayList<GenerWorkerList> Tolist()
+	{
 		ArrayList<GenerWorkerList> list = new ArrayList<GenerWorkerList>();
 		for (int i = 0; i < this.size(); i++)
 		{

@@ -1,12 +1,5 @@
 package bp.wf;
 
-import bp.da.*;
-import bp.web.*;
-import bp.en.*;
-import bp.port.*;
-import bp.sys.*;
-import bp.*;
-import java.util.*;
 
 /** 
  授权方式
@@ -30,7 +23,8 @@ public enum AuthorWay
 
 	private int intValue;
 	private static java.util.HashMap<Integer, AuthorWay> mappings;
-	private static java.util.HashMap<Integer, AuthorWay> getMappings()  {
+	private static java.util.HashMap<Integer, AuthorWay> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (AuthorWay.class)
@@ -45,15 +39,18 @@ public enum AuthorWay
 	}
 
 	private AuthorWay(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue() {
+	public int getValue()
+	{
 		return intValue;
 	}
 
-	public static AuthorWay forValue(int value) 
-	{return getMappings().get(value);
+	public static AuthorWay forValue(int value)
+	{
+		return getMappings().get(value);
 	}
 }

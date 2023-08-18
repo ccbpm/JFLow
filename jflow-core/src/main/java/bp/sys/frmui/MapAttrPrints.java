@@ -1,7 +1,7 @@
 package bp.sys.frmui;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
 import bp.*;
 import bp.sys.*;
@@ -17,13 +17,15 @@ public class MapAttrPrints extends EntitiesMyPK
 	/** 
 	 打印组件s
 	*/
-	public MapAttrPrints() throws Exception {
+	public MapAttrPrints()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new MapAttrPrint();
 	}
 
@@ -36,7 +38,8 @@ public class MapAttrPrints extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<MapAttrPrint> ToJavaList() {
+	public final java.util.List<MapAttrPrint> ToJavaList()
+	{
 		return (java.util.List<MapAttrPrint>)(Object)this;
 	}
 	/** 
@@ -44,7 +47,8 @@ public class MapAttrPrints extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<MapAttrPrint> Tolist()  {
+	public final ArrayList<MapAttrPrint> Tolist()
+	{
 		ArrayList<MapAttrPrint> list = new ArrayList<MapAttrPrint>();
 		for (int i = 0; i < this.size(); i++)
 		{

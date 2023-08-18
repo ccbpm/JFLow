@@ -1,20 +1,22 @@
 package bp.port;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
 import java.util.*;
 
 /** 
- 部门岗位人员对应 
+ 部门角色人员对应 
 */
 public class DeptEmpStations extends EntitiesMyPK
 {
 
 		///#region 构造
 	/** 
-	 工作部门岗位人员对应
+	 工作部门角色人员对应
 	*/
-	public DeptEmpStations()  {
+	public DeptEmpStations()
+	{
 	}
 
 		///#endregion
@@ -25,7 +27,8 @@ public class DeptEmpStations extends EntitiesMyPK
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		return new DeptEmpStation();
 	}
 
@@ -38,7 +41,8 @@ public class DeptEmpStations extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<DeptEmpStation> ToJavaList()  {
+	public final java.util.List<DeptEmpStation> ToJavaList()
+	{
 		return (java.util.List<DeptEmpStation>)(Object)this;
 	}
 	/** 
@@ -46,7 +50,8 @@ public class DeptEmpStations extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<DeptEmpStation> Tolist()  {
+	public final ArrayList<DeptEmpStation> Tolist()
+	{
 		ArrayList<DeptEmpStation> list = new ArrayList<DeptEmpStation>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -57,8 +62,10 @@ public class DeptEmpStations extends EntitiesMyPK
 
 		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 
+
 		///#region 删除方法
-	public final String DelteNotInEmp() throws Exception {
+	public final String DelteNotInEmp()
+	{
 		String sql = "DELETE FROM Port_DeptEmpStation WHERE FK_Emp NOT IN (SELECT No FROM Port_Emp)";
 		DBAccess.RunSQL(sql);
 		return "删除成功";

@@ -1,6 +1,6 @@
 package bp.ccfast.portal.windowext;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.*;
 import bp.ccfast.*;
 import bp.ccfast.portal.*;
@@ -16,13 +16,15 @@ public class Dtls extends EntitiesMyPK
 	/** 
 	 变量信息s
 	*/
-	public Dtls() {
+	public Dtls()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new Dtl();
 	}
 
@@ -35,7 +37,8 @@ public class Dtls extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<Dtl> ToJavaList() {
+	public final java.util.List<Dtl> ToJavaList()
+	{
 		return (java.util.List<Dtl>)(Object)this;
 	}
 	/** 
@@ -43,7 +46,8 @@ public class Dtls extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<Dtl> Tolist()  {
+	public final ArrayList<Dtl> Tolist()
+	{
 		ArrayList<Dtl> list = new ArrayList<Dtl>();
 		for (int i = 0; i < this.size(); i++)
 		{

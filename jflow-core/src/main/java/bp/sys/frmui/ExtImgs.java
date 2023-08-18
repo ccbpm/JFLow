@@ -1,6 +1,9 @@
 package bp.sys.frmui;
 
-import bp.en.*;
+import bp.da.*;
+import bp.en.*; import bp.en.Map;
+import bp.sys.*;
+import bp.*;
 import bp.sys.*;
 import java.util.*;
 
@@ -14,28 +17,30 @@ public class ExtImgs extends EntitiesMyPK
 	/** 
 	 装饰图片s
 	*/
-	public ExtImgs() {
+	public ExtImgs()
+	{
 	}
 	/** 
 	 装饰图片s
 	 
-	 param fk_mapdata s
+	 @param fk_mapdata s
 	*/
 	public ExtImgs(String fk_mapdata) throws Exception {
-		if (bp.difference.SystemConfig.getIsDebug())
+		if (bp.difference.SystemConfig.isDebug())
 		{
 			this.Retrieve(MapAttrAttr.FK_MapData, fk_mapdata);
 		}
 		else
 		{
-			this.RetrieveFromCash(MapAttrAttr.FK_MapData, (Object)fk_mapdata);
+			this.RetrieveFromCache(MapAttrAttr.FK_MapData, (Object)fk_mapdata);
 		}
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FrmImg();
 	}
 
@@ -48,7 +53,8 @@ public class ExtImgs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<ExtImg> ToJavaList() {
+	public final java.util.List<ExtImg> ToJavaList()
+	{
 		return (java.util.List<ExtImg>)(Object)this;
 	}
 	/** 
@@ -56,7 +62,8 @@ public class ExtImgs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<ExtImg> Tolist()  {
+	public final ArrayList<ExtImg> Tolist()
+	{
 		ArrayList<ExtImg> list = new ArrayList<ExtImg>();
 		for (int i = 0; i < this.size(); i++)
 		{

@@ -1,9 +1,12 @@
 package bp.wf.template.frm;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
+import bp.*;
+import bp.wf.*;
 import bp.wf.template.*;
+import java.util.*;
 
 /** 
  Word表单属性
@@ -15,12 +18,10 @@ public class MapFrmWord extends EntityNoName
 	/** 
 	 模版版本号
 	*/
-	public final String getTemplaterVer() throws Exception
-	{
+	public final String getTemplaterVer()  {
 		return this.GetValStringByKey(MapFrmWordAttr.TemplaterVer);
 	}
-	public final void setTemplaterVer(String value)  throws Exception
-	 {
+	public final void setTemplaterVer(String value){
 		this.SetValByKey(MapFrmWordAttr.TemplaterVer, value);
 	}
 	/** 
@@ -35,8 +36,7 @@ public class MapFrmWord extends EntityNoName
 		}
 		return str;
 	}
-	public final void setDBSave(String value)  throws Exception
-	 {
+	public final void setDBSave(String value){
 		this.SetValByKey(MapFrmWordAttr.DBSave, value);
 	}
 
@@ -47,7 +47,7 @@ public class MapFrmWord extends EntityNoName
 	/** 
 	 是否是节点表单?
 	*/
-	public final boolean isNodeFrm() throws Exception {
+	public final boolean getItIsNodeFrm() throws Exception {
 		if (this.getNo().contains("ND") == false)
 		{
 			return false;
@@ -58,7 +58,7 @@ public class MapFrmWord extends EntityNoName
 			return false;
 		}
 
-		if (this.getNo().substring(0, 2).equals("ND"))
+		if (Objects.equals(this.getNo().substring(0, 2), "ND"))
 		{
 			return true;
 		}
@@ -68,7 +68,7 @@ public class MapFrmWord extends EntityNoName
 	/** 
 	 节点ID.
 	*/
-	public final int getNodeID() throws Exception {
+	public final int getNodeID() {
 		return Integer.parseInt(this.getNo().replace("ND", ""));
 	}
 
@@ -78,7 +78,8 @@ public class MapFrmWord extends EntityNoName
 
 		///#region 权限控制.
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (bp.web.WebUser.getNo().equals("admin") == true)
 		{
@@ -97,14 +98,15 @@ public class MapFrmWord extends EntityNoName
 	/** 
 	 Word表单属性
 	*/
-	public MapFrmWord()  {
+	public MapFrmWord()
+	{
 	}
 	/** 
 	 Word表单属性
 	 
-	 param no 表单ID
+	 @param no 表单ID
 	*/
-	public MapFrmWord(String no)
+	public MapFrmWord(String no) throws Exception
 	{
 		super(no);
 	}
@@ -112,7 +114,7 @@ public class MapFrmWord extends EntityNoName
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -126,11 +128,11 @@ public class MapFrmWord extends EntityNoName
 		map.AddTBString(MapFrmWordAttr.PTable, null, "存储表", true, false, 0, 100, 20);
 		map.AddTBString(MapFrmWordAttr.Name, null, "表单名称", true, false, 0, 500, 20, true);
 
-			//数据源.
+		//数据源.
 		map.AddDDLEntities(MapFrmWordAttr.DBSrc, "local", "数据源", new SFDBSrcs(), true);
 		map.AddDDLEntities(MapFrmWordAttr.FK_FormTree, "01", "表单类别", new SysFormTrees(), true);
 
-			//表单的运行类型.
+		//表单的运行类型.
 		map.AddDDLSysEnum(MapFrmWordAttr.FrmType, FrmType.FoolForm.getValue(), "表单类型", true, false, MapFrmWordAttr.FrmType);
 
 			///#endregion 基本属性.
@@ -150,11 +152,11 @@ public class MapFrmWord extends EntityNoName
 		map.AddTBString(MapFrmWordAttr.DesignerUnit, null, "单位", true, false, 0, 500, 20, true);
 		map.AddTBString(MapFrmWordAttr.GUID, null, "GUID", true, true, 0, 128, 20, false);
 		map.AddTBString(MapFrmWordAttr.Ver, null, "版本号", true, true, 0, 30, 20);
-		//	map.AddTBString(MapFrmFreeAttr.DesignerTool, null, "表单设计器", true, true, 0, 30, 20);
+	//	map.AddTBString(MapFrmFreeAttr.DesignerTool, null, "表单设计器", true, true, 0, 30, 20);
 
 		map.AddTBStringDoc(MapFrmWordAttr.Note, null, "备注", true, false, true, 10);
 
-			//增加参数字段.
+		//增加参数字段.
 		map.AddTBAtParas(4000);
 		map.AddTBInt(MapFrmWordAttr.Idx, 100, "顺序号", false, false);
 
@@ -162,25 +164,25 @@ public class MapFrmWord extends EntityNoName
 
 		map.AddMyFile("表单模版", null, bp.difference.SystemConfig.getPathOfDataUser() + "FrmVSTOTemplate/");
 
-			//查询条件.
+		//查询条件.
 		map.AddSearchAttr(MapFrmWordAttr.DBSrc, 130);
 
 
 			///#region 方法 - 基本功能.
 		RefMethod rm = new RefMethod();
 
-			/* 2017-04-28 10:52:03
-			 * Mayy
-			 * 去掉此功能（废弃，因在线编辑必须使用ActiveX控件，适用性、稳定性太差）
-			rm = new RefMethod();
-			rm.Title = "编辑Word表单模版";
-			rm.ClassMethodName = this.ToString() + ".DoEditWordTemplate";
-			rm.Icon = ../../Img/FileType/xlsx.gif";
-			rm.Visable = true;
-			rm.Target = "_blank";
-			rm.refMethodType = RefMethodType.RightFrameOpen;
-			map.AddRefMethod(rm);
-			 */
+		/* 2017-04-28 10:52:03
+		 * Mayy
+		 * 去掉此功能（废弃，因在线编辑必须使用ActiveX控件，适用性、稳定性太差）
+		rm = new RefMethod();
+		rm.Title = "编辑Word表单模版";
+		rm.ClassMethodName = this.ToString() + ".DoEditWordTemplate";
+		rm.Icon = ../../Img/FileType/xlsx.gif";
+		rm.Visable = true;
+		rm.Target = "_blank";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		map.AddRefMethod(rm);
+		 */
 
 		rm = new RefMethod();
 		rm.Title = "启动傻瓜表单设计器";
@@ -191,15 +193,15 @@ public class MapFrmWord extends EntityNoName
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		map.AddRefMethod(rm);
 
-			//rm = new RefMethod();
-			//rm.Title = "字段维护";
-			//rm.ClassMethodName = this.ToString() + ".DoEditFiledsList";
-			//rm.Icon = "../../WF/Img/FileType/xlsx.gif";
-			//// rm.Icon = ../../Admin/CCBPMDesigner/Img/Field.png";
-			//rm.Visable = true;
-			//rm.Target = "_blank";
-			//rm.refMethodType = RefMethodType.RightFrameOpen;
-			//map.AddRefMethod(rm);
+		//rm = new RefMethod();
+		//rm.Title = "字段维护";
+		//rm.ClassMethodName = this.ToString() + ".DoEditFiledsList";
+		//rm.Icon = "../../WF/Img/FileType/xlsx.gif";
+		//// rm.Icon = ../../Admin/CCBPMDesigner/Img/Field.png";
+		//rm.Visable = true;
+		//rm.Target = "_blank";
+		//rm.refMethodType = RefMethodType.RightFrameOpen;
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "装载填充"; // "设计表单";
@@ -220,12 +222,12 @@ public class MapFrmWord extends EntityNoName
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
 
-			//rm = new RefMethod();
-			//rm.Title = "批量设置验证规则";
-			//rm.Icon = "../../WF/Img/RegularExpression.png";
-			//rm.ClassMethodName = this.ToString() + ".DoRegularExpressionBatch";
-			//rm.refMethodType = RefMethodType.RightFrameOpen;
-			//map.AddRefMethod(rm);
+		//rm = new RefMethod();
+		//rm.Title = "批量设置验证规则";
+		//rm.Icon = "../../WF/Img/RegularExpression.png";
+		//rm.ClassMethodName = this.ToString() + ".DoRegularExpressionBatch";
+		//rm.refMethodType = RefMethodType.RightFrameOpen;
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "批量修改字段"; // "设计表单";
@@ -234,7 +236,7 @@ public class MapFrmWord extends EntityNoName
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
-			//map.AddRefMethod(rm);
+		//map.AddRefMethod(rm);
 
 
 		rm = new RefMethod();
@@ -271,7 +273,7 @@ public class MapFrmWord extends EntityNoName
 
 			///#region 高级设置.
 
-			//带有参数的方法.
+		//带有参数的方法.
 		rm = new RefMethod();
 		rm.Title = "重命名字段";
 		rm.GroupName = "高级设置";
@@ -333,13 +335,13 @@ public class MapFrmWord extends EntityNoName
 
 		///#region 节点表单方法.
 
-	public final String DoMapWord() throws Exception {
-		return bp.difference.SystemConfig.getCCFlowWebPath() + "WF/Comm/En.htm?EnName=BP.WF.Template.Frm.MapFrmWord&No=" + this.getNo();
+	public final String DoMapWord() {
+		return "../../Comm/En.htm?EnName=BP.WF.Template.Frm.MapFrmWord&No=" + this.getNo();
 	}
-	public final String DoDesignerFool() throws Exception {
+	public final String DoDesignerFool() {
 		return "../../Admin/FoolFormDesigner/Designer.htm?FK_MapData=" + this.getNo() + "&MyPK=" + this.getNo() + "&IsEditMapData=True&IsFirst=1";
 	}
-	public final String DoEditWordTemplate() throws Exception {
+	public final String DoEditWordTemplate() {
 		return "../../Admin/CCFormDesigner/WordFrmDesigner/Designer.htm?FK_MapData=" + this.getNo();
 	}
 	/** 
@@ -350,7 +352,7 @@ public class MapFrmWord extends EntityNoName
 	public final String DoNodeFrmCompent() throws Exception {
 		if (this.getNo().contains("ND") == true)
 		{
-			return "../../Comm/EnOnly.htm?EnName=BP.WF.Template.FrmNodeComponent&PK=" + this.getNo().replace("ND", "") + "&t=" + DataType.getCurrentDate();
+			return "../../Comm/EnOnly.htm?EnName=BP.WF.Template.FrmNodeComponent&PK=" + this.getNo().replace("ND", "") + "&t=" + DataType.getCurrentDateTime();
 		}
 		else
 		{
@@ -365,16 +367,16 @@ public class MapFrmWord extends EntityNoName
 	/** 
 	 替换名称
 	 
-	 param fieldOldName 旧名称
-	 param newField 新字段
-	 param newFieldName 新字段名称(可以为空)
+	 @param fieldOldName 旧名称
+	 @param newField 新字段
+	 @param newFieldName 新字段名称(可以为空)
 	 @return 
 	*/
 	public final String DoChangeFieldName(String fieldOld, String newField, String newFieldName) throws Exception {
 		MapAttr attrOld = new MapAttr();
 		attrOld.setKeyOfEn(fieldOld);
-		attrOld.setFK_MapData(this.getNo());
-		attrOld.setMyPK(attrOld.getFK_MapData() + "_" + attrOld.getKeyOfEn());
+		attrOld.setFrmID(this.getNo());
+		attrOld.setMyPK(attrOld.getFrmID() + "_" + attrOld.getKeyOfEn());
 		if (attrOld.RetrieveFromDBSources() == 0)
 		{
 			return "@旧字段输入错误[" + attrOld.getKeyOfEn() + "].";
@@ -383,8 +385,8 @@ public class MapFrmWord extends EntityNoName
 		//检查是否存在该字段？
 		MapAttr attrNew = new MapAttr();
 		attrNew.setKeyOfEn(newField);
-		attrNew.setFK_MapData(this.getNo());
-		attrNew.setMyPK(attrNew.getFK_MapData() + "_" + attrNew.getKeyOfEn());
+		attrNew.setFrmID(this.getNo());
+		attrNew.setMyPK(attrNew.getFrmID() + "_" + attrNew.getKeyOfEn());
 		if (attrNew.RetrieveFromDBSources() == 1)
 		{
 			return "@该字段[" + attrNew.getKeyOfEn() + "]已经存在.";
@@ -396,9 +398,9 @@ public class MapFrmWord extends EntityNoName
 		//copy这个数据,增加上它.
 		attrNew.Copy(attrOld);
 		attrNew.setKeyOfEn(newField);
-		attrNew.setFK_MapData(this.getNo());
+		attrNew.setFrmID(this.getNo());
 
-		if (!newFieldName.equals(""))
+		if (!Objects.equals(newFieldName, ""))
 		{
 			attrNew.setName(newFieldName);
 		}
@@ -411,12 +413,12 @@ public class MapFrmWord extends EntityNoName
 		{
 			item.setMyPK(item.getMyPK().replace("_" + fieldOld, "_" + newField));
 
-			if (fieldOld.equals(item.getAttrOfOper()))
+			if (Objects.equals(item.getAttrOfOper(), fieldOld))
 			{
 				item.setAttrOfOper(newField);
 			}
 
-			if (fieldOld.equals(item.getAttrsOfActive()))
+			if (Objects.equals(item.getAttrsOfActive(), fieldOld))
 			{
 				item.setAttrsOfActive(newField);
 			}
@@ -437,31 +439,31 @@ public class MapFrmWord extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoRegularExpressionBatch() throws Exception {
-		return "../../Admin/FoolFormDesigner/MapExt/RegularExpressionBatch.htm?FK_Flow=&FK_MapData=" + this.getNo() + "&t=" + DataType.getCurrentDate();
+	public final String DoRegularExpressionBatch() {
+		return "../../Admin/FoolFormDesigner/MapExt/RegularExpressionBatch.htm?FK_Flow=&FK_MapData=" + this.getNo() + "&t=" + DataType.getCurrentDateTime();
 	}
 	/** 
 	 批量修改字段
 	 
 	 @return 
 	*/
-	public final String DoBatchEditAttr() throws Exception {
-		return "../../Admin/FoolFormDesigner/BatchEdit.htm?FK_MapData=" + this.getNo() + "&t=" + DataType.getCurrentDate();
+	public final String DoBatchEditAttr() {
+		return "../../Admin/FoolFormDesigner/BatchEdit.htm?FK_MapData=" + this.getNo() + "&t=" + DataType.getCurrentDateTime();
 	}
 	/** 
 	 排序字段顺序
 	 
 	 @return 
 	*/
-	public final String MobileFrmDesigner() throws Exception {
-		return "../../Admin/MobileFrmDesigner/Default.htm?FK_Flow=&FK_MapData=" + this.getNo() + "&t=" + DataType.getCurrentDate();
+	public final String MobileFrmDesigner() {
+		return "../../Admin/MobileFrmDesigner/Default.htm?FK_Flow=&FK_MapData=" + this.getNo() + "&t=" + DataType.getCurrentDateTime();
 	}
 	/** 
 	 设计表单
 	 
 	 @return 
 	*/
-	public final String DoDFrom() throws Exception {
+	public final String DoDFrom() {
 		return "../../Admin/FoolFormDesigner/CCForm/Frm.htm?FK_MapData=" + this.getNo() + "&UserNo=" + bp.web.WebUser.getNo() + "&Token=" + bp.web.WebUser.getToken() + "&AppCenterDBType=" + DBAccess.getAppCenterDBType() + "&CustomerNo=" + bp.difference.SystemConfig.getCustomerNo();
 	}
 	/** 
@@ -478,7 +480,7 @@ public class MapFrmWord extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoSearch() throws Exception {
+	public final String DoSearch() {
 		return "../../Comm/Search.htm?s=34&FK_MapData=" + this.getNo() + "&EnsName=" + this.getNo();
 	}
 	/** 
@@ -486,7 +488,7 @@ public class MapFrmWord extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoGroup() throws Exception {
+	public final String DoGroup() {
 		return "../../Comm/Group.htm?s=34&FK_MapData=" + this.getNo() + "&EnsName=" + this.getNo();
 	}
 	/** 
@@ -494,15 +496,15 @@ public class MapFrmWord extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoDBSrc() throws Exception {
+	public final String DoDBSrc() {
 		return "../../Comm/Search.htm?s=34&FK_MapData=" + this.getNo() + "&EnsName=BP.Sys.SFDBSrcs";
 	}
 
 
-	public final String DoPageLoadFull() throws Exception {
+	public final String DoPageLoadFull() {
 		return "../../Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData=" + this.getNo() + "&ExtType=PageLoadFull&RefNo=";
 	}
-	public final String DoInitScript() throws Exception {
+	public final String DoInitScript() {
 		return "../../Admin/FoolFormDesigner/MapExt/InitScript.htm?s=34&FK_MapData=" + this.getNo() + "&ExtType=PageLoadFull&RefNo=";
 	}
 	/** 
@@ -510,7 +512,7 @@ public class MapFrmWord extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoBodyAttr() throws Exception {
+	public final String DoBodyAttr() {
 		return "../../Admin/FoolFormDesigner/MapExt/BodyAttr.htm?s=34&FK_MapData=" + this.getNo() + "&ExtType=BodyAttr&RefNo=";
 	}
 	/** 
@@ -518,7 +520,7 @@ public class MapFrmWord extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoEvent() throws Exception {
+	public final String DoEvent() {
 		return "../../Admin/CCFormDesigner/Action.htm?FK_MapData=" + this.getNo() + "&T=sd&FK_Node=0";
 	}
 	/** 
@@ -526,7 +528,7 @@ public class MapFrmWord extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoExp() throws Exception {
+	public final String DoExp() {
 		return "../../Admin/FoolFormDesigner/ImpExp/Exp.htm?FK_MapData=" + this.getNo();
 	}
 

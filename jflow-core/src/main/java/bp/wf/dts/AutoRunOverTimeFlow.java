@@ -2,9 +2,11 @@ package bp.wf.dts;
 
 import bp.da.*;
 import bp.port.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.wf.template.*;
+import bp.*;
 import bp.wf.*;
+import java.time.*;
 
 /** 
  Method 的摘要说明
@@ -14,7 +16,7 @@ public class AutoRunOverTimeFlow extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public AutoRunOverTimeFlow()throws Exception
+	public AutoRunOverTimeFlow()
 	{
 		this.Title = "处理逾期的任务";
 		this.Help = "扫描并处理逾期的任务，按照节点配置的预期规则";
@@ -44,14 +46,13 @@ public class AutoRunOverTimeFlow extends Method
 	 @return 返回执行结果
 	*/
 	@Override
-	public Object Do()throws Exception
-	{
+	public Object Do() throws Exception {
 
 			///#region 找到要逾期的数据.
 		DataTable generTab = null;
 		String sql = "SELECT a.FK_Flow,a.WorkID,a.Title,a.FK_Node,a.SDTOfNode,a.Starter,a.TodoEmps ";
 		sql += "FROM WF_GenerWorkFlow a, WF_Node b";
-		sql += " WHERE a.SDTOfNode<='" + DataType.getCurrentDataTime() + "' ";
+		sql += " WHERE a.SDTOfNode<='" + DataType.getCurrentDateTime() + "' ";
 		sql += " AND WFState=2 and b.OutTimeDeal!=0";
 		sql += " AND a.FK_Node=b.NodeID";
 		generTab = DBAccess.RunSQLReturnTable(sql);
@@ -63,12 +64,12 @@ public class AutoRunOverTimeFlow extends Method
 		String info = "";
 		for (DataRow row : generTab.Rows)
 		{
-			String fk_flow = row.getValue("FK_Flow") + "";
-			int fk_node = Integer.parseInt(row.getValue("FK_Node") + "");
-			long workid = Long.parseLong(row.getValue("WorkID") + "");
-			String title = row.getValue("Title") + "";
-			String compleateTime = row.getValue("SDTOfNode") + "";
-			String starter = row.getValue("Starter") + "";
+			String fk_flow = row.get("FK_Flow") + "";
+			int fk_node = Integer.parseInt(row.get("FK_Node") + "");
+			long workid = Long.parseLong(row.get("WorkID") + "");
+			String title = row.get("Title") + "";
+			String compleateTime = row.get("SDTOfNode") + "";
+			String starter = row.get("Starter") + "";
 
 			GenerWorkerLists gwls = new GenerWorkerLists();
 			gwls.Retrieve(GenerWorkerListAttr.WorkID, workid, GenerWorkerListAttr.FK_Node, fk_node, null);
@@ -76,12 +77,12 @@ public class AutoRunOverTimeFlow extends Method
 			boolean isLogin = false;
 			for (GenerWorkerList item : gwls.ToJavaList())
 			{
-				if (item.isEnable() == false)
+				if (item.getItIsEnable() == false)
 				{
 					continue;
 				}
 
-				Emp emp = new Emp(item.getFK_Emp());
+				Emp emp = new Emp(item.getEmpNo());
 				bp.web.WebUser.SignInOfGener(emp, "CH", false, false, null, null);
 				isLogin = true;
 			}
@@ -96,7 +97,7 @@ public class AutoRunOverTimeFlow extends Method
 			try
 			{
 				Node node = new Node(fk_node);
-				if (node.isStartNode())
+				if (node.getItIsStartNode())
 				{
 					continue;
 				}
@@ -117,12 +118,12 @@ public class AutoRunOverTimeFlow extends Method
 							Node jumpToNode = new Node(jumpNode);
 
 							//设置默认同意.
-							Dev2Interface.WriteTrackWorkCheck(jumpToNode.getFK_Flow(), node.getNodeID(), workid, 0, "同意（预期自动审批）", null, null);
+							Dev2Interface.Node_WriteWorkCheck(workid, "同意（预期自动审批）", null, null);
 
 							//执行发送.
 							info = Dev2Interface.Node_SendWork(fk_flow, workid, null, null, jumpToNode.getNodeID(), null).ToMsgOfText();
 
-							// info = bp.wf.Dev2Interface.Flow_Schedule(workid, jumpToNode.NodeID, emp.getNo());
+							// info = BP.WF.Dev2Interface.Flow_Schedule(workid, jumpToNode.getNodeID(), emp.getNo());
 							msg = "流程 '" + node.getFlowName() + "',标题: '" + title + "'的应该完成时间为'" + compleateTime + "',当前节点'" + node.getName() + "'超时处理规则为'自动跳转'," + info;
 
 
@@ -219,7 +220,7 @@ public class AutoRunOverTimeFlow extends Method
 						{
 							Emp myemp = new Emp(doOutTime);
 
-							boolean boo = Dev2Interface.WriteToSMS(myemp.getUserID(), DataType.getCurrentDataTime(), "系统发送逾期消息", "您的流程:'" + title + "'的完成时间应该为'" + compleateTime + "',流程已经逾期,请及时处理!", "系统消息", workid);
+							boolean boo = Dev2Interface.Port_WriteToSMS(myemp.getUserID(), DataType.getCurrentDateTime(), "系统发送逾期消息", "您的流程:'" + title + "'的完成时间应该为'" + compleateTime + "',流程已经逾期,请及时处理!", "系统消息", workid);
 							if (boo)
 							{
 								msg = "'" + title + "'逾期消息已经发送给:'" + myemp.getName() + "'";

@@ -13,13 +13,15 @@ public class MapFrmNodes extends EntitiesNoName
 	/** 
 	 自由表单属性s
 	*/
-	public MapFrmNodes() throws Exception {
+	public MapFrmNodes()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new MapFrmNode();
 	}
 
@@ -32,7 +34,8 @@ public class MapFrmNodes extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<MapFrmNode> ToJavaList() {
+	public final java.util.List<MapFrmNode> ToJavaList()
+	{
 		return (java.util.List<MapFrmNode>)(Object)this;
 	}
 	/** 
@@ -40,7 +43,8 @@ public class MapFrmNodes extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<MapFrmNode> Tolist()  {
+	public final ArrayList<MapFrmNode> Tolist()
+	{
 		ArrayList<MapFrmNode> list = new ArrayList<MapFrmNode>();
 		for (int i = 0; i < this.size(); i++)
 		{

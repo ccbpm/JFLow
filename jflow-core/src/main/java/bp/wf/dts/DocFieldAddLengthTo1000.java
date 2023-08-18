@@ -1,8 +1,10 @@
 package bp.wf.dts;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
+import bp.*;
+import bp.wf.*;
 
 /** 
  扩充Doc字段的长度 的摘要说明
@@ -12,7 +14,7 @@ public class DocFieldAddLengthTo1000 extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public DocFieldAddLengthTo1000()throws Exception
+	public DocFieldAddLengthTo1000()
 	{
 		this.Title = "扩充Doc字段的长度";
 		this.Help = "为doc类型的字段扩充长度，低于1000的字符扩充为1000.";
@@ -48,8 +50,7 @@ public class DocFieldAddLengthTo1000 extends Method
 	 @return 返回执行结果
 	*/
 	@Override
-	public Object Do()throws Exception
-	{
+	public Object Do() throws Exception {
 		String strs = "开始执行....";
 		MapAttrs mattrs = new MapAttrs();
 		mattrs.Retrieve(MapAttrAttr.MyDataType, DataType.AppString, MapAttrAttr.FK_MapData);
@@ -58,7 +59,7 @@ public class DocFieldAddLengthTo1000 extends Method
 		{
 			if (attr.getUIHeightInt() > 50 && attr.getMaxLen() < 1000)
 			{
-				strs += " @ 类:" + attr.getFK_MapData() + " 字段:" + attr.getKeyOfEn() + " , " + attr.getName() + " ";
+				strs += " @ 类:" + attr.getFrmID() + " 字段:" + attr.getKeyOfEn() + " , " + attr.getName() +" ";
 				attr.setMaxLen(1000);
 				attr.Update();
 			}

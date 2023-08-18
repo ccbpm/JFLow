@@ -22,7 +22,7 @@ public class FrmFieldAttr extends EntityNoNameAttr
 	/** 
 	 FK_MapData
 	*/
-	public static final String FK_MapData = "FK_MapData";
+	public static final String FrmID = "FK_MapData";
 	/** 
 	 是否必填
 	*/

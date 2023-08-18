@@ -1,7 +1,7 @@
 package bp.ccfast.ccmenu;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
 import bp.*;
 import bp.ccfast.*;

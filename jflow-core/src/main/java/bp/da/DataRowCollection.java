@@ -60,7 +60,7 @@ public class DataRowCollection extends ArrayList<DataRow>
             String key= dc.ColumnName;
             String valStr=String.valueOf( ap.get(key)); 
             if((DataType.IsNullOrEmpty(valStr) ||"null".equals(valStr))
-            		&& SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase){
+            		&& SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase){
             	valStr=String.valueOf( ap.get(key.toLowerCase())); 
             }
 			

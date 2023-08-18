@@ -1,11 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.sys.*;
 import bp.en.*;
-import bp.wf.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -18,13 +13,15 @@ public class NodeWorkChecks extends Entities
 	/** 
 	 审核组件s
 	*/
-	public NodeWorkChecks() throws Exception {
+	public NodeWorkChecks()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new NodeWorkCheck();
 	}
 
@@ -37,7 +34,8 @@ public class NodeWorkChecks extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.List<NodeWorkCheck> ToJavaList() {
+	public final java.util.List<NodeWorkCheck> ToJavaList()
+	{
 		return (java.util.List<NodeWorkCheck>)(Object)this;
 	}
 	/** 
@@ -45,7 +43,8 @@ public class NodeWorkChecks extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<NodeWorkCheck> Tolist()  {
+	public final ArrayList<NodeWorkCheck> Tolist()
+	{
 		ArrayList<NodeWorkCheck> list = new ArrayList<NodeWorkCheck>();
 		for (int i = 0; i < this.size(); i++)
 		{

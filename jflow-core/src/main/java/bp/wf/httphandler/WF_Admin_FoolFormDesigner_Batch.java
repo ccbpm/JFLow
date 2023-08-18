@@ -6,14 +6,16 @@ import bp.da.DataTable;
 import bp.sys.*;
 import bp.*;
 import bp.sys.CCFormAPI;
+import bp.sys.frmui.MapAttrString;
 import bp.wf.*;
 
-public class WF_Admin_FoolFormDesigner_Batch extends bp.difference.handler.WebContralBase
+public class WF_Admin_FoolFormDesigner_Batch extends bp.difference.handler.DirectoryPageBase
 {
 	/** 
 	 批量修改
 	*/
-	public WF_Admin_FoolFormDesigner_Batch() throws Exception {
+	public WF_Admin_FoolFormDesigner_Batch()
+	{
 	}
 	/** 
 	 批量修改字段Init.
@@ -25,7 +27,7 @@ public class WF_Admin_FoolFormDesigner_Batch extends bp.difference.handler.WebCo
 		attrs.Retrieve("FK_MapData", this.getFrmID(), "Idx");
 
 		DataTable dt = new DataTable();
-		dt.Columns.Add(new DataColumn("Name")); //字段名
+		dt.Columns.add(new DataColumn("Name")); //字段名
 		dt.Columns.Add(new DataColumn("DBType")); //数据类型
 		dt.Columns.Add(new DataColumn("GroupID")); //隶属分组.
 		dt.Columns.Add(new DataColumn("KeyOfEn")); //字段ID
@@ -75,7 +77,7 @@ public class WF_Admin_FoolFormDesigner_Batch extends bp.difference.handler.WebCo
 	}
 	public final String KeyOfEn_Save() throws Exception {
 		String newName = this.getKeyOfEn();
-		bp.sys.frmui.MapAttrString en = new bp.sys.frmui.MapAttrString(this.getMyPK());
+		bp.sys.frmui.MapAttrString en = new MapAttrString(this.getMyPK());
 		return en.DoRenameField(newName);
 	}
 }

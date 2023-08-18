@@ -1,6 +1,8 @@
 package bp.ccbill.template;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.ccbill.*;
 import java.util.*;
 
 /** 
@@ -11,13 +13,15 @@ public class DictFlows extends EntitiesMyPK
 	/** 
 	 台账子流程
 	*/
-	public DictFlows() throws Exception {
+	public DictFlows()
+	{
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new DictFlow();
 	}
 
@@ -27,7 +31,8 @@ public class DictFlows extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<DictFlow> ToJavaList() {
+	public final java.util.List<DictFlow> ToJavaList()
+	{
 		return (java.util.List<DictFlow>)(Object)this;
 	}
 	/** 
@@ -35,7 +40,8 @@ public class DictFlows extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<DictFlow> Tolist()  {
+	public final ArrayList<DictFlow> Tolist()
+	{
 		ArrayList<DictFlow> list = new ArrayList<DictFlow>();
 		for (int i = 0; i < this.size(); i++)
 		{

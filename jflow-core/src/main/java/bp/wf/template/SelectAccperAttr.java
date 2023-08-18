@@ -1,11 +1,5 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.en.*;
-import bp.port.*;
-import bp.*;
-import bp.wf.*;
-import java.util.*;
 
 /** 
  选择接受人属性
@@ -28,6 +22,10 @@ public class SelectAccperAttr
 	 操作员名称
 	*/
 	public static final String EmpName = "EmpName";
+	/** 
+	 部门编号
+	*/
+	public static final String FK_Dept = "FK_Dept";
 	/** 
 	 部门名称
 	*/
@@ -72,4 +70,8 @@ public class SelectAccperAttr
 	 应完成日期(计划)
 	*/
 	public static final String PlanSDT = "SDT";
+	/** 
+	 节点顺序
+	*/
+	public static final String NodeIdx = "NodeIdx";
 }

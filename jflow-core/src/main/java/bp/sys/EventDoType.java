@@ -1,7 +1,4 @@
 package bp.sys;
-
-import bp.*;
-
 /** 
  事件执行内容
 */
@@ -42,13 +39,18 @@ public enum EventDoType
 	/** 
 	 自定义WebApi
 	*/
-	WebApi(8);
+	WebApi(8),
+	/** 
+	 SFProduces
+	*/
+	SFProcedure(9);
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
 	private int intValue;
 	private static java.util.HashMap<Integer, EventDoType> mappings;
-	private static java.util.HashMap<Integer, EventDoType> getMappings()  {
+	private static java.util.HashMap<Integer, EventDoType> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (EventDoType.class)
@@ -63,15 +65,18 @@ public enum EventDoType
 	}
 
 	private EventDoType(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue() {
+	public int getValue()
+	{
 		return intValue;
 	}
 
-	public static EventDoType forValue(int value) 
-	{return getMappings().get(value);
+	public static EventDoType forValue(int value)
+	{
+		return getMappings().get(value);
 	}
 }

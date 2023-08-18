@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import bp.da.DataType;
 import bp.difference.ContextHolderUtils;
-import bp.difference.SystemConfig;
 import bp.tools.StringHelper;
 
 public abstract class HttpHandlerBase
@@ -30,7 +29,7 @@ public abstract class HttpHandlerBase
 		//创建 ctrl 对象.
 		Object tempVar = mycontext;
 		
-		WebContralBase ctrl = (WebContralBase)((tempVar instanceof WebContralBase) ? tempVar : null);
+		DirectoryPageBase ctrl = (DirectoryPageBase)((tempVar instanceof DirectoryPageBase) ? tempVar : null);
 		
 		
 		String mName=ctrl.GetRequestVal("DoMethod");			
@@ -194,9 +193,9 @@ public abstract class HttpHandlerBase
 
     public final Long getOID()
     {
-        String str = this.GetRequestVal("RefOID"); // context.Request.QueryString["RefOID"];
+        String str = this.GetRequestVal("RefOID"); // context.Request.QueryString["RefOID");
         if (DataType.IsNullOrEmpty(str) == true)
-            str = this.GetRequestVal("OID");  //context.Request.QueryString["OID"];
+            str = this.GetRequestVal("OID");  //context.Request.QueryString["OID");
 
         if (DataType.IsNullOrEmpty(str) == true)
             str="0";
@@ -298,7 +297,7 @@ public abstract class HttpHandlerBase
 //	@PostConstruct
 //	public void init(){
 //		HttpServletRequest request = ContextHolderUtils.getRequest();
-//		//setFK_Node(request.getParameter("FK_Node"));
+//		//setNodeID(request.getParameter("FK_Node"));
 //		//setFID(request.getParameter("FID"));
 //		//setWorkID(request.getParameter("WorkID"));
 //		//setFK_Flow(request.getParameter("FK_Flow"));
@@ -391,7 +390,7 @@ public abstract class HttpHandlerBase
         return Integer.parseInt(str);
     }
 
-//	public void setFK_Node(String fK_Node) {
+//	public void setNodeID(String fK_Node) {
 //		FK_Node = fK_Node;
 //	}
 

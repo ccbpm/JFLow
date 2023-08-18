@@ -107,7 +107,7 @@ public class UAC
 	}
 
 	public final UAC OpenForAdmin()  {
-		if (WebUser.getNo() != null && WebUser.getIsAdmin() == true)
+		if (WebUser.getNo() != null && WebUser.getIsAdmin()  == true)
 		{
 			this.OpenAll();
 		}

@@ -1,7 +1,6 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
-import bp.difference.handler.WebContralBase;
 import bp.wf.template.*;
 import bp.*;
 import bp.wf.*;
@@ -9,26 +8,29 @@ import bp.wf.*;
 /** 
  页面功能实体
 */
-public class WF_Admin_Cond2020 extends WebContralBase
+public class WF_Admin_Cond2020 extends bp.difference.handler.DirectoryPageBase
 {
 
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_Cond2020() throws Exception {
+	public WF_Admin_Cond2020()
+	{
 	}
 	/** 
 	 初始化列表
 	 
 	 @return 
 	*/
-	public final String List_Init() throws Exception {
+	public final String List_Init()
+	{
 		// BP.WF.Template.CondAttr.ToNodeID
 		// Conds condes = new Conds();
 		// condes.RetrieveAll();
 		return "";
 	}
-	public final String List_Move() throws Exception {
+	public final String List_Move()
+	{
 		String[] ens = this.GetRequestVal("MyPKs").split("[,]", -1);
 		for (int i = 0; i < ens.length; i++)
 		{
@@ -38,24 +40,31 @@ public class WF_Admin_Cond2020 extends WebContralBase
 		}
 		return "顺序移动成功..";
 	}
-	/** 
-	 校验是否正确
-	 
-	 @return 
-	*/
 	public final String List_DoCheck() throws Exception {
-		String str = "";
-
+		int toNodeID = 0;
 		String mystr = this.GetRequestVal("ToNodeID");
-		int toNodeID = this.getFK_Node();
 		if (DataType.IsNullOrEmpty(mystr) == false)
 		{
 			toNodeID = Integer.parseInt(mystr);
 		}
 
+		int condType = this.GetRequestValInt("CondType");
+		return List_DoCheckExt(condType, this.getNodeID(), toNodeID);
+	}
+	/** 
+	 校验是否正确
+	 
+	 @return 
+	*/
+	public static String List_DoCheckExt(int condType, int nodeID, int toNodeID) throws Exception {
+		if (toNodeID == 0)
+		{
+			toNodeID = nodeID;
+		}
+
 		//集合.
 		Conds conds = new Conds();
-		conds.Retrieve(CondAttr.FK_Node, this.getFK_Node(), CondAttr.ToNodeID, toNodeID, CondAttr.CondType, this.GetRequestValInt("CondType"), CondAttr.Idx);
+		conds.Retrieve(CondAttr.FK_Node, nodeID, CondAttr.ToNodeID, toNodeID, CondAttr.CondType, condType, CondAttr.Idx);
 
 		if (conds.size() == 0)
 		{
@@ -76,7 +85,7 @@ public class WF_Admin_Cond2020 extends WebContralBase
 				}
 			}
 		}
-
+		String str = "";
 		//遍历方向条件.
 		for (Cond item : conds.ToJavaList())
 		{
@@ -86,12 +95,12 @@ public class WF_Admin_Cond2020 extends WebContralBase
 			}
 			else
 			{
-				str += " 1=1 ";
+				str += " 1=1 "; // + item.AttrKey + item.FK_Operator + item.OperatorValue;
 			}
 		}
 
 		String sql = "";
-		switch (bp.difference.SystemConfig.getAppCenterDBType( ))
+		switch (bp.difference.SystemConfig.getAppCenterDBType())
 		{
 			case MSSQL:
 				sql = " SELECT TOP 1 No FROM Port_Emp WHERE " + str;
@@ -100,9 +109,9 @@ public class WF_Admin_Cond2020 extends WebContralBase
 				sql = " SELECT No FROM Port_Emp WHERE " + str + "   limit 1 ";
 				break;
 			case Oracle:
+			case DM:
 			case KingBaseR3:
 			case KingBaseR6:
-			case DM:
 				sql = " SELECT No FROM Port_Emp WHERE (" + str + ") AND  rownum <=1 ";
 				break;
 			default:
@@ -112,21 +121,25 @@ public class WF_Admin_Cond2020 extends WebContralBase
 		try
 		{
 			DataTable dt = DBAccess.RunSQLReturnTable(sql);
-			return "格式正确:<font color=blue>" + str + "</blue>";
+			return "格式正确:" + str;
 		}
 		catch (RuntimeException ex)
 		{
-			return "err@不符合规范. <font color=blue>" + str + "</font>";
+			return "不符合规范:" + str;
 		}
 	}
-	/**
-	 初始化岗位数据
-	 @return
-	 */
-	public final String SelectStation_StationTypes() throws Exception {
+	/** 
+	 初始化岗位
+	 
+	 @return 
+	*/
+
+	public final String SelectStation_StationTypes()
+	{
 		String sql = "select No,Name FROM port_StationType WHERE No in (SELECT Fk_StationType from Port_Station WHERE OrgNo ='" + this.GetRequestVal("OrgNo") + "')";
+
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		if(bp.difference.SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		if (bp.difference.SystemConfig.getAppCenterDBFieldCaseModel() != FieldCaseModel.None)
 		{
 			dt.Columns.get(0).ColumnName = "No";
 			dt.Columns.get(1).ColumnName = "Name";

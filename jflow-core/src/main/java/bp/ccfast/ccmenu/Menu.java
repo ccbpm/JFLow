@@ -1,7 +1,8 @@
 package bp.ccfast.ccmenu;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.en.Map;
 import bp.sys.*;
 
 /** 
@@ -12,7 +13,8 @@ public class Menu extends EntityNoName
 
 		///#region 属性
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (bp.web.WebUser.getIsAdmin() == true)
 		{
@@ -30,45 +32,37 @@ public class Menu extends EntityNoName
 	/** 
 	 系统编号
 	*/
-	public final String getSystemNo()
-	{
+	public final String getSystemNo() {
 		return this.GetValStringByKey(MenuAttr.SystemNo);
 	}
-	public final void setSystemNo(String value)
-	 {
+	public final void setSystemNo(String value)  {
 		this.SetValByKey(MenuAttr.SystemNo, value);
 	}
 	/** 
 	 组织编号
 	*/
-	public final String getOrgNo()
-	{
+	public final String getOrgNo() {
 		return this.GetValStringByKey(MenuAttr.OrgNo);
 	}
-	public final void setOrgNo(String value)
-	 {
+	public final void setOrgNo(String value)  {
 		this.SetValByKey(MenuAttr.OrgNo, value);
 	}
 	/** 
 	 标记
 	*/
-	public final String getMark()
-	{
+	public final String getMark() {
 		return this.GetValStringByKey(MenuAttr.Mark);
 	}
-	public final void setMark(String value)
-	 {
+	public final void setMark(String value)  {
 		this.SetValByKey(MenuAttr.Mark, value);
 	}
 	/** 
 	 Tag 1
 	*/
-	public final String getTag1()
-	{
+	public final String getTag1() {
 		return this.GetValStringByKey(MenuAttr.Tag1);
 	}
-	public final void setTag1(String value)
-	 {
+	public final void setTag1(String value)  {
 		this.SetValByKey(MenuAttr.Tag1, value);
 	}
 	//public CtrlWay HisCtrlWay
@@ -85,23 +79,20 @@ public class Menu extends EntityNoName
 	/** 
 	 功能
 	*/
-	public final MenuType getHisMenuType()  {
+	public final MenuType getHisMenuType() {
 		return MenuType.forValue(this.GetValIntByKey(MenuAttr.MenuType));
 	}
-	public final void setHisMenuType(MenuType value)
-	 {
+	public final void setHisMenuType(MenuType value)  {
 		this.SetValByKey(MenuAttr.MenuType, value.getValue());
 	}
 
 	/** 
 	 是否启用
 	*/
-	public final boolean isEnable()
-	{
+	public final boolean getItIsEnable() {
 		return this.GetValBooleanByKey(MenuAttr.IsEnable);
 	}
-	public final void setEnable(boolean value)
-	 {
+	public final void setItIsEnable(boolean value)  {
 		this.SetValByKey(MenuAttr.IsEnable, value);
 	}
 	/** 
@@ -121,70 +112,56 @@ public class Menu extends EntityNoName
 	/** 
 	 类别编号
 	*/
-	public final String getModuleNo()
-	{
+	public final String getModuleNo() {
 		return this.GetValStringByKey(MenuAttr.ModuleNo);
 	}
-	public final void setModuleNo(String value)
-	 {
+	public final void setModuleNo(String value)  {
 		this.SetValByKey(MenuAttr.ModuleNo, value);
 	}
 	/** 
 	 模式
 	*/
-	public final String getMenuModel()
-	{
+	public final String getMenuModel() {
 		return this.GetValStringByKey(MenuAttr.MenuModel);
 	}
-	public final void setMenuModel(String value)
-	 {
+	public final void setMenuModel(String value)  {
 		this.SetValByKey(MenuAttr.MenuModel, value);
 	}
-	public final String getIcon()
-	{
+	public final String getIcon() {
 		return this.GetValStringByKey(MenuAttr.Icon);
 	}
-	public final void setIcon(String value)
-	 {
+	public final void setIcon(String value)  {
 		this.SetValByKey(MenuAttr.Icon, value);
 	}
 	/** 
 	 菜单工作类型 0=自定义菜单， 1=系统菜单，不可以删除.
 	*/
-	public final int getWorkType()
-	{
+	public final int getWorkType() {
 		return this.GetValIntByKey(MenuAttr.WorkType);
 	}
-	public final void setWorkType(int value)
-	 {
+	public final void setWorkType(int value)  {
 		this.SetValByKey(MenuAttr.WorkType, value);
 	}
-	public final String getUrlExt()
-	{
+	public final String getUrlExt() {
 		return this.GetValStringByKey(MenuAttr.UrlExt);
 	}
-	public final void setUrlExt(String value)
-	 {
+	public final void setUrlExt(String value)  {
 		this.SetValByKey(MenuAttr.UrlExt, value);
 	}
-	public final String getMobileUrlExt()
-	{
+	public final String getMobileUrlExt() {
 		return this.GetValStringByKey(MenuAttr.MobileUrlExt);
 	}
-	public final void setMobileUrlExt(String value)
-	 {
+	public final void setMobileUrlExt(String value)  {
 		this.SetValByKey(MenuAttr.MobileUrlExt, value);
 	}
-	public boolean IsCheck = false;
+	public boolean ItIsCheck = false;
 	/** 
 	 标记
 	*/
-	public final int getIdx()
-	{
+	public final int getIdx() {
 		return this.GetValIntByKey(MenuAttr.Idx);
 	}
-	public final void setIdx(int value)
-	 {
+	public final void setIdx(int value)  {
 		this.SetValByKey(MenuAttr.Idx, value);
 	}
 
@@ -195,7 +172,8 @@ public class Menu extends EntityNoName
 	/** 
 	 菜单
 	*/
-	public Menu()  {
+	public Menu()
+	{
 	}
 
 	/** 
@@ -204,7 +182,8 @@ public class Menu extends EntityNoName
 	 @return 
 	*/
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		if (DataType.IsNullOrEmpty(this.getNo()) == true)
 		{
 			this.setNo(DBAccess.GenerGUID(0, null, null));
@@ -214,7 +193,8 @@ public class Menu extends EntityNoName
 		return super.beforeInsert();
 	}
 	@Override
-	protected boolean beforeDelete() throws Exception {
+	protected boolean beforeDelete() throws Exception
+	{
 		//如果是数据源列表.
 		if (this.getMenuModel().equals("DBList") == true)
 		{
@@ -232,17 +212,17 @@ public class Menu extends EntityNoName
 			ens.Delete(bp.ccfast.portal.WindowTemplateAttr.PageID, this.getNo());
 
 			// BP.CCFast.Portal.WindowExt.HtmlVarDtls dtls = new Home.WindowExt.HtmlVarDtls();
-			// dtls.Delete(BP.CCFast.Portal.WindowTemplateAttr.PageID, this.No);
+			// dtls.Delete(BP.CCFast.Portal.WindowTemplateAttr.PageID, this.getNo());
 		}
 
 
 		return super.beforeDelete();
 	}
-	/** 
-	 EnMap
-	*/
+	/**
+	 * EnMap
+	 */
 	@Override
-	public bp.en.Map getEnMap()  {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -262,7 +242,7 @@ public class Menu extends EntityNoName
 		map.AddTBString(MenuAttr.FrmID, null, "FrmID", false, false, 0, 300, 200, false);
 		map.AddTBString(MenuAttr.FlowNo, null, "FlowNo", false, false, 0, 300, 200, false);
 
-			// @0=系统根目录@1=系统类别@2=系统.
+		// @0=系统根目录@1=系统类别@2=系统.
 		map.AddDDLSysEnum(MenuAttr.OpenWay, 1, "打开方式", true, true, MenuAttr.OpenWay, "@0=新窗口@1=本窗口@2=覆盖新窗口");
 
 		map.AddTBString(MenuAttr.UrlExt, null, "PC端连接", true, false, 0, 500, 200, true);
@@ -271,10 +251,10 @@ public class Menu extends EntityNoName
 		map.AddBoolean(MenuAttr.IsEnable, true, "是否启用?", true, true);
 
 		map.AddTBString(MenuAttr.Icon, null, "Icon", true, false, 0, 50, 50, true);
-			//  map.AddTBString(MenuAttr.ModuleNo, null, "ModuleNo", false, false, 0, 50, 50);
+		//  map.AddTBString(MenuAttr.ModuleNo, null, "ModuleNo", false, false, 0, 50, 50);
 		map.AddTBString(MenuAttr.SystemNo, null, "SystemNo", false, false, 0, 50, 50);
 
-			//隶属模块，可以让用户编辑。
+		//隶属模块，可以让用户编辑。
 		map.AddDDLSQL(MenuAttr.ModuleNo, null, "隶属模块编号", "SELECT No,Name FROM GPM_Module WHERE SystemNo='@SystemNo'", true);
 
 		map.AddDDLSysEnum(MenuAttr.ListModel, 0, "列表模式", true, true, MenuAttr.ListModel, "@0=编辑模式@1=视图模式");
@@ -283,10 +263,9 @@ public class Menu extends EntityNoName
 		msg += "\t\n 2. 视图模式就是查询的模式打开数据..";
 		map.SetHelperAlert(MenuAttr.ListModel, msg);
 
-		map.AddTBInt(MenuAttr.Idx, 0, "顺序号", true, false);
-
 		map.AddTBString(MenuAttr.OrgNo, null, "OrgNo", true, false, 0, 50, 20);
-
+		map.AddTBInt(MenuAttr.Idx, 0, "顺序号", true, false);
+		map.AddTBAtParas(500);
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
@@ -294,7 +273,8 @@ public class Menu extends EntityNoName
 		///#endregion
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception {
+	protected boolean beforeUpdateInsertAction() throws Exception
+	{
 		if (DataType.IsNullOrEmpty(this.getModuleNo()) == true)
 		{
 			throw new RuntimeException("err@模块编号不能为空.");
@@ -313,13 +293,18 @@ public class Menu extends EntityNoName
 	}
 
 	@Override
-	protected void afterDelete() throws Exception {
+	protected void afterDelete() throws Exception
+	{
 		String sql = "";
 
 			///#region 删除实体。
 		if (this.getMenuModel().equals("Dict") == true || this.getMenuModel().equals("DBList") == true || this.getMenuModel().equals("Bill") == true)
 		{
 			String frmID = this.getUrlExt();
+			if (frmID.contains("?") || frmID.contains("="))
+			{
+				frmID = this.GetParaString("EnPKVal");
+			}
 			//删除实体.
 			MapData md = new MapData(frmID);
 			md.Delete();
@@ -361,7 +346,8 @@ public class Menu extends EntityNoName
 	/** 
 	 向下移动
 	*/
-	public final void DoDown() throws Exception {
+	public final void DoDown() throws Exception
+	{
 		this.DoOrderDown(MenuAttr.ModuleNo, this.getModuleNo(), ModuleAttr.Idx);
 	}
 

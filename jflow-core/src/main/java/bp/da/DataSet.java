@@ -47,14 +47,15 @@ public class DataSet {
 
 			}
 		}
-
 		return false;
-
+	}
+	public DataTable get(String tableName)
+	{
+		return GetTableByName(tableName);
 	}
 
 	public DataTable GetTableByName(String tableName)
 	{
-
 		for (DataTable dtb : this.Tables)
 		{
 			if( tableName.equals(dtb.getTableName()))
@@ -157,7 +158,7 @@ public class DataSet {
 		int pathType=0;
 		if(path.startsWith("resources")==true)
 			pathType = 1;
-		if(SystemConfig.getIsJarRun() && pathType==1){
+		if(SystemConfig.isJarRun() && pathType==1){
 
 		}
 		// 写入文件
@@ -322,7 +323,7 @@ public class DataSet {
 			pathType =1;
 		try {
 			String encoding = "UTF-8"; // 字符编码
-			if(SystemConfig.getIsJarRun() && pathType==1){
+			if(SystemConfig.isJarRun() && pathType==1){
 				ClassPathResource classPathResource = new ClassPathResource(path);
 				InputStream inputStream = classPathResource.getInputStream();
 				StringBuilder stringBuilder = new StringBuilder();

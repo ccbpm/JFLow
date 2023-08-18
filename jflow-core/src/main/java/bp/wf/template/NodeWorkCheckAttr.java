@@ -1,17 +1,10 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.sys.*;
 import bp.en.*;
-import bp.wf.*;
-import bp.*;
-import bp.wf.*;
-import java.util.*;
-
 /** 
  审核组件
 */
-public class NodeWorkCheckAttr extends EntityNoAttr
+public class NodeWorkCheckAttr extends EntityNoNameAttr
 {
 	/** 
 	 傻瓜表单审核标签

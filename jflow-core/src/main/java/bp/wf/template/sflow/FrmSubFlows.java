@@ -1,6 +1,11 @@
 package bp.wf.template.sflow;
 
-import bp.en.*;
+import bp.da.*;
+import bp.en.*; import bp.en.Map;
+import bp.sys.*;
+import bp.*;
+import bp.wf.*;
+import bp.wf.template.*;
 import java.util.*;
 
 /** 
@@ -13,28 +18,25 @@ public class FrmSubFlows extends Entities
 	/** 
 	 父子流程s
 	*/
-	public FrmSubFlows() throws Exception {
+	public FrmSubFlows()
+	{
 	}
 	/** 
 	 父子流程s
 	 
-	 param fk_mapdata s
+	 @param fk_mapdata s
 	*/
 	public FrmSubFlows(String fk_mapdata) throws Exception {
-		if (bp.difference.SystemConfig.getIsDebug())
-		{
-			this.Retrieve("No", fk_mapdata, null);
-		}
-		else
-		{
-			this.RetrieveFromCash("No", (Object)fk_mapdata);
-		}
+
+			this.RetrieveFromCache("No", (Object)fk_mapdata);
+
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FrmSubFlow();
 	}
 
@@ -46,7 +48,8 @@ public class FrmSubFlows extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmSubFlow> ToJavaList() {
+	public final java.util.List<FrmSubFlow> ToJavaList()
+	{
 		return (java.util.List<FrmSubFlow>)(Object)this;
 	}
 
@@ -55,7 +58,8 @@ public class FrmSubFlows extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmSubFlow> Tolist()  {
+	public final ArrayList<FrmSubFlow> Tolist()
+	{
 		ArrayList<FrmSubFlow> list = new ArrayList<FrmSubFlow>();
 		for (int i = 0; i < this.size(); i++)
 		{

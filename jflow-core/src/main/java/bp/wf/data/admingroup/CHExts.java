@@ -24,7 +24,7 @@ public class CHExts extends Entities
 	 时效考核
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity() {
 		return new CHExt();
 	}
 

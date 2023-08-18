@@ -31,7 +31,7 @@ public enum FrmEnableRole
 	*/
 	Disable(5),
 	/** 
-	 按岗位
+	 按角色
 	*/
 	ByStation(6),
 	/** 
@@ -43,7 +43,8 @@ public enum FrmEnableRole
 
 	private int intValue;
 	private static java.util.HashMap<Integer, FrmEnableRole> mappings;
-	private static java.util.HashMap<Integer, FrmEnableRole> getMappings()  {
+	private static java.util.HashMap<Integer, FrmEnableRole> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (FrmEnableRole.class)
@@ -58,15 +59,18 @@ public enum FrmEnableRole
 	}
 
 	private FrmEnableRole(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue() {
+	public int getValue()
+	{
 		return intValue;
 	}
 
 	public static FrmEnableRole forValue(int value)
-	{return getMappings().get(value);
+	{
+		return getMappings().get(value);
 	}
 }

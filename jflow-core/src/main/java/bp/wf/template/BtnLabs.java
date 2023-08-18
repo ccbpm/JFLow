@@ -11,13 +11,15 @@ public class BtnLabs extends Entities
 	/** 
 	 节点按钮权限s
 	*/
-	public BtnLabs() throws Exception {
+	public BtnLabs()
+	{
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new BtnLab();
 	}
 
@@ -27,7 +29,8 @@ public class BtnLabs extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.List<BtnLab> ToJavaList() {
+	public final java.util.List<BtnLab> ToJavaList()
+	{
 		return (java.util.List<BtnLab>)(Object)this;
 	}
 	/** 
@@ -35,7 +38,8 @@ public class BtnLabs extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<BtnLab> Tolist()  {
+	public final ArrayList<BtnLab> Tolist()
+	{
 		ArrayList<BtnLab> list = new ArrayList<BtnLab>();
 		for (int i = 0; i < this.size(); i++)
 		{

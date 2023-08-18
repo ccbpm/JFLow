@@ -1,69 +1,55 @@
 package bp.sys;
 
 import bp.da.*;
-import bp.en.*;
-import bp.*;
-import bp.en.Map;
-
-import java.util.*;
+import bp.en.*; import bp.en.Map;
 
 /** 
- SysEnumMain
+ 枚举注册
 */
 public class SysEnumMain extends EntityNoName
 {
 
 		///#region 实现基本的方法
-	public final int isHaveDtl() throws Exception
-	{
+	public final int isHaveDtl()  {
 		return this.GetValIntByKey(SysEnumMainAttr.IsHaveDtl);
 	}
-	public final void setHaveDtl(int value)  throws Exception
-	 {
+	public final void setHaveDtl(int value){
 		this.SetValByKey(SysEnumMainAttr.IsHaveDtl, value);
 	}
 	/** 
 	 组织编号
 	*/
-	public final String getOrgNo() throws Exception
-	{
+	public final String getOrgNo()  {
 		return this.GetValStrByKey(SysEnumMainAttr.OrgNo);
 	}
-	public final void setOrgNo(String value)  throws Exception
-	 {
+	public final void setOrgNo(String value){
 		this.SetValByKey(SysEnumMainAttr.OrgNo, value);
 	}
 	/** 
 	 配置的值
 	*/
-	public final String getCfgVal() throws Exception
-	{
+	public final String getCfgVal()  {
 		return this.GetValStrByKey(SysEnumMainAttr.CfgVal);
 	}
-	public final void setCfgVal(String value)  throws Exception
-	 {
+	public final void setCfgVal(String value){
 		this.SetValByKey(SysEnumMainAttr.CfgVal, value);
 	}
 	/** 
 	 语言
 	*/
-	public final String getLang() throws Exception
-	{
+	public final String getLang()  {
 		return this.GetValStrByKey(SysEnumMainAttr.Lang);
 	}
-	public final void setLang(String value)  throws Exception
-	 {
+	public final void setLang(String value){
 		this.SetValByKey(SysEnumMainAttr.Lang, value);
 	}
 	/** 
 	 枚举值
 	*/
-	public final String getEnumKey() throws Exception
-	{
+	public final String getEnumKey()  {
 		return this.GetValStrByKey(SysEnumMainAttr.EnumKey);
 	}
-	public final void setEnumKey(String value)  throws Exception
-	 {
+	public final void setEnumKey(String value){
 		this.SetValByKey(SysEnumMainAttr.EnumKey, value);
 	}
 
@@ -71,18 +57,26 @@ public class SysEnumMain extends EntityNoName
 
 
 		///#region 构造方法
+	@Override
+	public UAC getHisUAC()
+	{
+		UAC uac = new UAC();
+		uac.Readonly();
+		return uac;
+	}
+
 	/** 
 	 SysEnumMain
 	*/
-	public SysEnumMain()  {
+	public SysEnumMain()
+	{
 	}
 	/** 
 	 SysEnumMain
 	 
-	 param no
+	 @param no
 	*/
-	public SysEnumMain(String no)throws Exception
-	{
+	public SysEnumMain(String no) throws Exception  {
 		try
 		{
 			this.setNo(no);
@@ -91,7 +85,7 @@ public class SysEnumMain extends EntityNoName
 		catch (RuntimeException ex)
 		{
 			SysEnums ses = new SysEnums(no);
-			if (ses.size() == 0)
+			if (ses.size()== 0)
 			{
 				throw ex;
 			}
@@ -108,13 +102,8 @@ public class SysEnumMain extends EntityNoName
 		}
 	}
 	@Override
-	protected  void afterUpdate() throws Exception {
-	//清除所有的缓存，这个位置会造成拼接SQL错误 case When
-		bp.da.Cash.ClearCash();
-		super.afterUpdate();
-	}
-
-	protected boolean beforeDelete() throws Exception {
+	protected boolean beforeDelete() throws Exception
+	{
 		// 检查这个类型是否被使用？
 		MapAttrs mattrs = new MapAttrs();
 		QueryObject qo = new QueryObject(mattrs);
@@ -130,7 +119,7 @@ public class SysEnumMain extends EntityNoName
 			String msg = "错误:下列数据已经引用了枚举您不能删除它。"; // "错误:下列数据已经引用了枚举您不能删除它。";
 			for (MapAttr attr : mattrs.ToJavaList())
 			{
-				msg += "\t\n" + attr.getField() + "" + attr.getName() + " Table = " + attr.getFK_MapData();
+				msg += "\t\n" + attr.getField() + "" + attr.getName() + " Table = " + attr.getFrmID();
 			}
 
 			//抛出异常，阻止删除.
@@ -143,47 +132,48 @@ public class SysEnumMain extends EntityNoName
 	 Map
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
 		}
 
-		Map map = new Map("Sys_EnumMain", "枚举");
+		Map map = new Map("Sys_EnumMain", "枚举注册");
 
-			/*
-			 * 为了能够支持cloud 我们做了如下变更.
-			 * 1. 增加了OrgNo, EnumKey 字段.
-			 * 2. 如果是单机版用户,原来的业务逻辑不变化.
-			 * 3. 如果是SAAS模式, No=  OrgNo+"_"+EnumKey ;
-			 */
+		/*
+		 * 为了能够支持cloud 我们做了如下变更.
+		 * 1. 增加了OrgNo, EnumKey 字段.
+		 * 2. 如果是单机版用户,原来的业务逻辑不变化.
+		 * 3. 如果是SAAS模式, No=  OrgNo+"_"+EnumKey ;
+		 */
 
 		map.AddTBStringPK(SysEnumMainAttr.No, null, "编号", true, false, 1, 40, 8);
 		map.AddTBString(SysEnumMainAttr.Name, null, "名称", true, false, 0, 40, 8);
 		map.AddTBString(SysEnumMainAttr.CfgVal, null, "配置信息", true, false, 0, 1500, 8);
 		map.AddTBString(SysEnumMainAttr.Lang, "CH", "语言", true, false, 0, 10, 8);
 
-			//枚举值.
+		//枚举值.
 		map.AddTBString(SysEnumMainAttr.EnumKey, null, "EnumKey", true, false, 0, 40, 8);
-			//组织编号.
+		//组织编号.
 		map.AddTBString(SysEnumMainAttr.OrgNo, null, "OrgNo", true, false, 0, 50, 8);
 
 		map.AddTBInt(SysEnumMainAttr.IsHaveDtl, 0, "是否有子集?", true, false);
 
-			//参数.
+		//参数.
 		map.AddTBString(SysEnumMainAttr.AtPara, null, "AtPara", true, false, 0, 200, 8);
 
-		for (int i = 0; i < 30; i++)
+		for (int index = 0; index < 30; index++)
 		{
-			map.AddTBString("Idx" + i, null, "EnumKey", false, false, 0, 50, 8);
-			map.AddTBString("Val" + i, null, "枚举值", false, false, 0, 500, 400);
+			map.AddTBString("Idx" + index, null, "EnumKey", false, false, 0, 50, 8);
+			map.AddTBString("Val" + index, null, "枚举值", false, false, 0, 500, 400);
 		}
 
 		this.set_enMap(map);
 		return this.get_enMap();
 	}
 	@Override
-	protected void afterDelete() throws Exception {
+	protected void afterDelete() throws Exception
+	{
 		//检查是否有，父表？
 		String parentKey = this.GetParaString("ParentKey");
 		if (DataType.IsNullOrEmpty(parentKey) == false)
@@ -197,7 +187,8 @@ public class SysEnumMain extends EntityNoName
 		super.afterDelete();
 	}
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		if (DataType.IsNullOrEmpty(this.getNo()) == true)
 		{
 			if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
@@ -209,19 +200,26 @@ public class SysEnumMain extends EntityNoName
 				this.setNo(bp.web.WebUser.getOrgNo() + "_" + this.getEnumKey());
 			}
 		}
-
 		return super.beforeInsert();
 	}
 
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception {
+	protected boolean beforeUpdateInsertAction() throws Exception
+	{
 		if (bp.difference.SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
 		{
 			this.setOrgNo(bp.web.WebUser.getOrgNo());
 		}
-
 		return super.beforeUpdateInsertAction();
+	}
+
+	@Override
+	protected void afterUpdate() throws Exception
+	{
+		//清除所有的缓存，这个位置会造成拼接SQL错误 case When
+		Cache.ClearCache();
+		super.afterUpdate();
 	}
 
 		///#endregion
@@ -245,6 +243,11 @@ public class SysEnumMain extends EntityNoName
 		String[] strs = this.getCfgVal().split("[@]", -1);
 		for (String str : strs)
 		{
+			if (DataType.IsNullOrEmpty(str))
+			{
+				continue;
+			}
+
 			String[] kvs = str.split("[=]", -1);
 
 			se.setEnumKey(this.getNo());
@@ -252,7 +255,6 @@ public class SysEnumMain extends EntityNoName
 			se.setLab(kvs[1].trim());
 			se.setLang("CH");
 			se.Insert();
-			//   se.setMyPK(this.No+"_"+se
 		}
 
 		return "执行成功.";

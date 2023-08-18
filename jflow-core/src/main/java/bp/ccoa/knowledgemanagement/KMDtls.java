@@ -42,13 +42,15 @@ public class KMDtls extends EntitiesNoName
 	/** 
 	 知识点
 	*/
-	public KMDtls() {
+	public KMDtls()
+	{
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new KMDtl();
 	}
 
@@ -61,7 +63,8 @@ public class KMDtls extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<KMDtl> ToJavaList() {
+	public final java.util.List<KMDtl> ToJavaList()
+	{
 		return (java.util.List<KMDtl>)(Object)this;
 	}
 	/** 
@@ -69,7 +72,8 @@ public class KMDtls extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<KMDtl> Tolist()  {
+	public final ArrayList<KMDtl> Tolist()
+	{
 		ArrayList<KMDtl> list = new ArrayList<KMDtl>();
 		for (int i = 0; i < this.size(); i++)
 		{

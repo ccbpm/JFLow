@@ -1,8 +1,9 @@
 package bp.ccbill.template;
 
 import bp.da.*;
+import bp.en.Map;
 import bp.web.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 
 /** 
  新建实体流程
@@ -14,50 +15,40 @@ public class MethodFlowNewEntity extends EntityNoName
 	/** 
 	 表单ID
 	*/
-	public final String getFrmID() throws Exception
-	{
+	public final String getFrmID() {
 		return this.GetValStringByKey(MethodAttr.FrmID);
 	}
-	public final void setFrmID(String value)  throws Exception
-	 {
+	public final void setFrmID(String value)  {
 		this.SetValByKey(MethodAttr.FrmID, value);
 	}
-	public final String getFlowNo() throws Exception
-	{
+	public final String getFlowNo() {
 		return this.GetValStringByKey(MethodAttr.FlowNo);
 	}
-	public final void setFlowNo(String value)  throws Exception
-	 {
+	public final void setFlowNo(String value)  {
 		this.SetValByKey(MethodAttr.FlowNo, value);
 	}
-	public final String getUrlExt() throws Exception
-	{
+	public final String getUrlExt() {
 		return this.GetValStringByKey("UrlExt");
 	}
-	public final void setUrlExt(String value)  throws Exception
-	 {
+	public final void setUrlExt(String value)  {
 		this.SetValByKey("UrlExt", value);
 	}
 	/** 
 	 是否在流程结束后同步？
 	*/
-	public final boolean getDTSWhenFlowOver() throws Exception
-	{
+	public final boolean getDTSWhenFlowOver() {
 		return this.GetValBooleanByKey(MethodAttr.DTSWhenFlowOver);
 	}
-	public final void setDTSWhenFlowOver(boolean value)  throws Exception
-	 {
+	public final void setDTSWhenFlowOver(boolean value)  {
 		this.SetValByKey(MethodAttr.DTSWhenFlowOver, value);
 	}
 	/** 
 	 同步的方式
 	*/
-	public final int getDTSDataWay() throws Exception
-	{
+	public final int getDTSDataWay() {
 		return this.GetValIntByKey(MethodAttr.DTSDataWay);
 	}
-	public final void setDTSDataWay(int value)  throws Exception
-	 {
+	public final void setDTSDataWay(int value)  {
 		this.SetValByKey(MethodAttr.DTSDataWay, value);
 	}
 
@@ -69,7 +60,8 @@ public class MethodFlowNewEntity extends EntityNoName
 	 权限控制
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (WebUser.getIsAdmin())
 		{
@@ -81,17 +73,18 @@ public class MethodFlowNewEntity extends EntityNoName
 	/** 
 	 新建实体流程
 	*/
-	public MethodFlowNewEntity() {
+	public MethodFlowNewEntity()
+	{
 	}
-	public MethodFlowNewEntity(String no) throws Exception {
+	public MethodFlowNewEntity(String no) throws Exception  {
 		this.setNo(no);
 		this.Retrieve();
 	}
-	/** 
-	 重写基类方法
-	*/
+	/**
+	 * 重写基类方法
+	 */
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -104,7 +97,7 @@ public class MethodFlowNewEntity extends EntityNoName
 		map.AddTBString("FlowNo", null, "流程编号", true, true, 0, 300, 10, false);
 		map.AddTBString(MethodAttr.Icon, null, "图标", true, false, 0, 50, 10, true);
 
-			//
+		//
 		map.AddTBString("UrlExt", null, "链接", false, false, 0, 300, 10, true);
 
 
@@ -114,7 +107,6 @@ public class MethodFlowNewEntity extends EntityNoName
 		map.AddBoolean(MethodAttr.IsSearchBar, false, "是否显示在 SearchDict.htm工具栏上(用于批处理)", true, true, true);
 
 			///#endregion 显示位置控制.
-
 
 
 			///#region 相同字段数据同步方式.
@@ -134,8 +126,8 @@ public class MethodFlowNewEntity extends EntityNoName
 		rm.Warning = "";
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.Func;
-			//rm.GroupName = "开发接口";
-			//  map.AddRefMethod(rm);
+		//rm.GroupName = "开发接口";
+		//  map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "重新导入实体字段"; // "设计表单";
@@ -143,7 +135,7 @@ public class MethodFlowNewEntity extends EntityNoName
 		rm.Warning = "现有的表单字段将会被清除，重新导入的字段会被增加上去，数据不会变化，导入需慎重。";
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.Func;
-			//rm.GroupName = "开发接口";
+		//rm.GroupName = "开发接口";
 		map.AddRefMethod(rm);
 
 		this.set_enMap(map);
@@ -173,7 +165,8 @@ public class MethodFlowNewEntity extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoAlert() throws Exception {
+	public final String DoAlert()
+	{
 		return "您需要转入流程设计器去设计流程.";
 		// return "../../CCBill/Admin/MethodParas.htm?No=" + this.MyPK;
 	}
@@ -191,7 +184,8 @@ public class MethodFlowNewEntity extends EntityNoName
 
 	}
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		if (DataType.IsNullOrEmpty(this.getNo()) == true)
 		{
 			this.setNo(DBAccess.GenerGUID(0, null, null));

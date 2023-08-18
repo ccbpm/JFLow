@@ -1,12 +1,12 @@
 package bp.port;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.*;
 import java.util.*;
 
 /** 
- 部门岗位人员对应
+ 部门角色人员对应
 */
 public class DeptEmpStationAttr
 {
@@ -17,7 +17,7 @@ public class DeptEmpStationAttr
 	*/
 	public static final String FK_Dept = "FK_Dept";
 	/** 
-	 岗位
+	 角色
 	*/
 	public static final String FK_Station = "FK_Station";
 	/** 

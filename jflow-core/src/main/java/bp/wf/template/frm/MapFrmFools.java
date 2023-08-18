@@ -1,6 +1,11 @@
 package bp.wf.template.frm;
 
-import bp.en.*;
+import bp.da.*;
+import bp.en.*; import bp.en.Map;
+import bp.sys.*;
+import bp.*;
+import bp.wf.*;
+import bp.wf.template.*;
 import java.util.*;
 
 /** 
@@ -13,13 +18,15 @@ public class MapFrmFools extends EntitiesNoName
 	/** 
 	 傻瓜表单属性s
 	*/
-	public MapFrmFools() throws Exception {
+	public MapFrmFools()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new MapFrmFool();
 	}
 
@@ -32,7 +39,8 @@ public class MapFrmFools extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<MapFrmFool> ToJavaList() {
+	public final java.util.List<MapFrmFool> ToJavaList()
+	{
 		return (java.util.List<MapFrmFool>)(Object)this;
 	}
 	/** 
@@ -40,7 +48,8 @@ public class MapFrmFools extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<MapFrmFool> Tolist()  {
+	public final ArrayList<MapFrmFool> Tolist()
+	{
 		ArrayList<MapFrmFool> list = new ArrayList<MapFrmFool>();
 		for (int i = 0; i < this.size(); i++)
 		{

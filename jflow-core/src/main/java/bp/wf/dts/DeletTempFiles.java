@@ -1,7 +1,7 @@
 package bp.wf.dts;
 
-import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
 import bp.wf.*;
 
 /** 
@@ -12,7 +12,7 @@ public class DeletTempFiles extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public DeletTempFiles()throws Exception
+	public DeletTempFiles()
 	{
 		this.Title = "删除产生的临时文件";
 		this.Help = "上传、下载、导入导出流程模版表单模版的临时文件删除.";
@@ -43,7 +43,7 @@ public class DeletTempFiles extends Method
 	 @return 返回执行结果
 	*/
 	@Override
-	public Object Do()throws Exception
+	public Object Do()
 	{
 
 		try
@@ -52,7 +52,7 @@ public class DeletTempFiles extends Method
 		}
 		catch (RuntimeException ex)
 		{
-			Log.DebugWriteError("删除临时文件错误:" + ex.getMessage());
+			bp.da.Log.DebugWriteError("删除临时文件错误:" + ex.getMessage());
 			return "err@" + ex.getMessage();
 		}
 		return "删除成功.";

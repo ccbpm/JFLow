@@ -1,25 +1,23 @@
 package bp.ccbill;
 
-import bp.ccfast.ccmenu.PowerCenter;
-import bp.ccfast.ccmenu.PowerCenterAttr;
-import bp.ccfast.ccmenu.PowerCenters;
 import bp.da.*;
-import bp.difference.handler.WebContralBase;
 import bp.sys.*;
 import bp.web.*;
 import bp.ccbill.template.*;
+import bp.ccfast.ccmenu.*;
 
 /** 
  页面功能实体
 */
-public class WF_CCBill_API extends WebContralBase
+public class WF_CCBill_API extends bp.difference.handler.DirectoryPageBase
 {
 
 		///#region 构造方法.
 	/** 
 	 构造函数
 	*/
-	public WF_CCBill_API() throws Exception {
+	public WF_CCBill_API()
+	{
 	}
 
 		///#endregion 构造方法.
@@ -29,7 +27,8 @@ public class WF_CCBill_API extends WebContralBase
 	/** 
 	 目录树编号
 	*/
-	public final String getTreeNo() throws Exception {
+	public final String getTreeNo()
+	{
 		return this.GetRequestVal("TreeNo");
 	}
 
@@ -43,17 +42,18 @@ public class WF_CCBill_API extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String CCFrom_GenerFrmListOfCanOption() throws Exception {
+	public final String CCFrom_GenerFrmListOfCanOption()
+	{
 		String sql = "";
 		String userNo = GetRequestVal("UserNo");
 		if (DataType.IsNullOrEmpty(userNo) == true)
 		{
-			userNo = WebUser.getNo();
+			userNo = WebUser.getUserID();
 		}
 
 		String powerSQL = "";
 
-		if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MySQL)
+		if (bp.difference.SystemConfig.getAppCenterDBType() == DBType.MySQL)
 		{
 			powerSQL = "SELECT FrmID," + "(CASE WHEN IsEnableAll=1 THEN true " + "ELSE(CASE WHEN IsEnableUser=1 AND INSTR(IDOfUsers,'," + userNo + ",')>0 THEN true " + "ELSE(CASE WHEN IsEnableStation=1 AND (SELECT COUNT(*) From Port_DeptEmpStation D,Port_Emp E WHERE D.FK_Emp = E.No AND E.No='" + userNo + "' AND INSTR(IDOfStations,D.FK_Station))>0 THEN true " + "ELSE(CASE WHEN IsEnableDept=1 AND (SELECT COUNT(*) From Port_DeptEmp D,Port_Emp E WHERE D.FK_Emp = E.No AND E.No='" + userNo + "' AND INSTR(IDOfDepts,D.FK_Dept))>0 THEN true " + "ELSE false END)" + "END)" + "END)" + "END) AS IsView   FROM Frm_CtrlModel WHERE CtrlObj='BtnSearch'";
 
@@ -69,14 +69,12 @@ public class WF_CCBill_API extends WebContralBase
 		}
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		if (bp.difference.SystemConfig.AppCenterDBFieldCaseModel() !=FieldCaseModel.None)
-		{
-			dt.Columns.get(0).setColumnName("No");
-			dt.Columns.get(1).setColumnName("Name");
-			dt.Columns.get(2).setColumnName("EntityType");
-			dt.Columns.get(3).setColumnName("FrmType");
-			dt.Columns.get(4).setColumnName("PTable");
-		}
+		dt.Columns.get(0).ColumnName = "No";
+		dt.Columns.get(1).ColumnName = "Name";
+		dt.Columns.get(2).ColumnName = "EntityType";
+		dt.Columns.get(3).ColumnName = "FrmType";
+		dt.Columns.get(4).ColumnName = "PTable";
+
 
 		return bp.tools.Json.ToJson(dt);
 	}
@@ -136,7 +134,8 @@ public class WF_CCBill_API extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String CCFrom_GenerFrmListOfCanOptionBySpecTreeNo() throws Exception {
+	public final String CCFrom_GenerFrmListOfCanOptionBySpecTreeNo()
+	{
 
 		String treeNo = this.GetRequestVal("TreeNo");
 		return null;
@@ -150,12 +149,13 @@ public class WF_CCBill_API extends WebContralBase
 		//获取该表单所有操作按钮的权限
 		ToolbarBtns btns = new ToolbarBtns();
 		btns.Retrieve(ToolbarBtnAttr.FrmID, this.getFrmID(), "Idx");
+		boolean isReadonly = this.GetRequestValBoolen("IsReadonly");
 		if (btns.size() == 0)
 		{
 			MapData md = new MapData(this.getFrmID());
 			//表单的工具栏权限
 			ToolbarBtn btn = new ToolbarBtn();
-			if (md.getEntityType() != EntityType.DBList)
+			if (md.getEntityType() != EntityType.DBList && isReadonly == false)
 			{
 				btn.setFrmID(md.getNo());
 				btn.setBtnID("New");
@@ -200,7 +200,7 @@ public class WF_CCBill_API extends WebContralBase
 			btn.setBtnID("PrintHtml");
 			btn.setBtnLab("打印Html");
 			btn.setMyPK(btn.getFrmID() + "_" + btn.getBtnID());
-			btn.setEnable(false);
+			btn.setItIsEnable(false);
 			btn.SetValByKey("Idx", 3);
 			btn.Insert();
 
@@ -209,7 +209,7 @@ public class WF_CCBill_API extends WebContralBase
 			btn.setBtnID("PrintPDF");
 			btn.setBtnLab("打印PDF");
 			btn.setMyPK(btn.getFrmID() + "_" + btn.getBtnID());
-			btn.setEnable(false);
+			btn.setItIsEnable(false);
 			btn.SetValByKey("Idx", 4);
 			btn.Insert();
 
@@ -218,7 +218,7 @@ public class WF_CCBill_API extends WebContralBase
 			btn.setBtnID("PrintRTF");
 			btn.setBtnLab("打印RTF");
 			btn.setMyPK(btn.getFrmID() + "_" + btn.getBtnID());
-			btn.setEnable(false);
+			btn.setItIsEnable(false);
 			btn.SetValByKey("Idx", 5);
 			btn.Insert();
 
@@ -227,7 +227,7 @@ public class WF_CCBill_API extends WebContralBase
 			btn.setBtnID("PrintCCWord");
 			btn.setBtnLab("打印CCWord");
 			btn.setMyPK(btn.getFrmID() + "_" + btn.getBtnID());
-			btn.setEnable(false);
+			btn.setItIsEnable(false);
 			btn.SetValByKey("Idx", 6);
 			btn.Insert();
 
@@ -236,7 +236,7 @@ public class WF_CCBill_API extends WebContralBase
 			btn.setBtnID("ExpZip");
 			btn.setBtnLab("导出Zip包");
 			btn.setMyPK(btn.getFrmID() + "_" + btn.getBtnID());
-			btn.setEnable(false);
+			btn.setItIsEnable(false);
 			btn.SetValByKey("Idx", 7);
 			btn.Insert();
 
@@ -248,10 +248,10 @@ public class WF_CCBill_API extends WebContralBase
 		PowerCenters pcs = new PowerCenters();
 		pcs.Retrieve(PowerCenterAttr.CtrlObj, this.getFrmID(), PowerCenterAttr.CtrlGroup, "FrmBtn", null);
 
-		String mydepts = "" + WebUser.getFK_Dept()+ ","; //我的部门.
-		String mystas = ""; //我的岗位.
+		String mydepts = "" + WebUser.getDeptNo() + ","; //我的部门.
+		String mystas = ""; //我的角色.
 
-		DataTable mydeptsDT = DBAccess.RunSQLReturnTable("SELECT FK_Dept,FK_Station FROM Port_DeptEmpStation WHERE FK_Emp='" + WebUser.getNo() + "'");
+		DataTable mydeptsDT = DBAccess.RunSQLReturnTable("SELECT FK_Dept,FK_Station FROM Port_DeptEmpStation WHERE FK_Emp='" + WebUser.getUserID() + "'");
 		for (DataRow dr : mydeptsDT.Rows)
 		{
 			mydepts += dr.getValue(0).toString() + ",";
@@ -262,7 +262,11 @@ public class WF_CCBill_API extends WebContralBase
 		String empIds = "";
 		for (ToolbarBtn btn : btns.ToJavaList())
 		{
-			if (btn.isEnable() == false)
+			if (btn.getItIsEnable() == false)
+			{
+				continue;
+			}
+			if (isReadonly == true && (btn.getBtnID().equals("New") || btn.getBtnID().equals("Save") || btn.getBtnID().equals("Submit") || btn.getBtnID().equals("Delete")))
 			{
 				continue;
 			}
@@ -309,7 +313,7 @@ public class WF_CCBill_API extends WebContralBase
 					break;
 				}
 
-				//是否包含岗位？
+				//是否包含角色？
 				if (pc.getCtrlModel().equals("Stations") == true && DataType.IsHaveIt(pc.getIDs(), mystas) == true)
 				{
 					newBtns.AddEntity(btn);
@@ -340,57 +344,7 @@ public class WF_CCBill_API extends WebContralBase
 		ToolbarBtns btns = CCFrom_FrmPower();
 		return bp.tools.Json.ToJson(btns.ToDataTableField("Frm_ToolbarBtn"));
 
-
-		//关联流程
-		//DictFlows dictFlows = new BP.CCBill.Template.DictFlows();
-		//dictFlows.Retrieve("FrmID", this.FrmID);
-		//foreach(DictFlow dict in dictFlows)
-		//{
-		//    dr = dt.NewRow();
-		//    dr["No"] = "dictFlow";
-		//    dr["Type"] = dict.FlowNo;
-		//    dr["Name"] = dict.Label;
-		//    dr["Icon"] = "shezhi";
-		//    dt.Rows.add(dr);
-		//}
-		//if (WebUser.getNo().Equals("admin") && this.IsMobile == false)
-		//{
-		//    dr = dt.NewRow();
-		//    dr["No"] = "Setting";
-		//    dr["Name"] = "设置";
-		//    dr["Icon"] = "shezhi";
-		//    dt.Rows.add(dr);
-		//}
-		//return BP.Tools.Json.ToJson(dt);
 	}
-
-
-
-
-	/** 
-	 获取菜单列表
-	 
-	 @return 
-	*/
-	//public string CCForm_Power_ViewList()
-	//{
-	//    string userNo = GetRequestVal("UserNo");
-	//    if (DataType.IsNullOrEmpty(userNo) == true)
-	//        userNo = WebUser.getNo();
-	//    string sql = "SELECT FrmID," +
-	//        "(CASE WHEN IsEnableAll=1 THEN true " +
-	//        "ELSE(CASE WHEN IsEnableUser=1 AND INSTR(IDOfUsers,'," + userNo + ",')>0 THEN true " +
-	//        "ELSE(CASE WHEN IsEnableStation=1 AND (SELECT COUNT(*) From Port_DeptEmpStation D,Port_Emp E WHERE D.FK_Emp = E.No AND E.No='" + userNo + "' AND INSTR(IDOfStations,D.FK_Station))>0 THEN true " +
-	//        "ELSE(CASE WHEN IsEnableDept=1 AND (SELECT COUNT(*) From Port_DeptEmp D,Port_Emp E WHERE D.FK_Emp = E.No AND E.No='" + userNo + "' AND INSTR(IDOfDepts,D.FK_Dept))>0 THEN true " +
-	//        "ELSE false END)" +
-	//        "END)" +
-	//        "END)" +
-	//        "END) AS IsView   FROM Frm_CtrlModel WHERE CtrlObj='BtnSearch'";
-	//    DataTable dt = DBAccess.RunSQLReturnTable(sql);
-	//    dt.TableName = "FrmView";
-	//    return BP.Tools.Json.ToJson(dt);
-	//}
-
 
 	/** 
 	 删除实体根据BillNo
@@ -430,18 +384,17 @@ public class WF_CCBill_API extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String CCBillAdmin_Admin_GenerAllBills() throws Exception {
+	public final String CCBillAdmin_Admin_GenerAllBills()
+	{
 		String sql = "";
 		sql = "SELECT No,Name,EntityType,FrmType,PTable FROM Sys_MapData WHERE (EntityType=1 OR EntityType=2) ORDER BY IDX ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		if (bp.difference.SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
-		{
-			dt.Columns.get(0).setColumnName("No");
-			dt.Columns.get(1).setColumnName("Name");
-			dt.Columns.get(2).setColumnName("EntityType");
-			dt.Columns.get(3).setColumnName("FrmType");
-			dt.Columns.get(4).setColumnName("PTable");
-		}
+		dt.Columns.get(0).ColumnName = "No";
+		dt.Columns.get(1).ColumnName = "Name";
+		dt.Columns.get(2).ColumnName = "EntityType";
+		dt.Columns.get(3).ColumnName = "FrmType";
+		dt.Columns.get(4).ColumnName = "PTable";
+
 
 		return bp.tools.Json.ToJson(dt);
 	}

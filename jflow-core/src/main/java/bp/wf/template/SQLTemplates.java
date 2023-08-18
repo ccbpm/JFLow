@@ -1,10 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.wf.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -18,13 +14,15 @@ public class SQLTemplates extends EntitiesNoName
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new SQLTemplate();
 	}
 	/** 
 	 SQL模板
 	*/
-	public SQLTemplates() throws Exception {
+	public SQLTemplates()
+	{
 	}
 
 		///#endregion
@@ -41,7 +39,8 @@ public class SQLTemplates extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<SQLTemplate> ToJavaList() {
+	public final java.util.List<SQLTemplate> ToJavaList()
+	{
 		return (java.util.List<SQLTemplate>)(Object)this;
 	}
 	/** 
@@ -49,7 +48,8 @@ public class SQLTemplates extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<SQLTemplate> Tolist()  {
+	public final ArrayList<SQLTemplate> Tolist()
+	{
 		ArrayList<SQLTemplate> list = new ArrayList<SQLTemplate>();
 		for (int i = 0; i < this.size(); i++)
 		{

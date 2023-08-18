@@ -279,7 +279,7 @@ public final class StringHelper
 	}
     
     /**
-     * This method replaces the .NET static string method 'IsNullOrWhiteSpace'.
+     * This method replaces the .NET static String method 'IsNullOrWhiteSpace'.
      * param string
      * @return
      */
@@ -298,7 +298,7 @@ public final class StringHelper
   	}
   	
   	/**
-  	 * This method replaces the .NET string method 'remove' (1 parameter version).
+  	 * This method replaces the .NET String method 'remove' (1 parameter version).
   	 * param string
   	 * param start
   	 * @return
@@ -309,7 +309,7 @@ public final class StringHelper
   	}
   	
 	/**
-	 * This method replaces the .NET string method 'remove' (2 parameter version).
+	 * This method replaces the .NET String method 'remove' (2 parameter version).
 	 * param string
 	 * param start
 	 * param count
@@ -321,7 +321,7 @@ public final class StringHelper
   	}
   	
   	/**
-  	 * This method replaces the .NET string method 'PadRight' (1 parameter version).
+  	 * This method replaces the .NET String method 'PadRight' (1 parameter version).
   	 * param string
   	 * param totalWidth
   	 * @return
@@ -332,7 +332,7 @@ public final class StringHelper
   	}
 
   	/**
-  	 * This method replaces the .NET string method 'PadRight' (2 parameter version).
+  	 * This method replaces the .NET String method 'PadRight' (2 parameter version).
   	 * param string
   	 * param totalWidth
   	 * param paddingChar
@@ -351,7 +351,7 @@ public final class StringHelper
   	}
   	
   	/**
-  	 * This method replaces the .NET string method 'PadLeft' (1 parameter version).
+  	 * This method replaces the .NET String method 'PadLeft' (1 parameter version).
   	 * param string
   	 * param totalWidth
   	 * @return
@@ -362,7 +362,7 @@ public final class StringHelper
   	}
 
   	/**
-  	 * This method replaces the .NET string method 'PadLeft' (2 parameter version).
+  	 * This method replaces the .NET String method 'PadLeft' (2 parameter version).
   	 * param string
   	 * param totalWidth
   	 * param paddingChar
@@ -382,7 +382,7 @@ public final class StringHelper
   	}
   	
   	/**
-  	 * This method replaces the .NET string method 'LastIndexOf' (char version).
+  	 * This method replaces the .NET String method 'LastIndexOf' (char version).
   	 * param string
   	 * param value
   	 * param startIndex
@@ -393,16 +393,16 @@ public final class StringHelper
 	{
 		int leftMost = startIndex + 1 - count;
 		int rightMost = startIndex + 1;
-		String substring = string.substring(leftMost, rightMost);
-		int lastIndexInSubstring = substring.lastIndexOf(value);
-		if (lastIndexInSubstring < 0)
+		String subString = string.substring(leftMost, rightMost);
+		int lastIndexInSubString = subString.lastIndexOf(value);
+		if (lastIndexInSubString < 0)
 			return -1;
 		else
-			return lastIndexInSubstring + leftMost;
+			return lastIndexInSubString + leftMost;
 	}
 
 	/**
-	 * This method replaces the .NET string method 'LastIndexOf' (string version).
+	 * This method replaces the .NET String method 'LastIndexOf' (String version).
 	 * param string
 	 * param value
 	 * param startIndex
@@ -413,16 +413,16 @@ public final class StringHelper
 	{
 		int leftMost = startIndex + 1 - count;
 		int rightMost = startIndex + 1;
-		String substring = string.substring(leftMost, rightMost);
-		int lastIndexInSubstring = substring.lastIndexOf(value);
-		if (lastIndexInSubstring < 0)
+		String subString = string.substring(leftMost, rightMost);
+		int lastIndexInSubString = subString.lastIndexOf(value);
+		if (lastIndexInSubString < 0)
 			return -1;
 		else
-			return lastIndexInSubstring + leftMost;
+			return lastIndexInSubString + leftMost;
 	}
 
 	/**
-	 * This method replaces the .NET string method 'IndexOfAny' (1 parameter version).
+	 * This method replaces the .NET String method 'IndexOfAny' (1 parameter version).
 	 * param string
 	 * param anyOf
 	 * @return
@@ -449,7 +449,7 @@ public final class StringHelper
 	}
 
 	/**
-	 * This method replaces the .NET string method 'IndexOfAny' (2 parameter version).
+	 * This method replaces the .NET String method 'IndexOfAny' (2 parameter version).
 	 * param string
 	 * param anyOf
 	 * param startIndex
@@ -457,15 +457,15 @@ public final class StringHelper
 	 */
 	public static int indexOfAny(String string, char[] anyOf, int startIndex)
 	{
-		int indexInSubstring = indexOfAny(string.substring(startIndex), anyOf);
-		if (indexInSubstring == -1)
+		int indexInSubString = indexOfAny(string.substring(startIndex), anyOf);
+		if (indexInSubString == -1)
 			return -1;
 		else
-			return indexInSubstring + startIndex;
+			return indexInSubString + startIndex;
 	}
 
 	/**
-	 * This method replaces the .NET string method 'IndexOfAny' (3 parameter version).
+	 * This method replaces the .NET String method 'IndexOfAny' (3 parameter version).
 	 * param string
 	 * param anyOf
 	 * param startIndex
@@ -475,15 +475,15 @@ public final class StringHelper
 	public static int indexOfAny(String string, char[] anyOf, int startIndex, int count)
 	{
 		int endIndex = startIndex + count;
-		int indexInSubstring = indexOfAny(string.substring(startIndex, endIndex), anyOf);
-		if (indexInSubstring == -1)
+		int indexInSubString = indexOfAny(string.substring(startIndex, endIndex), anyOf);
+		if (indexInSubString == -1)
 			return -1;
 		else
-			return indexInSubstring + startIndex;
+			return indexInSubString + startIndex;
 	}
 
 	/**
-	 * This method replaces the .NET string method 'LastIndexOfAny' (1 parameter version).
+	 * This method replaces the .NET String method 'LastIndexOfAny' (1 parameter version).
 	 * param string
 	 * param anyOf
 	 * @return
@@ -507,7 +507,7 @@ public final class StringHelper
 	}
 
 	/**
-	 * This method replaces the .NET string method 'LastIndexOfAny' (2 parameter version).
+	 * This method replaces the .NET String method 'LastIndexOfAny' (2 parameter version).
 	 * param string
 	 * param anyOf
 	 * param startIndex
@@ -515,16 +515,16 @@ public final class StringHelper
 	 */
 	public static int lastIndexOfAny(String string, char[] anyOf, int startIndex)
 	{
-		String substring = string.substring(0, startIndex + 1);
-		int lastIndexInSubstring = lastIndexOfAny(substring, anyOf);
-		if (lastIndexInSubstring < 0)
+		String subString = string.substring(0, startIndex + 1);
+		int lastIndexInSubString = lastIndexOfAny(subString, anyOf);
+		if (lastIndexInSubString < 0)
 			return -1;
 		else
-			return lastIndexInSubstring;
+			return lastIndexInSubString;
 	}
 
 	/**
-	 * This method replaces the .NET string method 'LastIndexOfAny' (3 parameter version).
+	 * This method replaces the .NET String method 'LastIndexOfAny' (3 parameter version).
 	 * param string
 	 * param anyOf
 	 * param startIndex
@@ -535,12 +535,12 @@ public final class StringHelper
 	{
 		int leftMost = startIndex + 1 - count;
 		int rightMost = startIndex + 1;
-		String substring = string.substring(leftMost, rightMost);
-		int lastIndexInSubstring = lastIndexOfAny(substring, anyOf);
-		if (lastIndexInSubstring < 0)
+		String subString = string.substring(leftMost, rightMost);
+		int lastIndexInSubString = lastIndexOfAny(subString, anyOf);
+		if (lastIndexInSubString < 0)
 			return -1;
 		else
-			return lastIndexInSubstring + leftMost;
+			return lastIndexInSubString + leftMost;
 	}
 	
 	/**

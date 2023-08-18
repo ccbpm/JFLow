@@ -25,7 +25,7 @@ public class RptEmps extends Entities
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new RptEmp();
 	}
@@ -39,7 +39,7 @@ public class RptEmps extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.List<RptEmp> ToJavaList()throws Exception
+	public final java.util.List<RptEmp> ToJavaList()
 	{
 		return (java.util.List<RptEmp>)(Object)this;
 	}
@@ -48,7 +48,7 @@ public class RptEmps extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<RptEmp> Tolist()throws Exception
+	public final ArrayList<RptEmp> Tolist()
 	{
 		ArrayList<RptEmp> list = new ArrayList<RptEmp>();
 		for (int i = 0; i < this.size(); i++)

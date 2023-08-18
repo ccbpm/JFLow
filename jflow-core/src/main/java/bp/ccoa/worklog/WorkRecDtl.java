@@ -2,7 +2,7 @@ package bp.ccoa.worklog;
 
 import bp.da.*;
 import bp.web.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
 
 /** 
@@ -15,91 +15,71 @@ public class WorkRecDtl extends EntityMyPK
 	/** 
 	 组织编号
 	*/
-	public final String getOrgNo()
-	{
+	public final String getOrgNo()  {
 		return this.GetValStrByKey(WorkRecAttr.OrgNo);
 	}
-	public final void setOrgNo(String value)
-	 {
+	public final void setOrgNo(String value)  {
 		this.SetValByKey(WorkRecAttr.OrgNo, value);
 	}
-	public final String getRec()
-	{
+	public final String getRec()  {
 		return this.GetValStrByKey(WorkRecAttr.Rec);
 	}
-	public final void setRec(String value)
-	 {
+	public final void setRec(String value)  {
 		this.SetValByKey(WorkRecAttr.Rec, value);
 	}
-	public final String getRecName()
-	{
+	public final String getRecName()  {
 		return this.GetValStrByKey(WorkRecAttr.RecName);
 	}
-	public final void setRecName(String value)
-	 {
+	public final void setRecName(String value)  {
 		this.SetValByKey(WorkRecAttr.RecName, value);
 	}
-	public final String getRDT()
-	{
+	public final String getRDT()  {
 		return this.GetValStrByKey(WorkRecAttr.RDT);
 	}
-	public final void setRDT(String value)
-	 {
+	public final void setRDT(String value)  {
 		this.SetValByKey(WorkRecAttr.RDT, value);
 	}
 	/** 
 	 日期
 	*/
-	public final String getRiQi()
-	{
+	public final String getRiQi()  {
 		return this.GetValStrByKey(WorkRecAttr.RiQi);
 	}
-	public final void setRiQi(String value)
-	 {
+	public final void setRiQi(String value)  {
 		this.SetValByKey(WorkRecAttr.RiQi, value);
 	}
 	/** 
 	 年月
 	*/
-	public final String getNianYue()
-	{
+	public final String getNianYue()  {
 		return this.GetValStrByKey(WorkRecAttr.NianYue);
 	}
-	public final void setNianYue(String value)
-	 {
+	public final void setNianYue(String value)  {
 		this.SetValByKey(WorkRecAttr.NianYue, value);
 	}
 
-	public final float getHeiJiHour()
-	{
+	public final float getHeiJiHour() {
 		return this.GetValFloatByKey(WorkRecDtlAttr.HeiJiHour);
 	}
-	public final void setHeiJiHour(float value)
-	 {
+	public final void setHeiJiHour(float value)  {
 		this.SetValByKey(WorkRecDtlAttr.HeiJiHour, value);
 	}
-	public final int getHour()
-	{
+	public final int getHour() {
 		return this.GetValIntByKey(WorkRecDtlAttr.Hour);
 	}
-	public final void setHour(int value)
-	 {
+	public final void setHour(int value)  {
 		this.SetValByKey(WorkRecDtlAttr.Hour, value);
 	}
-	public final int getMinute()
-	{
+	public final int getMinute() {
 		return this.GetValIntByKey(WorkRecDtlAttr.Minute);
 	}
-	public final void setMinute(int value)
-	 {
+	public final void setMinute(int value)  {
 		this.SetValByKey(WorkRecDtlAttr.Minute, value);
 	}
-	public final int getWeekNum()
-	{
+	public final int getWeekNum() {
 		return this.GetValIntByKey(WorkRecDtlAttr.WeekNum);
 	}
-	public final void setWeekNum(int value)
-	 {
+	public final void setWeekNum(int value)  {
 		this.SetValByKey(WorkRecDtlAttr.WeekNum, value);
 	}
 
@@ -111,7 +91,8 @@ public class WorkRecDtl extends EntityMyPK
 	 权限控制
 	*/
 	@Override
-	public UAC getHisUAC() {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (WebUser.getIsAdmin())
 		{
@@ -123,9 +104,10 @@ public class WorkRecDtl extends EntityMyPK
 	/** 
 	 工作内容
 	*/
-	public WorkRecDtl()  {
+	public WorkRecDtl()
+	{
 	}
-	public WorkRecDtl(String mypk)throws Exception
+	public WorkRecDtl(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -134,7 +116,8 @@ public class WorkRecDtl extends EntityMyPK
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -142,7 +125,8 @@ public class WorkRecDtl extends EntityMyPK
 
 		Map map = new Map("OA_WorkRecDtl", "工作内容");
 
-		map.AddMyPK(true);
+
+		map.AddTBStringPK("MyPK", null, "编号", false, false, 0, 40, 10);
 
 		map.AddTBString(WorkRecDtlAttr.RefPK, null, "RefPK", false, false, 0, 40, 10);
 
@@ -175,7 +159,8 @@ public class WorkRecDtl extends EntityMyPK
 
 		///#region 执行方法.
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		this.setMyPK(DBAccess.GenerGUID(0, null, null));
 
 		this.setRec(WebUser.getNo());

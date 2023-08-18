@@ -1,10 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.wf.port.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -15,12 +11,13 @@ public class NodeDepts extends EntitiesMyPK
 	/** 
 	 节点部门
 	*/
-	public NodeDepts()  {
+	public NodeDepts()
+	{
 	}
 	/** 
 	 节点部门
 	 
-	 param NodeID 节点ID
+	 @param NodeID 节点ID
 	*/
 	public NodeDepts(int NodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -31,7 +28,8 @@ public class NodeDepts extends EntitiesMyPK
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new NodeDept();
 	}
 
@@ -42,7 +40,8 @@ public class NodeDepts extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<NodeDept> ToJavaList() {
+	public final java.util.List<NodeDept> ToJavaList()
+	{
 		return (java.util.List<NodeDept>)(Object)this;
 	}
 	/** 
@@ -50,7 +49,8 @@ public class NodeDepts extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<NodeDept> Tolist()  {
+	public final ArrayList<NodeDept> Tolist()
+	{
 		ArrayList<NodeDept> list = new ArrayList<NodeDept>();
 		for (int i = 0; i < this.size(); i++)
 		{

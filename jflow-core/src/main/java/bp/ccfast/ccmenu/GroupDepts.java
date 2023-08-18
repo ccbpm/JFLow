@@ -1,6 +1,6 @@
 package bp.ccfast.ccmenu;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.port.*;
 import bp.*;
 import bp.ccfast.*;
@@ -9,20 +9,22 @@ import java.util.*;
 /** 
  权限组部门s
 */
-public class GroupDepts extends EntitiesMM
+public class GroupDepts extends EntitiesMyPK
 {
 
 		///#region 构造
 	/** 
 	 权限组s
 	*/
-	public GroupDepts()  {
+	public GroupDepts()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new GroupDept();
 	}
 
@@ -35,7 +37,8 @@ public class GroupDepts extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final java.util.List<GroupDept> ToJavaList() {
+	public final java.util.List<GroupDept> ToJavaList()
+	{
 		return (java.util.List<GroupDept>)(Object)this;
 	}
 	/** 
@@ -43,7 +46,8 @@ public class GroupDepts extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final ArrayList<GroupDept> Tolist()  {
+	public final ArrayList<GroupDept> Tolist()
+	{
 		ArrayList<GroupDept> list = new ArrayList<GroupDept>();
 		for (int i = 0; i < this.size(); i++)
 		{

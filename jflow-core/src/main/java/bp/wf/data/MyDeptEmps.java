@@ -16,7 +16,7 @@ public class MyDeptEmps extends bp.en.EntitiesNoName
 	}
 
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new MyDeptEmp();
 	}
@@ -24,7 +24,7 @@ public class MyDeptEmps extends bp.en.EntitiesNoName
 	public int RetrieveAll() throws Exception 
 	{
 		QueryObject qo = new QueryObject(this);
-		qo.AddWhere(MyDeptEmpAttr.FK_Dept, bp.web.WebUser.getFK_Dept());
+		qo.AddWhere(MyDeptEmpAttr.FK_Dept, bp.web.WebUser.getDeptNo());
 		return qo.DoQuery();
 	}
 

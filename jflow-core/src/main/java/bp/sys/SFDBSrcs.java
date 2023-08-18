@@ -1,9 +1,6 @@
 package bp.sys;
 
-import bp.ccbill.DBListDBSrc;
-import bp.da.*;
 import bp.en.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -16,13 +13,15 @@ public class SFDBSrcs extends EntitiesNoName
 	/** 
 	 数据源s
 	*/
-	public SFDBSrcs()  {
+	public SFDBSrcs()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		return new SFDBSrc();
 	}
 
@@ -64,7 +63,7 @@ public class SFDBSrcs extends EntitiesNoName
 	*/
 	public final int RetrieveWCSrc() throws Exception {
 		QueryObject qo = new QueryObject(this);
-		qo.AddWhere(SFDBSrcAttr.DBSrcType, "= ", DBSrcType.WebServices.getValue());
+		qo.AddWhere(SFDBSrcAttr.DBSrcType, "= ", bp.sys.DBSrcType.WebServices);
 		int i = qo.DoQuery();
 		if (i == 0)
 		{
@@ -79,7 +78,8 @@ public class SFDBSrcs extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<SFDBSrc> ToJavaList() {
+	public final java.util.List<SFDBSrc> ToJavaList()
+	{
 		return (java.util.List<SFDBSrc>)(Object)this;
 	}
 	/** 
@@ -87,7 +87,8 @@ public class SFDBSrcs extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<SFDBSrc> Tolist()  {
+	public final ArrayList<SFDBSrc> Tolist()
+	{
 		ArrayList<SFDBSrc> list = new ArrayList<SFDBSrc>();
 		for (int i = 0; i < this.size(); i++)
 		{

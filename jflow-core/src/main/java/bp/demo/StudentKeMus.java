@@ -39,7 +39,7 @@ public class StudentKeMus extends EntitiesMM
 	 * 得到它的 Entity
 	 */
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new StudentKeMu();
 	}

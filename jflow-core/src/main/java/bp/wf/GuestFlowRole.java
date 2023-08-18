@@ -1,6 +1,5 @@
 package bp.wf;
 
-
 public enum GuestFlowRole
 {
 	/** 
@@ -18,11 +17,13 @@ public enum GuestFlowRole
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
 	public static GuestFlowRole forValue(int value)
-	{return values()[value];
+	{
+		return values()[value];
 	}
 }

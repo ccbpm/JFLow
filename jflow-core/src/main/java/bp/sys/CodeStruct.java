@@ -25,7 +25,7 @@ public enum CodeStruct
 		return this.ordinal();
 	}
 
-	public static CodeStruct forValue(int value) 
+	public static CodeStruct forValue(int value)
 	{
 		return values()[value];
 	}

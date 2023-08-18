@@ -15,7 +15,7 @@
 	
 	<modules>
 		<module>jflow-core</module>
-		<module>jflow-web</module>
+	    <module>jflow-web</module>
   	</modules>
 	
 	<properties>
@@ -71,6 +71,7 @@
 		<!--springfox-swagger2-->
 		<springfox-swagger2.version>2.9.2</springfox-swagger2.version>
 		<springfox-swagger-ui.version>2.9.2</springfox-swagger-ui.version>
+		<okhttp.version>3.14.9</okhttp.version>
 	</properties>
 	<!-- 设定中央仓库 -->
 	<repositories>

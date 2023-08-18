@@ -1,13 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.en.*;
-import bp.en.Map;
-import bp.port.*;
-import bp.sys.*;
-import bp.*;
-import bp.wf.*;
-import java.util.*;
+import bp.en.*; import bp.en.Map;
 
 /** 
  表单节点排除规则
@@ -21,7 +14,8 @@ public class FrmNodeFieldRemove extends EntityMyPK
 	 UI界面上的访问控制
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		return uac;
@@ -29,36 +23,28 @@ public class FrmNodeFieldRemove extends EntityMyPK
 	/** 
 	 流程编号
 	*/
-	public final String getFlowNo() throws Exception
-	{
+	public final String getFlowNo()  {
 		return this.GetValStringByKey(FrmNodeFieldRemoveAttr.FlowNo);
 	}
-	public final void setFlowNo(String value)  throws Exception
-	 {
+	public final void setFlowNo(String value){
 		this.SetValByKey(FrmNodeFieldRemoveAttr.FlowNo, value);
 	}
-	public final String getFrmID() throws Exception
-	{
+	public final String getFrmID()  {
 		return this.GetValStringByKey(FrmNodeFieldRemoveAttr.FrmID);
 	}
-	public final void setFrmID(String value)  throws Exception
-	 {
+	public final void setFrmID(String value){
 		this.SetValByKey(FrmNodeFieldRemoveAttr.FrmID, value);
 	}
-	public final String getFields() throws Exception
-	{
+	public final String getFields()  {
 		return this.GetValStringByKey(FrmNodeFieldRemoveAttr.Fields);
 	}
-	public final void setFields(String value)  throws Exception
-	 {
+	public final void setFields(String value){
 		this.SetValByKey(FrmNodeFieldRemoveAttr.Fields, value);
 	}
-	public final int getNodeID() throws Exception
-	{
+	public final int getNodeID()  {
 		return this.GetValIntByKey(FrmNodeFieldRemoveAttr.NodeID);
 	}
-	public final void setNodeID(int value)  throws Exception
-	 {
+	public final void setNodeID(int value){
 		this.SetValByKey(FrmNodeFieldRemoveAttr.NodeID, value);
 	}
 
@@ -69,14 +55,15 @@ public class FrmNodeFieldRemove extends EntityMyPK
 	/** 
 	 表单节点排除规则
 	*/
-	public FrmNodeFieldRemove()  {
+	public FrmNodeFieldRemove()
+	{
 	}
 	/** 
 	 表单节点排除规则
 	 
-	 param mypk
+	 @param mypk
 	*/
-	public FrmNodeFieldRemove(String mypk)throws Exception
+	public FrmNodeFieldRemove(String mypk) throws Exception
 	{
 		super(mypk);
 	}
@@ -84,7 +71,8 @@ public class FrmNodeFieldRemove extends EntityMyPK
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();

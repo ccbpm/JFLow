@@ -1,5 +1,7 @@
 package bp.en;
 
+import bp.da.*;
+
 /**
  EnDtl 的摘要说明。
  */
@@ -11,99 +13,63 @@ public class EnDtl
 	public EnDtl()
 	{
 	}
-
 	/**
-	 明细
-
-	 param className 类名称
+	 编辑器模式 0=默认的DtlBatch.htm, 1=DtlSearch.htm
 	 */
-	public EnDtl(String className)  {
-		this.setEns(ClassFactory.GetEns(className));
-	}
+	public DtlEditerModel DtlEditerModel = bp.en.DtlEditerModel.DtlBatch;
 	/**
 	 类名称
 	 */
 	public final String getEnsName()
 	{
-		return this.getEns().toString();
+		return this.Ens.toString();
 	}
 	/**
 	 明细
 	 */
-	private Entities _Ens = null;
-	public String GroupName = null;
-	/**
-	 获取或设置 他的集合
-	 */
-	public final Entities getEns()
-	{
-		return _Ens;
+	public Entities Ens = null;
+
+	public Entities getEns() {
+		return Ens;
 	}
-	public final void setEns(Entities value)
-	{_Ens = value;
+
+	public void setEns(Entities ens) {
+		Ens = ens;
 	}
-	/**
-	 他关连的key
-	 */
-	private String _refKey = null;
+
+	public String UrlExt = null;
 	/**
 	 他关连的 key
 	 */
-	public final String getRefKey()
-	{
-		return _refKey;
+	public String RefKey = null;
+
+	public String getRefKey() {
+		return RefKey;
 	}
-	public final void setRefKey(String value)
-	{
-		this._refKey = value;
+
+	public void setRefKey(String refKey) {
+		RefKey = refKey;
 	}
+
+	private String _desc = "";
 	/**
 	 描述
 	 */
-	private String _Desc = null;
-	/**
-	 描述
-	 * @throws Exception
-	 */
-	public final String getDesc()
-	{
-		if (this._Desc == null)
+	public final String getDesc() throws Exception {
+		if (DataType.IsNullOrEmpty(_desc))
 		{
-			this._Desc = this.getEns().getGetNewEntity().getEnDesc();
+			return this.Ens.getNewEntity().getEnDesc();
 		}
-		return _Desc;
+		return this._desc;
 	}
 	public final void setDesc(String value)
 	{
-		_Desc = value;
+		this._desc = value;
 	}
 	/**
 	 显示到分组
 	 */
-	private String _groupName = null;
+	public String GroupName = null;
 	public String Icon = null;
-	/// <summary>
-	/// 编辑器模式 0=默认的DtlBatch.htm, 1=DtlSearch.htm
-	/// </summary>
-	private DtlEditerModel _DtlEditerModel=DtlEditerModel.DtlBatch;
-	public final DtlEditerModel getDtlEditerModel()
-	{
-		return _DtlEditerModel;
-	}
-	public final void setDtlEditerModel(DtlEditerModel value)
-	{
-		this._DtlEditerModel = value;
-	}
 
-	/**
-	 显示到分组
-	 */
-	public final String getGroupName()
-	{
-		return _groupName;
-	}
-	public final void setGroupName(String value)
-	{
-		this._groupName = value;
-	}
 }

@@ -1,12 +1,5 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.en.*;
-import bp.wf.template.*;
-import bp.port.*;
-import bp.*;
-import bp.wf.*;
-import java.util.*;
 
 /** 
  标签属性

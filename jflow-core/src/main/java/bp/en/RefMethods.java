@@ -79,6 +79,6 @@ public class RefMethods extends ArrayList<RefMethod>
 	
 	public List<RefMethod> ToJavaList()throws Exception
 	{
-		return (List<RefMethod>)(Object)this;
+		return (List<RefMethod>)(Object)(Object)this;
 	}
 }

@@ -1,9 +1,12 @@
 package bp.wf.template;
 
 import bp.da.*;
-import bp.en.*;
-import bp.wf.data.*;
+import bp.sys.*;
+import bp.en.*; import bp.en.Map;
+import bp.port.*;
 import bp.difference.*;
+import bp.*;
+import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -12,33 +15,25 @@ import java.util.*;
 public class Conds extends Entities
 {
 
-    public Conds(CondType node, int nodeID, long workID, bp.wf.GERpt rptGe) {
-    }
-
-    ///#region 属性
-	public final String getConditionDesc() throws Exception {
+		///#region 属性
+	public final String getConditionDesc()
+	{
 		return "";
 	}
 	/** 
 	 获得Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new Cond();
 	}
 	/** 
 	 执行计算
-	 
-	 param runModel 模式
+	 @param en 模式
 	 @return 
 	*/
-
-	public final boolean GenerResult() throws Exception {
-		return GenerResult(null);
-	}
-
-//ORIGINAL LINE: public bool GenerResult(GERpt en = null)
-	public final boolean GenerResult(GERpt en)
+	public final boolean GenerResult(GERpt en, WebUserCopy webUser)
 	{
 
 		try
@@ -55,6 +50,7 @@ public class Conds extends Entities
 				{
 					cd.setWorkID(en.getOID());
 					cd.en = en;
+					cd.setWebUser(webUser);
 				}
 			}
 
@@ -92,7 +88,7 @@ public class Conds extends Entities
 
 			//如果是混合计算.
 			String sql = "";
-			switch (SystemConfig.getAppCenterDBType( ))
+			switch (SystemConfig.getAppCenterDBType())
 			{
 				case MSSQL:
 					sql = " SELECT TOP 1 No FROM WF_Emp WHERE " + exp;
@@ -118,7 +114,7 @@ public class Conds extends Entities
 			{
 				return false;
 			}
-
+			return true;
 
 				///#endregion 处理混合计算。
 		}
@@ -126,15 +122,14 @@ public class Conds extends Entities
 		{
 			throw new RuntimeException("err@计算条件出现错误:" + this.NodeID + " - " + ex.getMessage());
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
-		return true;
-
 	}
 	/** 
 	 描述
 	*/
-	public final String getMsgOfDesc() throws Exception {
+	public final String getMsgOfDesc()
+	{
 		String msg = "";
 		for (Cond c : this.ToJavaList())
 		{
@@ -151,24 +146,24 @@ public class Conds extends Entities
 	/** 
 	 条件
 	*/
-	public Conds()  {
+	public Conds()
+	{
 	}
 	/** 
 	 条件
 	 
-	 param fk_flow 流程编号
+	 @param fk_flow 流程编号
 	*/
 	public Conds(String fk_flow) throws Exception {
 		this.Retrieve(CondAttr.FK_Flow, fk_flow, null);
 	}
 	/** 
 	 条件
-	 
-	 param ct 类型
-	 param nodeID 节点
+	 @param ct 类型
+	 @param nodeID 节点
 	*/
 	public Conds(CondType ct, int nodeID, long workid, GERpt enData) throws Exception {
-		this.NodeID = nodeID;
+		this.NodeID=nodeID;
 		this.Retrieve(CondAttr.FK_Node, nodeID, CondAttr.CondType, ct.getValue(), CondAttr.Idx);
 		for (Cond en : this.ToJavaList())
 		{
@@ -179,8 +174,8 @@ public class Conds extends Entities
 	/** 
 	 条件 - 配置信息
 	 
-	 param ct
-	 param nodeID
+	 @param ct
+	 @param nodeID
 	*/
 	public Conds(CondType ct, int nodeID) throws Exception {
 		this.Retrieve(CondAttr.FK_Node, nodeID, CondAttr.CondType, ct.getValue(), CondAttr.Idx);
@@ -195,7 +190,8 @@ public class Conds extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.List<Cond> ToJavaList() {
+	public final java.util.List<Cond> ToJavaList()
+	{
 		return (java.util.List<Cond>)(Object)this;
 	}
 	/** 
@@ -203,7 +199,8 @@ public class Conds extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<Cond> Tolist()  {
+	public final ArrayList<Cond> Tolist()
+	{
 		ArrayList<Cond> list = new ArrayList<Cond>();
 		for (int i = 0; i < this.size(); i++)
 		{

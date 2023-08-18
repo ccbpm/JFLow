@@ -32,15 +32,15 @@ public abstract class Entity extends EnObj implements Serializable
 	 * @
 	*/
 
-	public final Entities GetEntitiesAttrFromAutoNumCash(Entities ens, String refKey, Object refVal, String refKey2,Object refVal2) throws Exception {
-		return GetEntitiesAttrFromAutoNumCash(ens, refKey, refVal, refKey2, refVal2,null);
+	public final Entities GetEntitiesAttrFromAutoNumCache(Entities ens, String refKey, Object refVal, String refKey2,Object refVal2) throws Exception {
+		return GetEntitiesAttrFromAutoNumCache(ens, refKey, refVal, refKey2, refVal2,null);
 	}
 
-	public final Entities GetEntitiesAttrFromAutoNumCash(Entities ens, String refKey, Object refVal) throws Exception {
-		return GetEntitiesAttrFromAutoNumCash(ens, refKey, refVal, null, null,null);
+	public final Entities GetEntitiesAttrFromAutoNumCache(Entities ens, String refKey, Object refVal) throws Exception {
+		return GetEntitiesAttrFromAutoNumCache(ens, refKey, refVal, null, null,null);
 	}
 
-	public final Entities GetEntitiesAttrFromAutoNumCash(Entities ens, String refKey, Object refVal, String refKey2, Object refVal2,String orderBy) throws Exception {
+	public final Entities GetEntitiesAttrFromAutoNumCache(Entities ens, String refKey, Object refVal, String refKey2, Object refVal2,String orderBy) throws Exception {
 		//获得段类名.
 		String clsName = ens.getClassIDOfShort();
 
@@ -113,11 +113,11 @@ public abstract class Entity extends EnObj implements Serializable
 	 * @
 	*/
 
-	public final void ClearAutoNumCash() throws Exception {
-		ClearAutoNumCash(true);
+	public final void ClearAutoNumCache() throws Exception {
+		ClearAutoNumCache(true);
 	}
 
-	public final void ClearAutoNumCash(boolean isUpdata) throws Exception {
+	public final void ClearAutoNumCache(boolean isUpdata) throws Exception {
 		boolean isHave = false;
 		for (Object key : this.getatPara().getHisHT().keySet())
 		{
@@ -145,14 +145,12 @@ public abstract class Entity extends EnObj implements Serializable
 
 	///与缓存有关的操作
 	private Entities _GetNewEntities = null;
-	public Entities getGetNewEntities() throws Exception {
+	public Entities GetNewEntities() throws Exception {
 		if (_GetNewEntities == null) {
 			String str = this.toString();
 			String ensName = str + "s";
 
 			_GetNewEntities = ClassFactory.GetEns(ensName);
-//			if (_GetNewEntities != null)
-//				return _GetNewEntities;
 			if (_GetNewEntities != null){
 				try {
 					return _GetNewEntities.getClass().newInstance();
@@ -168,7 +166,7 @@ public abstract class Entity extends EnObj implements Serializable
 				if (ens == null) {
 					continue;
 				}
-				if (ens.getGetNewEntity().toString() != null && ens.getGetNewEntity().toString().equals(str)) {
+				if (ens.getNewEntity().toString() != null && ens.getNewEntity().toString().equals(str)) {
 					_GetNewEntities = ens;
 					try {
 						return _GetNewEntities.getClass().newInstance();
@@ -189,7 +187,7 @@ public abstract class Entity extends EnObj implements Serializable
 	 类名
 	 * @
 	*/
-	public String getClassID()  {
+	public String getClassID() {
 		return this.toString();
 	}
 	/** 
@@ -201,22 +199,22 @@ public abstract class Entity extends EnObj implements Serializable
 	}
 
 
-	protected SQLCash _SQLCash = null;
-	public SQLCash getSQLCash() throws Exception {
-		if (_SQLCash == null)
+	protected SQLCache _SQLCache = null;
+	public SQLCache getSQLCache() throws Exception {
+		if (_SQLCache == null)
 		{
-			_SQLCash = bp.da.Cash.GetSQL(this.toString());
-			if (_SQLCash == null)
+			_SQLCache = bp.da.Cache.GetSQL(this.toString());
+			if (_SQLCache == null)
 			{
-				_SQLCash = new SQLCash(this);
-				bp.da.Cash.SetSQL(this.toString(), _SQLCash);
+				_SQLCache = new SQLCache(this);
+				bp.da.Cache.SetSQL(this.toString(), _SQLCache);
 			}
 		}
-		return _SQLCash;
+		return _SQLCache;
 	}
-	public void setSQLCash(SQLCash value)
+	public void setSQLCache(SQLCache value)
 	{
-		_SQLCash = value;
+		_SQLCache = value;
 	}
 	/** 
 	 转化成
@@ -224,8 +222,7 @@ public abstract class Entity extends EnObj implements Serializable
 	 @return 
 	 * @
 	*/
-	public final String ToStringAtParas()
-	{
+	public final String ToStringAtParas() throws Exception {
 		String str = "";
 		for (Attr attr : this.getEnMap().getAttrs())
 		{
@@ -233,8 +230,7 @@ public abstract class Entity extends EnObj implements Serializable
 		}
 		return str;
 	}
-	public final bp.da.KeyVals ToKeyVals()
-	{
+	public final bp.da.KeyVals ToKeyVals() throws Exception {
 		KeyVals kvs = new KeyVals();
 		for (Attr attr : this.getEnMap().getAttrs())
 		{
@@ -249,8 +245,7 @@ public abstract class Entity extends EnObj implements Serializable
 	 * @
 	*/
 
-	public final String ToJson()
-	{
+	public final String ToJson() {
 		return ToJson(true);
 	}
 
@@ -297,14 +292,14 @@ public abstract class Entity extends EnObj implements Serializable
 		ds.Tables.add(this.ToDataTableField()); //把主表数据加入进去.
 
 		Attrs attrs = this.getEnMap().getAttrs();
-		for (Attr attr : attrs.ToJavaList())
+		for (Attr attr : attrs)
 		{
 			if (attr.getUIBindKey().equals(""))
 			{
 				continue;
 			}
 
-			if (attr.getIsEnum())
+			if (attr.getItIsEnum())
 			{
 				if (ds.GetTableByName(attr.getUIBindKey())!=null)
 				{
@@ -317,7 +312,7 @@ public abstract class Entity extends EnObj implements Serializable
 				continue;
 			}
 
-			if (attr.getIsFK())
+			if (attr.getItIsFK())
 			{
 				if (ds.GetTableByName(attr.getUIBindKey())!=null)
 				{
@@ -341,21 +336,19 @@ public abstract class Entity extends EnObj implements Serializable
 	 @return 
 	*/
 
-	public final DataTable ToEmptyTableField()
-	{
+	public final DataTable ToEmptyTableField() {
 		return ToEmptyTableField(null);
 	}
 
 
-	public final DataTable ToEmptyTableField(Entity en)
-	{
+	public final DataTable ToEmptyTableField(Entity en)  {
 		DataTable dt = new DataTable();
 		if (en == null)
 		{
 			en = this;
 		}
 
-		dt.setTableName(en.getEnMap().getPhysicsTable());
+		dt.TableName = en.getEnMap().getPhysicsTable();
 
 		for (Attr attr : en.getEnMap().getAttrs())
 		{
@@ -392,14 +385,14 @@ public abstract class Entity extends EnObj implements Serializable
 		return dt;
 	}
 
-	public final DataTable ToDataTableField() throws Exception {
+	public final DataTable ToDataTableField() {
 		return ToDataTableField("Main");
 	}
 
 
-	public final DataTable ToDataTableField(String tableName) throws Exception {
+	public final DataTable ToDataTableField(String tableName)  {
 		DataTable dt = this.ToEmptyTableField(this);
-		dt.setTableName(tableName);
+		dt.TableName = tableName;
 
 		//增加参数列.
 		if (this.getRow().containsKey("AtPara") == true)
@@ -442,13 +435,13 @@ public abstract class Entity extends EnObj implements Serializable
 			else
 			{
 				Object obj = this.GetValByKey(attr.getKey());
-				if (obj == null && attr.getIsNum())
+				if (obj == null && attr.getItIsNum())
 				{
 					dr.setValue(attr.getKey(), 0);
 					continue;
 				}
 
-				if (attr.getIsNum() == true && DataType.IsNumStr(obj.toString()) == false)
+				if (attr.getItIsNum() == true && DataType.IsNumStr(obj.toString()) == false)
 				{
 					dr.setValue(attr.getKey(), 0);
 				}
@@ -493,8 +486,7 @@ public abstract class Entity extends EnObj implements Serializable
 	 param ps 要运行的sql
 	 @return 执行的结果
 	*/
-	public final int RunSQL(Paras ps)
-	{
+	public final int RunSQL(Paras ps) throws Exception {
 		switch (this.getEnMap().getEnDBUrl().getDBUrlType())
 		{
 			case AppCenterDSN:
@@ -506,8 +498,7 @@ public abstract class Entity extends EnObj implements Serializable
 				throw new RuntimeException("@没有设置类型。");
 		}
 	}
-	public final int RunSQL(String sql, Paras paras)
-	{
+	public final int RunSQL(String sql, Paras paras) throws Exception {
 		switch (this.getEnMap().getEnDBUrl().getDBUrlType())
 		{
 			case AppCenterDSN:
@@ -526,15 +517,13 @@ public abstract class Entity extends EnObj implements Serializable
 	 @return 执行的查询结果
 	*/
 
-	public  DataTable RunSQLReturnTable(String sql)
-	{
+	public  DataTable RunSQLReturnTable(String sql) throws Exception {
 		return RunSQLReturnTable(sql, null);
 	}
 
 
 
-	public  DataTable RunSQLReturnTable(String sql, Paras paras)
-	{
+	public  DataTable RunSQLReturnTable(String sql, Paras paras) throws Exception {
 		switch (this.getEnMap().getEnDBUrl().getDBUrlType())
 		{
 			case AppCenterDSN:
@@ -554,14 +543,12 @@ public abstract class Entity extends EnObj implements Serializable
 	 @return
 	*/
 
-	public final int RunSQLReturnValInt(String sql)
-	{
+	public final int RunSQLReturnValInt(String sql) throws Exception {
 		return RunSQLReturnValInt(sql, null);
 	}
 
 
-	public final int RunSQLReturnValInt(String sql, Paras paras)
-	{
+	public final int RunSQLReturnValInt(String sql, Paras paras) throws Exception {
 		if (paras == null)
 		{
 			paras = new Paras();
@@ -596,7 +583,7 @@ public abstract class Entity extends EnObj implements Serializable
 
 		for (Entity en : ensOfMM)
 		{
-			Entity enOfM = ensOfM.getGetNewEntity();
+			Entity enOfM = ensOfM.getNewEntity();
 			enOfM.setPKVal(en.GetValStringByKey(attr.getAttrOfMInMM()));
 			enOfM.Retrieve();
 			ensOfM.AddEntity(enOfM);
@@ -653,7 +640,7 @@ public abstract class Entity extends EnObj implements Serializable
 				return dtl.getEns();
 			}
 		}
-		throw new RuntimeException("@在取[" + this.getEnDesc() + "]的明细时出现错误。[" + ens.getGetNewEntity().getEnDesc() + "],不在他的集合内。");
+		throw new RuntimeException("@在取[" + this.getEnDesc() + "]的明细时出现错误。[" + ens.getNewEntity().getEnDesc() + "],不在他的集合内。");
 	}
 
 
@@ -671,7 +658,7 @@ public abstract class Entity extends EnObj implements Serializable
 			}
 			QueryObject qo = new QueryObject(dtl.getEns());
 			MapDtl md = new MapDtl();
-			md.setNo(dtl.getEns().getGetNewEntity().getClassID());
+			md.setNo(dtl.getEns().getNewEntity().getClassID());
 			if (md.RetrieveFromDBSources() == 0)
 			{
 				qo.AddWhere(dtl.getRefKey(), pkval);
@@ -757,7 +744,7 @@ public abstract class Entity extends EnObj implements Serializable
 	 param val 要检查的key.对应的val
 	 @return 
 	*/
-	protected final int ExitsValueNum(String key, String val) {
+	protected final int ExitsValueNum(String key, String val) throws Exception {
 		String field = this.getEnMap().GetFieldByKey(key);
 		Paras ps = new Paras();
 		ps.Add("p", val);
@@ -843,8 +830,7 @@ public abstract class Entity extends EnObj implements Serializable
 	 param attrGroupVal 分组的主键
 	 @return 		
 	*/
-	public final String GenerNewNoByKey(int nolength, String attrKey, String attrGroupKey, String attrGroupVal)
-	{
+	public final String GenerNewNoByKey(int nolength, String attrKey, String attrGroupKey, String attrGroupVal) throws Exception {
 		if (attrGroupKey == null || attrGroupVal == null)
 		{
 			throw new RuntimeException("@分组字段attrGroupKey attrGroupVal 不能为空");
@@ -895,8 +881,7 @@ public abstract class Entity extends EnObj implements Serializable
 		}
 		return StringHelper.padLeft(str, nolength, '0');
 	}
-	public final String GenerNewNoByKey(String attrKey, String attrGroupKey, String attrGroupVal)
-	{
+	public final String GenerNewNoByKey(String attrKey, String attrGroupKey, String attrGroupVal) throws Exception {
 		return this.GenerNewNoByKey(Integer.parseInt(this.getEnMap().getCodeStruct()), attrKey, attrGroupKey, attrGroupVal);
 	}
 	/** 
@@ -910,8 +895,7 @@ public abstract class Entity extends EnObj implements Serializable
 	 @return 
 	 * @
 	*/
-	public final String GenerNewNoByKey(String attrKey, String attrGroupKey1, String attrGroupKey2, Object attrGroupVal1, Object attrGroupVal2)
-	{
+	public final String GenerNewNoByKey(String attrKey, String attrGroupKey1, String attrGroupKey2, Object attrGroupVal1, Object attrGroupVal2) throws Exception {
 		String f = this.getEnMap().GetFieldByKey(attrKey);
 		Paras ps = new Paras();
 		//   ps.Add("f", f);
@@ -957,8 +941,7 @@ public abstract class Entity extends EnObj implements Serializable
 	 @return 
 	 * @
 	*/
-	public final String GenerNewNoByKey(String attrKey, String attrGroupKey1, String attrGroupKey2, String attrGroupKey3, Object attrGroupVal1, Object attrGroupVal2, Object attrGroupVal3)
-	{
+	public final String GenerNewNoByKey(String attrKey, String attrGroupKey1, String attrGroupKey2, String attrGroupKey3, Object attrGroupVal1, Object attrGroupVal2, Object attrGroupVal3) throws Exception {
 		String f = this.getEnMap().GetFieldByKey(attrKey);
 		Paras ps = new Paras();
 		//   ps.Add("f", f);
@@ -1006,7 +989,7 @@ public abstract class Entity extends EnObj implements Serializable
 		///排序操作
 	protected final void DoOrderUp(String idxAttr) throws Exception
 	{
-		//  string pkval = this.PKVal as string;
+		//  String pkval = this.PKVal as string;
 		String pkval = this.getPKVal().toString();
 		String pk = this.getPK();
 		String table = this.getEnMap().getPhysicsTable();
@@ -1036,9 +1019,8 @@ public abstract class Entity extends EnObj implements Serializable
 		DBAccess.RunSQL("UPDATE " + table + " SET " + idxAttr + "=" + idxAttr + "+1 WHERE " + pk + "='" + beforeNo + "'");
 		DBAccess.RunSQL("UPDATE " + table + " SET " + idxAttr + "=" + idxAttr + "-1 WHERE " + pk + "='" + pkval + "'");
 	}
-	protected final void DoOrderUp(String groupKeyAttr, String groupKeyVal, String idxAttr)
-	{
-		//  string pkval = this.PKVal as string;
+	protected final void DoOrderUp(String groupKeyAttr, String groupKeyVal, String idxAttr) throws Exception {
+		//  String pkval = this.PKVal as string;
 		String pkval = this.getPKVal().toString();
 		String pk = this.getPK();
 		String table = this.getEnMap().getPhysicsTable();
@@ -1068,9 +1050,8 @@ public abstract class Entity extends EnObj implements Serializable
 		DBAccess.RunSQL("UPDATE " + table + " SET " + idxAttr + "=" + idxAttr + "+1 WHERE " + pk + "='" + beforeNo + "'");
 		DBAccess.RunSQL("UPDATE " + table + " SET " + idxAttr + "=" + idxAttr + "-1 WHERE " + pk + "='" + pkval + "'");
 	}
-	protected final void DoOrderUp(String groupKeyAttr, Object gVal1, String gKey2, Object gVal2, String idxAttr)
-	{
-		//  string pkval = this.PKVal as string;
+	protected final void DoOrderUp(String groupKeyAttr, Object gVal1, String gKey2, Object gVal2, String idxAttr) throws Exception {
+		//  String pkval = this.PKVal as string;
 		String pkval = this.getPKVal().toString();
 		String pk = this.getPK();
 		String table = this.getEnMap().getPhysicsTable();
@@ -1114,9 +1095,8 @@ public abstract class Entity extends EnObj implements Serializable
 	 param idxAttr
 	 * @
 	*/
-	protected final void DoOrderUp(String groupKeyAttr, Object gVal1, String gKey2, Object gVal2, String gKey3, Object gVal3, String idxAttr)
-	{
-		//  string pkval = this.PKVal as string;
+	protected final void DoOrderUp(String groupKeyAttr, Object gVal1, String gKey2, Object gVal2, String gKey3, Object gVal3, String idxAttr) throws Exception {
+		//  String pkval = this.PKVal as string;
 		String pkval = this.getPKVal().toString();
 		String pk = this.getPK();
 		String table = this.getEnMap().getPhysicsTable();
@@ -1149,9 +1129,8 @@ public abstract class Entity extends EnObj implements Serializable
 		DBAccess.RunSQL("UPDATE " + table + " SET " + idxAttr + "=" + idxAttr + "-1 WHERE " + pk + "='" + pkval + "'");
 	}
 	
-	protected final void DoOrderUp(String groupKeyAttr, Object gVal1, String gKey2, Object gVal2, String gKey3, Object gVal3,  String gKey4, Object gVal4,String idxAttr)
-	{
-		//  string pkval = this.PKVal as string;
+	protected final void DoOrderUp(String groupKeyAttr, Object gVal1, String gKey2, Object gVal2, String gKey3, Object gVal3,  String gKey4, Object gVal4,String idxAttr) throws Exception {
+		//  String pkval = this.PKVal as string;
 		String pkval = this.getPKVal().toString();
 		String pk = this.getPK();
 		String table = this.getEnMap().getPhysicsTable();
@@ -1192,12 +1171,11 @@ public abstract class Entity extends EnObj implements Serializable
 	 param
 	 * @
 	*/
-	protected final void DoOrderInsertTo(String idxAttr, Object entityPKVal, String groupKey)
-	{
+	protected final void DoOrderInsertTo(String idxAttr, Object entityPKVal, String groupKey) throws Exception {
 		String ptable = this.getEnMap().getPhysicsTable(); // Sys_MapAttr
 		String pk = this.getPK(); //MyPK
 		int idx = this.GetValIntByKey(idxAttr); // 当前实体的idx. 10
-												//   string groupVal = this.GetValStringByKey(groupKey); //分组的val.   101
+												//   String groupVal = this.GetValStringByKey(groupKey); //分组的val.   101
 
 		//求出来要被插队的 idx.
 		String sql = "SELECT " + idxAttr + "," + groupKey + " FROM " + ptable + " WHERE " + pk + "='" + entityPKVal + "'";
@@ -1215,8 +1193,7 @@ public abstract class Entity extends EnObj implements Serializable
 	 param idxAttr
 	 * @
 	*/
-	protected final void DoOrderDown(String idxAttr)
-	{
+	protected final void DoOrderDown(String idxAttr) throws Exception {
 		String pkval = this.getPKVal().toString();
 		String pk = this.getPK();
 		String table = this.getEnMap().getPhysicsTable();
@@ -1252,8 +1229,7 @@ public abstract class Entity extends EnObj implements Serializable
 
 		DBAccess.RunSQLs(sqls);
 	}
-	protected final void DoOrderDown(String groupKeyAttr, String groupKeyVal, String idxAttr)
-	{
+	protected final void DoOrderDown(String groupKeyAttr, String groupKeyVal, String idxAttr) throws Exception {
 		String pkval = this.getPKVal().toString();
 		String pk = this.getPK();
 		String table = this.getEnMap().getPhysicsTable();
@@ -1299,8 +1275,7 @@ public abstract class Entity extends EnObj implements Serializable
 	 param idxAttr 排序字段
 	 * @
 	*/
-	protected final void DoOrderDown(String groupKeyAttr, Object val1, String gKeyAttr2, Object gKeyVal2, String idxAttr)
-	{
+	protected final void DoOrderDown(String groupKeyAttr, Object val1, String gKeyAttr2, Object gKeyVal2, String idxAttr) throws Exception {
 		String pkval = this.getPKVal().toString();
 		String pk = this.getPK();
 		String table = this.getEnMap().getPhysicsTable();
@@ -1348,8 +1323,7 @@ public abstract class Entity extends EnObj implements Serializable
 	 param idxAttr 排序字段
 	 * @
 	*/
-	protected final void DoOrderDown(String groupKeyAttr, Object val1, String gKeyAttr2, Object gKeyVal2, String gKeyAttr3, Object gKeyVal3, String idxAttr)
-	{
+	protected final void DoOrderDown(String groupKeyAttr, Object val1, String gKeyAttr2, Object gKeyVal2, String gKeyAttr3, Object gKeyVal3, String idxAttr) throws Exception {
 		String pkval = this.getPKVal().toString();
 		String pk = this.getPK();
 		String table = this.getEnMap().getPhysicsTable();
@@ -1385,8 +1359,7 @@ public abstract class Entity extends EnObj implements Serializable
 
 		DBAccess.RunSQLs(sqls);
 	}
-	protected final void DoOrderDown(String groupKeyAttr, Object val1, String gKeyAttr2, Object gKeyVal2, String gKeyAttr3, Object gKeyVal3,String gKeyAttr4, Object gKeyVal4,  String idxAttr)
-	{
+	protected final void DoOrderDown(String groupKeyAttr, Object val1, String gKeyAttr2, Object gKeyVal2, String gKeyAttr3, Object gKeyVal3,String gKeyAttr4, Object gKeyVal4,  String idxAttr) throws Exception {
 		String pkval = this.getPKVal().toString();
 		String pk = this.getPK();
 		String table = this.getEnMap().getPhysicsTable();
@@ -1466,13 +1439,13 @@ public abstract class Entity extends EnObj implements Serializable
 			switch (SystemConfig.getAppCenterDBType())
 			{
 				case MSSQL:
-					return this.RunSQL(this.getSQLCash().Insert, SqlBuilder.GenerParas(this, null));
+					return this.RunSQL(this.getSQLCache().Insert, SqlBuilder.GenerParas(this, null));
 				case Access:
-					return this.RunSQL(this.getSQLCash().Insert, SqlBuilder.GenerParas(this, null));
+					return this.RunSQL(this.getSQLCache().Insert, SqlBuilder.GenerParas(this, null));
 				case MySQL:
 				case Informix:
 				default:
-					return this.RunSQL(this.getSQLCash().Insert.replace("[", "").replace("]", ""), SqlBuilder.GenerParas(this, null));
+					return this.RunSQL(this.getSQLCache().Insert.replace("[", "").replace("]", ""), SqlBuilder.GenerParas(this, null));
 			}
 		}
 		catch (RuntimeException ex)
@@ -1595,17 +1568,17 @@ public abstract class Entity extends EnObj implements Serializable
 	{
 		try
 		{
-			int i =  EntityDBAccess.Retrieve(this, this.getSQLCash().Select, SqlBuilder.GenerParasPK(this));
+			int i =  EntityDBAccess.Retrieve(this, this.getSQLCache().Select, SqlBuilder.GenerParasPK(this));
 			if (this.getEnMap().getDepositaryOfEntity() == Depositary.Application)
 			{
-				Cash2019.UpdateRow(this.toString(), this.getPKVal().toString(), this.getRow());
+				Cache2019.UpdateRow(this.toString(), this.getPKVal().toString(), this.getRow());
 			}
 			return i;
 		}
 		catch (java.lang.Exception e)
 		{
 			this.CheckPhysicsTable();
-			return EntityDBAccess.Retrieve(this, this.getSQLCash().Select, SqlBuilder.GenerParasPK(this));
+			return EntityDBAccess.Retrieve(this, this.getSQLCache().Select, SqlBuilder.GenerParasPK(this));
 		}
 	}
 	/** 
@@ -1652,7 +1625,7 @@ public abstract class Entity extends EnObj implements Serializable
 		/*如果是没有放入缓存的实体. @wangyanyan */
         if (this.getEnMap().getDepositaryOfEntity() == Depositary.Application)
         {
-        	Row row = bp.da.Cash2019.GetRow(this.toString(), this.getPKVal().toString());
+        	Row row = bp.da.Cache2019.GetRow(this.toString(), this.getPKVal().toString());
             if (row != null)
             {
                 this.setRow(row);
@@ -1663,13 +1636,13 @@ public abstract class Entity extends EnObj implements Serializable
 		// 如果是没有放入缓存的实体.
 		try {
 
-			int i = DBAccess.RunSQLReturnResultSet(this.getSQLCash().Select, SqlBuilder.GenerParasPK(this), this,
+			int i = DBAccess.RunSQLReturnResultSet(this.getSQLCache().Select, SqlBuilder.GenerParasPK(this), this,
 					this.getEnMap().getAttrs());
 			if (i > 0){
                 //@wangyanyan 放入缓存.
                 if (this.getEnMap().getDepositaryOfEntity() == Depositary.Application)
                 {
-                    bp.da.Cash2019.PutRow(this.toString(), this.getPKVal().toString(), this.getRow());
+                    bp.da.Cache2019.PutRow(this.toString(), this.getPKVal().toString(), this.getRow());
                 }
 				return i;
 			}
@@ -1722,6 +1695,9 @@ public abstract class Entity extends EnObj implements Serializable
 
 		Log.DefaultLogWriteLine(LogType.Error, "@没有[" + this.getEnMap().getEnDesc() + "  " + this.getEnMap().getPhysicsTable() + ", 类[" + this.toString() + "], 物理表[" + this.getEnMap().getPhysicsTable() + "] 实例。PK = " + this.GetValByKey(this.getPK()));
 		throw new RuntimeException("@记录[" + this.getEnMap().getEnDesc() + "  " + this.getEnMap().getPhysicsTable() + ", " + msg + "不存在.");
+	}
+	public boolean IsExits() throws Exception {
+	return	getIsExits();
 	}
 	/** 
 	 判断是不是存在的方法.
@@ -1790,7 +1766,7 @@ public abstract class Entity extends EnObj implements Serializable
 				return false;
 			}
 
-			if (this.getIsOIDEntity())
+			if (this.getItIsOIDEntity())
 			{
 				if (obj.toString().equals("0"))
 				{
@@ -1859,7 +1835,7 @@ public abstract class Entity extends EnObj implements Serializable
 	public final DataTable RetrieveNotSetValues() throws Exception
 	{
 		Paras ps = new Paras();
-        ps.SQL = SqlBuilder.Retrieve(this);
+        ps.SQL=SqlBuilder.Retrieve(this);
         ps.Add(this.getPK(), this.getPKVal());
 
         return this.RunSQLReturnTable(ps.SQL,ps);
@@ -1937,14 +1913,14 @@ public abstract class Entity extends EnObj implements Serializable
 
 
 		///删除.
-	private boolean CheckDB() throws Exception
+	private boolean CheckDB()
 	{
 
 			///检查数据.
 		//CheckDatas  ens=new CheckDatas(this.getEnMap().getPhysicsTable());
 		//foreach(CheckData en in ens)
 		//{
-		//    string sql="DELETE  FROM "+en.RefTBName+"   WHERE  "+en.RefTBFK+" ='"+this.GetValByKey(en.MainTBPK) +"' ";	
+		//    String sql="DELETE  FROM "+en.RefTBName+"   WHERE  "+en.RefTBFK+" ='"+this.GetValByKey(en.MainTBPK) +"' ";	
 		//    DBAccess.RunSQL(sql);
 		//}
 
@@ -1954,10 +1930,10 @@ public abstract class Entity extends EnObj implements Serializable
 			///判断是否有明细
 		for (bp.en.EnDtl dtl : this.getEnMap().getDtls())
 		{
-			String sql = "DELETE  FROM  " + dtl.getEns().getGetNewEntity().getEnMap().getPhysicsTable() + "   WHERE  " + dtl.getRefKey() + " ='" + this.getPKVal().toString() + "' ";
+			String sql = "DELETE  FROM  " + dtl.getEns().getNewEntity().getEnMap().getPhysicsTable() + "   WHERE  " + dtl.getRefKey() + " ='" + this.getPKVal().toString() + "' ";
 			//DBAccess.RunSQL(sql);
 			/*
-			//string sql="SELECT "+dtl.RefKey+" FROM  "+dtl.getEns().getGetNewEntity().getEnMap().getPhysicsTable()+"   WHERE  "+dtl.RefKey+" ='"+this.PKVal.ToString() +"' ";	
+			//String sql="SELECT "+dtl.RefKey+" FROM  "+dtl.getEns().getNewEntity().getEnMap().getPhysicsTable()+"   WHERE  "+dtl.RefKey+" ='"+this.PKVal.ToString() +"' ";	
 			DataTable dt= DBAccess.RunSQLReturnTable(sql); 
 			if(dt.Rows.size()==0)
 			    continue;
@@ -1976,8 +1952,7 @@ public abstract class Entity extends EnObj implements Serializable
 	 @return 
 	 * @throws Exception 
 	*/
-	protected boolean beforeDelete() throws Exception
-	{
+	protected boolean beforeDelete() throws Exception {
 		this.CheckDB();
 		return true;
 	}
@@ -1992,7 +1967,7 @@ public abstract class Entity extends EnObj implements Serializable
 		//			CheckDatas  ens=new CheckDatas(this.getEnMap().getPhysicsTable());
 		//			foreach(CheckData en in ens)
 		//			{
-		//				string sql="DELETE  FROM "+en.RefTBName+"   WHERE  "+en.RefTBFK+" ='"+this.GetValByKey(en.MainTBPK) +"' ";	
+		//				String sql="DELETE  FROM "+en.RefTBName+"   WHERE  "+en.RefTBFK+" ='"+this.GetValByKey(en.MainTBPK) +"' ";	
 		//				DBAccess.RunSQL(sql); 
 		//			}
 
@@ -2002,7 +1977,7 @@ public abstract class Entity extends EnObj implements Serializable
 			///判断是否有明细
 		for (bp.en.EnDtl dtl : this.getEnMap().getDtls())
 		{
-			String sql = "DELETE FROM " + dtl.getEns().getGetNewEntity().getEnMap().getPhysicsTable() + "   WHERE  " + dtl.getRefKey() + " ='" + this.getPKVal().toString() + "' ";
+			String sql = "DELETE FROM " + dtl.getEns().getNewEntity().getEnMap().getPhysicsTable() + "   WHERE  " + dtl.getRefKey() + " ='" + this.getPKVal().toString() + "' ";
 			DBAccess.RunSQL(sql);
 		}
 
@@ -2012,7 +1987,7 @@ public abstract class Entity extends EnObj implements Serializable
 			///判断是否有一对对的关系.
 		for (bp.en.AttrOfOneVSM dtl : this.getEnMap().getAttrsOfOneVSM())
 		{
-			String sql = "DELETE  FROM " + dtl.getEnsOfMM().getGetNewEntity().getEnMap().getPhysicsTable() + "   WHERE  " + dtl.getAttrOfOneInMM() + " ='" + this.getPKVal().toString() + "' ";
+			String sql = "DELETE  FROM " + dtl.getEnsOfMM().getNewEntity().getEnMap().getPhysicsTable() + "   WHERE  " + dtl.getAttrOfOneInMM() + " ='" + this.getPKVal().toString() + "' ";
 			DBAccess.RunSQL(sql);
 		}
 
@@ -2022,15 +1997,15 @@ public abstract class Entity extends EnObj implements Serializable
 	 把缓存删除
 	 * @throws Exception 
 	*/
-	public final void DeleteDataAndCash() throws Exception
+	public final void DeleteDataAndCache() throws Exception
 	{
 		this.Delete();
-		this.DeleteFromCash();
+		this.DeleteFromCache();
 	}
-	public final void DeleteFromCash() throws Exception
+	public final void DeleteFromCache() throws Exception
 	{
 		//删除缓存.
-		CashEntity.Delete(this.toString(), this.getPKVal().toString());
+		CacheEntity.Delete(this.toString(), this.getPKVal().toString());
 		// 删除数据.
 		this.getRow().clear();
 	}
@@ -2055,7 +2030,7 @@ public abstract class Entity extends EnObj implements Serializable
 		//更新缓存.  @wangyanyan
 		if (this.getEnMap().getDepositaryOfEntity() == Depositary.Application)
 		{
-			Cash2019.DeleteRow(this.toString(), this.getPKVal().toString());
+			Cache2019.DeleteRow(this.toString(), this.getPKVal().toString());
 		}
 
 		this.afterDelete();
@@ -2173,13 +2148,12 @@ public abstract class Entity extends EnObj implements Serializable
 		}
 		/**删除缓存。
 		*/
-		bp.da.CashEntity.Delete(this.toString(), this.getPKVal().toString());
+		bp.da.CacheEntity.Delete(this.toString(), this.getPKVal().toString());
 		return;
 	}
 
 		///参数字段
-	public final AtPara getatPara()
-	{
+	public final AtPara getatPara()  {
 		Object tempVar = this.getRow().GetValByKey("_ATObj_");
 		AtPara at = tempVar instanceof AtPara ? (AtPara)tempVar : null;
 		if (at != null)
@@ -2210,8 +2184,7 @@ public abstract class Entity extends EnObj implements Serializable
 	 @return 
 	 * @
 	*/
-	public final String GetParaString(String key)
-	{
+	public final String GetParaString(String key)  {
 		removeATObj(key);
 		return getatPara().GetValStrByKey(key);
 	}
@@ -2240,26 +2213,22 @@ public abstract class Entity extends EnObj implements Serializable
 	 * @
 	*/
 
-	public final int GetParaInt(String key)
-	{
+	public final int GetParaInt(String key)  {
 		return GetParaInt(key, 0);
 	}
 
 
-	public final int GetParaInt(String key, int isNullAsVal)
-	{
+	public final int GetParaInt(String key, int isNullAsVal) {
 		removeATObj(key);
 		return getatPara().GetValIntByKey(key, isNullAsVal);
 	}
 
-	public final float GetParaFloat(String key)
-	{
+	public final float GetParaFloat(String key) throws Exception {
 		return GetParaFloat(key, 0);
 	}
 
 
-	public final float GetParaFloat(String key, float isNullAsVal)
-	{
+	public final float GetParaFloat(String key, float isNullAsVal) {
 		removeATObj(key);
 		return getatPara().GetValFloatByKey(key, isNullAsVal);
 	}
@@ -2270,8 +2239,7 @@ public abstract class Entity extends EnObj implements Serializable
 	 @return 
 	 * @
 	*/
-	public final boolean GetParaBoolen(String key)
-	{
+	public final boolean GetParaBoolen(String key) {
 		removeATObj(key);
 		return getatPara().GetValBoolenByKey(key);
 	}
@@ -2283,11 +2251,11 @@ public abstract class Entity extends EnObj implements Serializable
 	 @return 
 	 * @
 	*/
-	public final boolean GetParaBoolen(String key, boolean IsNullAsVal)  {
+	public final boolean GetParaBoolen(String key, boolean IsNullAsVal) {
 		removeATObj(key);
 		return getatPara().GetValBoolenByKey(key, IsNullAsVal);
 	}
-	private  void removeATObj(String key){
+	private  void removeATObj(String key)  {
 		AtPara para = getatPara();
 		if(para.getHisHT().contains(key)==false)
 			this.getRow().remove("_ATObj_");
@@ -2318,16 +2286,13 @@ public abstract class Entity extends EnObj implements Serializable
 			this.SetValByKey("AtPara", at.GenerAtParaStrs());
 		}
 	}
-	public final void SetPara(String key, int obj)
-	{
+	public final void SetPara(String key, int obj)  {
 		SetPara(key, String.valueOf(obj));
 	}
-	public final void SetPara(String key, float obj)
-	{
+	public final void SetPara(String key, float obj) {
 		SetPara(key, String.valueOf(obj));
 	}
-	public final void SetPara(String key, boolean obj)
-	{
+	public final void SetPara(String key, boolean obj) {
 		if (obj == false)
 		{
 			SetPara(key, "0");
@@ -2348,8 +2313,7 @@ public abstract class Entity extends EnObj implements Serializable
 	 param key
 	 * @
 	*/
-	public final Object GetRefObject(String key)
-	{
+	public final Object GetRefObject(String key) {
 		return this.getRow().get("_" + key);
 		//object obj = this.Row[key];
 		//if (obj == null)
@@ -2367,8 +2331,7 @@ public abstract class Entity extends EnObj implements Serializable
 	 param obj
 	 * @
 	*/
-	public final void SetRefObject(String key, Object obj)
-	{
+	public final void SetRefObject(String key, Object obj)  {
 		if (obj == null || obj.equals("")  )
 		{
 			this.getRow().put("_" + key, "");
@@ -2391,7 +2354,7 @@ public abstract class Entity extends EnObj implements Serializable
 	 @return 
 	 * @
 	*/
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception{
 		return true;
 	}
 	protected boolean roll()
@@ -2426,7 +2389,7 @@ public abstract class Entity extends EnObj implements Serializable
 		{
 			this.CheckPhysicsTable();
 			if(ex.getMessage().contains("Parameter not found")){
-				this.setSQLCash(null);
+				this.setSQLCache(null);
 				return this.Insert();
 			}
 
@@ -2444,7 +2407,7 @@ public abstract class Entity extends EnObj implements Serializable
 		// 开始更新内存数据。 @wangyanyan
 		if (this.getEnMap().getDepositaryOfEntity() == Depositary.Application)
 		{
-			Cash2019.PutRow(this.toString(), this.getPKVal().toString(), this.getRow());
+			Cache2019.PutRow(this.toString(), this.getPKVal().toString(), this.getRow());
 		}
 
 		this.afterInsert();
@@ -2455,7 +2418,7 @@ public abstract class Entity extends EnObj implements Serializable
 	protected void afterInsert() throws Exception
 	{
 		//added by liuxc,2016-02-19,新建时，新增一个版本记录
-		if (this.getEnMap().IsEnableVer)
+		if (this.getEnMap().ItIsEnableVer)
 		{
 			//增加版本为1的版本历史记录
 			String enName = this.toString();
@@ -2481,9 +2444,9 @@ public abstract class Entity extends EnObj implements Serializable
 
 			// 保存字段数据.
 			Attrs attrs = this.getEnMap().getAttrs();
-			for (Attr attr : attrs.ToJavaList())
+			for (Attr attr : attrs)
 			{
-				if (attr.getIsRefAttr())
+				if (attr.getItIsRefAttr())
 				{
 					continue;
 				}
@@ -2551,7 +2514,7 @@ public abstract class Entity extends EnObj implements Serializable
 	public void Copy(Row fromRow) throws Exception
 	{
 		Attrs attrs = this.getEnMap().getAttrs();
-		for (Attr attr : attrs.ToJavaList())
+		for (Attr attr : attrs)
 		{
 			try
 			{
@@ -2565,7 +2528,7 @@ public abstract class Entity extends EnObj implements Serializable
 	public void Copy(XmlEn xmlen) throws Exception
 	{
 		Attrs attrs = this.getEnMap().getAttrs();
-		for (Attr attr : attrs.ToJavaList())
+		for (Attr attr : attrs)
 		{
 			Object obj = null;
 			try
@@ -2638,7 +2601,7 @@ public abstract class Entity extends EnObj implements Serializable
 	{
 		for (Attr attr : this.getEnMap().getAttrs())
 		{
-			if (attr.getIsPK() == false)
+			if (attr.getItIsPK() == false)
 			{
 				continue;
 			}
@@ -2719,8 +2682,7 @@ public abstract class Entity extends EnObj implements Serializable
 	 @return 更新的个数
 	 * @throws Exception 
 	*/
-	public final int Update(String key1, Object val1) throws Exception
-	{
+	public final int Update(String key1, Object val1) throws Exception {
 		this.SetValByKey(key1, val1);
 
 		String sql = "";
@@ -2736,16 +2698,14 @@ public abstract class Entity extends EnObj implements Serializable
 
 		return this.RunSQL(sql);
 	}
-	public final int Update(String key1, Object val1, String key2, Object val2) throws Exception
-	{
+	public final int Update(String key1, Object val1, String key2, Object val2) throws Exception {
 		this.SetValByKey(key1, val1);
 		this.SetValByKey(key2, val2);
 
 		key1 = key1 + "," + key2;
 		return this.Update(key1.split("[,]", -1));
 	}
-	public final int Update(String key1, Object val1, String key2, Object val2, String key3, Object val3) throws Exception
-	{
+	public final int Update(String key1, Object val1, String key2, Object val2, String key3, Object val3) throws Exception {
 		this.SetValByKey(key1, val1);
 		this.SetValByKey(key2, val2);
 		this.SetValByKey(key3, val3);
@@ -2753,8 +2713,7 @@ public abstract class Entity extends EnObj implements Serializable
 		key1 = key1 + "," + key2 + "," + key3;
 		return this.Update(key1.split("[,]", -1));
 	}
-	public final int Update(String key1, Object val1, String key2, Object val2, String key3, Object val3, String key4, Object val4) throws Exception
-	{
+	public final int Update(String key1, Object val1, String key2, Object val2, String key3, Object val3, String key4, Object val4) throws Exception {
 		this.SetValByKey(key1, val1);
 		this.SetValByKey(key2, val2);
 		this.SetValByKey(key3, val3);
@@ -2762,8 +2721,7 @@ public abstract class Entity extends EnObj implements Serializable
 		key1 = key1 + "," + key2 + "," + key3 + "," + key4;
 		return this.Update(key1.split("[,]", -1));
 	}
-	public final int Update(String key1, Object val1, String key2, Object val2, String key3, Object val3, String key4, Object val4, String key5, Object val5) throws Exception
-	{
+	public final int Update(String key1, Object val1, String key2, Object val2, String key3, Object val3, String key4, Object val4, String key5, Object val5) throws Exception {
 		this.SetValByKey(key1, val1);
 		this.SetValByKey(key2, val2);
 		this.SetValByKey(key3, val3);
@@ -2773,8 +2731,7 @@ public abstract class Entity extends EnObj implements Serializable
 		key1 = key1 + "," + key2 + "," + key3 + "," + key4 + "," + key5;
 		return this.Update(key1.split("[,]", -1));
 	}
-	public final int Update(String key1, Object val1, String key2, Object val2, String key3, Object val3, String key4, Object val4, String key5, Object val5, String key6, Object val6) throws Exception
-	{
+	public final int Update(String key1, Object val1, String key2, Object val2, String key3, Object val3, String key4, Object val4, String key5, Object val5, String key6, Object val6) throws Exception {
 		this.SetValByKey(key1, val1);
 		this.SetValByKey(key2, val2);
 		this.SetValByKey(key3, val3);
@@ -2831,8 +2788,8 @@ public abstract class Entity extends EnObj implements Serializable
 			switch (this.getEnMap().getDepositaryOfEntity())
 			{
 				case Application:
-					//this.DeleteFromCash();
-					CashEntity.Update(this.toString(), this.getPKVal().toString(), this);
+					//this.DeleteFromCache();
+					CacheEntity.Update(this.toString(), this.getPKVal().toString(), this);
 					break;
 				case None:
 					break;
@@ -2841,7 +2798,7 @@ public abstract class Entity extends EnObj implements Serializable
 			//更新缓存. @wangyanyan
 			if (this.getEnMap().getDepositaryOfEntity() == Depositary.Application)
 			{
-				Cash2019.UpdateRow(this.toString(), this.getPKVal().toString(), this.getRow());
+				Cache2019.UpdateRow(this.toString(), this.getPKVal().toString(), this.getRow());
 			}
 
 			this.afterUpdate();
@@ -2859,7 +2816,7 @@ public abstract class Entity extends EnObj implements Serializable
 				/*说明字符串长度有问题.*/
 				this.CheckPhysicsTable();
 				if(ex.getMessage().contains("Parameter not found")==true){
-					this.setSQLCash(null);
+					this.setSQLCache(null);
 					return this.Update();
 				}
 				//执行字段扩充检查.
@@ -2869,7 +2826,7 @@ public abstract class Entity extends EnObj implements Serializable
 			}
 
 			Log.DefaultLogWriteLine(LogType.Error, ex.getMessage());
-			if (SystemConfig.getIsDebug())
+			if (SystemConfig.isDebug())
 			{
 				throw new RuntimeException("@[" + this.getEnDesc() + "]更新期间出现错误:" + str + ex.getMessage());
 			}
@@ -2907,7 +2864,7 @@ public abstract class Entity extends EnObj implements Serializable
 			String msg = "@[" + this.getEnDesc() + "]UpdateOfDebug更新期间出现错误:" + str + ex.getMessage();
 			Log.DefaultLogWriteLine(LogType.Error, msg);
 
-			if (SystemConfig.getIsDebug())
+			if (SystemConfig.isDebug())
 			{
 				throw new RuntimeException(msg);
 			}
@@ -2920,7 +2877,7 @@ public abstract class Entity extends EnObj implements Serializable
 
 	protected void afterUpdate() throws Exception
 	{
-		if (this.getEnMap().IsEnableVer)
+		if (this.getEnMap().ItIsEnableVer)
 		{
 			/*处理版本号管理.*/
 			// 取出来原来最后的版本数据.
@@ -3119,11 +3076,11 @@ public abstract class Entity extends EnObj implements Serializable
 	protected final void CheckDateAttr() throws Exception
 	{
 		Attrs attrs = this.getEnMap().getAttrs();
-		for (Attr attr : attrs.ToJavaList())
+		for (Attr attr : attrs)
 		{
 			if (attr.getMyDataType() == DataType.AppDate || attr.getMyDataType() == DataType.AppDateTime)
 			{
-				Date dt = this.GetValDateTime(attr.getKey());
+				Date dt = this.GetValDate(attr.getKey());
 			}
 		}
 	}
@@ -3209,9 +3166,9 @@ public abstract class Entity extends EnObj implements Serializable
 	protected final void ReSetNameAttrVal() throws Exception
 	{
 		Attrs attrs = this.getEnMap().getAttrs();
-		for (Attr attr : attrs.ToJavaList())
+		for (Attr attr : attrs)
 		{
-			if (attr.getIsFKorEnum() == false)
+			if (attr.getItIsFKorEnum() == false)
 			{
 				continue;
 			}
@@ -3234,9 +3191,9 @@ public abstract class Entity extends EnObj implements Serializable
 
 			///修复表字段。
 		Attrs attrs = this.getEnMap().getAttrs();
-		for (Attr attr : attrs.ToJavaList())
+		for (Attr attr : attrs)
 		{
-			if (attr.getIsRefAttr() || attr.getIsPK())
+			if (attr.getItIsRefAttr() || attr.getItIsPK())
 			{
 				continue;
 			}
@@ -3322,7 +3279,7 @@ public abstract class Entity extends EnObj implements Serializable
 					if (FType.toLowerCase().contains("char"))
 					{
 						/*类型正确，检查长度*/
-						if (attr.getIsPK())
+						if (attr.getItIsPK())
 						{
 							continue;
 						}
@@ -3379,7 +3336,7 @@ public abstract class Entity extends EnObj implements Serializable
 						//foreach (DataRow dr in dtYueShu.Rows)
 						//{
 						//    if (dr["FName").toString().ToLower() == attr.getKey().ToLower())
-						//        DBAccess.RunSQL("ALTER TABLE " + table + " drop constraint " + dr[0].ToString());
+						//        DBAccess.RunSQL("ALTER TABLE " + table + " drop constraint " + dr[0).toString());
 						//}
 
 						//DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " drop column " + attr.Field);
@@ -3397,7 +3354,7 @@ public abstract class Entity extends EnObj implements Serializable
 						//foreach (DataRow dr in dtYueShu.Rows)
 						//{
 						//    if (dr["FName").toString().ToLower() == attr.getKey().ToLower())
-						//        DBAccess.RunSQL("alter table " + table + " drop constraint " + dr[0].ToString());
+						//        DBAccess.RunSQL("alter table " + table + " drop constraint " + dr[0).toString());
 						//}
 						//DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " drop column " + attr.Field);
 						//DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField() + " INT DEFAULT '" + attr.getDefaultVal() + "' NULL");
@@ -3416,7 +3373,7 @@ public abstract class Entity extends EnObj implements Serializable
 						//foreach (DataRow dr in dtYueShu.Rows)
 						//{
 						//    if (dr["FName").toString().ToLower() == attr.getKey().ToLower())
-						//        DBAccess.RunSQL("alter table " + table + " drop constraint " + dr[0].ToString());
+						//        DBAccess.RunSQL("alter table " + table + " drop constraint " + dr[0).toString());
 						//}
 						//DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " drop column " + attr.Field);
 						//DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField() + " FLOAT DEFAULT '" + attr.getDefaultVal() + "' NULL");
@@ -3436,7 +3393,7 @@ public abstract class Entity extends EnObj implements Serializable
 
 			///检查枚举类型是否存在.
 		attrs = this.getEnMap().getHisEnumAttrs();
-		for (Attr attr : attrs.ToJavaList())
+		for (Attr attr : attrs)
 		{
 			if (attr.getMyDataType() != DataType.AppInt)
 			{
@@ -3525,7 +3482,7 @@ public abstract class Entity extends EnObj implements Serializable
 
 		for (Attr item : this.getEnMap().getAttrs())
 		{
-			if (item.getIsRefAttr() == true)
+			if (item.getItIsRefAttr() == true)
 			{
 				continue;
 			}
@@ -3580,9 +3537,9 @@ public abstract class Entity extends EnObj implements Serializable
 
 			///修复表字段。
 		Attrs attrs = this.getEnMap().getAttrs();
-		for (Attr attr : attrs.ToJavaList())
+		for (Attr attr : attrs)
 		{
-			if (attr.getIsRefAttr() || attr.getIsPK())
+			if (attr.getItIsRefAttr()  || attr.getItIsPK())
 			{
 				continue;
 			}
@@ -3666,7 +3623,7 @@ public abstract class Entity extends EnObj implements Serializable
 					if (FType.toLowerCase().contains("char"))
 					{
 						/*类型正确，检查长度*/
-						if (attr.getIsPK())
+						if (attr.getItIsPK())
 						{
 							continue;
 						}
@@ -3695,7 +3652,7 @@ public abstract class Entity extends EnObj implements Serializable
 								//foreach (DataRow dr in dtYueShu.Rows)
 								//{
 								//    if (dr["FName").toString().ToLower() == attr.getKey().ToLower())
-								//        DBAccess.RunSQL("ALTER TABLE " + table + " drop constraint " + dr[0].ToString());
+								//        DBAccess.RunSQL("ALTER TABLE " + table + " drop constraint " + dr[0).toString());
 								//}
 
 								DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ALTER column " + attr.getKey() + " type character varying(" + attr.getMaxLength() + ")");
@@ -3740,7 +3697,7 @@ public abstract class Entity extends EnObj implements Serializable
 
 			///检查枚举类型是否存在.
 		attrs = this.getEnMap().getHisEnumAttrs();
-		for (Attr attr : attrs.ToJavaList())
+		for (Attr attr : attrs)
 		{
 			if (attr.getMyDataType() != DataType.AppInt)
 			{
@@ -3893,7 +3850,7 @@ public abstract class Entity extends EnObj implements Serializable
 
 		//遍历属性.
 		Attrs attrs = this.getEnMap().getAttrs();
-		for (Attr attr : attrs.ToJavaList())
+		for (Attr attr : attrs)
 		{
 			if (attr.getMyDataType() != DataType.AppString)
 			{
@@ -3988,7 +3945,7 @@ public abstract class Entity extends EnObj implements Serializable
 		}
 
 		//需要清空一下缓存
-		Cash.DelSQL(this.toString());
+		//Cache.DelSQL(this.toString());
 		// 如果不是主应用程序的数据库就不让执行检查. 考虑第三方的系统的安全问题.
 		if (this.getEnMap().getEnDBUrl().getDBUrlType() != DBUrlType.AppCenterDSN)
 		{
@@ -4037,7 +3994,7 @@ public abstract class Entity extends EnObj implements Serializable
 				continue;
 			}
 
-			if (attr.getIsPK())
+			if (attr.getItIsPK())
 			{
 				continue;
 			}
@@ -4138,7 +4095,7 @@ public abstract class Entity extends EnObj implements Serializable
 		Attrs attrs = this.getEnMap().getHisEnumAttrs();
 		
 		attrs = this.getEnMap().getHisEnumAttrs();
-		for (Attr attr : attrs.ToJavaList())
+		for (Attr attr : attrs)
 		{
 			if (attr.getMyDataType() != DataType.AppInt)
 			{
@@ -4194,7 +4151,7 @@ public abstract class Entity extends EnObj implements Serializable
 				continue;
 			}
 
-			if (attr.getIsPK())
+			if (attr.getItIsPK())
 			{
 				continue;
 			}
@@ -4299,7 +4256,7 @@ public abstract class Entity extends EnObj implements Serializable
 
 			///检查枚举类型字段是否是INT 类型
 		Attrs attrs = this.getEnMap().getHisEnumAttrs();
-		for (Attr attr : attrs.ToJavaList())
+		for (Attr attr : attrs)
 		{
 			if (attr.getMyDataType() != DataType.AppInt)
 			{
@@ -4334,7 +4291,7 @@ public abstract class Entity extends EnObj implements Serializable
 
 			///检查枚举类型是否存在.
 		attrs = this.getEnMap().getHisEnumAttrs();
-		for (Attr attr : attrs.ToJavaList())
+		for (Attr attr : attrs)
 		{
 			if (attr.getMyDataType() != DataType.AppInt)
 			{
@@ -4396,7 +4353,7 @@ public abstract class Entity extends EnObj implements Serializable
 				continue;
 			}
 
-			if (attr.getIsPK())
+			if (attr.getItIsPK())
 			{
 				continue;
 			}
@@ -4434,7 +4391,7 @@ public abstract class Entity extends EnObj implements Serializable
 					break;
 				case DataType.AppInt:
 				case DataType.AppBoolean:
-					if (attr.getIsPK() == true)
+					if (attr.getItIsPK() == true)
 					{
 						DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField() + " INT DEFAULT '" + attr.getDefaultVal() + "' NOT NULL");
 					}
@@ -4471,7 +4428,7 @@ public abstract class Entity extends EnObj implements Serializable
 			int maxLen = attr.getMaxLength();
 			dt = new DataTable();
 			//sql = "SELECT DATA_LENGTH AS LEN, OWNER FROM ALL_TAB_COLUMNS WHERE upper(TABLE_NAME)='" + this.getEnMap().getPhysicsTable()Ext.ToUpper() 
-			//    + "' AND UPPER(COLUMN_NAME)='" + attr.Field.ToUpper() + "' AND DATA_LENGTH < " + attr.MaxLength;
+			//    + "' AND UPPER(COLUMN_NAME)='" + attr.Field.ToUpper() + "' AND DATA_LENGTH < " + attr.getMaxLength();
 
 			//update dgq 2016-5-24 不取所有用户的表列名，只要取自己的就可以了
 			sql = "SELECT DATA_LENGTH AS LEN FROM USER_TAB_COLUMNS WHERE upper(TABLE_NAME)='" + this.getEnMap().getPhysicsTableExt().toUpperCase() + "' AND UPPER(COLUMN_NAME)='" + attr.getField().toUpperCase() + "' AND DATA_LENGTH < " + attr.getMaxLength();
@@ -4495,7 +4452,7 @@ public abstract class Entity extends EnObj implements Serializable
 
 			///检查枚举类型字段是否是INT 类型
 		Attrs attrs = this.getEnMap().getHisEnumAttrs();
-		for (Attr attr : attrs.ToJavaList())
+		for (Attr attr : attrs)
 		{
 			if (attr.getMyDataType() != DataType.AppInt)
 			{
@@ -4528,7 +4485,7 @@ public abstract class Entity extends EnObj implements Serializable
 
 			///检查枚举类型是否存在.
 		attrs = this.getEnMap().getHisEnumAttrs();
-		for (Attr attr : attrs.ToJavaList())
+		for (Attr attr : attrs)
 		{
 			if (attr.getMyDataType() != DataType.AppInt)
 			{
@@ -4575,7 +4532,7 @@ public abstract class Entity extends EnObj implements Serializable
 	{
 
 		//检查字段是否存在
-		//string sql = "SELECT * FROM " + this.getEnMap().getPhysicsTable() + " WHERE 1=2 ";
+		//String sql = "SELECT * FROM " + this.getEnMap().getPhysicsTable() + " WHERE 1=2 ";
 		String sql = "SELECT STRING_AGG(column_name,',') AS Column_Name  FROM ALL_TAB_COLUMNS WHERE upper(TABLE_NAME) = '" + this.getEnMap().getPhysicsTable().toUpperCase() + "'";
 		// AND owner='" + SystemConfig.getAppCenterDBDatabase().toUpperCase() + "'";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
@@ -4594,7 +4551,7 @@ public abstract class Entity extends EnObj implements Serializable
 				continue;
 			}
 
-			if (attr.getIsPK())
+			if (attr.getItIsPK())
 			{
 				continue;
 			}
@@ -4632,7 +4589,7 @@ public abstract class Entity extends EnObj implements Serializable
 					break;
 				case DataType.AppInt:
 				case DataType.AppBoolean:
-					if (attr.getIsPK() == true)
+					if (attr.getItIsPK() == true)
 					{
 						DBAccess.RunSQL("ALTER TABLE " + this.getEnMap().getPhysicsTable() + " ADD " + attr.getField() + " INT DEFAULT '" + attr.getDefaultVal() + "' NOT NULL");
 					}
@@ -4666,7 +4623,7 @@ public abstract class Entity extends EnObj implements Serializable
 			int maxLen = attr.getMaxLength();
 			dt = new DataTable();
 			//sql = "SELECT DATA_LENGTH AS LEN, OWNER FROM ALL_TAB_COLUMNS WHERE upper(TABLE_NAME)='" + this.getEnMap().getPhysicsTable()Ext.ToUpper() 
-			//    + "' AND UPPER(COLUMN_NAME)='" + attr.Field.ToUpper() + "' AND DATA_LENGTH < " + attr.MaxLength;
+			//    + "' AND UPPER(COLUMN_NAME)='" + attr.Field.ToUpper() + "' AND DATA_LENGTH < " + attr.getMaxLength();
 
 			//update dgq 2016-5-24 不取所有用户的表列名，只要取自己的就可以了
 			sql = "SELECT DATA_LENGTH AS LEN FROM ALL_TAB_COLUMNS WHERE upper(TABLE_NAME)='" + this.getEnMap().getPhysicsTableExt().toUpperCase() + "' AND UPPER(COLUMN_NAME)='" + attr.getField().toUpperCase() + "' AND DATA_LENGTH < " + attr.getMaxLength();
@@ -4684,7 +4641,7 @@ public abstract class Entity extends EnObj implements Serializable
 
 		///检查枚举类型字段是否是INT 类型
 		Attrs attrs = this.getEnMap().getHisEnumAttrs();
-		for (Attr attr : attrs.ToJavaList())
+		for (Attr attr : attrs)
 		{
 			if (attr.getMyDataType() != DataType.AppInt)
 			{
@@ -4714,7 +4671,7 @@ public abstract class Entity extends EnObj implements Serializable
 
 		///检查枚举类型是否存在.
 		attrs = this.getEnMap().getHisEnumAttrs();
-		for (Attr attr : attrs.ToJavaList())
+		for (Attr attr : attrs)
 		{
 			if (attr.getMyDataType() != DataType.AppInt)
 			{
@@ -4811,7 +4768,7 @@ public abstract class Entity extends EnObj implements Serializable
 		{
 			MapDtl mdtl = new MapDtl();
 
-			Entity enDtl = dtl.getEns().getGetNewEntity();
+			Entity enDtl = dtl.getEns().getNewEntity();
 
 			mdtl.setNo(enDtl.getClassID());
 			if (mdtl.RetrieveFromDBSources() == 0)
@@ -4820,7 +4777,7 @@ public abstract class Entity extends EnObj implements Serializable
 			}
 
 			mdtl.setName(enDtl.getEnDesc());
-			mdtl.setFK_MapData(fk_mapdata);
+			mdtl.setFrmID(fk_mapdata);
 			mdtl.setPTable(enDtl.getEnMap().getPhysicsTable());
 
 			mdtl.setRefPK(dtl.getRefKey()); //关联的主键.
@@ -4844,17 +4801,17 @@ public abstract class Entity extends EnObj implements Serializable
 	*/
 	private void DTSMapToSys_MapData_InitMapAttr(Attrs attrs, String fk_mapdata) throws Exception
 	{
-		for (Attr attr : attrs.ToJavaList())
+		for (Attr attr : attrs)
 		{
-			if (attr.getIsRefAttr())
+			if (attr.getItIsRefAttr() )
 			{
 				continue;
 			}
 
 			MapAttr mattr = new MapAttr();
 			mattr.setKeyOfEn(attr.getKey());
-			mattr.setFK_MapData(fk_mapdata);
-			mattr.setMyPK(mattr.getFK_MapData() + "_" + mattr.getKeyOfEn());
+			mattr.setFrmID(fk_mapdata);
+			mattr.setMyPK(mattr.getFrmID() + "_" + mattr.getKeyOfEn());
 			mattr.RetrieveFromDBSources();
 
 			mattr.setName(attr.getDesc());
@@ -4878,7 +4835,7 @@ public abstract class Entity extends EnObj implements Serializable
 
 			mattr.setUIRefKeyText(attr.getUIRefKeyText());
 			mattr.setUIVisible(attr.getUIVisible());
-			if (attr.getIsSupperText() == 1)
+			if (attr.getItIsSupperText() == 1)
 				mattr.setTextModel(3);
 			//设置显示与隐藏，按照默认值.
 			if (mattr.GetParaString("SearchVisable").equals(""))

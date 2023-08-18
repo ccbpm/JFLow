@@ -30,7 +30,7 @@ public enum ImgAppType
 		return this.ordinal();
 	}
 
-	public static ImgAppType forValue(int value) 
+	public static ImgAppType forValue(int value)
 	{
 		return values()[value];
 	}

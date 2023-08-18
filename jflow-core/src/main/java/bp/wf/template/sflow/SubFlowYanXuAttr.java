@@ -1,6 +1,5 @@
 package bp.wf.template.sflow;
 
-
 /** 
  延续子流程属性
 */

@@ -1,11 +1,7 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
 import bp.en.Map;
-
-import java.util.*;
 
 /** 
  单选框
@@ -17,119 +13,81 @@ public class FrmRB extends EntityMyPK
 	/** 
 	 提示
 	*/
-	public final String getTip() throws Exception
-	{
+	public final String getTip()  {
 		return this.GetValStringByKey(FrmRBAttr.Tip);
 	}
-	public final void setTip(String value)  throws Exception
-	 {
+	public final void setTip(String value){
 		this.SetValByKey(FrmRBAttr.Tip, value);
 	}
 
 	/** 
 	 字段设置值
 	*/
-	public final String getSetVal() throws Exception
-	{
+	public final String getSetVal()  {
 		return this.GetValStringByKey(FrmRBAttr.SetVal);
 	}
-	public final void setVal(String value)  throws Exception
-	 {
+	public final void setVal(String value){
 		this.SetValByKey(FrmRBAttr.SetVal, value);
 	}
 	/** 
 	 要执行的脚本
 	*/
-	public final String getScript() throws Exception
-	{
+	public final String getScript()  {
 		return this.GetValStringByKey(FrmRBAttr.Script);
 	}
-	public final void setScript(String value)  throws Exception
-	 {
+	public final void setScript(String value){
 		this.SetValByKey(FrmRBAttr.Script, value);
 	}
 
 	/** 
 	 字段-配置信息
 	*/
-	public final String getFieldsCfg() throws Exception
-	{
+	public final String getFieldsCfg()  {
 		return this.GetValStringByKey(FrmRBAttr.FieldsCfg);
 	}
-	public final void setFieldsCfg(String value)  throws Exception
-	 {
+	public final void setFieldsCfg(String value){
 		this.SetValByKey(FrmRBAttr.FieldsCfg, value);
 	}
-	public final String getLab() throws Exception
-	{
+	public final String getLab()  {
 		return this.GetValStringByKey(FrmRBAttr.Lab);
 	}
 
-	public final void setLab(String val)  throws Exception
-	 {
+	public final void setLab(String val){
 		this.SetValByKey(FrmRBAttr.Lab, val);
 	}
-	public final String getKeyOfEn() throws Exception
-	{
+	public final String getKeyOfEn()  {
 		return this.GetValStringByKey(FrmRBAttr.KeyOfEn);
 	}
-	public final void setKeyOfEn(String value)  throws Exception
-	 {
+	public final void setKeyOfEn(String value){
 		this.SetValByKey(FrmRBAttr.KeyOfEn, value);
 	}
-
-	public final int getIntKey() throws Exception
-	{
+	public final int getIntKey()  {
 		return this.GetValIntByKey(FrmRBAttr.IntKey);
 	}
-	public final void setIntKey(int val)  throws Exception
-	 {
+	public final void setIntKey(int val){
 		this.SetValByKey(FrmRBAttr.IntKey, val);
 	}
 
-	public final String getFK_MapData() throws Exception
-	{
-		return this.GetValStrByKey(FrmRBAttr.FK_MapData);
+	public final String getFrmID()  {
+		return this.GetValStrByKey(FrmRBAttr.FrmID);
 	}
-	public final void setFK_MapData(String val)  throws Exception
-	 {
-		this.SetValByKey(FrmRBAttr.FK_MapData, val);
+	public final void setFrmID(String value){
+		this.SetValByKey(FrmRBAttr.FrmID, value);
 	}
-	public final String getEnumKey() throws Exception
-	{
+
+	public final String getEnumKey()  {
 		return this.GetValStrByKey(FrmRBAttr.EnumKey);
 	}
-	public final void setEnumKey(String val)  throws Exception
-	 {
+	public final void setEnumKey(String val){
 		this.SetValByKey(FrmRBAttr.EnumKey, val);
 	}
-	public final int getFontSize() throws Exception {
+	public final int getFontSize()
+	{
 		return this.GetParaInt(FrmRBAttr.FontSize, 12);
 	}
-	public final void setFontSize(int value)throws Exception
-	{this.SetPara(FrmRBAttr.FontSize, value);
-	}
-
-
-	public final float getX() throws Exception
+	public final void setFontSize(int value)
 	{
-		return this.GetValFloatByKey(FrmRBAttr.X);
-	}
-	public final void setX(float value) throws Exception
-	{
-		this.SetValByKey(FrmRBAttr.X, value);
-	}
-
-	/**
-	 Y
-	 */
-	public final float getY() throws Exception
-	{
-		return this.GetValFloatByKey(FrmRBAttr.Y);
-	}
-	public final void setY(float value) throws Exception
-	{
-		this.SetValByKey(FrmRBAttr.Y, value);
+		this.SetPara(FrmRBAttr.FontSize, value);
 	}
 
 		///#endregion
@@ -139,10 +97,10 @@ public class FrmRB extends EntityMyPK
 	/** 
 	 单选框
 	*/
-	public FrmRB()  {
-	}
-	public FrmRB(String mypk)throws Exception
+	public FrmRB()
 	{
+	}
+	public FrmRB(String mypk) throws Exception {
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
@@ -150,37 +108,28 @@ public class FrmRB extends EntityMyPK
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
 		}
 		Map map = new Map("Sys_FrmRB", "单选框");
-			//      map.EnDBUrl = new DBUrl(DBUrlType.DBAccessOfMSSQL1);
-
-		map.IndexField = FrmImgAthDBAttr.FK_MapData;
+		map.IndexField = FrmRBAttr.FrmID;
 
 		map.AddMyPK();
-		map.AddTBString(FrmRBAttr.FK_MapData, null, "表单ID", true, false, 0, 300, 20);
-		map.AddTBString(FrmRBAttr.KeyOfEn, null, "字段", true, false, 0, 300, 20);
-		map.AddTBString(FrmRBAttr.EnumKey, null, "枚举值", true, false, 0, 30, 20);
-		map.AddTBString(FrmRBAttr.Lab, null, "标签", true, false, 0, 500, 20);
-
+		map.AddTBString(FrmRBAttr.FrmID, "", "表单ID", true, false, 0, 200, 20);
+		map.AddTBString(FrmRBAttr.KeyOfEn, "", "字段", true, false, 0, 200, 20);
+		map.AddTBString(FrmRBAttr.EnumKey, "", "枚举值", true, false, 0, 30, 20);
+		map.AddTBString(FrmRBAttr.Lab, "", "标签", true, false, 0, 500, 20);
 		map.AddTBInt(FrmRBAttr.IntKey, 0, "IntKey", true, false);
-
-
 		map.AddTBInt(MapAttrAttr.UIIsEnable, 0, "是否启用", true, false);
 
-		map.AddTBFloat(FrmRBAttr.X, 5, "X", true, false);
-		map.AddTBFloat(FrmRBAttr.Y, 5, "Y", false, false);
-
-			//要执行的脚本.
-		map.AddTBString(FrmRBAttr.Script, null, "要执行的脚本", true, false, 0, 4000, 20);
-		map.AddTBString(FrmRBAttr.FieldsCfg, null, "配置信息@FieldName=Sta", true, false, 0, 4000, 20);
-		map.AddTBString(FrmRBAttr.SetVal, null, "设置的值", true, false, 0, 200, 20);
-
-		map.AddTBString(FrmRBAttr.Tip, null, "选择后提示的信息", true, false, 0, 1000, 20);
-		map.AddTBString(FrmRBAttr.GUID, null, "GUID", true, false, 0, 128, 20);
+		//要执行的脚本.
+		map.AddTBString(FrmRBAttr.Script, "", "要执行的脚本", true, false, 0, 4000, 20);
+		map.AddTBString(FrmRBAttr.FieldsCfg, "", "配置信息@FieldName=Sta", true, false, 0, 4000, 20);
+		map.AddTBString(FrmRBAttr.SetVal, "", "设置的值", true, false, 0, 200, 20);
+		map.AddTBString(FrmRBAttr.Tip, "", "选择后提示的信息", true, false, 0, 1000, 20);
 
 		map.AddTBAtParas(500);
 
@@ -191,14 +140,16 @@ public class FrmRB extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected boolean beforeInsert() throws Exception {
-		this.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn() + "_" + this.getIntKey());
+	protected boolean beforeInsert() throws Exception
+	{
+		this.setMyPK(this.getFrmID() + "_" + this.getKeyOfEn() + "_" + this.getIntKey());
 		return super.beforeInsert();
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception {
-		this.setMyPK(this.getFK_MapData() + "_" + this.getKeyOfEn() + "_" + this.getIntKey());
+	protected boolean beforeUpdateInsertAction() throws Exception
+	{
+		this.setMyPK(this.getFrmID() + "_" + this.getKeyOfEn() + "_" + this.getIntKey());
 		return super.beforeUpdateInsertAction();
 	}
 }

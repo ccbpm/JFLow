@@ -40,6 +40,10 @@ public class FrmActionType
 	*/
 	public static final String StartRegFlow = "StartRegFlow";
 	/** 
+	 流程修改实体数据
+	*/
+	public static final String FlowBaseData = "FlowBaseData";
+	/** 
 	 其他
 	*/
 	public static final String Etc = "Etc";

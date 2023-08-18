@@ -712,7 +712,7 @@ public class PushMsg extends EntityMyPK
 			return "";
 		}
 
-		String atParas = "@FK_Flow=" + currNode.getFK_Flow() + "@WorkID=" + workid + "@NodeID=" + currNode.getNodeID() + "@FK_Node=" + currNode.getNodeID();
+		String atParas = "@FK_Flow=" + currNode.getFlowNo() + "@WorkID=" + workid + "@NodeID=" + currNode.getNodeID() + "@FK_Node=" + currNode.getNodeID();
 		String generAlertMessage = ""; //定义要返回的提示消息.
 		String mailTitle = this.getMailTitle(); // 邮件标题.
 		String smsDoc = this.getSMSDoc(); //消息模板.
@@ -745,13 +745,15 @@ public class PushMsg extends EntityMyPK
 		{
 			//获取退回原因
 			Paras ps = new Paras();
-			ps.SQL = "SELECT BeiZhu,ReturnerName,IsBackTracking FROM WF_ReturnWork WHERE WorkID=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "WorkID  ORDER BY RDT DESC";
-			ps.Add(ReturnWorkAttr.WorkID, Long.parseLong(en.getPKVal().toString()));
+			if(DataType.IsNullOrEmpty(this.getFK_Flow()))
+				this.setFK_Flow(r.GetValStrByKey("FK_Flow"));
+			ps.SQL = "SELECT Msg,EmpFrom FROM ND"+Integer.parseInt(this.getFK_Flow())+"Track WHERE (ActionType=2 OR ActionType=201) AND WorkID=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "WorkID  ORDER BY RDT DESC";
+			ps.Add(TrackAttr.WorkID, Long.parseLong(en.getPKVal().toString()));
 			DataTable retunWdt = DBAccess.RunSQLReturnTable(ps);
 			if (retunWdt.Rows.size() != 0)
 			{
-				String returnMsg = retunWdt.Rows.get(0).getValue("BeiZhu").toString();
-				String returner = retunWdt.Rows.get(0).getValue("ReturnerName").toString();
+				String returnMsg = retunWdt.Rows.get(0).getValue(0).toString();
+				String returner = retunWdt.Rows.get(0).getValue(1).toString();
 				smsDoc = smsDoc.replace("ReturnMsg", returnMsg);
 			}
 		}
@@ -838,9 +840,9 @@ public class PushMsg extends EntityMyPK
 			//替换SQL中的参数
 			bySQL = bySQL.replace("@WebUser.No", WebUser.getNo());
 			bySQL = bySQL.replace("@WebUser.Name", WebUser.getName());
-			bySQL = bySQL.replace("@WebUser.FK_DeptNameOfFull", WebUser.getFK_DeptNameOfFull());
-			bySQL = bySQL.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
-			bySQL = bySQL.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
+			bySQL = bySQL.replace("@WebUser.FK_DeptNameOfFull", WebUser.getDeptNameOfFull());
+			bySQL = bySQL.replace("@WebUser.FK_DeptName", WebUser.getDeptName());
+			bySQL = bySQL.replace("@WebUser.FK_Dept", WebUser.getDeptNo());
 			/*如果仍然有没有替换下来的变量.*/
 			if (bySQL.contains("@") == true)
 			{

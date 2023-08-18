@@ -1,6 +1,11 @@
 package bp.port;
 
-import bp.en.*;
+import bp.da.*;
+import bp.en.*; import bp.en.Map;
+import bp.web.*;
+import bp.sys.*;
+import bp.*;
+import java.util.*;
 
 /** 
  部门属性
@@ -25,5 +30,6 @@ public class DeptAttr extends EntityNoNameAttr
 	public static final String Idx = "Idx";
 
 	public static final String NameOfPath = "NameOfPath";
+	public static final String Adminer = "Adminer";
 
 }

@@ -1,7 +1,7 @@
 package bp.wf.template.frm;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
 import bp.*;
 import bp.wf.*;
@@ -18,13 +18,15 @@ public class MapFrmWpss extends EntitiesNoName
 	/** 
 	 Wps表单属性s
 	*/
-	public MapFrmWpss() throws Exception {
+	public MapFrmWpss()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new MapFrmWps();
 	}
 
@@ -37,7 +39,8 @@ public class MapFrmWpss extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<MapFrmWps> ToJavaList() {
+	public final java.util.List<MapFrmWps> ToJavaList()
+	{
 		return (java.util.List<MapFrmWps>)(Object)this;
 	}
 	/** 
@@ -45,7 +48,8 @@ public class MapFrmWpss extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<MapFrmWps> Tolist()  {
+	public final ArrayList<MapFrmWps> Tolist()
+	{
 		ArrayList<MapFrmWps> list = new ArrayList<MapFrmWps>();
 		for (int i = 0; i < this.size(); i++)
 		{

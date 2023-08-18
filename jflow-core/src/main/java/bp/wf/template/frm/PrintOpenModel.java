@@ -1,5 +1,8 @@
 package bp.wf.template.frm;
 
+import bp.*;
+import bp.wf.*;
+import bp.wf.template.*;
 
 /** 
  生成的文件打开方式
@@ -19,7 +22,8 @@ public enum PrintOpenModel
 
 	private int intValue;
 	private static java.util.HashMap<Integer, PrintOpenModel> mappings;
-	private static java.util.HashMap<Integer, PrintOpenModel> getMappings()  {
+	private static java.util.HashMap<Integer, PrintOpenModel> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (PrintOpenModel.class)
@@ -34,15 +38,18 @@ public enum PrintOpenModel
 	}
 
 	private PrintOpenModel(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue() {
+	public int getValue()
+	{
 		return intValue;
 	}
 
 	public static PrintOpenModel forValue(int value)
-	{return getMappings().get(value);
+	{
+		return getMappings().get(value);
 	}
 }

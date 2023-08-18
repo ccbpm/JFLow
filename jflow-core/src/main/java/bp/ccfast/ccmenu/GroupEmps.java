@@ -1,6 +1,6 @@
 package bp.ccfast.ccmenu;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.port.*;
 import bp.*;
 import bp.ccfast.*;
@@ -16,13 +16,15 @@ public class GroupEmps extends EntitiesMM
 	/** 
 	 权限组s
 	*/
-	public GroupEmps()  {
+	public GroupEmps()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new GroupEmp();
 	}
 
@@ -35,7 +37,8 @@ public class GroupEmps extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final java.util.List<GroupEmp> ToJavaList() {
+	public final java.util.List<GroupEmp> ToJavaList()
+	{
 		return (java.util.List<GroupEmp>)(Object)this;
 	}
 	/** 
@@ -43,7 +46,8 @@ public class GroupEmps extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final ArrayList<GroupEmp> Tolist()  {
+	public final ArrayList<GroupEmp> Tolist()
+	{
 		ArrayList<GroupEmp> list = new ArrayList<GroupEmp>();
 		for (int i = 0; i < this.size(); i++)
 		{

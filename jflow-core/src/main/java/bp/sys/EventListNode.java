@@ -1,7 +1,4 @@
 package bp.sys;
-
-import bp.*;
-
 /** 
  事件标记列表
 */

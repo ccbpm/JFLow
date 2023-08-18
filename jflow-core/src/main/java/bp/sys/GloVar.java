@@ -11,23 +11,19 @@ public class GloVar extends EntityNoName
 {
 
 		///#region 属性
-	public final Object getValOfObject()  throws Exception
-	{
+	public final Object getValOfObject()  {
 		return this.GetValByKey(GloVarAttr.Val);
 	}
-	public final void setValOfObject(Object value) throws Exception
-	{
+	public final void setValOfObject(Object value){
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
-	public final String getVal()  throws Exception
-	{
+	public final String getVal()  {
 		return this.GetValStringByKey(GloVarAttr.Val);
 	}
-	public final void setVal(String value) throws Exception
-	{
+	public final void setVal(String value){
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
-	public final float getValOfFloat()throws Exception
+	public final float getValOfFloat()
 	{
 		try
 		{
@@ -38,11 +34,10 @@ public class GloVar extends EntityNoName
 			return 0;
 		}
 	}
-	public final void setValOfFloat(float value) throws Exception
-	{
+	public final void setValOfFloat(float value){
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
-	public final int getValOfInt()throws Exception
+	public final int getValOfInt()
 	{
 		try
 		{
@@ -53,11 +48,10 @@ public class GloVar extends EntityNoName
 			return 0;
 		}
 	}
-	public final void setValOfInt(int value) throws Exception
-	{
+	public final void setValOfInt(int value){
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
-	public final BigDecimal getValOfDecimal()throws Exception
+	public final BigDecimal getValOfDecimal()
 	{
 		try
 		{
@@ -68,46 +62,37 @@ public class GloVar extends EntityNoName
 			return new BigDecimal(0);
 		}
 	}
-	public final void setValOfDecimal(BigDecimal value) throws Exception
-	{
+	public final void setValOfDecimal(BigDecimal value){
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
-	public final boolean getValOfBoolen()  throws Exception
-	{
+	public final boolean getValOfBoolen()  {
 		return this.GetValBooleanByKey(GloVarAttr.Val);
 	}
-	public final void setValOfBoolen(boolean value) throws Exception
-	{
+	public final void setValOfBoolen(boolean value){
 		this.SetValByKey(GloVarAttr.Val, value);
 	}
 	/** 
 	 note
 	*/
-	public final String getNote()  throws Exception
-	{
+	public final String getNote()  {
 		return this.GetValStringByKey(GloVarAttr.Note);
 	}
-	public final void setNote(String value) throws Exception
-	{
+	public final void setNote(String value){
 		this.SetValByKey(GloVarAttr.Note, value);
 	}
-	public final int getIdx()  throws Exception
-	{
+	public final int getIdx()  {
 		return this.GetValIntByKey(GloVarAttr.Idx);
 	}
-	public final void setIdx(int value) throws Exception
-	{
+	public final void setIdx(int value){
 		this.SetValByKey(GloVarAttr.Idx, value);
 	}
 	/** 
 	 分组值
 	*/
-	public final String getGroupKey()  throws Exception
-	{
+	public final String getGroupKey()  {
 		return this.GetValStringByKey(GloVarAttr.GroupKey);
 	}
-	public final void setGroupKey(String value) throws Exception
-	{
+	public final void setGroupKey(String value){
 		this.SetValByKey(GloVarAttr.GroupKey, value);
 	}
 
@@ -124,17 +109,17 @@ public class GloVar extends EntityNoName
 	/** 
 	 全局变量
 	 
-	 param no
+	 @param no
 	*/
-	public GloVar(String no) throws Exception {
+	public GloVar(String no) throws Exception  {
 		this.setNo(no);
 		this.Retrieve();
 	}
 	/** 
 	 键值
 	 
-	 param key key
-	 param isNullAsVal
+	 @param key key
+	 @param isNullAsVal 
 	*/
 	public GloVar(String key, Object isNullAsVal) throws Exception {
 		try
@@ -155,7 +140,7 @@ public class GloVar extends EntityNoName
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap()
+	public Map getEnMap()
 	{
 		if (this.get_enMap() != null)
 		{
@@ -185,8 +170,7 @@ public class GloVar extends EntityNoName
 	/** 
 	 一个月份的假期.
 	*/
-	public static String getHolidays()throws Exception
-	{
+	public static String getHolidays() throws Exception {
 		if (_Holidays != null)
 		{
 			return _Holidays;
@@ -204,7 +188,7 @@ public class GloVar extends EntityNoName
 		}
 		return _Holidays;
 	}
-	public static void setHolidays(String value) throws Exception
+	public static void setHolidays(String value)
 	{
 		_Holidays = value;
 	}

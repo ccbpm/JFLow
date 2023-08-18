@@ -1,24 +1,24 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
-import bp.difference.handler.WebContralBase;
 import bp.sys.*;
 import bp.en.*;
 import bp.wf.template.*;
 import bp.difference.*;
-import bp.*;
 import bp.wf.*;
+import java.util.*;
 
 /** 
  页面功能实体
 */
-public class WF_Admin_Sln extends WebContralBase
+public class WF_Admin_Sln extends bp.difference.handler.DirectoryPageBase
 {
 
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_Sln() throws Exception {
+	public WF_Admin_Sln()
+	{
 	}
 
 
@@ -30,7 +30,7 @@ public class WF_Admin_Sln extends WebContralBase
 	*/
 	public final String BindForm_GetFlowNodeDropList() throws Exception {
 		Nodes nodes = new Nodes();
-		nodes.Retrieve(NodeAttr.FK_Flow, getFK_Flow(), NodeAttr.Step);
+		nodes.Retrieve(NodeAttr.FK_Flow, this.getFlowNo(), NodeAttr.Step);
 
 		if (nodes.size() == 0)
 		{
@@ -42,7 +42,7 @@ public class WF_Admin_Sln extends WebContralBase
 
 		for (Node node : nodes.ToJavaList())
 		{
-			sBuilder.append("<option " + (getFK_Node() == node.getNodeID() ? "disabled = \"disabled\"" : "") + " value = \"" + node.getNodeID() + "\" >" + "[" + node.getNodeID() + "]" + node.getName() + "</ option >");
+			sBuilder.append("<option " + (this.getNodeID() == node.getNodeID() ? "disabled = \"disabled\"" : "") + " value = \"" + node.getNodeID() + "\" >" + "[" + node.getNodeID() + "]" + node.getName() + "</ option >");
 		}
 
 		sBuilder.append("</select>");
@@ -64,7 +64,7 @@ public class WF_Admin_Sln extends WebContralBase
 
 		for (String node : nodeList)
 		{
-			if (DataType.IsNullOrEmpty(node))
+			if (node == null || node.isEmpty())
 			{
 				continue;
 			}
@@ -76,7 +76,7 @@ public class WF_Admin_Sln extends WebContralBase
 
 			for (String frm : frmList)
 			{
-				if (DataType.IsNullOrEmpty(frm))
+				if (frm == null || frm.isEmpty())
 				{
 					continue;
 				}
@@ -84,19 +84,19 @@ public class WF_Admin_Sln extends WebContralBase
 				FrmNode fn = new FrmNode();
 				FrmNode frmNode = new FrmNode();
 
-				if (fn.IsExit("mypk", frm + "_" + this.getFK_Node() + "_" + this.getFK_Flow()))
+				if (fn.IsExit("mypk", frm + "_" + this.getNodeID() + "_" + this.getFlowNo()))
 				{
 					frmNode.Copy(fn);
-					frmNode.setMyPK(frm + "_" + nodeid + "_" + this.getFK_Flow());
-					frmNode.setFK_Flow(this.getFK_Flow());
-					frmNode.setFK_Node(nodeid);
+					frmNode.setMyPK(frm + "_" + nodeid + "_" + this.getFlowNo());
+					frmNode.setFlowNo(this.getFlowNo());
+					frmNode.setNodeID(nodeid);
 					frmNode.setFKFrm(frm);
 				}
 				else
 				{
-					frmNode.setMyPK(frm + "_" + nodeid + "_" + this.getFK_Flow());
-					frmNode.setFK_Flow(this.getFK_Flow());
-					frmNode.setFK_Node(nodeid);
+					frmNode.setMyPK(frm + "_" + nodeid + "_" + this.getFlowNo());
+					frmNode.setFlowNo(this.getFlowNo());
+					frmNode.setNodeID(nodeid);
 					frmNode.setFKFrm(frm);
 				}
 
@@ -115,9 +115,9 @@ public class WF_Admin_Sln extends WebContralBase
 	public final String BindFrmsDtl_Save() throws Exception {
 		try
 		{
-			String formNos = this.GetRequestVal("formNos"); // this.context.Request["formNos"];
+			String formNos = ContextHolderUtils.getRequest().getParameter("formNos"); // this.context.Request["formNos");
 
-			FrmNodes fns = new FrmNodes(this.getFK_Flow(), this.getFK_Node());
+			FrmNodes fns = new FrmNodes(this.getFlowNo(), this.getNodeID());
 			//删除已经删除的。
 			for (FrmNode fn : fns.ToJavaList())
 			{
@@ -143,10 +143,10 @@ public class WF_Admin_Sln extends WebContralBase
 
 				FrmNode fn = new FrmNode();
 				fn.setFKFrm(s);
-				fn.setFK_Flow(this.getFK_Flow());
-				fn.setFK_Node(this.getFK_Node());
+				fn.setFlowNo(this.getFlowNo());
+				fn.setNodeID(this.getNodeID());
 
-				fn.setMyPK(fn.getFKFrm() + "_" + fn.getFK_Node() + "_" + fn.getFK_Flow());
+				fn.setMyPK(fn.getFKFrm() + "_" + fn.getNodeID() + "_" + fn.getFlowNo());
 
 				fn.Save();
 			}
@@ -167,7 +167,7 @@ public class WF_Admin_Sln extends WebContralBase
 		//形成树
 		FlowFormTrees appendFormTrees = new FlowFormTrees();
 		//节点绑定表单
-		FrmNodes frmNodes = new FrmNodes(this.getFK_Flow(), this.getFK_Node());
+		FrmNodes frmNodes = new FrmNodes(this.getFlowNo(), this.getNodeID());
 		//所有表单类别
 		SysFormTrees formTrees = new SysFormTrees();
 		formTrees.RetrieveAll(SysFormTreeAttr.Idx);
@@ -184,7 +184,6 @@ public class WF_Admin_Sln extends WebContralBase
 			root.Insert();
 		}
 		root.setNodeType("root");
-
 		appendFormTrees.AddEntity(root);
 
 		for (SysFormTree formTree : formTrees.ToJavaList())
@@ -201,8 +200,6 @@ public class WF_Admin_Sln extends WebContralBase
 				root.setNo(formTree.getNo());
 				continue;
 			}
-
-
 
 			//文件夹
 			FlowFormTree nodeFolder = new FlowFormTree();
@@ -225,8 +222,8 @@ public class WF_Admin_Sln extends WebContralBase
 				{
 					FlowFormTree formFolder = new FlowFormTree();
 					formFolder.setNo(map.getNo());
-					formFolder.setParentNo(map.getFK_FormTree());
-					formFolder.setName(map.getName() + "[" + map.getNo() + "]");
+					formFolder.setParentNo(map.getFormTreeNo());
+					formFolder.setName(map.getName() +"[" + map.getNo() + "]");
 					formFolder.setNodeType("form");
 					appendFormTrees.AddEntity(formFolder);
 				}
@@ -249,9 +246,9 @@ public class WF_Admin_Sln extends WebContralBase
 	/** 
 	 将实体转为树形
 	 
-	 param ens
-	 param rootNo
-	 param checkIds
+	 @param ens
+	 @param rootNo
+	 @param checkIds
 	*/
 	private StringBuilder appendMenus = new StringBuilder();
 	private StringBuilder appendMenuSb = new StringBuilder();
@@ -264,7 +261,7 @@ public class WF_Admin_Sln extends WebContralBase
 		}
 		appendMenus.append("[{");
 		appendMenus.append("\"id\":\"" + rootNo + "\"");
-		appendMenus.append(",\"text\":\"" + root.getName() + "\"");
+		appendMenus.append(",\"text\":\"" + root.getName() +"\"");
 		appendMenus.append(",\"state\":\"open\"");
 
 		//attributes
@@ -282,8 +279,7 @@ public class WF_Admin_Sln extends WebContralBase
 		appendMenus.append("}]");
 	}
 
-	public final void AddChildren(EntityTree parentEn, Entities ens, String checkIds)
-	{
+	public final void AddChildren(EntityTree parentEn, Entities ens, String checkIds) throws Exception {
 		appendMenus.append(appendMenuSb);
 		appendMenuSb.setLength(0);
 
@@ -291,18 +287,18 @@ public class WF_Admin_Sln extends WebContralBase
 		for (Entity en : ens)
 		{
 			EntityTree item = (EntityTree)en;
-			if (!parentEn.getNo().equals(item.getParentNo()))
+			if (!Objects.equals(item.getParentNo(), parentEn.getNo()))
 			{
 				continue;
 			}
 
 			if (checkIds.contains("," + item.getNo() + ","))
 			{
-				appendMenuSb.append("{\"id\":\"" + item.getNo() + "\",\"text\":\"" + item.getName() + "\",\"checked\":true");
+				appendMenuSb.append("{\"id\":\"" + item.getNo() + "\",\"text\":\"" + item.getName() +"\",\"checked\":true");
 			}
 			else
 			{
-				appendMenuSb.append("{\"id\":\"" + item.getNo() + "\",\"text\":\"" + item.getName() + "\",\"checked\":false");
+				appendMenuSb.append("{\"id\":\"" + item.getNo() + "\",\"text\":\"" + item.getName() +"\",\"checked\":false");
 			}
 
 
@@ -316,7 +312,7 @@ public class WF_Admin_Sln extends WebContralBase
 				url = url.replace("/", "|");
 				appendMenuSb.append(",\"attributes\":{\"NodeType\":\"" + formTree.getNodeType() + "\",\"IsEdit\":\"" + formTree.isEdit() + "\",\"Url\":\"" + url + "\"}");
 				//图标
-				if (formTree.getNodeType().equals("form"))
+				if (Objects.equals(formTree.getNodeType(), "form"))
 				{
 					ico = "icon-sheet";
 				}
@@ -353,18 +349,18 @@ public class WF_Admin_Sln extends WebContralBase
 		SysEnums ses = new SysEnums("FrmEnableRole");
 
 		String text = "";
-		Node nd = new Node(this.getFK_Node());
+		Node nd = new Node(this.getNodeID());
 
-		//FrmNodeExt fns = new FrmNodeExt(this.FK_Flow, this.FK_Node);
+		//FrmNodeExt fns = new FrmNodeExt(this.FlowNo, this.getNodeID());
 
-		FrmNodes fns = new FrmNodes(this.getFK_Flow(), this.getFK_Node());
+		FrmNodes fns = new FrmNodes(this.getFlowNo(), this.getNodeID());
 
 
 			///#region 如果没有ndFrm 就增加上.
 		boolean isHaveNDFrm = false;
 		for (FrmNode fn : fns.ToJavaList())
 		{
-			if (fn.getFKFrm().equals("ND" + this.getFK_Node()))
+			if (Objects.equals(fn.getFKFrm(), "ND" + this.getNodeID()))
 			{
 				isHaveNDFrm = true;
 				break;
@@ -374,14 +370,14 @@ public class WF_Admin_Sln extends WebContralBase
 		if (isHaveNDFrm == false)
 		{
 			FrmNode fn = new FrmNode();
-			fn.setFK_Flow(this.getFK_Flow());
-			fn.setFKFrm("ND" + this.getFK_Node());
-			fn.setFK_Node(this.getFK_Node());
+			fn.setFlowNo(this.getFlowNo());
+			fn.setFKFrm("ND" + this.getNodeID());
+			fn.setNodeID(this.getNodeID());
 
 			fn.setFrmEnableRole(FrmEnableRole.Disable); //就是默认不启用.
 			fn.setFrmSln(FrmSln.forValue(0));
 			//  fn.IsEdit = true;
-			fn.setEnableLoadData(true);
+			fn.setItIsEnableLoadData(true);
 			fn.Insert();
 			fns.AddEntity(fn);
 		}
@@ -393,7 +389,7 @@ public class WF_Admin_Sln extends WebContralBase
 		{
 			MapData md = new MapData();
 			md.setNo(fn.getFKFrm());
-			if (md.getIsExits() == false)
+			if (md.getIsExits()==false)
 			{
 				fn.Delete(); //说明该表单不存在了，就需要把这个删除掉.
 				continue;
@@ -403,7 +399,7 @@ public class WF_Admin_Sln extends WebContralBase
 		}
 
 		FrmNodeExts fnes = new FrmNodeExts();
-		fnes.Retrieve(FrmNodeAttr.FK_Flow, this.getFK_Flow(), FrmNodeAttr.FK_Node, this.getFK_Node(), FrmNodeAttr.Idx);
+		fnes.Retrieve(FrmNodeAttr.FK_Flow, this.getFlowNo(), FrmNodeAttr.FK_Node, this.getNodeID(), FrmNodeAttr.Idx);
 
 		//把json数据返回过去.
 		return fnes.ToJson("dt");
@@ -422,15 +418,15 @@ public class WF_Admin_Sln extends WebContralBase
 		public String LGTypeT;
 		public boolean UIVisible;
 		public boolean UIIsEnable;
-		public boolean IsSigan;
+		public boolean ItIsSigan;
 		public String DefVal;
-		public boolean IsNotNull;
+		public boolean ItIsNotNull;
 		public String RegularExp;
-		public boolean IsWriteToFlowTable;
+		public boolean ItIsWriteToFlowTable;
 		/** 
 		  add new attr 是否写入流程注册表
 		*/
-		public boolean IsWriteToGenerWorkFlow;
+		public boolean ItIsWriteToGenerWorkFlow;
 	}
 
 		///#endregion 字段权限.

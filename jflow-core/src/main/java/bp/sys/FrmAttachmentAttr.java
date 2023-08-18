@@ -1,9 +1,5 @@
 package bp.sys;
-
-import bp.da.*;
 import bp.en.*;
-import bp.*;
-import java.util.*;
 
 /** 
  附件
@@ -30,11 +26,6 @@ public class FrmAttachmentAttr extends EntityMyPKAttr
 	 高度
 	*/
 	public static final String H = "H";
-	/**
-	 宽度
-	 */
-	public static final String W = "W";
-	
 	/** 
 	 要求上传的格式
 	*/
@@ -160,7 +151,6 @@ public class FrmAttachmentAttr extends EntityMyPKAttr
 	 是否可见？
 	*/
 	public static final String IsVisable = "IsVisable";
-
 	/** 
 	 附件类型 0 普通附件 1 图片附件
 	*/
@@ -170,17 +160,14 @@ public class FrmAttachmentAttr extends EntityMyPKAttr
 	*/
 	public static final String PicUploadType = "PicUploadType";
 	/** 
+	 是否启用模板？
+	*/
+	public static final String IsEnableTemplate = "IsEnableTemplate";
+	/** 
 	 附件删除方式
 	*/
 	public static final String DeleteWay = "DeleteWay";
-	/**
-	 X
-	 */
-	public static final String X = "X";
-	/**
-	 Y
-	 */
-	public static final String Y = "Y";
+
 
 		///#region 数据引用.
 	/** 

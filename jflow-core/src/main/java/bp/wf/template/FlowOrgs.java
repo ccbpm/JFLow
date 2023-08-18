@@ -1,10 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.wf.port.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -15,12 +11,13 @@ public class FlowOrgs extends EntitiesMM
 	/** 
 	 流程对应组织
 	*/
-	public FlowOrgs()  {
+	public FlowOrgs()
+	{
 	}
 	/** 
 	 流程对应组织
 	 
-	 param orgNo orgNo 
+	 @param orgNo orgNo 
 	*/
 	public FlowOrgs(String orgNo) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -31,7 +28,8 @@ public class FlowOrgs extends EntitiesMM
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		return new FlowOrg();
 	}
 
@@ -42,7 +40,8 @@ public class FlowOrgs extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final java.util.List<FlowOrg> ToJavaList() {
+	public final java.util.List<FlowOrg> ToJavaList()
+	{
 		return (java.util.List<FlowOrg>)(Object)this;
 	}
 	/** 
@@ -50,7 +49,8 @@ public class FlowOrgs extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final ArrayList<FlowOrg> Tolist()  {
+	public final ArrayList<FlowOrg> Tolist()
+	{
 		ArrayList<FlowOrg> list = new ArrayList<FlowOrg>();
 		for (int i = 0; i < this.size(); i++)
 		{

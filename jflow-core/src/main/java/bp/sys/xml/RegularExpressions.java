@@ -1,6 +1,7 @@
 package bp.sys.xml;
-
 import bp.en.*;
+import bp.difference.*;
+
 /** 
  
 */
@@ -23,7 +24,7 @@ public class RegularExpressions extends XmlEns
 	 得到它的 Entity 
 	*/
 	@Override
-	public XmlEn getGetNewEntity()
+	public XmlEn getNewEntity()
 	{
 		return new RegularExpression();
 	}
@@ -31,19 +32,21 @@ public class RegularExpressions extends XmlEns
 	 文件路径
 	*/
 	@Override
-	public String getFile()throws Exception
+	public String getFile()
 	{
-		return bp.difference.SystemConfig.getPathOfData() + "XML/RegularExpression.xml";
+		return SystemConfig.getPathOfData() + "XML/RegularExpression.xml";
 	}
 	/** 
 	 物理表名
 	*/
 	@Override
-	public String getTableName()  {
+	public String getTableName()
+	{
 		return "Item";
 	}
 	@Override
-	public Entities getRefEns()  {
+	public Entities getRefEns()
+	{
 		return null;
 	}
 

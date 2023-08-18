@@ -1,8 +1,6 @@
 package bp.wf.httphandler;
 
-import bp.ccfast.ccmenu.Module;
 import bp.da.*;
-import bp.difference.handler.WebContralBase;
 import bp.sys.*;
 import bp.web.*;
 import bp.wf.template.*;
@@ -13,12 +11,13 @@ import bp.wf.*;
 /** 
  页面功能实体
 */
-public class WF_GPM extends WebContralBase
+public class WF_GPM extends bp.difference.handler.DirectoryPageBase
 {
 	/** 
 	 构造函数
 	*/
-	public WF_GPM() throws Exception {
+	public WF_GPM()
+	{
 
 	}
 
@@ -27,7 +26,8 @@ public class WF_GPM extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String PowerCenter_DoClearCash() throws Exception {
+	public final String PowerCenter_DoClearCache()
+	{
 		String ctrlGroup = this.GetRequestVal("CtrlGroup");
 
 		String sql = "";
@@ -50,7 +50,8 @@ public class WF_GPM extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String Module_Move() throws Exception {
+	public final String Module_Move()
+	{
 		String sortNo = this.GetRequestVal("RootNo");
 		String[] EnNos = this.GetRequestVal("EnNos").split("[,]", -1);
 		for (int i = 0; i < EnNos.length; i++)
@@ -61,7 +62,8 @@ public class WF_GPM extends WebContralBase
 		}
 		return "模块顺序移动成功..";
 	}
-	public final String System_Move() throws Exception {
+	public final String System_Move()
+	{
 		String[] EnNos = this.GetRequestVal("EnNos").split("[,]", -1);
 		for (int i = 0; i < EnNos.length; i++)
 		{
@@ -76,7 +78,8 @@ public class WF_GPM extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String Menu_Move() throws Exception {
+	public final String Menu_Move()
+	{
 		String sortNo = this.GetRequestVal("RootNo");
 		String[] EnNos = this.GetRequestVal("EnNos").split("[,]", -1);
 		for (int i = 0; i < EnNos.length; i++)
@@ -90,7 +93,8 @@ public class WF_GPM extends WebContralBase
 	}
 
 
-	public final String Home_Init() throws Exception {
+	public final String Home_Init()
+	{
 		String str = bp.difference.SystemConfig.getPathOfData() + "XML/BarTemp.xml";
 		DataSet ds = new DataSet();
 		ds.readXml(str);
@@ -142,16 +146,17 @@ public class WF_GPM extends WebContralBase
 		system.setOrgNo(WebUser.getOrgNo());
 		system.Insert();
 
-		SysFormTree frmTee = (SysFormTree) frmTree.DoCreateSubNode();
-		frmTee.setName ( name);
+		bp.en.EntityTree tempVar = frmTree.DoCreateSubNode(null);
+		SysFormTree frmTee = tempVar instanceof SysFormTree ? (SysFormTree)tempVar : null;
+		frmTee.setName(name);
 		// en.ICON = system.Icon;
 		frmTee.setOrgNo(WebUser.getOrgNo());
-		frmTree.setIdx ( 100);
+		frmTree.setIdx(100);
 		frmTee.Update();
 		DBAccess.RunSQL("UPDATE Sys_FormTree SET No='" + system.getNo() + "' WHERE No='" + frmTee.getNo() + "'");
 
-		bp.en.EntityTree tempVar = fs.DoCreateSubNode(null);
-		FlowSort myen = tempVar instanceof FlowSort ? (FlowSort)tempVar : null;
+		bp.en.EntityTree tempVar2 = fs.DoCreateSubNode(null);
+		FlowSort myen = tempVar2 instanceof FlowSort ? (FlowSort)tempVar2 : null;
 		myen.setName(name);
 		myen.setOrgNo(WebUser.getOrgNo());
 		myen.setIdx(100);

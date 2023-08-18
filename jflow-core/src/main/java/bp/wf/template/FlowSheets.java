@@ -1,7 +1,6 @@
 package bp.wf.template;
 
 import bp.en.*;
-
 import java.util.*;
 
 /** 
@@ -14,10 +13,8 @@ public class FlowSheets extends EntitiesNoName
 	/** 
 	 查询出来全部的在生存期间内的流程
 	 
-	 param FlowSort 流程类别
-	 param IsCountInLifeCycle 是不是计算在生存期间内 true 查询出来全部的
-	 * @return
-	 */
+	 @param FlowSort 流程类别
+	*/
 	public final int Retrieve(String FlowSort) throws Exception {
 		QueryObject qo = new QueryObject(this);
 		qo.AddWhere(bp.wf.template.FlowAttr.FK_FlowSort, FlowSort);
@@ -33,12 +30,13 @@ public class FlowSheets extends EntitiesNoName
 	/** 
 	 工作流程
 	*/
-	public FlowSheets() throws Exception {
+	public FlowSheets()
+	{
 	}
 	/** 
 	 工作流程
 	 
-	 param fk_sort
+	 @param fk_sort
 	*/
 	public FlowSheets(String fk_sort) throws Exception {
 		this.Retrieve(bp.wf.template.FlowAttr.FK_FlowSort, fk_sort, null);
@@ -52,7 +50,8 @@ public class FlowSheets extends EntitiesNoName
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FlowSheet();
 	}
 
@@ -65,7 +64,8 @@ public class FlowSheets extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<FlowSheet> ToJavaList() {
+	public final java.util.List<FlowSheet> ToJavaList()
+	{
 		return (java.util.List<FlowSheet>)(Object)this;
 	}
 	/** 
@@ -73,7 +73,8 @@ public class FlowSheets extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<FlowSheet> Tolist()  {
+	public final ArrayList<FlowSheet> Tolist()
+	{
 		ArrayList<FlowSheet> list = new ArrayList<FlowSheet>();
 		for (int i = 0; i < this.size(); i++)
 		{

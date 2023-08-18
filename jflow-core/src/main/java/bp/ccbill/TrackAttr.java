@@ -1,7 +1,7 @@
 package bp.ccbill;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.*;
 import java.util.*;
 
@@ -37,7 +37,7 @@ public class TrackAttr extends EntityMyPKAttr
 	/** 
 	 部门No
 	*/
-	public static final String DeptNo = "DeptNo";
+	public static final String FK_Dept = "FK_Dept";
 	/** 
 	 部门名称
 	*/

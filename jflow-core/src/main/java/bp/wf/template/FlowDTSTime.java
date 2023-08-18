@@ -1,6 +1,5 @@
 package bp.wf.template;
 
-
 /** 
  数据同步的时间
 */
@@ -21,11 +20,13 @@ public enum FlowDTSTime
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
 	public static FlowDTSTime forValue(int value)
-	{return values()[value];
+	{
+		return values()[value];
 	}
 }

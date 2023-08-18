@@ -1,14 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
-import bp.sys.base.*;
 import bp.en.*;
-import bp.pub.*;
-import bp.*;
-import java.util.*;
-import java.io.*;
-import java.nio.file.*;
-import java.time.*;
 
 /** 
  映射基础
@@ -31,10 +23,6 @@ public class MapDataAttr extends EntityNoNameAttr
 	 从表数量
 	*/
 	public static final String Dtls = "Dtls";
-	/**
-	 表单类别
-	 */
-	public static final String FK_FrmSort = "FK_FrmSort";
 	/** 
 	 实体主键
 	*/
@@ -44,14 +32,9 @@ public class MapDataAttr extends EntityNoNameAttr
 	*/
 	public static final String FrmW = "FrmW";
 	/** 
-	 高度
-	*/
-	public static final String FrmH = "FrmH";
-	/** 
 	 表格列(对傻瓜表单有效)
 	*/
 	public static final String TableCol = "TableCol";
-
 	/** 
 	 来源
 	*/
@@ -80,12 +63,6 @@ public class MapDataAttr extends EntityNoNameAttr
 	 表单类型
 	*/
 	public static final String FrmType = "FrmType";
-	/**
-	 htm表单
-	 */
-	public static final String HtmlTemplateFile = "HtmlTemplateFile";
-
-
 	/** 
 	 业务类型
 	*/
@@ -178,11 +155,6 @@ public class MapDataAttr extends EntityNoNameAttr
 	 是否关键字查询
 	*/
 	public static final String IsSearchKey = "IsSearchKey";
-
-	/**
-	 是否关键字查询
-	 */
-	public static final String RptIsSearchKey = "RptIsSearchKey";
 	/** 
 	 时间段查询方式
 	*/
@@ -226,9 +198,6 @@ public class MapDataAttr extends EntityNoNameAttr
 	 是否是加密
 	*/
 	public static final String IsJM = "IsJM";
-	/**
-	 数据钻取
-	 */
-	public static final String Drill = "Drill";
+
 		///#endregion 参数属性.
 }

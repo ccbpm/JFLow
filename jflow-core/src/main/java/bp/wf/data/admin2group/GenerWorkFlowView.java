@@ -23,8 +23,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 备注
 	*/
-	public final String getFlowNote() throws Exception
-	{
+	public final String getFlowNote()  {
 		return this.GetValStrByKey(GenerWorkFlowViewAttr.FlowNote);
 	}
 	public final void setFlowNote(String value)throws Exception
@@ -33,18 +32,15 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 工作流程编号
 	*/
-	public final String getFK_Flow() 
-	{
+	public final String getFK_Flow()  {
 		return this.GetValStrByKey(GenerWorkFlowViewAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
-	{SetValByKey(GenerWorkFlowViewAttr.FK_Flow, value);
+	public final void setFK_Flow(String value) throws Exception {SetValByKey(GenerWorkFlowViewAttr.FK_Flow, value);
 	}
 	/** 
 	 BillNo
 	*/
-	public final String getBillNo() throws Exception
-	{
+	public final String getBillNo()  {
 		return this.GetValStrByKey(GenerWorkFlowViewAttr.BillNo);
 	}
 	public final void setBillNo(String value)throws Exception
@@ -53,8 +49,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 流程名称
 	*/
-	public final String getFlowName() throws Exception
-	{
+	public final String getFlowName()  {
 		return this.GetValStrByKey(GenerWorkFlowViewAttr.FlowName);
 	}
 	public final void setFlowName(String value)throws Exception
@@ -63,8 +58,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 优先级
 	*/
-	public final int getPRI() throws Exception
-	{
+	public final int getPRI()  {
 		return this.GetValIntByKey(GenerWorkFlowViewAttr.PRI);
 	}
 	public final void setPRI(int value)throws Exception
@@ -73,8 +67,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 待办人员数量
 	*/
-	public final int getTodoEmpsNum() throws Exception
-	{
+	public final int getTodoEmpsNum()  {
 		return this.GetValIntByKey(GenerWorkFlowViewAttr.TodoEmpsNum);
 	}
 	public final void setTodoEmpsNum(int value)throws Exception
@@ -83,8 +76,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 待办人员列表
 	*/
-	public final String getTodoEmps() throws Exception
-	{
+	public final String getTodoEmps()  {
 		return this.GetValStrByKey(GenerWorkFlowViewAttr.TodoEmps);
 	}
 	public final void setTodoEmps(String value)throws Exception
@@ -93,8 +85,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 参与人
 	*/
-	public final String getEmps() throws Exception
-	{
+	public final String getEmps()  {
 		return this.GetValStrByKey(GenerWorkFlowViewAttr.Emps);
 	}
 	public final void setEmps(String value)throws Exception
@@ -103,7 +94,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 状态
 	*/
-	public final TaskSta getTaskSta() throws Exception {
+	public final TaskSta getTaskSta() {
 		return TaskSta.forValue(this.GetValIntByKey(GenerWorkFlowViewAttr.TaskSta));
 	}
 	public final void setTaskSta(TaskSta value)throws Exception
@@ -112,8 +103,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 类别编号
 	*/
-	public final String getFK_FlowSort() throws Exception
-	{
+	public final String getFK_FlowSort()  {
 		return this.GetValStrByKey(GenerWorkFlowViewAttr.FK_FlowSort);
 	}
 	public final void setFK_FlowSort(String value)throws Exception
@@ -122,8 +112,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 部门编号
 	*/
-	public final String getFK_Dept() throws Exception
-	{
+	public final String getFK_Dept()  {
 		return this.GetValStrByKey(GenerWorkFlowViewAttr.FK_Dept);
 	}
 	public final void setFK_Dept(String value)throws Exception
@@ -132,8 +121,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 标题
 	*/
-	public final String getTitle() throws Exception
-	{
+	public final String getTitle()  {
 		return this.GetValStrByKey(GenerWorkFlowViewAttr.Title);
 	}
 	public final void setTitle(String value)throws Exception
@@ -142,8 +130,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 客户编号
 	*/
-	public final String getGuestNo() throws Exception
-	{
+	public final String getGuestNo()  {
 		return this.GetValStrByKey(GenerWorkFlowViewAttr.GuestNo);
 	}
 	public final void setGuestNo(String value)throws Exception
@@ -152,8 +139,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 客户名称
 	*/
-	public final String getGuestName() throws Exception
-	{
+	public final String getGuestName()  {
 		return this.GetValStrByKey(GenerWorkFlowViewAttr.GuestName);
 	}
 	public final void setGuestName(String value)throws Exception
@@ -162,8 +148,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 产生时间
 	*/
-	public final String getRDT() throws Exception
-	{
+	public final String getRDT()  {
 		return this.GetValStrByKey(GenerWorkFlowViewAttr.RDT);
 	}
 	public final void setRDT(String value)throws Exception
@@ -172,8 +157,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 节点应完成时间
 	*/
-	public final String getSDTOfNode() throws Exception
-	{
+	public final String getSDTOfNode()  {
 		return this.GetValStrByKey(GenerWorkFlowViewAttr.SDTOfNode);
 	}
 	public final void setSDTOfNode(String value)throws Exception
@@ -182,8 +166,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 流程应完成时间
 	*/
-	public final String getSDTOfFlow() throws Exception
-	{
+	public final String getSDTOfFlow()  {
 		return this.GetValStrByKey(GenerWorkFlowViewAttr.SDTOfFlow);
 	}
 	public final void setSDTOfFlow(String value)throws Exception
@@ -192,8 +175,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 流程ID
 	*/
-	public final long getWorkID()
-	{
+	public final long getWorkID()  {
 		return this.GetValInt64ByKey(GenerWorkFlowViewAttr.WorkID);
 	}
 	public final void setWorkID(long value)throws Exception
@@ -202,8 +184,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 主线程ID
 	*/
-	public final long getFID() throws Exception
-	{
+	public final long getFID()  {
 		return this.GetValInt64ByKey(GenerWorkFlowViewAttr.FID);
 	}
 	public final void setFID(long value)throws Exception
@@ -212,8 +193,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 父节点流程编号.
 	*/
-	public final long getPWorkID() throws Exception
-	{
+	public final long getPWorkID()  {
 		return this.GetValInt64ByKey(GenerWorkFlowViewAttr.PWorkID);
 	}
 	public final void setPWorkID(long value)throws Exception
@@ -222,8 +202,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 父流程调用的节点
 	*/
-	public final int getPNodeID() throws Exception
-	{
+	public final int getPNodeID()  {
 		return this.GetValIntByKey(GenerWorkFlowViewAttr.PNodeID);
 	}
 	public final void setPNodeID(int value)throws Exception
@@ -232,8 +211,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 PFlowNo
 	*/
-	public final String getPFlowNo() throws Exception
-	{
+	public final String getPFlowNo()  {
 		return this.GetValStrByKey(GenerWorkFlowViewAttr.PFlowNo);
 	}
 	public final void setPFlowNo(String value)throws Exception
@@ -242,8 +220,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 吊起子流程的人员
 	*/
-	public final String getPEmp() throws Exception
-	{
+	public final String getPEmp()  {
 		return this.GetValStrByKey(GenerWorkFlowViewAttr.PEmp);
 	}
 	public final void setPEmp(String value)throws Exception
@@ -252,8 +229,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 发起人
 	*/
-	public final String getStarter() throws Exception
-	{
+	public final String getStarter()  {
 		return this.GetValStrByKey(GenerWorkFlowViewAttr.Starter);
 	}
 	public final void setStarter(String value)throws Exception
@@ -262,8 +238,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 发起人名称
 	*/
-	public final String getStarterName() throws Exception
-	{
+	public final String getStarterName()  {
 		return this.GetValStrByKey(GenerWorkFlowViewAttr.StarterName);
 	}
 	public final void setStarterName(String value)  throws Exception
@@ -273,8 +248,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 发起人部门名称
 	*/
-	public final String getDeptName() throws Exception
-	{
+	public final String getDeptName()  {
 		return this.GetValStrByKey(GenerWorkFlowViewAttr.DeptName);
 	}
 	public final void setDeptName(String value)  throws Exception
@@ -284,8 +258,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 当前节点名称
 	*/
-	public final String getNodeName() throws Exception
-	{
+	public final String getNodeName()  {
 		return this.GetValStrByKey(GenerWorkFlowViewAttr.NodeName);
 	}
 	public final void setNodeName(String value)  throws Exception
@@ -295,17 +268,16 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 当前工作到的节点
 	*/
-	public final int getFK_Node() throws Exception
-	{
+	public final int getFK_Node()  {
 		return this.GetValIntByKey(GenerWorkFlowViewAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)throws Exception
+	public final void setNodeID(int value)throws Exception
 	{SetValByKey(GenerWorkFlowViewAttr.FK_Node, value);
 	}
 	/** 
 	 工作流程状态
 	*/
-	public final WFState getWFState() throws Exception {
+	public final WFState getWFState() {
 		return WFState.forValue(this.GetValIntByKey(GenerWorkFlowViewAttr.WFState));
 	}
 	public final void setWFState(WFState value)throws Exception
@@ -327,7 +299,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 状态(简单)
 	*/
-	public final WFSta getWFSta() throws Exception {
+	public final WFSta getWFSta() {
 		return WFSta.forValue(this.GetValIntByKey(GenerWorkFlowViewAttr.WFSta));
 	}
 	public final void setWFSta(WFSta value)throws Exception
@@ -341,7 +313,7 @@ public class GenerWorkFlowView extends Entity
 				return "已完成";
 			case Runing:
 				return "在运行";
-			case HungUp:
+			case Hungup:
 				return "挂起";
 			case Askfor:
 				return "加签";
@@ -356,8 +328,7 @@ public class GenerWorkFlowView extends Entity
 	/** 
 	 GUID
 	*/
-	public final String getGUID() throws Exception
-	{
+	public final String getGUID()  {
 		return this.GetValStrByKey(GenerWorkFlowViewAttr.GUID);
 	}
 	public final void setGUID(String value)throws Exception
@@ -369,7 +340,7 @@ public class GenerWorkFlowView extends Entity
 
 		///#region 参数属性.
 
-	public final String getParasToNodes() throws Exception {
+	public final String getParasToNodes() {
 		return this.GetParaString("ToNodes");
 	}
 
@@ -380,7 +351,7 @@ public class GenerWorkFlowView extends Entity
 	 加签信息
 	*/
 
-	public final String getParasAskForReply() throws Exception {
+	public final String getParasAskForReply() {
 		return this.GetParaString("AskForReply");
 	}
 
@@ -424,7 +395,7 @@ public class GenerWorkFlowView extends Entity
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap()  {
+	public bp.en.Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -472,7 +443,7 @@ public class GenerWorkFlowView extends Entity
 		rm.ClassMethodName = this.toString() + ".DoTrack";
 			// rm.Icon = "../../WF/Img/Track.png";
 		rm.Icon = "icon-graph";
-			//        rm.IsForEns = true;
+			//        rm.ItIsForEns = true;
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
@@ -490,7 +461,7 @@ public class GenerWorkFlowView extends Entity
 		rm = new RefMethod();
 		rm.Title = "轨迹修改";
 		rm.Icon = "icon-graph";
-			//   rm.IsForEns = false;
+			//   rm.ItIsForEns = false;
 		rm.ClassMethodName = this.toString() + ".DoEditTrack";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		map.AddRefMethod(rm);
@@ -507,7 +478,7 @@ public class GenerWorkFlowView extends Entity
 
 		rm = new RefMethod();
 		rm.Title = "调整数据";
-		rm.IsForEns = false;
+		rm.ItIsForEns = false;
 		rm.Icon = "icon-target";
 		rm.ClassMethodName = this.toString() + ".DoEditFrm";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
@@ -519,7 +490,7 @@ public class GenerWorkFlowView extends Entity
 		rm.Warning = "您确定要删除吗？包括该流程的所有数据。";
 			// rm.Icon = "../../WF/Img/Btn/Delete.gif";
 		rm.Icon = "icon-close";
-		rm.IsForEns = false;
+		rm.ItIsForEns = false;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -529,13 +500,13 @@ public class GenerWorkFlowView extends Entity
 			//   rm.Warning = "您确定要删除吗？";
 			// rm.Icon = "../../WF/Img/Btn/Delete.gif";
 		rm.Icon = "icon-close";
-		rm.IsForEns = false;
+		rm.ItIsForEns = false;
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Icon = "icon-wrench";
 		rm.Title = "修复数据";
-		rm.IsForEns = false;
+		rm.ItIsForEns = false;
 		rm.ClassMethodName = this.toString() + ".RepairDataIt";
 		rm.refMethodType = RefMethodType.Func;
 		map.AddRefMethod(rm);
@@ -572,7 +543,7 @@ public class GenerWorkFlowView extends Entity
 
 
 		///#region 执行功能.
-	//,string isOK, int wfstate, string fk_emp
+	//,String isOK, int wfstate, String fk_emp
 	public final String DoTest(String toEmpNo, String toNodeID) throws Exception {
 
 		return Dev2Interface.Flow_ReSend(this.getWorkID(), Integer.parseInt(toNodeID), toEmpNo, bp.web.WebUser.getName() + ":调整.");
@@ -619,7 +590,7 @@ public class GenerWorkFlowView extends Entity
 
 		Attrs attrs = wk.getEnMap().getAttrs();
 		boolean isHave = false;
-		for (Attr attr : attrs.ToJavaList())
+		for (Attr attr : attrs)
 		{
 			String jsonVal = mydr.getValue(attr.getKey()).toString();
 			String enVal = wk.GetValStringByKey(attr.getKey());
@@ -685,7 +656,7 @@ public class GenerWorkFlowView extends Entity
 
 				Attrs attrs = wk.getEnMap().getAttrs();
 				boolean isHave = false;
-				for (Attr attr : attrs.ToJavaList())
+				for (Attr attr : attrs)
 				{
 					String jsonVal = mydr.getValue(attr.getKey()).toString();
 					String enVal = wk.GetValStringByKey(attr.getKey());
@@ -729,7 +700,7 @@ public class GenerWorkFlowView extends Entity
 	 
 	 @return 
 	*/
-	public final String DoEditTrack() throws Exception {
+	public final String DoEditTrack() {
 		return "../../Admin/AttrFlow/EditTrack.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow();
 	}
 	/** 
@@ -737,7 +708,7 @@ public class GenerWorkFlowView extends Entity
 	 
 	 @return 
 	*/
-	public final String DoTrack() throws Exception {
+	public final String DoTrack() {
 		return "../../WFRpt.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow();
 	}
 	/** 
@@ -812,7 +783,7 @@ public class GenerWorkFlowView extends Entity
 	 
 	 @return 
 	*/
-	public final String DoFlowShift() throws Exception {
+	public final String DoFlowShift() {
 		return "../../WorkOpt/Shift.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
 	}
 	/** 
@@ -820,7 +791,7 @@ public class GenerWorkFlowView extends Entity
 	 
 	 @return 
 	*/
-	public final String Rollback() throws Exception {
+	public final String Rollback() {
 		return "../../WorkOpt/Rollback.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
 	}
 	/** 
@@ -828,7 +799,7 @@ public class GenerWorkFlowView extends Entity
 	 
 	 @return 
 	*/
-	public final String DoFlowSkip() throws Exception {
+	public final String DoFlowSkip() {
 		return "../../WorkOpt/FlowSkip.htm?WorkID=" + this.getWorkID() + "&FID=" + this.getFID() + "&FK_Flow=" + this.getFK_Flow() + "&FK_Node=" + this.getFK_Node();
 	}
 

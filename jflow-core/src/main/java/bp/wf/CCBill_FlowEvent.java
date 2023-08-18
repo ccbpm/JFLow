@@ -2,7 +2,6 @@ package bp.wf;
 
 import bp.sys.*;
 import bp.en.*;
-
 /** 
  单据业务流程
 */
@@ -11,8 +10,8 @@ public class CCBill_FlowEvent
 	/** 
 	 流程结束的时候要处理的事件
 	 
-	 param wn
-	 param paras
+	 @param wn
+	 @param paras
 	*/
 	public static void DealFlowOver(WorkNode wn, String paras) throws Exception {
 
@@ -33,9 +32,9 @@ public class CCBill_FlowEvent
 
 			//创建实体.
 			GEEntity geEn = new GEEntity(dictFrmID, dictWorkID);
-			for (Object key : row.keySet())
+			for (String key : row.keySet())
 			{
-				if (key.toString().indexOf("bak") == 0)
+				if (key.indexOf("bak") == 0)
 				{
 					continue;
 				}
@@ -46,11 +45,14 @@ public class CCBill_FlowEvent
 				}
 
 				//设置值.
-				geEn.SetValByKey(String.valueOf(key), row.GetValByKey(String.valueOf(key)));
+				geEn.SetValByKey(key, row.GetValByKey(key));
 			}
 
 			geEn.setOID(dictWorkID);
 			geEn.Update(); //更新.
+
+			//修改实体信息.
+			bp.ccbill.Dev2Interface.Dict_AddTrack(dictFrmID, String.valueOf(wn.getWorkID()), bp.ccbill.FrmActionType.FlowBaseData, "流程修改实体数据", geEn.ToJson(true), wn.getHisFlow().getNo(), wn.getHisFlow().getName(), wn.getHisNode().getNodeID(), wn.getWorkID());
 
 			//更新从表.
 			//  MapDtls dtls = new MapDtls(flowFrmID);

@@ -1,7 +1,4 @@
 package bp.wf;
-
-import bp.*;
-
 /** 
  组长确认规则
 */
@@ -22,11 +19,13 @@ public enum TeamLeaderConfirmRole
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
 	public static TeamLeaderConfirmRole forValue(int value)
-	{return values()[value];
+	{
+		return values()[value];
 	}
 }

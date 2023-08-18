@@ -9,7 +9,8 @@ import bp.ccbill.*;
 */
 public class M_ZhuXiaoXueJi extends bp.en.Method
 {
-	public M_ZhuXiaoXueJi()  {
+	public M_ZhuXiaoXueJi()
+	{
 		this.Title = "注销学籍.";
 		this.Help = "执行学籍的注销的业务逻辑， 关于该学生的借书信息、食堂信息等资料都需要注销掉.";
 		this.GroupName = "CCBill的是实体Demo";
@@ -40,13 +41,15 @@ public class M_ZhuXiaoXueJi extends bp.en.Method
 	 @return 
 	*/
 	@Override
-	public void Init() {
+	public void Init()
+	{
 	}
 	/** 
 	 当前的操纵员是否可以执行这个方法
 	*/
 	@Override
-	public boolean getIsCanDo()  {
+	public boolean getIsCanDo()
+	{
 		if (bp.web.WebUser.getIsAdmin() == true)
 		{
 			return true;

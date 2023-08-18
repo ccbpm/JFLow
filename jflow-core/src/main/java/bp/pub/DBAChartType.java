@@ -1,5 +1,6 @@
 package bp.pub;
 
+
 /** 
  显示类型.
 */

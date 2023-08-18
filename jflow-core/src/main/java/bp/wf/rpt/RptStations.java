@@ -1,18 +1,17 @@
 package bp.wf.rpt;
 
 import bp.en.*;
-
 import java.util.*;
 
 /** 
- 报表岗位 
+ 报表角色 
 */
 public class RptStations extends Entities
 {
 
 		///#region 构造
 	/** 
-	 报表与岗位集合
+	 报表与角色集合
 	*/
 	public RptStations()
 	{
@@ -26,7 +25,7 @@ public class RptStations extends Entities
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new RptStation();
 	}
@@ -40,7 +39,7 @@ public class RptStations extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.List<RptStation> ToJavaList()throws Exception
+	public final java.util.List<RptStation> ToJavaList()
 	{
 		return (java.util.List<RptStation>)(Object)this;
 	}
@@ -49,7 +48,7 @@ public class RptStations extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<RptStation> Tolist()throws Exception
+	public final ArrayList<RptStation> Tolist()
 	{
 		ArrayList<RptStation> list = new ArrayList<RptStation>();
 		for (int i = 0; i < this.size(); i++)

@@ -2,10 +2,7 @@ package bp.sys;
 
 import bp.da.*;
 import bp.en.*;
-import bp.*;
 import bp.en.Map;
-
-import java.util.*;
 
 /** 
  序列号
@@ -17,23 +14,19 @@ public class Serial extends Entity
 	/** 
 	 序列号
 	*/
-	public final String getIntVal() throws Exception
-	{
+	public final String getIntVal()  {
 		return this.GetValStringByKey(SerialAttr.IntVal);
 	}
-	public final void setIntVal(String value)  throws Exception
-	 {
+	public final void setIntVal(String value){
 		this.SetValByKey(SerialAttr.IntVal, value);
 	}
 	/** 
 	 操作员ID
 	*/
-	public final String getCfgKey() throws Exception
-	{
+	public final String getCfgKey()  {
 		return this.GetValStringByKey(SerialAttr.CfgKey);
 	}
-	public final void setCfgKey(String value)  throws Exception
-	 {
+	public final void setCfgKey(String value){
 		this.SetValByKey(SerialAttr.CfgKey, value);
 	}
 
@@ -45,13 +38,15 @@ public class Serial extends Entity
 	/** 
 	 序列号
 	*/
-	public Serial()  {
+	public Serial()
+	{
 	}
 	/** 
 	 map
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();

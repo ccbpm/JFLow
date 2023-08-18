@@ -1,6 +1,5 @@
 package bp.wf;
 
-import bp.*;
 
 /** 
  阻塞模式
@@ -40,7 +39,8 @@ public enum BlockModel
 
 	private int intValue;
 	private static java.util.HashMap<Integer, BlockModel> mappings;
-	private static java.util.HashMap<Integer, BlockModel> getMappings()  {
+	private static java.util.HashMap<Integer, BlockModel> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (BlockModel.class)
@@ -55,15 +55,18 @@ public enum BlockModel
 	}
 
 	private BlockModel(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return intValue;
 	}
 
 	public static BlockModel forValue(int value)
-	{return getMappings().get(value);
+	{
+		return getMappings().get(value);
 	}
 }

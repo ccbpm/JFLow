@@ -1,8 +1,7 @@
 package bp.wf.rpt;
 
-
 /** 
- 报表岗位
+ 报表角色
 */
 public class RptStationAttr
 {
@@ -13,7 +12,7 @@ public class RptStationAttr
 	*/
 	public static final String FK_Rpt = "FK_Rpt";
 	/** 
-	 岗位
+	 角色
 	*/
 	public static final String FK_Station = "FK_Station";
 

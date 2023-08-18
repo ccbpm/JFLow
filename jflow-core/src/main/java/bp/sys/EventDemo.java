@@ -1,10 +1,5 @@
 package bp.sys;
-
-import bp.da.*;
-import bp.en.*;
-import bp.web.*;
 import bp.sys.base.*;
-import bp.*;
 
 /** 
  事件Demo
@@ -19,7 +14,8 @@ public abstract class EventDemo extends EventBase
 	/** 
 	 事件Demo
 	*/
-	public EventDemo() throws Exception {
+	public EventDemo()
+	{
 		this.setTitle("事件demo执行演示.");
 	}
 	/** 
@@ -29,7 +25,8 @@ public abstract class EventDemo extends EventBase
 	 3，所有的参数都可以从  this.SysPara.GetValByKey中获取。
 	*/
 	@Override
-	public void Do()  {
+	public void Do()
+	{
 		if (1 == 2)
 		{
 			throw new RuntimeException("@执行错误xxxxxx.");

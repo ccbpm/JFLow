@@ -1,6 +1,5 @@
 package bp.sys;
 
-
 /** 
  按钮访问
 */
@@ -15,7 +14,7 @@ public enum BtnUAC
 	*/
 	ByEmp,
 	/** 
-	 按岗位
+	 按角色
 	*/
 	ByStation,
 	/** 
@@ -34,7 +33,7 @@ public enum BtnUAC
 		return this.ordinal();
 	}
 
-	public static BtnUAC forValue(int value) 
+	public static BtnUAC forValue(int value)
 	{
 		return values()[value];
 	}

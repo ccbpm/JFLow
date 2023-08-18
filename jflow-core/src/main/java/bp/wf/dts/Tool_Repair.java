@@ -1,7 +1,8 @@
 package bp.wf.dts;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
 import bp.wf.*;
 
 /** 
@@ -12,7 +13,7 @@ public class Tool_Repair extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public Tool_Repair()throws Exception
+	public Tool_Repair()
 	{
 		this.Title = "修复因显示不出来到达节点下拉框而导致的，发送不下去的bug引起的垃圾数据";
 		this.Help = "此bug已经修复掉了,如果仍然出现类似的问题，有可能是其他问题引起的.";
@@ -47,8 +48,7 @@ public class Tool_Repair extends Method
 	 @return 返回执行结果
 	*/
 	@Override
-	public Object Do()throws Exception
-	{
+	public Object Do() throws Exception {
 		String sql = "SELECT WorkID,TODOEMPS,FK_NODE FROM WF_GENERWORKFLOW WHERE (WFState=2 OR  WFState=5) ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
@@ -63,7 +63,7 @@ public class Tool_Repair extends Method
 			gwls.Retrieve(GenerWorkerListAttr.WorkID, workid, GenerWorkerListAttr.IsPass, 0, null);
 			for (GenerWorkerList gwl : gwls.ToJavaList())
 			{
-				if (todoEmps.contains(gwl.getFK_Emp() + ",") == false)
+				if (todoEmps.contains(gwl.getEmpNo() + ",") == false)
 				{
 					if (nodeID.toString().endsWith("01") == true)
 					{
@@ -71,9 +71,9 @@ public class Tool_Repair extends Method
 					}
 
 					GenerWorkFlow gwf = new GenerWorkFlow(workid);
-					msg += "<br>@流程:" + gwf.getFlowName() + "节点:" + gwf.getFK_Node() + "," + gwf.getNodeName() + " workid: " + workid + "title:" + gwf.getTitle() + " todoEmps:" + gwf.getTodoEmps();
-					msg += "不包含:" + gwl.getFK_Emp() + "," + gwl.getFK_EmpText();
-					gwf.setTodoEmps(gwf.getTodoEmps() + gwl.getFK_Emp() + "," + gwl.getFK_EmpText() + ";");
+					msg += "<br>@流程:" + gwf.getFlowName() + "节点:" + gwf.getNodeID() + "," + gwf.getNodeName() + " workid: " + workid + "title:" + gwf.getTitle() + " todoEmps:" + gwf.getTodoEmps();
+					msg += "不包含:" + gwl.getEmpNo() + "," + gwl.getEmpName();
+					gwf.setTodoEmps(gwf.getTodoEmps() + gwl.getEmpNo() + "," + gwl.getEmpName() + ";");
 				   // gwf.Update();
 				}
 			}

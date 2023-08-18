@@ -1,19 +1,16 @@
 package bp.wf.httphandler;
 
-import bp.*;
-import bp.difference.handler.WebContralBase;
-import bp.wf.*;
-
 /** 
  初始化函数
 */
-public class WF_Admin_CCBPMDesigner_App_OneFlow extends WebContralBase
+public class WF_Admin_CCBPMDesigner_App_OneFlow extends bp.difference.handler.DirectoryPageBase
 {
 
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_CCBPMDesigner_App_OneFlow() throws Exception {
+	public WF_Admin_CCBPMDesigner_App_OneFlow()
+	{
 	}
 
 
@@ -24,7 +21,8 @@ public class WF_Admin_CCBPMDesigner_App_OneFlow extends WebContralBase
 	 @return 
 	*/
 	@Override
-	protected String DoDefaultMethod() throws Exception {
+	protected String DoDefaultMethod()
+	{
 		switch (this.getDoType())
 		{
 
@@ -39,10 +37,7 @@ public class WF_Admin_CCBPMDesigner_App_OneFlow extends WebContralBase
 	}
 
 		///#endregion 执行父类的重写方法.
-
-
 		///#region xxx 界面 .
-
 		///#endregion xxx 界面方法.
 
 }

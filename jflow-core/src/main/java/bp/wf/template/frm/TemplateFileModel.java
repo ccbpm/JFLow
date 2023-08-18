@@ -1,5 +1,8 @@
 package bp.wf.template.frm;
 
+import bp.*;
+import bp.wf.*;
+import bp.wf.template.*;
 
 /** 
  模版类型
@@ -25,11 +28,13 @@ public enum TemplateFileModel
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue() {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
-	public static TemplateFileModel forValue(int value) 
-	{return values()[value];
+	public static TemplateFileModel forValue(int value)
+	{
+		return values()[value];
 	}
 }

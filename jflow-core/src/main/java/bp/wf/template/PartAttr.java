@@ -1,19 +1,21 @@
 package bp.wf.template;
+
+
 /** 
  配件属性
 */
 public class PartAttr extends bp.en.EntityMyPKAttr
 {
 
-		///基本属性
+		///#region 基本属性
 	/** 
 	 流程编号
 	*/
-	public static final String FK_Flow = "FK_Flow";
+	public static final String FlowNo = "FlowNo";
 	/** 
 	 节点ID
 	*/
-	public static final String FK_Node = "FK_Node";
+	public static final String NodeID = "NodeID";
 	/** 
 	 前置导航的父子流程关系
 	*/
@@ -59,5 +61,5 @@ public class PartAttr extends bp.en.EntityMyPKAttr
 	*/
 	public static final String Tag9 = "Tag9";
 
-		///
+		///#endregion
 }

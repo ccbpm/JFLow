@@ -1,19 +1,18 @@
 package bp.wf.httphandler;
 
 import bp.*;
-import bp.difference.handler.WebContralBase;
 import bp.wf.*;
 
 /** 
  页面功能实体
 */
-public class CCMobile_WorkOpt_OneWork extends WebContralBase
+public class CCMobile_WorkOpt_OneWork extends bp.difference.handler.DirectoryPageBase
 {
 	/** 
 	 构造函数
 	*/
 	public CCMobile_WorkOpt_OneWork() throws Exception {
-		bp.web.WebUser.setSheBei( "Mobile");
+		bp.web.WebUser.setSheBei("Mobile");
 
 	}
 
@@ -31,9 +30,7 @@ public class CCMobile_WorkOpt_OneWork extends WebContralBase
 	public final String TimeBase_UnSend() throws Exception {
 		//获取撤销到的节点
 		int unSendToNode = this.GetRequestValInt("FK_Node");
-		return Dev2Interface.Flow_DoUnSend(this.getFK_Flow(), this.getWorkID(), unSendToNode, this.getFID());
-		//WF_WorkOpt_OneWork en = new WF_WorkOpt_OneWork();
-		//return en.OP_UnSend();
+		return Dev2Interface.Flow_DoUnSend(this.getFlowNo(), this.getWorkID(), unSendToNode, this.getFID());
 	}
 
 

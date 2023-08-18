@@ -1,6 +1,5 @@
 package bp.sys;
 
-import bp.*;
 
 /** 
  文本框类型
@@ -26,11 +25,13 @@ public enum TBModel
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
 	public static TBModel forValue(int value)
-	{return values()[value];
+	{
+		return values()[value];
 	}
 }

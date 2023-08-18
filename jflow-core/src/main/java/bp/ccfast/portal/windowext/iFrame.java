@@ -1,7 +1,10 @@
 package bp.ccfast.portal.windowext;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.ccfast.*;
 import bp.ccfast.portal.*;
+import java.util.*;
 
 /** 
  框架信息块
@@ -14,7 +17,8 @@ public class iFrame extends EntityNoName
 	 控制权限
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (bp.web.WebUser.getIsAdmin() == true)
 		{
@@ -42,27 +46,23 @@ public class iFrame extends EntityNoName
 	/** 
 	 框架信息块
 	*/
-	public iFrame()  {
+	public iFrame()
+	{
 	}
 	/** 
 	 框架信息块
 	 
-	 param no
+	 @param no
 	*/
-	public iFrame(String no)
-	{
+	public iFrame(String no) throws Exception  {
 		this.setNo(no);
-		try {
-			this.Retrieve();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.Retrieve();
 	}
 	/** 
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -88,7 +88,8 @@ public class iFrame extends EntityNoName
 
 		///#endregion
 
-	public final String AddTemplate()  {
+	public final String AddTemplate()
+	{
 		return "../../GPM/Window/iFrame.png";
 	}
 }

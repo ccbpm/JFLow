@@ -1,27 +1,25 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.wf.port.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
- 方向与工作岗位对应
+ 方向与工作角色对应
 */
 public class DirectionStations extends EntitiesMM
 {
 	/** 
-	 方向与工作岗位对应
+	 方向与工作角色对应
 	*/
-	public DirectionStations()  {
+	public DirectionStations()
+	{
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new DirectionStation();
 	}
 
@@ -32,7 +30,8 @@ public class DirectionStations extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final java.util.List<DirectionStation> ToJavaList() {
+	public final java.util.List<DirectionStation> ToJavaList()
+	{
 		return (java.util.List<DirectionStation>)(Object)this;
 	}
 	/** 
@@ -40,7 +39,8 @@ public class DirectionStations extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final ArrayList<DirectionStation> Tolist()  {
+	public final ArrayList<DirectionStation> Tolist()
+	{
 		ArrayList<DirectionStation> list = new ArrayList<DirectionStation>();
 		for (int i = 0; i < this.size(); i++)
 		{

@@ -1,32 +1,30 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
-import bp.difference.handler.CommonUtils;
-import bp.difference.handler.WebContralBase;
 import bp.sys.*;
 import bp.web.*;
 import bp.port.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.wf.template.*;
 import bp.difference.*;
 import bp.*;
 import bp.wf.*;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.*;
 import java.time.*;
-import java.util.Date;
 
 /** 
  抄送处理类
 */
-public class WF_MyView extends WebContralBase
+public class WF_MyView extends bp.difference.handler.DirectoryPageBase
 {
 
 	/** 
 	 抄送处理类
 	*/
-	public WF_MyView() throws Exception {
+	public WF_MyView()
+	{
 
 	}
 
@@ -44,7 +42,7 @@ public class WF_MyView extends WebContralBase
 			return "";
 		}
 		//根据TrackID从Track表中获取历史数据
-		return DBAccess.GetBigTextFromDB("ND" + Integer.parseInt(this.getFK_Flow()) + "Track", "MyPK", trackID, "FrmDB");
+		return DBAccess.GetBigTextFromDB("ND" + Integer.parseInt(this.getFlowNo()) + "Track", "MyPK", trackID, "FrmDB");
 	}
 
 
@@ -55,13 +53,15 @@ public class WF_MyView extends WebContralBase
 	/** 
 	 从节点.
 	*/
-	public final String getFromNode() throws Exception {
+	public final String getFromNode()
+	{
 		return this.GetRequestVal("FromNode");
 	}
 	/** 
 	 是否抄送
 	*/
-	public final boolean isCC() throws Exception {
+	public final boolean getItIsCC()
+	{
 		String str = this.GetRequestVal("Paras");
 
 		if (DataType.IsNullOrEmpty(str) == false)
@@ -88,24 +88,27 @@ public class WF_MyView extends WebContralBase
 	/** 
 	 轨迹ID
 	*/
-	public final String getTrackID() throws Exception {
+	public final String getTrackID()
+	{
 		return this.GetRequestVal("TrackeID");
 	}
 	/** 
 	 到达的节点ID
 	*/
-	public final int getToNode() throws Exception {
+	public final int getToNode()
+	{
 		return this.GetRequestValInt("ToNode");
 	}
 	private int _FK_Node = 0;
 	/** 
 	 当前的 NodeID ,在开始时间,nodeID,是地一个,流程的开始节点ID.
 	*/
-	public final int getFK_Node()  {
-		String fk_nodeReq = this.GetRequestVal("FK_Node"); //this.Request.Form["FK_Node"];
+	public final int getFKNode()
+	{
+		String fk_nodeReq = this.GetRequestVal("FK_Node"); //this.Request.Form["FK_Node");
 		if (DataType.IsNullOrEmpty(fk_nodeReq))
 		{
-			fk_nodeReq = this.GetRequestVal("NodeID"); // this.Request.Form["NodeID"];
+			fk_nodeReq = this.GetRequestVal("NodeID"); // this.Request.Form["NodeID");
 		}
 
 		if (DataType.IsNullOrEmpty(fk_nodeReq) == false)
@@ -124,7 +127,7 @@ public class WF_MyView extends WebContralBase
 			}
 			else
 			{
-				_FK_Node = Integer.parseInt(this.getFK_Flow() + "01");
+				_FK_Node = Integer.parseInt(this.getFlowNo() + "01");
 			}
 		}
 		return _FK_Node;
@@ -134,28 +137,34 @@ public class WF_MyView extends WebContralBase
 	/** 
 	 表单宽度
 	*/
-	public final String getWidth() throws Exception {
+	public final String getWidth()
+	{
 		return _width;
 	}
-	public final void setWidth(String value)throws Exception
-	{_width = value;
+	public final void setWidth(String value)
+	{
+		_width = value;
 	}
 	private String _height = "";
 	/** 
 	 表单高度
 	*/
-	public final String getHeight() throws Exception {
+	public final String getHeight()
+	{
 		return _height;
 	}
-	public final void setHeight(String value)throws Exception
-	{_height = value;
+	public final void setHeight(String value)
+	{
+		_height = value;
 	}
 	public String _btnWord = "";
-	public final String getBtnWord() throws Exception {
+	public final String getBtnWord()
+	{
 		return _btnWord;
 	}
-	public final void setBtnWord(String value)throws Exception
-	{_btnWord = value;
+	public final void setBtnWord(String value)
+	{
+		_btnWord = value;
 	}
 	private GenerWorkFlow _HisGenerWorkFlow = null;
 	public final GenerWorkFlow getHisGenerWorkFlow() throws Exception {
@@ -169,10 +178,7 @@ public class WF_MyView extends WebContralBase
 	public final Node getCurrND() throws Exception {
 		if (_currNode == null)
 		{
-			_currNode = new Node(this.getFK_Node());
-		}else{
-			if(_currNode.getNodeID()!=this.getFK_Node())
-				_currNode = new Node(this.getFK_Node());
+			_currNode = new Node(this.getNodeID());
 		}
 		return _currNode;
 	}
@@ -180,10 +186,7 @@ public class WF_MyView extends WebContralBase
 	public final Flow getCurrFlow() throws Exception {
 		if (_currFlow == null)
 		{
-			_currFlow = new Flow(this.getFK_Flow());
-		}else{
-			if(_currFlow.getNo().equals(this.getFK_Flow())==false)
-				_currFlow = new Flow(this.getFK_Flow());
+			_currFlow = new Flow(this.getFlowNo());
 		}
 		return _currFlow;
 	}
@@ -203,19 +206,19 @@ public class WF_MyView extends WebContralBase
 		dt.Columns.Add("Name");
 		dt.Columns.Add("Oper");
 
-		BtnLab btnLab = new BtnLab(this.getFK_Node());
-		String tKey = DataType.getCurrentDateByFormart("MM-dd-hh:mm:ss");
+		BtnLab btnLab = new BtnLab(this.getNodeID());
+		String tKey = DBAccess.GenerGUID(); // LocalDateTime.now().toString("MM-dd-hh:mm:ss");
 		String toolbar = "";
 		try
 		{
 
 			DataRow dr = dt.NewRow();
-			/*if (this.getIsMobile() == false)
+			/*if (this.IsMobile == false)
 			{
-				dr.setValue("No", "Close");
-				dr.setValue("Name", "关闭");
-				dr.setValue("Oper", "Close();");
-				dt.Rows.add(dr);
+			    dr["No"] = "Close";
+			    dr["Name"] = "关闭";
+			    dr["Oper"] = "Close();";
+			    dt.Rows.add(dr);
 			}*/
 
 
@@ -225,7 +228,7 @@ public class WF_MyView extends WebContralBase
 
 			if (gwf.getWFState() == WFState.Runing)
 			{
-				nd = new Node(gwf.getFK_Node());
+				nd = new Node(gwf.getNodeID());
 			}
 
 
@@ -239,7 +242,7 @@ public class WF_MyView extends WebContralBase
 			{
 				case Runing: // 运行时
 					/*删除流程.*/
-					if (powers.contains("FlowDataDelete") == true || (Dev2Interface.Flow_IsCanDeleteFlowInstance(this.getFK_Flow(), this.getWorkID(), WebUser.getNo()) == true && btnLab.getDeleteEnable() != 0))
+					if (powers.contains("FlowDataDelete") == true || (Dev2Interface.Flow_IsCanDeleteFlowInstance(this.getFlowNo(), this.getWorkID(), WebUser.getNo()) == true && btnLab.getDeleteEnable() != 0))
 					{
 						dr = dt.NewRow();
 						dr.setValue("No", "Delete");
@@ -248,9 +251,27 @@ public class WF_MyView extends WebContralBase
 						dt.Rows.add(dr);
 					}
 
+					/***取回审批*/
+					//String para = "";
+					//sql = "SELECT NodeID FROM WF_Node WHERE CheckNodes LIKE '%" + gwf.NodeID + "%'";
+					//int myNode = DBAccess.RunSQLReturnValInt(sql, 0);
+					//if (myNode != 0)
+					//{
+					//    GetTask gt = new GetTask(myNode);
+					//    if (gt.Can_I_Do_It())
+					//    {
+					//        dr = dt.NewRow();
+					//        dr["No"] = "TackBack";
+					//        dr["Name"] = "取回审批";
+					//        dr["Oper"] = "TackBack(" + gwf.NodeID + "," + myNode + ")";
+					//        dt.Rows.add(dr);
+
+					//    }
+					//}
+
 
 					/*撤销发送*/
-					sql="SELECT WorkID,FK_Emp,FK_Node,WhoExeIt From WF_GenerWorkerList WHERE FK_Emp='"+WebUser.getNo()+"' AND ((IsPass=0 AND WhoExeIt=1) OR IsPass=1) AND IsEnable=1 AND WorkID="+this.getWorkID();
+					sql = "SELECT WorkID,FK_Emp,FK_Node,WhoExeIt From WF_GenerWorkerlist WHERE FK_Emp='" + WebUser.getNo() + "' AND ((IsPass=0 AND WhoExeIt=1) OR IsPass=1) AND IsEnable=1 AND WorkID=" + this.getWorkID();
 					DataTable dtt = DBAccess.RunSQLReturnTable(sql);
 
 					if (dtt.Rows.size() > 0 || powers.contains("FlowDataUnSend") == true)
@@ -258,10 +279,14 @@ public class WF_MyView extends WebContralBase
 						dr = dt.NewRow();
 						dr.setValue("No", "UnSend");
 						dr.setValue("Name", "撤销");
-						if(dtt.Rows.size() > 0 && dtt.Rows.get(0).getValue(3).toString().equals("1"))
+						if (dtt.Rows.size() > 0 && dtt.Rows.get(0).getValue(3).toString().equals("1"))
+						{
 							dr.setValue("Oper", "UnSend(1)");
+						}
 						else
+						{
 							dr.setValue("Oper", "UnSend()");
+						}
 						dt.Rows.add(dr);
 					}
 
@@ -271,7 +296,7 @@ public class WF_MyView extends WebContralBase
 						dr = dt.NewRow();
 						dr.setValue("No", "EndFlow");
 						dr.setValue("Name", btnLab.getEndFlowLab());
-						dr.setValue("Oper", "DoStop('" + btnLab.getEndFlowLab() + "','" + this.getFK_Flow() + "','" + this.getWorkID() + "');");
+						dr.setValue("Oper", "DoStop('" + btnLab.getEndFlowLab() + "','" + this.getFlowNo() + "','" + this.getWorkID() + "');");
 						dt.Rows.add(dr);
 					}
 
@@ -292,7 +317,7 @@ public class WF_MyView extends WebContralBase
 					{
 						dr = dt.NewRow();
 						dr.setValue("No", "Rollback");
-						dr.setValue("Name",  btnLab.GetValStringByKey(BtnAttr.RollbackLab));
+						dr.setValue("Name", btnLab.GetValStringByKey(BtnAttr.RollbackLab));
 						dr.setValue("Oper", "");
 						dt.Rows.add(dr);
 					}
@@ -312,14 +337,17 @@ public class WF_MyView extends WebContralBase
 
 				dt.Rows.add(dr);
 			}
-
-			if (btnLab.GetValBooleanByKey(BtnAttr.TrackEnableMyView)){
+			if (btnLab.GetValBooleanByKey(BtnAttr.TrackEnableMyView))
+			{
 				dr = dt.NewRow();
 				dr.setValue("No", "Track");
-				dr.setValue("Name",  btnLab.getTrackLab());
+				dr.setValue("Name", btnLab.getTrackLab());
 				dr.setValue("Oper", "");
 				dt.Rows.add(dr);
 			}
+
+
+
 				///#endregion 根据流程权限控制规则获取可以操作的按钮功能
 
 
@@ -328,7 +356,7 @@ public class WF_MyView extends WebContralBase
 			/* 判断是否是分合流？ 从而增加子线程按钮.*/
 			if (gwf.getWFState() == WFState.Runing)
 			{
-				if (nd.isFLHL() == true)
+				if (nd.getItIsFLHL() == true)
 				{
 					dr = dt.NewRow();
 					dr.setValue("No", "Thread");
@@ -423,11 +451,11 @@ public class WF_MyView extends WebContralBase
 
 				///#region  加载自定义的button.
 			NodeToolbars bars = new NodeToolbars();
-			bars.Retrieve(NodeToolbarAttr.FK_Node, this.getFK_Node(), NodeToolbarAttr.IsMyView, 1, NodeToolbarAttr.Idx);
+			bars.Retrieve(NodeToolbarAttr.FK_Node, this.getNodeID(), NodeToolbarAttr.IsMyView, 1, NodeToolbarAttr.Idx);
 			for (NodeToolbar bar : bars.ToJavaList())
 			{
 
-				if (bar.getExcType() == 1 || (!DataType.IsNullOrEmpty(bar.getTarget()) == false && bar.getTarget().toLowerCase().equals("javascript")))
+				if (bar.getExcType() == 1 || (!DataType.IsNullOrEmpty(bar.getTarget()) == false && Objects.equals(bar.getTarget().toLowerCase(), "javascript")))
 				{
 					dr = dt.NewRow();
 					dr.setValue("No", "NodeToolBar");
@@ -437,7 +465,7 @@ public class WF_MyView extends WebContralBase
 				}
 				else
 				{
-					String urlr3 = bar.getUrl() + "&FK_Node=" + this.getFK_Node() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&s=" + tKey;
+					String urlr3 = bar.getUrl() + "&FK_Node=" + this.getNodeID() + "&FID=" + this.getFID() + "&WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFlowNo() + "&s=" + tKey;
 					dr = dt.NewRow();
 					dr.setValue("No", "NodeToolBar");
 					dr.setValue("Name", bar.getTitle());
@@ -463,8 +491,8 @@ public class WF_MyView extends WebContralBase
 		dt.Columns.Add("Name");
 		dt.Columns.Add("Oper");
 
-		BtnLab btnLab = new BtnLab(this.getFK_Node());
-		String tKey =DataType.getCurrentDateByFormart("MM-dd-hh:mm:ss");
+		BtnLab btnLab = new BtnLab(this.getNodeID());
+		String tKey = DataType.getCurrentDateByFormart("MM-dd-hh:mm:ss");
 		String toolbar = "";
 		try
 		{
@@ -548,14 +576,14 @@ public class WF_MyView extends WebContralBase
 	public final String MyView_UnSend() throws Exception {
 		boolean isUnDelayedSend = this.GetRequestValBoolen("IsUnDelayedSend");
 		//是否撤销延期发送
-		if(isUnDelayedSend == true)
+		if (isUnDelayedSend == true)
 		{
 			GenerWorkerList gwl = new GenerWorkerList();
-			int i = gwl.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, this.getFK_Node(), GenerWorkerListAttr.FK_Emp, WebUser.getNo());
+			int i = gwl.Retrieve(GenerWorkerListAttr.WorkID, this.getWorkID(), GenerWorkerListAttr.FK_Node, this.getNodeID(), GenerWorkerListAttr.FK_Emp, WebUser.getNo());
 			if (i != 0)
 			{
 				gwl.setWhoExeIt(0);
-				gwl.SetPara("Day",0);
+				gwl.SetPara("Day", 0);
 				gwl.SetPara("hour", 0);
 				gwl.SetPara("Minute", 0);
 				gwl.SetPara("DelayedData", "");
@@ -565,7 +593,6 @@ public class WF_MyView extends WebContralBase
 			}
 			return "撤销成功";
 		}
-
 		//获取用户当前所在的节点
 		String currNode = "";
 		switch (DBAccess.getAppCenterDBType())
@@ -589,9 +616,13 @@ public class WF_MyView extends WebContralBase
 				break;
 		}
 		String unSendToNode = DBAccess.RunSQLReturnString(currNode);
+		if (DataType.IsNullOrEmpty(unSendToNode) == true)
+		{
+			return "err@你没有撤销当前流程的权限";
+		}
 		try
 		{
-			return Dev2Interface.Flow_DoUnSend(this.getFK_Flow(), this.getWorkID(), Integer.parseInt(unSendToNode), this.getFID());
+			return Dev2Interface.Flow_DoUnSend(this.getFlowNo(), this.getWorkID(), Integer.parseInt(unSendToNode), this.getFID());
 		}
 		catch (RuntimeException ex)
 		{
@@ -601,7 +632,7 @@ public class WF_MyView extends WebContralBase
 	/** 
 	 是否可以查看工作.
 	 
-	 param gwf
+	 @param gwf
 	 @return 
 	*/
 	public final boolean IsCanView(GenerWorkFlow gwf) throws Exception {
@@ -621,7 +652,7 @@ public class WF_MyView extends WebContralBase
 		}
 
 		//如果是本部门发起的.
-		if (gwf.getFK_Dept().equals(WebUser.getFK_Dept()))
+		if (gwf.getDeptNo().equals(WebUser.getDeptNo()))
 		{
 			return true;
 		}
@@ -649,7 +680,7 @@ public class WF_MyView extends WebContralBase
 		}
 
 		//处理流程控制权限.
-		TruckViewPower viewEn = new TruckViewPower(gwf.getFK_Flow());
+		TruckViewPower viewEn = new TruckViewPower(gwf.getFlowNo());
 
 
 			///#region 基本权限控制.
@@ -662,7 +693,7 @@ public class WF_MyView extends WebContralBase
 		if (viewEn.getPSpecDept() == true && DataType.IsNullOrEmpty(viewEn.getPSpecDeptExt()) == false)
 		{
 			viewEn.setPSpecDeptExt(viewEn.getPSpecDeptExt() + ",");
-			if (viewEn.getPSpecDeptExt().equals(WebUser.getFK_Dept()+ ",") == true)
+			if (viewEn.getPSpecDeptExt().equals(WebUser.getDeptNo() + ",") == true)
 			{
 				return true;
 			}
@@ -676,7 +707,7 @@ public class WF_MyView extends WebContralBase
 		//本部门可见.
 		if (viewEn.getPMyDept() == true)
 		{
-			if (gwf.getFK_Dept().equals(WebUser.getFK_Dept()) == true)
+			if (gwf.getDeptNo().equals(WebUser.getDeptNo()) == true)
 			{
 				return true;
 			}
@@ -686,8 +717,8 @@ public class WF_MyView extends WebContralBase
 		if (viewEn.getPPMyDept() == true)
 		{
 			//上级部门可见.
-			Dept dept = new Dept(gwf.getFK_Dept());
-			if (dept.getParentNo().equals(WebUser.getFK_Dept()) == true)
+			Dept dept = new Dept(gwf.getDeptNo());
+			if (dept.getParentNo().equals(WebUser.getDeptNo()) == true)
 			{
 				return true;
 			}
@@ -697,8 +728,8 @@ public class WF_MyView extends WebContralBase
 		if (viewEn.getPPMyDept() == true)
 		{
 			//上级部门可见.
-			Dept dept = new Dept(gwf.getFK_Dept());
-			if (dept.getParentNo().equals(WebUser.getFK_Dept()) == true)
+			Dept dept = new Dept(gwf.getDeptNo());
+			if (dept.getParentNo().equals(WebUser.getDeptNo()) == true)
 			{
 				return true;
 			}
@@ -708,8 +739,8 @@ public class WF_MyView extends WebContralBase
 		if (viewEn.getPSameDept() == true)
 		{
 			//如果发起人的部门，与当前人员的部门是同一级部门.
-			Dept dept = new Dept(gwf.getFK_Dept());
-			Dept mydept = new Dept(WebUser.getFK_Dept());
+			Dept dept = new Dept(gwf.getDeptNo());
+			Dept mydept = new Dept(WebUser.getDeptNo());
 			if (mydept.getParentNo().equals(dept.getParentNo()) == true)
 			{
 				return true;
@@ -735,9 +766,9 @@ public class WF_MyView extends WebContralBase
 
 		}
 
-			///#region 指定岗位可见
+			///#region 指定角色可见
 
-			///#endregion 指定岗位可见
+			///#endregion 指定角色可见
 
 
 			///#region 指定人员可见
@@ -787,15 +818,15 @@ public class WF_MyView extends WebContralBase
 		//当前的流程还是运行中的，并且可以执行当前工作,如果是，就直接转到工作处理器.
 		if (gwf.getFID() != 0)
 		{
-			Node nd = new Node(gwf.getFK_Node());
-			if (nd.getIsSubThread() == true && toDoEmps.contains(";" + WebUser.getNo() + ",") && isReadonly==false)
+			Node nd = new Node(gwf.getNodeID());
+			if (nd.getItIsSubThread() == true && toDoEmps.contains(";" + WebUser.getNo() + ",") && isReadonly == false)
 			{
 				WF_MyFlow handler = new WF_MyFlow();
 				return handler.MyFlow_Init();
 			}
 		}
 
-		if (gwf.getFID() == 0 && gwf.getWFState() != WFState.Complete && toDoEmps.contains(";" + WebUser.getNo() + ",") && isReadonly==false)
+		if (gwf.getFID() == 0 && gwf.getWFState() != WFState.Complete && toDoEmps.contains(";" + WebUser.getNo() + ",") && isReadonly == false)
 		{
 			WF_MyFlow handler = new WF_MyFlow();
 			return handler.MyFlow_Init();
@@ -836,35 +867,33 @@ public class WF_MyView extends WebContralBase
 
 
 			///#region 处理表单类型.
-		if (this.getCurrND().getHisFormType() == NodeFormType.SheetTree
-				|| this.getCurrND().getHisFormType() == NodeFormType.SheetAutoTree
-				|| this.getCurrFlow().getFlowDevModel() == FlowDevModel.FrmTree)
+		if (this.getCurrND().getHisFormType() == NodeFormType.SheetTree || this.getCurrND().getHisFormType() == NodeFormType.SheetAutoTree || this.getCurrFlow().getFlowDevModel() == FlowDevModel.FrmTree)
 		{
 
 
 				///#region 开始组合url.
 			String toUrl = "";
 
-			if (this.getIsMobile() == true)
+			if (this.getItIsMobile() == true)
 			{
 				if (gwf.getParasFrms().equals("") == false)
 				{
-					toUrl = "MyViewGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&Token=" + WebUser.getToken() + "&PFlowNo=" + gwf.getPFlowNo() + "&PNodeID=" + gwf.getPNodeID() + "&PWorkID=" + gwf.getPWorkID() + "&Frms=" + gwf.getParasFrms();
+					toUrl = "MyViewGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFlowNo() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&Token=" + WebUser.getToken() + "&PFlowNo=" + gwf.getPFlowNo() + "&PNodeID=" + gwf.getPNodeID() + "&PWorkID=" + gwf.getPWorkID() + "&Frms=" + gwf.getParasFrms();
 				}
 				else
 				{
-					toUrl = "MyViewGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&Token=" + WebUser.getToken() + "&PFlowNo=" + gwf.getPFlowNo() + "&PNodeID=" + gwf.getPNodeID() + "&PWorkID=" + gwf.getPWorkID();
+					toUrl = "MyViewGener.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFlowNo() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&Token=" + WebUser.getToken() + "&PFlowNo=" + gwf.getPFlowNo() + "&PNodeID=" + gwf.getPNodeID() + "&PWorkID=" + gwf.getPWorkID();
 				}
 			}
 			else
 			{
 				if (gwf.getParasFrms().equals("") == false)
 				{
-					toUrl = "MyViewTree.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&Token=" + WebUser.getToken() + "&PFlowNo=" + gwf.getPFlowNo() + "&PNodeID=" + gwf.getPNodeID() + "&PWorkID=" + gwf.getPWorkID() + "&Frms=" + gwf.getParasFrms();
+					toUrl = "MyViewTree.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFlowNo() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&Token=" + WebUser.getToken() + "&PFlowNo=" + gwf.getPFlowNo() + "&PNodeID=" + gwf.getPNodeID() + "&PWorkID=" + gwf.getPWorkID() + "&Frms=" + gwf.getParasFrms();
 				}
 				else
 				{
-					toUrl = "MyViewTree.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&Token=" + WebUser.getToken() + "&PFlowNo=" + gwf.getPFlowNo() + "&PNodeID=" + gwf.getPNodeID() + "&PWorkID=" + gwf.getPWorkID();
+					toUrl = "MyViewTree.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFlowNo() + "&UserNo=" + WebUser.getNo() + "&FID=" + this.getFID() + "&Token=" + WebUser.getToken() + "&PFlowNo=" + gwf.getPFlowNo() + "&PNodeID=" + gwf.getPNodeID() + "&PWorkID=" + gwf.getPWorkID();
 				}
 			}
 
@@ -898,13 +927,13 @@ public class WF_MyView extends WebContralBase
 
 				toUrl += "&" + str;
 			}
-			for (Object key : CommonUtils.getRequest().getParameterMap().keySet())
+			for (String key : ContextHolderUtils.getRequest().getParameterMap().keySet())
 			{
 				if (toUrl.contains(key + "=") == true)
 				{
 					continue;
 				}
-				toUrl += "&" + key + "=" + ContextHolderUtils.getRequest().getParameter(String.valueOf(key));
+				toUrl += "&" + key + "=" + ContextHolderUtils.getRequest().getParameter(key);
 			}
 
 				///#endregion 开始组合url.
@@ -917,8 +946,7 @@ public class WF_MyView extends WebContralBase
 			return "url@" + toUrl;
 		}
 
-		if (this.getCurrND().getHisFormType() == NodeFormType.SDKForm
-			|| this.getCurrFlow().getFlowDevModel() == FlowDevModel.SDKFrm)
+		if (this.getCurrND().getHisFormType() == NodeFormType.SDKForm || this.getCurrFlow().getFlowDevModel() == FlowDevModel.SDKFrmSelfPK || this.getCurrFlow().getFlowDevModel() == FlowDevModel.SDKFrmWorkID)
 		{
 			String url = getCurrND().getFormUrl();
 			if (DataType.IsNullOrEmpty(url))
@@ -939,7 +967,7 @@ public class WF_MyView extends WebContralBase
 		NodeFormType frmtype = this.getCurrND().getHisFormType();
 		if (frmtype != NodeFormType.RefOneFrmTree)
 		{
-			getCurrND().WorkID = this.getWorkID(); //为获取表单ID ( NodeFrmID )提供参数.
+			getCurrND().WorkID= this.getWorkID(); //为获取表单ID ( NodeFrmID )提供参数.
 
 			if (this.getCurrND().getNodeFrmID().contains(String.valueOf(this.getCurrND().getNodeID())) == false)
 			{
@@ -975,10 +1003,10 @@ public class WF_MyView extends WebContralBase
 			return "url@" + url;
 		}
 
-		if (frmtype == NodeFormType.FoolForm && this.getIsMobile() == false)
+		if (frmtype == NodeFormType.FoolForm && this.getItIsMobile() == false)
 		{
 			String url = "MyViewGener.htm";
-			if (this.getIsMobile())
+			if (this.getItIsMobile())
 			{
 				url = "MyViewGener.htm";
 			}
@@ -992,7 +1020,7 @@ public class WF_MyView extends WebContralBase
 		}
 
 		//自定义表单
-		if ((frmtype == NodeFormType.SelfForm || this.getCurrFlow().getFlowDevModel() == FlowDevModel.SelfFrm) && this.getIsMobile() == false)
+		if ((frmtype == NodeFormType.SelfForm || this.getCurrFlow().getFlowDevModel() == FlowDevModel.SelfFrm) && this.getItIsMobile() == false)
 		{
 
 			String url = "MyViewSelfForm.htm";
@@ -1008,11 +1036,9 @@ public class WF_MyView extends WebContralBase
 			///#endregion 内置表单类型的判断.
 
 		String myurl = "MyViewGener.htm";
-		MapData md = new MapData(this.getCurrND().getNodeFrmID());
-		if (md.getHisFrmType() == FrmType.ChapterFrm)
-		{
-			myurl = "MyViewTree.htm?NodeFrmType=11";
-		}
+		//MapData md = new MapData(this.currND.getNodeFrmID());
+		//if (md.getHisFrmType() == FrmType.ChapterFrm)
+		 //   myurl = "MyViewTree.htm?NodeFrmType=11";
 		//处理连接.
 		myurl = this.MyView_Init_DealUrl(getCurrND(), myurl);
 		myurl = myurl.replace("DoType=MyView_Init&", "");
@@ -1021,12 +1047,11 @@ public class WF_MyView extends WebContralBase
 		return "url@" + myurl;
 	}
 
-	private String MyView_Init_DealUrl(bp.wf.Node currND) throws UnsupportedEncodingException {
+	private String MyView_Init_DealUrl(bp.wf.Node currND) throws Exception {
 		return MyView_Init_DealUrl(currND, null);
 	}
 
-//ORIGINAL LINE: private string MyView_Init_DealUrl(BP.WF.Node currND, string url = null)
-	private String MyView_Init_DealUrl(Node currND, String url) throws UnsupportedEncodingException {
+	private String MyView_Init_DealUrl(Node currND, String url) throws Exception {
 		if (url == null)
 		{
 			url = currND.getFormUrl();
@@ -1045,8 +1070,8 @@ public class WF_MyView extends WebContralBase
 			urlExt = urlExt.replace("&WorkID=&", "&WorkID=" + this.getWorkID() + "&");
 		}
 
-		//SDK表单上服务器地址,应用到使用ccflow的时候使用的是sdk表单,该表单会存储在其他的服务器上,珠海高凌提出.
-		url = url.replace("@SDKFromServHost", SystemConfig.getAppSettings().get("SDKFromServHost").toString());
+		//SDK表单上服务器地址,应用到使用ccflow的时候使用的是sdk表单,该表单会存储在其他的服务器上,珠海驰骋提出. 
+		url = url.replace("@SDKFromServHost", SystemConfig.GetValByKey("SDKFromServHost",""));
 
 		if (urlExt.contains("&NodeID") == false)
 		{
@@ -1065,7 +1090,7 @@ public class WF_MyView extends WebContralBase
 
 		if (urlExt.contains("&UserNo") == false)
 		{
-			urlExt += "&UserNo=" + URLEncoder.encode(WebUser.getNo(), "UTF-8");
+			urlExt += "&UserNo=" + URLEncoder.encode(WebUser.getNo());
 		}
 
 		if (urlExt.contains("&Token") == false)
@@ -1082,7 +1107,7 @@ public class WF_MyView extends WebContralBase
 			url += "?" + urlExt;
 		}
 
-		for (String str : CommonUtils.getRequest().getParameterMap().keySet())
+		for (String str : ContextHolderUtils.getRequest().getParameterMap().keySet())
 		{
 			if (DataType.IsNullOrEmpty(str) == true || str.toLowerCase().equals("t") == true)
 			{
@@ -1123,14 +1148,14 @@ public class WF_MyView extends WebContralBase
 			///#region 添加表单及文件夹
 
 		//节点表单
-		Node nd = new Node(this.getFK_Node());
+		Node nd = new Node(this.getNodeID());
 
 		FrmNodes frmNodes = new FrmNodes();
-		frmNodes.Retrieve(FrmNodeAttr.FK_Node, this.getFK_Node(), FrmNodeAttr.Idx);
+		frmNodes.Retrieve(FrmNodeAttr.FK_Node, this.getNodeID(), FrmNodeAttr.Idx);
 
 		//文件夹
 		//SysFormTrees formTrees = new SysFormTrees();
-		//formTrees.RetrieveAll(SysFormTreeAttr.getName());
+		//formTrees.RetrieveAll(SysFormTreeAttr.Name);
 
 		//所有表单集合. 为了优化效率,这部分重置了一下.
 		MapDatas mds = new MapDatas();
@@ -1144,11 +1169,11 @@ public class WF_MyView extends WebContralBase
 		}
 		else
 		{
-			mds.RetrieveInSQL("SELECT FK_Frm FROM WF_FrmNode WHERE FK_Node=" + this.getFK_Node());
+			mds.RetrieveInSQL("SELECT FK_Frm FROM WF_FrmNode WHERE FK_Node=" + this.getNodeID());
 		}
 
 
-		String frms = this.GetRequestVal("Frms");
+		String frms = ContextHolderUtils.getRequest().getParameter("Frms");
 		GenerWorkFlow gwf = new GenerWorkFlow(this.getWorkID());
 		if (DataType.IsNullOrEmpty(frms) == true)
 		{
@@ -1211,7 +1236,7 @@ public class WF_MyView extends WebContralBase
 
 					if (frms.contains(",") == false)
 					{
-						if (!frmNode.getFKFrm().equals(frms))
+						if (!Objects.equals(frms, frmNode.getFKFrm()))
 						{
 							continue;
 						}
@@ -1236,21 +1261,21 @@ public class WF_MyView extends WebContralBase
 					if (DataType.IsNullOrEmpty(mysql) == true)
 					{
 						MapData FrmMd = new MapData(frmNode.getFKFrm());
-						return "err@表单" + frmNode.getFKFrm() + ",[" + FrmMd.getName() + "]在节点[" + frmNode.getFK_Node() + "]启用方式按照sql启用但是您没有给他设置sql表达式.";
+						return "err@表单" + frmNode.getFKFrm() + ",[" + FrmMd.getName() +"]在节点[" + frmNode.getNodeID() + "]启用方式按照sql启用但是您没有给他设置sql表达式.";
 					}
 
 
 					mysql = mysql.replace("@OID", String.valueOf(this.getWorkID()));
 					mysql = mysql.replace("@WorkID", String.valueOf(this.getWorkID()));
 
-					mysql = mysql.replace("@NodeID", String.valueOf(this.getFK_Node()));
-					mysql = mysql.replace("@FK_Node", String.valueOf(this.getFK_Node()));
+					mysql = mysql.replace("@NodeID", String.valueOf(this.getNodeID()));
+					mysql = mysql.replace("@FK_Node", String.valueOf(this.getNodeID()));
 
-					mysql = mysql.replace("@FK_Flow", this.getFK_Flow());
+					mysql = mysql.replace("@FK_Flow", this.getFlowNo());
 
 					mysql = mysql.replace("@WebUser.No", WebUser.getNo());
 					mysql = mysql.replace("@WebUser.Name", WebUser.getName());
-					mysql = mysql.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
+					mysql = mysql.replace("@WebUser.FK_Dept", WebUser.getDeptNo());
 
 
 					//替换特殊字符.
@@ -1265,7 +1290,7 @@ public class WF_MyView extends WebContralBase
 				case ByStation:
 					Object tempVar3 = frmNode.getFrmEnableExp();
 					String exp = tempVar3 instanceof String ? (String)tempVar3 : null;
-					String Sql = "SELECT FK_Station FROM Port_DeptEmpStation where FK_Emp='" + WebUser.getNo() + "'";
+					String Sql = "SELECT FK_Station FROM Port_DeptEmpStation where FK_Emp='" + WebUser.getUserID() + "'";
 					String station = DBAccess.RunSQLReturnString(Sql);
 					if (DataType.IsNullOrEmpty(station) == true)
 					{
@@ -1325,7 +1350,7 @@ public class WF_MyView extends WebContralBase
 			boolean isHave = false;
 			for (MapData md : mds.ToJavaList())
 			{
-				if (md.getFK_FormTree().equals(""))
+				if (Objects.equals(md.getFormTreeNo(), ""))
 				{
 					isHave = true;
 					break;
@@ -1341,9 +1366,9 @@ public class WF_MyView extends WebContralBase
 			{
 				for (MapData md : mds.ToJavaList())
 				{
-					if (!md.getFK_FormTree().equals(""))
+					if (!Objects.equals(md.getFormTreeNo(), ""))
 					{
-						treeNo = md.getFK_FormTree();
+						treeNo = md.getFormTreeNo();
 						break;
 					}
 				}
@@ -1353,23 +1378,23 @@ public class WF_MyView extends WebContralBase
 
 			for (MapData md : mds.ToJavaList())
 			{
-				if (!frmNode.getFKFrm().equals(md.getNo()))
+				if (!Objects.equals(frmNode.getFKFrm(), md.getNo()))
 				{
 					continue;
 				}
 
-				if (md.getFK_FormTree().equals(""))
+				if (Objects.equals(md.getFormTreeNo(), ""))
 				{
-					md.setFK_FormTree(treeNo);
+					md.setFormTreeNo(treeNo);
 				}
 
 				//给他增加目录.
-				if (appFlowFormTree.contains("Name", md.getFK_FormTreeText()) == false)
+				if (appFlowFormTree.contains("Name", md.getFormTreeText()) == false)
 				{
 					FlowFormTree nodeFolder = new FlowFormTree();
-					nodeFolder.setNo(md.getFK_FormTree());
+					nodeFolder.setNo(md.getFormTreeNo());
 					nodeFolder.setParentNo("1");
-					nodeFolder.setName(md.getFK_FormTreeText());
+					nodeFolder.setName(md.getFormTreeText());
 					nodeFolder.setNodeType("folder");
 					appFlowFormTree.AddEntity(nodeFolder);
 				}
@@ -1378,9 +1403,9 @@ public class WF_MyView extends WebContralBase
 				boolean IsNotNull = false;
 				FrmFields formFields = new FrmFields();
 				QueryObject obj = new QueryObject(formFields);
-				obj.AddWhere(FrmFieldAttr.FK_Node, this.getFK_Node());
+				obj.AddWhere(FrmFieldAttr.FK_Node, this.getNodeID());
 				obj.addAnd();
-				obj.AddWhere(FrmFieldAttr.FK_MapData, md.getNo());
+				obj.AddWhere(FrmFieldAttr.FrmID, md.getNo());
 				obj.addAnd();
 				obj.AddWhere(FrmFieldAttr.IsNotNull, 1);
 				obj.DoQuery();
@@ -1391,7 +1416,7 @@ public class WF_MyView extends WebContralBase
 
 				FlowFormTree nodeForm = new FlowFormTree();
 				nodeForm.setNo(md.getNo());
-				nodeForm.setParentNo(md.getFK_FormTree());
+				nodeForm.setParentNo(md.getFormTreeNo());
 
 				//设置他的表单显示名字. 2019.09.30
 				String frmName = md.getName();
@@ -1407,8 +1432,8 @@ public class WF_MyView extends WebContralBase
 				}
 				nodeForm.setName(frmName);
 				nodeForm.setNodeType(IsNotNull ? "form|1" : "form|0");
-				nodeForm.setEdit(String.valueOf(frmNode.isEditInt())); // Convert.ToString(Convert.ToInt32(frmNode.IsEdit));
-				nodeForm.setCloseEtcFrm(String.valueOf(frmNode.isCloseEtcFrmInt()));
+				nodeForm.setEdit(String.valueOf(frmNode.getItIsEditInt())); // Convert.ToString(Convert.ToInt32(frmNode.IsEdit));
+				nodeForm.setCloseEtcFrm(String.valueOf(frmNode.getItIsCloseEtcFrmInt()));
 				appFlowFormTree.AddEntity(nodeForm);
 				break;
 			}
@@ -1427,9 +1452,9 @@ public class WF_MyView extends WebContralBase
 	/** 
 	 将实体转为树形
 	 
-	 param ens
-	 param rootNo
-	 param checkIds
+	 @param ens
+	 @param rootNo
+	 @param checkIds
 	*/
 	private StringBuilder appendMenus = new StringBuilder();
 	private StringBuilder appendMenuSb = new StringBuilder();
@@ -1442,7 +1467,7 @@ public class WF_MyView extends WebContralBase
 		}
 		appendMenus.append("[{");
 		appendMenus.append("\"id\":\"" + rootNo + "\"");
-		appendMenus.append(",\"text\":\"" + root.getName() + "\"");
+		appendMenus.append(",\"text\":\"" + root.getName() +"\"");
 
 		//attributes
 		FlowFormTree formTree = root instanceof FlowFormTree ? (FlowFormTree)root : null;
@@ -1461,8 +1486,7 @@ public class WF_MyView extends WebContralBase
 		appendMenus.append("}]");
 	}
 
-	private void AddChildren(EntityTree parentEn, Entities ens, String checkIds)
-	{
+	private void AddChildren(EntityTree parentEn, Entities ens, String checkIds) throws Exception {
 		appendMenus.append(appendMenuSb);
 		appendMenuSb.setLength(0);
 
@@ -1470,18 +1494,18 @@ public class WF_MyView extends WebContralBase
 		for (Entity en : ens.ToJavaListEn())
 		{
 			EntityTree item = (EntityTree) en;
-			if (!parentEn.getNo().equals(item.getParentNo()))
+			if (!Objects.equals(item.getParentNo(), parentEn.getNo()))
 			{
 				continue;
 			}
 
 			if (checkIds.contains("," + item.getNo() + ","))
 			{
-				appendMenuSb.append("{\"id\":\"" + item.getNo() + "\",\"text\":\"" + item.getName() + "\",\"checked\":true");
+				appendMenuSb.append("{\"id\":\"" + item.getNo() + "\",\"text\":\"" + item.getName() +"\",\"checked\":true");
 			}
 			else
 			{
-				appendMenuSb.append("{\"id\":\"" + item.getNo() + "\",\"text\":\"" + item.getName() + "\",\"checked\":false");
+				appendMenuSb.append("{\"id\":\"" + item.getNo() + "\",\"text\":\"" + item.getName() +"\",\"checked\":false");
 			}
 
 
@@ -1491,25 +1515,25 @@ public class WF_MyView extends WebContralBase
 			{
 				String url = formTree.getUrl() == null ? "" : formTree.getUrl();
 				String ico = "icon-tree_folder";
-				if (SystemConfig.getSysNo().equals("YYT"))
+				if (Objects.equals(SystemConfig.getSysNo(), "YYT"))
 				{
 					ico = "icon-boat_16";
 				}
 				url = url.replace("/", "|");
 				appendMenuSb.append(",\"attributes\":{\"NodeType\":\"" + formTree.getNodeType() + "\",\"IsEdit\":\"" + formTree.isEdit() + "\",\"IsCloseEtcFrm\":\"" + formTree.isCloseEtcFrm() + "\",\"Url\":\"" + url + "\"}");
 				//图标
-				if (formTree.getNodeType().equals("form|0"))
+				if (Objects.equals(formTree.getNodeType(), "form|0"))
 				{
 					ico = "form0";
-					if (SystemConfig.getSysNo().equals("YYT"))
+					if (Objects.equals(SystemConfig.getSysNo(), "YYT"))
 					{
 						ico = "icon-Wave";
 					}
 				}
-				if (formTree.getNodeType().equals("form|1"))
+				if (Objects.equals(formTree.getNodeType(), "form|1"))
 				{
 					ico = "form1";
-					if (SystemConfig.getSysNo().equals("YYT"))
+					if (Objects.equals(SystemConfig.getSysNo(), "YYT"))
 					{
 						ico = "icon-Shark_20";
 					}
@@ -1517,7 +1541,7 @@ public class WF_MyView extends WebContralBase
 				if (formTree.getNodeType().contains("tools"))
 				{
 					ico = "icon-4";
-					if (SystemConfig.getSysNo().equals("YYT"))
+					if (Objects.equals(SystemConfig.getSysNo(), "YYT"))
 					{
 						ico = "icon-Wave";
 					}
@@ -1555,8 +1579,16 @@ public class WF_MyView extends WebContralBase
 			long workID = this.getWorkID();
 			if (this.getCurrND().getHisFormType() == NodeFormType.RefOneFrmTree)
 			{
+				MapData md = new MapData(this.getCurrND().getNodeFrmID());
+				if (md.getHisFrmType() == FrmType.ChapterFrm)
+				{
+					String url = "Frm.htm?FK_MapData=" +md.getNo();
+					url = MyView_Init_DealUrl(this.getCurrND(), url);
+					return "url@" + url;
+				}
+
 				//获取绑定的表单
-				FrmNode frmnode = new FrmNode(this.getFK_Node(), this.getCurrND().getNodeFrmID());
+				FrmNode frmnode = new FrmNode(this.getNodeID(), this.getCurrND().getNodeFrmID());
 				switch (frmnode.getWhoIsPK())
 				{
 					case FID:
@@ -1582,11 +1614,11 @@ public class WF_MyView extends WebContralBase
 
 			}
 
-			ds = CCFlowAPI.GenerWorkNode(this.getFK_Flow(), this.getCurrND(), workID, this.getFID(), WebUser.getNo(), this.getWorkID(), "1", true);
+			ds = CCFlowAPI.GenerWorkNode(this.getFlowNo(), this.getCurrND(), workID, this.getFID(), WebUser.getNo(), this.getWorkID(), "1", true);
 
 
 				///#region 如果是移动应用就考虑多表单的问题.
-			if (getCurrND().getHisFormType() == NodeFormType.SheetTree && this.getIsMobile() == true)
+			if (getCurrND().getHisFormType() == NodeFormType.SheetTree && this.getItIsMobile() == true)
 			{
 				/*如果是表单树并且是，移动模式.*/
 
@@ -1612,15 +1644,14 @@ public class WF_MyView extends WebContralBase
 				return bp.tools.Json.ToJson(ds);
 			}
 
-
-				///#region 处理多语言.
-			if (WebUser.getSysLang().equals("CH") == false)
-			{
-				Langues langs = new Langues();
-				langs.Retrieve(LangueAttr.Model, LangueModel.CCForm, LangueAttr.Sort, "Fields", LangueAttr.Langue, WebUser.getSysLang(), null); //查询语言.
-			}
-
-				///#endregion 处理多语言.
+			///#region 处理多语言.
+			//if (WebUser.getSysLang().equals("CH") == false)
+			//{
+			//    Langues langs = new Langues();
+			//    langs.Retrieve(LangueAttr.Model, LangueModel.CCForm,
+			//        LangueAttr.Sort, "Fields", LangueAttr.Langue, WebUser.getSysLang()); //查询语言.
+			//}
+			///#endregion 处理多语言.
 
 			return bp.tools.Json.ToJson(ds);
 

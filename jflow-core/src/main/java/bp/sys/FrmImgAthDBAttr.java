@@ -1,10 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
-import java.util.*;
-
 /** 
  剪切图片附件数据存储 - 属性
 */

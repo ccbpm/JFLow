@@ -1,13 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.wf.*;
-import bp.port.*;
-import bp.*;
-import bp.wf.*;
-import java.util.*;
-
 /** 
  任务 属性
 */

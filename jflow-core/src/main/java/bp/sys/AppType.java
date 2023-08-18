@@ -19,7 +19,8 @@ public enum AppType
 
 	private int intValue;
 	private static java.util.HashMap<Integer, AppType> mappings;
-	private static java.util.HashMap<Integer, AppType> getMappings()  {
+	private static java.util.HashMap<Integer, AppType> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (AppType.class)
@@ -34,11 +35,13 @@ public enum AppType
 	}
 
 	private AppType(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return intValue;
 	}
 

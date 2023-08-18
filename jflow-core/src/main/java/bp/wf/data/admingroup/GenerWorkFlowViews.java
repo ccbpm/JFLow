@@ -1,11 +1,6 @@
 package bp.wf.data.admingroup;
 
-import bp.da.*;
-import bp.sys.*;
 import bp.en.*;
-import bp.*;
-import bp.wf.*;
-import bp.wf.data.*;
 import java.util.*;
 
 /** 
@@ -19,7 +14,7 @@ public class GenerWorkFlowViews extends Entities
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity() {
 		return new GenerWorkFlowView();
 	}
 	/** 

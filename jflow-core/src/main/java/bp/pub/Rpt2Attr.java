@@ -1,10 +1,11 @@
 package bp.pub;
 
 import bp.da.*;
-import bp.difference.ContextHolderUtils;
+import bp.en.*; import bp.en.Map;
 import bp.web.*;
-
-import java.util.Enumeration;
+import bp.sys.*;
+import bp.difference.*;
+import bp.*;
 
 /** 
  数据报表
@@ -49,17 +50,17 @@ public class Rpt2Attr
 
 		title = title.replace("@WebUser.No", WebUser.getNo());
 		title = title.replace("@WebUser.Name", WebUser.getName());
-		title = title.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
-		title = title.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
+		title = title.replace("@WebUser.FK_Dept", WebUser.getDeptNo());
+		title = title.replace("@WebUser.FK_DeptName", WebUser.getDeptName());
 		if (title.contains("@") == false)
 		{
 			return title;
 		}
 
-			//foreach (string key in Glo.Request.QueryString)
-			//{
-			//    title = title.Replace("@" + key, Glo.Request.QueryString[key]);
-			//}
+		//foreach (String key in Glo.Request.QueryString)
+		//{
+		//    title = title.replace("@" + key, Glo.Request.QueryString[key]);
+		//}
 
 		if (title.contains("@") == false)
 		{
@@ -72,14 +73,14 @@ public class Rpt2Attr
 		}
 
 		AtPara ap = new AtPara(this.DefaultParas);
-		for (Object key : ap.getHisHT().keySet())
+		for (String key : ap.getHisHT().keySet())
 		{
-			title = title.replace("@" + key, ap.GetValStrByKey(key.toString()));
+			title = title.replace("@" + key, ap.GetValStrByKey(key));
 		}
 
 		return title;
 	}
-	public final void setTitle(String value) throws Exception
+	public final void setTitle(String value)
 	{
 		_Title = value;
 	}
@@ -134,7 +135,7 @@ public class Rpt2Attr
 	/** 
 	 是否启用table.
 	*/
-	public boolean IsEnableTable = true;
+	public boolean ItIsEnableTable = true;
 	/** 
 	 柱图显示类型.
 	*/
@@ -144,20 +145,21 @@ public class Rpt2Attr
 		return _ColumnChartShowType;
 	}
 	public final void setColumnChartShowType(ColumnChartShowType value)
-	{_ColumnChartShowType = value;
+	{
+		_ColumnChartShowType = value;
 	}
 	/** 
 	 是否显示饼图
 	*/
-	public boolean IsEnablePie = true;
+	public boolean ItIsEnablePie = true;
 	/** 
 	 是否显示柱图
 	*/
-	public boolean IsEnableColumn = true;
+	public boolean ItIsEnableColumn = true;
 	/** 
 	 是否显示折线图
 	*/
-	public boolean IsEnableLine = true;
+	public boolean ItIsEnableLine = true;
 	/** 
 	 折线图显示类型.
 	*/
@@ -220,23 +222,16 @@ public class Rpt2Attr
 	{
 		if (_DBDataTable == null)
 		{
-				//获得数据表.
-				// 执行SQL.
+			//获得数据表.
+			// 执行SQL.
 			String sql = this.DBSrc;
-			sql = sql.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
+			sql = sql.replace("@WebUser.FK_Dept", WebUser.getDeptNo());
 			sql = sql.replace("@WebUser.No", WebUser.getNo());
 			sql = sql.replace("@WebUser.Name", WebUser.getName());
-			Enumeration enu = bp.sys.base.Glo.getRequest().getParameterNames();
-			while (enu.hasMoreElements()) {
-				// 判断是否有内容，hasNext()
-				String k = (String) enu.nextElement();
-				if (DataType.IsNullOrEmpty(k))
-				{
-					continue;
-				}
-				sql = sql.replace("@" + k, bp.sys.base.Glo.getRequest().getParameter(k));
+			for (String k : ContextHolderUtils.getRequest().getParameterMap().keySet())
+			{
+				sql = sql.replace("@" + k, ContextHolderUtils.getRequest().getParameter(k));
 			}
-
 			if (sql.contains("@") == true)
 			{
 				AtPara ap = new AtPara(this.DefaultParas);
@@ -251,7 +246,8 @@ public class Rpt2Attr
 		return _DBDataTable;
 	}
 	public final void setDBDataTable(DataTable value)
-	{_DBDataTable = value;
+	{
+		_DBDataTable = value;
 	}
 	/** 
 	 转化成Json

@@ -4,12 +4,12 @@ package bp.difference;
 //	Copyright © 2007 - 2021 Tangible Software Solutions, Inc.
 //	This class can be used by anyone provided that the copyright notice remains intact.
 //
-//	This class is used to replicate some .NET string methods in Java.
+//	This class is used to replicate some .NET String methods in Java.
 //----------------------------------------------------------------------------------------
 public final class StringHelper
 {
 	//------------------------------------------------------------------------------------
-	//	This method replaces the .NET string method 'Substring' when 'start' is a method
+	//	This method replaces the .NET String method 'Substring' when 'start' is a method
 	//	call or calculated value to ensure that 'start' is obtained just once.
 	//------------------------------------------------------------------------------------
 	public static String substring(String string, int start, int length)
@@ -21,7 +21,7 @@ public final class StringHelper
 	}
 
 	//------------------------------------------------------------------------------------
-	//	This method replaces the .NET static string method 'IsNullOrEmpty'.
+	//	This method replaces the .NET static String method 'IsNullOrEmpty'.
 	//------------------------------------------------------------------------------------
 	public static boolean isNullOrEmpty(String string)
 	{
@@ -29,7 +29,7 @@ public final class StringHelper
 	}
 
 	//------------------------------------------------------------------------------------
-	//	This method replaces the .NET static string method 'IsNullOrWhiteSpace'.
+	//	This method replaces the .NET static String method 'IsNullOrWhiteSpace'.
 	//------------------------------------------------------------------------------------
 	public static boolean isNullOrWhiteSpace(String string)
 	{
@@ -46,7 +46,7 @@ public final class StringHelper
 	}
 
 	//------------------------------------------------------------------------------------
-	//	This method replaces the .NET static string method 'Join' (2 parameter version).
+	//	This method replaces the .NET static String method 'Join' (2 parameter version).
 	//------------------------------------------------------------------------------------
 	public static String join(String separator, String[] stringArray)
 	{
@@ -57,7 +57,7 @@ public final class StringHelper
 	}
 
 	//------------------------------------------------------------------------------------
-	//	This method replaces the .NET static string method 'Join' (4 parameter version).
+	//	This method replaces the .NET static String method 'Join' (4 parameter version).
 	//------------------------------------------------------------------------------------
 	public static String join(String separator, String[] stringArray, int startIndex, int count)
 	{
@@ -79,7 +79,7 @@ public final class StringHelper
 	}
 
 	//------------------------------------------------------------------------------------
-	//	This method replaces the .NET string method 'Remove' (1 parameter version).
+	//	This method replaces the .NET String method 'Remove' (1 parameter version).
 	//------------------------------------------------------------------------------------
 	public static String remove(String string, int start)
 	{
@@ -87,7 +87,7 @@ public final class StringHelper
 	}
 
 	//------------------------------------------------------------------------------------
-	//	This method replaces the .NET string method 'Remove' (2 parameter version).
+	//	This method replaces the .NET String method 'Remove' (2 parameter version).
 	//------------------------------------------------------------------------------------
 	public static String remove(String string, int start, int count)
 	{
@@ -95,7 +95,7 @@ public final class StringHelper
 	}
 
 	//------------------------------------------------------------------------------------
-	//	This method replaces the .NET string method 'TrimEnd'.
+	//	This method replaces the .NET String method 'TrimEnd'.
 	//------------------------------------------------------------------------------------
 	public static String trimEnd(String string, Character... charsToTrim)
 	{
@@ -133,7 +133,7 @@ public final class StringHelper
 	}
 
 	//------------------------------------------------------------------------------------
-	//	This method replaces the .NET string method 'TrimStart'.
+	//	This method replaces the .NET String method 'TrimStart'.
 	//------------------------------------------------------------------------------------
 	public static String trimStart(String string, Character... charsToTrim)
 	{
@@ -171,7 +171,7 @@ public final class StringHelper
 	}
 
 	//------------------------------------------------------------------------------------
-	//	This method replaces the .NET string method 'Trim' when arguments are used.
+	//	This method replaces the .NET String method 'Trim' when arguments are used.
 	//------------------------------------------------------------------------------------
 	public static String trim(String string, Character... charsToTrim)
 	{
@@ -179,7 +179,7 @@ public final class StringHelper
 	}
 
 	//------------------------------------------------------------------------------------
-	//	This method is used for string equality comparisons when the option
+	//	This method is used for String equality comparisons when the option
 	//	'Use helper 'stringsEqual' method to handle null strings' is selected
 	//	(The Java String 'equals' method can't be called on a null instance).
 	//------------------------------------------------------------------------------------
@@ -192,7 +192,7 @@ public final class StringHelper
 	}
 
 	//------------------------------------------------------------------------------------
-	//	This method replaces the .NET string method 'PadRight' (1 parameter version).
+	//	This method replaces the .NET String method 'PadRight' (1 parameter version).
 	//------------------------------------------------------------------------------------
 	public static String padRight(String string, int totalWidth)
 	{
@@ -200,7 +200,7 @@ public final class StringHelper
 	}
 
 	//------------------------------------------------------------------------------------
-	//	This method replaces the .NET string method 'PadRight' (2 parameter version).
+	//	This method replaces the .NET String method 'PadRight' (2 parameter version).
 	//------------------------------------------------------------------------------------
 	public static String padRight(String string, int totalWidth, char paddingChar)
 	{
@@ -215,7 +215,7 @@ public final class StringHelper
 	}
 
 	//------------------------------------------------------------------------------------
-	//	This method replaces the .NET string method 'PadLeft' (1 parameter version).
+	//	This method replaces the .NET String method 'PadLeft' (1 parameter version).
 	//------------------------------------------------------------------------------------
 	public static String padLeft(String string, int totalWidth)
 	{
@@ -223,7 +223,7 @@ public final class StringHelper
 	}
 
 	//------------------------------------------------------------------------------------
-	//	This method replaces the .NET string method 'PadLeft' (2 parameter version).
+	//	This method replaces the .NET String method 'PadLeft' (2 parameter version).
 	//------------------------------------------------------------------------------------
 	public static String padLeft(String string, int totalWidth, char paddingChar)
 	{
@@ -239,7 +239,7 @@ public final class StringHelper
 	}
 
 	//------------------------------------------------------------------------------------
-	//	This method replaces the .NET string constructor which repeats a character.
+	//	This method replaces the .NET String constructor which repeats a character.
 	//------------------------------------------------------------------------------------
 	public static String repeatChar(char charToRepeat, int count)
 	{
@@ -252,37 +252,37 @@ public final class StringHelper
 	}
 
 	//------------------------------------------------------------------------------------
-	//	This method replaces the .NET string method 'LastIndexOf' (char version).
+	//	This method replaces the .NET String method 'LastIndexOf' (char version).
 	//------------------------------------------------------------------------------------
 	public static int lastIndexOf(String string, char value, int startIndex, int count)
 	{
 		int leftMost = startIndex + 1 - count;
 		int rightMost = startIndex + 1;
-		String substring = string.substring(leftMost, rightMost);
-		int lastIndexInSubstring = substring.lastIndexOf(value);
-		if (lastIndexInSubstring < 0)
+		String subString = string.substring(leftMost, rightMost);
+		int lastIndexInSubString = subString.lastIndexOf(value);
+		if (lastIndexInSubString < 0)
 			return -1;
 		else
-			return lastIndexInSubstring + leftMost;
+			return lastIndexInSubString + leftMost;
 	}
 
 	//------------------------------------------------------------------------------------
-	//	This method replaces the .NET string method 'LastIndexOf' (string version).
+	//	This method replaces the .NET String method 'LastIndexOf' (String version).
 	//------------------------------------------------------------------------------------
 	public static int lastIndexOf(String string, String value, int startIndex, int count)
 	{
 		int leftMost = startIndex + 1 - count;
 		int rightMost = startIndex + 1;
-		String substring = string.substring(leftMost, rightMost);
-		int lastIndexInSubstring = substring.lastIndexOf(value);
-		if (lastIndexInSubstring < 0)
+		String subString = string.substring(leftMost, rightMost);
+		int lastIndexInSubString = subString.lastIndexOf(value);
+		if (lastIndexInSubString < 0)
 			return -1;
 		else
-			return lastIndexInSubstring + leftMost;
+			return lastIndexInSubString + leftMost;
 	}
 
 	//------------------------------------------------------------------------------------
-	//	This method replaces the .NET string method 'IndexOfAny' (1 parameter version).
+	//	This method replaces the .NET String method 'IndexOfAny' (1 parameter version).
 	//------------------------------------------------------------------------------------
 	public static int indexOfAny(String string, char[] anyOf)
 	{
@@ -306,32 +306,32 @@ public final class StringHelper
 	}
 
 	//------------------------------------------------------------------------------------
-	//	This method replaces the .NET string method 'IndexOfAny' (2 parameter version).
+	//	This method replaces the .NET String method 'IndexOfAny' (2 parameter version).
 	//------------------------------------------------------------------------------------
 	public static int indexOfAny(String string, char[] anyOf, int startIndex)
 	{
-		int indexInSubstring = indexOfAny(string.substring(startIndex), anyOf);
-		if (indexInSubstring == -1)
+		int indexInSubString = indexOfAny(string.substring(startIndex), anyOf);
+		if (indexInSubString == -1)
 			return -1;
 		else
-			return indexInSubstring + startIndex;
+			return indexInSubString + startIndex;
 	}
 
 	//------------------------------------------------------------------------------------
-	//	This method replaces the .NET string method 'IndexOfAny' (3 parameter version).
+	//	This method replaces the .NET String method 'IndexOfAny' (3 parameter version).
 	//------------------------------------------------------------------------------------
 	public static int indexOfAny(String string, char[] anyOf, int startIndex, int count)
 	{
 		int endIndex = startIndex + count;
-		int indexInSubstring = indexOfAny(string.substring(startIndex, endIndex), anyOf);
-		if (indexInSubstring == -1)
+		int indexInSubString = indexOfAny(string.substring(startIndex, endIndex), anyOf);
+		if (indexInSubString == -1)
 			return -1;
 		else
-			return indexInSubstring + startIndex;
+			return indexInSubString + startIndex;
 	}
 
 	//------------------------------------------------------------------------------------
-	//	This method replaces the .NET string method 'LastIndexOfAny' (1 parameter version).
+	//	This method replaces the .NET String method 'LastIndexOfAny' (1 parameter version).
 	//------------------------------------------------------------------------------------
 	public static int lastIndexOfAny(String string, char[] anyOf)
 	{
@@ -352,31 +352,31 @@ public final class StringHelper
 	}
 
 	//------------------------------------------------------------------------------------
-	//	This method replaces the .NET string method 'LastIndexOfAny' (2 parameter version).
+	//	This method replaces the .NET String method 'LastIndexOfAny' (2 parameter version).
 	//------------------------------------------------------------------------------------
 	public static int lastIndexOfAny(String string, char[] anyOf, int startIndex)
 	{
-		String substring = string.substring(0, startIndex + 1);
-		int lastIndexInSubstring = lastIndexOfAny(substring, anyOf);
-		if (lastIndexInSubstring < 0)
+		String subString = string.substring(0, startIndex + 1);
+		int lastIndexInSubString = lastIndexOfAny(subString, anyOf);
+		if (lastIndexInSubString < 0)
 			return -1;
 		else
-			return lastIndexInSubstring;
+			return lastIndexInSubString;
 	}
 
 	//------------------------------------------------------------------------------------
-	//	This method replaces the .NET string method 'LastIndexOfAny' (3 parameter version).
+	//	This method replaces the .NET String method 'LastIndexOfAny' (3 parameter version).
 	//------------------------------------------------------------------------------------
 	public static int lastIndexOfAny(String string, char[] anyOf, int startIndex, int count)
 	{
 		int leftMost = startIndex + 1 - count;
 		int rightMost = startIndex + 1;
-		String substring = string.substring(leftMost, rightMost);
-		int lastIndexInSubstring = lastIndexOfAny(substring, anyOf);
-		if (lastIndexInSubstring < 0)
+		String subString = string.substring(leftMost, rightMost);
+		int lastIndexInSubString = lastIndexOfAny(subString, anyOf);
+		if (lastIndexInSubString < 0)
 			return -1;
 		else
-			return lastIndexInSubstring + leftMost;
+			return lastIndexInSubString + leftMost;
 	}
 
 }

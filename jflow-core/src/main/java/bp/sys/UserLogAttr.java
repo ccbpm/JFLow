@@ -1,6 +1,5 @@
 package bp.sys;
 
-
 /** 
  用户日志
 */
@@ -10,8 +9,6 @@ public class UserLogAttr
 	 名称
 	*/
 	public static final String EmpNo = "EmpNo";
-
-	public static final String FK_Emp = "FK_Emp";
 	/** 
 	 用户名
 	*/
@@ -20,9 +17,6 @@ public class UserLogAttr
 	 日志标记
 	*/
 	public static final String LogFlag = "LogFlag";
-	/** 
-	 级别
-	*/
 	public static final String LevelText = "LevelText";
 	/** 
 	 处理内容

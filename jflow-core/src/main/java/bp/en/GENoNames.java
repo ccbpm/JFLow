@@ -1,7 +1,5 @@
 package bp.en;
 
-import bp.da.*;
-
 import java.util.*;
 
 /** 
@@ -29,7 +27,7 @@ public class GENoNames extends EntitiesNoName
 		this.Desc = tableDesc;
 	}
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new GENoName(this.SFTable, this.Desc);
 	}
@@ -49,7 +47,7 @@ public class GENoNames extends EntitiesNoName
 	*/
 	public final java.util.List<GENoName> ToJavaList()throws Exception
 	{
-		return (java.util.List<GENoName>)(Object)this;
+		return (java.util.List<GENoName>)(Object)(Object)this;
 	}
 	/** 
 	 转化成list

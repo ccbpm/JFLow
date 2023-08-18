@@ -1,9 +1,9 @@
 package bp.sys;
 
 import bp.da.*;
+import bp.difference.*;
 import bp.en.*;
 import bp.web.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -14,24 +14,28 @@ public class FastInputs extends EntitiesMyPK
 	/** 
 	 常用语s
 	*/
-	public FastInputs() throws Exception {
+	public FastInputs()
+	{
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FastInput();
 	}
-
-	/**
-	 * 获得已经有的数据
-	 * @return
-	 */
-	public String InitData_Flow() throws Exception {
+	/** 
+	 获得已经有的数据.
+	 
+	 @return 
+	*/
+	public final String InitData_Flow() throws Exception {
 		String userNo = WebUser.getNo();
-		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+		{
 			userNo = WebUser.getOrgNo() + "_" + userNo;
+		}
 
 		int i = this.Retrieve("CfgKey", "Flow", "FK_Emp", userNo);
 		if (i == 0)
@@ -72,7 +76,9 @@ public class FastInputs extends EntitiesMyPK
 				String mypk = "Flow" + userNo + "_" + index;
 				FastInput en = new FastInput();
 				if (en.IsExit("MyPK", mypk))
+				{
 					continue;
+				}
 				en.setMyPK(mypk);
 				en.SetValByKey("CfgKey", "Flow");
 				en.SetValByKey("FK_Emp", userNo);
@@ -100,31 +106,31 @@ public class FastInputs extends EntitiesMyPK
 			FastInput en = new FastInput();
 			en.setMyPK(DBAccess.GenerGUID());
 			en.setVals("同意");
-			en.setFK_Emp(WebUser.getNo());
+			en.setEmpNo(WebUser.getNo());
 			en.Insert();
 
 			en = new FastInput();
 			en.setMyPK(DBAccess.GenerGUID());
 			en.setVals("不同意");
-			en.setFK_Emp(WebUser.getNo());
+			en.setEmpNo(WebUser.getNo());
 			en.Insert();
 
 			en = new FastInput();
 			en.setMyPK(DBAccess.GenerGUID());
 			en.setVals("同意，请领导批示");
-			en.setFK_Emp(WebUser.getNo());
+			en.setEmpNo(WebUser.getNo());
 			en.Insert();
 
 			en = new FastInput();
 			en.setMyPK(DBAccess.GenerGUID());
 			en.setVals("同意办理");
-			en.setFK_Emp(WebUser.getNo());
+			en.setEmpNo(WebUser.getNo());
 			en.Insert();
 
 			en = new FastInput();
 			en.setMyPK(DBAccess.GenerGUID());
 			en.setVals("情况属实报领导批准");
-			en.setFK_Emp(WebUser.getNo());
+			en.setEmpNo(WebUser.getNo());
 			en.Insert();
 
 			val = this.Retrieve(FastInputAttr.CfgKey, "CYY", FastInputAttr.FK_Emp, WebUser.getNo());
@@ -139,7 +145,8 @@ public class FastInputs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<FastInput> ToJavaList() {
+	public final java.util.List<FastInput> ToJavaList()
+	{
 		return (java.util.List<FastInput>)(Object)this;
 	}
 	/** 
@@ -147,7 +154,8 @@ public class FastInputs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<FastInput> Tolist()  {
+	public final ArrayList<FastInput> Tolist()
+	{
 		ArrayList<FastInput> list = new ArrayList<FastInput>();
 		for (int i = 0; i < this.size(); i++)
 		{

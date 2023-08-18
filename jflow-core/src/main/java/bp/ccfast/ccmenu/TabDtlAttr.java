@@ -1,10 +1,6 @@
 package bp.ccfast.ccmenu;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
-import bp.ccfast.*;
-import java.util.*;
 
 public class TabDtlAttr extends EntityNoNameAttr
 {

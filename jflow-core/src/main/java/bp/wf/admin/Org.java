@@ -4,59 +4,53 @@ import bp.da.*;
 import bp.en.*;
 import bp.en.Map;
 import bp.web.*;
-import bp.wf.port.admin2group.*;
-import java.util.*;
 
 /** 
  独立组织
 */
 public class Org extends EntityNoName
 {
+
 		///#region 属性
 	/** 
 	 父级组织编号
 	*/
-	public final String getParentNo()
-	{
+	public final String getParentNo()  {
 		return this.GetValStrByKey(OrgAttr.ParentNo);
 	}
-	public final void setParentNo(String value)
-	{
+	public final void setParentNo(String value){
 		this.SetValByKey(OrgAttr.ParentNo, value);
 	}
 	/** 
 	 父级组织名称
 	*/
-	public final String getParentName()
-	{
+	public final String getParentName()  {
 		return this.GetValStrByKey(OrgAttr.ParentName);
 	}
-	public final void setParentName(String value)
-	{
+	public final void setParentName(String value){
 		this.SetValByKey(OrgAttr.ParentName, value);
 	}
 	/** 
 	 父节点编号
 	*/
-	public final String getAdminer()
-	{
+	public final String getAdminer()  {
 		return this.GetValStrByKey(OrgAttr.Adminer);
 	}
-	public final void setAdminer(String value)
-	{
+	public final void setAdminer(String value){
 		this.SetValByKey(OrgAttr.Adminer, value);
 	}
 	/** 
 	 管理员名称
 	*/
-	public final String getAdminerName()
-	{
+	public final String getAdminerName()  {
 		return this.GetValStrByKey(OrgAttr.AdminerName);
 	}
-	public final void setAdminerName(String value)
-	{
+	public final void setAdminerName(String value){
 		this.SetValByKey(OrgAttr.AdminerName, value);
 	}
+
+		///#endregion
+
 
 		///#region 构造函数
 	/** 
@@ -70,10 +64,13 @@ public class Org extends EntityNoName
 	 
 	 @param no 编号
 	*/
-	public Org(String no)
+	public Org(String no) throws Exception
 	{
 		super(no);
 	}
+
+		///#endregion
+
 
 		///#region 重写方法
 	/** 
@@ -90,8 +87,7 @@ public class Org extends EntityNoName
 	 Map
 	*/
 	@Override
-	public Map getEnMap()
-	{
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -111,6 +107,7 @@ public class Org extends EntityNoName
 
 		map.AddTBString(OrgAttr.Adminer, null, "管理员(创始人)", true, true, 0, 60, 200);
 		map.AddTBString(OrgAttr.AdminerName, null, "管理员名称", true, true, 0, 60, 200);
+
 
 			///#region 低代码.
 		RefMethod rm = new RefMethod();
@@ -205,7 +202,6 @@ public class Org extends EntityNoName
 			///#endregion 表单管理.
 
 
-
 			///#region 组织管理.
 		rm = new RefMethod();
 		rm.GroupName = "组织";
@@ -217,7 +213,7 @@ public class Org extends EntityNoName
 
 		rm = new RefMethod();
 		rm.GroupName = "组织";
-		rm.Title = "岗位";
+		rm.Title = "角色";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.ClassMethodName = this.toString() + ".OrgStation";
 		rm.Icon = "icon-chart";
@@ -225,7 +221,7 @@ public class Org extends EntityNoName
 
 		rm = new RefMethod();
 		rm.GroupName = "组织";
-		rm.Title = "岗位类型";
+		rm.Title = "角色类型";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.ClassMethodName = this.toString() + ".OrgStationType";
 		rm.Icon = "icon-chart";
@@ -268,15 +264,15 @@ public class Org extends EntityNoName
 	}
 	public final String OrgStation()
 	{
-		return "/WF/Comm/Search.htm?EnsName=BP.Port.Stations";
+		return "/WF/Comm/Search.htm?EnsName=bp.port.Stations";
 	}
 	public final String OrgStationType()
 	{
-		return "/WF/Comm/Ens.htm?EnsName=BP.Port.StationTypes";
+		return "/WF/Comm/Ens.htm?EnsName=bp.port.StationTypes";
 	}
 	public final String OrgDept()
 	{
-		return "/WF/Comm/Search.htm?EnsName=BP.Port.Depts";
+		return "/WF/Comm/Search.htm?EnsName=bp.port.Depts";
 	}
 
 		///#endregion 组织.
@@ -298,11 +294,11 @@ public class Org extends EntityNoName
 
 	public final String FrmTemplate()
 	{
-		return "/WF/Comm/Search.htm?EnsName=BP.WF.Admin.Frms";
+		return "/WF/Comm/Search.htm?EnsName=BP.WF.Template.Frms";
 	}
 	public final String FrmSort()
 	{
-		return "/WF/Comm/Ens.htm?EnsName=BP.WF.Admin.FrmSorts";
+		return "/WF/Comm/Ens.htm?EnsName=BP.WF.Template.FrmSorts";
 	}
 
 		///#endregion 表单.
@@ -315,7 +311,7 @@ public class Org extends EntityNoName
 	}
 	public final String FlowSorts()
 	{
-		return "/WF/Comm/Ens.htm?EnsName=BP.WF.Admin.FlowSorts";
+		return "/WF/Comm/Ens.htm?EnsName=BP.WF.Template.FlowSorts";
 	}
 	public final String FlowGenerWorkFlowView()
 	{
@@ -330,7 +326,8 @@ public class Org extends EntityNoName
 		///#endregion 流程模板
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception {
+	protected boolean beforeUpdateInsertAction() throws Exception
+	{
 
 		this.SetValByKey("FlowNums", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM WF_Flow WHERE OrgNo='" + WebUser.getOrgNo() + "'"));
 		this.SetValByKey("FrmNums", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS a FROM Sys_MapData WHERE OrgNo='" + WebUser.getOrgNo() + "'"));

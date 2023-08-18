@@ -1,11 +1,5 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.en.*;
-import bp.wf.*;
-import bp.*;
-import bp.wf.*;
-
 
 /** 
  SQL模板属性

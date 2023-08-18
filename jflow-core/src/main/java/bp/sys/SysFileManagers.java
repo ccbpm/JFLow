@@ -1,10 +1,7 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
-
-import java.util.List;
+import java.util.*;
 
 /** 
  文件管理者 
@@ -14,13 +11,14 @@ public class SysFileManagers extends EntitiesOID
 	/** 
 	 文件管理者
 	*/
-	public SysFileManagers() throws Exception {
+	public SysFileManagers()
+	{
 	}
 	/** 
 	 文件管理者
 	 
-	 param EnName
-	 param refval
+	 @param EnName
+	 @param refval
 	*/
 	public SysFileManagers(String EnName, String refval) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -32,7 +30,7 @@ public class SysFileManagers extends EntitiesOID
 	/** 
 	 文件管理者
 	 
-	 param EnName
+	 @param EnName
 	*/
 	public SysFileManagers(String EnName) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -43,13 +41,15 @@ public class SysFileManagers extends EntitiesOID
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new SysFileManager();
 	}
-	public final SysFileManager GetSysFileByAttrFileNo(String key) throws Exception {
+	public final SysFileManager GetSysFileByAttrFileNo(String key)
+	{
 		for (SysFileManager en : this.ToJavaList())
 		{
-			if (en.getAttrFileNo().equals(key))
+			if (Objects.equals(en.getAttrFileNo(), key))
 			{
 				return en;
 			}

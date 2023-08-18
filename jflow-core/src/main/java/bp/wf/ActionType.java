@@ -1,6 +1,5 @@
 package bp.wf;
 
-import bp.*;
 
 /** 
  日志类型
@@ -139,11 +138,11 @@ public enum ActionType
 	 调整流程
 	*/
 	Adjust(31),
-	/**
-	 * 路由节点
-	 */
+	/** 
+	 路由节点
+	*/
 	Route(32),
-	/**
+	/** 
 	 信息
 	*/
 	Info(100);
@@ -152,7 +151,8 @@ public enum ActionType
 
 	private int intValue;
 	private static java.util.HashMap<Integer, ActionType> mappings;
-	private static java.util.HashMap<Integer, ActionType> getMappings()  {
+	private static java.util.HashMap<Integer, ActionType> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (ActionType.class)
@@ -167,15 +167,18 @@ public enum ActionType
 	}
 
 	private ActionType(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return intValue;
 	}
 
 	public static ActionType forValue(int value)
-	{return getMappings().get(value);
+	{
+		return getMappings().get(value);
 	}
 }

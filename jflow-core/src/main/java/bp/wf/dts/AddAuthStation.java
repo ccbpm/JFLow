@@ -1,8 +1,9 @@
 package bp.wf.dts;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.wf.template.*;
+import bp.*;
 import bp.wf.*;
 
 /** 
@@ -13,12 +14,12 @@ public class AddAuthStation extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public AddAuthStation()throws Exception
+	public AddAuthStation()
 	{
-		this.Title = "增加授权岗位";
-		this.Help = "1. 解决一个流程执行完成后，那些授权岗位参与了该流程.";
-		this.Help += "\t\n 2. 在WF_GenerWorkFlow 的Emps的字段上增加  @部门编号+下划线+岗位编号; ";
-		this.Help += "\t\n 3. 解决中科软的人员离职后的工作交接后，按照授权岗位查询已经办理过的流量问题.";
+		this.Title = "增加授权角色";
+		this.Help = "1. 解决一个流程执行完成后，那些授权角色参与了该流程.";
+		this.Help += "\t\n 2. 在WF_GenerWorkFlow 的Emps的字段上增加  @部门编号+下划线+角色编号; ";
+		this.Help += "\t\n 3. 解决中科软的人员离职后的工作交接后，按照授权角色查询已经办理过的流量问题.";
 
 		this.GroupName = "流程自动执行定时任务";
 	}
@@ -45,8 +46,7 @@ public class AddAuthStation extends Method
 	 @return 返回执行结果
 	*/
 	@Override
-	public Object Do()throws Exception
-	{
+	public Object Do() throws Exception {
 		GenerWorkFlows ens = new GenerWorkFlows();
 		ens.Retrieve("", "", null);
 
@@ -62,21 +62,21 @@ public class AddAuthStation extends Method
 			GenerWorkFlow gwf = new GenerWorkFlow(workid);
 
 			//查询出来当前流程的Track.
-			sql = "SELECT * FROM ND" + Integer.parseInt(gwf.getFK_Flow()) + "Track WHERE WorkID=" + workid + " ORDER BY RDT ";
+			sql = "SELECT * FROM ND" + Integer.parseInt(gwf.getFlowNo()) + "Track WHERE WorkID=" + workid + " ORDER BY RDT ";
 			DataTable tarck = DBAccess.RunSQLReturnTable(sql);
 
 			//查询出来节点.
-			Nodes nds = new Nodes(gwf.getFK_Flow());
+			Nodes nds = new Nodes(gwf.getFlowNo());
 
 			//遍历节点.
 			for (Node nd : nds.ToJavaList())
 			{
-				if (!this.IsHaveStation(nd))
+				if (this.ItIsHaveStation(nd) == false)
 				{
 					continue;
 				}
 
-				//求节点与岗位的集合.
+				//求节点与角色的集合.
 				NodeStations ndstations = new NodeStations(nd.getNodeID());
 				if (ndstations.size() == 0)
 				{
@@ -84,7 +84,7 @@ public class AddAuthStation extends Method
 				}
 
 				//找到处理当前工作的人员集合.
-				sql = "SELECT EmpFrom FROM ND" + Integer.parseInt(gwf.getFK_Flow()) + "Track WHERE WorkID=" + workid + " AND NDFrom=" + nd.getNodeID() + " ORDER BY RDT ";
+				sql = "SELECT EmpFrom FROM ND" + Integer.parseInt(gwf.getFlowNo()) + "Track WHERE WorkID=" + workid + " AND NDFrom=" + nd.getNodeID() + " ORDER BY RDT ";
 				DataTable dtTarck = DBAccess.RunSQLReturnTable(sql);
 
 				for (DataRow drTrack : dtTarck.Rows)
@@ -104,7 +104,7 @@ public class AddAuthStation extends Method
 						String stationNo = mydtDeptStatio.get("FK_Station").toString();
 
 						String str = "@" + deptNo + "_" + stationNo + ";";
-						if (!gwf.getTodoEmps().contains(str))
+						if (gwf.getTodoEmps().contains(str) == false)
 						{
 							gwf.setTodoEmps(gwf.getTodoEmps() + str);
 						}
@@ -120,7 +120,7 @@ public class AddAuthStation extends Method
 		return "调度完成..";
 	}
 
-	public final boolean IsHaveStation(Node nd) throws Exception {
+	public final boolean ItIsHaveStation(Node nd) throws Exception {
 		if (nd.getHisDeliveryWay() == DeliveryWay.ByDeptAndStation)
 		{
 			return true;

@@ -1,9 +1,10 @@
 package bp.ccfast.portal;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
 import bp.en.*;
 import bp.ccfast.portal.windowext.*;
+import bp.sys.CCBPMRunModel;
+
 import java.util.*;
 
 /** 
@@ -16,13 +17,15 @@ public class WindowTemplates extends EntitiesNoName
 	/** 
 	 信息块s
 	*/
-	public WindowTemplates() throws Exception {
+	public WindowTemplates()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new WindowTemplate();
 	}
 
@@ -35,7 +38,8 @@ public class WindowTemplates extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<WindowTemplate> ToJavaList() {
+	public final java.util.List<WindowTemplate> ToJavaList()
+	{
 		return (java.util.List<WindowTemplate>)(Object)this;
 	}
 	/** 
@@ -43,7 +47,8 @@ public class WindowTemplates extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<WindowTemplate> Tolist()  {
+	public final ArrayList<WindowTemplate> Tolist()
+	{
 		ArrayList<WindowTemplate> list = new ArrayList<WindowTemplate>();
 		for (int i = 0; i < this.size(); i++)
 		{
@@ -206,18 +211,18 @@ public class WindowTemplates extends EntitiesNoName
 		String html = "";
 		html += "<ul>";
 		html += " <li>ccbpm是一个100%的开源软件,包含工作流程引擎、表单引擎、组织结构管理、菜单管理等敏捷开发的基础模块。</li>";
-		html += " <li>该开源软件由高凌公司从2003年开始研发到至今，经过多个版本迭代，并历经数千个项目于用户需求场景完成。</li>";
+		html += " <li>该开源软件由驰骋公司从2003年开始研发到至今，经过多个版本迭代，并历经数千个项目于用户需求场景完成。</li>";
 		html += " <li>设计严谨、考究抽象程度高、覆盖大部分客户应用需求，属于一款不可多得的应用国产的敏捷开发工具。</li>";
 		html += " <li>源代码都发布在giee上，采用GPL开源协议进行开源，遵守GPL开源协议使用ccbpm合法有效。</li>";
-		html += " <li>高凌公司对外提供现场培训、技术支持、协助集成、协助项目落地服务，对小微企业，小企业，中等企业，大企业收费8,12,18,23三个等级的付费。</li>";
+		html += " <li>驰骋公司对外提供现场培训、技术支持、协助集成、协助项目落地服务，对小微企业，小企业，中等企业，大企业收费8,12,18,23三个等级的付费。</li>";
 		html += "</ul>";
 		en.setDocs(html);
 		en.setMoreLinkModel(1);
 		en.setColSpan(2);
-		en.setDel(true);
+		en.setItIsDel(true);
 		en.Insert();
 
-		///#endregion 关于我们.
+			///#endregion 关于我们.
 
 
 			///#region 登录信息.
@@ -256,11 +261,8 @@ public class WindowTemplates extends EntitiesNoName
 		en.setName("我的待办");
 		en.setWinDocModel(WinDocModel.ChartLine); //柱状图.
 
-		if(SystemConfig.getAppCenterDBType()==DBType.KingBaseR3 || SystemConfig.getAppCenterDBType()==DBType.KingBaseR6)
-			html = "SELECT FK_NodeText AS \"流程名\", COUNT(WorkID) as \"数量\" ";
-		else
-			html = "SELECT FK_NodeText AS '流程名', COUNT(WorkID) as '数量' ";
-		html += " FROM WF_GenerWorkerlist WHERE FK_Emp = '@WebUser.No' AND IsPass=0 GROUP BY FK_NodeText ";
+		html = "SELECT NodeName AS '流程名', COUNT(WorkID) as '数量' ";
+		html += " FROM WF_GenerWorkerlist WHERE FK_Emp = '@WebUser.No' AND IsPass=0 GROUP BY NodeName ";
 		en.setDocs(html);
 		en.setMoreLinkModel(1);
 		en.setColSpan(4);
@@ -276,19 +278,13 @@ public class WindowTemplates extends EntitiesNoName
 		en.setName("全部流程");
 		en.setWinDocModel(WinDocModel.ChartLine); //柱状图.
 
-		if (bp.difference.SystemConfig.getCCBPMRunModel() == bp.sys.CCBPMRunModel.Single)
+		if (bp.difference.SystemConfig.getCCBPMRunModel() ==   CCBPMRunModel.Single)
 		{
-			if(SystemConfig.getAppCenterDBType()==DBType.KingBaseR3 || SystemConfig.getAppCenterDBType()==DBType.KingBaseR6)
-				en.setDocs("SELECT FlowName AS \"流程名\", COUNT(WorkID) AS \"数量\"  FROM WF_GenerWorkFlow WHERE WFState !=0 GROUP BY FlowName");
-			else
-				en.setDocs("SELECT FlowName AS 流程名, COUNT(WorkID) AS \"数量\"  FROM WF_GenerWorkFlow WHERE WFState !=0 GROUP BY FlowName");
+			en.setDocs("SELECT FlowName AS '流程名', COUNT(WorkID) AS '数量'  FROM WF_GenerWorkFlow WHERE WFState !=0 GROUP BY FlowName");
 		}
 		else
 		{
-			if(SystemConfig.getAppCenterDBType()==DBType.KingBaseR3 || SystemConfig.getAppCenterDBType()==DBType.KingBaseR6)
-				en.setDocs("SELECT FlowName AS \"流程名\", COUNT(WorkID) AS \"数量\"  FROM WF_GenerWorkFlow WHERE WFState !=0 AND OrgNo='@WebUser.OrgNo' GROUP BY FlowName");
-			else
-				en.setDocs("SELECT FlowName AS '流程名', COUNT(WorkID) AS '数量'  FROM WF_GenerWorkFlow WHERE WFState !=0 AND OrgNo='@WebUser.OrgNo' GROUP BY FlowName");
+			en.setDocs("SELECT FlowName AS '流程名', COUNT(WorkID) AS '数量'  FROM WF_GenerWorkFlow WHERE WFState !=0 AND OrgNo='@WebUser.OrgNo' GROUP BY FlowName");
 		}
 
 		en.setMoreLinkModel(1);
@@ -305,10 +301,7 @@ public class WindowTemplates extends EntitiesNoName
 		en.setWinDocModel(WinDocModel.ChartLine); //.
 		en.setNo("005");
 		en.setName("未完成");
-		if(SystemConfig.getAppCenterDBType()==DBType.KingBaseR3 || SystemConfig.getAppCenterDBType()==DBType.KingBaseR6)
-			html = "SELECT FlowName AS \"流程名\", COUNT(WorkID) AS \"数量\" FROM WF_GenerWorkFlow  WHERE WFState = 2 ";
-		else
-			html = "SELECT FlowName AS '流程名', COUNT(WorkID) AS '数量' FROM WF_GenerWorkFlow  WHERE WFState = 2 ";
+		html = "SELECT FlowName AS '流程名', COUNT(WorkID) AS '数量' FROM WF_GenerWorkFlow  WHERE WFState = 2 ";
 		html += "and Emps like '%@WebUser.No%' GROUP BY FlowName";
 		en.setDocs(html);
 		en.setMoreLinkModel(1);
@@ -326,19 +319,13 @@ public class WindowTemplates extends EntitiesNoName
 		en.setName("我的发起");
 		en.setWinDocModel(WinDocModel.ChartPie); //柱状图.
 
-		if (bp.difference.SystemConfig.getCCBPMRunModel() == bp.sys.CCBPMRunModel.Single)
+		if (bp.difference.SystemConfig.getCCBPMRunModel() ==  CCBPMRunModel.Single)
 		{
-			if(SystemConfig.getAppCenterDBType()==DBType.KingBaseR3 || SystemConfig.getAppCenterDBType()==DBType.KingBaseR6)
-				en.setDocs("SELECT FlowName AS \"流程名\", COUNT(WorkID) AS \"数量\"  FROM WF_GenerWorkFlow WHERE WFState !=0 AND Starter='@WebUser.No'  GROUP BY FlowName");
-			else
-				en.setDocs("SELECT FlowName AS '流程名', COUNT(WorkID) AS '数量'  FROM WF_GenerWorkFlow WHERE WFState !=0 AND Starter='@WebUser.No'  GROUP BY FlowName");
+			en.setDocs("SELECT FlowName AS '流程名', COUNT(WorkID) AS '数量'  FROM WF_GenerWorkFlow WHERE WFState !=0 AND Starter='@WebUser.No'  GROUP BY FlowName");
 		}
 		else
 		{
-			if(SystemConfig.getAppCenterDBType()==DBType.KingBaseR3 || SystemConfig.getAppCenterDBType()==DBType.KingBaseR6)
-				en.setDocs("SELECT FlowName AS \"流程名\", COUNT(WorkID) AS \"数量\"  FROM WF_GenerWorkFlow WHERE WFState !=0 AND Starter='@WebUser.No' AND OrgNo='@WebUser.OrgNo' GROUP BY FlowName");
-			else
-				en.setDocs("SELECT FlowName AS '流程名', COUNT(WorkID) AS '数量'  FROM WF_GenerWorkFlow WHERE WFState !=0 AND Starter='@WebUser.No' AND OrgNo='@WebUser.OrgNo' GROUP BY FlowName");
+			en.setDocs("SELECT FlowName AS '流程名', COUNT(WorkID) AS '数量'  FROM WF_GenerWorkFlow WHERE WFState !=0 AND Starter='@WebUser.No' AND OrgNo='@WebUser.OrgNo' GROUP BY FlowName");
 		}
 
 		en.setMoreLinkModel(1);
@@ -355,18 +342,13 @@ public class WindowTemplates extends EntitiesNoName
 		en.setName("我参与的");
 		en.setWinDocModel(WinDocModel.ChartChina); //柱状图.
 
-		if (bp.difference.SystemConfig.getCCBPMRunModel() == bp.sys.CCBPMRunModel.Single)
+		if (bp.difference.SystemConfig.getCCBPMRunModel() ==   CCBPMRunModel.Single)
 		{
-			if(SystemConfig.getAppCenterDBType()==DBType.KingBaseR3 || SystemConfig.getAppCenterDBType()==DBType.KingBaseR6)
-				en.setDocs("SELECT FlowName AS \"流程名\", COUNT(WorkID) AS \"数量\"  FROM WF_GenerWorkFlow WHERE WFState !=0 AND Emps LIKE  '%@WebUser.No,%'  GROUP BY FlowName");
-			else
-				en.setDocs("SELECT FlowName AS '流程名', COUNT(WorkID) AS '数量'  FROM WF_GenerWorkFlow WHERE WFState !=0 AND Emps LIKE  '%@WebUser.No,%'  GROUP BY FlowName");
+			en.setDocs("SELECT FlowName AS '流程名', COUNT(WorkID) AS '数量'  FROM WF_GenerWorkFlow WHERE WFState !=0 AND Emps LIKE  '%@WebUser.getNo(),%'  GROUP BY FlowName");
 		}
 		else
-		{if(SystemConfig.getAppCenterDBType()==DBType.KingBaseR3 || SystemConfig.getAppCenterDBType()==DBType.KingBaseR6)
-			en.setDocs("SELECT FlowName AS \"流程名\", COUNT(WorkID) AS \"数量\"  FROM WF_GenerWorkFlow WHERE WFState !=0 AND Emps LIKE '%@WebUser.No,%' AND OrgNo='@WebUser.OrgNo' GROUP BY FlowName");
-		else
-			en.setDocs("SELECT FlowName AS '流程名', COUNT(WorkID) AS '数量'  FROM WF_GenerWorkFlow WHERE WFState !=0 AND Emps LIKE '%@WebUser.No,%' AND OrgNo='@WebUser.OrgNo' GROUP BY FlowName");
+		{
+			en.setDocs("SELECT FlowName AS '流程名', COUNT(WorkID) AS '数量'  FROM WF_GenerWorkFlow WHERE WFState !=0 AND Emps LIKE '%@WebUser.getNo(),%' AND OrgNo='@WebUser.OrgNo' GROUP BY FlowName");
 		}
 
 		en.setMoreLinkModel(1);
@@ -374,16 +356,16 @@ public class WindowTemplates extends EntitiesNoName
 
 		en.Insert();
 
+			///#endregion 我的发起.
+
+
 			///#region 流程实例月份柱状图.
 		en = new WindowTemplate();
 		en.setPageID("Home");
 		en.setNo("008");
 		en.setName("月统计发起");
 		en.setWinDocModel(WinDocModel.ChartLine);
-		if(SystemConfig.getAppCenterDBType()==DBType.KingBaseR3 || SystemConfig.getAppCenterDBType()==DBType.KingBaseR6)
-			html = "SELECT FK_NY  AS \"月份\", COUNT(WorkID) AS \"数量\"  FROM WF_GenerWorkFlow WHERE WFState !=0 GROUP BY FK_NY";
-		else
-			html = "SELECT FK_NY  AS '月份', COUNT(WorkID) AS '数量'  FROM WF_GenerWorkFlow WHERE WFState !=0 GROUP BY FK_NY";
+		html = "SELECT FK_NY  AS '月份', COUNT(WorkID) AS '数量'  FROM WF_GenerWorkFlow WHERE WFState !=0 GROUP BY FK_NY";
 		en.setDocs(html);
 		en.setMoreLinkModel(1);
 		en.setColSpan(4);

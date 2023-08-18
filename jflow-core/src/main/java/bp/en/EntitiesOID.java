@@ -30,5 +30,7 @@ public abstract class EntitiesOID extends Entities
 		qo.DoQuery();
 	}
 
-		///
+    public abstract Entity getNewEntity();
+
+    ///
 }

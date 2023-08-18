@@ -11,12 +11,12 @@ public class FrmOrgs extends EntitiesMM
 	/** 
 	 表单对应组织
 	*/
-	public FrmOrgs()  {
+	public FrmOrgs()
+	{
 	}
 	/** 
 	 表单对应组织
-	 
-	 param EmpNo EmpNo
+	 @param orgNo orgNo
 	*/
 	public FrmOrgs(String orgNo) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -27,7 +27,8 @@ public class FrmOrgs extends EntitiesMM
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FrmOrg();
 	}
 
@@ -38,7 +39,8 @@ public class FrmOrgs extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmOrg> ToJavaList() {
+	public final java.util.List<FrmOrg> ToJavaList()
+	{
 		return (java.util.List<FrmOrg>)(Object)this;
 	}
 	/** 
@@ -46,7 +48,8 @@ public class FrmOrgs extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmOrg> Tolist()  {
+	public final ArrayList<FrmOrg> Tolist()
+	{
 		ArrayList<FrmOrg> list = new ArrayList<FrmOrg>();
 		for (int i = 0; i < this.size(); i++)
 		{

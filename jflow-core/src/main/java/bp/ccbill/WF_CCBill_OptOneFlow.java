@@ -1,21 +1,23 @@
 package bp.ccbill;
 
 import bp.da.*;
-import bp.difference.handler.WebContralBase;
 import bp.wf.*;
+import bp.wf.httphandler.*;
 import bp.ccbill.template.*;
+import bp.*;
 
 /** 
  页面功能实体
 */
-public class WF_CCBill_OptOneFlow extends WebContralBase
+public class WF_CCBill_OptOneFlow extends bp.difference.handler.DirectoryPageBase
 {
 
 		///#region 构造方法.
 	/** 
 	 构造函数
 	*/
-	public WF_CCBill_OptOneFlow() throws Exception {
+	public WF_CCBill_OptOneFlow()
+	{
 	}
 
 		///#endregion 构造方法.
@@ -25,7 +27,8 @@ public class WF_CCBill_OptOneFlow extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String FlowBaseData_Init() throws Exception {
+	public final String FlowBaseData_Init()
+	{
 		MethodFlowBaseData method = new MethodFlowBaseData();
 		return "";
 	}
@@ -39,8 +42,8 @@ public class WF_CCBill_OptOneFlow extends WebContralBase
 
 		String sql = "SELECT DISTINCT A.FK_Flow as No, A.FlowName as Name, B.Icon  FROM WF_GenerWorkFlow A, WF_Flow B  WHERE  A.FK_Flow=B.No AND A.PWorkID=" + this.getWorkID();
 		DataTable dtGroup = DBAccess.RunSQLReturnTable(sql);
-		dtGroup.TableName = "Flows";
-		if (bp.difference.SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
+		dtGroup.setTableName("Flows");
+		if (bp.difference.SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			dtGroup.Columns.get(0).setColumnName("No");
 			dtGroup.Columns.get(1).setColumnName("Name");

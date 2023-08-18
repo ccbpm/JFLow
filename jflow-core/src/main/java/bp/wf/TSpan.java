@@ -1,7 +1,5 @@
 package bp.wf;
 
-import bp.*;
-
 /** 
  时间段
 */
@@ -26,11 +24,13 @@ public enum TSpan
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue() {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
-	public static TSpan forValue(int value) 
-	{return values()[value];
+	public static TSpan forValue(int value)
+	{
+		return values()[value];
 	}
 }

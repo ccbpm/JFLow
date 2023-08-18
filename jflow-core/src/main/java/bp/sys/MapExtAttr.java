@@ -1,11 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
-import bp.web.*;
 import bp.en.*;
-import bp.difference.*;
-import bp.*;
-import java.util.*;
 
 /** 
  扩展
@@ -20,6 +15,10 @@ public class MapExtAttr extends EntityNoNameAttr
 	 ExtType
 	*/
 	public static final String ExtType = "ExtType";
+	/** 
+	 模式
+	*/
+	public static final String ExtModel = "ExtModel";
 	/** 
 	 插入表单的位置
 	*/
@@ -76,6 +75,10 @@ public class MapExtAttr extends EntityNoNameAttr
 	 tag5
 	*/
 	public static final String Tag5 = "Tag5";
+	/** 
+	 tag6
+	*/
+	public static final String Tag6 = "Tag6";
 	/** 
 	 数据源
 	*/

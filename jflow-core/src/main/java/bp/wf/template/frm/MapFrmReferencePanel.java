@@ -1,6 +1,11 @@
 package bp.wf.template.frm;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.sys.*;
+import bp.*;
+import bp.wf.*;
+import bp.wf.template.*;
+import java.util.*;
 
 /** 
  Word表单属性
@@ -12,12 +17,10 @@ public class MapFrmReferencePanel extends EntityNoName
 	/** 
 	 模版版本号
 	*/
-	public final String getRefTitle() throws Exception
-	{
+	public final String getRefTitle()  {
 		return this.GetValStringByKey(MapFrmReferencePanelAttr.RefTitle);
 	}
-	public final void setRefTitle(String value)  throws Exception
-	 {
+	public final void setRefTitle(String value){
 		this.SetValByKey(MapFrmReferencePanelAttr.RefTitle, value);
 	}
 
@@ -27,7 +30,8 @@ public class MapFrmReferencePanel extends EntityNoName
 
 		///#region 权限控制.
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (bp.web.WebUser.getNo().equals("admin") == true)
 		{
@@ -46,14 +50,15 @@ public class MapFrmReferencePanel extends EntityNoName
 	/** 
 	 Word表单属性
 	*/
-	public MapFrmReferencePanel()  {
+	public MapFrmReferencePanel()
+	{
 	}
 	/** 
 	 Word表单属性
 	 
-	 param no 表单ID
+	 @param no 表单ID
 	*/
-	public MapFrmReferencePanel(String no)
+	public MapFrmReferencePanel(String no) throws Exception
 	{
 		super(no);
 	}
@@ -61,7 +66,7 @@ public class MapFrmReferencePanel extends EntityNoName
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();

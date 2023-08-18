@@ -1,30 +1,27 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
-import bp.web.*;
-import bp.difference.*;
-import bp.*;
 import java.util.*;
 
 /** 
  实体集合
 */
-public class EnCfgs extends EntitiesNo
+public class EnCfgs extends EntitiesNoName
 {
 
 		///#region 构造
 	/** 
 	 配置信息
 	*/
-	public EnCfgs() throws Exception {
+	public EnCfgs()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new EnCfg();
 	}
 
@@ -37,7 +34,8 @@ public class EnCfgs extends EntitiesNo
 	 
 	 @return List
 	*/
-	public final java.util.List<EnCfg> ToJavaList() {
+	public final java.util.List<EnCfg> ToJavaList()
+	{
 		return (java.util.List<EnCfg>)(Object)this;
 	}
 	/** 
@@ -45,7 +43,8 @@ public class EnCfgs extends EntitiesNo
 	 
 	 @return List
 	*/
-	public final ArrayList<EnCfg> Tolist()  {
+	public final ArrayList<EnCfg> Tolist()
+	{
 		ArrayList<EnCfg> list = new ArrayList<EnCfg>();
 		for (int i = 0; i < this.size(); i++)
 		{

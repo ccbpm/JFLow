@@ -1,7 +1,7 @@
 package bp.sys.frmui;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
 import bp.*;
 import bp.sys.*;
@@ -17,13 +17,15 @@ public class MapAttrFlowBBSs extends EntitiesMyPK
 	/** 
 	 评论(抄送)组件s
 	*/
-	public MapAttrFlowBBSs() throws Exception {
+	public MapAttrFlowBBSs()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new MapAttrFlowBBS();
 	}
 
@@ -36,7 +38,8 @@ public class MapAttrFlowBBSs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<MapAttrFlowBBS> ToJavaList() {
+	public final java.util.List<MapAttrFlowBBS> ToJavaList()
+	{
 		return (java.util.List<MapAttrFlowBBS>)(Object)this;
 	}
 	/** 
@@ -44,7 +47,8 @@ public class MapAttrFlowBBSs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<MapAttrFlowBBS> Tolist()  {
+	public final ArrayList<MapAttrFlowBBS> Tolist()
+	{
 		ArrayList<MapAttrFlowBBS> list = new ArrayList<MapAttrFlowBBS>();
 		for (int i = 0; i < this.size(); i++)
 		{

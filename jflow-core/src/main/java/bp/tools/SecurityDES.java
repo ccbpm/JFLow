@@ -2,7 +2,7 @@ package bp.tools;
 
 import bp.sys.*;
 import bp.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.*;
 import java.io.*;
 

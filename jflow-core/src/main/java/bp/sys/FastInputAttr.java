@@ -1,10 +1,5 @@
 package bp.sys;
-
-import bp.da.*;
 import bp.en.*;
-import bp.web.*;
-import bp.*;
-import java.util.*;
 
 /** 
  常用语属性

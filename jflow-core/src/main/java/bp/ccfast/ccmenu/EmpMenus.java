@@ -1,25 +1,29 @@
 package bp.ccfast.ccmenu;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.ccfast.*;
 import java.util.*;
 
 /** 
  人员菜单功能s
 */
-public class EmpMenus extends EntitiesMM
+public class EmpMenus extends EntitiesMyPK
 {
 
 		///#region 构造
 	/** 
 	 菜单s
 	*/
-	public EmpMenus()  {
+	public EmpMenus()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new EmpMenu();
 	}
 
@@ -32,7 +36,8 @@ public class EmpMenus extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final java.util.List<EmpMenu> ToJavaList() {
+	public final java.util.List<EmpMenu> ToJavaList()
+	{
 		return (java.util.List<EmpMenu>)(Object)this;
 	}
 	/** 
@@ -40,7 +45,8 @@ public class EmpMenus extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final ArrayList<EmpMenu> Tolist()  {
+	public final ArrayList<EmpMenu> Tolist()
+	{
 		ArrayList<EmpMenu> list = new ArrayList<EmpMenu>();
 		for (int i = 0; i < this.size(); i++)
 		{

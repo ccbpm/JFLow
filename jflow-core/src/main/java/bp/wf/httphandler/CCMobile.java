@@ -1,12 +1,14 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
-import bp.difference.handler.WebContralBase;
 import bp.sys.*;
 import bp.web.*;
 import bp.port.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.wf.Glo;
+import bp.wf.port.admin2group.*;
+import bp.difference.*;
+import bp.ccfast.ccmenu.*;
 import bp.*;
 import bp.wf.*;
 import java.util.*;
@@ -15,8 +17,10 @@ import java.io.*;
 /** 
  页面功能实体
 */
-public class CCMobile extends WebContralBase
+public class CCMobile extends bp.difference.handler.DirectoryPageBase
 {
+
+
 	/** 
 	 构造函数
 	*/
@@ -32,7 +36,8 @@ public class CCMobile extends WebContralBase
 	 @return 
 	*/
 	@Override
-	protected String DoDefaultMethod() throws Exception {
+	protected String DoDefaultMethod()
+	{
 		switch (this.getDoType())
 		{
 
@@ -55,26 +60,63 @@ public class CCMobile extends WebContralBase
 
 	public final String Login_Submit() throws Exception {
 		String userNo = this.GetRequestVal("TB_No");
+		if (DataType.IsNullOrEmpty(userNo) == true)
+		{
+			userNo = this.GetRequestVal("TB_UserNo");
+		}
 		String pass = this.GetRequestVal("TB_PW");
-
+		if (DataType.IsNullOrEmpty(pass) == true)
+		{
+			pass = this.GetRequestVal("TB_Pass");
+		}
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+		{
+			Emp saemp = null;
+			if (DataType.IsNullOrEmpty(this.getOrgNo()) == false)
+			{
+				String empNo = this.getOrgNo() + "_" + userNo;
+				saemp.setNo(empNo);
+				if (saemp.RetrieveFromDBSources() == 0)
+				{
+					return "err@账号" + userNo + "在组织" + this.getOrgNo() + "还未注册.";
+				}
+			}
+			else
+			{
+				//获取当前用户
+				Emps emps = new Emps();
+				emps.Retrieve(EmpAttr.UserID, userNo, EmpAttr.EmpSta, 1, null);
+				if (emps.size() == 0)
+				{
+					return "err@还未注册该账号或该账号已经禁用.";
+				}
+				saemp = emps.get(0) instanceof Emp ? (Emp)emps.get(0) : null;
+			}
+			if (saemp.CheckPass(pass) == false)
+			{
+				return "err@用户名或者密码错误.";
+			}
+			//调用登录方法.
+			Dev2Interface.Port_Login(saemp.getUserID(), saemp.getOrgNo());
+			return "url@Home.htm?Token=" + Dev2Interface.Port_GenerToken("PC") + "&UserNo=" + saemp.getUserID();
+		}
 		Emp emp = new Emp();
-		emp.setUserID (userNo);
+		emp.setUserID(userNo);
 		if (emp.RetrieveFromDBSources() == 0)
 		{
 			if (DBAccess.IsExitsTableCol("Port_Emp", "NikeName") == true)
 			{
 				/*如果包含昵称列,就检查昵称是否存在.*/
 				Paras ps = new Paras();
-				ps.SQL = "SELECT " + bp.sys.base.Glo.getUserNo() + " FROM Port_Emp WHERE NikeName=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "userNo";
+				ps.SQL = "SELECT " + bp.sys.base.Glo.getUserNo() + " FROM Port_Emp WHERE NikeName=" + SystemConfig.getAppCenterDBVarStr() + "userNo";
 				ps.Add("userNo", userNo, false);
-				//string sql = "SELECT No FROM Port_Emp WHERE NikeName='" + userNo + "'";
 				String no = DBAccess.RunSQLReturnStringIsNull(ps, null);
 				if (no == null)
 				{
 					return "err@用户名或者密码错误.";
 				}
 
-				emp.setUserID (no);
+				emp.setUserID(no);
 				int i = emp.RetrieveFromDBSources();
 				if (i == 0)
 				{
@@ -85,16 +127,16 @@ public class CCMobile extends WebContralBase
 			{
 				/*如果包含昵称列,就检查昵称是否存在.*/
 				Paras ps = new Paras();
-				ps.SQL = "SELECT " + bp.sys.base.Glo.getUserNo() + " FROM Port_Emp WHERE Tel=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "userNo";
+				ps.SQL = "SELECT " + bp.sys.base.Glo.getUserNo() + " FROM Port_Emp WHERE Tel=" + SystemConfig.getAppCenterDBVarStr() + "userNo";
 				ps.Add("userNo", userNo, false);
-				//string sql = "SELECT No FROM Port_Emp WHERE NikeName='" + userNo + "'";
+				//String sql = "SELECT No FROM Port_Emp WHERE NikeName='" + userNo + "'";
 				String no = DBAccess.RunSQLReturnStringIsNull(ps, null);
 				if (no == null)
 				{
 					return "err@用户名或者密码错误.";
 				}
 
-				emp.setUserID (no);
+				emp.setUserID(no);
 				int i = emp.RetrieveFromDBSources();
 				if (i == 0)
 				{
@@ -112,15 +154,78 @@ public class CCMobile extends WebContralBase
 			return "err@用户名或者密码错误.";
 		}
 
-		//调用登录方法.
-		Dev2Interface.Port_Login(emp.getUserID());
+		if (bp.wf.Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
+		{
+			//调用登录方法.
+			Dev2Interface.Port_Login(emp.getUserID());
+			if (DBAccess.IsExitsTableCol("Port_Emp", "EmpSta") == true)
+			{
+				String sql = "SELECT EmpSta FROM Port_Emp WHERE No='" + emp.getNo() + "'";
+				if (DBAccess.RunSQLReturnValInt(sql, 1) == 1)
+				{
+					return "err@该用户已经被禁用.";
+				}
+			}
+			return "url@/FastMobilePortal/Default.htm?Token=" + Dev2Interface.Port_GenerToken("PC") + "&UserNo=" + emp.getUserID();
+		}
+		if (bp.wf.Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
+		{
+			//调用登录方法.
+			Dev2Interface.Port_Login(emp.getUserID());
+			if (DBAccess.IsExitsTableCol("Port_Emp", "EmpSta") == true)
+			{
+				String sql = "SELECT EmpSta FROM Port_Emp WHERE No='" + emp.getNo() + "'";
+				if (DBAccess.RunSQLReturnValInt(sql, 1) == 1)
+				{
+					return "err@该用户已经被禁用.";
+				}
+			}
+			return "url@/FastMobilePortal/Default.htm?Token=" + Dev2Interface.Port_GenerToken("PC") + "&UserNo=" + emp.getUserID();
+		}
+		//获得当前管理员管理的组织数量.
+		OrgAdminers adminers = null;
 
-		//if (!DataType.IsNullOrEmpty(openid) && openid != "undefined") {
-		//    emp.Wei_UserID = openid;
-		//    emp.Update();
-		//}
+		//查询他管理多少组织.
+		adminers = new OrgAdminers();
+		adminers.Retrieve(OrgAdminerAttr.FK_Emp, emp.getUserID(), null);
+		if (adminers.size() == 0)
+		{
+			Orgs orgs = new Orgs();
+			int i = orgs.Retrieve("Adminer", this.GetRequestVal("TB_No"), null);
+			if (i == 0)
+			{
+				//调用登录方法.
+				Dev2Interface.Port_Login(emp.getUserID(), emp.getOrgNo());
+				return "url@/FastMobilePortal/Default.htm?Token=" + Dev2Interface.Port_GenerToken("PC") + "&UserNo=" + emp.getUserID() + "&OrgNo=" + emp.getOrgNo();
+			}
 
-		return "登录成功.";
+			for (Org org : orgs.ToJavaList())
+			{
+				OrgAdminer oa = new OrgAdminer();
+				oa.setEmpNo(WebUser.getNo());
+				oa.setOrgNo(org.getNo());
+				oa.Save();
+			}
+			adminers.Retrieve(OrgAdminerAttr.FK_Emp, emp.getUserID(), null);
+		}
+
+		//设置他的组织，信息.
+		WebUser.setNo(emp.getUserID()); //登录帐号.
+		WebUser.setDeptNo(emp.getDeptNo());
+		WebUser.setDeptName(emp.getDeptText());
+
+		//执行登录.
+		Dev2Interface.Port_Login(emp.getUserID(), emp.getOrgNo());
+
+		String token = Dev2Interface.Port_GenerToken("PC");
+
+		//判断是否是多个组织的情况.
+		if (adminers.size() == 1)
+		{
+			return "url@/FastMobilePortal/Default.htm?Token=" + token + "&UserNo=" + emp.getUserID() + "&OrgNo=" + emp.getOrgNo();
+		}
+
+		return "url@SelectOneOrg.htm?Token=" + token + "&UserNo=" + emp.getUserID() + "&OrgNo=" + emp.getOrgNo();
 	}
 
 
@@ -136,16 +241,16 @@ public class CCMobile extends WebContralBase
 			{
 				/*如果包含昵称列,就检查昵称是否存在.*/
 				Paras ps = new Paras();
-				ps.SQL = "SELECT " + bp.sys.base.Glo.getUserNo() + " FROM Port_Emp WHERE NikeName=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "userNo";
+				ps.SQL = "SELECT " + bp.sys.base.Glo.getUserNo() + " FROM Port_Emp WHERE NikeName=" + SystemConfig.getAppCenterDBVarStr() + "userNo";
 				ps.Add("userNo", userNo, false);
-				//string sql = "SELECT No FROM Port_Emp WHERE NikeName='" + userNo + "'";
+				//String sql = "SELECT No FROM Port_Emp WHERE NikeName='" + userNo + "'";
 				String no = DBAccess.RunSQLReturnStringIsNull(ps, null);
 				if (no == null)
 				{
 					return "err@用户名或者密码错误.";
 				}
 
-				emp.setUserID (no);
+				emp.setUserID(no);
 				int i = emp.RetrieveFromDBSources();
 				if (i == 0)
 				{
@@ -156,16 +261,16 @@ public class CCMobile extends WebContralBase
 			{
 				/*如果包含昵称列,就检查昵称是否存在.*/
 				Paras ps = new Paras();
-				ps.SQL = "SELECT " + bp.sys.base.Glo.getUserNo() + " FROM Port_Emp WHERE Tel=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "userNo";
+				ps.SQL = "SELECT " + bp.sys.base.Glo.getUserNo() + " FROM Port_Emp WHERE Tel=" + SystemConfig.getAppCenterDBVarStr() + "userNo";
 				ps.Add("userNo", userNo, false);
-				//string sql = "SELECT No FROM Port_Emp WHERE NikeName='" + userNo + "'";
+				//String sql = "SELECT No FROM Port_Emp WHERE NikeName='" + userNo + "'";
 				String no = DBAccess.RunSQLReturnStringIsNull(ps, null);
 				if (no == null)
 				{
 					return "err@用户名或者密码错误.";
 				}
 
-				emp.setUserID (no);
+				emp.setUserID(no);
 				int i = emp.RetrieveFromDBSources();
 				if (i == 0)
 				{
@@ -194,12 +299,14 @@ public class CCMobile extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String HuiQianList_Init() throws Exception {
+	public final String HuiQianList_Init()
+	{
 		WF wf = new WF();
 		return wf.HuiQianList_Init();
 	}
 
-	public final String GetUserInfo() throws Exception {
+	public final String GetUserInfo()
+	{
 		if (WebUser.getNo() == null)
 		{
 			return "{err:'nologin'}";
@@ -207,7 +314,7 @@ public class CCMobile extends WebContralBase
 
 		StringBuilder append = new StringBuilder();
 		append.append("{");
-		String userPath = bp.difference.SystemConfig.getPathOfWebApp() + "DataUser/UserIcon/";
+		String userPath = SystemConfig.getPathOfWebApp() + "DataUser/UserIcon/";
 		String userIcon = userPath + WebUser.getNo() + "Biger.png";
 		if ((new File(userIcon)).isFile())
 		{
@@ -218,7 +325,7 @@ public class CCMobile extends WebContralBase
 			append.append("UserIcon:'DefaultBiger.png'");
 		}
 		append.append(",UserName:'" + WebUser.getName() + "'");
-		append.append(",UserDeptName:'" + WebUser.getFK_DeptName() + "'");
+		append.append(",UserDeptName:'" + WebUser.getDeptName() + "'");
 		append.append("}");
 		return append.toString();
 	}
@@ -232,40 +339,162 @@ public class CCMobile extends WebContralBase
 		ht.put("UserName", WebUser.getName());
 
 		//系统名称.
-		ht.put("SysName", bp.difference.SystemConfig.getSysName());
-		ht.put("CustomerName", bp.difference.SystemConfig.getCustomerName());
+		ht.put("SysName", SystemConfig.getSysName());
+		ht.put("CustomerName", SystemConfig.getCustomerName());
 
 		ht.put("Todolist_EmpWorks", Dev2Interface.getTodolistEmpWorks());
 		ht.put("Todolist_Runing", Dev2Interface.getTodolistRuning());
 		ht.put("Todolist_Complete", Dev2Interface.getTodolistComplete());
-		//ht.Add("Todolist_Sharing", BP.WF.Dev2Interface.Todolist_Sharing);
 		ht.put("Todolist_CCWorks", Dev2Interface.getTodolistCCWorks());
-		//ht.Add("Todolist_Apply", BP.WF.Dev2Interface.Todolist_Apply); //申请下来的任务个数.
-		//ht.Add("Todolist_Draft", BP.WF.Dev2Interface.Todolist_Draft); //草稿数量.
 
 		ht.put("Todolist_HuiQian", Dev2Interface.getTodolistHuiQian()); //会签数量.
 		ht.put("Todolist_Drafts", Dev2Interface.getTodolistDraft()); //会签数量.
 
 		return bp.tools.Json.ToJsonEntityModel(ht);
 	}
+	public final String Default_Init() throws Exception {
+		DataSet ds = new DataSet();
+		//获取最近发起的流程
+		String sql = "";
+		int top = GetRequestValInt("Top");
+		if (top == 0)
+		{
+			top = 8;
+		}
+
+		switch (SystemConfig.getAppCenterDBType())
+		{
+			case MSSQL:
+				sql = " SELECT TOP " + top + "  FK_Flow,FlowName,F.Icon FROM WF_GenerWorkFlow G ,WF_Flow F WHERE  F.IsCanStart=1 AND F.No=G.FK_Flow AND Starter='" + WebUser.getNo() + "' ORDER By SendDT DESC";
+				break;
+			case MySQL:
+			case PostgreSQL:
+			case UX:
+			case HGDB:
+				sql = "SELECT DISTINCT * From (SELECT  FK_Flow,FlowName,F.Icon FROM WF_GenerWorkFlow G ,WF_Flow F WHERE  F.IsCanStart=1 AND F.No=G.FK_Flow AND Starter='" + WebUser.getNo() + "'  Order By SendDT  limit  " + (top * 2) + ") A limit " + top;
+				break;
+			case Oracle:
+			case DM:
+			case KingBaseR3:
+			case KingBaseR6:
+				sql = " SELECT * FROM (SELECT DISTINCT FK_Flow as \"FK_Flow\",FlowName as \"FlowName\",F.Icon FROM WF_GenerWorkFlow G ,WF_Flow F WHERE F.IsCanStart=1 AND F.No=G.FK_Flow AND Starter='" + WebUser.getNo() + "' GROUP BY FK_Flow,FlowName,ICON Order By SendDT) WHERE  rownum <=" + top;
+				break;
+			default:
+				throw new RuntimeException("err@系统暂时还未开发使用" + SystemConfig.getAppCenterDBType() + "数据库");
+		}
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		dt.setTableName("Flows");
+		ds.Tables.add(dt);
+		//应用中心
+		MySystems systems = new MySystems();
+		systems.RetrieveAll();
+		MySystems systemsCopy = new MySystems();
+		//权限中心.
+		PowerCenters pcs = new PowerCenters();
+		pcs.RetrieveAll();
+		String mydepts = "" + WebUser.getDeptNo() + ","; //我的部门.
+		String mystas = ""; //我的角色.
+		DataTable mydeptsDT = DBAccess.RunSQLReturnTable("SELECT FK_Dept,FK_Station FROM Port_DeptEmpStation WHERE FK_Emp='" + WebUser.getUserID() + "'");
+		for (DataRow dr : mydeptsDT.Rows)
+		{
+			mydepts += dr.getValue(0).toString() + ",";
+			mystas += dr.getValue(1).toString() + ",";
+		}
+
+		//首先解决系统的权限.
+		String ids = "";
+		for (MySystem item : systems.ToJavaList())
+		{
+			//如果被禁用了.
+			if (item.getItIsEnable() == false)
+			{
+				continue;
+			}
+
+			//找到关于系统的控制权限集合.
+			bp.en.Entities tempVar = pcs.GetEntitiesByKey(PowerCenterAttr.CtrlPKVal, item.getNo());
+			PowerCenters mypcs = tempVar instanceof PowerCenters ? (PowerCenters)tempVar : null;
+			//如果没有权限控制的描述，就默认有权限.
+			if (mypcs == null)
+			{
+				systemsCopy.AddEntity(item);
+				continue;
+			}
+
+			//控制遍历权限.
+			for (PowerCenter pc : mypcs.ToJavaList())
+			{
+				if (pc.getCtrlModel().equals("Anyone") == true)
+				{
+					systemsCopy.AddEntity(item);
+					break;
+				}
+				if (pc.getCtrlModel().equals("Adminer") == true && WebUser.getNo().equals("admin") == true)
+				{
+					systemsCopy.AddEntity(item);
+					break;
+				}
+
+				if (pc.getCtrlModel().equals("AdminerAndAdmin2") == true && WebUser.getIsAdmin() == true)
+				{
+					systemsCopy.AddEntity(item);
+					break;
+				}
+				ids = "," + pc.getIDs() + ",";
+				if (pc.getCtrlModel().equals("Emps") == true && ids.contains("," + WebUser.getNo() + ",") == true)
+				{
+					systemsCopy.AddEntity(item);
+					break;
+				}
+
+				//是否包含部门？
+				if (pc.getCtrlModel().equals("Depts") == true && DataType.IsHaveIt(pc.getIDs(), mydepts) == true)
+				{
+					systemsCopy.AddEntity(item);
+					break;
+				}
+
+				//是否包含角色？
+				if (pc.getCtrlModel().equals("Stations") == true && DataType.IsHaveIt(pc.getIDs(), mystas) == true)
+				{
+					systemsCopy.AddEntity(item);
+					break;
+				}
+
+				//SQL？
+				if (pc.getCtrlModel().equals("SQL") == true)
+				{
+					sql = bp.wf.Glo.DealExp(pc.getIDs(), null, "");
+					if (DBAccess.RunSQLReturnValFloat(sql) > 0)
+					{
+						systemsCopy.AddEntity(item);
+					}
+					break;
+				}
+			}
+		}
+		ds.Tables.add(systemsCopy.ToDataTableField("Systems"));
+		return bp.tools.Json.ToJson(ds);
+	}
 	/** 
 	 查询
 	 
 	 @return 
 	*/
-	public final String Home_Init_WorkCount() throws Exception {
+	public final String Home_Init_WorkCount()
+	{
 		Paras ps = new Paras();
-		ps.SQL = "SELECT  TSpan as No, '' as Name, COUNT(WorkID) as Num, FROM WF_GenerWorkFlow WHERE Emps LIKE '%" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "Emps%' GROUP BY TSpan";
+		ps.SQL = "SELECT  TSpan as No, '' as Name, COUNT(WorkID) as Num, FROM WF_GenerWorkFlow WHERE Emps LIKE '%" + SystemConfig.getAppCenterDBVarStr() + "Emps%' GROUP BY TSpan";
 		ps.Add("Emps", WebUser.getNo(), false);
-		//string sql = "SELECT  TSpan as No, '' as Name, COUNT(WorkID) as Num, FROM WF_GenerWorkFlow WHERE Emps LIKE '%" + WebUser.getNo() + "%' GROUP BY TSpan";
+		//String sql = "SELECT  TSpan as No, '' as Name, COUNT(WorkID) as Num, FROM WF_GenerWorkFlow WHERE Emps LIKE '%" + WebUser.getNo() + "%' GROUP BY TSpan";
 		DataSet ds = new DataSet();
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 		ds.Tables.add(dt);
 
-		dt.Columns.get(0).setColumnName("TSpan");
-		dt.Columns.get(1).setColumnName("Num");
+		dt.Columns.get(0).ColumnName = "TSpan";
+		dt.Columns.get(1).ColumnName = "Num";
 
-		String sql = "SELECT IntKey as No, Lab as Name FROM "+bp.sys.base.Glo.SysEnum()+" WHERE EnumKey='TSpan'";
+		String sql = "SELECT IntKey as No, Lab as Name FROM " + bp.sys.base.Glo.SysEnum() + " WHERE EnumKey='TSpan'";
 		DataTable dt1 = DBAccess.RunSQLReturnTable(sql);
 		for (DataRow dr : dt.Rows)
 		{
@@ -295,7 +524,37 @@ public class CCMobile extends WebContralBase
 	public final String Todolist_Init() throws Exception {
 		String fk_node = this.GetRequestVal("FK_Node");
 		String showWhat = this.GetRequestVal("ShowWhat");
-		DataTable dt = Dev2Interface.DB_GenerEmpWorksOfDataTable(WebUser.getNo(), this.getFK_Node(), showWhat);
+		String orderBy = this.GetRequestVal("OrderBy");
+		DataTable dt = Dev2Interface.DB_GenerEmpWorksOfDataTable(WebUser.getNo(), this.getNodeID(), showWhat, null, null, orderBy);
+		dt.Columns.Add("WFStateLabel");
+		for (DataRow dr : dt.Rows)
+		{
+			int sta = Integer.parseInt(dr.getValue("WFState").toString());
+			dr.setValue("WFStateLabel", "待办");
+			if (sta == 5)
+			{
+				dr.setValue("WFStateLabel", "退回");
+			}
+			if (sta == 4)
+			{
+				String atpara = dr.getValue("AtPara").toString();
+				if (atpara.contains("@HungupSta=2") == true)
+				{
+					dr.setValue("WFStateLabel", "拒绝挂起");
+				}
+				if (atpara.contains("@HungupSta=1") == true)
+				{
+					dr.setValue("WFStateLabel", "同意挂起");
+				}
+				if (atpara.contains("@HungupSta=0") == true)
+				{
+					dr.setValue("WFStateLabel", "挂起等待审批");
+				}
+			}
+
+		}
+
+
 		return bp.tools.Json.ToJson(dt);
 	}
 	/** 
@@ -303,19 +562,29 @@ public class CCMobile extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String Complete_Init() throws Exception {
+	public final String Complete_Init()
+	{
 		DataTable dt = null;
 		dt = Dev2Interface.DB_FlowComplete();
 		return bp.tools.Json.ToJson(dt);
 	}
-	public final String DB_GenerReturnWorks() throws Exception {
+	public final String DB_GenerReturnWorks()
+	{
 		/* 如果工作节点退回了*/
-		ReturnWorks rws = new ReturnWorks();
-		rws.Retrieve(ReturnWorkAttr.ReturnToNode, this.getFK_Node(), ReturnWorkAttr.WorkID, this.getWorkID(), ReturnWorkAttr.RDT);
-		StringBuilder append = new StringBuilder();
-		append.append("[");
-
-		return bp.tools.Json.ToJson(rws.ToDataTableField("dt"));
+		String flowNo = DBAccess.RunSQLReturnString("SELECT FK_Flow From WF_Node WHERE NodeID=" + this.getNodeID());
+		String trackTable = "ND" + Integer.parseInt(flowNo) + "Track";
+		String sql = "SELECT NDFrom,NDFromT,EmpFrom,EmpFromT,Msg,RDT From " + trackTable + " WHERE WorkID=" + this.getWorkID() + " AND NDTo=" + this.getNodeID() + " Order By RDT";
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		if (SystemConfig.getAppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			dt.Columns.get(0).ColumnName = "ReturnNode";
+			dt.Columns.get(1).ColumnName = "ReturnNodeName";
+			dt.Columns.get(2).ColumnName = "Returner";
+			dt.Columns.get(3).ColumnName = "ReturnerName";
+			dt.Columns.get(4).ColumnName = "BeiZhu";
+			dt.Columns.get(5).ColumnName = "RDT";
+		}
+		return bp.tools.Json.ToJson(dt);
 	}
 
 	public final String Start_Init() throws Exception {
@@ -344,9 +613,9 @@ public class CCMobile extends WebContralBase
 			return "err@提示:此工作已经被别人处理或者此流程已删除。";
 		}
 
-		Emp empOF = new Emp(wl.getFK_Emp());
+		Emp empOF = new Emp(wl.getEmpNo());
 		bp.web.WebUser.SignInOfGener(empOF, "CH", false, false, null, null);
-		return "MyFlow.htm?FK_Flow=" + wl.getFK_Flow() + "&WorkID=" + wl.getWorkID() + "&FK_Node=" + wl.getFK_Node() + "&FID=" + wl.getFID();
+		return "MyFlow.htm?FK_Flow=" + wl.getFlowNo() + "&WorkID=" + wl.getWorkID() + "&FK_Node=" + wl.getNodeID() + "&FID=" + wl.getFID();
 	}
 	/** 
 	 流程单表单查看.
@@ -362,7 +631,8 @@ public class CCMobile extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String FrmView_UnSend() throws Exception {
+	public final String FrmView_UnSend()
+	{
 		WF_WorkOpt_OneWork en = new WF_WorkOpt_OneWork();
 		return en.OP_UnSend();
 	}
@@ -404,13 +674,13 @@ public class CCMobile extends WebContralBase
 		String sql = "";
 
 		String sqlOrgNoWhere = "";
-		if (bp.difference.SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
+		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
 		{
 			sqlOrgNoWhere = " AND OrgNo='" + WebUser.getOrgNo() + "'";
 		}
 
 		String tSpan = this.GetRequestVal("TSpan");
-		if (tSpan.equals(""))
+		if (Objects.equals(tSpan, ""))
 		{
 			tSpan = null;
 		}
@@ -419,25 +689,25 @@ public class CCMobile extends WebContralBase
 			///#region 1、获取时间段枚举/总数.
 		SysEnums ses = new SysEnums("TSpan");
 		DataTable dtTSpan = ses.ToDataTableField("dt");
-		dtTSpan.TableName = "TSpan";
+		dtTSpan.setTableName("TSpan");
 		ds.Tables.add(dtTSpan);
 
-		if (this.getFK_Flow() == null)
+		if (this.getFlowNo() == null)
 		{
 			sql = "SELECT  TSpan as No, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE (Emps LIKE '%" + WebUser.getNo() + "%' OR Starter='" + WebUser.getNo() + "') AND WFState > 1 " + sqlOrgNoWhere + "  GROUP BY TSpan";
 		}
 		else
 		{
-			sql = "SELECT  TSpan as No, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE FK_Flow='" + this.getFK_Flow() + "' AND (Emps LIKE '%" + WebUser.getNo() + "%' OR Starter='" + WebUser.getNo() + "')  AND WFState > 1  " + sqlOrgNoWhere + " GROUP BY TSpan";
+			sql = "SELECT  TSpan as No, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE FK_Flow='" + this.getFlowNo() + "' AND (Emps LIKE '%" + WebUser.getNo() + "%' OR Starter='" + WebUser.getNo() + "')  AND WFState > 1  " + sqlOrgNoWhere + " GROUP BY TSpan";
 		}
 
 		DataTable dtTSpanNum = DBAccess.RunSQLReturnTable(sql);
 		for (DataRow drEnum : dtTSpan.Rows)
 		{
-			String no = drEnum.get("IntKey").toString();
+			String no = drEnum.getValue("IntKey").toString();
 			for (DataRow dr : dtTSpanNum.Rows)
 			{
-				if (dr.getValue("No").toString().equals(no))
+				if (Objects.equals(dr.getValue("No").toString(), no))
 				{
 					drEnum.setValue("Lab", drEnum.get("Lab").toString() + "(" + dr.getValue("Num") + ")");
 					break;
@@ -449,7 +719,7 @@ public class CCMobile extends WebContralBase
 
 
 			///#region 2、处理流程类别列表.
-		if (tSpan.equals("-1"))
+		if (Objects.equals(tSpan, "-1"))
 		{
 			sql = "SELECT  FK_Flow as No, FlowName as Name, COUNT(WorkID) as Num FROM WF_GenerWorkFlow WHERE (Emps LIKE '%" + WebUser.getNo() + "%' OR TodoEmps LIKE '%" + WebUser.getNo() + ",%' OR Starter='" + WebUser.getNo() + "')  AND WFState > 1 AND FID = 0  " + sqlOrgNoWhere + " GROUP BY FK_Flow, FlowName";
 		}
@@ -460,11 +730,11 @@ public class CCMobile extends WebContralBase
 
 		DataTable dtFlows = DBAccess.RunSQLReturnTable(sql);
 
-		dtFlows.Columns.get(0).setColumnName("No");
-		dtFlows.Columns.get(1).setColumnName("Name");
-		dtFlows.Columns.get(2).setColumnName("Num");
+		dtFlows.Columns.get(0).ColumnName = "No";
+		dtFlows.Columns.get(1).ColumnName = "Name";
+		dtFlows.Columns.get(2).ColumnName = "Num";
 
-		dtFlows.TableName = "Flows";
+		dtFlows.setTableName("Flows");
 		ds.Tables.add(dtFlows);
 
 			///#endregion
@@ -474,14 +744,14 @@ public class CCMobile extends WebContralBase
 		GenerWorkFlows gwfs = new GenerWorkFlows();
 		String sqlWhere = "";
 		sqlWhere = "(1 = 1)AND (((Emps LIKE '%" + WebUser.getNo() + "%')OR(TodoEmps LIKE '%" + WebUser.getNo() + "%')OR(Starter = '" + WebUser.getNo() + "')) AND (WFState > 1) " + sqlOrgNoWhere;
-		if (!tSpan.equals("-1"))
+		if (!Objects.equals(tSpan, "-1"))
 		{
 			sqlWhere += "AND (TSpan = '" + tSpan + "') ";
 		}
 
-		if (this.getFK_Flow() != null)
+		if (this.getFlowNo() != null)
 		{
-			sqlWhere += "AND (FK_Flow = '" + this.getFK_Flow() + "')) ";
+			sqlWhere += "AND (FK_Flow = '" + this.getFlowNo() + "')) ";
 		}
 		else
 		{
@@ -489,40 +759,40 @@ public class CCMobile extends WebContralBase
 		}
 		sqlWhere += "ORDER BY RDT DESC";
 
-		if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.Oracle || bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR3 ||bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR6)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 || SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
 			sql = "SELECT NVL(WorkID, 0) WorkID,NVL(FID, 0) FID ,FK_Flow,FlowName,Title, NVL(WFSta, 0) WFSta,WFState,  Starter, StarterName,Sender,NVL(RDT, '2018-05-04 19:29') RDT,NVL(FK_Node, 0) FK_Node,NodeName, TodoEmps FROM (select * from WF_GenerWorkFlow where " + sqlWhere + ") where rownum <= 500";
 		}
-		else if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MSSQL)
+		else if (SystemConfig.getAppCenterDBType() == DBType.MSSQL)
 		{
 			sql = "SELECT  TOP 500 ISNULL(WorkID, 0) WorkID,ISNULL(FID, 0) FID ,FK_Flow,FlowName,Title, ISNULL(WFSta, 0) WFSta,WFState,  Starter, StarterName,Sender,ISNULL(RDT, '2018-05-04 19:29') RDT,ISNULL(FK_Node, 0) FK_Node,NodeName, TodoEmps FROM WF_GenerWorkFlow where " + sqlWhere;
 		}
-		else if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MySQL)
+		else if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 		{
 			sql = "SELECT IFNULL(WorkID, 0) WorkID,IFNULL(FID, 0) FID ,FK_Flow,FlowName,Title, IFNULL(WFSta, 0) WFSta,WFState,  Starter, StarterName,Sender,IFNULL(RDT, '2018-05-04 19:29') RDT,IFNULL(FK_Node, 0) FK_Node,NodeName, TodoEmps FROM WF_GenerWorkFlow where " + sqlWhere + " LIMIT 500";
 		}
-		else if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.HGDB)
+		else if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.UX)
 		{
 			sql = "SELECT COALESCE(WorkID, 0) WorkID,COALESCE(FID, 0) FID ,FK_Flow,FlowName,Title, COALESCE(WFSta, 0) WFSta,WFState,  Starter, StarterName,Sender,COALESCE(RDT, '2018-05-04 19:29') RDT,COALESCE(FK_Node, 0) FK_Node,NodeName, TodoEmps FROM WF_GenerWorkFlow where " + sqlWhere + " LIMIT 500";
 		}
 		DataTable mydt = DBAccess.RunSQLReturnTable(sql);
 
-		mydt.Columns.get(0).setColumnName("WorkID");
-		mydt.Columns.get(1).setColumnName("FID");
-		mydt.Columns.get(2).setColumnName("FK_Flow");
-		mydt.Columns.get(3).setColumnName("FlowName");
-		mydt.Columns.get(4).setColumnName("Title");
-		mydt.Columns.get(5).setColumnName("WFSta");
-		mydt.Columns.get(6).setColumnName("WFState");
-		mydt.Columns.get(7).setColumnName("Starter");
-		mydt.Columns.get(8).setColumnName("StarterName");
-		mydt.Columns.get(9).setColumnName("Sender");
-		mydt.Columns.get(10).setColumnName("RDT");
-		mydt.Columns.get(11).setColumnName("FK_Node");
-		mydt.Columns.get(12).setColumnName("NodeName");
-		mydt.Columns.get(13).setColumnName("TodoEmps");
+		mydt.Columns.get(0).ColumnName = "WorkID";
+		mydt.Columns.get(1).ColumnName = "FID";
+		mydt.Columns.get(2).ColumnName = "FK_Flow";
+		mydt.Columns.get(3).ColumnName = "FlowName";
+		mydt.Columns.get(4).ColumnName = "Title";
+		mydt.Columns.get(5).ColumnName = "WFSta";
+		mydt.Columns.get(6).ColumnName = "WFState";
+		mydt.Columns.get(7).ColumnName = "Starter";
+		mydt.Columns.get(8).ColumnName = "StarterName";
+		mydt.Columns.get(9).ColumnName = "Sender";
+		mydt.Columns.get(10).ColumnName = "RDT";
+		mydt.Columns.get(11).ColumnName = "FK_Node";
+		mydt.Columns.get(12).ColumnName = "NodeName";
+		mydt.Columns.get(13).ColumnName = "TodoEmps";
 
-		mydt.TableName = "WF_GenerWorkFlow";
+		mydt.setTableName("WF_GenerWorkFlow");
 		if (mydt != null)
 		{
 			mydt.Columns.Add("TDTime");
@@ -544,7 +814,7 @@ public class CCMobile extends WebContralBase
 			///#region 获取track数据.
 		String sqlOfWhere2 = "";
 		String sqlOfWhere1 = "";
-		String dbStr = bp.difference.SystemConfig.getAppCenterDBVarStr();
+		String dbStr = SystemConfig.getAppCenterDBVarStr();
 		Paras ps = new Paras();
 		if (fid == 0)
 		{
@@ -601,10 +871,17 @@ public class CCMobile extends WebContralBase
 		}
 		qo.Top = 50;
 
-
-		DataTable dt = qo.DoQueryToTable();
-		return bp.tools.Json.ToJson(dt);
-
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.UX || SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 || SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
+		{
+			qo.DoQuery();
+			DataTable dt = gwfs.ToDataTableField("Ens");
+			return bp.tools.Json.ToJson(dt);
+		}
+		else
+		{
+			DataTable dt = qo.DoQueryToTable();
+			return bp.tools.Json.ToJson(dt);
+		}
 	}
 
 

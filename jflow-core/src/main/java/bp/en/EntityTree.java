@@ -9,8 +9,7 @@ public abstract class EntityTree extends Entity
 {
 
 		///属性
-	public final boolean getIsRoot()
-	{
+	public final boolean getItIsRoot() throws Exception {
 		if (this.getParentNo().equals("-1") || this.getParentNo().equals("0"))
 		{
 			return true;
@@ -30,53 +29,44 @@ public abstract class EntityTree extends Entity
 	{
 		return this.GetValStringByKey(EntityTreeAttr.No);
 	}
-	public final void setNo(String value)
-	{
+	public final void setNo(String value){
 		this.SetValByKey(EntityTreeAttr.No, value);
 	}
 	/** 
 	 名称
 	 * @throws Exception 
 	*/
-	public final String getName()
-	{
+	public final String getName()  {
 		return this.GetValStringByKey(EntityTreeAttr.Name);
 	}
-	public final void setName(String value)
-	{
+	public final void setName(String value){
 		this.SetValByKey(EntityTreeAttr.Name, value);
 	}
 	/** 
 	 父节点编号
 	*/
-	public String getParentNo()
-	{
+	public String getParentNo()  {
 		return this.GetValStringByKey(EntityTreeAttr.ParentNo);
 	}
-	public void setParentNo(String value)
-	{
+	public void setParentNo(String value){
 		this.SetValByKey(EntityTreeAttr.ParentNo, value);
 	}
 	/** 
 	 图标
 	*/
-	public final String getICON()
-	{
+	public final String getICON()  {
 		return this.GetValStringByKey(EntityTreeAttr.ICON);
 	}
-	public final void setICON(String value)
-	{
+	public final void setICON(String value){
 		this.SetValByKey(EntityTreeAttr.ICON, value);
 	}
 	/** 
 	 顺序号
 	*/
-	public int getIdx()
-	{
+	public int getIdx()  {
 		return this.GetValIntByKey(EntityTreeAttr.Idx);
 	}
-	public void setIdx(int value)
-	{
+	public void setIdx(int value){
 		this.SetValByKey(EntityTreeAttr.Idx, value);
 	}
 
@@ -101,7 +91,7 @@ public abstract class EntityTree extends Entity
 	 param no 编号
 	 * @throws Exception 
 	*/
-	public EntityTree(String no) throws Exception
+	public EntityTree(String no) throws Exception 
 	{
 		if (DataType.IsNullOrEmpty(no))
 		{
@@ -151,7 +141,7 @@ public abstract class EntityTree extends Entity
 		return super.beforeInsert();
 	}
 	@Override
-	protected boolean beforeUpdate()throws Exception
+	protected boolean beforeUpdate() throws Exception
 	{
 		if (this.getEnMap().getIsAllowRepeatName() == false)
 		{
@@ -257,7 +247,7 @@ public abstract class EntityTree extends Entity
 	 
 	 @return 
 	*/
-	public  String DoDown()throws Exception
+	public  String DoDown() throws Exception
 	{
 		this.DoOrderDown(EntityTreeAttr.ParentNo, this.getParentNo(), EntityTreeAttr.Idx);
 		return "执行成功.";

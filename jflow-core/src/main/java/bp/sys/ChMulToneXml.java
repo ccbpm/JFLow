@@ -2,9 +2,6 @@ package bp.sys;
 
 import bp.sys.xml.*;
 
-import java.util.List;
-
-
 /** 
  多音字
 */
@@ -12,16 +9,13 @@ public class ChMulToneXml extends XmlEn
 {
 
 		///#region 属性
-	public final String getNo()  throws Exception
-	{
+	public final String getNo() {
 		return this.GetValStringByKey("No");
 	}
-	public final String getName()  throws Exception
-	{
+	public final String getName() {
 		return this.GetValStringByKey("Name");
 	}
-	public final String getDesc()  throws Exception
-	{
+	public final String getDesc() {
 		return this.GetValStringByKey("No");
 	}
 
@@ -39,7 +33,7 @@ public class ChMulToneXml extends XmlEn
 	 获取一个实例s
 	*/
 	@Override
-	public XmlEns getGetNewEntities()
+	public XmlEns getNewEntities()
 	{
 		return new ChMulToneXmls();
 	}

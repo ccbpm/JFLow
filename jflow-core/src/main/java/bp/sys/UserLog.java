@@ -2,6 +2,7 @@ package bp.sys;
 
 import bp.da.*;
 import bp.en.*;
+import bp.en.Map;
 import bp.difference.*;
 
 
@@ -11,7 +12,8 @@ import bp.difference.*;
 public class UserLog extends EntityMyPK
 {
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.Readonly();
 		return uac;
@@ -19,67 +21,47 @@ public class UserLog extends EntityMyPK
 
 
 		///#region 基本属性
-	public final String getIP() throws Exception
-	{
+	public final String getIP()  {
 		return this.GetValStringByKey(UserLogAttr.IP);
 	}
-	public final void setIP(String value)  throws Exception
-	 {
+	public final void setIP(String value){
 		this.SetValByKey(UserLogAttr.IP, value);
 	}
 	/** 
 	 日志标记键
 	*/
-	public final String getLogFlag() throws Exception
-	{
+	public final String getLogFlag()  {
 		return this.GetValStringByKey(UserLogAttr.LogFlag);
 	}
-	public final void setLogFlag(String value)  throws Exception
-	 {
+	public final void setLogFlag(String value){
 		this.SetValByKey(UserLogAttr.LogFlag, value);
 	}
 	/** 
 	 FK_Emp
 	*/
-	public final String getFK_Emp() throws Exception
-	{
-		return this.GetValStringByKey(UserLogAttr.FK_Emp);
-	}
-	public final void setFK_Emp(String value) throws Exception
-	{
-		this.SetValByKey(UserLogAttr.FK_Emp, value);
-	}
-	public final String getEmpNo() throws Exception
-	{
+	public final String getEmpNo()  {
 		return this.GetValStringByKey(UserLogAttr.EmpNo);
 	}
-	public final void setEmpNo(String value)  throws Exception
-	 {
+	public final void setEmpNo(String value){
 		this.SetValByKey(UserLogAttr.EmpNo, value);
 	}
-	public final String getEmpName() throws Exception
-	{
+	public final String getEmpName()  {
 		return this.GetValStringByKey(UserLogAttr.EmpName);
 	}
-	public final void setEmpName(String value)  throws Exception
-	 {
+	public final void setEmpName(String value){
 		this.SetValByKey(UserLogAttr.EmpName, value);
 	}
-	public final String getRDT() throws Exception
-	{
+	public final String getRDT()  {
 		return this.GetValStringByKey(UserLogAttr.RDT);
 	}
-	public final void setRDT(String value)  throws Exception
-	 {
+	public final void setRDT(String value){
 		this.SetValByKey(UserLogAttr.RDT, value);
 	}
 
-	public final String getDocs() throws Exception
-	{
+	public final String getDocs()  {
 		return this.GetValStringByKey(UserLogAttr.Docs);
 	}
-	public final void setDocs(String value)  throws Exception
-	 {
+	public final void setDocs(String value){
 		this.SetValByKey(UserLogAttr.Docs, value);
 	}
 
@@ -91,14 +73,16 @@ public class UserLog extends EntityMyPK
 	/** 
 	 用户日志
 	*/
-	public UserLog()  {
+	public UserLog()
+	{
 	}
 
 	/** 
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -116,12 +100,14 @@ public class UserLog extends EntityMyPK
 		map.AddTBString(UserLogAttr.LogFlag, null, "类型", true, true, 0, 200, 20);
 		map.AddTBString(UserLogAttr.LevelText, null, "级别", true, true, 0, 200, 20);
 
+
 		map.DTSearchKey = UserLogAttr.RDT;
 		map.DTSearchWay = DTSearchWay.ByDate;
 
 		//查询条件.
 		map.AddSearchAttr(UserLogAttr.LevelText);
 		map.AddSearchAttr(UserLogAttr.LogFlag);
+
 
 		this.set_enMap(map);
 		return this.get_enMap();
@@ -130,12 +116,13 @@ public class UserLog extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		this.setMyPK(DBAccess.GenerGUID());
 		this.setRDT(DataType.getCurrentDateTime());
-		if (SystemConfig.getIsBSsystem())
+		if (SystemConfig.isBSsystem())
 		{
-			this.setIP(getIP());
+			this.setIP(bp.difference.Glo.getIP());
 		}
 
 		if (DataType.IsNullOrEmpty(this.getEmpNo()) == true)
@@ -149,7 +136,9 @@ public class UserLog extends EntityMyPK
 
 
 		///#region 重写
-	public Entities getNewEntities()  {
+	@Override
+	public Entities GetNewEntities()
+	{
 		return new UserLogs();
 	}
 

@@ -1,12 +1,5 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.en.*;
-import bp.port.*;
-import bp.sys.*;
-import bp.*;
-import bp.wf.*;
-import java.util.*;
 
 /** 
  表单节点排除规则属性

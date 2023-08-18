@@ -1,6 +1,5 @@
 package bp.wf;
 
-import bp.*;
 
 /** 
  工作提醒规则
@@ -22,11 +21,13 @@ public enum CHAlertRole
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue(){
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
 	public static CHAlertRole forValue(int value)
-	{return values()[value];
+	{
+		return values()[value];
 	}
 }

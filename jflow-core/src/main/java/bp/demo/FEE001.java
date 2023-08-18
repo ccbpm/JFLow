@@ -66,12 +66,12 @@ public class FEE001 extends FlowEventBase
 	
 	// 重写节点运动事件.
 	@Override
-	public String SendWhen() throws Exception {
-		if (this.HisNode.getNodeID() == 14401)
+	public String SendWhen() {
+		if (this.getHisNode().getNodeID() == 14401)
 		{
 			String getVal = this.GetValStr("getVal");
 			
-			writeFlie("节点编号为" + this.HisNode.getNodeID() + "的SendWhen事件.\r\n"
+			writeFlie("节点编号为" + this.getHisNode().getNodeID() + "的SendWhen事件.\r\n"
 					+ "获取表单字段getVal的值为：" + getVal + "\r\n");
 			//throw new exc
 		}
@@ -79,24 +79,17 @@ public class FEE001 extends FlowEventBase
 	}
 	
 	@Override
-	public String SendSuccess() throws Exception
-	{
+	public String SendSuccess() {
 		 
-		if (this.HisNode.getNodeID() == 20501)
+		if (this.getHisNode().getNodeID() == 20501)
 		{
 			String getVal = this.GetValStr("getVal");
-			
-			writeFlie("节点编号为" + this.HisNode.getNodeID()
+			writeFlie("节点编号为" + this.getHisNode().getNodeID()
 					+ "的SendSuccess事件.\r\n" + "获取表单字段getVal的值为：" + getVal
 					+ "\r\n");
-			 
 		}
-		
-		
 		return super.SendSuccess();
 	}
-	
-	
 	/**
 	 * 删除后
 	 * 
@@ -127,9 +120,7 @@ public class FEE001 extends FlowEventBase
 	@Override
 	public String FlowOverAfter()
 	{
-		//string sql
-		 
-		
+		//String sql
 		return "写入成功....";
 	}
 	 

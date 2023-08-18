@@ -1,4 +1,5 @@
 package bp.pub;
+
 import bp.en.*;
 
 /** 
@@ -7,12 +8,12 @@ import bp.en.*;
 public class NYs extends EntitiesNoName
 {
 
-		///#region
+		///#region   年月
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new NY();
 	}

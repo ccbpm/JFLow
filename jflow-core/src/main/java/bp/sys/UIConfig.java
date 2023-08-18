@@ -2,11 +2,6 @@ package bp.sys;
 
 import bp.da.*;
 import bp.en.*;
-import bp.*;
-import bp.web.*;
-import bp.difference.*;
-import bp.*;
-import java.util.*;
 
 /** 
  UI的设置.Search. Card, Group信息.
@@ -15,12 +10,13 @@ public class UIConfig
 {
 	public Entity HisEn;
 	public AtPara HisAP;
-	public UIConfig() throws Exception {
+	public UIConfig()
+	{
 	}
 	/** 
 	 UI的设置.Search. Card, Group信息.
 	 
-	 param enName
+	 @param en
 	*/
 	public UIConfig(Entity en) throws Exception {
 		this.HisEn = en;
@@ -47,11 +43,13 @@ public class UIConfig
 	}
 
 
-		///#region 移动.
+
+	///#region 移动.
 	/** 
 	 移动到方式.
 	*/
-	public final MoveToShowWay getMoveToShowWay() throws Exception {
+	public final MoveToShowWay getMoveToShowWay()
+	{
 		return MoveToShowWay.forValue(this.HisAP.GetValIntByKey("MoveToShowWay"));
 	}
 
@@ -59,7 +57,8 @@ public class UIConfig
 	/** 
 	 移动到字段
 	*/
-	public final String getMoveTo() throws Exception {
+	public final String getMoveTo()
+	{
 		String s = this.HisAP.GetValStrByKey("MoveTo");
 		return s;
 	}
@@ -69,31 +68,36 @@ public class UIConfig
 	/** 
 	 风格类型
 	*/
-	public final int getUIRowStyleGlo() throws Exception {
+	public final int getUIRowStyleGlo()
+	{
 		return this.HisAP.GetValIntByKey("UIRowStyleGlo");
 	}
 	/** 
 	 是否启用双击打开？
 	*/
-	public final boolean isEnableDouclickGlo() throws Exception {
+	public final boolean getItIsEnableDouclickGlo()
+	{
 		return this.HisAP.GetValBoolenByKey("IsEnableDouclickGlo");
 	}
 	/** 
 	 是否显示相关功能?
 	*/
-	public final boolean isEnableRefFunc() throws Exception {
+	public final boolean getItIsEnableRefFunc()
+	{
 		return this.HisAP.GetValBoolenByKey("IsEnableRefFunc");
 	}
 	/** 
 	 是否启用焦点字段
 	*/
-	public final boolean isEnableFocusField() throws Exception {
+	public final boolean getItIsEnableFocusField()
+	{
 		return this.HisAP.GetValBoolenByKey("IsEnableFocusField");
 	}
 	/** 
 	 是否打开ICON
 	*/
-	public final boolean isEnableOpenICON() throws Exception {
+	public final boolean getItIsEnableOpenICON()
+	{
 		return this.HisAP.GetValBoolenByKey("IsEnableOpenICON");
 	}
 	/** 
@@ -114,10 +118,12 @@ public class UIConfig
 		}
 		return s;
 	}
-	public final int getWinCardW() throws Exception {
+	public final int getWinCardW()
+	{
 		return this.HisAP.GetValIntByKey("WinCardW");
 	}
-	public final int getWinCardH() throws Exception {
+	public final int getWinCardH()
+	{
 		return this.HisAP.GetValIntByKey("WinCardH");
 	}
 	/** 
@@ -130,5 +136,4 @@ public class UIConfig
 		cfg.setUI(this.HisAP.GenerAtParaStrs());
 		return cfg.Save();
 	}
-
 }

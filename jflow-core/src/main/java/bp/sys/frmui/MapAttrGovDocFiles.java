@@ -1,7 +1,7 @@
 package bp.sys.frmui;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
 import bp.*;
 import bp.sys.*;
@@ -17,13 +17,15 @@ public class MapAttrGovDocFiles extends EntitiesMyPK
 	/** 
 	 公文正文组件s
 	*/
-	public MapAttrGovDocFiles() throws Exception {
+	public MapAttrGovDocFiles()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new MapAttrGovDocFile();
 	}
 
@@ -36,7 +38,8 @@ public class MapAttrGovDocFiles extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<MapAttrGovDocFile> ToJavaList() {
+	public final java.util.List<MapAttrGovDocFile> ToJavaList()
+	{
 		return (java.util.List<MapAttrGovDocFile>)(Object)this;
 	}
 	/** 
@@ -44,7 +47,8 @@ public class MapAttrGovDocFiles extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<MapAttrGovDocFile> Tolist()  {
+	public final ArrayList<MapAttrGovDocFile> Tolist()
+	{
 		ArrayList<MapAttrGovDocFile> list = new ArrayList<MapAttrGovDocFile>();
 		for (int i = 0; i < this.size(); i++)
 		{

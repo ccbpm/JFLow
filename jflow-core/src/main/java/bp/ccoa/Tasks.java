@@ -79,13 +79,15 @@ public class Tasks extends EntitiesMyPK
 	/** 
 	 任务
 	*/
-	public Tasks()  {
+	public Tasks()
+	{
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new Task();
 	}
 
@@ -99,7 +101,8 @@ public class Tasks extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<Task> ToJavaList() {
+	public final java.util.List<Task> ToJavaList()
+	{
 		return (java.util.List<Task>)(Object)this;
 	}
 	/** 
@@ -107,7 +110,8 @@ public class Tasks extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<Task> Tolist()  {
+	public final ArrayList<Task> Tolist()
+	{
 		ArrayList<Task> list = new ArrayList<Task>();
 		for (int i = 0; i < this.size(); i++)
 		{

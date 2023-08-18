@@ -2,12 +2,7 @@ package bp.sys;
 
 import bp.da.*;
 import bp.en.*;
-import bp.*;
-import bp.*;
 import bp.en.Map;
-import bp.web.WebUser;
-
-import java.util.*;
 
 /** 
  报表模板
@@ -19,137 +14,110 @@ public class RptTemplate extends Entity
 	/** 
 	 集合类名称
 	*/
-	public final String getEnsName() throws Exception
-	{
+	public final String getEnsName()  {
 		return this.GetValStringByKey(RptTemplateAttr.EnsName);
 	}
-	public final void setEnsName(String value)
-	 {
+	public final void setEnsName(String value){
 		this.SetValByKey(RptTemplateAttr.EnsName, value);
 	}
-	public final String getFK_Emp() throws Exception
-	{
+	public final String getFKEmp()  {
 		return this.GetValStringByKey(RptTemplateAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)  throws Exception
-	 {
+	public final void setFKEmp(String value){
 		this.SetValByKey(RptTemplateAttr.FK_Emp, value);
 	}
 	/** 
 	 描述
 	*/
-	public final String getMyPK() throws Exception
-	{
+	public final String getMyPK()  {
 		return this.GetValStringByKey(RptTemplateAttr.MyPK);
 	}
-	public final void setMyPK(String value)  throws Exception
-	 {
+	public final void setMyPK(String value){
 		this.SetValByKey(RptTemplateAttr.MyPK, value);
 	}
-
 	/** 
 	 D1
 	*/
-	public final String getD1() throws Exception
-	{
+	public final String getD1()  {
 		return this.GetValStringByKey(RptTemplateAttr.D1);
 	}
-	public final void setD1(String value)  throws Exception
-	 {
+	public final void setD1(String value){
 		this.SetValByKey(RptTemplateAttr.D1, value);
 	}
 	/** 
 	 D2
 	*/
-	public final String getD2() throws Exception
-	{
+	public final String getD2()  {
 		return this.GetValStringByKey(RptTemplateAttr.D2);
 	}
-	public final void setD2(String value)  throws Exception
-	 {
+	public final void setD2(String value){
 		this.SetValByKey(RptTemplateAttr.D2, value);
 	}
 	/** 
 	 D3
 	*/
-	public final String getD3() throws Exception
-	{
+	public final String getD3()  {
 		return this.GetValStringByKey(RptTemplateAttr.D3);
 	}
-	public final void setD3(String value)  throws Exception
-	 {
+	public final void setD3(String value){
 		this.SetValByKey(RptTemplateAttr.D3, value);
 	}
-	public final String getAlObjsText() throws Exception
-	{
+	public final String getAlObjsText()  {
 		return this.GetValStringByKey(RptTemplateAttr.AlObjs);
 	}
 	/** 
 	 分析的对象
 	 数据格式 @分析对象1@分析对象2@分析对象3@
 	*/
-	public final String getAlObjs() throws Exception
-	{
+	public final String getAlObjs()  {
 		return this.GetValStringByKey(RptTemplateAttr.AlObjs);
 	}
-	public final void setAlObjs(String value)  throws Exception
-	 {
+	public final void setAlObjs(String value){
 		this.SetValByKey(RptTemplateAttr.AlObjs, value);
 	}
-	public final int getHeight() throws Exception
-	{
+	public final int getHeight()  {
 		return this.GetValIntByKey(RptTemplateAttr.Height);
 	}
-	public final void setHeight(int value)  throws Exception
-	 {
+	public final void setHeight(int value){
 		this.SetValByKey(RptTemplateAttr.Height, value);
 	}
-	public final int getWidth() throws Exception
-	{
+	public final int getWidth()  {
 		return this.GetValIntByKey(RptTemplateAttr.Width);
 	}
-	public final void setWidth(int value)  throws Exception
-	 {
+	public final void setWidth(int value){
 		this.SetValByKey(RptTemplateAttr.Width, value);
 	}
 	/** 
 	 是否显示大合计
 	*/
-	public final boolean isSumBig() throws Exception
-	{
+	public final boolean isSumBig()  {
 		return this.GetValBooleanByKey(RptTemplateAttr.IsSumBig);
 	}
-	public final void setSumBig(boolean value)  throws Exception
-	 {
+	public final void setSumBig(boolean value){
 		this.SetValByKey(RptTemplateAttr.IsSumBig, value);
 	}
 	/** 
 	 小合计
 	*/
-	public final boolean isSumLittle() throws Exception
-	{
+	public final boolean isSumLittle()  {
 		return this.GetValBooleanByKey(RptTemplateAttr.IsSumLittle);
 	}
-	public final void setSumLittle(boolean value)  throws Exception
-	 {
+	public final void setSumLittle(boolean value){
 		this.SetValByKey(RptTemplateAttr.IsSumLittle, value);
 	}
 	/** 
 	 是否现实右合计。
 	*/
-	public final boolean isSumRight() throws Exception
-	{
+	public final boolean isSumRight()  {
 		return this.GetValBooleanByKey(RptTemplateAttr.IsSumRight);
 	}
-	public final void setSumRight(boolean value)  throws Exception
-	 {
+	public final void setSumRight(boolean value){
 		this.SetValByKey(RptTemplateAttr.IsSumRight, value);
 	}
-	public final PercentModel getPercentModel() throws Exception {
+	public final PercentModel getPercentModel() {
 		return PercentModel.forValue(this.GetValIntByKey(RptTemplateAttr.PercentModel));
 	}
-	public final void setPercentModel(PercentModel value)  throws Exception
-	 {
+	public final void setPercentModel(PercentModel value){
 		this.SetValByKey(RptTemplateAttr.PercentModel, value.getValue());
 	}
 
@@ -159,7 +127,8 @@ public class RptTemplate extends Entity
 		///#region 构造方法
 
 	@Override
-	public UAC getHisUAC() {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.IsUpdate = true;
 		uac.IsView = true;
@@ -168,17 +137,18 @@ public class RptTemplate extends Entity
 	/** 
 	 
 	*/
-	public RptTemplate() {
+	public RptTemplate()
+	{
 	}
 	/** 
 	 类
 	 
-	 param EnsName
+	 @param ensName
 	*/
 	public RptTemplate(String ensName) throws Exception {
 		this.setEnsName(ensName);
-		this.setFK_Emp(WebUser.getNo());
-		this.setMyPK(WebUser.getNo() + "@" + getEnsName());
+		this.setFKEmp(bp.web.WebUser.getNo());
+		this.setMyPK(bp.web.WebUser.getNo() + "@" + getEnsName());
 		try
 		{
 			this.Retrieve();
@@ -193,7 +163,7 @@ public class RptTemplate extends Entity
 	 报表模板
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();

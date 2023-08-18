@@ -1,31 +1,31 @@
 package bp.ccbill;
 
 import bp.da.*;
-import bp.difference.handler.WebContralBase;
+import bp.wf.httphandler.*;
+import bp.*;
 import java.io.*;
 
 /** 
  页面功能实体
 */
-public class WF_CCBill_Admin_MethodDocSys extends WebContralBase
+public class WF_CCBill_Admin_MethodDocSys extends bp.difference.handler.DirectoryPageBase
 {
 
 		///#region 属性.
-	public final String getGroupID() throws Exception {
+	public final String getGroupID()
+	{
 		String str = this.GetRequestVal("GroupID");
 		return str;
 	}
-	public final String getName() throws Exception {
-		String str = this.GetRequestVal("Name");
-		return str;
-	}
+
 
 		///#endregion 属性.
 
 	/** 
 	 构造函数
 	*/
-	public WF_CCBill_Admin_MethodDocSys() throws Exception {
+	public WF_CCBill_Admin_MethodDocSys()
+	{
 
 	}
 	/** 
@@ -33,7 +33,8 @@ public class WF_CCBill_Admin_MethodDocSys extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String MethodDocSysParas_Mover() throws Exception {
+	public final String MethodDocSysParas_Mover()
+	{
 		String[] ens = this.GetRequestVal("MyPKs").split("[,]", -1);
 		for (int i = 0; i < ens.length; i++)
 		{

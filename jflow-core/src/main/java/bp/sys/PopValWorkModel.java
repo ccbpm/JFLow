@@ -1,11 +1,5 @@
 package bp.sys;
 
-import bp.da.*;
-import bp.web.*;
-import bp.en.*;
-import bp.difference.*;
-import bp.*;
-import java.util.*;
 
 /** 
  PopVal - 工作方式
@@ -43,11 +37,13 @@ public enum PopValWorkModel
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
 	public static PopValWorkModel forValue(int value)
-	{return values()[value];
+	{
+		return values()[value];
 	}
 }

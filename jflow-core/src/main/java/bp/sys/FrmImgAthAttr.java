@@ -1,10 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
-import java.util.*;
-
 /** 
  图片附件 属性
 */
@@ -17,7 +13,7 @@ public class FrmImgAthAttr extends EntityMyPKAttr
 	/** 
 	 主表
 	*/
-	public static final String FK_MapData = "FK_MapData";
+	public static final String FrmID = "FK_MapData";
 	/** 
 	 X
 	*/

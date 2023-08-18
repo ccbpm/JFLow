@@ -22,13 +22,11 @@ public class BanJi extends EntityNoName
 	/**
 	 * 班主任
 	 */
-	public final String getBZR()
-	{
+	public final String getBZR()  {
 		return this.GetValStrByKey(BanJiAttr.BZR);
 	}
 	
-	public final void setBZR(String value)
-	{
+	public final void setBZR(String value)  {
 		this.SetValByKey(BanJiAttr.BZR, value);
 	}
 	
@@ -59,9 +57,7 @@ public class BanJi extends EntityNoName
 	public Map getEnMap()
 	{
 		if (this.get_enMap() != null)
-		{
 			return this.get_enMap();
-		}
 		Map map = new Map();
 		
 		map.setEnDBUrl(new DBUrl(DBUrlType.AppCenterDSN));
@@ -81,7 +77,7 @@ public class BanJi extends EntityNoName
 	}
 	
 	@Override
-	public Entities getGetNewEntities()
+	public Entities GetNewEntities()
 	{
 		return new BanJis();
 	}

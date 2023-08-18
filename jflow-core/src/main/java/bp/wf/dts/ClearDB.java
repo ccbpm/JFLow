@@ -1,9 +1,11 @@
 package bp.wf.dts;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
+import bp.*;
 import bp.wf.*;
+import java.util.*;
 
 /** 
  Method 的摘要说明
@@ -13,7 +15,7 @@ public class ClearDB extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public ClearDB()throws Exception
+	public ClearDB()
 	{
 		this.Title = "清除流程运行的数据(此功能要在测试环境里运行)";
 		this.Help = "清除所有流程运行的数据，包括待办工作。";
@@ -49,19 +51,14 @@ public class ClearDB extends Method
 	 @return 返回执行结果
 	*/
 	@Override
-	public Object Do()throws Exception
-	{
-		if (!bp.web.WebUser.getNo().equals("admin"))
+	public Object Do() throws Exception {
+		if (!Objects.equals(bp.web.WebUser.getNo(), "admin"))
 		{
 			return "非法的用户执行。";
 		}
 
-		//DBAccess.RunSQL("DELETE FROM WF_CHOfFlow");
-
-		DBAccess.RunSQL("DELETE FROM WF_Bill");
 		DBAccess.RunSQL("DELETE FROM WF_GenerWorkerlist");
 		DBAccess.RunSQL("DELETE FROM WF_GenerWorkFlow");
-		DBAccess.RunSQL("DELETE FROM WF_ReturnWork");
 		DBAccess.RunSQL("DELETE FROM WF_SelectAccper");
 		DBAccess.RunSQL("DELETE FROM WF_TransferCustom");
 		DBAccess.RunSQL("DELETE FROM WF_RememberMe");

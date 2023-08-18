@@ -1,8 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -13,13 +11,15 @@ public class Serials extends Entities
 	/** 
 	 序列号s
 	*/
-	public Serials()  {
+	public Serials()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new Serial();
 	}
 
@@ -30,7 +30,8 @@ public class Serials extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.List<Serial> ToJavaList() {
+	public final java.util.List<Serial> ToJavaList()
+	{
 		return (java.util.List<Serial>)(Object)this;
 	}
 	/** 
@@ -38,7 +39,8 @@ public class Serials extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<Serial> Tolist()  {
+	public final ArrayList<Serial> Tolist()
+	{
 		ArrayList<Serial> list = new ArrayList<Serial>();
 		for (int i = 0; i < this.size(); i++)
 		{

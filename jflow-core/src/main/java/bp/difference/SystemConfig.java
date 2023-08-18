@@ -26,6 +26,56 @@ public class SystemConfig {
 
 	private static boolean _IsBSsystem = true;
 
+	public static String getUserLockTimeSeconds() {
+
+		return SystemConfig.getAppSettings().get("UserLockTimeSeconds").toString();
+	}
+
+	/**
+	 * OSS服务器的Endpoint
+	 * @return
+	 */
+	public static String getOSSEndpoint() {
+
+		return SystemConfig.getAppSettings().get("OSSEndpoint").toString();
+	}
+
+	/**
+	 * OSS服务器的AccessKeyId
+	 * @return
+	 */
+	public static String getOSSAccessKeyId() {
+
+		return SystemConfig.getAppSettings().get("OSSAccessKeyId").toString();
+	}
+
+	/**
+	 * OSS服务器的AccessKeySecret
+	 * @return
+	 */
+	public static String getOSSAccessKeySecret() {
+
+		return SystemConfig.getAppSettings().get("OSSAccessKeySecret").toString();
+	}
+
+	/**
+	 * OSS服务器的BucketName
+	 * @return
+	 */
+	public static String getOSSBucketName() {
+
+		return SystemConfig.getAppSettings().get("OSSBucketName").toString();
+	}
+
+	/**
+	 * Bucket子目录路径配置
+	 * @return
+	 */
+	public static String getBucketSubPath() {
+
+		return SystemConfig.getAppSettings().get("BucketSubPath").toString();
+	}
+
 	public static String getFTPServerType() {
 
 		return SystemConfig.getAppSettings().get("FTPServerType").toString();
@@ -60,7 +110,7 @@ public class SystemConfig {
 	/// <summary>
 	/// 附件上传加密
 	/// </summary>
-	public static boolean getIsEnableAthEncrypt() {
+	public static boolean isEnableAthEncrypt() {
 		Object isEnableAthEncryptObj = SystemConfig.getAppSettings().get("IsEnableAthEncrypt");
 		if (isEnableAthEncryptObj == null) {
 			return false;
@@ -80,7 +130,7 @@ public class SystemConfig {
 	/// <summary>
 	/// 附件上传位置
 	/// </summary>
-	public static boolean getIsUploadFileToFTP() {
+	public static boolean isUploadFileToFTP() {
 		String IsUploadFileToFTP = SystemConfig.getAppSettings().get("IsUploadFileToFTP").toString();
 
 		if (DataType.IsNullOrEmpty(IsUploadFileToFTP) == true)
@@ -159,6 +209,11 @@ public class SystemConfig {
 		return SystemConfig.GetValByKeyInt("TokenModel",1);
 	}
 
+	public static String getUserDefaultPass()
+	{
+		return SystemConfig.GetValByKey("UserDefaultPass", "123");
+	}
+
 	// rtf打印单条审核信息
 	// 0相关审核信息展示到同一个地方，
 	// 1按配置的审核标签展示(默认为1).
@@ -191,13 +246,13 @@ public class SystemConfig {
 	 */
 	public static String GetConfigXmlEns(String key, String ensName) {
 		try {
-			Object tempVar = bp.da.Cash.GetObj("TConfigEns", bp.da.Depositary.Application);
+			Object tempVar = bp.da.Cache.GetObj("TConfigEns", bp.da.Depositary.Application);
 			DataTable dt = (DataTable) ((tempVar instanceof DataTable) ? tempVar : null);
 			if (dt == null) {
 				DataSet ds = new DataSet("dss");
 				ds.readXml(SystemConfig.getPathOfXML() + "Ens/ConfigEns.xml");
 				dt = ds.Tables.get(0);
-				bp.da.Cash.AddObj("TConfigEns", bp.da.Depositary.Application, dt);
+				bp.da.Cache.AddObj("TConfigEns", bp.da.Depositary.Application, dt);
 			}
 
 			for (DataRow dr : dt.Rows) {
@@ -345,13 +400,17 @@ public class SystemConfig {
 	 */
 	public static String getPathOfWebApp(){
 		HttpServletRequest request = bp.sys.base.Glo.getRequest();
-		if (SystemConfig.getIsBSsystem()) {
+		if (SystemConfig.isBSsystem()) {
 			if (request == null || request.getSession() == null) {
 				return bp.wf.Glo.getHostURL() + "/";
 			} else {
-				if(getIsJarRun() == true )
+				if(isJarRun() == true )
 					return "resources/";
-				String path = bp.sys.base.Glo.getRequest().getSession().getServletContext().getRealPath("") + "/";
+				String path = bp.sys.base.Glo.getRequest().getSession().getServletContext().getRealPath("");
+				if(path.contains(System.getProperty("java.io.tmpdir"))){
+					String err = "当前正在使用系统临时文件夹[" + System.getProperty("java.io.tmpdir") + "],请检查配置文件jflow.properties的IsStartJarPackage";
+					throw new RuntimeException(err);
+				}
 				return path;
 			}
 		} else {
@@ -367,6 +426,17 @@ public class SystemConfig {
 		return bp.wf.Glo.getCCFlowAppPath();
 	}
 
+	/**
+	 * 本机运行或者war包发布的物理地址
+	 *
+	 * @return
+	 */
+	public static String getWebApiHost() {
+		if (SystemConfig.getAppSettings().get("WebApiHost") != null) {
+			return SystemConfig.getAppSettings().get("WebApiHost").toString();
+		}
+		return "";
+	}
 	/**
 	 * 本机运行或者war包发布的物理地址
 	 *
@@ -410,7 +480,7 @@ public class SystemConfig {
 	 * 路径：WF/Data/XML
 	 * @return
 	 */
-	public static String getPathOfXML()throws Exception {
+	public static String getPathOfXML() {
 		return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataDirPath").toString() + "/Data/XML/";
 	}
 
@@ -421,7 +491,7 @@ public class SystemConfig {
 	 * @return
 	 */
 	public static String getPathOfDataUser(){
-		return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataUserDirPath").toString() + "DataUser/";
+		return getPathOfWebApp() + SystemConfig.getAppSettings().get("DataUserDirPath").toString() + "DataUser" + File.separator;
 	}
 
 	/**
@@ -432,7 +502,7 @@ public class SystemConfig {
 	 * @throws Exception
 	 */
 	public static String getPathOfCyclostyleFile()throws Exception {
-		if(SystemConfig.getIsJarRun() == false)
+		if(SystemConfig.isJarRun() == false)
 			return getPathOfDataUser() + "CyclostyleFile/";
 		return getPhysicalPath() + "DataUser/CyclostyleFile/";
 	}
@@ -444,9 +514,9 @@ public class SystemConfig {
 	 * @return
 	 */
 	public static String getPathOfTemp() {
-		if(SystemConfig.getIsJarRun() == false)
-			return getPathOfDataUser() + "Temp/";
-		return getPhysicalPath()+"DataUser/Temp/";
+		if(SystemConfig.isJarRun() == false)
+			return getPathOfDataUser() + "Temp" + File.separator;
+		return getPhysicalPath()+"DataUser" + File.separator + "Temp" + File.separator;
 	}
 
 	/**
@@ -456,7 +526,7 @@ public class SystemConfig {
 	 * @return
 	 */
 	public static String getPathOfInstancePacketOfData() {
-		if(SystemConfig.getIsJarRun() == false)
+		if(SystemConfig.isJarRun() == false)
 			return getPathOfDataUser() + "InstancePacketOfData/";
 		return getPhysicalPath()+"DataUser/InstancePacketOfData/";
 	}
@@ -486,13 +556,13 @@ public class SystemConfig {
 		return str;
 
 	}
-	public static boolean getIsJarRun(){
+	public static boolean isJarRun(){
         Object str =  SystemConfig.getAppSettings().get("IsStartJarPackage");
         if(str == null || str.toString().equals("0"))
             return false;
         return true;
     }
-	public static boolean getIsBSsystem() {
+	public static boolean isBSsystem() {
 		return SystemConfig._IsBSsystem;
 		//return SystemConfig.GetValByKeyBoolen("IsBSsystem", true);
 	}
@@ -501,9 +571,6 @@ public class SystemConfig {
 		SystemConfig._IsBSsystem = value;
 	}
 
-	public static boolean getIsCSsystem() {
-		return !SystemConfig.getIsBSsystem();
-	}
 
 	// 统配置信息
 	/**
@@ -617,20 +684,26 @@ public class SystemConfig {
 		return getAppSettings().get("ThirdPartySoftWareKey").toString();
 	}
 
-	public static boolean getIsEnableNull() {
+	public static boolean sEnableNull() {
 		if (getAppSettings().get("IsEnableNull").toString().equals("1")) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-
+	public static boolean isEnableNull() {
+		if (getAppSettings().get("IsEnableNull").toString().equals("1")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	/**
 	 * 是否 debug 状态
 	 * 
 	 * @return
 	 */
-	public static boolean getIsDebug() {
+	public static boolean isDebug() {
 		if (getAppSettings().get("IsDebug").toString().equals("1")) {
 			return true;
 		} else {
@@ -643,7 +716,7 @@ public class SystemConfig {
 	 * 0 表示不禁用, 1 表示禁用，默认为0不禁用
 	 * @return
 	 */
-	public static boolean getIsDisHelp() {
+	public static boolean isDisHelp() {
 		String isDisHelp = SystemConfig.getAppSettings().get("IsDisHelp") == null ? "0" : SystemConfig.getAppSettings().get("IsDisHelp").toString();
 		if (isDisHelp.equals("1")) {
 			return true;
@@ -655,7 +728,7 @@ public class SystemConfig {
 	 * 
 	 * @return
 	 */
-	public static boolean getIsMultiSys() {
+	public static boolean isMultiSys() {
 		if (getAppSettings().get("IsMultiSys").toString().equals("1")) {
 			return true;
 		} else {
@@ -668,7 +741,7 @@ public class SystemConfig {
 	 * 
 	 * @return
 	 */
-	public static boolean getIsMultiThread_del() {
+	public static boolean isMultiThread_del() {
 		if (getAppSettings().get("IsMultiThread").toString().equals("1")) {
 			return true;
 		} else {
@@ -681,7 +754,7 @@ public class SystemConfig {
 	 * 
 	 * @return
 	 */
-	public static boolean getIsMultiLanguageSys() {
+	public static boolean isMultiLanguageSys() {
 		if (getAppSettings().get("IsMultiLanguageSys").toString().equals("1")) {
 			return true;
 		} else {
@@ -690,11 +763,11 @@ public class SystemConfig {
 	}
 
 	/**
-	 * 当前的 TempCash 是否失效了
+	 * 当前的 TempCache 是否失效了
 	 * 
 	 * @return
 	 */
-	public static boolean getIsTempCashFail() {
+	public static boolean isTempCacheFail() {
 
 		return true;
 	}
@@ -1085,21 +1158,21 @@ public class SystemConfig {
 
 	public static Hashtable<String, Object> CS_DBConnctionDic;
 
-	public static void DoClearCash_del()throws Exception {
-		DoClearCash();
+	public static void DoClearCache_del()throws Exception {
+		DoClearCache();
 	}
 
 	/**
 	 * 执行清空
 	 */
-	public static void DoClearCash() throws Exception{
-		bp.da.Cash.getMap_Cash().clear();
-		bp.da.Cash.getSQL_Cash().clear();
-		bp.da.Cash.getEnsData_Cash().clear();
-		bp.da.Cash.getEnsData_Cash_Ext().clear();
-		bp.da.Cash.getBS_Cash().clear();
-		bp.da.Cash.getBill_Cash().clear();
-		bp.da.CashEntity.getDCash().clear();
+	public static void DoClearCache() throws Exception{
+		bp.da.Cache.getMap_Cache().clear();
+		bp.da.Cache.getSQL_Cache().clear();
+		bp.da.Cache.getEnsData_Cache().clear();
+		bp.da.Cache.getEnsData_Cache_Ext().clear();
+		bp.da.Cache.getBS_Cache().clear();
+		bp.da.Cache.getBill_Cache().clear();
+		bp.da.CacheEntity.getDCache().clear();
 	}
 
 	/**
@@ -1162,7 +1235,7 @@ public class SystemConfig {
 	/**
 	 * 是否多语言
 	 */
-	public static boolean getIsMultilingual() {
+	public static boolean isMultilingual() {
 		if (getAppSettings().get("IsMultilingual").toString().equals("1"))
 			return true;
 		return false;
@@ -1266,7 +1339,7 @@ public class SystemConfig {
 	/**
 	 * 数据库大小写模式
 	 */
-	public static FieldCaseModel AppCenterDBFieldCaseModel()  {
+	public static FieldCaseModel getAppCenterDBFieldCaseModel()  {
 		switch (getAppCenterDBType())
 		{
 			case Oracle:
@@ -1321,6 +1394,9 @@ public class SystemConfig {
 	public static boolean getRedisIsEnable(){
 		return SystemConfig.GetValByKeyBoolen("RedisIsEnable", true);
 	}
-
+	public static String getOZType()
+	{
+		return SystemConfig.GetValByKey("OZType","");
+	}
 
 }

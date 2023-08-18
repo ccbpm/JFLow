@@ -1,12 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.port.*;
-import bp.sys.*;
-import bp.wf.template.sflow.*;
-import bp.wf.template.frm.*;
-import bp.*;
 import bp.wf.*;
 import java.util.*;
 
@@ -24,7 +18,7 @@ public class FrmNodes extends EntitiesMyPK
 		Nodes ens = new Nodes();
 		for (FrmNode ns : this.ToJavaList())
 		{
-			ens.AddEntity(new Node(ns.getFK_Node()));
+			ens.AddEntity(new Node(ns.getNodeID()));
 		}
 		return ens;
 	}
@@ -36,12 +30,13 @@ public class FrmNodes extends EntitiesMyPK
 	/** 
 	 节点表单
 	*/
-	public FrmNodes() throws Exception {
+	public FrmNodes()
+	{
 	}
 	/** 
 	 节点表单
-	 
-	 param NodeID 节点ID
+	 @param fk_flow
+	 @param nodeID 节点ID
 	*/
 	public FrmNodes(String fk_flow, int nodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -54,8 +49,7 @@ public class FrmNodes extends EntitiesMyPK
 	}
 	/** 
 	 节点表单
-	 
-	 param NodeNo NodeNo
+	 @param nodeID nodeID
 	*/
 	public FrmNodes(int nodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -72,13 +66,14 @@ public class FrmNodes extends EntitiesMyPK
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FrmNode();
 	}
 	/** 
 	 节点表单s
 	 
-	 param sts 节点表单
+	 @param sts 节点表单
 	 @return 
 	*/
 	public final Nodes GetHisNodes(Nodes sts) throws Exception {
@@ -101,7 +96,7 @@ public class FrmNodes extends EntitiesMyPK
 	/** 
 	 节点表单
 	 
-	 param NodeNo 工作节点编号
+	 @param NodeNo 工作节点编号
 	 @return 节点s
 	*/
 	public final Nodes GetHisNodes(String NodeNo) throws Exception {
@@ -119,7 +114,7 @@ public class FrmNodes extends EntitiesMyPK
 	/** 
 	 转向此节点的集合的Nodes
 	 
-	 param nodeID 此节点的ID
+	 @param nodeID 此节点的ID
 	 @return 转向此节点的集合的Nodes (FromNodes) 
 	*/
 	public final Nodes GetHisNodes(int nodeID) throws Exception {
@@ -130,7 +125,7 @@ public class FrmNodes extends EntitiesMyPK
 		Nodes ens = new Nodes();
 		for (FrmNode en : this.ToJavaList())
 		{
-			ens.AddEntity(new Node(en.getFK_Node()));
+			ens.AddEntity(new Node(en.getNodeID()));
 		}
 		return ens;
 	}
@@ -144,7 +139,8 @@ public class FrmNodes extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmNode> ToJavaList() {
+	public final java.util.List<FrmNode> ToJavaList()
+	{
 		return (java.util.List<FrmNode>)(Object)this;
 	}
 	/** 
@@ -152,7 +148,8 @@ public class FrmNodes extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmNode> Tolist()  {
+	public final ArrayList<FrmNode> Tolist()
+	{
 		ArrayList<FrmNode> list = new ArrayList<FrmNode>();
 		for (int i = 0; i < this.size(); i++)
 		{

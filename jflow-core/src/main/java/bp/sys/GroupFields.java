@@ -9,17 +9,19 @@ import java.util.*;
 public class GroupFields extends EntitiesOID
 {
 
+
+
 		///#region 构造
 	/** 
 	 GroupFields
 	*/
-	public GroupFields()throws Exception
+	public GroupFields()
 	{
 	}
 	/** 
 	 GroupFields
 	 
-	 param enName 名称
+	 @param enName 名称
 	*/
 	public GroupFields(String enName) throws Exception {
 		int i = this.Retrieve(GroupFieldAttr.FrmID, enName, GroupFieldAttr.Idx);
@@ -46,14 +48,14 @@ public class GroupFields extends EntitiesOID
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new GroupField();
 	}
 	/** 
 	 查询
 	 
-	 param enName
+	 @param enName
 	 @return 
 	*/
 	public final int RetrieveFieldGroup(String enName) throws Exception {
@@ -61,7 +63,7 @@ public class GroupFields extends EntitiesOID
 		qo.AddWhere(GroupFieldAttr.FrmID, enName);
 		qo.addAnd();
 		qo.AddWhereIsNull(GroupFieldAttr.CtrlID);
-		//qo.AddWhereLen(GroupFieldAttr.CtrlID, " = ", 0, SystemConfig.getAppCenterDBType());
+		//qo.AddWhereLen(GroupFieldAttr.CtrlID, " = ", 0, bp.difference.SystemConfig.getAppCenterDBType());
 		int num = qo.DoQuery();
 
 		if (num == 0)
@@ -85,12 +87,17 @@ public class GroupFields extends EntitiesOID
 		}
 		return num;
 	}
+
+		///#endregion
+
+
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final java.util.List<GroupField> ToJavaList()throws Exception
+	public final java.util.List<GroupField> ToJavaList()
 	{
 		return (java.util.List<GroupField>)(Object)this;
 	}
@@ -99,7 +106,7 @@ public class GroupFields extends EntitiesOID
 	 
 	 @return List
 	*/
-	public final ArrayList<GroupField> Tolist()throws Exception
+	public final ArrayList<GroupField> Tolist()
 	{
 		ArrayList<GroupField> list = new ArrayList<GroupField>();
 		for (int i = 0; i < this.size(); i++)

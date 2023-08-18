@@ -13,53 +13,43 @@ public class AutoRpt extends EntityNoName
 	/** 
 	 发起时间点
 	*/
-	public final String getStartDT()
-	{
+	public final String getStartDT()  {
 		return this.GetValStringByKey(AutoRptAttr.StartDT);
 	}
-	public final void setStartDT(String value)
-	{
+	public final void setStartDT(String value){
 		this.SetValByKey(AutoRptAttr.StartDT, value);
 	}
 	/** 
 	 执行的时间点.
 	*/
-	public final String getDots()
-	{
+	public final String getDots()  {
 		return this.GetValStringByKey(AutoRptAttr.Dots);
 	}
-	public final void setDots(String value)
-	{
+	public final void setDots(String value){
 		this.SetValByKey(AutoRptAttr.Dots, value);
 	}
 	/** 
 	 执行时间
 	*/
-	public final String getDTOfExe()
-	{
+	public final String getDTOfExe()  {
 		return this.GetValStringByKey(AutoRptAttr.DTOfExe);
 	}
-	public final void setDTOfExe(String value)
-	{
+	public final void setDTOfExe(String value){
 		this.SetValByKey(AutoRptAttr.DTOfExe, value);
 	}
 	/** 
 	 到达的人员
 	*/
-	public final String getToEmps()
-	{
+	public final String getToEmps()  {
 		return this.GetValStringByKey(AutoRptAttr.ToEmps);
 	}
-	public final void setToEmps(String value)
-	{
+	public final void setToEmps(String value){
 		this.SetValByKey(AutoRptAttr.ToEmps, value);
 	}
-	public final String getToEmpOfSQLs()
-	{
+	public final String getToEmpOfSQLs()  {
 		return this.GetValStringByKey(AutoRptAttr.ToEmpOfSQLs);
 	}
-	public final void setToEmpOfSQLs(String value)
-	{
+	public final void setToEmpOfSQLs(String value){
 		this.SetValByKey(AutoRptAttr.ToEmpOfSQLs, value);
 	}
 

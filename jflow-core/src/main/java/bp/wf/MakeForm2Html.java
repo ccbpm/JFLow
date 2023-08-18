@@ -91,7 +91,7 @@ public class MakeForm2Html
 			mapAttrs = new MapAttrs();
 			mapAttrs.RetrieveIn(MapAttrAttr.FK_MapData, "(" + frmIDs + ")", "GroupID, Idx");
 			frmRBs = new FrmRBs();
-			frmRBs.RetrieveIn(FrmRBAttr.FK_MapData, "(" + frmIDs + ")");
+			frmRBs.RetrieveIn(FrmRBAttr.FrmID, "(" + frmIDs + ")");
 		}
 		else
 		{
@@ -248,7 +248,7 @@ public class MakeForm2Html
 							else
 							{
 								//判断是不是图片签名
-								if (attr.getIsSigan() == true)
+								if (attr.getItIsSigan() == true)
 								{
 									String SigantureNO = en.GetValStrByKey(attr.getKeyOfEn());
 									String src = SystemConfig.getHostURL() + "/DataUser/Siganture/";
@@ -318,7 +318,7 @@ public class MakeForm2Html
 							break;
 					}
 
-					if (attr.getIsBigDoc())
+					if (attr.getItIsBigDoc())
 					{
 						//这几种字体生成 pdf都乱码
 						text = text.replace("仿宋,", "宋体,");
@@ -532,7 +532,7 @@ public class MakeForm2Html
 							continue;
 						}
 
-						if (item.getIsNum())
+						if (item.getItIsNum())
 						{
 							sb.append("<td style='text-align:right' >" + text + "</td>");
 							continue;
@@ -565,7 +565,7 @@ public class MakeForm2Html
 				{
 					continue;
 				}
-				if (ath.getIsVisable() == false)
+				if (ath.getItIsVisable() == false)
 				{
 					continue;
 				}
@@ -574,7 +574,7 @@ public class MakeForm2Html
 				sb.append("  <th colspan=4><b>" + gf.getLab() + "</b></th>");
 				sb.append(" </tr>");
 
-				FrmAttachmentDBs athDBs = bp.wf.Glo.GenerFrmAttachmentDBs(ath, (new Long(workid)).toString(), ath.getMyPK(), workid);
+				FrmAttachmentDBs athDBs = bp.wf.CCFormAPI.GenerFrmAttachmentDBs(ath, (new Long(workid)).toString(), ath.getMyPK(), workid);
 
 
 				if (ath.getUploadType() == AttachmentUploadType.Single)
@@ -599,7 +599,7 @@ public class MakeForm2Html
 					{
 						String fileTo = path + "/pdf/" + item.getFileName();
 						//加密信息
-						boolean fileEncrypt = SystemConfig.getIsEnableAthEncrypt();
+						boolean fileEncrypt = SystemConfig.isEnableAthEncrypt();
 						boolean isEncrypt = item.GetParaBoolen("IsEncrypt");
 						///#region 从ftp服务器上下载.
 						if (ath.getAthSaveWay() == AthSaveWay.FTPServer)
@@ -682,8 +682,8 @@ public class MakeForm2Html
 				//替换系统参数
 				url = url.replace("@WebUser.No", WebUser.getNo());
 				url = url.replace("@WebUser.Name;", WebUser.getName());
-				url = url.replace("@WebUser.FK_DeptName;", WebUser.getFK_DeptName());
-				url = url.replace("@WebUser.FK_Dept;", WebUser.getFK_Dept());
+				url = url.replace("@WebUser.FK_DeptName;", WebUser.getDeptName());
+				url = url.replace("@WebUser.FK_Dept;", WebUser.getDeptNo());
 
 				//替换参数
 				if (url.indexOf("?") > 0)
@@ -1010,7 +1010,7 @@ public class MakeForm2Html
 					continue;
 				}
 				//签名
-				if (attr.getIsSigan() == true)
+				if (attr.getItIsSigan() == true)
 				{
 					continue;
 				}
@@ -1097,7 +1097,7 @@ public class MakeForm2Html
 		FrmAttachments aths = new FrmAttachments(frmID);
 		for (FrmAttachment ath : aths.ToJavaList())
 		{
-			if (ath.getIsVisable() == false)
+			if (ath.getItIsVisable() == false)
 			{
 				continue;
 			}
@@ -1243,7 +1243,7 @@ public class MakeForm2Html
 						else
 						{
 							//判断是不是图片签名
-							if (attr.getIsSigan() == true)
+							if (attr.getItIsSigan() == true)
 							{
 								String SigantureNO = gedtl.GetValStrByKey(attr.getKeyOfEn());
 								String src = SystemConfig.getHostURL() + "/DataUser/Siganture/";
@@ -1286,7 +1286,7 @@ public class MakeForm2Html
 						break;
 				}
 
-				if (attr.getIsBigDoc())
+				if (attr.getItIsBigDoc())
 				{
 					//这几种字体生成 pdf都乱码
 					text = text.replace("仿宋,", "宋体,");
@@ -1314,7 +1314,7 @@ public class MakeForm2Html
 						text = "是";
 					}
 				}
-				if (attr.getIsNum())
+				if (attr.getItIsNum())
 				{
 					sb.append("<td class='DtlTd' style='text-align:right;' >" + text + "</td>");
 				}
@@ -1350,8 +1350,8 @@ public class MakeForm2Html
 			}
 
 			//文件加密
-			boolean fileEncrypt = SystemConfig.getIsEnableAthEncrypt();
-			FrmAttachmentDBs athDBs = bp.wf.Glo.GenerFrmAttachmentDBs(ath, (new Long(workid)).toString(), ath.getMyPK(), workid);
+			boolean fileEncrypt = SystemConfig.isEnableAthEncrypt();
+			FrmAttachmentDBs athDBs = bp.wf.CCFormAPI.GenerFrmAttachmentDBs(ath, (new Long(workid)).toString(), ath.getMyPK(), workid);
 			sb.append("<table id = 'ShowTable' class='table' style='width:100%'>");
 			sb.append("<thead><tr style = 'border:0px;'>");
 			sb.append("<th style='width:50px; border: 1px solid #ddd;padding:8px;background-color:white' nowrap='true'>序</th>");
@@ -1511,7 +1511,7 @@ public class MakeForm2Html
 
 			String pdfFile = pdfPath + "/" + pdfName + ".pdf";
 			String pdfFileExe ="";
-			if(SystemConfig.getIsJarRun()==false)
+			if(SystemConfig.isJarRun()==false)
 				pdfFileExe = SystemConfig.getPathOfDataUser() + "ThirdpartySoftware/wkhtmltox/wkhtmltopdf.exe";
 			else
 				pdfFileExe = SystemConfig.getPhysicalPath() + "DataUser/ThirdpartySoftware/wkhtmltox/wkhtmltopdf.exe";
@@ -1573,7 +1573,7 @@ public class MakeForm2Html
 			}
 
 			//获取绑定的表单
-			FrmNodes nds = new FrmNodes(node.getFK_Flow(), node.getNodeID());
+			FrmNodes nds = new FrmNodes(node.getFlowNo(), node.getNodeID());
 			for (FrmNode item : nds.ToJavaList())
 			{
 				//判断当前绑定的表单是否启用
@@ -1945,7 +1945,7 @@ public class MakeForm2Html
 			if (flowNo != null)
 			{
 				gwf = new GenerWorkFlow(workid);
-				qrUrl = hostURL + "/WF/WorkOpt/PrintDocQRGuide.htm?AP=" + frmID + "$" + workid + "_" + flowNo + "_" + gwf.getFK_Node() + "_" + gwf.getStarter() + "_" + gwf.getFK_Dept();
+				qrUrl = hostURL + "/WF/WorkOpt/PrintDocQRGuide.htm?AP=" + frmID + "$" + workid + "_" + flowNo + "_" + gwf.getNodeID() + "_" + gwf.getStarter() + "_" + gwf.getDeptNo();
 			}
 
 			//二维码的生成
@@ -1989,8 +1989,8 @@ public class MakeForm2Html
 				//替换系统参数
 				url = url.replace("@WebUser.No", WebUser.getNo());
 				url = url.replace("@WebUser.Name;", WebUser.getName());
-				url = url.replace("@WebUser.FK_DeptName;", WebUser.getFK_DeptName());
-				url = url.replace("@WebUser.FK_Dept;", WebUser.getFK_Dept());
+				url = url.replace("@WebUser.FK_DeptName;", WebUser.getDeptName());
+				url = url.replace("@WebUser.FK_Dept;", WebUser.getDeptNo());
 
 				//替换参数
 				if (url.indexOf("?") > 0)
@@ -2089,7 +2089,7 @@ public class MakeForm2Html
 			Node nd = null;
 			if (gwf != null)
 			{
-				nd = new Node(gwf.getFK_Node());
+				nd = new Node(gwf.getNodeID());
 			}
 			if (isPrintShuiYin == true)
 			{

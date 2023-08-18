@@ -1,7 +1,5 @@
 package bp.wf;
 
-import bp.*;
-
 /** 
  流程运行类型
 */
@@ -19,11 +17,13 @@ public enum TransferCustomType
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
 	public static TransferCustomType forValue(int value)
-	{return values()[value];
+	{
+		return values()[value];
 	}
 }

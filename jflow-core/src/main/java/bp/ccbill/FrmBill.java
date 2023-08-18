@@ -1,11 +1,14 @@
 package bp.ccbill;
 
+import bp.ccbill.template.Collection;
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.wf.*;
 import bp.wf.template.*;
 import bp.sys.*;
 import bp.ccbill.template.*;
+import bp.*;
+import java.util.*;
 
 /** 
  单据属性
@@ -15,7 +18,8 @@ public class FrmBill extends EntityNoName
 
 		///#region 权限控制.
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.OpenForAppAdmin();
 		uac.IsDelete = false;
@@ -30,7 +34,7 @@ public class FrmBill extends EntityNoName
 	/** 
 	 物理表
 	*/
-	public final String getPTable()  {
+	public final String getPTable() throws Exception {
 		String s = this.GetValStrByKey(MapDataAttr.PTable);
 		if (DataType.IsNullOrEmpty(s) == true)
 		{
@@ -38,45 +42,40 @@ public class FrmBill extends EntityNoName
 		}
 		return s;
 	}
-	public final void setPTable(String value)
-	 {
+	public final void setPTable(String value)  {
 		this.SetValByKey(MapDataAttr.PTable, value);
 	}
 	/** 
 	 实体类型：@0=单据@1=编号名称实体@2=树结构实体
 	*/
-	public final EntityType getEntityType()  {
+	public final EntityType getEntityType() {
 		return EntityType.forValue(this.GetValIntByKey(FrmBillAttr.EntityType));
 	}
-	public final void setEntityType(EntityType value)
-	 {
+	public final void setEntityType(EntityType value)  {
 		this.SetValByKey(FrmBillAttr.EntityType, value.getValue());
 	}
 	/** 
 	 表单类型 (0=傻瓜，2=自由 ...)
 	*/
-	public final FrmType getFrmType()  {
+	public final FrmType getFrmType() {
 		return FrmType.forValue(this.GetValIntByKey(MapDataAttr.FrmType));
 	}
-	public final void setFrmType(FrmType value)
-	 {
+	public final void setFrmType(FrmType value)  {
 		this.SetValByKey(MapDataAttr.FrmType, value.getValue());
 	}
 	/** 
 	 表单树
 	*/
-	public final String getFKFormTree()
-	{
+	public final String getFormTreeNo()  {
 		return this.GetValStrByKey(MapDataAttr.FK_FormTree);
 	}
-	public final void setFK_FormTree(String value)
-	 {
+	public final void setFormTreeNo(String value)  {
 		this.SetValByKey(MapDataAttr.FK_FormTree, value);
 	}
 	/** 
 	 单据格式
 	*/
-	public final String getBillNoFormat()  {
+	public final String getBillNoFormat() throws Exception {
 		String str = this.GetValStrByKey(FrmBillAttr.BillNoFormat);
 		if (DataType.IsNullOrEmpty(str) == true)
 		{
@@ -84,14 +83,13 @@ public class FrmBill extends EntityNoName
 		}
 		return str;
 	}
-	public final void setBillNoFormat(String value)
-	 {
+	public final void setBillNoFormat(String value)  {
 		this.SetValByKey(FrmBillAttr.BillNoFormat, value);
 	}
 	/** 
 	 单据编号生成规则
 	*/
-	public final String getTitleRole()  {
+	public final String getTitleRole() throws Exception {
 		String str = this.GetValStrByKey(FrmBillAttr.TitleRole);
 		if (DataType.IsNullOrEmpty(str) == true)
 		{
@@ -99,35 +97,28 @@ public class FrmBill extends EntityNoName
 		}
 		return str;
 	}
-	public final void setTitleRole(String value)
-	 {
+	public final void setTitleRole(String value)  {
 		this.SetValByKey(FrmBillAttr.BillNoFormat, value);
 	}
 
-	public final String getSortColumns()
-	{
+	public final String getSortColumns()  {
 		return this.GetValStrByKey(FrmBillAttr.SortColumns);
 	}
-	public final void setSortColumns(String value)
-	 {
+	public final void setSortColumns(String value)  {
 		this.SetValByKey(FrmBillAttr.SortColumns, value);
 	}
 
-	public final String getFieldSet()
-	{
+	public final String getFieldSet()  {
 		return this.GetValStrByKey(FrmBillAttr.FieldSet);
 	}
-	public final void setFieldSet(String value)
-	 {
+	public final void setFieldSet(String value)  {
 		this.SetValByKey(FrmBillAttr.FieldSet, value);
 	}
 
-	public final String getRefDict()
-	{
+	public final String getRefDict()  {
 		return this.GetValStrByKey(FrmBillAttr.RefDict);
 	}
-	public final void setRefDict(String value)
-	 {
+	public final void setRefDict(String value)  {
 		this.SetValByKey(FrmBillAttr.RefDict, value);
 	}
 
@@ -138,21 +129,23 @@ public class FrmBill extends EntityNoName
 	/** 
 	 单据属性
 	*/
-	public FrmBill()  {
+	public FrmBill()
+	{
 	}
 	/** 
 	 单据属性
 	 
-	 param no 映射编号
+	 @param no 映射编号
 	*/
-	public FrmBill(String no) throws Exception {
+	public FrmBill(String no) throws Exception
+	{
 		super(no);
 	}
 	/** 
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap()  {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -163,10 +156,10 @@ public class FrmBill extends EntityNoName
 
 
 			///#region 基本属性.
-		map.AddGroupAttr("基本属性");
+		map.AddGroupAttr("基本属性", "");
 		map.AddTBStringPK(MapDataAttr.No, null, "表单编号", true, true, 1, 190, 20);
 		map.AddDDLSysEnum(MapDataAttr.FrmType, 0, "表单类型", true, true, "BillFrmType", "@0=傻瓜表单@1=自由表单@8=开发者表单");
-			//map.AddDDLSysEnum(MapDataAttr.FrmModel, 0, "单据模板", true, true, "BillFrmModel", "@0=系统预置@1=用户新增");
+		//map.AddDDLSysEnum(MapDataAttr.FrmModel, 0, "单据模板", true, true, "BillFrmModel", "@0=系统预置@1=用户新增");
 		map.AddTBString(MapDataAttr.PTable, null, "存储表", true, false, 0, 500, 20, true);
 		map.AddTBString(MapDataAttr.Name, null, "表单名称", true, false, 0, 500, 20, true);
 
@@ -174,7 +167,7 @@ public class FrmBill extends EntityNoName
 		{
 			String sql = "SELECT No,Name FROM WF_FlowSort WHERE OrgNo='" + bp.web.WebUser.getOrgNo() + "' AND No!='" + bp.web.WebUser.getOrgNo() + "'";
 			map.AddDDLSQL(MapDataAttr.FK_FormTree, null, "表单类别", sql, true);
-				//map.AddDDLEntities(MapDataAttr.FK_FormTree, "01", "表单类别", new SysFormTrees(), true);
+			//map.AddDDLEntities(MapDataAttr.FK_FormTree, "01", "表单类别", new SysFormTrees(), true);
 		}
 		else
 		{
@@ -189,19 +182,22 @@ public class FrmBill extends EntityNoName
 		cfg += "@2=MyBill.htm 单据编辑器";
 		cfg += "@9=自定义URL";
 		map.AddDDLSysEnum("SearchDictOpenType", 0, "双击行打开内容", true, true, "SearchDictOpenType", cfg);
+		map.AddBoolean(EnCfgAttr.IsSelectMore, true, "是否下拉查询条件多选?", true, true);
 		map.AddTBString(EnCfgAttr.UrlExt, null, "要打开的Url", true, false, 0, 500, 60, true);
 
 			///#endregion 基本属性.
 
 
 			///#region 单据属性.
-		map.AddGroupAttr("单据属性");
-			//map.AddDDLSysEnum(FrmBillAttr.FrmBillWorkModel, 0, "工作模式", true, false, FrmBillAttr.FrmBillWorkModel,
-			//    "@0=独立表单@1=单据工作模式");
+		map.AddGroupAttr("单据属性", "");
+
+		//map.AddDDLSysEnum(FrmBillAttr.FrmBillWorkModel, 0, "工作模式", true, false, FrmBillAttr.FrmBillWorkModel,
+		//    "@0=独立表单@1=单据工作模式");
+
 		map.AddDDLSysEnum(FrmBillAttr.EntityType, 0, "业务类型", true, false, FrmBillAttr.EntityType, "@0=独立表单@1=单据@2=编号名称实体@3=树结构实体");
 		map.SetHelperAlert(FrmBillAttr.EntityType, "该实体的类型,@0=单据@1=编号名称实体@2=树结构实体.");
 
-			//map.AddDDLSysEnum(MapDataAttr.FrmType, 0, "表单类型", true, true, "", "@0=独立表单@1=单据工作模式@2=流程工作模式");
+		//map.AddDDLSysEnum(MapDataAttr.FrmType, 0, "表单类型", true, true, "", "@0=独立表单@1=单据工作模式@2=流程工作模式");
 
 		map.AddTBString(FrmBillAttr.BillNoFormat, null, "单号规则", true, false, 0, 100, 20, true);
 		map.AddTBString(FrmBillAttr.TitleRole, null, "标题生成规则", true, false, 0, 100, 20, true);
@@ -221,39 +217,39 @@ public class FrmBill extends EntityNoName
 
 
 			///#region 按钮权限.
-			//map.AddTBString(FrmBillAttr.BtnNewLable, "新建", "新建", true, false, 0, 50, 20);
-			//map.AddDDLSysEnum(FrmDictAttr.BtnNewModel, 0, "新建模式", true, true, FrmDictAttr.BtnNewModel,
-			//  "@0=表格模式@1=卡片模式@2=不可用", true);
+		//map.AddTBString(FrmBillAttr.BtnNewLable, "新建", "新建", true, false, 0, 50, 20);
+		//map.AddDDLSysEnum(FrmDictAttr.BtnNewModel, 0, "新建模式", true, true, FrmDictAttr.BtnNewModel,
+		//  "@0=表格模式@1=卡片模式@2=不可用", true);
 
 
-			//map.AddTBString(FrmBillAttr.BtnSaveLable, "保存", "保存", true, false, 0, 50, 20);
-			////map.AddBoolean(FrmBillAttr.BtnSaveEnable, true, "是否可用？", true, true);
+		//map.AddTBString(FrmBillAttr.BtnSaveLable, "保存", "保存", true, false, 0, 50, 20);
+		////map.AddBoolean(FrmBillAttr.BtnSaveEnable, true, "是否可用？", true, true);
 
-			//map.AddTBString(FrmBillAttr.BtnSubmitLable, "提交", "提交", true, false, 0, 50, 20);
+		//map.AddTBString(FrmBillAttr.BtnSubmitLable, "提交", "提交", true, false, 0, 50, 20);
 
-			//map.AddTBString(FrmBillAttr.BtnDelLable, "删除", "删除", true, false, 0, 50, 20);
-			////map.AddBoolean(FrmBillAttr.BtnDelEnable, true, "是否可用？", true, true);
+		//map.AddTBString(FrmBillAttr.BtnDelLable, "删除", "删除", true, false, 0, 50, 20);
+		////map.AddBoolean(FrmBillAttr.BtnDelEnable, true, "是否可用？", true, true);
 
-			//map.AddTBString(FrmBillAttr.BtnSearchLabel, "列表", "列表", true, false, 0, 50, 20);
-			////map.AddBoolean(FrmBillAttr.BtnSearchEnable, true, "是否可用？", true, true);
+		//map.AddTBString(FrmBillAttr.BtnSearchLabel, "列表", "列表", true, false, 0, 50, 20);
+		////map.AddBoolean(FrmBillAttr.BtnSearchEnable, true, "是否可用？", true, true);
 
-			//map.AddTBString(FrmBillAttr.BtnGroupLabel, "分析", "分析", true, false, 0, 50, 20);
-			//map.AddBoolean(FrmBillAttr.BtnGroupEnable, false, "是否可用？", true, true);
+		//map.AddTBString(FrmBillAttr.BtnGroupLabel, "分析", "分析", true, false, 0, 50, 20);
+		//map.AddBoolean(FrmBillAttr.BtnGroupEnable, false, "是否可用？", true, true);
 
-			//map.AddTBString(FrmBillAttr.BtnPrintHtml, "打印Html", "打印Html", true, false, 0, 50, 20);
-			//map.AddBoolean(FrmBillAttr.BtnPrintHtmlEnable, false, "是否可用？", true, true);
+		//map.AddTBString(FrmBillAttr.BtnPrintHtml, "打印Html", "打印Html", true, false, 0, 50, 20);
+		//map.AddBoolean(FrmBillAttr.BtnPrintHtmlEnable, false, "是否可用？", true, true);
 
-			//map.AddTBString(FrmBillAttr.BtnPrintPDF, "打印PDF", "打印PDF", true, false, 0, 50, 20);
-			//map.AddBoolean(FrmBillAttr.BtnPrintPDFEnable, false, "是否可用？", true, true);
+		//map.AddTBString(FrmBillAttr.BtnPrintPDF, "打印PDF", "打印PDF", true, false, 0, 50, 20);
+		//map.AddBoolean(FrmBillAttr.BtnPrintPDFEnable, false, "是否可用？", true, true);
 
-			//map.AddTBString(FrmBillAttr.BtnPrintRTF, "打印RTF", "打印RTF", true, false, 0, 50, 20);
-			//map.AddBoolean(FrmBillAttr.BtnPrintRTFEnable, false, "是否可用？", true, true);
+		//map.AddTBString(FrmBillAttr.BtnPrintRTF, "打印RTF", "打印RTF", true, false, 0, 50, 20);
+		//map.AddBoolean(FrmBillAttr.BtnPrintRTFEnable, false, "是否可用？", true, true);
 
-			//map.AddTBString(FrmBillAttr.BtnPrintCCWord, "打印CCWord", "打印CCWord", true, false, 0, 50, 20);
-			//map.AddBoolean(FrmBillAttr.BtnPrintCCWordEnable, false, "是否可用？", true, true);
+		//map.AddTBString(FrmBillAttr.BtnPrintCCWord, "打印CCWord", "打印CCWord", true, false, 0, 50, 20);
+		//map.AddBoolean(FrmBillAttr.BtnPrintCCWordEnable, false, "是否可用？", true, true);
 
-			//map.AddTBString(FrmBillAttr.BtnExpZip, "导出zip文件", "导出zip文件", true, false, 0, 50, 20);
-			//map.AddBoolean(FrmBillAttr.BtnExpZipEnable, false, "是否可用？", true, true);
+		//map.AddTBString(FrmBillAttr.BtnExpZip, "导出zip文件", "导出zip文件", true, false, 0, 50, 20);
+		//map.AddBoolean(FrmBillAttr.BtnExpZipEnable, false, "是否可用？", true, true);
 
 
 		map.AddTBString(FrmBillAttr.BtnRefBill, "关联单据", "关联单据", true, false, 0, 50, 20);
@@ -267,37 +263,34 @@ public class FrmBill extends EntityNoName
 
 
 			///#region 查询按钮权限.
-
-			//map.AddTBString(FrmBillAttr.BtnImpExcel, "导入", "导入Excel文件", true, false, 0, 50, 20);
-			//map.AddBoolean(FrmBillAttr.BtnImpExcelEnable, true, "是否可用？", true, true);
-
-			//map.AddTBString(FrmBillAttr.BtnExpExcel, "导出", "导出Excel文件", true, false, 0, 50, 20);
-			//map.AddBoolean(FrmBillAttr.BtnExpExcelEnable, true, "是否可用？", true, true);
-
-			//map.AddTBString(FrmBillAttr.BtnGroupLabel, "分析", "分析", true, false, 0, 50, 20);
-			//map.AddBoolean(FrmBillAttr.BtnGroupEnable, true, "是否可用？", true, true);
-
+		//map.AddTBString(FrmBillAttr.BtnImpExcel, "导入", "导入Excel文件", true, false, 0, 50, 20);
+		//map.AddBoolean(FrmBillAttr.BtnImpExcelEnable, true, "是否可用？", true, true);
+		//map.AddTBString(FrmBillAttr.BtnExpExcel, "导出", "导出Excel文件", true, false, 0, 50, 20);
+		//map.AddBoolean(FrmBillAttr.BtnExpExcelEnable, true, "是否可用？", true, true);
+		//map.AddTBString(FrmBillAttr.BtnGroupLabel, "分析", "分析", true, false, 0, 50, 20);
+		//map.AddBoolean(FrmBillAttr.BtnGroupEnable, true, "是否可用？", true, true);
 
 			///#endregion 查询按钮权限.
 
 
 			///#region 设计者信息.
-		map.AddGroupAttr("设计者信息");
+		map.AddGroupAttr("设计者信息", "");
+
 		map.AddTBString(MapDataAttr.Designer, null, "设计者", true, false, 0, 500, 20);
 		map.AddTBString(MapDataAttr.DesignerContact, null, "联系方式", true, false, 0, 500, 20);
 		map.AddTBString(MapDataAttr.DesignerUnit, null, "单位", true, false, 0, 500, 20, true);
 		map.AddTBString(MapDataAttr.GUID, null, "GUID", true, true, 0, 128, 20, false);
 		map.AddTBString(MapDataAttr.Ver, null, "版本号", true, true, 0, 30, 20);
-		map.AddTBStringDoc(MapDataAttr.Note, null, "备注", true, false, true);
+		map.AddTBStringDoc(MapDataAttr.Note, null, "备注", true, false, true, 10);
 		map.AddTBInt(MapDataAttr.Idx, 100, "顺序号", false, false);
 
 			///#endregion 设计者信息.
 
 
 			///#region 扩展参数.
-		map.AddTBString(FrmDictAttr.Tag0, null, "Tag0", false, false, 0, 500, 20);
-		map.AddTBString(FrmDictAttr.Tag1, null, "Tag1", false, false, 0, 4000, 20);
-		map.AddTBString(FrmDictAttr.Tag2, null, "Tag2", false, false, 0, 500, 20);
+		map.AddTBString(FrmAttr.Tag0, null, "Tag0", false, false, 0, 500, 20);
+		map.AddTBString(FrmAttr.Tag1, null, "Tag1", false, false, 0, 4000, 20);
+		map.AddTBString(FrmAttr.Tag2, null, "Tag2", false, false, 0, 500, 20);
 
 			///#endregion 扩展参数.
 
@@ -305,7 +298,9 @@ public class FrmBill extends EntityNoName
 
 
 			///#region 基本功能.
+
 		map.AddGroupMethod("基本设置");
+
 		RefMethod rm = new RefMethod();
 
 		rm = new RefMethod();
@@ -323,8 +318,8 @@ public class FrmBill extends EntityNoName
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.Target = "_blank";
-			//rm.GroupName = "开发接口";
-			//map.AddRefMethod(rm);
+		//rm.GroupName = "开发接口";
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "单据url的API"; // "设计表单";
@@ -332,8 +327,8 @@ public class FrmBill extends EntityNoName
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
-			//rm.GroupName = "开发接口";
-		   // map.AddRefMethod(rm);
+		//rm.GroupName = "开发接口";
+	   // map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "打开单据数据"; // "设计表单";
@@ -341,19 +336,24 @@ public class FrmBill extends EntityNoName
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
 		rm.Target = "_blank";
-			//rm.GroupName = "开发接口";
+		//rm.GroupName = "开发接口";
 		map.AddRefMethod(rm);
 
 
 		rm = new RefMethod();
 		rm.Title = "绑定到菜单目录"; // "设计表单";
-		rm.getHisAttrs().AddDDLSQL("MENUNo", null, "选择菜单目录", "SELECT No,Name FROM GPM_Menu WHERE MenuType=3", true);
-		rm.getHisAttrs().AddTBString("Name", "@Name", "菜单名称", true, false, 0, 100, 100);
+		try{
+			rm.getHisAttrs().AddDDLSQL("MENUNo", null, "选择菜单目录", "SELECT No,Name FROM GPM_Menu WHERE MenuType=3", true);
+			rm.getHisAttrs().AddTBString("Name", "@Name", "菜单名称", true, false, 0, 100, 100);
+		}catch(Exception e){
+
+		}
+
 		rm.ClassMethodName = this.toString() + ".DoBindMenu";
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.Func;
 		rm.Target = "_blank";
-			//rm.GroupName = "开发接口";
+		//rm.GroupName = "开发接口";
 		map.AddRefMethod(rm);
 
 
@@ -375,27 +375,27 @@ public class FrmBill extends EntityNoName
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
 
-			//rm = new RefMethod();
-			//rm.Title = "执行方法"; // "设计表单";
-			//rm.ClassMethodName = this.ToString() + ".DoMethod";
-			//rm.Icon = "../../WF/Img/Event.png";
-			//rm.Visable = true;
-			//rm.refMethodType = RefMethodType.RightFrameOpen;
-			//rm.Target = "_blank";
-			//map.AddRefMethod(rm);
+		//rm = new RefMethod();
+		//rm.Title = "执行方法"; // "设计表单";
+		//rm.ClassMethodName = this.ToString() + ".DoMethod";
+		//rm.Icon = "../../WF/Img/Event.png";
+		//rm.Visable = true;
+		//rm.refMethodType = RefMethodType.RightFrameOpen;
+		//rm.Target = "_blank";
+		//map.AddRefMethod(rm);
 
 			///#endregion 基本功能.
 
 
 			///#region 权限规则.
 		map.AddGroupMethod("权限规则");
+
 		rm = new RefMethod();
 		rm.Title = "创建规则"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoCreateRole";
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.LinkModel;
 		rm.RefAttrKey = FrmBillAttr.BtnNewLable;
-		rm.GroupName = "权限规则";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -404,7 +404,6 @@ public class FrmBill extends EntityNoName
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.LinkModel;
 		rm.RefAttrKey = FrmBillAttr.BtnSaveLable;
-		rm.GroupName = "权限规则";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -413,7 +412,6 @@ public class FrmBill extends EntityNoName
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.LinkModel;
 		rm.RefAttrKey = FrmBillAttr.BtnSubmitLable;
-		rm.GroupName = "权限规则";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -422,7 +420,6 @@ public class FrmBill extends EntityNoName
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.LinkModel;
 		rm.RefAttrKey = FrmBillAttr.BtnDelLable;
-		rm.GroupName = "权限规则";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
@@ -431,16 +428,13 @@ public class FrmBill extends EntityNoName
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.LinkModel;
 		rm.RefAttrKey = FrmBillAttr.BtnSearchLabel;
-		rm.GroupName = "权限规则";
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "数据查询权限规则";
 		rm.ClassMethodName = this.toString() + ".DoSearchDataRole()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.GroupName = "权限规则";
 		map.AddRefMethod(rm);
-
 
 			///#endregion
 
@@ -448,7 +442,6 @@ public class FrmBill extends EntityNoName
 			///#region 报表定义.
 		map.AddGroupMethod("报表定义");
 		rm = new RefMethod();
-		rm.GroupName = "报表定义";
 		rm.Title = "设置显示的列"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoRpt_ColsChose";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
@@ -456,7 +449,6 @@ public class FrmBill extends EntityNoName
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
-		rm.GroupName = "报表定义";
 		rm.Title = "设置多表头"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoRptMTitle";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
@@ -464,28 +456,26 @@ public class FrmBill extends EntityNoName
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
-		rm.GroupName = "报表定义";
 		rm.Title = "列的顺序"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoRpt_ColsIdxAndLabel";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
-			//   map.AddRefMethod(rm);
+		//   map.AddRefMethod(rm);
 
 		rm = new RefMethod();
-		rm.GroupName = "报表定义";
 		rm.Title = "查询条件"; // "设计表单";
 		rm.ClassMethodName = this.toString() + ".DoRpt_SearchCond";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
 		map.AddRefMethod(rm);
 
-			//rm = new RefMethod();
-			//rm.GroupName = "报表定义";
-			//rm.Title = "页面展示设置"; // "设计表单";
-			//rm.ClassMethodName = this.ToString() + ".DoRpt_Setting";
-			//rm.refMethodType = RefMethodType.RightFrameOpen;
-			//rm.Target = "_blank";
-			//map.AddRefMethod(rm);
+		//rm = new RefMethod();
+		//rm.GroupName = "报表定义";
+		//rm.Title = "页面展示设置"; // "设计表单";
+		//rm.ClassMethodName = this.ToString() + ".DoRpt_Setting";
+		//rm.refMethodType = RefMethodType.RightFrameOpen;
+		//rm.Target = "_blank";
+		//map.AddRefMethod(rm);
 
 
 			///#endregion 报表定义.
@@ -536,7 +526,7 @@ public class FrmBill extends EntityNoName
 		btn.setBtnID("PrintHtml");
 		btn.setBtnLab("打印Html");
 		btn.setMyPK(btn.getFrmID() + "_" + btn.getBtnID());
-		btn.setEnable(false);
+		btn.setItIsEnable(false);
 		btn.SetValByKey("Idx", 3);
 		btn.Insert();
 
@@ -545,7 +535,7 @@ public class FrmBill extends EntityNoName
 		btn.setBtnID("PrintPDF");
 		btn.setBtnLab("打印PDF");
 		btn.setMyPK(btn.getFrmID() + "_" + btn.getBtnID());
-		btn.setEnable(false);
+		btn.setItIsEnable(false);
 		btn.SetValByKey("Idx", 4);
 		btn.Insert();
 
@@ -554,7 +544,7 @@ public class FrmBill extends EntityNoName
 		btn.setBtnID("PrintRTF");
 		btn.setBtnLab("打印RTF");
 		btn.setMyPK(btn.getFrmID() + "_" + btn.getBtnID());
-		btn.setEnable(false);
+		btn.setItIsEnable(false);
 		btn.SetValByKey("Idx", 5);
 		btn.Insert();
 
@@ -563,7 +553,7 @@ public class FrmBill extends EntityNoName
 		btn.setBtnID("PrintCCWord");
 		btn.setBtnLab("打印CCWord");
 		btn.setMyPK(btn.getFrmID() + "_" + btn.getBtnID());
-		btn.setEnable(false);
+		btn.setItIsEnable(false);
 		btn.SetValByKey("Idx", 6);
 		btn.Insert();
 
@@ -572,7 +562,7 @@ public class FrmBill extends EntityNoName
 		btn.setBtnID("ExpZip");
 		btn.setBtnLab("导出Zip包");
 		btn.setMyPK(btn.getFrmID() + "_" + btn.getBtnID());
-		btn.setEnable(false);
+		btn.setItIsEnable(false);
 		btn.SetValByKey("Idx", 7);
 		btn.Insert();
 
@@ -646,7 +636,8 @@ public class FrmBill extends EntityNoName
 	}
 
 	@Override
-	protected void afterInsert() throws Exception {
+	protected void afterInsert() throws Exception
+	{
 		InsertToolbarBtns();
 		CheckEnityTypeAttrsFor_Bill();
 
@@ -656,9 +647,8 @@ public class FrmBill extends EntityNoName
 		///#endregion
 
 
-
 		///#region 权限控制.
-	public final String DoSaveRole()  {
+	public final String DoSaveRole() {
 		return "../../CCBill/Admin/BillRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnSave";
 	}
 	/** 
@@ -666,7 +656,7 @@ public class FrmBill extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoSubmitRole()  {
+	public final String DoSubmitRole() {
 		return "../../CCBill/Admin/BillRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnSubmit";
 	}
 
@@ -675,7 +665,7 @@ public class FrmBill extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoCreateRole()  {
+	public final String DoCreateRole() {
 		return "../../CCBill/Admin/BillRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnNew";
 	}
 	/** 
@@ -683,7 +673,7 @@ public class FrmBill extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoSearchRole()  {
+	public final String DoSearchRole() {
 		return "../../CCBill/Admin/BillRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnSearch";
 	}
 	/** 
@@ -691,7 +681,7 @@ public class FrmBill extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoDeleteRole()  {
+	public final String DoDeleteRole() {
 		return "../../CCBill/Admin/BillRole.htm?s=34&FrmID=" + this.getNo() + "&CtrlObj=BtnDelete";
 	}
 
@@ -700,12 +690,11 @@ public class FrmBill extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoSearchDataRole()  {
+	public final String DoSearchDataRole() {
 		return "../../CCBill/Admin/SearchDataRole.htm?s=34&FrmID=" + this.getNo();
 	}
 
 		///#endregion 权限控制.
-
 
 
 		///#region 报表定义
@@ -714,7 +703,7 @@ public class FrmBill extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoRpt_ColsChose()  {
+	public final String DoRpt_ColsChose() {
 		return "../../CCBill/Admin/ColsChose.htm?FrmID=" + this.getNo();
 	}
 	/** 
@@ -722,7 +711,7 @@ public class FrmBill extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoRptMTitle()  {
+	public final String DoRptMTitle() {
 		return "../../Comm/Sys/MultiTitle.htm?EnsName=" + this.getNo() + "&DoType=Bill";
 	}
 	/** 
@@ -730,7 +719,7 @@ public class FrmBill extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoRpt_ColsIdxAndLabel()  {
+	public final String DoRpt_ColsIdxAndLabel() {
 		return "../../CCBill/Admin/ColsIdxAndLabel.htm?FrmID=" + this.getNo();
 	}
 	/** 
@@ -738,20 +727,20 @@ public class FrmBill extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoRpt_SearchCond()  {
+	public final String DoRpt_SearchCond() {
 		return "../../CCBill/Admin/SearchCond.htm?FrmID=" + this.getNo();
 	}
 
-	public final String DoRpt_Setting()  {
+	public final String DoRpt_Setting() {
 		return "../Sys/SearchSetting.htm?EnsName=" + this.getNo() + "&SettingType=1";
 	}
 
 		///#endregion 报表定义.
 
-	public final String ToolbarSetting()  {
+	public final String ToolbarSetting() {
 		return "../../CCBill/Admin/ToolbarSetting.htm?s=34&FrmID=" + this.getNo();
 	}
-	public final String DoPageLoadFull()  {
+	public final String DoPageLoadFull() {
 		return "../../Admin/FoolFormDesigner/MapExt/PageLoadFull.htm?s=34&FK_MapData=" + this.getNo() + "&ExtType=PageLoadFull&RefNo=";
 	}
 	/** 
@@ -759,7 +748,7 @@ public class FrmBill extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoEvent()  {
+	public final String DoEvent() {
 		return "../../Admin/CCFormDesigner/Action.htm?FK_MapData=" + this.getNo() + "&T=sd&FK_Node=0";
 	}
 
@@ -771,7 +760,6 @@ public class FrmBill extends EntityNoName
 		CheckEnityTypeAttrsFor_Bill(false);
 	}
 
-//ORIGINAL LINE: public void CheckEnityTypeAttrsFor_Bill(bool isHavePFrmID=false)
 	public final void CheckEnityTypeAttrsFor_Bill(boolean isHavePFrmID) throws Exception {
 		//取出来全部的属性.
 		MapAttrs attrs = new MapAttrs(this.getNo());
@@ -782,8 +770,8 @@ public class FrmBill extends EntityNoName
 		{
 			/* 标题 */
 			MapAttr attr = new MapAttr();
-			attr.setFK_MapData(this.getNo());
-			attr.setHisEditType( EditType.UnDel);
+			attr.setFrmID( this.getNo());
+			attr.setHisEditType(EditType.UnDel);
 			attr.setKeyOfEn(GERptAttr.Title); // "FlowEmps";
 			attr.setName("标题"); //   单据模式， ccform的模式.
 			attr.setMyDataType(DataType.AppString);
@@ -794,7 +782,7 @@ public class FrmBill extends EntityNoName
 			attr.setUIIsLine(true);
 			attr.setMinLen(0);
 			attr.setMaxLen(400);
-			attr.setIdx(-100);
+			attr.setIdx(-1);
 			attr.Insert();
 		}
 
@@ -802,7 +790,7 @@ public class FrmBill extends EntityNoName
 		{
 			/* WorkID */
 			MapAttr attr = new MapAttr();
-			attr.setFK_MapData(this.getNo());
+			attr.setFrmID( this.getNo());
 			attr.setKeyOfEn("OID");
 			attr.setName("主键ID");
 			attr.setMyDataType(DataType.AppInt);
@@ -810,7 +798,7 @@ public class FrmBill extends EntityNoName
 			attr.setLGType(FieldTypeS.Normal);
 			attr.setUIVisible(false);
 			attr.setUIIsEnable(false);
-			attr.setDefVal( "0");
+			attr.setDefVal("0");
 			attr.setEditType(EditType.Readonly);
 			attr.Insert();
 		}
@@ -818,8 +806,8 @@ public class FrmBill extends EntityNoName
 		{
 			/* 单据编号 */
 			MapAttr attr = new MapAttr();
-			attr.setFK_MapData(this.getNo());
-			attr.setHisEditType( EditType.UnDel);
+			attr.setFrmID( this.getNo());
+			attr.setHisEditType(EditType.UnDel);
 			attr.setKeyOfEn(GERptAttr.BillNo);
 
 			attr.setName("单据编号"); //  单据编号
@@ -828,10 +816,10 @@ public class FrmBill extends EntityNoName
 			attr.setLGType(FieldTypeS.Normal);
 			attr.setUIVisible(true);
 			attr.setUIIsEnable(false);
-			attr.setUIIsLine(false);
+			attr.setUIIsLine (false);
 			attr.setMinLen(0);
 			attr.setMaxLen(100);
-			attr.setIdx(-100);
+			attr.setIdx(-1);
 			attr.Insert();
 		}
 
@@ -839,8 +827,8 @@ public class FrmBill extends EntityNoName
 		{
 			/* 参数 */
 			MapAttr attr = new MapAttr();
-			attr.setFK_MapData(this.getNo());
-			attr.setHisEditType( EditType.UnDel);
+			attr.setFrmID( this.getNo());
+			attr.setHisEditType(EditType.UnDel);
 			attr.setKeyOfEn(GERptAttr.AtPara);
 			attr.setName("参数"); // 单据编号
 			attr.setMyDataType(DataType.AppString);
@@ -848,10 +836,10 @@ public class FrmBill extends EntityNoName
 			attr.setLGType(FieldTypeS.Normal);
 			attr.setUIVisible(false);
 			attr.setUIIsEnable(false);
-			attr.setUIIsLine(false);
+			attr.setUIIsLine (false);
 			attr.setMinLen(0);
 			attr.setMaxLen(4000);
-			attr.setIdx( -99);
+			attr.setIdx(-99);
 			attr.Insert();
 		}
 
@@ -859,8 +847,8 @@ public class FrmBill extends EntityNoName
 		{
 			/* 单据状态 */
 			MapAttr attr = new MapAttr();
-			attr.setFK_MapData(this.getNo());
-			attr.setHisEditType( EditType.UnDel);
+			attr.setFrmID( this.getNo());
+			attr.setHisEditType(EditType.UnDel);
 			attr.setKeyOfEn("BillState"); // "FlowEmps";
 			attr.setName("单据状态");
 			attr.setMyDataType(DataType.AppInt);
@@ -871,7 +859,7 @@ public class FrmBill extends EntityNoName
 			attr.setUIIsLine(true);
 			attr.setMinLen(0);
 			attr.setMaxLen(10);
-			attr.setIdx( -98);
+			attr.setIdx(-98);
 			attr.Insert();
 		}
 
@@ -879,8 +867,8 @@ public class FrmBill extends EntityNoName
 		{
 			/* 发起人 */
 			MapAttr attr = new MapAttr();
-			attr.setFK_MapData(this.getNo());
-			attr.setHisEditType( EditType.UnDel);
+			attr.setFrmID( this.getNo());
+			attr.setHisEditType(EditType.UnDel);
 			attr.setKeyOfEn("Starter");
 			attr.setName("创建人");
 			attr.setMyDataType(DataType.AppString);
@@ -890,16 +878,16 @@ public class FrmBill extends EntityNoName
 			attr.setUIVisible(false);
 			attr.setUIIsEnable(false);
 			attr.setMinLen(0);
-			attr.setMaxLen(32);
-			attr.setIdx( -1);
+			attr.setMaxLen(100);
+			attr.setIdx(-1);
 			attr.Insert();
 		}
 		if (attrs.contains(this.getNo() + "_StarterName") == false)
 		{
 			/* 创建人名称 */
 			MapAttr attr = new MapAttr();
-			attr.setFK_MapData(this.getNo());
-			attr.setHisEditType( EditType.UnDel);
+			attr.setFrmID( this.getNo());
+			attr.setHisEditType(EditType.UnDel);
 			attr.setKeyOfEn("StarterName");
 			attr.setName("创建人名称");
 			attr.setMyDataType(DataType.AppString);
@@ -910,15 +898,15 @@ public class FrmBill extends EntityNoName
 			attr.setUIIsEnable(false);
 			attr.setMinLen(0);
 			attr.setMaxLen(32);
-			attr.setIdx( -1);
+			attr.setIdx(-1);
 			attr.Insert();
 		}
 
 		if (attrs.contains(this.getNo() + "_RDT") == false)
 		{
 			MapAttr attr = new MapAttr();
-			attr.setFK_MapData(this.getNo());
-			attr.setHisEditType( EditType.UnDel);
+			attr.setFrmID( this.getNo());
+			attr.setHisEditType(EditType.UnDel);
 			attr.setKeyOfEn("RDT");
 			attr.setName("创建时间");
 			attr.setMyDataType(DataType.AppDateTime);
@@ -926,16 +914,16 @@ public class FrmBill extends EntityNoName
 			attr.setLGType(FieldTypeS.Normal);
 			attr.setUIVisible(false);
 			attr.setUIIsEnable(false);
-			attr.setUIIsLine(false);
-			attr.setIdx( -97);
+			attr.setUIIsLine (false);
+			attr.setIdx(-97);
 			attr.Insert();
 		}
 		if (attrs.contains(this.getNo() + "_FK_Dept") == false)
 		{
 			/* 创建人部门 */
 			MapAttr attr = new MapAttr();
-			attr.setFK_MapData(this.getNo());
-			attr.setHisEditType( EditType.UnDel);
+			attr.setFrmID( this.getNo());
+			attr.setHisEditType(EditType.UnDel);
 			attr.setKeyOfEn("FK_Dept");
 			attr.setName("创建人部门");
 			attr.setMyDataType(DataType.AppString);
@@ -945,16 +933,16 @@ public class FrmBill extends EntityNoName
 			attr.setUIVisible(false);
 			attr.setUIIsEnable(false);
 			attr.setMinLen(0);
-			attr.setMaxLen(32);
-			attr.setIdx( -1);
+			attr.setMaxLen(100);
+			attr.setIdx(-1);
 			attr.Insert();
 		}
 		if (attrs.contains(this.getNo() + "_OrgNo") == false)
 		{
 			/* 创建人名称 */
 			MapAttr attr = new MapAttr();
-			attr.setFK_MapData(this.getNo());
-			attr.setHisEditType( EditType.UnDel);
+			attr.setFrmID( this.getNo());
+			attr.setHisEditType(EditType.UnDel);
 			attr.setKeyOfEn("OrgNo");
 			attr.setName("创建人所在的组织");
 			attr.setMyDataType(DataType.AppString);
@@ -964,8 +952,8 @@ public class FrmBill extends EntityNoName
 			attr.setUIVisible(false);
 			attr.setUIIsEnable(false);
 			attr.setMinLen(0);
-			attr.setMaxLen(32);
-			attr.setIdx( -1);
+			attr.setMaxLen(100);
+			attr.setIdx(-1);
 			attr.Insert();
 		}
 		if (isHavePFrmID == true)
@@ -973,8 +961,8 @@ public class FrmBill extends EntityNoName
 			if (attrs.contains(this.getNo() + "_PWorkID") == false)
 			{
 				MapAttr attr = new MapAttr();
-				attr.setFK_MapData(this.getNo());
-				attr.setHisEditType( EditType.UnDel);
+				attr.setFrmID( this.getNo());
+				attr.setHisEditType(EditType.UnDel);
 				attr.setKeyOfEn("PWorkID");
 				attr.setName("实体发起的单据");
 				attr.setMyDataType(DataType.AppInt);
@@ -985,15 +973,15 @@ public class FrmBill extends EntityNoName
 				attr.setUIIsEnable(false);
 				attr.setMinLen(0);
 				attr.setMaxLen(50);
-				attr.setIdx( -1);
+				attr.setIdx(-1);
 				attr.Insert();
 			}
 
 			if (attrs.contains(this.getNo() + "_PFrmID") == false)
 			{
 				MapAttr attr = new MapAttr();
-				attr.setFK_MapData(this.getNo());
-				attr.setHisEditType( EditType.UnDel);
+				attr.setFrmID( this.getNo());
+				attr.setHisEditType(EditType.UnDel);
 				attr.setKeyOfEn("PFrmID");
 				attr.setName("实体名称");
 				attr.setMyDataType(DataType.AppString);
@@ -1004,7 +992,7 @@ public class FrmBill extends EntityNoName
 				attr.setUIIsEnable(false);
 				attr.setMinLen(0);
 				attr.setMaxLen(200);
-				attr.setIdx( -1);
+				attr.setIdx(-1);
 				attr.Insert();
 			}
 
@@ -1017,8 +1005,7 @@ public class FrmBill extends EntityNoName
 	 
 	 @return 返回执行结果.
 	*/
-	public final String DoBindMenu(String menumDirNo, String menuName)
-	{
+	public final String DoBindMenu(String menumDirNo, String menuName) throws Exception {
 		String sql = "SELECT FK_App FROM GPM_Menu WHERE No='" + menumDirNo + "'";
 		String app = DBAccess.RunSQLReturnString(sql);
 
@@ -1045,11 +1032,11 @@ public class FrmBill extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoOpenBill()  {
-		return "../../CCBill/SearchBill.htm?FrmID=" + this.getNo() + "&t=" + DataType.getCurrentDataTime();
+	public final String DoOpenBill() {
+		return "../../CCBill/SearchBill.htm?FrmID=" + this.getNo() + "&t=" + DataType.getCurrentDateTime();
 	}
-	public final String DoAPI()  {
-		return "../../Admin/FoolFormDesigner/Bill/API.htm?FrmID=" + this.getNo() + "&t=" + DataType.getCurrentDataTime();
+	public final String DoAPI() {
+		return "../../Admin/FoolFormDesigner/Bill/API.htm?FrmID=" + this.getNo() + "&t=" + DataType.getCurrentDateTime();
 	}
 
 		///#endregion 方法操作.

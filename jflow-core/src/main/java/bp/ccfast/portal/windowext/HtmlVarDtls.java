@@ -1,10 +1,6 @@
 package bp.ccfast.portal.windowext;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
-import bp.ccfast.*;
-import bp.ccfast.portal.*;
 import java.util.*;
 
 /** 
@@ -17,13 +13,15 @@ public class HtmlVarDtls extends EntitiesMyPK
 	/** 
 	 变量信息s
 	*/
-	public HtmlVarDtls() {
+	public HtmlVarDtls()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new HtmlVarDtl();
 	}
 
@@ -36,7 +34,8 @@ public class HtmlVarDtls extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<HtmlVarDtl> ToJavaList() {
+	public final java.util.List<HtmlVarDtl> ToJavaList()
+	{
 		return (java.util.List<HtmlVarDtl>)(Object)this;
 	}
 	/** 
@@ -44,7 +43,8 @@ public class HtmlVarDtls extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<HtmlVarDtl> Tolist()  {
+	public final ArrayList<HtmlVarDtl> Tolist()
+	{
 		ArrayList<HtmlVarDtl> list = new ArrayList<HtmlVarDtl>();
 		for (int i = 0; i < this.size(); i++)
 		{

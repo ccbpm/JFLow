@@ -1,7 +1,7 @@
 package bp.sys.frmui;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.en.Map;
 import bp.sys.*;
 import bp.*;
@@ -18,23 +18,19 @@ public class MapAttrFixed extends EntityMyPK
 	/** 
 	 表单ID
 	*/
-	public final String getFK_MapData() throws Exception
-	{
+	public final String getFrmID()  {
 		return this.GetValStringByKey(MapAttrAttr.FK_MapData);
 	}
-	public final void setFKMapData(String value)  throws Exception
-	 {
+	public final void setFrmID(String value){
 		this.SetValByKey(MapAttrAttr.FK_MapData, value);
 	}
 	/** 
 	 字段
 	*/
-	public final String getKeyOfEn() throws Exception
-	{
+	public final String getKeyOfEn()  {
 		return this.GetValStringByKey(MapAttrAttr.KeyOfEn);
 	}
-	public final void setKeyOfEn(String value)  throws Exception
-	 {
+	public final void setKeyOfEn(String value){
 		this.SetValByKey(MapAttrAttr.KeyOfEn, value);
 	}
 
@@ -47,7 +43,8 @@ public class MapAttrFixed extends EntityMyPK
 	 控制权限
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.IsInsert = false;
 		uac.IsUpdate = true;
@@ -57,14 +54,14 @@ public class MapAttrFixed extends EntityMyPK
 	/** 
 	 实体属性
 	*/
-	public MapAttrFixed()  {
+	public MapAttrFixed()
+	{
 	}
 	/** 
 	 实体属性
 	*/
-	public MapAttrFixed(String mypk)throws Exception
-	{
-		this.setMyPK(getMyPK());
+	public MapAttrFixed(String myPK) throws Exception {
+		this.setMyPK(myPK);
 		this.Retrieve();
 
 	}
@@ -72,7 +69,8 @@ public class MapAttrFixed extends EntityMyPK
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -105,19 +103,19 @@ public class MapAttrFixed extends EntityMyPK
 
 
 			///#region 傻瓜表单
-			//单元格数量 2013-07-24 增加
+		//单元格数量 2013-07-24 增加
 		map.AddDDLSysEnum(MapAttrAttr.ColSpan, 1, "TextBox单元格数量", true, true, "ColSpanAttrDT", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格@5=跨5个单元格@6=跨6个单元格");
 		map.SetHelperAlert(MapAttrAttr.ColSpan, "对于傻瓜表单有效: 标识该字段TextBox横跨的宽度,占的单元格数量.");
 
-			//文本占单元格数量
+		//文本占单元格数量
 		map.AddDDLSysEnum(MapAttrAttr.LabelColSpan, 1, "Label单元格数量", true, true, "ColSpanAttrString", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格@5=跨6个单元格@6=跨6个单元格");
 		map.SetHelperAlert(MapAttrAttr.LabelColSpan, "对于傻瓜表单有效: 标识该字段Lable，标签横跨的宽度,占的单元格数量.");
 
-			//文本跨行
+		//文本跨行
 		map.AddTBInt(MapAttrAttr.RowSpan, 1, "行数", true, false);
 
-			//显示的分组.
-		map.AddDDLSQL(MapAttrAttr.GroupID, "0", "显示的分组", MapAttrString.getSQLOfGroupAttr(), true);
+		//显示的分组.
+		map.AddDDLSQL(MapAttrAttr.GroupID, 0, "显示的分组", MapAttrString.getSQLOfGroupAttr(), true);
 
 
 		map.AddTBInt(MapAttrAttr.Idx, 0, "顺序号", true, false);
@@ -131,7 +129,8 @@ public class MapAttrFixed extends EntityMyPK
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception {
+	protected boolean beforeUpdateInsertAction() throws Exception
+	{
 		MapAttr attr = new MapAttr();
 		attr.setMyPK(this.getMyPK());
 		attr.RetrieveFromDBSources();
@@ -153,31 +152,33 @@ public class MapAttrFixed extends EntityMyPK
 	 删除
 	*/
 	@Override
-	protected void afterDelete() throws Exception {
+	protected void afterDelete() throws Exception
+	{
 		//删除经度纬度的字段
-		MapAttr mapAttr = new MapAttr(this.getFK_MapData() + "_JD");
+		MapAttr mapAttr = new MapAttr(this.getFrmID() + "_JD");
 		mapAttr.Delete();
 
-		mapAttr = new MapAttr(this.getFK_MapData() + "_WD");
+		mapAttr = new MapAttr(this.getFrmID() + "_WD");
 		mapAttr.Delete();
 
 		//删除相对应的rpt表中的字段
-		if (this.getFK_MapData().contains("ND") == true)
+		if (this.getFrmID().contains("ND") == true)
 		{
-			String fk_mapData = this.getFK_MapData().substring(0, this.getFK_MapData().length() - 2) + "Rpt";
+			String fk_mapData = this.getFrmID().substring(0, this.getFrmID().length() - 2) + "Rpt";
 			String sql = "DELETE FROM Sys_MapAttr WHERE FK_MapData='" + fk_mapData + "' AND( KeyOfEn='" + this.getKeyOfEn() + "' OR KeyOfEn='JD' OR KeyOfEn='WD')";
 			DBAccess.RunSQL(sql);
 		}
 
 		//调用frmEditAction, 完成其他的操作.
-		CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+		CCFormAPI.AfterFrmEditAction(this.getFrmID());
 
 		super.afterDelete();
 	}
 
 
 	@Override
-	protected void afterInsertUpdateAction() throws Exception {
+	protected void afterInsertUpdateAction() throws Exception
+	{
 		MapAttr mapAttr = new MapAttr();
 		mapAttr.setMyPK(this.getMyPK());
 		mapAttr.RetrieveFromDBSources();
@@ -185,10 +186,10 @@ public class MapAttrFixed extends EntityMyPK
 
 		//判断表单中是否存在经度、维度字段
 		mapAttr = new MapAttr();
-		mapAttr.setMyPK(this.getFK_MapData() + "_" + "JD");
+		mapAttr.setMyPK(this.getFrmID() + "_" + "JD");
 		if (mapAttr.RetrieveFromDBSources() == 0)
 		{
-			mapAttr.setFK_MapData(this.getFK_MapData());
+			mapAttr.setFrmID(this.getFrmID());
 			mapAttr.setKeyOfEn("JD");
 			mapAttr.setName("经度");
 			mapAttr.setGroupID(1);
@@ -203,10 +204,10 @@ public class MapAttrFixed extends EntityMyPK
 			mapAttr.Insert(); //插入字段.
 		}
 
-		mapAttr.setMyPK(this.getFK_MapData() + "_" + "WD");
+		mapAttr.setMyPK(this.getFrmID() + "_" + "WD");
 		if (mapAttr.RetrieveFromDBSources() == 0)
 		{
-			mapAttr.setFK_MapData(this.getFK_MapData());
+			mapAttr.setFrmID(this.getFrmID());
 			mapAttr.setKeyOfEn("WD");
 			mapAttr.setName("纬度");
 			mapAttr.setGroupID(1);
@@ -222,7 +223,7 @@ public class MapAttrFixed extends EntityMyPK
 		}
 
 		//调用frmEditAction, 完成其他的操作.
-		CCFormAPI.AfterFrmEditAction(this.getFK_MapData());
+		CCFormAPI.AfterFrmEditAction(this.getFrmID());
 
 		super.afterInsertUpdateAction();
 	}

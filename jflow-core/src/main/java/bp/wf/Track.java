@@ -2,8 +2,6 @@ package bp.wf;
 
 import bp.da.*;
 import bp.en.*;
-import java.time.*;
-import java.util.Date;
 
 /** 
  轨迹
@@ -20,8 +18,7 @@ public class Track extends bp.en.Entity
 	/** 
 	 主键值
 	*/
-	public final String getMyPK() throws Exception
-	{
+	public final String getMyPK()  {
 		return this.GetValStrByKey(TrackAttr.MyPK);
 	}
 	public final void setMyPK(String value)  throws Exception
@@ -35,10 +32,9 @@ public class Track extends bp.en.Entity
 	}
 
 	@Override
-	public String getPK_Field() throws Exception {
+	public String getPK_Field() {
 		return "MyPK";
 	}
-	public String FK_Flow = null;
 
 		///#endregion 基本属性.
 
@@ -47,8 +43,7 @@ public class Track extends bp.en.Entity
 	/** 
 	 节点从
 	*/
-	public final int getNDFrom() throws Exception
-	{
+	public final int getNDFrom()  {
 		return this.GetValIntByKey(TrackAttr.NDFrom);
 	}
 	public final void setNDFrom(int value)  throws Exception
@@ -58,8 +53,7 @@ public class Track extends bp.en.Entity
 	/** 
 	 节点到
 	*/
-	public final int getNDTo() throws Exception
-	{
+	public final int getNDTo()  {
 		return this.GetValIntByKey(TrackAttr.NDTo);
 	}
 	public final void setNDTo(int value)  throws Exception
@@ -69,8 +63,7 @@ public class Track extends bp.en.Entity
 	/** 
 	 从人员
 	*/
-	public final String getEmpFrom() throws Exception
-	{
+	public final String getEmpFrom()  {
 		return this.GetValStringByKey(TrackAttr.EmpFrom);
 	}
 	public final void setEmpFrom(String value)  throws Exception
@@ -80,8 +73,7 @@ public class Track extends bp.en.Entity
 	/** 
 	 到人员
 	*/
-	public final String getEmpTo() throws Exception
-	{
+	public final String getEmpTo()  {
 		return this.GetValStringByKey(TrackAttr.EmpTo);
 	}
 	public final void setEmpTo(String value)  throws Exception
@@ -91,8 +83,7 @@ public class Track extends bp.en.Entity
 	/** 
 	 参数数据.
 	*/
-	public final String getTag() throws Exception
-	{
+	public final String getTag()  {
 		return this.GetValStringByKey(TrackAttr.Tag);
 	}
 	public final void setTag(String value)  throws Exception
@@ -102,8 +93,7 @@ public class Track extends bp.en.Entity
 	/** 
 	 记录日期
 	*/
-	public final String getRDT() throws Exception
-	{
+	public final String getRDT()  {
 		return this.GetValStringByKey(TrackAttr.RDT);
 	}
 	public final void setRDT(String value)  throws Exception
@@ -113,8 +103,7 @@ public class Track extends bp.en.Entity
 	/** 
 	 fid
 	*/
-	public final long getFID() throws Exception
-	{
+	public final long getFID()  {
 		return this.GetValInt64ByKey(TrackAttr.FID);
 	}
 	public final void setFID(long value)  throws Exception
@@ -124,8 +113,7 @@ public class Track extends bp.en.Entity
 	/** 
 	 工作ID
 	*/
-	public final long getWorkID() throws Exception
-	{
+	public final long getWorkID()  {
 		return this.GetValInt64ByKey(TrackAttr.WorkID);
 	}
 	public final void setWorkID(long value)  throws Exception
@@ -135,8 +123,7 @@ public class Track extends bp.en.Entity
 	/** 
 	 CWorkID
 	*/
-	public final long getCWorkID() throws Exception
-	{
+	public final long getCWorkID()  {
 		return this.GetValInt64ByKey(TrackAttr.CWorkID);
 	}
 	public final void setCWorkID(long value)  throws Exception
@@ -146,7 +133,7 @@ public class Track extends bp.en.Entity
 	/** 
 	 活动类型
 	*/
-	public final ActionType getHisActionType() throws Exception {
+	public final ActionType getHisActionType() {
 		return ActionType.forValue(this.GetValIntByKey(TrackAttr.ActionType));
 	}
 	public final void setHisActionType(ActionType value)  throws Exception
@@ -228,8 +215,7 @@ public class Track extends bp.en.Entity
 	/** 
 	 活动名称
 	*/
-	public final String getActionTypeText() throws Exception
-	{
+	public final String getActionTypeText()  {
 		return this.GetValStringByKey(TrackAttr.ActionTypeText);
 	}
 	public final void setActionTypeText(String value)  throws Exception
@@ -239,8 +225,7 @@ public class Track extends bp.en.Entity
 	/** 
 	 节点数据
 	*/
-	public final String getNodeData() throws Exception
-	{
+	public final String getNodeData()  {
 		return this.GetValStringByKey(TrackAttr.NodeData);
 	}
 	public final void setNodeData(String value)  throws Exception
@@ -250,8 +235,7 @@ public class Track extends bp.en.Entity
 	/** 
 	 实际执行人
 	*/
-	public final String getExer() throws Exception
-	{
+	public final String getExer()  {
 		return this.GetValStringByKey(TrackAttr.Exer);
 	}
 	public final void setExer(String value)  throws Exception
@@ -261,8 +245,7 @@ public class Track extends bp.en.Entity
 	/** 
 	 审核意见
 	*/
-	public final String getMsg() throws Exception
-	{
+	public final String getMsg()  {
 		return this.GetValStringByKey(TrackAttr.Msg);
 	}
 	public final void setMsg(String value)  throws Exception
@@ -272,15 +255,13 @@ public class Track extends bp.en.Entity
 	/** 
 	 消息
 	*/
-	public final String getMsgHtml() throws Exception
-	{
+	public final String getMsgHtml() throws Exception {
 		return this.GetValHtmlStringByKey(TrackAttr.Msg);
 	}
 	/** 
 	 人员到
 	*/
-	public final String getEmpToT() throws Exception
-	{
+	public final String getEmpToT()  {
 		return this.GetValStringByKey(TrackAttr.EmpToT);
 	}
 	public final void setEmpToT(String value)  throws Exception
@@ -290,8 +271,7 @@ public class Track extends bp.en.Entity
 	/** 
 	 人员从
 	*/
-	public final String getEmpFromT() throws Exception
-	{
+	public final String getEmpFromT()  {
 		return this.GetValStringByKey(TrackAttr.EmpFromT);
 	}
 	public final void setEmpFromT(String value)  throws Exception
@@ -301,8 +281,7 @@ public class Track extends bp.en.Entity
 	/** 
 	 节点从
 	*/
-	public final String getNDFromT() throws Exception
-	{
+	public final String getNDFromT()  {
 		return this.GetValStringByKey(TrackAttr.NDFromT);
 	}
 	public final void setNDFromT(String value)  throws Exception
@@ -312,15 +291,14 @@ public class Track extends bp.en.Entity
 	/** 
 	 节点到
 	*/
-	public final String getNDToT() throws Exception
-	{
+	public final String getNDToT()  {
 		return this.GetValStringByKey(TrackAttr.NDToT);
 	}
 	public final void setNDToT(String value)  throws Exception
 	 {
 		this.SetValByKey(TrackAttr.NDToT, value);
 	}
-
+	public String FlowNo = null;
 		///#endregion attrs
 
 
@@ -459,7 +437,7 @@ public class Track extends bp.en.Entity
 	*/
 	public final void DoInsert(long mypk)throws Exception
 	{
-		String ptable = "ND" + Integer.parseInt(this.FK_Flow) + "Track";
+		String ptable = "ND" + Integer.parseInt(this.FlowNo) + "Track";
 		String dbstr = bp.difference.SystemConfig.getAppCenterDBVarStr();
 		String sql = "INSERT INTO " + ptable;
 		sql += "(";
@@ -581,7 +559,7 @@ public class Track extends bp.en.Entity
 			if (this.getHisActionType() == ActionType.SubThreadForward || this.getHisActionType() == ActionType.StartChildenFlow || this.getHisActionType() == ActionType.Start || this.getHisActionType() == ActionType.Forward || this.getHisActionType() == ActionType.SubThreadForward || this.getHisActionType() == ActionType.ForwardHL || this.getHisActionType() == ActionType.FlowOver)
 			{
 
-				Flow fl = new Flow(this.FK_Flow);
+				Flow fl = new Flow(this.FlowNo);
 				Node nd = new Node(this.getNDFrom());
 
 				Work wk = nd.getHisWork();

@@ -1,13 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.pub.*;
-import bp.*;
-import java.util.*;
-import java.io.*;
-import java.time.*;
-import java.math.*;
 
 /** 
  实体属性
@@ -136,14 +129,7 @@ public class MapAttrAttr extends EntityMyPKAttr
 	public static final String FontSize = "FontSize";
 
 
-	/** 
-	 x
-	*/
-	public static final String X = "X";
-	/** 
-	 y
-	*/
-	public static final String Y = "Y";
+
 	/** 
 	 TabIdx
 	*/
@@ -199,8 +185,6 @@ public class MapAttrAttr extends EntityMyPKAttr
 	*/
 	public static final String UIIsInput = "UIIsInput";
 
-	public static final String TextModel="TextModel";
-
 		///#endregion 参数属性.
 
 	/** 
@@ -216,11 +200,11 @@ public class MapAttrAttr extends EntityMyPKAttr
 	*/
 	public static final String IsEnableInAPP = "IsEnableInAPP";
 	public static final String IsSupperText = "IsSupperText";
-	public static final String IsRichText = "IsRichText";
-	public static final String IsSecret = "IsSecret";
 	/** 
 	 默认值设置方式
 	*/
 	public static final String DefValType = "DefValType";
 	public static final String DefaultVal = "";
+
+	public static final String TextModel = "TextModel";
 }

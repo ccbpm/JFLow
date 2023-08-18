@@ -2,7 +2,7 @@ package bp.ccoa.worklog;
 
 import bp.da.*;
 import bp.web.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
 
 /** 
@@ -15,110 +15,88 @@ public class WorkRec extends EntityMyPK
 	/** 
 	 组织编号
 	*/
-	public final String getOrgNo()
-	{
+	public final String getOrgNo()  {
 		return this.GetValStrByKey(WorkRecAttr.OrgNo);
 	}
-	public final void setOrgNo(String value)
-	 {
+	public final void setOrgNo(String value)  {
 		this.SetValByKey(WorkRecAttr.OrgNo, value);
 	}
-	public final String getRec()
-	{
+	public final String getRec()  {
 		return this.GetValStrByKey(WorkRecAttr.Rec);
 	}
-	public final void setRec(String value)
-	 {
+	public final void setRec(String value)  {
 		this.SetValByKey(WorkRecAttr.Rec, value);
 	}
-	public final String getRecName()
-	{
+	public final String getRecName()  {
 		return this.GetValStrByKey(WorkRecAttr.RecName);
 	}
-	public final void setRecName(String value)
-	 {
+	public final void setRecName(String value)  {
 		this.SetValByKey(WorkRecAttr.RecName, value);
 	}
-	public final String getRDT()
-	{
+	public final String getRDT()  {
 		return this.GetValStrByKey(WorkRecAttr.RDT);
 	}
-	public final void setRDT(String value)
-	 {
+	public final void setRDT(String value)  {
 		this.SetValByKey(WorkRecAttr.RDT, value);
 	}
 	/** 
 	 日期
 	*/
-	public final String getRiQi()
-	{
+	public final String getRiQi()  {
 		return this.GetValStrByKey(WorkRecAttr.RiQi);
 	}
-	public final void setRiQi(String value)
-	 {
+	public final void setRiQi(String value)  {
 		this.SetValByKey(WorkRecAttr.RiQi, value);
 	}
 	/** 
 	 年月
 	*/
-	public final String getNianYue()
-	{
+	public final String getNianYue()  {
 		return this.GetValStrByKey(WorkRecAttr.NianYue);
 	}
-	public final void setNianYue(String value)
-	 {
+	public final void setNianYue(String value)  {
 		this.SetValByKey(WorkRecAttr.NianYue, value);
 	}
-	public final String getNianDu()
-	{
+	public final String getNianDu()  {
 		return this.GetValStrByKey(WorkRecAttr.NianDu);
 	}
-	public final void setNianDu(String value)
-	 {
+	public final void setNianDu(String value)  {
 		this.SetValByKey(WorkRecAttr.NianDu, value);
 	}
 	/** 
 	 项目数
 	*/
-	public final int getNumOfItem()
-	{
+	public final int getNumOfItem() {
 		return this.GetValIntByKey(WorkRecAttr.NumOfItem);
 	}
-	public final void setNumOfItem(int value)
-	 {
+	public final void setNumOfItem(int value)  {
 		this.SetValByKey(WorkRecAttr.NumOfItem, value);
 	}
 	/** 
 	 第几周？
 	*/
-	public final int getWeekNum()
-	{
+	public final int getWeekNum() {
 		return this.GetValIntByKey(WorkRecAttr.WeekNum);
 	}
-	public final void setWeekNum(int value)
-	 {
+	public final void setWeekNum(int value)  {
 		this.SetValByKey(WorkRecAttr.WeekNum, value);
 	}
 	/** 
 	 合计小时
 	*/
-	public final float getHeiJiHour()
-	{
+	public final float getHeiJiHour() {
 		return this.GetValFloatByKey(WorkRecAttr.HeiJiHour);
 	}
-	public final void setHeiJiHour(float value)
-	 {
+	public final void setHeiJiHour(float value)  {
 		this.SetValByKey(WorkRecAttr.HeiJiHour, value);
 	}
 	/** 
 	 日志类型
 	*/
-	public final int getWorkRecModel()
-	{
+	public final int getWorkRecModel() {
 		return this.GetValIntByKey(WorkRecAttr.WorkRecModel);
 	}
-	public final void setWorkRecModel(int value)
-	 {
+	public final void setWorkRecModel(int value)  {
 		this.SetValByKey(WorkRecAttr.WorkRecModel, value);
 	}
 
@@ -130,7 +108,8 @@ public class WorkRec extends EntityMyPK
 	 权限控制
 	*/
 	@Override
-	public UAC getHisUAC() {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (WebUser.getIsAdmin())
 		{
@@ -142,9 +121,10 @@ public class WorkRec extends EntityMyPK
 	/** 
 	 工作日志
 	*/
-	public WorkRec()  {
+	public WorkRec()
+	{
 	}
-	public WorkRec(String mypk)throws Exception
+	public WorkRec(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -153,7 +133,8 @@ public class WorkRec extends EntityMyPK
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -171,8 +152,8 @@ public class WorkRec extends EntityMyPK
 
 		map.AddTBFloat(WorkRecDtlAttr.HeiJiHour, 0, "合计小时", false, false);
 
-			//map.AddTBInt(WorkRecAttr.Hour, 0, "小时", false, false);
-			//map.AddTBInt(WorkRecAttr.Minute, 0, "分钟", false, false);
+		//map.AddTBInt(WorkRecAttr.Hour, 0, "小时", false, false);
+		//map.AddTBInt(WorkRecAttr.Minute, 0, "分钟", false, false);
 
 		map.AddTBInt(WorkRecAttr.NumOfItem, 0, "项目数", false, false);
 
@@ -186,23 +167,23 @@ public class WorkRec extends EntityMyPK
 		map.AddTBString(WorkRecAttr.NianYue, null, "年月", false, false, 0, 10, 10);
 		map.AddTBString(WorkRecAttr.NianDu, null, "年度", false, false, 0, 10, 10);
 
-			//RefMethod rm = new RefMethod();
-			//rm.Title = "方法参数"; // "设计表单";
-			//rm.ClassMethodName = this.ToString() + ".DoParas";
-			//rm.Visable = true;
-			//rm.refMethodType = RefMethodType.RightFrameOpen;
-			//rm.Target = "_blank";
-			//rm.GroupName = "开发接口";
-			//map.AddRefMethod(rm);
+		//RefMethod rm = new RefMethod();
+		//rm.Title = "方法参数"; // "设计表单";
+		//rm.ClassMethodName = this.ToString() + ".DoParas";
+		//rm.Visable = true;
+		//rm.refMethodType = RefMethodType.RightFrameOpen;
+		//rm.Target = "_blank";
+		//rm.GroupName = "开发接口";
+		//map.AddRefMethod(rm);
 
-			//rm = new RefMethod();
-			//rm.Title = "方法内容"; // "设计表单";
-			//rm.ClassMethodName = this.ToString() + ".DoDocs";
-			//rm.Visable = true;
-			//rm.refMethodType = RefMethodType.RightFrameOpen;
-			//rm.Target = "_blank";
-			////rm.GroupName = "开发接口";
-			//map.AddRefMethod(rm);
+		//rm = new RefMethod();
+		//rm.Title = "方法内容"; // "设计表单";
+		//rm.ClassMethodName = this.ToString() + ".DoDocs";
+		//rm.Visable = true;
+		//rm.refMethodType = RefMethodType.RightFrameOpen;
+		//rm.Target = "_blank";
+		////rm.GroupName = "开发接口";
+		//map.AddRefMethod(rm);
 
 		this.set_enMap(map);
 		return this.get_enMap();
@@ -213,7 +194,8 @@ public class WorkRec extends EntityMyPK
 
 		///#region 执行方法.
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		//if (this.WorkRecModel == 2 || this.WorkRecModel == 2)
 		//{
 		int i = this.Retrieve(WorkRecAttr.WorkRecModel, 2, WorkRecAttr.RiQi, this.getRiQi());
@@ -245,7 +227,8 @@ public class WorkRec extends EntityMyPK
 		return super.beforeInsert();
 	}
 	@Override
-	protected boolean beforeUpdate() throws Exception {
+	protected boolean beforeUpdate() throws Exception
+	{
 		//计算条数.
 		this.setNumOfItem(DBAccess.RunSQLReturnValInt("SELECT COUNT(*) AS N FROM OA_WorkRecDtl WHERE RefPK='" + this.getMyPK() + "'"));
 

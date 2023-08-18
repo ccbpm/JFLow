@@ -98,7 +98,7 @@ public class AtPara  implements Serializable
 	}
 
 
-//ORIGINAL LINE: public float GetValFloatByKey(string key, float isNullAsVal = 0)
+//ORIGINAL LINE: public float GetValFloatByKey(String key, float isNullAsVal = 0)
 	public final float GetValFloatByKey(String key, float isNullAsVal)
 	{
 		try

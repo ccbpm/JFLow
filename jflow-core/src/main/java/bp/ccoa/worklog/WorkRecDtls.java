@@ -11,13 +11,15 @@ public class WorkRecDtls extends EntitiesMyPK
 	/** 
 	 工作内容
 	*/
-	public WorkRecDtls()  {
+	public WorkRecDtls()
+	{
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new WorkRecDtl();
 	}
 
@@ -27,7 +29,8 @@ public class WorkRecDtls extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<WorkRecDtl> ToJavaList() {
+	public final java.util.List<WorkRecDtl> ToJavaList()
+	{
 		return (java.util.List<WorkRecDtl>)(Object)this;
 	}
 	/** 
@@ -35,7 +38,8 @@ public class WorkRecDtls extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<WorkRecDtl> Tolist()  {
+	public final ArrayList<WorkRecDtl> Tolist()
+	{
 		ArrayList<WorkRecDtl> list = new ArrayList<WorkRecDtl>();
 		for (int i = 0; i < this.size(); i++)
 		{

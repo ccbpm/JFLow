@@ -1,6 +1,5 @@
 package bp.wf;
 
-import bp.*;
 
 /** 
  节点工作退回规则
@@ -30,11 +29,13 @@ public enum ReturnRole
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
 	public static ReturnRole forValue(int value)
-	{return values()[value];
+	{
+		return values()[value];
 	}
 }

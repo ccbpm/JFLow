@@ -1,7 +1,4 @@
 package bp.wf;
-
-import bp.*;
-
 /** 
  子线程删除规则
 */
@@ -22,11 +19,13 @@ public enum ThreadKillRole
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
 	public static ThreadKillRole forValue(int value)
-	{return values()[value];
+	{
+		return values()[value];
 	}
 }

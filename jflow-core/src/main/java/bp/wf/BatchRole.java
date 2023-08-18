@@ -1,6 +1,5 @@
 package bp.wf;
 
-import bp.*;
 
 /** 
  节点工作批处理
@@ -22,11 +21,13 @@ public enum BatchRole
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
 	public static BatchRole forValue(int value)
-	{return values()[value];
+	{
+		return values()[value];
 	}
 }

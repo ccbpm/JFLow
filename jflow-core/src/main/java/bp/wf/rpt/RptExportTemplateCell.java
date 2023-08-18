@@ -1,8 +1,7 @@
 package bp.wf.rpt;
 
-import bp.da.DataType;
 
-/**
+/** 
  报表导出模板字段与单元格绑定信息对象
 */
 public class RptExportTemplateCell
@@ -13,11 +12,11 @@ public class RptExportTemplateCell
 	 单元格行号
 	*/
 	private int RowIdx;
-	public final int getRowIdx()throws Exception
+	public final int getRowIdx()
 	{
 		return RowIdx;
 	}
-	public final void setRowIdx(int value) throws Exception
+	public final void setRowIdx(int value)
 	{
 		RowIdx = value;
 	}
@@ -26,11 +25,11 @@ public class RptExportTemplateCell
 	 单元格列号
 	*/
 	private int ColumnIdx;
-	public final int getColumnIdx()throws Exception
+	public final int getColumnIdx()
 	{
 		return ColumnIdx;
 	}
-	public final void setColumnIdx(int value) throws Exception
+	public final void setColumnIdx(int value)
 	{
 		ColumnIdx = value;
 	}
@@ -38,9 +37,11 @@ public class RptExportTemplateCell
 	/** 
 	 获取单元格名称
 	*/
-	public final String getCellName()throws Exception
+//C# TO JAVA CONVERTER TASK: Java annotations will not correspond to .NET attributes:
+//ORIGINAL LINE: [XmlIgnore] public String CellName
+	public final String getCellName()
 	{
-		if (DataType.IsNullOrEmpty(_cellName))
+		if ((_cellName == null || _cellName.isEmpty()))
 		{
 			_cellName = GetCellName(getColumnIdx(), getRowIdx());
 		}
@@ -52,11 +53,11 @@ public class RptExportTemplateCell
 	  单元格所属sheet表名
 	*/
 	private String SheetName;
-	public final String getSheetName()throws Exception
+	public final String getSheetName()
 	{
 		return SheetName;
 	}
-	public final void setSheetName(String value) throws Exception
+	public final void setSheetName(String value)
 	{
 		SheetName = value;
 	}
@@ -64,25 +65,25 @@ public class RptExportTemplateCell
 	/** 
 	 字段所属fk_mapdata
 	*/
-	private String FK_MapData;
-	public final String getFK_MapData()throws Exception
+	private String FrmID;
+	public final String getFrmID()
 	{
-		return FK_MapData;
+		return FrmID;
 	}
-	public final void setFK_MapData(String value) throws Exception
+	public final void setFrmID(String value)
 	{
-		FK_MapData = value;
+		FrmID = value;
 	}
 
 	/** 
 	 字段英文名
 	*/
 	private String KeyOfEn;
-	public final String getKeyOfEn()throws Exception
+	public final String getKeyOfEn()
 	{
 		return KeyOfEn;
 	}
-	public final void setKeyOfEn(String value) throws Exception
+	public final void setKeyOfEn(String value)
 	{
 		KeyOfEn = value;
 	}
@@ -91,11 +92,11 @@ public class RptExportTemplateCell
 	 明细表字段所属fk_mapdata
 	*/
 	private String FK_DtlMapData;
-	public final String getFK_DtlMapData()throws Exception
+	public final String getFKDtlMapData()
 	{
 		return FK_DtlMapData;
 	}
-	public final void setFK_DtlMapData(String value) throws Exception
+	public final void setFKDtlMapData(String value)
 	{
 		FK_DtlMapData = value;
 	}
@@ -104,11 +105,11 @@ public class RptExportTemplateCell
 	 明细表字段英文名
 	*/
 	private String DtlKeyOfEn;
-	public final String getDtlKeyOfEn()throws Exception
+	public final String getDtlKeyOfEn()
 	{
 		return DtlKeyOfEn;
 	}
-	public final void setDtlKeyOfEn(String value) throws Exception
+	public final void setDtlKeyOfEn(String value)
 	{
 		DtlKeyOfEn = value;
 	}
@@ -116,8 +117,8 @@ public class RptExportTemplateCell
 	/** 
 	 获取单元格的显示名称，格式如A1,B2
 	 
-	 param columnIdx 单元格列号
-	 param rowIdx 单元格行号
+	 @param columnIdx 单元格列号
+	 @param rowIdx 单元格行号
 	 @return 
 	*/
 	public static String GetCellName(int columnIdx, int rowIdx)

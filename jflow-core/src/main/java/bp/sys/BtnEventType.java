@@ -1,6 +1,5 @@
 package bp.sys;
 
-
 /** 
  按钮事件类型 - 与sl 中设置的要相同。
 */
@@ -39,7 +38,8 @@ public enum BtnEventType
 
 	private int intValue;
 	private static java.util.HashMap<Integer, BtnEventType> mappings;
-	private static java.util.HashMap<Integer, BtnEventType> getMappings()  {
+	private static java.util.HashMap<Integer, BtnEventType> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (BtnEventType.class)
@@ -54,7 +54,8 @@ public enum BtnEventType
 	}
 
 	private BtnEventType(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
@@ -63,7 +64,7 @@ public enum BtnEventType
 		return intValue;
 	}
 
-	public static BtnEventType forValue(int value) 
+	public static BtnEventType forValue(int value)
 	{
 		return getMappings().get(value);
 	}

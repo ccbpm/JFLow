@@ -1,21 +1,23 @@
 package bp.ccbill;
 
 import bp.da.*;
-import bp.difference.handler.WebContralBase;
 import bp.web.*;
+import bp.wf.httphandler.*;
+import bp.*;
 import java.util.*;
 
 /** 
  页面功能实体
 */
-public class WF_CCBill_Portal extends WebContralBase
+public class WF_CCBill_Portal extends bp.difference.handler.DirectoryPageBase
 {
 
 		///#region 构造方法.
 	/** 
 	 构造函数
 	*/
-	public WF_CCBill_Portal() throws Exception {
+	public WF_CCBill_Portal()
+	{
 	}
 
 		///#endregion 构造方法.
@@ -27,7 +29,8 @@ public class WF_CCBill_Portal extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String Default_Init() throws Exception {
+	public final String Default_Init()
+	{
 		Hashtable ht = new Hashtable();
 		ht.put("FlowNum", DBAccess.RunSQLReturnValInt("SELECT COUNT(No) FROM WF_Flow")); //流程数
 		ht.put("NodeNum", DBAccess.RunSQLReturnValInt("SELECT COUNT(NodeID) FROM WF_Node")); //节点数据
@@ -52,19 +55,19 @@ public class WF_CCBill_Portal extends WebContralBase
 		//月份分组.
 		String sql = "SELECT FK_NY, count(WorkID) as Num FROM WF_GenerWorkFlow WHERE WFState >1 GROUP BY FK_NY ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
-		dt.TableName = "DTNY";
+		dt.setTableName("DTNY");
 		ds.Tables.add(dt);
 
 		//部门分组.
 		sql = "SELECT DeptName, count(WorkID) as Num FROM WF_EmpWorks WHERE WFState >1 GROUP BY DeptName";
 		DataTable deptNums = DBAccess.RunSQLReturnTable(sql);
-		deptNums.TableName = "DeptNums";
+		deptNums.setTableName("DeptNums");
 		ds.Tables.add(deptNums);
 
 		//流程分组.
 		sql = "SELECT FlowName, count(WorkID) as Num FROM WF_EmpWorks WHERE WFState >1 GROUP BY FlowName";
 		DataTable flowNums = DBAccess.RunSQLReturnTable(sql);
-		flowNums.TableName = "FlowNums";
+		flowNums.setTableName("FlowNums");
 		ds.Tables.add(flowNums);
 		return bp.tools.Json.ToJson(ds);
 	}
@@ -99,7 +102,8 @@ public class WF_CCBill_Portal extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String Default_FlowsNearly() throws Exception {
+	public final String Default_FlowsNearly()
+	{
 		String sql = "";
 		int top = GetRequestValInt("Top");
 		if (top == 0)
@@ -107,7 +111,7 @@ public class WF_CCBill_Portal extends WebContralBase
 			top = 8;
 		}
 
-		switch (bp.difference.SystemConfig.getAppCenterDBType( ))
+		switch (bp.difference.SystemConfig.getAppCenterDBType())
 		{
 			case MSSQL:
 				sql = " SELECT TOP " + top + " FK_Flow,FlowName,F.Icon FROM WF_GenerWorkFlow G ,WF_Flow F WHERE  F.IsCanStart=1 AND F.No=G.FK_Flow AND Starter='" + WebUser.getNo() + "' GROUP BY FK_Flow,FlowName,ICON ORDER By Max(SendDT) DESC";
@@ -116,7 +120,7 @@ public class WF_CCBill_Portal extends WebContralBase
 			case PostgreSQL:
 			case UX:
 			case HGDB:
-				sql = " SELECT DISTINCT A.FK_Flow,A.FlowName,B.Icon,A.SendDT  FROM WF_GenerWorkFlow A ,WF_Flow B WHERE B.IsCanStart=1 AND B.No=A.FK_Flow AND A.Starter='"+WebUser.getNo()+"'  Order By A.SendDT  limit " + top;
+				sql = " SELECT DISTINCT A.FK_Flow,A.FlowName,B.Icon,A.SendDT  FROM WF_GenerWorkFlow A ,WF_Flow B WHERE B.IsCanStart=1 AND B.No=A.FK_Flow AND A.Starter='" + WebUser.getNo() + "'  Order By A.SendDT  limit " + top;
 				break;
 			case Oracle:
 			case DM:
@@ -125,7 +129,7 @@ public class WF_CCBill_Portal extends WebContralBase
 				sql = " SELECT * FROM (SELECT DISTINCT FK_Flow as \"FK_Flow\",FlowName as \"FlowName\",F.Icon ,max(SendDT) SendDT FROM WF_GenerWorkFlow G ,WF_Flow F WHERE F.IsCanStart=1 AND F.No=G.FK_Flow AND Starter='" + WebUser.getNo() + "' GROUP BY FK_Flow,FlowName,ICON Order By SendDT) WHERE  rownum <=" + top;
 				break;
 			default:
-				throw new RuntimeException("err@系统暂时还未开发使用" + bp.difference.SystemConfig.getAppCenterDBType( ) + "数据库");
+				throw new RuntimeException("err@系统暂时还未开发使用" + bp.difference.SystemConfig.getAppCenterDBType() + "数据库");
 		}
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		return bp.tools.Json.ToJson(dt);
@@ -136,7 +140,8 @@ public class WF_CCBill_Portal extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String Default_MenusOfFlag() throws Exception {
+	public final String Default_MenusOfFlag()
+	{
 
 		String sql = "";
 		int top = GetRequestValInt("Top");
@@ -145,7 +150,7 @@ public class WF_CCBill_Portal extends WebContralBase
 			top = 8;
 		}
 
-		switch (bp.difference.SystemConfig.getAppCenterDBType( ))
+		switch (bp.difference.SystemConfig.getAppCenterDBType())
 		{
 			case MSSQL:
 				sql = " SELECT TOP " + top + "  No,Name,Icon FROM GPM_Menu WHERE  LEN(MenuModel )  >1 ";
@@ -163,13 +168,14 @@ public class WF_CCBill_Portal extends WebContralBase
 				sql = " SELECT   No,Name,Icon FROM GPM_Menu WHERE  LEN(MenuModel )  >1 rownum " + top;
 				break;
 			default:
-				throw new RuntimeException("err@系统暂时还未开发使用" + bp.difference.SystemConfig.getAppCenterDBType( ) + "数据库");
+				throw new RuntimeException("err@系统暂时还未开发使用" + bp.difference.SystemConfig.getAppCenterDBType() + "数据库");
 		}
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		return bp.tools.Json.ToJson(dt);
 	}
 
-	public final String Fast_Mobile_Default_Init11() throws Exception {
+	public final String Fast_Mobile_Default_Init11()
+	{
 		//DataSet ds = new DataSet();
 		//ds.Table
 

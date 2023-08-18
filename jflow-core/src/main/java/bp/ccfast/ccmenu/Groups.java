@@ -1,6 +1,6 @@
 package bp.ccfast.ccmenu;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.port.*;
 import bp.*;
 import bp.ccfast.*;
@@ -16,13 +16,15 @@ public class Groups extends EntitiesNoName
 	/** 
 	 权限组s
 	*/
-	public Groups() throws Exception {
+	public Groups()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new Group();
 	}
 
@@ -35,7 +37,8 @@ public class Groups extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<Group> ToJavaList() {
+	public final java.util.List<Group> ToJavaList()
+	{
 		return (java.util.List<Group>)(Object)this;
 	}
 	/** 
@@ -43,7 +46,8 @@ public class Groups extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<Group> Tolist()  {
+	public final ArrayList<Group> Tolist()
+	{
 		ArrayList<Group> list = new ArrayList<Group>();
 		for (int i = 0; i < this.size(); i++)
 		{

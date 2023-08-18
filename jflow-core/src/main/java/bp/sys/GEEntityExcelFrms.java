@@ -1,8 +1,6 @@
 package bp.sys;
 
 import bp.en.*;
-import bp.en.Map;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -13,13 +11,14 @@ public class GEEntityExcelFrms extends EntitiesOID
 
 		///#region 重载基类方法
 	@Override
-	public String toString()  {
-		return this.FK_MapData;
+	public String toString()
+	{
+		return this.FrmID;
 	}
 	/** 
 	 主键
 	*/
-	public String FK_MapData = null;
+	public String FrmID = null;
 
 		///#endregion
 
@@ -29,16 +28,16 @@ public class GEEntityExcelFrms extends EntitiesOID
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
-			//if (this.FK_MapData == null)
-			//    throw new Exception("@没有能 FK_MapData 给值。");
+		//if (this.FrmID == null)
+		//    throw new Exception("@没有能 FK_MapData 给值。");
 
-		if (this.FK_MapData == null)
+		if (this.FrmID == null)
 		{
 			return new GEEntity();
 		}
-		return new GEEntity(this.FK_MapData);
+		return new GEEntity(this.FrmID);
 	}
 	/** 
 	 通用实体ID
@@ -48,12 +47,11 @@ public class GEEntityExcelFrms extends EntitiesOID
 	}
 	/** 
 	 通用实体ID
-	 
-	 param fk_mapdata
+	 @param frmID
 	*/
-	public GEEntityExcelFrms(String fk_mapdata)
+	public GEEntityExcelFrms(String frmID)
 	{
-		this.FK_MapData=fk_mapdata;
+		this.FrmID= frmID;
 	}
 
 		///#endregion
@@ -65,7 +63,7 @@ public class GEEntityExcelFrms extends EntitiesOID
 	 
 	 @return List
 	*/
-	public final java.util.List<GEEntityExcelFrm> ToJavaList()throws Exception
+	public final java.util.List<GEEntityExcelFrm> ToJavaList()
 	{
 		return (java.util.List<GEEntityExcelFrm>)(Object)this;
 	}
@@ -74,7 +72,7 @@ public class GEEntityExcelFrms extends EntitiesOID
 	 
 	 @return List
 	*/
-	public final ArrayList<GEEntityExcelFrm> Tolist()throws Exception
+	public final ArrayList<GEEntityExcelFrm> Tolist()
 	{
 		ArrayList<GEEntityExcelFrm> list = new ArrayList<GEEntityExcelFrm>();
 		for (int i = 0; i < this.size(); i++)

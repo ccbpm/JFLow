@@ -2,17 +2,14 @@ package bp.wf.httphandler;
 
 import bp.da.*;
 import bp.sys.*;
-import bp.*;
 import bp.sys.CCFormAPI;
-import bp.wf.*;
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.time.*;
 
 /** 
  页面功能实体
 */
-public class WF_Admin_FoolFormDesigner_StyletDfine extends bp.difference.handler.WebContralBase
+public class WF_Admin_FoolFormDesigner_StyletDfine extends bp.difference.handler.DirectoryPageBase
 {
 	/** 
 	 构造函数
@@ -227,7 +224,7 @@ public class WF_Admin_FoolFormDesigner_StyletDfine extends bp.difference.handler
 		return Default_App_Ext(ens, false);
 	}
 
-//ORIGINAL LINE: public string Default_App_Ext(GloVars ens, bool isApp = false)
+//ORIGINAL LINE: public String Default_App_Ext(GloVars ens, bool isApp = false)
 	public final String Default_App_Ext(GloVars ens, boolean isApp) throws Exception {
 		String docs = "";
 
@@ -266,7 +263,7 @@ public class WF_Admin_FoolFormDesigner_StyletDfine extends bp.difference.handler
 			}
 
 			docs += "\t\n " + item + ":" + ap.GetValStrByKey(item).trim().replace(" ", "") + " !important;";
-			//docs += "\t\n " + item + ":" + ap.GetValStrByKey(item).Trim().Replace(" ", "") + " ;";
+			//docs += "\t\n " + item + ":" + ap.GetValStrByKey(item).Trim().replace(" ", "") + " ;";
 		}
 		docs += "\t\n }";
 		return docs;

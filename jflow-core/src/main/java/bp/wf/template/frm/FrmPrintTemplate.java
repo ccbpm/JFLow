@@ -1,9 +1,12 @@
 package bp.wf.template.frm;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
+import bp.*;
 import bp.wf.*;
+import bp.wf.template.*;
+import java.util.*;
 import java.io.*;
 
 /** 
@@ -17,7 +20,8 @@ public class FrmPrintTemplate extends EntityMyPK
 	 UI界面上的访问控制
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		return uac;
@@ -31,47 +35,42 @@ public class FrmPrintTemplate extends EntityMyPK
 		no = no.replace(" ", "");
 		return no;
 	}
-	public final void setMyPK(String value)
-	 {
+	public final void setMyPK(String value){
 		this.SetValByKey("MyPK", value);
 		this.SetValByKey(FrmPrintTemplateAttr.TempFilePath, value);
 	}
 	/** 
 	 生成的单据类型
 	*/
-	public final PrintFileType getHisPrintFileType() throws Exception {
+	public final PrintFileType getHisPrintFileType() {
 		return PrintFileType.forValue(this.GetValIntByKey(FrmPrintTemplateAttr.PrintFileType));
 	}
-	public final void setHisPrintFileType(PrintFileType value)  throws Exception
-	 {
+	public final void setHisPrintFileType(PrintFileType value){
 		this.SetValByKey(FrmPrintTemplateAttr.PrintFileType, value.getValue());
 	}
 	/** 
 	 二维码生成方式
 	*/
-	public final QRModel getQRModel() throws Exception {
+	public final QRModel getQRModel() {
 		return QRModel.forValue(this.GetValIntByKey(FrmPrintTemplateAttr.QRModel));
 	}
-	public final void setQRModel(QRModel value)  throws Exception
-	 {
+	public final void setQRModel(QRModel value){
 		this.SetValByKey(FrmPrintTemplateAttr.QRModel, value.getValue());
 	}
-	public final TemplateFileModel getTemplateFileModel() throws Exception {
+	public final TemplateFileModel getTemplateFileModel() {
 		return TemplateFileModel.forValue(this.GetValIntByKey(FrmPrintTemplateAttr.TemplateFileModel));
 	}
-	public final void setTemplateFileModel(TemplateFileModel value)  throws Exception
-	 {
+	public final void setTemplateFileModel(TemplateFileModel value){
 		this.SetValByKey(FrmPrintTemplateAttr.TemplateFileModel, value.getValue());
 	}
 
 	/** 
 	 生成的单据打开方式
 	*/
-	public final PrintOpenModel getPrintOpenModel() throws Exception {
+	public final PrintOpenModel getPrintOpenModel() {
 		return PrintOpenModel.forValue(this.GetValIntByKey(FrmPrintTemplateAttr.PrintOpenModel));
 	}
-	public final void setPrintOpenModel(PrintOpenModel value)  throws Exception
-	 {
+	public final void setPrintOpenModel(PrintOpenModel value){
 		this.SetValByKey(FrmPrintTemplateAttr.PrintOpenModel, value.getValue());
 	}
 	/** 
@@ -85,8 +84,7 @@ public class FrmPrintTemplate extends EntityMyPK
 		}
 		return s;
 	}
-	public final void setTempFilePath(String value)  throws Exception
-	 {
+	public final void setTempFilePath(String value){
 		this.SetValByKey(FrmPrintTemplateAttr.TempFilePath, value);
 	}
 	/** 
@@ -99,37 +97,22 @@ public class FrmPrintTemplate extends EntityMyPK
 	/** 
 	 节点ID
 	*/
-	public final int getNodeID() throws Exception
-	{
+	public final int getNodeID()  {
 		return this.GetValIntByKey(FrmPrintTemplateAttr.NodeID);
 	}
-	public final void setNodeID(int value)  throws Exception
-	 {
+	public final void setNodeID(int value){
 		this.SetValByKey(FrmPrintTemplateAttr.NodeID, value);
 	}
-
-	public final String getNo() throws Exception
-	{
-		return this.GetValStringByKey(FrmPrintTemplateAttr.No);
-	}
-	public final void setNo(String value)  throws Exception
-	{
-		this.SetValByKey(FrmPrintTemplateAttr.No, value);
-	}
-	public final String getName() throws Exception
-	{
+	public final String getName()  {
 		return this.GetValStringByKey(FrmPrintTemplateAttr.Name);
 	}
-	public final void setName(String value)  throws Exception
-	 {
+	public final void setName(String value){
 		this.SetValByKey(FrmPrintTemplateAttr.Name, value);
 	}
-	public final String getFrmID() throws Exception
-	{
+	public final String getFrmID()  {
 		return this.GetValStringByKey(FrmPrintTemplateAttr.FrmID);
 	}
-	public final void setFrmID(String value)  throws Exception
-	 {
+	public final void setFrmID(String value){
 		this.SetValByKey(FrmPrintTemplateAttr.FrmID, value);
 	}
 
@@ -140,28 +123,23 @@ public class FrmPrintTemplate extends EntityMyPK
 	/** 
 	 打印模板
 	*/
-	public FrmPrintTemplate() {
+	public FrmPrintTemplate()
+	{
 	}
 	/** 
 	 打印模板
 	 
-	 param mypk 主键
+	 @param mypk 主键
 	*/
-	public FrmPrintTemplate(String mypk)throws Exception
+	public FrmPrintTemplate(String mypk) throws Exception
 	{
 		super(mypk.replace("\n", "").trim());
 	}
 	/** 
 	 获得单据文件流
-	 
-	 param oid
 	 @return 
 	*/
-
-//ORIGINAL LINE: public byte[] GenerTemplateFile()
 	public final byte[] GenerTemplateFile() throws Exception {
-
-//ORIGINAL LINE: byte[] bytes = DBAccess.GetByteFromDB(this.getEnMap().getPhysicsTable(), "MyPK", this.MyPK, "DBFile");
 		byte[] bytes = DBAccess.GetByteFromDB(this.getEnMap().getPhysicsTable(), "MyPK", this.getMyPK(), "DBFile");
 		if (bytes != null)
 		{
@@ -182,7 +160,7 @@ public class FrmPrintTemplate extends EntityMyPK
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -206,7 +184,7 @@ public class FrmPrintTemplate extends EntityMyPK
 
 		map.AddDDLSysEnum(FrmPrintTemplateAttr.PrintOpenModel, 0, "生成的文件打开方式", true, false, "PrintOpenModel", "@0=下载本地@1=在线打开");
 
-		map.AddDDLSysEnum(FrmAttachmentAttr.AthSaveWay, 0, "实例的保存方式", true, true, FrmAttachmentAttr.AthSaveWay, "@0=保存到web服务器@1=保存到数据库Sys_FrmPrintDB@2=ftp服务器");
+		map.AddDDLSysEnum(FrmAttachmentAttr.AthSaveWay, 0, "实例的保存方式", true, true, FrmAttachmentAttr.AthSaveWay, "@0=保存到web服务器@1=保存到数据库@2=ftp服务器@3=保存到对象存储OSS");
 
 
 		map.AddDDLSysEnum(FrmPrintTemplateAttr.QRModel, 0, "二维码生成方式", true, false, FrmPrintTemplateAttr.QRModel, "@0=不生成@1=生成二维码");
@@ -219,7 +197,8 @@ public class FrmPrintTemplate extends EntityMyPK
 
 		///#endregion
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		if (DataType.IsNullOrEmpty(this.getMyPK()) == true)
 		{
 			this.setMyPK(DBAccess.GenerGUID(0, null, null));

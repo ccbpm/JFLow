@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
 import bp.difference.redis.RedisUtils;
+import bp.pub.PubClass;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
@@ -17,6 +18,8 @@ import bp.difference.handler.CommonUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import java.io.*;
 
 /**
  * JFlow上下文工具类
@@ -238,6 +241,42 @@ public class ContextHolderUtils implements ApplicationContextAware, DisposableBe
 	@Override
 	public void destroy() throws Exception {
 		ContextHolderUtils.springContext = null;
+	}
+
+	public static void ResponseWriteFile(byte[] fileData, String fileName) throws IOException {
+		ResponseWriteFile(fileData,fileName, "application/octet-stream");
+	}
+	public static void ResponseWriteFile(byte[] fileData, String fileName, String contentType) throws IOException {
+		HttpServletResponse response = getResponse();
+		response.setContentType(contentType+";charset=utf8");
+		response.setHeader("Content-Disposition",
+				"attachment;filename=" + PubClass.toUtf8String(getRequest(),fileName));
+		response.setHeader("Connection", "close");
+		response.setHeader("Code", "OK");
+		// 读取目标文件，通过response将目标文件写到客户端
+		// 读取文件
+		OutputStream out = response.getOutputStream();
+		out.write(fileData);
+		out.close();
+
+	}
+	public static void ResponseWriteFile(String filePath, String fileName, String contentType) throws IOException {
+		HttpServletResponse response = getResponse();
+		response.setContentType(contentType+";charset=utf8");
+		response.setHeader("Content-Disposition",
+				"attachment;filename=" + PubClass.toUtf8String(getRequest(),fileName));
+		response.setHeader("Connection", "close");
+		response.setHeader("Code", "OK");
+		InputStream in = new FileInputStream(new File(filePath));
+		OutputStream out = response.getOutputStream();
+		// 写文件
+		int b;
+		while ((b = in.read()) != -1) {
+			out.write(b);
+		}
+		in.close();
+		out.close();
+
 	}
 
 }

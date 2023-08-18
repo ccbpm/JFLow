@@ -2,43 +2,38 @@ package bp.wf.httphandler;
 
 import bp.da.*;
 import bp.difference.handler.CommonFileUtils;
-import bp.difference.handler.WebContralBase;
-import bp.en.Map;
 import bp.sys.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.difference.*;
-import org.apache.tomcat.jni.Directory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.io.*;
+import java.time.*;
 
 /** 
  页面功能实体
 */
-public class WF_Comm_Sys extends WebContralBase
+public class WF_Comm_Sys extends bp.difference.handler.DirectoryPageBase
 {
 	/** 
 	 加密字符串
 	 
 	 @return 
 	*/
-//	public final String JiaMi_Init() throws Exception {
-//		String str = "ssss";
-//		DecryptAndEncryptionHelper.DecryptAndEncryptionHelper en = new DecryptAndEncryptionHelper.DecryptAndEncryptionHelper();
-//		return en.Encrypto(str);
-//
-//	   // DecryptAndEncryptionHelper.Encrypto decode = new DecryptAndEncryptionHelper.decode();
-//		//eturn decode.decode_exe(str);
-//	}
-	public final String ImpData_Init() throws Exception {
+	public final String JiaMi_Init() throws Exception {
+		String str = "ssss";
+		return bp.tools.Cryptos.aesEncrypt(str);
+	}
+	public final String ImpData_Init()
+	{
 		return "";
 	}
 	private String ImpData_DoneMyPK(Entities ens, DataTable dt) throws Exception {
 		//错误信息
 		String errInfo = "";
-		EntityMyPK en = (EntityMyPK)ens.getGetNewEntity();
+		EntityMyPK en = (EntityMyPK)ens.getNewEntity();
 		//定义属性.
 		Attrs attrs = en.getEnMap().getAttrs();
 
@@ -55,11 +50,11 @@ public class WF_Comm_Sys extends WebContralBase
 			ens.ClearTable();
 			for (DataRow dr : dt.Rows)
 			{
-				en = (EntityMyPK)ens.getGetNewEntity();
+				en = (EntityMyPK)ens.getNewEntity();
 				//给实体赋值
 				errInfo += SetEntityAttrVal("", dr, attrs, en, dt, 0);
 				//获取PKVal
-				en.setPKVal(en.InitMyPKVals());
+				en.setPKVal(  en.InitMyPKVals());
 				if (en.RetrieveFromDBSources() == 0)
 				{
 					en.Insert();
@@ -69,17 +64,12 @@ public class WF_Comm_Sys extends WebContralBase
 
 			}
 		}
-
-
-			///#endregion 清空方式导入.
-
-
 			///#region 更新方式导入
 		if (impWay == 1 || impWay == 2)
 		{
 			for (DataRow dr : dt.Rows)
 			{
-				en = (EntityMyPK)ens.getGetNewEntity();
+				en = (EntityMyPK)ens.getNewEntity();
 				//给实体赋值
 				errInfo += SetEntityAttrVal("", dr, attrs, en, dt, 1);
 
@@ -110,27 +100,26 @@ public class WF_Comm_Sys extends WebContralBase
 	 @return 
 	*/
 	public final String ImpData_Done() throws Exception {
+
 		HttpServletRequest request = getRequest();
 		long filesSize = CommonFileUtils.getFilesSize(request, "File_Upload");
 		if (filesSize == 0) {
 			return "err@请选择要导入的数据信息。";
 		}
-
 		String errInfo = "";
 
 		String ext = ".xls";
 		String fileName = CommonFileUtils.getOriginalFilename(request, "File_Upload");
 		if (fileName.contains(".xlsx"))
-		{
 			ext = ".xlsx";
-		}
 
-		//设置文件名
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		String currDate = sdf.format(new Date());
+
 		String fileNewName = currDate + ext;
+
 		//文件存放路径
-		String filePath = SystemConfig.getPathOfTemp() + fileNewName;
+		String filePath = SystemConfig.getPathOfTemp() + "/" + fileNewName;
 		File tempFile = new File(filePath);
 		if (tempFile.exists()) {
 			tempFile.delete();
@@ -143,7 +132,7 @@ public class WF_Comm_Sys extends WebContralBase
 			return "err@执行失败";
 		}
 		//从excel里面获得数据表.
-		DataTable dt = bp.da.DBLoad.GetTableByExt(filePath);
+		DataTable dt = DBLoad.ReadExcelFileToDataTable(filePath, 0);
 
 		//删除临时文件
 		(new File(filePath)).delete();
@@ -155,14 +144,14 @@ public class WF_Comm_Sys extends WebContralBase
 
 		//获得entity.
 		Entities ens = ClassFactory.GetEns(this.getEnsName());
-		Entity en = ens.getGetNewEntity();
+		Entity en = ens.getNewEntity();
 
 		if (en.getPK().equals("MyPK") == true)
 		{
 			return this.ImpData_DoneMyPK(ens, dt);
 		}
 
-		if (en.getIsNoEntity() == false)
+		if (en.getItIsNoEntity() == false)
 		{
 			return "err@必须是EntityNo或者EntityMyPK实体,才能导入.";
 		}
@@ -202,10 +191,10 @@ public class WF_Comm_Sys extends WebContralBase
 					no = StringHelper.padLeft(no, Integer.parseInt(codeStruct), '0');
 				}
 
-				bp.en.Entity tempVar = ens.getGetNewEntity();
+				bp.en.Entity tempVar = ens.getNewEntity();
 				EntityNoName myen = tempVar instanceof EntityNoName ? (EntityNoName)tempVar : null;
 				myen.setNo(no);
-				if (myen.getIsExits() == true)
+				if (myen.getIsExits())
 				{
 					errInfo += "err@编号[" + no + "][" + name + "]重复.";
 					continue;
@@ -213,7 +202,7 @@ public class WF_Comm_Sys extends WebContralBase
 
 				myen.setName(name);
 
-				en = ens.getGetNewEntity();
+				en = ens.getNewEntity();
 
 				//给实体赋值
 				errInfo += SetEntityAttrVal(no, dr, attrs, en, dt, 0);
@@ -238,10 +227,10 @@ public class WF_Comm_Sys extends WebContralBase
 				{
 					no = StringHelper.padLeft(no, Integer.parseInt(codeStruct), '0');
 				}
-				bp.en.Entity tempVar2 = ens.getGetNewEntity();
+				bp.en.Entity tempVar2 = ens.getNewEntity();
 				EntityNoName myen = tempVar2 instanceof EntityNoName ? (EntityNoName)tempVar2 : null;
 				myen.setNo(no);
-				if (myen.getIsExits() == true)
+				if (myen.getIsExits())
 				{
 					//给实体赋值
 					errInfo += SetEntityAttrVal(no, dr, attrs, myen, dt, 1);
@@ -266,14 +255,14 @@ public class WF_Comm_Sys extends WebContralBase
 	private String SetEntityAttrVal(String no, DataRow dr, Attrs attrs, Entity en, DataTable dt, int saveType) throws Exception {
 		String errInfo = "";
 		//按照属性赋值.
-		for (Attr item : attrs.ToJavaList())
+		for (Attr item : attrs)
 		{
-			if (item.getKey().equals("No"))
+			if (Objects.equals(item.getKey(), "No"))
 			{
 				en.SetValByKey(item.getKey(), no);
 				continue;
 			}
-			if (item.getKey().equals("Name"))
+			if (Objects.equals(item.getKey(), "Name"))
 			{
 				en.SetValByKey(item.getKey(), dr.getValue(item.getDesc()).toString());
 				continue;
@@ -327,10 +316,10 @@ public class WF_Comm_Sys extends WebContralBase
 			}
 
 			//boolen类型的处理..
-			if (item.getMyDataType() == DataType.AppBoolean)
+			if (item.getMyDataType ()== DataType.AppBoolean)
 			{
 				String val = dr.getValue(item.getDesc()).toString();
-				if (val.equals("是") || val.equals("有"))
+				if (Objects.equals(val, "是") || Objects.equals(val, "有"))
 				{
 					en.SetValByKey(item.getKey(), 1);
 				}
@@ -347,7 +336,7 @@ public class WF_Comm_Sys extends WebContralBase
 
 		try
 		{
-			if (en.getIsNoEntity() == true)
+			if (en.getItIsNoEntity() == true)
 			{
 				if (saveType == 0)
 				{
@@ -372,7 +361,8 @@ public class WF_Comm_Sys extends WebContralBase
 	/** 
 	 构造函数
 	*/
-	public WF_Comm_Sys() throws Exception {
+	public WF_Comm_Sys()
+	{
 	}
 	/** 
 	 函数库
@@ -383,62 +373,58 @@ public class WF_Comm_Sys extends WebContralBase
 		String expFileName = "all-wcprops,dir-prop-base,entries";
 		String expDirName = ".svn";
 
-		String pathDir = SystemConfig.getPathOfData() + "JSLib/";
+		String pathDir = SystemConfig.getPathOfData() + "/JSLib/";
 
 		String html = "";
 		html += "<fieldset>";
 		html += "<legend>" + "系统自定义函数. 位置:" + pathDir + "</legend>";
 
-
-		//.AddFieldSet();
+		// .AddFieldSet();
 		File dir = new File(pathDir);
 		File[] dirs = new File(pathDir).listFiles();
-		for (File mydir : dirs)
-		{
-			if (expDirName.contains(mydir.getName()))
-			{
+		for (File mydir : dirs) {
+			if (expDirName.contains(mydir.getName())) {
 				continue;
 			}
 
 			html += "事件名称" + mydir.getName();
 			html += "<ul>";
-			File[] fls = mydir.listFiles();
-			for (File fl : fls)
-			{
-				if (expFileName.contains(fl.getName()))
-				{
-					continue;
+			if (mydir.isDirectory()) {
+				File[] fls = mydir.listFiles();
+				for (File fl : fls) {
+					if (expFileName.contains(fl.getName())) {
+						continue;
+					}
+
+					html += "<li>" + fl.getName() + "</li>";
 				}
 
-				html += "<li>" + fl.getName() + "</li>";
 			}
 			html += "</ul>";
 		}
 		html += "</fieldset>";
 
-		pathDir = SystemConfig.getPathOfDataUser() + "JSLib/";
+		pathDir = SystemConfig.getPathOfDataUser() + "/JSLib/";
 		html += "<fieldset>";
 		html += "<legend>" + "用户自定义函数. 位置:" + pathDir + "</legend>";
 
 		dir = new File(pathDir);
-		dirs = new File(pathDir).listFiles();
-		for (File mydir : dirs)
-		{
-			if (expDirName.contains(mydir.getName()))
-			{
+		dirs = dir.listFiles();
+		for (File mydir : dirs) {
+			if (expDirName.contains(mydir.getName())) {
 				continue;
 			}
 
 			html += "事件名称" + mydir.getName();
 			html += "<ul>";
-			File[] fls = mydir.listFiles();
-			for (File fl : fls)
-			{
-				if (expFileName.contains(fl.getName()))
-				{
-					continue;
+			if (mydir.isDirectory()) {
+				File[] fls = mydir.listFiles();
+				for (File fl : fls) {
+					if (expFileName.contains(fl.getName())) {
+						continue;
+					}
+					html += "<li>" + fl.getName() + "</li>";
 				}
-				html += "<li>" + fl.getName() + "</li>";
 			}
 			html += "</ul>";
 		}
@@ -455,7 +441,7 @@ public class WF_Comm_Sys extends WebContralBase
 			Map map = en.getEnMap();
 			en.CheckPhysicsTable();
 			String msg = "";
-			// string msg = "";
+			// String msg = "";
 			String table = "";
 			String sql = "";
 			String sql1 = "";
@@ -469,7 +455,7 @@ public class WF_Comm_Sys extends WebContralBase
 			{
 				if (attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
 				{
-					refen = ClassFactory.GetEns(attr.getUIBindKey()).getGetNewEntity();
+					refen = ClassFactory.GetEns(attr.getUIBindKey()).getNewEntity();
 					table = refen.getEnMap().getPhysicsTable();
 					sql1 = "SELECT COUNT(*) FROM " + table;
 
@@ -498,7 +484,14 @@ public class WF_Comm_Sys extends WebContralBase
 				}
 				if (attr.getMyFieldType() == FieldType.PKEnum || attr.getMyFieldType() == FieldType.Enum)
 				{
-					sql = "SELECT " + attr.getField() + " FROM " + map.getPhysicsTable() + " WHERE " + attr.getField() + " NOT IN ( select Intkey from "+bp.sys.base.Glo.SysEnum()+" WHERE ENUMKEY='" + attr.getUIBindKey() + "' )";
+					if(SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL){
+						if(attr.getItIsNum())
+							sql = "SELECT " + attr.getField() + " FROM " + map.getPhysicsTable() + " WHERE " + attr.getField() + " NOT IN ( select Intkey FROM " + bp.sys.base.Glo.SysEnum() + " WHERE ENUMKEY='" + attr.getUIBindKey() + "' )";
+						else
+							sql = "SELECT " + attr.getField() + " FROM " + map.getPhysicsTable() + " WHERE " + attr.getField() + " NOT IN ( select CAST(Intkey AS varchar) FROM " + bp.sys.base.Glo.SysEnum() + " WHERE ENUMKEY='" + attr.getUIBindKey() + "' )";
+					}
+					else
+						sql = "SELECT " + attr.getField() + " FROM " + map.getPhysicsTable() + " WHERE " + attr.getField() + " NOT IN ( select Intkey FROM " + bp.sys.base.Glo.SysEnum() + " WHERE ENUMKEY='" + attr.getUIBindKey() + "' )";
 					dt = DBAccess.RunSQLReturnTable(sql);
 					if (dt.Rows.size() == 0)
 					{
@@ -527,7 +520,7 @@ public class WF_Comm_Sys extends WebContralBase
 				}
 			}
 
-			if (msg.equals(""))
+			if (Objects.equals(msg, ""))
 			{
 				return map.getEnDesc() + ":数据体检成功,完全正确.";
 			}
@@ -541,24 +534,170 @@ public class WF_Comm_Sys extends WebContralBase
 			return "err@" + ex.getMessage();
 		}
 	}
-	public final String SystemClass_Fields() throws Exception {
-		Entities ens = ClassFactory.GetEns(this.getEnsName());
-		Entity en = ens.getGetNewEntity();
+	public final String SystemClass_Fields_UI() throws Exception {
+		return SystemClass_Fields_UI_Ext(this.getEnsName());
+	}
+	public final String SystemClass_Fields_UI_Ext(String ensName) throws Exception {
+		Entities ens = ClassFactory.GetEns(ensName);
+		Entity en = ens.getNewEntity();
 
 		Map map = en.getEnMap();
 		en.CheckPhysicsTable();
 
-		String html = "<table>";
+		String html = "<table style='width:95%;font-size'>";
 
-		html += "<caption>数据结构" + map.getEnDesc() + "," + map.getPhysicsTable() + "</caption>";
+		html += "<caption>" + map.getEnDesc() + "," + ensName + "," + map.getPhysicsTable() + "</caption>";
+
+		//html += "<tr>";
+		//html += "<th colspan=8> " + map.getEnDesc() + ","+ensName+"," + map.getPhysicsTable() + " </th>";
+		//html += "</tr>";
 
 		html += "<tr>";
-		html += "<th>序号</th>";
+		html += "<th>#</th>";
 		html += "<th>描述</th>";
-		html += "<th>属性</th>";
-		html += "<th>物理字段</th>";
-		html += "<th>数据类型</th>";
-		html += "<th>关系类型</th>";
+		html += "<th>字段</th>";
+		html += "<th>类型</th>";
+		//   html += "<th>关系</th>";
+		html += "<th>控件/外观/长度</th>";
+		html += "<th>备注</th>";
+		//      html += "<th>默认值</th>";
+		html += "</tr>";
+
+		int i = 0;
+		for (Attr attr : map.getAttrs())
+		{
+			if (attr.getMyFieldType() == FieldType.RefText)
+			{
+				continue;
+			}
+			i++;
+			html += "<tr>";
+			html += "<td>" + i + "</td>";
+			html += "<td>" + attr.getDesc() + "</td>";
+			html += "<td>" + attr.getKey() + "</td>";
+			//   html += "<td>" + attr.getField() + "</td>";
+			html += "<td>" + attr.getMyDataTypeStr() + "</td>";
+			// html += "<td>" + attr.getMyFieldType().ToString() + "</td>";
+			String desc = "";
+			if (attr.getUIVisible() == true)
+			{
+				desc += "可见,";
+			}
+			else
+			{
+				desc += "不可见,";
+			}
+
+			if (attr.getUIIsReadonly() == false)
+			{
+				desc += "可编辑";
+			}
+			else
+			{
+				desc += "不可编辑";
+			}
+
+			switch (attr.getMyDataType())
+			{
+				case DataType.AppBoolean:
+					html += "<td>选择框," + desc + "</td>";
+					break;
+				case DataType.AppDouble:
+				case DataType.AppFloat:
+				case DataType.AppInt:
+					if (attr.getMyFieldType() == FieldType.Enum)
+					{
+						html += "<td>下拉框," + desc + "</td>";
+						break;
+					}
+					else
+					{
+						html += "<td>数值文本框," + desc + "</td>";
+					}
+					break;
+				case DataType.AppMoney:
+					html += "<td>金额文本框," + desc + "</td>";
+					break;
+				case DataType.AppDate:
+					html += "<td>日期文本框," + desc + "</td>";
+					break;
+				case DataType.AppDateTime:
+					html += "<td>日期时间文本框," + desc + "</td>";
+					break;
+				default:
+					if (attr.getMyFieldType() == FieldType.FK)
+					{
+						html += "<td>下拉框(" + attr.getMinLength() + "/" + attr.getMaxLength() + ")," + desc + "</td>";
+					}
+					else
+					{
+						html += "<td>文本框(" + attr.getMinLength() + "/" + attr.getMaxLength() + ")," + desc + "</td>";
+					}
+					break;
+			}
+
+			String defVal = "";
+			if (DataType.IsNullOrEmpty(attr.getDefaultValOfReal()) == false)
+			{
+				defVal += "默认值:" + attr.getDefaultValOfReal() + "";
+			}
+
+			switch (attr.getMyFieldType())
+			{
+				case Enum:
+				case PKEnum:
+					try
+					{
+						SysEnums ses = new SysEnums(attr.getUIBindKey());
+						String str = "";
+						for (SysEnum se : ses.ToJavaList())
+						{
+							str += se.getIntKey() + "&nbsp;" + se.getLab() + ",";
+						}
+						html += "<td>" + str + defVal + "</td>";
+					}
+					catch (java.lang.Exception e)
+					{
+						html += "<td>" + defVal + "</td>";
+
+					}
+					break;
+				case FK:
+				case PKFK:
+					Entities myens = ClassFactory.GetEns(attr.getUIBindKey());
+					html += "<td>表/视图:" + myens.getNewEntity().getEnMap().getPhysicsTable() + " 关联字段:" + attr.getUIRefKeyValue()+ "," + attr.getUIRefKeyText() + defVal + "</td>";
+					break;
+				default:
+					html += "<td>" + defVal + "</td>";
+					break;
+			}
+			html += "</tr>";
+		}
+		html += "</table>";
+
+		//  html += "<div style='text-align:center;' >(表:数据结构" + map.getEnDesc() + "," + ensName + "," + map.getPhysicsTable() + ")</div>";
+
+		return html;
+	}
+	public final String SystemClass_Fields() throws Exception {
+		return SystemClass_Fields_Ext(this.getEnsName());
+	}
+	public final String SystemClass_Fields_Ext(String ensName) throws Exception {
+		Entities ens = ClassFactory.GetEns(ensName);
+		Entity en = ens.getNewEntity();
+
+		Map map = en.getEnMap();
+		en.CheckPhysicsTable();
+
+		String html = "";
+		html += "<center>" + map.getEnDesc() + "," + map.getPhysicsTable() + "</center>";
+		html += "<table>";
+		html += "<tr>";
+		html += "<th>#</th>";
+		html += "<th>描述</th>";
+		html += "<th>字段</th>";
+		html += "<th>类型</th>";
+		html += "<th>关系</th>";
 		html += "<th>长度</th>";
 		html += "<th>对应</th>";
 		html += "<th>默认值</th>";
@@ -575,9 +714,9 @@ public class WF_Comm_Sys extends WebContralBase
 			html += "<tr>";
 			html += "<td>" + i + "</td>";
 			html += "<td>" + attr.getDesc() + "</td>";
-			html += "<td>" + attr.getKey() + "</td>";
+			//   html += "<td>" + attr.getKey() + "</td>";
 			html += "<td>" + attr.getField() + "</td>";
-			html += "<td>" + attr.getMyDataType() + "</td>";
+			html += "<td>" + attr.getMyDataTypeStr() + "</td>";
 			html += "<td>" + attr.getMyFieldType().toString() + "</td>";
 
 			if (attr.getMyDataType() == DataType.AppBoolean || attr.getMyDataType() == DataType.AppDouble || attr.getMyDataType() == DataType.AppFloat || attr.getMyDataType() == DataType.AppInt || attr.getMyDataType() == DataType.AppMoney)
@@ -613,7 +752,7 @@ public class WF_Comm_Sys extends WebContralBase
 				case FK:
 				case PKFK:
 					Entities myens = ClassFactory.GetEns(attr.getUIBindKey());
-					html += "<td>表/视图:" + myens.getGetNewEntity().getEnMap().getPhysicsTable() + " 关联字段:" + attr.getUIRefKeyValue() + "," + attr.getUIRefKeyText() + "</td>";
+					html += "<td>表/视图:" + myens.getNewEntity().getEnMap().getPhysicsTable() + " 关联字段:" + attr.getUIRefKeyValue()+ "," + attr.getUIRefKeyText() + "</td>";
 					break;
 				default:
 					html += "<td>无</td>";
@@ -627,6 +766,61 @@ public class WF_Comm_Sys extends WebContralBase
 		return html;
 	}
 
+	/** 
+	 系统日志
+	 
+	 @return 
+	*/
+	public final String SystemLog_Init() throws Exception {
+		DataTable dt = new DataTable();
+		dt.Columns.Add("No");
+		dt.Columns.Add("Name");
+		dt.Columns.Add("LogType");
+
+		String path = SystemConfig.getPathOfDataUser() + "\\Log\\info";
+		String[] strs = bp.tools.BaseFileUtils.getFiles(path);
+		for (String str : strs)
+		{
+			DataRow dr = dt.NewRow();
+			dr.setValue(0, str.substring(str.indexOf("info") + 5));
+			dr.setValue(1, str.substring(str.indexOf("info") + 5));
+			dr.setValue(2, "信息");
+			// dr[1] = str;
+			dt.Rows.add(dr);
+		}
+
+		path = SystemConfig.getPathOfDataUser() + "\\Log\\error";
+		File fileE =new File(path);    //如果文件夹不存在则创建
+		if  (!fileE .exists()  && !fileE .isDirectory()) {
+			fileE .mkdir();
+		}
+		strs = fileE.list();
+		for (String str : strs)
+		{
+			DataRow dr = dt.NewRow();
+			dr.setValue(0,str);
+			dr.setValue(1 ,str.substring(0,str.indexOf(".log")));
+			dr.setValue(2, "错误");
+			dt.Rows.add(dr);
+		}
+		return bp.tools.Json.ToJson(dt);
+	}
+	public final String SystemLog_Open() throws Exception {
+		String logType = this.GetRequestVal("LogType");
+		if (logType.equals("信息") == true)
+		{
+			logType = "info";
+		}
+		else
+		{
+			logType = "error";
+		}
+
+		String path = SystemConfig.getPathOfDataUser() + "\\Log\\" + logType + "\\" + this.getRefNo();
+		String str = DataType.ReadTextFile2Html(path);
+		return str;
+	}
+
 	public final String SystemClass_Init() throws Exception {
 		DataTable dt = new DataTable();
 		dt.Columns.Add("No");
@@ -635,21 +829,26 @@ public class WF_Comm_Sys extends WebContralBase
 		dt.Columns.Add("PTable");
 
 		ArrayList al = null;
-		al = ClassFactory.GetObjects("bp.en.Entity");
+		al = ClassFactory.GetObjects("BP.En.Entity");
 		for (Object obj : al)
 		{
 			Entity en = null;
 			try
 			{
-
 				en = obj instanceof Entity ? (Entity)obj : null;
-				if(en==null)
+				if (en == null)
+				{
 					continue;
-				String className = en.getClass().getName();
-				if(DataType.IsNullOrEmpty(className) == true)
-					continue;
+				}
 
-				switch (className.toUpperCase()) {
+				String className = en.toString();
+				if (DataType.IsNullOrEmpty(className) == true)
+				{
+					continue;
+				}
+
+				switch (className.toUpperCase())
+				{
 					case "BP.WF.STARTWORK":
 					case "BP.WF.WORK":
 					case "BP.WF.GESTARTWORK":
@@ -685,7 +884,7 @@ public class WF_Comm_Sys extends WebContralBase
 			dr.setValue("No", en.toString());
 			try
 			{
-				dr.setValue("EnsName", en.getGetNewEntities().toString());
+				dr.setValue("EnsName", en.GetNewEntities().toString());
 			}
 			catch (java.lang.Exception e2)
 			{
@@ -710,7 +909,8 @@ public class WF_Comm_Sys extends WebContralBase
 	 @return 
 	*/
 	@Override
-	protected String DoDefaultMethod() throws Exception {
+	protected String DoDefaultMethod()
+	{
 		String sfno = this.GetRequestVal("sfno");
 		SFTable sftable = null;
 		DataTable dt = null;
@@ -746,7 +946,7 @@ public class WF_Comm_Sys extends WebContralBase
 		DataSet ds = new DataSet();
 
 		SFDBSrc src = new SFDBSrc();
-		if (!DataType.IsNullOrEmpty(this.GetRequestVal("No")))
+		if (!(this.GetRequestVal("No") == null || this.GetRequestVal("No").isEmpty()))
 		{
 			src = new SFDBSrc(getNo());
 		}
@@ -778,7 +978,8 @@ public class WF_Comm_Sys extends WebContralBase
 	}
 
 	//javaScript 脚本上传
-	public final String javaScriptImp_Done() throws Exception {
+	public final String javaScriptImp_Done()
+	{
 		File xmlFile = null;
 		String fileName = "";
 		HttpServletRequest request = getRequest();
@@ -791,14 +992,14 @@ public class WF_Comm_Sys extends WebContralBase
 			if (xmlFile.exists()) {
 				xmlFile.delete();
 			}
-				try {
-					CommonFileUtils.upload(request, "file", xmlFile);
-				} catch (Exception e) {
-					e.printStackTrace();
-					return "err@执行失败";
-				}
+			try {
+				CommonFileUtils.upload(request, "file", xmlFile);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "err@执行失败";
 			}
-			return "脚本" + fileName + "导入成功";
+		}
+		return "脚本" + fileName + "导入成功";
 	}
 
 	public final String RichUploadFile() throws Exception {
@@ -849,7 +1050,7 @@ public class WF_Comm_Sys extends WebContralBase
 		String savePath = SystemConfig.getPathOfDataUser() + "JSLibData";
 
 		File di = new File(savePath);
-		//找到该目录下的文件 
+		//找到该目录下的文件
 		File[] fileList = di.listFiles();
 
 		if (fileList == null || fileList.length == 0)
@@ -872,75 +1073,4 @@ public class WF_Comm_Sys extends WebContralBase
 	}
 
 		///#endregion
-		/// <summary>
-		/// 系统日志
-		/// </summary>
-		/// <returns></returns>
-		public String SystemLog_Init()
-		{
-			DataTable dt = new DataTable();
-			dt.Columns.Add("No");
-			dt.Columns.Add("Name");
-			dt.Columns.Add("LogType");
-
-			String path = SystemConfig.getPathOfDataUser() + "\\Log\\info";
-			File file =new File(path);    //如果文件夹不存在则创建
-			if  (!file .exists()  && !file .isDirectory()) {
-				file .mkdir();
-			}
-
-			String[] strs =file.list();
-			for (String str : strs)
-			{
-				DataRow dr = dt.NewRow();
-				dr.setValue(0,str);
-				dr.setValue(1,str.substring(0,str.indexOf(".log")));
-				dr.setValue(2, "信息");
-				// dr[1] = str;
-				dt.Rows.add(dr);
-			}
-
-			path = SystemConfig.getPathOfDataUser() + "\\Log\\error";
-			File fileE =new File(path);    //如果文件夹不存在则创建
-			if  (!fileE .exists()  && !fileE .isDirectory()) {
-				fileE .mkdir();
-			}
-			strs = fileE.list();
-			for (String str : strs)
-			{
-				DataRow dr = dt.NewRow();
-				dr.setValue(0,str);
-				dr.setValue(1 ,str.substring(0,str.indexOf(".log")));
-				dr.setValue(2,"错误");
-				dt.Rows.add(dr);
-			}
-			return bp.tools.Json.ToJson(dt);
-		}
-		public String SystemLog_Open() throws Exception {
-			String logType = this.GetRequestVal("LogType");
-			if (logType.equals("信息") == true)
-				logType = "info";
-			else
-				logType = "error";
-
-			String path = SystemConfig.getPathOfDataUser() + "\\Log\\" + logType + "\\" + this.getRefNo();
-			String str = DataType.ReadTextFile2Html(path);
-			return str;
-		}
-
-	/**
-	 * 下载日志文件
-	 * @return 日志文件路径
-	 * @throws Exception
-	 */
-		public String SystemLog_Download() throws Exception{
-			String logType = this.GetRequestVal("LogType");
-			if (logType.equals("信息") == true)
-				logType = "info";
-			else
-				logType = "error";
-
-			String filePath = "@url\\DataUser\\Log\\" + logType + "\\" + this.getRefNo();
-			return filePath;
-		}
 }

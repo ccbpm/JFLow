@@ -1,6 +1,7 @@
 package bp.ccbill.template;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.en.Map;
 
 /** 
  单据可创建的部门
@@ -16,7 +17,8 @@ public class FrmDeptCreate extends EntityMM
 	 UI界面上的访问控制
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.OpenAll();
 		return uac;
@@ -24,23 +26,19 @@ public class FrmDeptCreate extends EntityMM
 	/** 
 	单据
 	*/
-	public final String getFrmID()
-	{
+	public final String getFrmID() {
 		return this.GetValStringByKey(FrmDeptCreateAttr.FrmID);
 	}
-	public final void setFrmID(String value)
-	 {
+	public final void setFrmID(String value)  {
 		this.SetValByKey(FrmDeptCreateAttr.FrmID, value);
 	}
 	/** 
 	 部门
 	*/
-	public final String getFK_Dept()
-	{
+	public final String getDeptNo() {
 		return this.GetValStringByKey(FrmDeptCreateAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
-	 {
+	public final void setDeptNo(String value)  {
 		this.SetValByKey(FrmDeptCreateAttr.FK_Dept, value);
 	}
 
@@ -51,13 +49,15 @@ public class FrmDeptCreate extends EntityMM
 	/** 
 	 单据可创建的部门
 	*/
-	public FrmDeptCreate()  {
+	public FrmDeptCreate()
+	{
 	}
-	/** 
-	 重写基类方法
-	*/
+	/**
+	 * 重写基类方法
+	 */
 	@Override
-	public bp.en.Map getEnMap()  {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();

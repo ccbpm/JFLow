@@ -1,7 +1,5 @@
 package bp.sys;
-
 import bp.en.*;
-
 import java.util.*;
 
 /** 
@@ -13,14 +11,14 @@ public class EnVers extends EntitiesMyPK
 	 得到一个新实体
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new EnVer();
 	}
 	/** 
 	 实体版本号集合
 	*/
-	public EnVers()throws Exception
+	public EnVers()
 	{
 	}
 
@@ -31,7 +29,7 @@ public class EnVers extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<EnVer> ToJavaList()throws Exception
+	public final java.util.List<EnVer> ToJavaList()
 	{
 		return (java.util.List<EnVer>)(Object)this;
 	}
@@ -40,7 +38,7 @@ public class EnVers extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<EnVer> Tolist()throws Exception
+	public final ArrayList<EnVer> Tolist()
 	{
 		ArrayList<EnVer> list = new ArrayList<EnVer>();
 		for (int i = 0; i < this.size(); i++)

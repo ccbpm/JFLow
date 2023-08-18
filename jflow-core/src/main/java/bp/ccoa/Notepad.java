@@ -2,7 +2,8 @@ package bp.ccoa;
 
 import bp.da.*;
 import bp.web.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+
 /** 
  记事本
 */
@@ -13,45 +14,37 @@ public class Notepad extends EntityMyPK
 	/** 
 	 组织编号
 	*/
-	public final String getOrgNo()
-	{
+	public final String getOrgNo()  {
 		return this.GetValStrByKey(NotepadAttr.OrgNo);
 	}
-	public final void setOrgNo(String value)
-	 {
+	public final void setOrgNo(String value)  {
 		this.SetValByKey(NotepadAttr.OrgNo, value);
 	}
 	/** 
 	 记录人
 	*/
-	public final String getRec()
-	{
+	public final String getRec()  {
 		return this.GetValStrByKey(NotepadAttr.Rec);
 	}
-	public final void setRec(String value)
-	 {
+	public final void setRec(String value)  {
 		this.SetValByKey(NotepadAttr.Rec, value);
 	}
 	/** 
 	 记录日期
 	*/
-	public final String getRDT()
-	{
+	public final String getRDT()  {
 		return this.GetValStrByKey(NotepadAttr.RDT);
 	}
-	public final void setRDT(String value)
-	 {
+	public final void setRDT(String value)  {
 		this.SetValByKey(NotepadAttr.RDT, value);
 	}
 	/** 
 	 年月
 	*/
-	public final String getNianYue()
-	{
+	public final String getNianYue()  {
 		return this.GetValStrByKey(NotepadAttr.NianYue);
 	}
-	public final void setNianYue(String value)
-	 {
+	public final void setNianYue(String value)  {
 		this.SetValByKey(NotepadAttr.NianYue, value);
 	}
 
@@ -63,7 +56,8 @@ public class Notepad extends EntityMyPK
 	 权限控制
 	*/
 	@Override
-	public UAC getHisUAC() {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (WebUser.getIsAdmin())
 		{
@@ -75,9 +69,10 @@ public class Notepad extends EntityMyPK
 	/** 
 	 记事本
 	*/
-	public Notepad()  {
+	public Notepad()
+	{
 	}
-	public Notepad(String mypk)throws Exception
+	public Notepad(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -86,7 +81,8 @@ public class Notepad extends EntityMyPK
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -108,23 +104,23 @@ public class Notepad extends EntityMyPK
 
 
 
-			//RefMethod rm = new RefMethod();
-			//rm.Title = "方法参数"; // "设计表单";
-			//rm.ClassMethodName = this.ToString() + ".DoParas";
-			//rm.Visable = true;
-			//rm.refMethodType = RefMethodType.RightFrameOpen;
-			//rm.Target = "_blank";
-			////rm.GroupName = "开发接口";
-			////  map.AddRefMethod(rm);
+		//RefMethod rm = new RefMethod();
+		//rm.Title = "方法参数"; // "设计表单";
+		//rm.ClassMethodName = this.ToString() + ".DoParas";
+		//rm.Visable = true;
+		//rm.refMethodType = RefMethodType.RightFrameOpen;
+		//rm.Target = "_blank";
+		////rm.GroupName = "开发接口";
+		////  map.AddRefMethod(rm);
 
-			//rm = new RefMethod();
-			//rm.Title = "方法内容"; // "设计表单";
-			//rm.ClassMethodName = this.ToString() + ".DoDocs";
-			//rm.Visable = true;
-			//rm.refMethodType = RefMethodType.RightFrameOpen;
-			//rm.Target = "_blank";
-			////rm.GroupName = "开发接口";
-			//map.AddRefMethod(rm);
+		//rm = new RefMethod();
+		//rm.Title = "方法内容"; // "设计表单";
+		//rm.ClassMethodName = this.ToString() + ".DoDocs";
+		//rm.Visable = true;
+		//rm.refMethodType = RefMethodType.RightFrameOpen;
+		//rm.Target = "_blank";
+		////rm.GroupName = "开发接口";
+		//map.AddRefMethod(rm);
 
 		this.set_enMap(map);
 		return this.get_enMap();
@@ -135,7 +131,8 @@ public class Notepad extends EntityMyPK
 
 		///#region 执行方法.
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		this.setMyPK(DBAccess.GenerGUID(0, null, null));
 		this.setRec(WebUser.getNo());
 		this.setRDT(DataType.getCurrentDateTime());

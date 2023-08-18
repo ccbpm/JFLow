@@ -5,8 +5,7 @@ import bp.da.*;
 import bp.en.*;
 import bp.web.*;
 import bp.wf.template.*;
-import bp.port.*;
-import bp.*;
+import java.util.*;
 
 /** 
  执行事件
@@ -16,11 +15,10 @@ public class ExecEvent
 	/** 
 	 执行表单
 	 
-	 param md
-	 param eventType
-	 param en
-	 param atParas
-	 @return 
+	 @param md
+	 @param eventType
+	 @param en
+	 @return
 	*/
 
 	public static String DoFrm(MapData md, String eventType, Entity en) throws Exception {
@@ -79,12 +77,11 @@ public class ExecEvent
 	/** 
 	 执行节点事件
 	 
-	 param doType
-	 param nd
-	 param wk
-	 param objs
-	 param atParas
-	 @return 
+	 @param doType
+	 @param nd
+	 @param wk
+	 @param objs
+	 @return
 	*/
 
 	public static String DoNode(String doType, Node nd, Work wk, SendReturnObjs objs) throws Exception {
@@ -95,7 +92,6 @@ public class ExecEvent
 		return DoNode(doType, nd, wk, null, null);
 	}
 
-//ORIGINAL LINE: public static string DoNode(string doType, Node nd, Work wk, SendReturnObjs objs = null, string atParas = null)
 	public static String DoNode(String doType, Node nd, Work wk, SendReturnObjs objs, String atParas) throws Exception {
 		WorkNode wn = new WorkNode(wk, nd);
 		return DoNode(doType, wn, objs, atParas);
@@ -103,8 +99,7 @@ public class ExecEvent
 	/** 
 	 执行事件
 	 
-	 param eventFlag
-	 param wn
+	 @param wn
 	*/
 
 	public static String DoNode(String doType, WorkNode wn, SendReturnObjs objs) throws Exception {
@@ -115,7 +110,6 @@ public class ExecEvent
 		return DoNode(doType, wn, null, null);
 	}
 
-//ORIGINAL LINE: public static string DoNode(string doType, WorkNode wn, SendReturnObjs objs = null, string atPara = null)
 	public static String DoNode(String doType, WorkNode wn, SendReturnObjs objs, String atPara) throws Exception {
 		if (wn.getHisNode() == null)
 		{
@@ -129,24 +123,63 @@ public class ExecEvent
 		//如果执行了节点发送成功时间. 
 		if (doType.equals(EventListNode.SendSuccess) == true)
 		{
+			if (wn.getHisFlow().getItIsFullSA() == true)
+				DBAccess.RunSQL("UPDATE WF_CCList SET Sta=0,RDT='"+DataType.getCurrentDateTime()+"' WHERE NodeIDWork=" + wn.getHisNode().getNodeID() + " AND WorkID=" + wn.getWorkID());
+
 			WorkNodePlus.SendDraftSubFlow(wn); //执行自动发送子流程草稿.
 		}
 
 
-			///#region 2021.5.30 gaoxin. 更新授权岗位:为中科软
-		//更新授权岗位:为中科软. 如果是当前节点的处理人员是按照岗位绑定的，就需要吧授权岗，写入到 Emps里面去.
-		if (doType.equals(EventListNode.SendSuccess) == true && bp.difference.SystemConfig.GetValByKeyBoolen("IsEnableAuthDeptStation",false) == true)
+			///#region 增加系统变量.
+		if (DataType.IsNullOrEmpty(atPara) == true)
 		{
-			// 如果这些计算人员的方式有岗位的因素，就需要把当前人员授权岗增加上去.
-			if (wn.getHisNode().getHisDeliveryWay() == DeliveryWay.ByStation || wn.getHisNode().getHisDeliveryWay() == DeliveryWay.ByStationOnly || wn.getHisNode().getHisDeliveryWay() == DeliveryWay.ByStationAndEmpDept || wn.getHisNode().getHisDeliveryWay() == DeliveryWay.ByDeptAndStation)
+			atPara = "";
+		}
+		if (atPara.contains("@WorkID") == false)
+		{
+			atPara += "@WorkID=" + wn.getWorkID();
+		}
+		if (atPara.contains("@NodeID") == false)
+		{
+			atPara += "@NodeID=" + wn.getHisNode().getNodeID();
+		}
+		if (atPara.contains("@FK_Node") == false)
+		{
+			atPara += "@FK_Node=" + wn.getHisNode().getNodeID();
+		}
+		if (atPara.contains("@FlowNo") == false)
+		{
+			atPara += "@FlowNo=" + wn.getHisNode().getFlowNo();
+		}
+		if (atPara.contains("@FK_Flow") == false)
+		{
+			atPara += "@FK_Flow=" + wn.getHisNode().getFlowNo();
+		}
+
+			///#endregion 增加系统变量.
+
+		//执行:全局的重写的方法事件.
+		String mymsg1 = bp.wf.OverrideEvent.DoIt(doType, wn, atPara, null, 0, null, null);
+		if (mymsg1 != null)
+		{
+			return mymsg1;
+		}
+
+
+			///#region 2021.5.30 gaoxin. 更新授权角色:为中科软
+		//更新授权角色:为中科软. 如果是当前节点的处理人员是按照角色绑定的，就需要吧授权岗，写入到 Emps里面去.
+		if (doType.equals(EventListNode.SendSuccess) == true && bp.difference.SystemConfig.GetValByKeyBoolen("IsEnableAuthDeptStation", false) == true)
+		{
+			// 如果这些计算人员的方式有角色的因素，就需要把当前人员授权岗增加上去.
+			if (wn.getHisNode().getHisDeliveryWay() == DeliveryWay.ByStation || wn.getHisNode().getHisDeliveryWay() == DeliveryWay.ByStationOnly || wn.getHisNode().getHisDeliveryWay() == DeliveryWay.ByDeptAndStation)
 			{
 				String sql = "SELECT A.FK_Dept, A.FK_Station FROM Port_DeptEmpStation A, WF_NodeStation B ";
-				sql += " WHERE A.FK_Emp='" + WebUser.getUserID() + "' AND A.FK_Station=B.FK_Station AND B.FK_Node=" + wn.getHisNode().getNodeID();
+				sql += " WHERE A.FK_Emp='" + WebUser.getNo() + "' AND A.FK_Station=B.FK_Station AND B.FK_Node=" + wn.getHisNode().getNodeID();
 				DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
 				for (DataRow dr : dt.Rows)
 				{
-				   String strs = "@" + dr.getValue(0).toString() + "_" + dr.getValue(1).toString() + "@";
+					String strs = "@" + dr.getValue(0).toString() + "_" + dr.getValue(1).toString() + "@";
 					if (wn.getHisGenerWorkFlow().getEmps().contains("@" + strs) == true)
 					{
 						continue;
@@ -205,7 +238,7 @@ public class ExecEvent
 		if (wn.getHisFlow().getFEventEntity() != null)
 		{
 			wn.getHisFlow().getFEventEntity().SendReturnObjs = objs;
-			msg = wn.getHisFlow().getFEventEntity().DoIt(doType, wn.getHisNode(), wn.getHisWork(), atPara, toNodeID, wn.JumpToEmp);
+			msg = wn.getHisFlow().getFEventEntity().DoIt(doType, wn.getHisNode(), wn.getHisWork(), atPara, toNodeID, wn.JumpToEmp, wn.getHisGenerWorkFlow());
 		}
 
 
@@ -272,7 +305,7 @@ public class ExecEvent
 		String msgAlert = ""; //生成的提示信息.
 		for (PushMsg item : pms.ToJavaList())
 		{
-			if (!item.getFK_Event().equals(doType))
+			if (!Objects.equals(item.getFK_Event(), doType))
 			{
 				continue;
 			}
@@ -285,8 +318,10 @@ public class ExecEvent
 			//执行发送消息.
 			msgAlert += item.DoSendMessage(wn.getHisNode(), wn.getHisWork(), atPara, objs);
 		}
-		if(DataType.IsNullOrEmpty(msg)==true)
+		if (DataType.IsNullOrEmpty(msg) == true)
+		{
 			return msgAlert;
+		}
 		return msg + msgAlert;
 
 			///#endregion 处理消息推送.
@@ -298,9 +333,9 @@ public class ExecEvent
 	/** 
 	 执行流程事件
 	 
-	 param doType
-	 param wn
-	 param atPara
+	 @param doType
+	 @param wn
+	 @param atPara
 	 @return 
 	*/
 	public static String DoFlow(String doType, WorkNode wn, String atPara) throws Exception {
@@ -338,13 +373,18 @@ public class ExecEvent
 			///#endregion 写入消息之前,删除消息,不让其在提醒.
 
 		String msg = null;
-		if (wn.getHisFlow().getFEventEntity() == null)
-		{
-		}
+
 		if (wn.getHisFlow().getFEventEntity() != null)
 		{
 			wn.getHisFlow().getFEventEntity().SendReturnObjs = wn.HisMsgObjs;
-			msg = wn.getHisFlow().getFEventEntity().DoIt(doType, wn.getHisNode(), wn.getHisWork(), null, toNodeID, wn.JumpToEmp);
+			if (doType.equals("FlowOnCreateWorkID") == true)
+			{
+				msg = wn.getHisFlow().getFEventEntity().DoIt(doType, wn.getHisNode(), wn.getHisWork(), null, toNodeID, wn.JumpToEmp, null);
+			}
+			else
+			{
+				msg = wn.getHisFlow().getFEventEntity().DoIt(doType, wn.getHisNode(), wn.getHisWork(), null, toNodeID, wn.JumpToEmp, wn.getHisGenerWorkFlow());
+			}
 		}
 
 
@@ -405,8 +445,10 @@ public class ExecEvent
 			//执行发送消息.
 			msgAlert += item.DoSendMessage(wn.getHisNode(), wn.getHisWork(), atPara, wn.HisMsgObjs);
 		}
-		if(msg==null)
+		if (msg == null)
+		{
 			return msgAlert;
+		}
 		return msg + msgAlert;
 
 			///#endregion 处理消息推送.

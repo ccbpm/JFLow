@@ -1,13 +1,5 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.web.*;
-import bp.en.*;
-import bp.port.*;
-import bp.sys.*;
-import bp.*;
-import bp.wf.*;
-import java.util.*;
 
 /** 
  权限模型属性
@@ -51,11 +43,11 @@ public class PowerModelAttr
 	*/
 	public static final String EmpName = "EmpName";
 	/** 
-	 岗位编号
+	 角色编号
 	*/
 	public static final String StaNo = "StaNo";
 	/** 
-	 岗位名称
+	 角色名称
 	*/
 	public static final String StaName = "StaName";
 	/** 

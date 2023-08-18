@@ -256,7 +256,7 @@ public class PubClass
 		SFTable sf = new SFTable();
 		sf.setNo(uiBindKey);
 		if (sf.RetrieveFromDBSources() != 0) {
-			if (sf.getSrcType() == SrcType.Handler || sf.getSrcType() == SrcType.JQuery)
+			if (sf.getSrcType() == bp.sys.DictSrcType.Handler || sf.getSrcType() == bp.sys.DictSrcType.JQuery)
 				return null;
 			dt = sf.GenerHisDataTable(ht);
 		}
@@ -279,7 +279,7 @@ public class PubClass
 		}
 		//  把列名做成标准的.
 
-		dt.TableName = uiBindKey;
+		dt.setTableName(uiBindKey);
 		return dt;
 	}
 
@@ -478,7 +478,7 @@ public class PubClass
 					default:
 						break;
 				}
-				en = ens.getGetNewEntity();
+				en = ens.getNewEntity();
 				if (en.getEnMap().getEnType() == EnType.View || en.getEnMap().getEnType() == EnType.ThirdPartApp)
 				{
 					continue;
@@ -720,7 +720,7 @@ public class PubClass
 	 为表增加解释
 
 	 param en
-	  * @throws Exception
+	 * @throws Exception
 	 */
 	public static void AddCommentForTable_MS(Entity en) throws Exception
 	{
@@ -798,7 +798,7 @@ public class PubClass
 	 */
 	public static String DBRpt1(DBCheckLevel level, Entities ens) throws Exception
 	{
-		Entity en = ens.getGetNewEntity();
+		Entity en = ens.getNewEntity();
 		if (en.getEnMap().getEnDBUrl().getDBUrlType() != DBUrlType.AppCenterDSN)
 		{
 			return null;
@@ -839,7 +839,7 @@ public class PubClass
 	public static DataTable HashtableToDataTable(Hashtable ht)throws Exception
 	{
 		DataTable dt = new DataTable();
-		dt.TableName = "Hashtable";
+		dt.setTableName("Hashtable");
 		for (Object key : ht.keySet())
 		{
 			if(key == null)
@@ -1057,7 +1057,7 @@ public class PubClass
 
 
 		Attrs attrs = map.getAttrs();
-		for (Attr attr : attrs.ToJavaList())
+		for (Attr attr : attrs)
 		{
 			String relKey = null;
 			switch (attr.getUIContralType())

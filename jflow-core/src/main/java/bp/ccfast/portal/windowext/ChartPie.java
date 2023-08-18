@@ -1,6 +1,7 @@
 package bp.ccfast.portal.windowext;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.en.Map;
 
 /** 
  饼图
@@ -13,7 +14,8 @@ public class ChartPie extends EntityNoName
 	 控制权限
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (bp.web.WebUser.getIsAdmin() == true)
 		{
@@ -41,27 +43,24 @@ public class ChartPie extends EntityNoName
 	/** 
 	 饼图
 	*/
-	public ChartPie() {
+	public ChartPie()
+	{
 	}
 	/** 
 	 饼图
 	 
-	 param no
+	 @param no
 	*/
-	public ChartPie(String no)
-	{
+	public ChartPie(String no) throws Exception  {
 		this.setNo(no);
-		try {
-			this.Retrieve();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		this.Retrieve();
 	}
-	/** 
-	 EnMap
-	*/
+	/**
+	 * EnMap
+	 */
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();

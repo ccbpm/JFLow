@@ -14,265 +14,217 @@ public class Delay extends EntityMyPK
 	/** 
 	 workid
 	*/
-	public final long getWorkID()
-	{
+	public final long getWorkID()  {
 		return this.GetValInt64ByKey(DelayAttr.WorkID);
 	}
-	public final void setWorkID(long value)
-	{
+	public final void setWorkID(long value){
 		this.SetValByKey(DelayAttr.WorkID, value);
 	}
 	/** 
 	 发起人
 	*/
-	public final String getStarter()
-	{
+	public final String getStarter()  {
 		return this.GetValStringByKey(DelayAttr.Starter);
 	}
-	public final void setStarter(String value)
-	{
+	public final void setStarter(String value){
 		this.SetValByKey(DelayAttr.Starter, value);
 	}
 	/** 
 	 发起人名称
 	*/
-	public final String getStarterName()
-	{
+	public final String getStarterName()  {
 		return this.GetValStringByKey(DelayAttr.StarterName);
 	}
-	public final void setStarterName(String value)
-	{
+	public final void setStarterName(String value){
 		this.SetValByKey(DelayAttr.StarterName, value);
 	}
 	/** 
 	 流程状态
 	*/
-	public final int getWFStateInt()
-	{
+	public final int getWFStateInt()  {
 		return this.GetValIntByKey(DelayAttr.WFState);
 	}
-	public final void setWFStateInt(int value)
-	{
+	public final void setWFStateInt(int value){
 		this.SetValByKey(DelayAttr.WFState, value);
 	}
 	/** 
 	 流程状态
 	*/
-	public final WFState getWFState()
-	{
+	public final WFState getWFState() {
 		return WFState.forValue(this.GetValIntByKey(DelayAttr.WFState));
 	}
-	public final void setWFState(WFState value)
-	{
+	public final void setWFState(WFState value){
 		this.SetValByKey(DelayAttr.WFState, value.getValue());
 	}
 	/** 
 	 部门编号
 	*/
-	public final String getFK_Dept()
-	{
+	public final String getFK_Dept()  {
 		return this.GetValStringByKey(DelayAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
-	{
+	public final void setFK_Dept(String value){
 		this.SetValByKey(DelayAttr.FK_Dept, value);
 	}
 	/** 
 	 部门名称
 	*/
-	public final String getDeptName()
-	{
+	public final String getDeptName()  {
 		return this.GetValStringByKey(DelayAttr.DeptName);
 	}
-	public final void setDeptName(String value)
-	{
+	public final void setDeptName(String value){
 		this.SetValByKey(DelayAttr.DeptName, value);
 	}
 	/** 
 	 流程编号
 	*/
-	public final String getFK_Flow()
-	{
+	public final String getFK_Flow()  {
 		return this.GetValStringByKey(DelayAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
-	{
+	public final void setFK_Flow(String value){
 		this.SetValByKey(DelayAttr.FK_Flow, value);
 	}
 	/** 
 	 流程名称
 	*/
-	public final String getFlowName()
-	{
+	public final String getFlowName()  {
 		return this.GetValStringByKey(DelayAttr.FlowName);
 	}
-	public final void setFlowName(String value)
-	{
+	public final void setFlowName(String value){
 		this.SetValByKey(DelayAttr.FlowName, value);
 	}
 	/** 
 	 当前节点
 	*/
-	public final int getFK_Node()
-	{
+	public final int getFK_Node()  {
 		return this.GetValIntByKey(DelayAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
-	{
+	public final void setNodeID(int value){
 		this.SetValByKey(DelayAttr.FK_Node, value);
 	}
 	/** 
 	 节点名称
 	*/
-	public final String getNodeName()
-	{
+	public final String getNodeName()  {
 		return this.GetValStringByKey(DelayAttr.NodeName);
 	}
-	public final void setNodeName(String value)
-	{
+	public final void setNodeName(String value){
 		this.SetValByKey(DelayAttr.NodeName, value);
 	}
 	/** 
 	 标题
 	*/
-	public final String getTitle()
-	{
+	public final String getTitle()  {
 		return this.GetValStringByKey(DelayAttr.Title);
 	}
-	public final void setTitle(String value)
-	{
+	public final void setTitle(String value){
 		this.SetValByKey(DelayAttr.Title, value);
 	}
 	/** 
 	 记录日期
 	*/
-	public final String getRDT()
-	{
+	public final String getRDT()  {
 		return this.GetValStringByKey(DelayAttr.RDT);
 	}
-	public final void setRDT(String value)
-	{
+	public final void setRDT(String value){
 		this.SetValByKey(DelayAttr.RDT, value);
 	}
 	/** 
 	 应完成日期
 	*/
-	public final String getSDT()
-	{
+	public final String getSDT()  {
 		return this.GetValStringByKey(DelayAttr.SDT);
 	}
-	public final void setSDT(String value)
-	{
+	public final void setSDT(String value){
 		this.SetValByKey(DelayAttr.SDT, value);
 	}
 	/** 
 	 人员编号
 	*/
-	public final String getFK_Emp()
-	{
+	public final String getFK_Emp()  {
 		return this.GetValStringByKey(DelayAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)
-	{
+	public final void setFK_Emp(String value){
 		this.SetValByKey(DelayAttr.FK_Emp, value);
 	}
 	/** 
 	 fid
 	*/
-	public final long getFID()
-	{
+	public final long getFID()  {
 		return this.GetValInt64ByKey(DelayAttr.FID);
 	}
-	public final void setFID(long value)
-	{
+	public final void setFID(long value){
 		this.SetValByKey(DelayAttr.FID, value);
 	}
 	/** 
 	 流程类别
 	*/
-	public final String getFK_FlowSort()
-	{
+	public final String getFK_FlowSort()  {
 		return this.GetValStringByKey(DelayAttr.FK_FlowSort);
 	}
-	public final void setFK_FlowSort(String value)
-	{
+	public final void setFK_FlowSort(String value){
 		this.SetValByKey(DelayAttr.FK_FlowSort, value);
 	}
 	/** 
 	 系统类型
 	*/
-	public final String getSysType()
-	{
+	public final String getSysType()  {
 		return this.GetValStringByKey(DelayAttr.SysType);
 	}
-	public final void setSysType(String value)
-	{
+	public final void setSysType(String value){
 		this.SetValByKey(DelayAttr.SysType, value);
 	}
 	/** 
 	 应完成日期
 	*/
-	public final String getSDTOfNode()
-	{
+	public final String getSDTOfNode()  {
 		return this.GetValStringByKey(DelayAttr.SDTOfNode);
 	}
-	public final void setSDTOfNode(String value)
-	{
+	public final void setSDTOfNode(String value){
 		this.SetValByKey(DelayAttr.SDTOfNode, value);
 	}
 	/** 
 	 催办次数
 	*/
-	public final int getPressTimes()
-	{
+	public final int getPressTimes()  {
 		return this.GetValIntByKey(DelayAttr.PressTimes);
 	}
-	public final void setPressTimes(int value)
-	{
+	public final void setPressTimes(int value){
 		this.SetValByKey(DelayAttr.PressTimes, value);
 	}
 	/** 
 	 单据编号
 	*/
-	public final String getBillNo()
-	{
+	public final String getBillNo()  {
 		return this.GetValStringByKey(DelayAttr.BillNo);
 	}
-	public final void setBillNo(String value)
-	{
+	public final void setBillNo(String value){
 		this.SetValByKey(DelayAttr.BillNo, value);
 	}
 	/** 
 	 备注
 	*/
-	public final String getFlowNote()
-	{
+	public final String getFlowNote()  {
 		return this.GetValStringByKey(DelayAttr.FlowNote);
 	}
-	public final void setFlowNote(String value)
-	{
+	public final void setFlowNote(String value){
 		this.SetValByKey(DelayAttr.FlowNote, value);
 	}
 	/** 
 	 待办处理人
 	*/
-	public final String getTodoEmps()
-	{
+	public final String getTodoEmps()  {
 		return this.GetValStringByKey(DelayAttr.TodoEmps);
 	}
-	public final void setTodoEmps(String value)
-	{
+	public final void setTodoEmps(String value){
 		this.SetValByKey(DelayAttr.TodoEmps, value);
 	}
 	/** 
 	 发送人
 	*/
-	public final String getSender()
-	{
+	public final String getSender()  {
 		return this.GetValStringByKey(DelayAttr.Sender);
 	}
-	public final void setSender(String value)
-	{
+	public final void setSender(String value){
 		this.SetValByKey(DelayAttr.Sender, value);
 	}
 
@@ -375,8 +327,7 @@ public class Delay extends EntityMyPK
 
 		///#endregion
 
-	public final String DoOpenTrack()
-	{
+	public final String DoOpenTrack() {
 		return "/WF/WFRpt.htm?WorkID=" + this.getWorkID() + "&FK_Flow=" + this.getFK_Flow();
 	}
 }

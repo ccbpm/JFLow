@@ -19,34 +19,29 @@ public class StudentKeMu extends EntityMM
 	/**
 	 * 学生
 	 */
-	public final String getFK_Student()
-	{
+	public final String getFK_Student() {
 		return this.GetValStringByKey(StudentKeMuAttr.FK_Student);
 	}
 	
-	public final void setFK_Student(String value)
-	{
+	public final void setFK_Student(String value) throws Exception {
 		SetValByKey(StudentKeMuAttr.FK_Student, value);
 	}
 	
 	/**
 	 * 科目名称
 	 */
-	public final String getFK_KeMuT()
-	{
+	public final String getFK_KeMuT() {
 		return this.GetValRefTextByKey(StudentKeMuAttr.FK_KeMu);
 	}
 	
 	/**
 	 * 科目
 	 */
-	public final String getFK_KeMu()
-	{
+	public final String getFK_KeMu() {
 		return this.GetValStringByKey(StudentKeMuAttr.FK_KeMu);
 	}
 	
-	public final void setFK_KeMu(String value)
-	{
+	public final void setFK_KeMu(String value) throws Exception {
 		SetValByKey(StudentKeMuAttr.FK_KeMu, value);
 	}
 	
@@ -60,7 +55,7 @@ public class StudentKeMu extends EntityMM
 	/**
 	 * 工作学生科目对应
 	 * 
-	 * @param _empoid
+	 * @param fk_student
 	 *            学生
 	 * @param fk_km
 	 *            科目编号

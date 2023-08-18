@@ -1,6 +1,13 @@
 package bp.port;
 
-import bp.en.*;
+import bp.da.*;
+import bp.difference.*;
+import bp.en.*; import bp.en.Map;
+import bp.sys.*;
+import bp.web.*;
+import bp.*;
+import java.util.*;
+import java.io.*;
 
 /** 
  操作员属性
@@ -13,23 +20,14 @@ public class EmpAttr extends EntityNoNameAttr
 	 UserID
 	*/
 	public static final String UserID = "UserID";
+	/** 
+	 组织编号
+	*/
 	public static final String OrgNo = "OrgNo";
-	/**
-	 sid
-	 */
-	public static final String SID = "SID";
 	/** 
 	 部门
 	*/
 	public static final String FK_Dept = "FK_Dept";
-	/** 
-	 密码
-	*/
-	public static final String Pass = "Pass";
-	/** 
-	 sid
-	*/
-	public static final String Token = "Token";
 	/** 
 	 手机号
 	*/
@@ -42,17 +40,25 @@ public class EmpAttr extends EntityNoNameAttr
 	 直属部门领导
 	*/
 	public static final String Leader = "Leader";
-	public static final String LeaderName = "LeaderName";
 	/** 
-	 用户状态
+	 部门领导编号
 	*/
-	public static final String EmpSta = "EmpSta";
+	public static final String LeaderName = "LeaderName";
 	/** 
 	 排序
 	*/
 	public static final String Idx = "Idx";
+	/** 
+	 检索拼音
+	*/
 	public static final String PinYin = "PinYin";
-	//public static final String IsOfficer="IsOfficer";
+
+	public static final String EmpSta = "EmpSta";
+	/** 
+	 是否是联络员
+	*/
+	//public const String IsOfficer = "IsOfficer";
+
 
 		///#endregion
 }

@@ -1,8 +1,11 @@
 package bp.sys.frmui;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.en.Map;
 import bp.sys.*;
+import java.util.*;
 
 /** 
  地图
@@ -14,56 +17,46 @@ public class ExtMap extends EntityMyPK
 	/** 
 	 目标
 	*/
-	public final String getTarget()
-	{
+	public final String getTarget()  {
 		return this.GetValStringByKey(MapAttrAttr.Tag1);
 	}
-	public final void setTarget(String value)
-	 {
+	public final void setTarget(String value){
 		this.SetValByKey(MapAttrAttr.Tag1, value);
 	}
 	/** 
 	 URL
 	*/
-	public final String getURL()
-	{
+	public final String getURL()  {
 		return this.GetValStringByKey(MapAttrAttr.Tag2).replace("#", "@");
 	}
-	public final void setURL(String value)
-	 {
+	public final void setURL(String value){
 		this.SetValByKey(MapAttrAttr.Tag2, value);
 	}
 	/** 
 	 FK_MapData
 	*/
-	public final String getFKMapData()
-	{
+	public final String getFrmID()  {
 		return this.GetValStrByKey(MapAttrAttr.FK_MapData);
 	}
-	public final void setFKMapData(String value)
-	 {
+	public final void setFrmID(String value){
 		this.SetValByKey(MapAttrAttr.FK_MapData, value);
 	}
 	/** 
 	 字段
 	*/
-	public final String getKeyOfEn()
-	{
+	public final String getKeyOfEn()  {
 		return this.GetValStringByKey(MapAttrAttr.KeyOfEn);
 	}
-	public final void setKeyOfEn(String value)
-	 {
+	public final void setKeyOfEn(String value){
 		this.SetValByKey(MapAttrAttr.KeyOfEn, value);
 	}
 	/** 
 	 Text
 	*/
-	public final String getName()
-	{
+	public final String getName()  {
 		return this.GetValStrByKey(MapAttrAttr.Name);
 	}
-	public final void setName(String value)
-	 {
+	public final void setName(String value){
 		this.SetValByKey(MapAttrAttr.Name, value);
 	}
 
@@ -72,7 +65,8 @@ public class ExtMap extends EntityMyPK
 
 		///#region 构造方法
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.Readonly();
 		if (bp.web.WebUser.getNo().equals("admin") == true)
@@ -85,15 +79,15 @@ public class ExtMap extends EntityMyPK
 	/** 
 	 地图
 	*/
-	public ExtMap() {
+	public ExtMap()
+	{
 	}
 	/** 
 	 地图
 	 
-	 param mypk
+	 @param mypk
 	*/
-	public ExtMap(String mypk)throws Exception
-	{
+	public ExtMap(String mypk) throws Exception {
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
@@ -101,7 +95,8 @@ public class ExtMap extends EntityMyPK
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -113,7 +108,7 @@ public class ExtMap extends EntityMyPK
 		map.AddMyPK();
 		map.AddTBString(MapAttrAttr.FK_MapData, null, "表单ID", true, true, 1, 100, 20);
 		map.AddTBString(MapAttrAttr.KeyOfEn, null, "字段", true, true, 1, 100, 20);
-		map.AddDDLSQL(MapAttrAttr.GroupID, "0", "显示的分组", MapAttrString.getSQLOfGroupAttr(), true);
+		map.AddDDLSQL(MapAttrAttr.GroupID, 0, "显示的分组", MapAttrString.getSQLOfGroupAttr(), true);
 		map.AddDDLSysEnum(MapAttrAttr.LabelColSpan, 1, "文本单元格数量", true, true, "ColSpanAttrString", "@1=跨1个单元格@2=跨2个单元格@3=跨3个单元格@4=跨4个单元格");
 		map.AddTBInt(MapAttrAttr.RowSpan, 1, "行数", true, false);
 		map.AddBoolean(MapAttrAttr.UIIsEnable, true, "是否可编辑？", true, true);
@@ -127,8 +122,8 @@ public class ExtMap extends EntityMyPK
 
 
 			///#region 个性化属性.
-			// map.AddTBString(MapAttrAttr.Tag1, "_blank", "连接目标(_blank,_parent,_self)", true, false, 0, 20, 20);
-			// map.AddTBString(MapAttrAttr.Tag2, null, "URL", true, false, 0, 500, 20, true);
+		// map.AddTBString(MapAttrAttr.Tag1, "_blank", "连接目标(_blank,_parent,_self)", true, false, 0, 20, 20);
+		// map.AddTBString(MapAttrAttr.Tag2, null, "URL", true, false, 0, 500, 20, true);
 
 			///#endregion 个性化属性.
 
@@ -139,16 +134,17 @@ public class ExtMap extends EntityMyPK
 	 删除后清缓存
 	*/
 	@Override
-	protected void afterDelete() throws Exception {
+	protected void afterDelete() throws Exception
+	{
 		//删除相对应的rpt表中的字段
-		if (this.getFKMapData().contains("ND") == true)
+		if (this.getFrmID().contains("ND") == true)
 		{
-			String fk_mapData = this.getFKMapData().substring(0, this.getFKMapData().length() - 2) + "Rpt";
+			String fk_mapData = this.getFrmID().substring(0, this.getFrmID().length() - 2) + "Rpt";
 			String sql = "DELETE FROM Sys_MapAttr WHERE FK_MapData='" + fk_mapData + "' AND KeyOfEn='" + this.getKeyOfEn() + "'";
 			DBAccess.RunSQL(sql);
 		}
 		//调用frmEditAction, 完成其他的操作.
-		CCFormAPI.AfterFrmEditAction(this.getFKMapData());
+		CCFormAPI.AfterFrmEditAction(this.getFrmID());
 		super.afterDelete();
 	}
 

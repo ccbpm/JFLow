@@ -1,6 +1,6 @@
 package bp.ccfast.portal.windowext;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.*;
 import bp.ccfast.*;
 import bp.ccfast.portal.*;
@@ -16,13 +16,15 @@ public class Htmls extends EntitiesNoName
 	/** 
 	 信息块s
 	*/
-	public Htmls()  {
+	public Htmls()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new Html();
 	}
 
@@ -35,7 +37,8 @@ public class Htmls extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<Html> ToJavaList() {
+	public final java.util.List<Html> ToJavaList()
+	{
 		return (java.util.List<Html>)(Object)this;
 	}
 	/** 
@@ -43,7 +46,8 @@ public class Htmls extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<Html> Tolist()  {
+	public final ArrayList<Html> Tolist()
+	{
 		ArrayList<Html> list = new ArrayList<Html>();
 		for (int i = 0; i < this.size(); i++)
 		{

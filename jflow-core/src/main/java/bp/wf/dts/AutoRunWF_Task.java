@@ -1,15 +1,13 @@
 package bp.wf.dts;
 
 import bp.da.*;
-import bp.en.*;
-import bp.port.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
-import bp.tools.DateUtils;
-import bp.web.WebUser;
 import bp.wf.template.*;
+import bp.*;
 import bp.wf.*;
+import java.util.*;
 import java.time.*;
-import java.util.Date;
 
 /** 
  Method 的摘要说明
@@ -19,7 +17,7 @@ public class AutoRunWF_Task extends Method
 	/** 
 	 不带有参数的方法
 	*/
-	public AutoRunWF_Task()throws Exception
+	public AutoRunWF_Task()
 	{
 		this.Title = "自动启动流程，使用扫描WF_Task表的模式.";
 		this.Help = "自动启动任务方式的流程, WF_Task";
@@ -49,8 +47,7 @@ public class AutoRunWF_Task extends Method
 	 @return 返回执行结果
 	*/
 	@Override
-	public Object Do()throws Exception
-	{
+	public Object Do() throws Exception {
 		String info = "";
 		String sql = "SELECT * FROM WF_Task WHERE TaskSta=0 ORDER BY Starter";
 		DataTable dt = null;
@@ -98,22 +95,13 @@ public class AutoRunWF_Task extends Method
 			if (DataType.IsNullOrEmpty(startDT) == false)
 			{
 				/*如果设置了发起时间,就检查当前时间是否与现在的时间匹配.*/
-				if (new Date().compareTo(DateUtils.parse(startDT)) < 0)
+				if (LocalDateTime.now().compareTo(LocalDateTime.parse(startDT)) < 0)
 				{
 					continue;
 				}
 			}
 
 			Flow fl = new Flow(fk_flow);
-			if (fl.getHisFlowAppType() == FlowAppType.PRJ)
-			{
-				if (paras.contains("PrjNo=") == false || paras.contains("PrjName=") == false)
-				{
-					info += "err@工程类的流程，没有PrjNo，PrjName参数:" + fl.getName();
-					DBAccess.RunSQL("UPDATE WF_Task SET TaskSta=2,Msg='" + info + "' WHERE MyPK='" + mypk + "'");
-					continue;
-				}
-			}
 
 			long workID = 0;
 			try
@@ -121,7 +109,7 @@ public class AutoRunWF_Task extends Method
 				String fTable = "ND" + Integer.parseInt(fl.getNo() + "01");
 				MapData md = new MapData(fTable);
 				//sql = "";
-				sql = "SELECT * FROM " + md.getPTable()+ " WHERE MainPK='" + mypk + "' AND WFState=1";
+				sql = "SELECT * FROM " + md.getPTable() + " WHERE MainPK='" + mypk + "' AND WFState=1";
 				try
 				{
 					if (DBAccess.RunSQLReturnTable(sql).Rows.size() != 0)
@@ -135,15 +123,15 @@ public class AutoRunWF_Task extends Method
 					continue;
 				}
 
-				if (!bp.web.WebUser.getNo().equals(starter))
+				if (!Objects.equals(bp.web.WebUser.getNo(), starter))
 				{
 					bp.web.WebUser.Exit();
-					Emp empadmin = new Emp(starter);
+					bp.port.Emp empadmin = new bp.port.Emp(starter);
 					bp.web.WebUser.SignInOfGener(empadmin, "CH", false, false, null, null);
 				}
 
 				//创建workid.
-				workID = bp.wf.Dev2Interface.Node_CreateBlankWork(fk_flow, WebUser.getNo());
+				workID = Dev2Interface.Node_CreateBlankWork(fk_flow, bp.web.WebUser.getNo());
 
 				Node nd = new Node(Integer.parseInt(fk_flow + "01"));
 				Work wk = nd.getHisWork();
@@ -170,16 +158,6 @@ public class AutoRunWF_Task extends Method
 				wk.SetValByKey("MainPK", mypk);
 				wk.Update();
 
-				if (fl.getHisFlowAppType() == FlowAppType.PRJ)
-				{
-					String prjNo = wk.GetValStrByKey("PrjNo");
-					if (DataType.IsNullOrEmpty(prjNo) == true)
-					{
-						info += "err@没有找到工程编号：MainPK" + mypk;
-						DBAccess.RunSQL("UPDATE WF_Task SET TaskSta=2,Msg='" + info + "' WHERE MyPK='" + mypk + "'");
-						continue;
-					}
-				}
 
 				WorkNode wn = new WorkNode(wk, fl.getHisStartNode());
 

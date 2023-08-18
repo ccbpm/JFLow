@@ -1,5 +1,4 @@
 package bp.ccfast;
-
 import bp.en.*;
 
 /** 

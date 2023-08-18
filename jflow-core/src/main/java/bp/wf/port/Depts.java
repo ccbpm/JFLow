@@ -2,12 +2,10 @@ package bp.wf.port;
 
 import bp.en.*;
 import bp.sys.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
-部门集合
+部门集合(即将弃用)
 */
 public class Depts extends EntitiesNoName
 {
@@ -26,9 +24,9 @@ public class Depts extends EntitiesNoName
 		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
 		{
 			QueryObject qo = new QueryObject(this);
-			qo.AddWhere(DeptAttr.No, " = ", bp.web.WebUser.getFK_Dept());
+			qo.AddWhere(DeptAttr.No, " = ", bp.web.WebUser.getDeptNo());
 			qo.addOr();
-			qo.AddWhere(DeptAttr.ParentNo, " = ", bp.web.WebUser.getFK_Dept());
+			qo.AddWhere(DeptAttr.ParentNo, " = ", bp.web.WebUser.getDeptNo());
 			return qo.DoQuery();
 		}
 
@@ -38,13 +36,15 @@ public class Depts extends EntitiesNoName
 	 得到一个新实体
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new Dept();
 	}
 	/** 
 	 create ens
 	*/
-	public Depts()  {
+	public Depts()
+	{
 	}
 
 
@@ -54,7 +54,8 @@ public class Depts extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<Dept> ToJavaList() {
+	public final java.util.List<Dept> ToJavaList()
+	{
 		return (java.util.List<Dept>)(Object)this;
 	}
 	/** 
@@ -62,7 +63,8 @@ public class Depts extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<Dept> Tolist()  {
+	public final ArrayList<Dept> Tolist()
+	{
 		ArrayList<Dept> list = new ArrayList<Dept>();
 		for (int i = 0; i < this.size(); i++)
 		{

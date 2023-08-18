@@ -1,9 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.pub.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -16,12 +13,13 @@ public class FrmBtns extends EntitiesMyPK
 	/** 
 	 按钮s
 	*/
-	public FrmBtns() throws Exception {
+	public FrmBtns()
+	{
 	}
 	/** 
 	 按钮s
 	 
-	 param fk_mapdata s
+	 @param fk_mapdata s
 	*/
 	public FrmBtns(String fk_mapdata) throws Exception {
 		this.Retrieve(FrmBtnAttr.FK_MapData, fk_mapdata);
@@ -30,7 +28,8 @@ public class FrmBtns extends EntitiesMyPK
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FrmBtn();
 	}
 
@@ -43,7 +42,8 @@ public class FrmBtns extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmBtn> ToJavaList() {
+	public final java.util.List<FrmBtn> ToJavaList()
+	{
 		return (java.util.List<FrmBtn>)(Object)this;
 	}
 	/** 
@@ -51,7 +51,8 @@ public class FrmBtns extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmBtn> Tolist()  {
+	public final ArrayList<FrmBtn> Tolist()
+	{
 		ArrayList<FrmBtn> list = new ArrayList<FrmBtn>();
 		for (int i = 0; i < this.size(); i++)
 		{

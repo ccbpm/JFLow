@@ -2,7 +2,6 @@ package bp.sys;
 
 import bp.en.*;
 import bp.sys.xml.*;
-
 import java.util.List;
 
 /** 
@@ -17,7 +16,6 @@ public class ChMulToneXmls extends XmlEns
 	*/
 	public ChMulToneXmls()
 	{
-		super();
 	}
 
 		///#endregion
@@ -28,12 +26,12 @@ public class ChMulToneXmls extends XmlEns
 	 得到它的 Entity 
 	*/
 	@Override
-	public XmlEn getGetNewEntity()
+	public XmlEn getNewEntity()
 	{
 		return new ChMulToneXml();
 	}
 	@Override
-	public String getFile()throws Exception
+	public String getFile()
 	{
 		return bp.difference.SystemConfig.getPathOfData() + "XML/XmlDB.xml";
 	}
@@ -41,15 +39,18 @@ public class ChMulToneXmls extends XmlEns
 	 物理表名
 	*/
 	@Override
-	public String getTableName()  {
+	public String getTableName()
+	{
 		return "PinYin";
 	}
 	@Override
-	public Entities getRefEns()  {
+	public Entities getRefEns()
+	{
 		return null;
 	}
 
 	public final List<ChMulToneXml> ToJavaList() {
 		return (List<ChMulToneXml>)(Object)this;
 	}
+
 }

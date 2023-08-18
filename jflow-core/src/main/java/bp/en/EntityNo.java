@@ -38,7 +38,7 @@ public abstract class EntityNo extends Entity
 	protected boolean beforeInsert() throws Exception {
 
 		Attr attr = this.getEnMap().GetAttrByKey("No");
-		if (attr.getUIVisible() == true && attr.getUIIsReadonly() && this.getEnMap().getIsAutoGenerNo() && this.getNo().length() == 0)
+		if (attr.getUIVisible() == true && attr.getUIIsReadonly() && this.getEnMap().getItIsAutoGenerNo() && this.getNo().length() == 0)
 		{
 			this.setNo(this.getGenerNewNo());
 		}
@@ -59,7 +59,7 @@ public abstract class EntityNo extends Entity
 	 param _no 编号
 	 * @throws Exception 
 	*/
-	public EntityNo(String _no)  {
+	public EntityNo(String _no) throws Exception {
 		if (_no == null || _no.equals(""))
 		{
 			throw new RuntimeException(this.getEnDesc() + "@对表[" + this.getEnDesc() + "]进行查询前必须指定编号。");
@@ -85,7 +85,7 @@ public abstract class EntityNo extends Entity
 		}
 		else
 		{
-			if (this.getEnMap().getIsAutoGenerNo() && this.getEnMap().GetAttrByKey("No").getUIIsReadonly())
+			if (this.getEnMap().getItIsAutoGenerNo() && this.getEnMap().GetAttrByKey("No").getUIIsReadonly())
 			{
 				this.setNo(this.getGenerNewNo());
 			}
@@ -144,5 +144,4 @@ public abstract class EntityNo extends Entity
 		return qo.DoQuery();
 	}
 
-		///
 }

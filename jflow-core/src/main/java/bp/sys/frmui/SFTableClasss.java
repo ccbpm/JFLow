@@ -1,7 +1,7 @@
 package bp.sys.frmui;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
 import bp.*;
 import bp.sys.*;
@@ -17,13 +17,15 @@ public class SFTableClasss extends EntitiesNoName
 	/** 
 	 用户自定义表s
 	*/
-	public SFTableClasss()  {
+	public SFTableClasss()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new SFTableClass();
 	}
 
@@ -36,7 +38,8 @@ public class SFTableClasss extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<SFTableClass> ToJavaList() {
+	public final java.util.List<SFTableClass> ToJavaList()
+	{
 		return (java.util.List<SFTableClass>)(Object)this;
 	}
 	/** 
@@ -44,7 +47,8 @@ public class SFTableClasss extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<SFTableClass> Tolist()  {
+	public final ArrayList<SFTableClass> Tolist()
+	{
 		ArrayList<SFTableClass> list = new ArrayList<SFTableClass>();
 		for (int i = 0; i < this.size(); i++)
 		{

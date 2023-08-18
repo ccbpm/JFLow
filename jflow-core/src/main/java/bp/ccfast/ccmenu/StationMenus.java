@@ -4,22 +4,24 @@ import bp.en.*;
 import java.util.*;
 
 /** 
- 岗位菜单s
+ 角色菜单s
 */
-public class StationMenus extends EntitiesMM
+public class StationMenus extends EntitiesMyPK
 {
 
 		///#region 构造
 	/** 
-	 岗位s
+	 角色s
 	*/
-	public StationMenus()  {
+	public StationMenus()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new StationMenu();
 	}
 
@@ -32,7 +34,8 @@ public class StationMenus extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final java.util.List<StationMenu> ToJavaList()  {
+	public final java.util.List<StationMenu> ToJavaList()
+	{
 		return (java.util.List<StationMenu>)(Object)this;
 	}
 	/** 
@@ -40,7 +43,8 @@ public class StationMenus extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final ArrayList<StationMenu> Tolist()  {
+	public final ArrayList<StationMenu> Tolist()
+	{
 		ArrayList<StationMenu> list = new ArrayList<StationMenu>();
 		for (int i = 0; i < this.size(); i++)
 		{

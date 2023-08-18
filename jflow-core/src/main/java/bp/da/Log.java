@@ -51,7 +51,7 @@ public class Log {
 
 	public static boolean isLoggerDebugEnabled() {
 		
-	    return SystemConfig.getIsDebug();
+	    return SystemConfig.isDebug();
 
 	}
 

@@ -1,8 +1,5 @@
 package bp.sys;
-
 import bp.en.*;
-
-
 /** 
  实体版本号属性
 */
@@ -12,6 +9,10 @@ public class EnVerAttr extends EntityMyPKAttr
 	  实体类
 	*/
 	public static final String FrmID = "FrmID";
+	/** 
+	 关联主键
+	*/
+	public static final String RefPK = "RefPK";
 	/** 
 	  实体类名称
 	*/
@@ -42,5 +43,8 @@ public class EnVerAttr extends EntityMyPKAttr
 	public static final String RDT = "RDT";
 
 	public static final String EnPKValue = "EnPKValue";
-
+	/** 
+	 DBJSON
+	*/
+	public static final String DBJSON = "DBJSON";
 }

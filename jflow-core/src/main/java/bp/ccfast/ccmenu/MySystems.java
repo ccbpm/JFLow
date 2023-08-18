@@ -2,13 +2,14 @@ package bp.ccfast.ccmenu;
 
 import bp.ccbill.template.Collection;
 import bp.ccbill.template.Method;
-import bp.difference.SystemConfig;
 import bp.sys.*;
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.ccbill.template.*;
 import bp.wf.*;
 import bp.wf.template.*;
+import bp.*;
+import bp.ccfast.*;
 import java.util.*;
 import java.io.*;
 
@@ -22,20 +23,29 @@ public class MySystems extends EntitiesNoName
 	/** 
 	 系统s
 	*/
-	public MySystems()  {
+	public MySystems()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new MySystem();
 	}
 	@Override
 	public int RetrieveAll() throws Exception {
 		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
 		{
-			int i = super.RetrieveAll("Idx");
+
+			int i = this.Retrieve(MySystemAttr.IsEnable, 1, "Idx");
+			if (i != 0)
+			{
+				return i;
+			}
+
+			i = this.RetrieveAll("Idx");
 			if (i != 0)
 			{
 				return i;
@@ -55,7 +65,7 @@ public class MySystems extends EntitiesNoName
 				en.setNo(dr.getValue("No").toString());
 				en.setName(dr.getValue("Name").toString());
 				en.setIcon(dr.getValue("Icon").toString());
-				en.setEnable(true);
+				en.setItIsEnable(true);
 				en.Insert();
 			}
 
@@ -79,7 +89,7 @@ public class MySystems extends EntitiesNoName
 				Menu en = new Menu();
 				en.setNo(dr.getValue("No").toString());
 				en.setName(dr.getValue("Name").toString());
-				//   en.SystemNo = dr["SystemNo"].ToString();
+				//   en.SystemNo = dr["SystemNo").toString();
 				en.setModuleNo(dr.getValue("ModuleNo").toString());
 				en.setUrlExt(dr.getValue("Url").toString());
 				en.setIcon(dr.getValue("Icon").toString());
@@ -92,8 +102,8 @@ public class MySystems extends EntitiesNoName
 			return RetrieveAll();
 		}
 
-		////集团模式下的岗位体系: @0=每套组织都有自己的岗位体系@1=所有的组织共享一套岗则体系.
-		//if (bp.difference.SystemConfig.GroupStationModel == 1)
+		////集团模式下的角色体系: @0=每套组织都有自己的角色体系@1=所有的组织共享一套岗则体系.
+		//if (bp.difference.SystemConfig.getGroupStationModel() == 1)
 		//    return base.RetrieveAll("Idx");
 
 		//按照orgNo查询.
@@ -108,9 +118,8 @@ public class MySystems extends EntitiesNoName
 	 @return 
 	*/
 	public final String ImpSystem_Init() throws Exception {
-		String path = SystemConfig.getPathOfWebApp() + "/CCFast/SystemTemplete/";
-		bp.da.Log.DefaultLogWriteLine(LogType.Info, "导入地址:" + path);
-		String[] strs=bp.tools.BaseFileUtils.getFiles (path);
+		String path = bp.difference.SystemConfig.getPathOfWebApp() + "CCFast/SystemTemplete/";
+		String[] strs = bp.tools.BaseFileUtils.getFiles(path);
 
 		DataTable dt = new DataTable();
 		dt.Columns.Add("No");
@@ -120,13 +129,13 @@ public class MySystems extends EntitiesNoName
 		{
 			File en = new File(str);
 			DataRow dc = dt.NewRow();
-			dc.setValue(0, en.getName());
-			dc.setValue(1, en.getName());
+			dc.setValue(String.valueOf(0), en.getName());
+			dc.setValue(String.valueOf(1), en.getName());
 			dt.Rows.add(dc);
 		}
 		return bp.tools.Json.ToJson(dt);
 	}
-	public final String DealGUIDNo(String no)
+	public final String DealGUIDNo(String no) throws Exception
 	{
 		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
 		{
@@ -143,7 +152,7 @@ public class MySystems extends EntitiesNoName
 	/** 
 	 导入系统
 	 
-	 param name
+	 @param name
 	 @return 
 	*/
 	public final String ImpSystem_Imp(String name) throws Exception {
@@ -264,8 +273,7 @@ public class MySystems extends EntitiesNoName
 
 		return "执行成功.";
 	}
-	private void ImpSystem_Imp_DictTable(Menu en, String path) throws Exception 
-	{
+	private void ImpSystem_Imp_DictTable(Menu en, String path) throws Exception {
 		String frmID = en.getUrlExt();
 
 		//导入表单.
@@ -279,15 +287,15 @@ public class MySystems extends EntitiesNoName
 		Row row = sFTable.getRow();
 		row.LoadDataTable(dt, dt.Rows.get(0));
 		sFTable.DirectInsert();
+
 	}
-	
 	/** 
 	 导入实体
 	 
-	 param en
-	 param path
+	 @param en
+	 @param path
 	*/
-	private void ImpSystem_Imp_Dict(Menu en, String path, MySystem system, Module module, String oldOrgNo) throws Exception {
+	private void ImpSystem_Imp_Dict(Menu en, String path, MySystem system, Module module_Keyword, String oldOrgNo) throws Exception {
 		String frmID = en.getUrlExt();
 
 		//导入表单.
@@ -307,7 +315,7 @@ public class MySystems extends EntitiesNoName
 
 		if (DataType.IsNullOrEmpty(oldOrgNo) == false)
 		{
-			md.setPTable ( md.getPTable().replace(oldOrgNo, bp.web.WebUser.getOrgNo()));
+			md.setPTable(md.getPTable().replace(oldOrgNo, bp.web.WebUser.getOrgNo()));
 		}
 
 		md.Update();
@@ -320,21 +328,6 @@ public class MySystems extends EntitiesNoName
 		DataTable dt = ds.GetTableByName("GroupMethods");
 		for (DataRow dr : dt.Rows)
 		{
-			if(dr.getValue("Name").toString().equals("相关操作")){
-				GroupMethods gms = new GroupMethods();
-				int i= gms.Retrieve(GroupMethodAttr.No,dr.getValue("No").toString());
-				if (i == 0){
-					GroupMethod gm = new GroupMethod();
-					gm.getRow().LoadDataTable(dt, dr);
-					gm.setOrgNo(bp.web.WebUser.getOrgNo());
-					gm.setFrmID(realFrmID);
-					gm.setNo(dr.getValue("No").toString());
-					gm.DirectInsert();
-				}
-				continue;
-			}
-
-
 			GroupMethod gm = new GroupMethod();
 			gm.getRow().LoadDataTable(dt, dr);
 			gm.setOrgNo(bp.web.WebUser.getOrgNo());
@@ -344,14 +337,17 @@ public class MySystems extends EntitiesNoName
 		}
 
 		dt = ds.GetTableByName("Methods");
-		if(dt!= null) {
-			for (DataRow dr : dt.Rows) {
+		if (dt != null)
+		{
+			for (DataRow dr : dt.Rows)
+			{
 				Method myen = new Method();
 				myen.getRow().LoadDataTable(dt, dr);
 
 				myen.setFrmID(realFrmID);
 
-				switch (myen.getMethodModel()) {
+				switch (myen.getMethodModel())
+				{
 					case "FlowEtc": //其他业务流程.
 						myen.setFlowNo(ImpSystem_Imp_Dict_FlowEtc(myen.getFlowNo(), myen.getName(), path, system));
 						break;
@@ -363,15 +359,16 @@ public class MySystems extends EntitiesNoName
 					default:
 						break;
 				}
-				//    en.OrgNo = bp.web.WebUser.getOrgNo();
+				//    en.OrgNo = Web.WebUser.getOrgNo();
 				myen.setNo(DBAccess.GenerGUID(0, null, null));
 				myen.DirectInsert();
 			}
 		}
+
 		//导入实体集合.
 		file = path + "/" + frmID + "_Collections.xml";
 		ds.readXml(file);
-		dt = ds.GetTableByName("Collections");
+		dt = ds.GetTableByName("GroupMethods");
 		for (DataRow dr : dt.Rows)
 		{
 			Collection myen = new Collection();
@@ -396,9 +393,8 @@ public class MySystems extends EntitiesNoName
 	}
 	/** 
 	 导入流程.
-	 
-	 param tempFlowNo
-	 param tempFlowName
+	 @param tempFlowNo
+	 @param path
 	 @return 
 	*/
 	private String ImpSystem_Imp_Dict_FlowEtc(String tempFlowNo, String tempFlowName, String path, MySystem mysystem) throws Exception {
@@ -411,17 +407,17 @@ public class MySystems extends EntitiesNoName
 
 		//执行导入
 		Flow flow = TemplateGlo.LoadFlowTemplate(mysystem.getNo(), path, model, null);
-		flow.setFK_FlowSort(mysystem.getNo());
+		flow.setFlowSortNo(mysystem.getNo());
 		flow.DoCheck(); //要执行一次检查.
 
 		return flow.getNo();
 
 
 		//Hashtable ht = new Hashtable();
-		//ht.Add("FK_Flow", flow.No); //流程编号.
+		//ht.Add("FK_Flow", flow.getNo()); //流程编号.
 		//ht.Add("FlowName", flow.Name); //名字.
-		//ht.Add("FK_FlowSort", flow.FK_FlowSort); //类别.
-		//ht.Add("Msg", "导入成功,流程编号为:" + flow.No + "名称为:" + flow.Name);
+		//ht.Add("FK_FlowSort", flow.FlowSortNo); //类别.
+		//ht.Add("Msg", "导入成功,流程编号为:" + flow.getNo() + "名称为:" + flow.Name);
 		//return BP.Tools.Json.ToJson(ht);
 	}
 
@@ -432,7 +428,8 @@ public class MySystems extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<MySystem> ToJavaList() {
+	public final java.util.List<MySystem> ToJavaList()
+	{
 		return (java.util.List<MySystem>)(Object)this;
 	}
 	/** 
@@ -440,7 +437,8 @@ public class MySystems extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<MySystem> Tolist()  {
+	public final ArrayList<MySystem> Tolist()
+	{
 		ArrayList<MySystem> list = new ArrayList<MySystem>();
 		for (int i = 0; i < this.size(); i++)
 		{

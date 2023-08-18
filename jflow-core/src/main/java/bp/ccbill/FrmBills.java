@@ -1,7 +1,7 @@
 package bp.ccbill;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.wf.*;
 import bp.wf.template.*;
 import bp.sys.*;
@@ -19,13 +19,15 @@ public class FrmBills extends EntitiesNoName
 	/** 
 	 单据属性s
 	*/
-	public FrmBills()  {
+	public FrmBills()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		return new FrmBill();
 	}
 
@@ -38,15 +40,17 @@ public class FrmBills extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmBill> ToJavaList() {
-		return (List<FrmBill>)(Object)this;
+	public final java.util.List<FrmBill> ToJavaList()
+	{
+		return (java.util.List<FrmBill>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmBill> Tolist()  {
+	public final ArrayList<FrmBill> Tolist()
+	{
 		ArrayList<FrmBill> list = new ArrayList<FrmBill>();
 		for (int i = 0; i < this.size(); i++)
 		{

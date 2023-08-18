@@ -1,5 +1,7 @@
 package bp.wf.template;
 
+import bp.*;
+import bp.wf.*;
 
 /** 
  Btn属性
@@ -118,7 +120,6 @@ public class BtnAttr
 	 抄送规则
 	*/
 	public static final String CCRole = "CCRole";
-
 	/** 
 	 二维码
 	*/
@@ -127,7 +128,6 @@ public class BtnAttr
 	 二维码规则
 	*/
 	public static final String QRCodeRole = "QRCodeRole";
-
 	/** 
 	 删除
 	*/
@@ -199,7 +199,6 @@ public class BtnAttr
 	 加签标签
 	*/
 	public static final String AskforEnable = "AskforEnable";
-
 	/** 
 	 会签标签
 	*/
@@ -211,7 +210,7 @@ public class BtnAttr
 	/** 
 	 协作模式被加签的人处理规则
 	*/
-   // public const string IsCanAddHuiQianer = "IsCanAddHuiQianer";
+   // public const String IsCanAddHuiQianer = "IsCanAddHuiQianer";
 	/** 
 	 会签组长模式
 	*/
@@ -224,7 +223,6 @@ public class BtnAttr
 	 是否启用
 	*/
 	public static final String AddLeaderEnable = "AddLeaderEnable";
-
 	/** 
 	 流转自定义 TransferCustomLab
 	*/
@@ -233,7 +231,6 @@ public class BtnAttr
 	 是否启用-流转自定义
 	*/
 	public static final String TCEnable = "TCEnable";
-
 	/** 
 	 公文
 	*/
@@ -258,7 +255,6 @@ public class BtnAttr
 	 是否启用-重要性
 	*/
 	public static final String PRIEnable = "PRIEnable";
-
 	/** 
 	 关注 
 	*/
@@ -301,9 +297,6 @@ public class BtnAttr
 	public static final String PrintPDFEnable = "PrintPDFEnable";
 	public static final String PrintPDFMyView = "PrintPDFMyView";
 	public static final String PrintPDFMyCC = "PrintPDFMyCC";
-
-
-
 	/** 
 	 打印pdf规则
 	*/
@@ -322,8 +315,6 @@ public class BtnAttr
 	public static final String PrintZipEnable = "PrintZipEnable";
 	public static final String PrintZipMyView = "PrintZipMyView";
 	public static final String PrintZipMyCC = "PrintZipMyCC";
-
-
 	/** 
 	 分配
 	*/
@@ -340,7 +331,6 @@ public class BtnAttr
 	 是否启用选择接受人
 	*/
 	public static final String SelectAccepterEnable = "SelectAccepterEnable";
-
 	/** 
 	 备注
 	*/
@@ -349,7 +339,6 @@ public class BtnAttr
 	*/
 	//备注是否可用
 	public static final String NoteEnable = "NoteEnable";
-
 	/** 
 	 帮助按钮
 	*/
@@ -366,9 +355,6 @@ public class BtnAttr
 	 获得规则
 	*/
 	public static final String NextRole = "NextRole";
-
-
-		///#region 公文2019
 	/** 
 	 公文标签
 	*/
@@ -385,21 +371,12 @@ public class BtnAttr
 	 显示位置
 	*/
 	public static final String OfficeBtnLocal = "OfficeBtnLocal";
-
-		///#endregion 公文2019
-
-
-
-		///#region 公文属性
 	public static final String DocLeftWord = "DocLeftWord";
 	public static final String DocRightWord = "DocRightWord";
 	/** 
 	 工作方式
 	*/
 	public static final String WebOfficeFrmModel = "WebOfficeFrmModel";
-
-		///#endregion 公文属性
-
 	/** 
 	 列表
 	*/
@@ -437,16 +414,23 @@ public class BtnAttr
 	*/
 	public static final String PressLab = "PressLab";
 	public static final String PressEnable = "PressEnable";
-	/**
-	 * 回滚
-	 */
+	/** 
+	 回滚
+	*/
 	public static final String RollbackLab = "RollbackLab";
 	public static final String RollbackEnable = "RollbackEnable";
 
-	/**
-	 * 延期发送
-	 */
+	/** 
+	 切换组织标签
+	*/
+	public static final String ChangeDeptLab = "ChangeDeptLab";
+	/** 
+	 是否启用切换组织
+	*/
+	public static final String ChangeDeptEnable = "ChangeDeptEnable";
+	/** 
+	 延期发送
+	*/
 	public static final String DelayedSendLab = "DelayedSendLab";
 	public static final String DelayedSendEnable = "DelayedSendEnable";
-
 }

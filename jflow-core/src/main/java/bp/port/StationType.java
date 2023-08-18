@@ -1,12 +1,13 @@
 package bp.port;
 
-import bp.da.DataType;
-import bp.en.*;
+import bp.da.*;
+import bp.en.*; import bp.en.Map;
+import bp.en.Map;
 import bp.sys.*;
 import bp.difference.*;
 
 /** 
-  岗位类型
+  角色类型
 */
 public class StationType extends EntityNoName
 {
@@ -15,25 +16,20 @@ public class StationType extends EntityNoName
 	/** 
 	 组织编码
 	*/
-	public final String getOrgNo()
-	{
+	public final String getOrgNo()  {
 		return this.GetValStrByKey(StationAttr.OrgNo);
 	}
-	public final void setOrgNo(String value)
-	 {
+	public final void setOrgNo(String value){
 		this.SetValByKey(StationAttr.OrgNo, value);
 	}
-	public final String getFK_StationType()
-	{
+	public final String getFKStationType()  {
 		return this.GetValStrByKey(StationAttr.FK_StationType);
 	}
-	public final void setFK_StationType(String value)
-	 {
+	public final void setFKStationType(String value){
 		this.SetValByKey(StationAttr.FK_StationType, value);
 	}
 
-	public final String getFK_StationTypeText()
-	{
+	public final String getFKStationTypeText()  {
 		return this.GetValRefTextByKey(StationAttr.FK_StationType);
 	}
 
@@ -43,7 +39,8 @@ public class StationType extends EntityNoName
 
 		///#region 实现基本的方方法
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		return uac;
@@ -54,32 +51,32 @@ public class StationType extends EntityNoName
 
 		///#region 构造方法
 	/** 
-	 岗位类型
+	 角色类型
 	*/
-	public StationType() {
+	public StationType()
+	{
 	}
 	/** 
-	 岗位类型
+	 角色类型
 	 
-	 param _No
+	 @param _No
 	*/
-	public StationType(String _No)
-	{
+	public StationType(String _No) throws Exception {
 		super(_No);
 	}
 
 		///#endregion
 
-	/** 
-	 岗位类型Map
-	*/
+	/**
+	 * 角色类型Map
+	 */
 	@Override
-	public bp.en.Map getEnMap()  {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
 		}
-		Map map = new Map("Port_StationType", "岗位类型");
+		Map map = new Map("Port_StationType", "角色类型");
 		map.setCodeStruct("2");
 
 		map.AddTBStringPK(StationTypeAttr.No, null, "编号", true, true, 1, 40, 40);
@@ -88,16 +85,23 @@ public class StationType extends EntityNoName
 
 		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 		{
-			map.AddTBString(StationAttr.OrgNo, null, "隶属组织", true, true, 0, 50, 250);
+			map.AddTBString(StationAttr.OrgNo, null, "隶属组织", false, false, 0, 50, 250);
 			map.AddHidden(StationAttr.OrgNo, "=", "@WebUser.OrgNo"); //加隐藏条件.
 		}
 
 		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
 		{
 			map.AddTBString(StationAttr.OrgNo, null, "隶属组织", true, true, 0, 50, 250);
+
 			if (SystemConfig.getGroupStationModel() == 0)
 			{
 				map.AddHidden(StationAttr.OrgNo, "=", "@WebUser.OrgNo"); //每个组织都有自己的岗责体系的时候. 加隐藏条件.
+			}
+			if (SystemConfig.getGroupStationModel() == 2)
+			{
+				map.AddTBString(StationAttr.FK_Dept, null, "隶属部门", false, false, 0, 50, 250);
+				map.AddHidden(StationAttr.FK_Dept, "=", "@WebUser.FK_Dept");
+
 			}
 		}
 
@@ -105,16 +109,23 @@ public class StationType extends EntityNoName
 		return this.get_enMap();
 	}
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception {
+	protected boolean beforeUpdateInsertAction() throws Exception
+	{
 		if (DataType.IsNullOrEmpty(this.getName()) == true)
-			throw new RuntimeException("请输入岗位类型名称");
-		if (DataType.IsNullOrEmpty(this.getOrgNo()) == true){
-			if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single) {
-				this.setOrgNo(bp.web.WebUser.getOrgNo());
-			}
-			if (bp.difference.SystemConfig.getGroupStationModel() == 2)
-				this.SetValByKey(StationAttr.FK_Dept, bp.web.WebUser.getFK_Dept());
+		{
+			throw new RuntimeException("请输入名称");
 		}
+
+		if (DataType.IsNullOrEmpty(this.getOrgNo()) == true && SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
+		{
+			this.setOrgNo(bp.web.WebUser.getOrgNo());
+		}
+
+		if (SystemConfig.getGroupStationModel() == 2)
+		{
+			this.SetValByKey(StationAttr.FK_Dept, bp.web.WebUser.getDeptNo());
+		}
+
 		return super.beforeUpdateInsertAction();
 	}
 

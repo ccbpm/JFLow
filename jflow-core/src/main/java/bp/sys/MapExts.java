@@ -1,10 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
-import bp.web.*;
 import bp.en.*;
-import bp.difference.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -17,12 +13,13 @@ public class MapExts extends Entities
 	/** 
 	 扩展s
 	*/
-	public MapExts()  {
+	public MapExts()
+	{
 	}
 	/** 
 	 扩展s
 	 
-	 param fk_mapdata s
+	 @param fk_mapdata s
 	*/
 	public MapExts(String fk_mapdata) throws Exception {
 		this.Retrieve(MapExtAttr.FK_MapData, fk_mapdata, MapExtAttr.PRI);
@@ -31,7 +28,8 @@ public class MapExts extends Entities
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		return new MapExt();
 	}
 
@@ -44,7 +42,8 @@ public class MapExts extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.List<MapExt> ToJavaList() {
+	public final java.util.List<MapExt> ToJavaList()
+	{
 		return (java.util.List<MapExt>)(Object)this;
 	}
 	/** 
@@ -52,7 +51,8 @@ public class MapExts extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<MapExt> Tolist()  {
+	public final ArrayList<MapExt> Tolist()
+	{
 		ArrayList<MapExt> list = new ArrayList<MapExt>();
 		for (int i = 0; i < this.size(); i++)
 		{

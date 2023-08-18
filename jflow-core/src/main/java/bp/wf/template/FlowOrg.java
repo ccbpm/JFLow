@@ -1,7 +1,6 @@
 package bp.wf.template;
 
-
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 
 /** 
  流程对应组织
@@ -13,27 +12,22 @@ public class FlowOrg extends EntityMM
 	/** 
 	流程
 	*/
-	public final String getFlowNo() throws Exception
-	{
+	public final String getFlowNo()  {
 		return this.GetValStringByKey(FlowOrgAttr.FlowNo);
 	}
-	public final void setFlowNo(String value)  throws Exception
-	 {
+	public final void setFlowNo(String value){
 		this.SetValByKey(FlowOrgAttr.FlowNo, value);
 	}
 	/** 
 	 组织
 	*/
-	public final String getOrgNo() throws Exception
-	{
+	public final String getOrgNo()  {
 		return this.GetValStringByKey(FlowOrgAttr.OrgNo);
 	}
-	public final void setOrgNo(String value)  throws Exception
-	 {
+	public final void setOrgNo(String value){
 		this.SetValByKey(FlowOrgAttr.OrgNo, value);
 	}
-	public final String getOrgNoT() throws Exception
-	{
+	public final String getOrgNoT()  {
 		return this.GetValRefTextByKey(FlowOrgAttr.OrgNo);
 	}
 
@@ -44,13 +38,14 @@ public class FlowOrg extends EntityMM
 	/** 
 	 流程对应组织
 	*/
-	public FlowOrg()  {
+	public FlowOrg()
+	{
 	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap()  {
+	public Map getEnMap()  {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();

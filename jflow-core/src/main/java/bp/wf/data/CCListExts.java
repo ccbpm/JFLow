@@ -15,7 +15,7 @@ public class CCListExts extends EntitiesMyPK
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new CCListExt();
 	}
@@ -36,7 +36,7 @@ public class CCListExts extends EntitiesMyPK
 	*/
 	public CCListExts(int fk_node, long workid, long fid) throws Exception {
 		QueryObject qo = new QueryObject(this);
-		qo.AddWhere(CCListAttr.FK_Node, fk_node);
+		qo.AddWhere(CCListAttr.NodeIDWork, fk_node);
 		qo.addAnd();
 		if (fid != 0)
 		{

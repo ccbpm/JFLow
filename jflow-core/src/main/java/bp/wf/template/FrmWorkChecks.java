@@ -1,11 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.sys.*;
 import bp.en.*;
-import bp.wf.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -18,13 +13,15 @@ public class FrmWorkChecks extends Entities
 	/** 
 	 审核组件s
 	*/
-	public FrmWorkChecks() throws Exception {
+	public FrmWorkChecks()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		return new FrmWorkCheck();
 	}
 
@@ -37,7 +34,8 @@ public class FrmWorkChecks extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmWorkCheck> ToJavaList() {
+	public final java.util.List<FrmWorkCheck> ToJavaList()
+	{
 		return (java.util.List<FrmWorkCheck>)(Object)this;
 	}
 	/** 
@@ -45,7 +43,8 @@ public class FrmWorkChecks extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmWorkCheck> Tolist()  {
+	public final ArrayList<FrmWorkCheck> Tolist()
+	{
 		ArrayList<FrmWorkCheck> list = new ArrayList<FrmWorkCheck>();
 		for (int i = 0; i < this.size(); i++)
 		{

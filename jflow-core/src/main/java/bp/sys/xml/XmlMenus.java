@@ -1,6 +1,5 @@
 package bp.sys.xml;
 
-
 /** 
  XmlMenus 的摘要说明。
 */
@@ -11,7 +10,7 @@ public abstract class XmlMenus extends XmlEns
 	/** 
 	 构造
 	*/
-	public XmlMenus()throws Exception
+	public XmlMenus()
 	{
 	}
 

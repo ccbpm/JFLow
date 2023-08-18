@@ -1,7 +1,6 @@
 package bp.sys.xml;
-
+;
 import bp.en.*;
-
 /** 
  
 */
@@ -12,7 +11,7 @@ public class ActiveAttrs extends XmlEns
 	/** 
 	 考核过错行为的数据元素
 	*/
-	public ActiveAttrs()throws Exception
+	public ActiveAttrs()
 	{
 	}
 
@@ -24,24 +23,25 @@ public class ActiveAttrs extends XmlEns
 	 得到它的 Entity 
 	*/
 	@Override
-	public XmlEn getGetNewEntity()
+	public XmlEn getNewEntity()
 	{
 		return new ActiveAttr();
 	}
 	@Override
-	public String getFile()throws Exception
-	{
+	public String getFile() {
 		return bp.difference.SystemConfig.getPathOfXML() + "Ens/ActiveAttr.xml";
 	}
 	/** 
 	 物理表名
 	*/
 	@Override
-	public String getTableName()  {
+	public String getTableName()
+	{
 		return "Item";
 	}
 	@Override
-	public Entities getRefEns()  {
+	public Entities getRefEns()
+	{
 		return null;
 	}
 

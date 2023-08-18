@@ -17,11 +17,13 @@ public enum FlowChartType
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
 	public static FlowChartType forValue(int value)
-	{return values()[value];
+	{
+		return values()[value];
 	}
 }

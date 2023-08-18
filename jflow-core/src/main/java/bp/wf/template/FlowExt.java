@@ -1,26 +1,20 @@
 package bp.wf.template;
 
 import bp.da.*;
-import bp.en.*;
-import bp.port.Dept;
-import bp.port.Emp;
-import bp.sys.*;
+import bp.port.*;
+import bp.en.*; import bp.en.Map;
 import bp.tools.DateUtils;
-import bp.web.WebUser;
+import bp.web.*;
+import bp.sys.*;
+import bp.wf.GERpt;
 import bp.wf.Glo;
+import bp.wf.data.*;
+import bp.wf.template.frm.*;
+import bp.difference.*;
+import bp.*;
 import bp.wf.*;
-import bp.wf.template.frm.MapDataExt;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.time.*;
 
 /** 
  流程
@@ -30,59 +24,40 @@ public class FlowExt extends EntityNoName
 
 		///#region 属性.
 	/** 
-	 存储表
-	*/
-	public final String getPTable() throws Exception
-	{
-		return this.GetValStringByKey(FlowAttr.PTable);
-	}
-	public final void setPTable(String value)  throws Exception
-	 {
-		this.SetValByKey(FlowAttr.PTable, value);
-	}
-	/** 
 	 流程类别
 	*/
-	public final String getFK_FlowSort() throws Exception
-	{
+	public final String getFlowSortNo()  {
 		return this.GetValStringByKey(FlowAttr.FK_FlowSort);
 	}
-	public final void setFK_FlowSort(String value)  throws Exception
-	 {
+	public final void setFlowSortNo(String value){
 		this.SetValByKey(FlowAttr.FK_FlowSort, value);
 	}
 	/** 
 	 系统类别（第2级流程树节点编号）
 	*/
-	public final String getSysType() throws Exception
-	{
+	public final String getSysType()  {
 		return this.GetValStringByKey(FlowAttr.SysType);
 	}
-	public final void setSysType(String value)  throws Exception
-	 {
+	public final void setSysType(String value){
 		this.SetValByKey(FlowAttr.SysType, value);
 	}
 
 	/** 
 	 是否可以独立启动
 	*/
-	public final boolean isCanStart() throws Exception
-	{
+	public final boolean getItIsCanStart()  {
 		return this.GetValBooleanByKey(FlowAttr.IsCanStart);
 	}
-	public final void setCanStart(boolean value)  throws Exception
-	 {
+	public final void setItIsCanStart(boolean value){
 		this.SetValByKey(FlowAttr.IsCanStart, value);
 	}
 	/** 
 	 流程事件实体
 	*/
-	public final String getFlowEventEntity() throws Exception
-	{
+	public final String getFlowEventEntity()  {
 		return this.GetValStringByKey(FlowAttr.FlowEventEntity);
 	}
-	public final void setFlowEventEntity(String value)  throws Exception
-	 {
+	public final void setFlowEventEntity(String value){
 		this.SetValByKey(FlowAttr.FlowEventEntity, value);
 	}
 	/** 
@@ -96,182 +71,23 @@ public class FlowExt extends EntityNoName
 		}
 		return str;
 	}
-	public final void setFlowMark(String value)  throws Exception
-	 {
+	public final void setFlowMark(String value){
 		this.SetValByKey(FlowAttr.FlowMark, value);
 	}
-
-
-		///#region   前置导航
-	/** 
-	 前置导航方式
-	*/
-	public final StartGuideWay getStartGuideWay() throws Exception {
-		return StartGuideWay.forValue(this.GetValIntByKey(FlowAttr.StartGuideWay));
-
-	}
-	public final void setStartGuideWay(StartGuideWay value)  throws Exception
-	 {
-		this.SetValByKey(FlowAttr.StartGuideWay, value.getValue());
-	}
-
-	/** 
-	 前置导航参数1
-	*/
-
-	public final String getStartGuidePara1() throws Exception
-	{
-		return this.GetValStringByKey(FlowAttr.StartGuidePara1);
-	}
-	public final void setStartGuidePara1(String value)  throws Exception
-	 {
-		this.SetValByKey(FlowAttr.StartGuidePara1, value);
-	}
-
-	/** 
-	 前置导航参数2
-	*/
-
-	public final String getStartGuidePara2() throws Exception
-	{
-		return this.GetValStringByKey(FlowAttr.StartGuidePara2);
-	}
-	public final void setStartGuidePara2(String value)  throws Exception
-	 {
-		this.SetValByKey(FlowAttr.StartGuidePara2, value);
-	}
-
-	/** 
-	 前置导航参数3
-	*/
-
-	public final String getStartGuidePara3() throws Exception
-	{
-		return this.GetValStringByKey(FlowAttr.StartGuidePara3);
-	}
-	public final void setStartGuidePara3(String value)  throws Exception
-	 {
-		this.SetValByKey(FlowAttr.StartGuidePara3, value);
-	}
-
-
-	/** 
-	 启动方式
-	*/
-	public final FlowRunWay getFlowRunWay() throws Exception {
-		return FlowRunWay.forValue(this.GetValIntByKey(FlowAttr.FlowRunWay));
-
-	}
-	public final void setFlowRunWay(FlowRunWay value)  throws Exception
-	 {
-		this.SetValByKey(FlowAttr.FlowRunWay, value.getValue());
-	}
-
-
-	/** 
-	 运行内容
-	*/
-
-	public final String getRunObj() throws Exception
-	{
-		return this.GetValStringByKey(FlowAttr.RunObj);
-	}
-	public final void setRunObj(String value)  throws Exception
-	 {
-		this.SetValByKey(FlowAttr.RunObj, value);
-	}
-
-
-	/** 
-	 是否启用开始节点数据重置按钮
-	*/
-
-	public final boolean isResetData() throws Exception
-	{
-		return this.GetValBooleanByKey(FlowAttr.IsResetData);
-	}
-	public final void setResetData(boolean value)  throws Exception
-	 {
-		this.SetValByKey(FlowAttr.IsResetData, value);
-	}
-
-	/** 
-	 是否自动装载上一笔数据
-	*/
-	public final boolean isLoadPriData() throws Exception
-	{
-		return this.GetValBooleanByKey(FlowAttr.IsLoadPriData);
-	}
-	public final void setLoadPriData(boolean value)  throws Exception
-	 {
-		this.SetValByKey(FlowAttr.IsLoadPriData, value);
-	}
-	/** 
-	 是否可以在手机里启用
-	*/
-	public final boolean isStartInMobile() throws Exception
-	{
+	public final boolean getItIsStartInMobile()  {
 		return this.GetValBooleanByKey(FlowAttr.IsStartInMobile);
 	}
-	public final void setStartInMobile(boolean value)  throws Exception
-	 {
+	public final void setItIsStartInMobile(boolean value){
 		this.SetValByKey(FlowAttr.IsStartInMobile, value);
 	}
 
-		///#endregion
-	/** 
-	 设计者编号
-	*/
-	public final String getDesignerNo() throws Exception
-	{
-		return this.GetValStringByKey(FlowAttr.DesignerNo);
-	}
-	public final void setDesignerNo(String value)  throws Exception
-	 {
-		this.SetValByKey(FlowAttr.DesignerNo, value);
-	}
-	/** 
-	 设计者名称
-	*/
-	public final String getDesignerName() throws Exception
-	{
-		return this.GetValStringByKey(FlowAttr.DesignerName);
-	}
-	public final void setDesignerName(String value)  throws Exception
-	 {
-		this.SetValByKey(FlowAttr.DesignerName, value);
-	}
-	/** 
-	 设计时间
-	*/
-	public final String getDesignTime() throws Exception
-	{
-		return this.GetValStringByKey(FlowAttr.DesignTime);
-	}
-	public final void setDesignTime(String value)  throws Exception
-	 {
-		this.SetValByKey(FlowAttr.DesignTime, value);
-	}
-	/** 
-	 编号生成格式
-	*/
-	public final String getBillNoFormat() throws Exception
-	{
-		return this.GetValStringByKey(FlowAttr.BillNoFormat);
-	}
-	public final void setBillNoFormat(String value)  throws Exception
-	 {
-		this.SetValByKey(FlowAttr.BillNoFormat, value);
-	}
 	/** 
 	 测试人员
 	*/
-	public final String getTester() throws Exception
-	{
+	public final String getTester()  {
 		return this.GetValStringByKey(FlowAttr.Tester);
 	}
-	public final void setTester(String value)  throws Exception
-	 {
+	public final void setTester(String value){
 		this.SetValByKey(FlowAttr.Tester, value);
 	}
 
@@ -283,7 +99,8 @@ public class FlowExt extends EntityNoName
 	 UI界面上的访问控制
 	*/
 	@Override
-	public UAC getHisUAC() {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 
 		if (WebUser.getIsAdmin() == false)
@@ -291,8 +108,8 @@ public class FlowExt extends EntityNoName
 			throw new RuntimeException("err@管理员登录用户信息丢失,当前会话[" + WebUser.getNo() + "," + WebUser.getName() + "]");
 		}
 		uac.IsUpdate = true;
-			//uac.OpenForAdmin();  //zsy修改 2020.5.15
-			//if (bp.web.WebUser.getNo().Equals("admin")==true || this.DesignerNo == WebUser.getNo())
+		//uac.OpenForAdmin();  //zsy修改 2020.5.15
+		//if (bp.web.WebUser.getNo().equals("admin")==true || this.DesignerNo == WebUser.getNo())
 		uac.IsDelete = false;
 		uac.IsInsert = false;
 		return uac;
@@ -300,33 +117,23 @@ public class FlowExt extends EntityNoName
 	/** 
 	 流程
 	*/
-	public FlowExt()  {
+	public FlowExt()
+	{
 	}
 	/** 
 	 流程
 	 
-	 param _No 编号
+	 @param _No 编号
 	*/
 	public FlowExt(String _No) throws Exception {
 		this.setNo(_No);
-		if (bp.difference.SystemConfig.getIsDebug())
-		{
-			int i = this.RetrieveFromDBSources();
-			if (i == 0)
-			{
-				throw new RuntimeException("流程编号不存在");
-			}
-		}
-		else
-		{
 			this.Retrieve();
-		}
 	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -334,47 +141,47 @@ public class FlowExt extends EntityNoName
 
 		Map map = new Map("WF_Flow", "流程模版");
 
-		map.AddGroupAttr("基本属性");
 
 			///#region 基本属性。
+		map.AddGroupAttr("基本属性", "");
 		map.AddTBStringPK(FlowAttr.No, null, "编号", true, true, 1, 4, 3);
 		map.SetHelperUrl(FlowAttr.No, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3661868&doc_id=31094"); //使用alert的方式显示帮助信息.
-			//处理流程类别.
+		// map.AddDDLEntities(FlowAttr.FK_FlowSort, null, "类别", new FlowSorts(), true);
+		//处理流程类别.
 		String sql = "";
-		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
 		{
-			map.AddDDLEntities(FlowAttr.FK_FlowSort, null, "类别", new FlowSorts(), true);
-				// map.AddDDLEntities(FlowAttr.FK_FlowSort, "01", "流程类别", new FlowSorts(), true);
+			//map.AddDDLEntities(FlowAttr.FK_FlowSort, null, "类别", new FlowSorts(), true);
+			sql = "SELECT No,Name FROM WF_FlowSort WHERE Name!='流程树' ORDER BY NO, IDX";
+			map.AddDDLSQL(FlowAttr.FK_FlowSort, null, "类别", sql, true);
 		}
 		else
 		{
-//			sql = "SELECT No,Name FROM WF_FlowSort WHERE OrgNo='@WebUser.OrgNo' ORDER BY NO, IDX";
-//			map.AddDDLSQL(FlowAttr.FK_FlowSort, null, "类别", sql, true);
-			map.AddDDLEntities(FlowAttr.FK_FlowSort, null, "类别", new bp.wf.admin.FlowSorts(), true);
+			sql = "SELECT No,Name FROM WF_FlowSort WHERE OrgNo='@WebUser.OrgNo' ORDER BY NO, IDX";
+			map.AddDDLSQL(FlowAttr.FK_FlowSort, null, "类别", sql, true);
 		}
 
-			//map.AddDDLEntities(FlowAttr.FK_FlowSort, "01", "流程类别", new FlowSorts(), false);
-			//map.SetHelperUrl(FlowAttr.FK_FlowSort, "http://ccbpm.mydoc.io/?v=5404&t=17024");
+		//map.AddDDLEntities(FlowAttr.FK_FlowSort, "01", "流程类别", new FlowSorts(), false);
+		//map.SetHelperUrl(FlowAttr.FK_FlowSort, "http://ccbpm.mydoc.io/?v=5404&t=17024");
 
 		map.AddTBString(FlowAttr.Name, null, "名称", true, false, 0, 50, 10, true);
 
-			// add 2013-02-14 唯一确定此流程的标记
+		// add 2013-02-14 唯一确定此流程的标记
 		map.AddTBString(FlowAttr.FlowMark, null, "流程标记", true, false, 0, 150, 10);
 		map.AddTBString(FlowAttr.FlowEventEntity, null, "流程事件实体", true, true, 0, 150, 10);
 		map.SetHelperUrl(FlowAttr.FlowMark, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3661870&doc_id=31094");
 		map.SetHelperUrl(FlowAttr.FlowEventEntity, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3661871&doc_id=31094");
 
-			// add 2013-02-05.
+		// add 2013-02-05.
 		map.AddTBString(FlowAttr.TitleRole, null, "标题生成规则", true, false, 0, 150, 10, true);
 		map.SetHelperUrl(FlowAttr.TitleRole, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3661872&doc_id=31094");
 
 		map.AddTBString(FlowAttr.TitleRoleNodes, null, "生成标题的节点", true, false, 0, 300, 10);
 		String msg = "设置帮助";
-			//msg += "\r\n 1. 如果为空表示只在开始节点生成标题.";
-			//msg += "\r\n 2. * 表示在任意节点可生成标题.";
-			//msg += "\r\n 3. 要在指定的节点重新生成标题用逗号分开,比如: 102,105,109";
+		//msg += "\r\n 1. 如果为空表示只在开始节点生成标题.";
+		//msg += "\r\n 2. * 表示在任意节点可生成标题.";
+		//msg += "\r\n 3. 要在指定的节点重新生成标题用逗号分开,比如: 102,105,109";
 		map.SetHelperUrl(FlowAttr.TitleRoleNodes, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3661873&doc_id=31094");
-
 
 
 		map.AddBoolean(FlowAttr.IsCanStart, true, "可以独立启动否？(独立启动的流程可以显示在发起流程列表里)", true, true, true);
@@ -383,70 +190,48 @@ public class FlowExt extends EntityNoName
 		map.AddBoolean(FlowAttr.IsFullSA, false, "是否自动计算未来的处理人？", true, true, true);
 		map.SetHelperUrl(FlowAttr.IsFullSA, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3661875&doc_id=31094");
 
-			//map.AddDDLSysEnum(FlowAttr.IsAutoSendSubFlowOver, 0, "为子流程时结束规则", true, true,
-			// FlowAttr.IsAutoSendSubFlowOver, "@0=不处理@1=让父流程自动运行下一步@2=结束父流程");
+		//map.AddDDLSysEnum(FlowAttr.IsAutoSendSubFlowOver, 0, "为子流程时结束规则", true, true,
+		// FlowAttr.IsAutoSendSubFlowOver, "@0=不处理@1=让父流程自动运行下一步@2=结束父流程");
 
-			//map.AddBoolean(FlowAttr.GuestFlowRole, false, "是否外部用户参与流程(非组织结构人员参与的流程)", true, true, false);
+		//map.AddBoolean(FlowAttr.GuestFlowRole, false, "是否外部用户参与流程(非组织结构人员参与的流程)", true, true, false);
 		map.AddDDLSysEnum(FlowAttr.GuestFlowRole, GuestFlowRole.None.getValue(), "外部用户参与流程规则", true, true, "GuestFlowRole", "@0=不参与@1=开始节点参与@2=中间节点参与");
 		map.SetHelperUrl(FlowAttr.GuestFlowRole, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3661876&doc_id=31094");
 
-			// map.AddDDLSysEnum(FlowAttr.FlowAppType, 0, "流程应用类型", true, true, "FlowAppType", "@0=业务流程@1=工程类(项目组流程)@2=公文流程(VSTO)");
-			//map.SetHelperUrl(FlowAttr.FlowAppType, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3661877&doc_id=31094");
+		// map.AddDDLSysEnum(FlowAttr.FlowAppType, 0, "流程应用类型", true, true, "FlowAppType", "@0=业务流程@1=工程类(项目组流程)@2=公文流程(VSTO)");
+		//map.SetHelperUrl(FlowAttr.FlowAppType, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3661877&doc_id=31094");
 
-			//map.AddDDLSysEnum(FlowAttr.SDTOfFlow, (int)TimelineRole.ByNodeSet, "时效性规则",
-			// true, true, FlowAttr.SDTOfFlow, "@0=按节点(由节点属性来定义)@1=按发起人(开始节点SysSDTOfFlow字段计算)");
-			//map.SetHelperUrl(FlowAttr.TimelineRole, "http://ccbpm.mydoc.io/?v=5404&t=17036");
+		//map.AddDDLSysEnum(FlowAttr.SDTOfFlow, (int)TimelineRole.ByNodeSet, "时效性规则",
+		// true, true, FlowAttr.SDTOfFlow, "@0=按节点(由节点属性来定义)@1=按发起人(开始节点SysSDTOfFlow字段计算)");
+		//map.SetHelperUrl(FlowAttr.TimelineRole, "http://ccbpm.mydoc.io/?v=5404&t=17036");
 
-			// 草稿
+		// 草稿
 		map.AddDDLSysEnum(FlowAttr.Draft, DraftRole.None.getValue(), "草稿规则", true, true, FlowAttr.Draft, "@0=无(不设草稿)@1=保存到待办@2=保存到草稿箱");
 		map.SetHelperUrl(FlowAttr.Draft, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3661878&doc_id=31094");
 
-			// add for 华夏银行.
-		map.AddDDLSysEnum(FlowAttr.FlowDeleteRole, FlowDeleteRole.AdminOnly.getValue(), "流程实例删除规则", true, true, FlowAttr.FlowDeleteRole, "@0=超级管理员可以删除@1=分级管理员可以删除@2=发起人可以删除@3=节点启动删除按钮的操作员");
-		map.SetHelperUrl(FlowAttr.FlowDeleteRole, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3661879&doc_id=31094");
-
-
-			//子流程结束时，让父流程自动运行到下一步。
-			//map.AddBoolean(FlowAttr.IsToParentNextNode, false, "子流程结束时，让父流程自动运行到下一步", true, true, true);
-			//map.SetHelperUrl(FlowAttr.IsToParentNextNode, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3661880&doc_id=31094");
-
-			//map.AddDDLSysEnum(FlowAttr.FlowAppType, (int)FlowAppType.Normal, "流程应用类型", true, true, "FlowAppType", "@0=业务流程@1=工程类(项目组流程)@2=公文流程(VSTO)");
-			//map.SetHelperUrl(FlowAttr.FlowAppType, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3661877&doc_id=31094");
-
-			//    map.AddTBString(FlowAttr.HelpUrl, null, "帮助文档", true, false, 0, 100, 10, true);
-
-
-			//为 莲荷科技增加一个系统类型, 用于存储当前所在流程树的第2级流程树编号.
+		//为 莲荷科技增加一个系统类型, 用于存储当前所在流程树的第2级流程树编号.
 		map.AddTBString(FlowAttr.SysType, null, "系统类型", false, false, 0, 50, 10, false);
-
-
 		map.AddTBString(FlowAttr.Tester, null, "发起测试人", true, false, 0, 100, 10, true);
 		map.SetHelperUrl(FlowAttr.Tester, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3661882&doc_id=31094");
 
-		sql = "SELECT No,Name FROM Sys_EnumMain WHERE No LIKE 'Flow_%' ";
-		map.AddDDLSQL("NodeAppType", null, "业务类型枚举(可为Null)", sql, true);
-
-			// add 2014-10-19.
+		// add 2014-10-19.
 		map.AddDDLSysEnum(FlowAttr.ChartType, FlowChartType.Icon.getValue(), "节点图形类型", true, true, "ChartType", "@0=几何图形@1=肖像图片");
 		map.SetHelperUrl(FlowAttr.ChartType, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3661883&doc_id=31094");
-
-		map.AddTBString(FlowAttr.HostRun, null, "运行主机(IP+端口)", true, false, 0, 40, 10, true);
+		map.AddTBInt(FlowAttr.Idx, 0, "显示顺序号(在发起列表中)", true, false);
+		// map.AddTBString(FlowAttr.HostRun, null, "运行主机(IP+端口)", true, false, 0, 40, 10, true);
 		map.AddTBDateTime(FlowAttr.CreateDate, null, "创建日期", true, true);
 		map.AddTBString(FlowAttr.Creater, null, "创建人", true, true, 0, 100, 10, true);
+
 			///#endregion 基本属性。
 
 
 			///#region 表单数据.
-
-		map.AddGroupAttr("数据&表单");
-		map.AddBoolean(FlowAttr.IsBatchStart, false, "是否可以批量发起流程？(如果是就要设置发起的需要填写的字段,多个用逗号分开)", true, true, true);
+		map.AddGroupAttr("数据&表单", "");
+		//批量发起 add 2013-12-27. 
+		map.AddBoolean(FlowAttr.IsBatchStart, false, "是否可以批量发起流程？(如果是就要设置发起的需要填写的字段,多个用逗号分开)", false, true, true);
 		map.AddTBString(FlowAttr.BatchStartFields, null, "发起字段s", true, false, 0, 100, 10, true);
 		map.SetHelperUrl(FlowAttr.IsBatchStart, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3952886&doc_id=31094");
 
-			//add 2013-05-22.
-		map.AddTBString(FlowAttr.HistoryFields, null, "历史查看字段", true, false, 0, 100, 10, true);
-
-			//移动到这里 by zhoupeng 2016.04.08.
+		//移动到这里 by zhoupeng 2016.04.08.
 		map.AddBoolean(FlowAttr.IsResetData, false, "是否启用开始节点数据重置按钮？已经取消)", false, true, true);
 		map.AddBoolean(FlowAttr.IsLoadPriData, false, "是否自动装载上一笔数据？", true, true, true);
 		map.AddBoolean(FlowAttr.IsDBTemplate, true, "是否启用数据模版？", true, true, true);
@@ -458,106 +243,55 @@ public class FlowExt extends EntityNoName
 
 		map.AddBoolean(FlowAttr.IsJM, false, "是否是数据加密流程(把所有字段加密存储)", true, true, true);
 		map.SetHelperUrl(FlowAttr.IsJM, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3952997&doc_id=31094");
+
 		map.AddBoolean(FlowAttr.IsEnableDBVer, false, "是否是启用数据版本控制", true, true, true);
 
-		// 数据存储.
-		map.AddDDLSysEnum(FlowAttr.DataStoreModel, DataStoreModel.ByCCFlow.getValue(), "数据存储", true, true, FlowAttr.DataStoreModel, "@0=数据轨迹模式@1=数据合并模式");
-		map.SetHelperUrl(FlowAttr.DataStoreModel, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3953009&doc_id=31094");
 
-		map.AddTBString(FlowAttr.PTable, null, "流程数据存储表", true, false, 0, 30, 10);
+		map.AddTBString(FlowAttr.PTable, null, "流程数据存储表", true, true, 0, 100, 10);
 		map.SetHelperUrl(FlowAttr.PTable, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=4000827&doc_id=31094");
 
 
-			//map.SetHelperBaidu(FlowAttr.HistoryFields, "ccflow 历史查看字段");
-		map.AddTBString(FlowAttr.FlowNoteExp, null, "备注的表达式", true, false, 0, 100, 10, true);
-		map.SetHelperUrl(FlowAttr.FlowNoteExp, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3953022&doc_id=31094");
-
-			//add  2013-08-30.
+		//add  2013-08-30.
 		map.AddTBString(FlowAttr.BillNoFormat, null, "单据编号格式", true, false, 0, 50, 10, false);
 		map.SetHelperUrl(FlowAttr.BillNoFormat, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=3953012&doc_id=31094");
 
-			// add 2019-09-25 by zhoupeng
+		// add 2019-09-25 by zhoupeng
 		map.AddTBString(FlowAttr.BuessFields, null, "关键业务字段", true, false, 0, 100, 10, false);
 		msg = "用于显示在待办上的业务字段信息.";
 		msg += "\t\n 1. 用户在看到待办的时候，就可以看到流程的实例的关键信息。";
 		msg += "\t\n 2. 用于待办的列表信息显示.";
 		msg += "\t\n 3. 配置格式为. Tel,Addr,Email  这些字段区分大小写并且是节点表单字段.";
 		msg += "\t\n 4. 数据存储在WF_GenerWorkFlow.AtPara里面.";
-		msg += "\t\n 5. 存储格式为: @BuessFields = 电话^Tel^18992323232;地址^Addr^山东成都;";
+		msg += "\t\n 5. 存储格式为: @BuessFields = 电话^Tel^18992323232;地址^Addr^山东杭州;";
 		map.SetHelperAlert(FlowAttr.BuessFields, msg);
 
-			//表单URL. //@liuqiang 把他翻译到java里面去.
-		map.AddDDLSysEnum(FlowAttr.FlowFrmModel, 0, "流程全局表单类型", true, false, FlowAttr.FlowFrmModel, "@0=完整版-2019年更早版本@1=绑定表单库的表单@2=表单树模式@3=自定义(嵌入)表单@4=SDK表单");
-		map.AddTBString(FlowAttr.FrmUrl, null, "表单Url", true, false, 0, 150, 10, true);
-		map.SetHelperAlert(FlowAttr.FrmUrl, "对嵌入式表单,SDK表单的url的表单,嵌入式表单有效,用与整体流程的设置.");
+		map.AddTBString(FlowAttr.AdvEmps, null, "高级查询人员", true, false, 0, 100, 10, true);
+		//msg = "用于指定人员查询流程实例数据集合的设置.";
+		//msg += "\t\n 存储格式：人员编号以逗号分割如zhangsan,lisi,";
+		map.SetHelperUrl(FlowAttr.AdvEmps, "https://gitee.com/opencc/JFlow/wikis/pages/preview?sort_id=6513111&doc_id=31094");
 
 			///#endregion 表单数据.
 
 
-			///#region 数据同步方案
-			//数据同步方式.
-			/**map.AddDDLSysEnum(FlowAttr.FlowDTSWay, (int)FlowDTSWay.None, "同步方式", true, true,
-			    FlowAttr.FlowDTSWay, "@0=不同步@1=同步",true);
-			map.SetHelperUrl(FlowAttr.FlowDTSWay, "http://ccbpm.mydoc.io/?v=5404&t=17893");
-
-			map.AddDDLEntities(FlowAttr.DTSDBSrc, "", "数据库", new BP.Sys.SFDBSrcs(), true);
-
-			map.AddTBString(FlowAttr.DTSBTable, null, "业务表名", true, false, 0, 50, 50, false);
-
-			map.AddTBString(FlowAttr.DTSBTablePK, null, "业务表主键", true, false, 0, 50, 50, false);
-			map.SetHelperAlert(FlowAttr.DTSBTablePK, "如果同步方式设置了按照业务表主键字段计算,那么需要在流程的节点表单里设置一个同名同类型的字段，系统将会按照这个主键进行数据同步。");
-
-			map.AddTBString(FlowAttr.DTSFields, null, "要同步的字段s,中间用逗号分开.", false, false, 0, 200, 100, false);
-
-			map.AddDDLSysEnum(FlowAttr.DTSTime, (int)FlowDTSTime.AllNodeSend, "执行同步时间点", true, true,
-			   FlowAttr.DTSTime, "@0=所有的节点发送后@1=指定的节点发送后@2=当流程结束时");
-			map.SetHelperUrl(FlowAttr.DTSTime, "http://ccbpm.mydoc.io/?v=5404&t=17894");
-
-			map.AddTBString(FlowAttr.DTSSpecNodes, null, "指定的节点ID", true, false, 0, 50, 50, false);
-			map.SetHelperAlert(FlowAttr.DTSSpecNodes, "如果执行同步时间点选择了按指定的节点发送后,多个节点用逗号分开.比如: 101,102,103");
-
-
-			map.AddDDLSysEnum(FlowAttr.DTSField, (int)DTSField.SameNames, "要同步的字段计算方式", true, true,
-			 FlowAttr.DTSField, "@0=字段名相同@1=按设置的字段匹配");
-			map.SetHelperUrl(FlowAttr.DTSField, "http://ccbpm.mydoc.io/?v=5404&t=17895");
-			*/
-		///#endregion 数据同步方案
-		map.AddTBString(FlowAttr.AdvEmps, null, "高级查询人员", true, false, 0, 100, 10, true);
-		msg = "用于指定人员查询流程实例数据集合的设置.";
-		msg += "\t\n 存储格式：人员编号以逗号分割如zhangsan,lisi,";
-		map.SetHelperAlert(FlowAttr.AdvEmps, msg);
-		//#endregion 表单数据.
-
 			///#region 轨迹信息
-		map.AddGroupAttr("轨迹");
-		map.AddBoolean(FlowAttr.IsFrmEnable, false, "是否显示表单", true, true, false);
+		map.AddGroupAttr("轨迹", "");
+		//map.AddBoolean(FlowAttr.IsFrmEnable, false, "是否显示表单", true, true, false);
 		map.AddBoolean(FlowAttr.IsTruckEnable, true, "是否显示轨迹图", true, true, false);
 		map.AddBoolean(FlowAttr.IsTimeBaseEnable, true, "是否显示时间轴", true, true, false);
 		map.AddBoolean(FlowAttr.IsTableEnable, true, "是否显示时间表", true, true, false);
-		map.AddBoolean(FlowAttr.IsOPEnable, false, "是否显示操作", true, true, false);
-		//@ZKR
+		//map.AddBoolean(FlowAttr.IsOPEnable, false, "是否显示操作", true, true, false);
 		map.AddDDLSysEnum(FlowAttr.SubFlowShowType, 0, "子流程轨迹图显示模式", true, true, FlowAttr.SubFlowShowType, "@0=平铺模式显示@1=合并模式显示");
 		map.AddDDLSysEnum(FlowAttr.TrackOrderBy, 0, "排序方式", true, true, FlowAttr.TrackOrderBy, "@0=按照时间先后顺序@1=倒序(新发生的在前面)");
 
 			///#endregion 轨迹信息
 
 
-			///#region 开发者信息.
-		map.AddTBString(FlowAttr.DesignerNo, null, "设计者编号", false, true, 0, 50, 10, false);
-		map.AddTBString(FlowAttr.DesignerName, null, "设计者名称", false, true, 0, 50, 10, false);
-		map.AddTBDateTime(FlowAttr.DesignTime, null, "创建时间", false, true);
-		map.AddTBString(FlowAttr.OrgNo, null, "组织编号", false, true, 0, 50, 10, false);
-			// map.AddTBStringDoc(FlowAttr.Note, null, "流程描述", true, false, true);
-
-			///#endregion 开发者信息.
-
-
-		///#region 基本功能.
+			///#region 基本功能.
 		map.AddGroupMethod("基本功能");
 		RefMethod rm = new RefMethod();
 		rm = new RefMethod();
 		rm.Title = "自动发起";
-			//rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/AutoStart.png";
+		//rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/AutoStart.png";
 		rm.ClassMethodName = this.toString() + ".DoSetStartFlowDataSources()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Icon = "icon-plane";
@@ -571,7 +305,6 @@ public class FlowExt extends EntityNoName
 		rm.Icon = "icon-ban";
 		map.AddRefMethod(rm);
 
-
 		rm = new RefMethod();
 		rm.Title = "发起前置导航";
 		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/StartGuide.png";
@@ -579,7 +312,6 @@ public class FlowExt extends EntityNoName
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Icon = "icon-list";
 		map.AddRefMethod(rm);
-
 
 		rm = new RefMethod();
 		rm.Title = "流程事件"; // "调用事件接口";
@@ -597,6 +329,7 @@ public class FlowExt extends EntityNoName
 		rm.Icon = "icon-bubbles";
 		map.AddRefMethod(rm);
 
+
 		rm = new RefMethod();
 		rm.Title = "轨迹查看权限";
 		rm.Icon = "../../WF/Img/Setting.png";
@@ -605,32 +338,39 @@ public class FlowExt extends EntityNoName
 		rm.Icon = "icon-briefcase";
 		map.AddRefMethod(rm);
 
-		rm = new RefMethod();
-		rm.Title = "修改ICON"; // "调用事件接口";
-		rm.ClassMethodName = this.toString() + ".DoNodesICON";
-			//  rm.Icon = "../../WF/Img/Event.png";
-		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.Icon = "icon-heart";
-		map.AddRefMethod(rm);
+		//rm = new RefMethod();
+		//rm.Title = "修改ICON"; // "调用事件接口";
+		//rm.ClassMethodName = this.ToString() + ".DoNodesICON";
+		////  rm.Icon = "../../WF/Img/Event.png";
+		//rm.refMethodType = RefMethodType.RightFrameOpen;
+		//rm.Icon = "icon-heart";
+		//map.AddRefMethod(rm);
+
 
 		rm = new RefMethod();
 		rm.Title = "版本管理";
 		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Node.png";
 		rm.ClassMethodName = this.toString() + ".DoVer()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-			// rm.GroupName = "实验中的功能";
 		rm.Icon = "icon-doc";
-
 		map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "权限控制";
-			// rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Node.png";
+		// rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Node.png";
 		rm.ClassMethodName = this.toString() + ".DoPowerModel()";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-			// rm.GroupName = "实验中的功能";
+		// rm.GroupName = "实验中的功能";
 		rm.Icon = "icon-settings";
 		map.AddRefMethod(rm);
+
+		//rm = new RefMethod();
+		//rm.Title = "批量发起";
+		//rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/AutoStart.png";
+		//rm.ClassMethodName = this.ToString() + ".DoBatchStart()";
+		//rm.refMethodType = RefMethodType.RightFrameOpen;
+		//rm.Icon = "icon-calculator";
+		//map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "流程模版";
@@ -640,7 +380,10 @@ public class FlowExt extends EntityNoName
 		rm.Icon = "icon-paper-plane";
 		map.AddRefMethod(rm);
 
-		//#region 时限规则
+			///#endregion 流程设置.
+
+
+			///#region 时限规则
 		map.AddGroupMethod("时限规则");
 		rm = new RefMethod();
 		rm.Title = "计划时间计算规则";
@@ -650,13 +393,13 @@ public class FlowExt extends EntityNoName
 		rm.Icon = "icon-clock";
 		map.AddRefMethod(rm);
 
-//		rm = new RefMethod();
-//		rm.Icon = "../../WF/Admin/CCFormDesigner/Img/CH.png";
-//		rm.ClassMethodName = this.toString() + ".DoDeadLineRole()";
-//		rm.refMethodType = RefMethodType.RightFrameOpen;
-//		// rm.GroupName = "实验中的功能";
-//		rm.Icon = "icon-clock";
-//		map.AddRefMethod(rm);
+		/*rm = new RefMethod();
+		rm.Icon = "../../WF/Admin/CCFormDesigner/Img/CH.png";
+		rm.ClassMethodName = this.ToString() + ".DoDeadLineRole()";
+		rm.refMethodType = RefMethodType.RightFrameOpen;
+		// rm.GroupName = "实验中的功能";
+		rm.Icon = "icon-clock";
+		map.AddRefMethod(rm);*/
 
 		rm = new RefMethod();
 		rm.Title = "预警、超期消息事件";
@@ -665,9 +408,11 @@ public class FlowExt extends EntityNoName
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Icon = "icon-energy";
 		map.AddRefMethod(rm);
-		//#endregion 时限规则
 
-        //#region 开发接口.
+			///#endregion 时限规则
+
+
+			///#region 开发接口.
 		map.AddGroupMethod("开发接口");
 		rm = new RefMethod();
 		rm.Title = "与业务表数据同步";
@@ -705,9 +450,11 @@ public class FlowExt extends EntityNoName
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Icon = "icon-paper-plane";
 		map.AddRefMethod(rm);
-        //#endregion 开发接口.
 
-        //#region 流程运行维护.
+			///#endregion 开发接口.
+
+
+			///#region 流程运行维护.
 		map.AddGroupMethod("流程维护");
 		rm = new RefMethod();
 		rm.Title = "重生成流程标题";
@@ -806,9 +553,11 @@ public class FlowExt extends EntityNoName
 		rm.getHisAttrs().AddTBString("note", null, "回滚原因", true, false, 0, 600, 200);
 		rm.Icon = "icon-briefcase";
 		map.AddRefMethod(rm);
-        //#endregion 流程运行维护.
 
-        //#region 流程监控.
+			///#endregion 流程运行维护.
+
+
+			///#region 流程监控.
 		map.AddGroupMethod("流程监控");
 		rm = new RefMethod();
 		rm.Title = "设计报表"; // "报表运行";
@@ -822,7 +571,7 @@ public class FlowExt extends EntityNoName
 		//rm.Title = "监控面板";
 		//rm.Icon = ../../Admin/CCBPMDesigner/Img/Monitor.png";
 		//rm.ClassMethodName = this.ToString() + ".DoDataManger_Welcome()";
-		//rm.RefMethodType = RefMethodType.RightFrameOpen;
+		//rm.refMethodType = RefMethodType.RightFrameOpen;
 		//rm.GroupName = "流程监控";
 		//map.AddRefMethod(rm);
 
@@ -830,7 +579,7 @@ public class FlowExt extends EntityNoName
 		//rm.Title = "图形分析";
 		//rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Group.png";
 		//rm.ClassMethodName = this.ToString() + ".DoDataManger_DataCharts()";
-		//rm.RefMethodType = RefMethodType.LinkeWinOpen;
+		//rm.refMethodType = RefMethodType.LinkeWinOpen;
 		//rm.GroupName = "流程监控";
 		//rm.Icon = "icon-briefcase";
 		//map.AddRefMethod(rm);
@@ -856,7 +605,7 @@ public class FlowExt extends EntityNoName
 		//rm.Title = "实例增长分析";
 		//rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Grow.png";
 		//rm.ClassMethodName = this.ToString() + ".DoDataManger_InstanceGrowOneFlow()";
-		//rm.RefMethodType = RefMethodType.RightFrameOpen;
+		//rm.refMethodType = RefMethodType.RightFrameOpen;
 		//rm.GroupName = "流程监控";
 		//rm.Visable = false;
 		//map.AddRefMethod(rm);
@@ -865,7 +614,7 @@ public class FlowExt extends EntityNoName
 		//rm.Title = "逾期未完成实例";
 		//rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Warning.png";
 		//rm.ClassMethodName = this.ToString() + ".DoDataManger_InstanceWarning()";
-		//rm.RefMethodType = RefMethodType.RightFrameOpen;
+		//rm.refMethodType = RefMethodType.RightFrameOpen;
 		//rm.GroupName = "流程监控";
 		//map.AddRefMethod(rm);
 
@@ -873,7 +622,7 @@ public class FlowExt extends EntityNoName
 		//rm.Title = "逾期已完成实例";
 		//rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/overtime.png";
 		//rm.ClassMethodName = this.ToString() + ".DoDataManger_InstanceOverTimeOneFlow()";
-		//rm.RefMethodType = RefMethodType.RightFrameOpen;
+		//rm.refMethodType = RefMethodType.RightFrameOpen;
 		//rm.Visable = false;
 		//rm.GroupName = "流程监控";
 		//map.AddRefMethod(rm);
@@ -885,9 +634,11 @@ public class FlowExt extends EntityNoName
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Icon = "icon-briefcase";
 		map.AddRefMethod(rm);
-        //#endregion 流程监控.
 
-        //#region 实验中的功能
+			///#endregion 流程监控.
+
+
+			///#region 实验中的功能
 		map.AddGroupMethod("实验中的功能");
 		rm = new RefMethod();
 		rm.Title = "数据源管理(如果新增数据源后需要关闭重新打开)";
@@ -904,7 +655,7 @@ public class FlowExt extends EntityNoName
 		rm = new RefMethod();
 		rm.Title = "业务表字段同步配置";
 		rm.ClassMethodName = this.toString() + ".DoBTable";
-		rm.Icon = bp.wf.Glo.getCCFlowAppPath()+ "WF/Img/Btn/DTS.gif";
+		rm.Icon = Glo.getCCFlowAppPath() + "WF/Img/Btn/DTS.gif";
 		//设置相关字段.
 		rm.RefAttrKey = FlowAttr.DTSField;
 		rm.RefAttrLinkLabel = "业务表字段同步配置";
@@ -922,25 +673,16 @@ public class FlowExt extends EntityNoName
 		rm.Icon = "icon-briefcase";
 		map.AddRefMethod(rm);
 
-		//rm = new RefMethod();
-		//rm.Title = "删除NDxxRpt表,多余字段.";
-		//rm.ClassMethodName = this.ToString() + ".DoDeleteFields()";
-		//rm.RefMethodType = RefMethodType.Func;
-		//rm.Warning = "您确定要执行吗？ \t\n 1, 表NDxxxRpt是自动创建的.  \t\n  2, 在设置流程过程中有些多余的字段会生成到NDxxRpt表里. \t\n 3,这里是删除数据字段为null 并且是多余的字段.";
-		//rm.GroupName = "实验中的功能";
-		//rm.Icon = "icon-briefcase";
-		//map.AddRefMethod(rm);
+		rm = new RefMethod();
+		rm.Title = "一键设置施工-监理模式";
+		rm.Icon = "../../WF/Admin/CCBPMDesigner/Img/Node.png";
+		rm.refMethodType = RefMethodType.Func;
+		rm.ClassMethodName = this.toString() + ".DoSDGaoSu()";
+		rm.Icon = "icon-briefcase";
+		map.AddRefMethod(rm);
 
-		//rm = new RefMethod();
-		//rm.Title = "删除NDxRpt表,数据为null的多余字段.";
-		//rm.ClassMethodName = this.ToString() + ".DoDeleteFieldsIsNull()";
-		//rm.RefMethodType = RefMethodType.Func;
-		//rm.Warning = "您确定要执行吗？ \t\n 1, 表NDxxxRpt是自动创建的.  \t\n  2, 在设置流程过程中有些多余的字段会生成到NDxxxRpt表里. \t\n 3,这里是删除数据字段为null 并且是多余的字段.";
-		//rm.GroupName = "实验中的功能";
-		//rm.Icon = "icon-briefcase";
-		//map.AddRefMethod(rm);
-       //#endregion 实验中的功能
 
+			///#endregion 实验中的功能
 
 		this.set_enMap(map);
 		return this.get_enMap();
@@ -948,35 +690,66 @@ public class FlowExt extends EntityNoName
 
 		///#endregion
 
+	/** 
+	 设置施工监理审核模式.
+	 
+	 @return 
+	*/
+	public final String DoSDGaoSu() throws Exception {
+		Nodes nds = new Nodes();
+		nds.Retrieve("FK_Flow", this.getNo(), null);
+
+
+		for (Node nd : nds.ToJavaList())
+		{
+			if (nd.getItIsStartNode() == true)
+			{
+				continue; //开始节点不处理.
+			}
+
+			//如果第2个节点.
+			if (String.valueOf(nd.getNodeID()).endsWith("02") == true)
+			{
+				nd.setHisDeliveryWay((DeliveryWay.BySQL));
+				//   nd.getDeliveryParas() = "";
+			}
+			else
+			{
+				//接受人模式与指定的节点相同。
+				nd.setHisDeliveryWay((DeliveryWay.BySpecNodeEmp));
+				nd.setDeliveryParas(String.valueOf(Integer.parseInt(this.getNo() + "02")));
+			}
+
+			//设置协作模式.
+			nd.setTodolistModel(TodolistModel.Teamup);
+			nd.setItIsExpSender(false); //是否排除当前人员.
+			nd.Update();
+		}
+
+		return "执行成功";
+	}
+
 
 		///#region 流程监控.
 
-	public final String DoDataManger_DataCharts() throws Exception {
+	public final String DoDataManger_DataCharts() {
 		return "../../Admin/AttrFlow/DataCharts.htm?FK_Flow=" + this.getNo();
-		// return "../../Comm/Search.htm?EnsName=BP.WF.Data.GenerWorkFlowViews&FK_Flow=" + this.No + "&WFSta=all";
 	}
 
 
-	public final String DoDataManger_Search() throws Exception {
+	public final String DoDataManger_Search() {
 		return "../../Comm/Search.htm?EnsName=BP.WF.Data.GenerWorkFlowViews&FK_Flow=" + this.getNo() + "&WFSta=all";
 	}
-	public final String DoDataManger_Group() throws Exception {
+	public final String DoDataManger_Group() {
 		return "../../Comm/Group.htm?EnsName=BP.WF.Data.GenerWorkFlowViews&FK_Flow=" + this.getNo() + "&WFSta=all";
 	}
 
 
-	public final String DoDataManger_DeleteLog() throws Exception {
+	public final String DoDataManger_DeleteLog() {
 		return "../../Comm/Search.htm?EnsName=BP.WF.WorkFlowDeleteLogs&FK_Flow=" + this.getNo() + "&WFSta=all";
 	}
 
-	/** 
-	 数据订阅
-	 
-	 @return 
-	*/
-	public final String DoDataManger_RptOrder() throws Exception {
-		return "../../Admin/CCBPMDesigner/App/RptOrder.aspx?anaTime=mouth&FK_Flow=" + this.getNo();
-	}
+
 
 		///#endregion 流程监控.
 
@@ -985,58 +758,39 @@ public class FlowExt extends EntityNoName
 	/** 
 	 执行删除指定日期范围内的流程
 	 
-	 param dtFrom 日期从
-	 param dtTo 日期到
-	 param isOk 仅仅删除当前流程？1=删除当前流程, 0=删除全部流程.
+	 @param dtFrom 日期从
+	 @param dtTo 日期到
+	 @param isDelCurrFlow 仅仅删除当前流程？1=删除当前流程, 0=删除全部流程.
 	 @return 
 	*/
 	public final String DoDelFlows(String dtFrom, String dtTo, boolean isDelCurrFlow) throws Exception {
+		//if (bp.web.WebUser.getNo() != "admin")
 		if (WebUser.getIsAdmin() == false)
+		{
 			return "非管理员用户，不能删除。";
+		}
 
 
 		String sql = "";
 		if (isDelCurrFlow == true)
+		{
 			sql = "SELECT WorkID, FK_Flow FROM WF_GenerWorkFlow  WHERE RDT >= '" + dtFrom + "' AND RDT <= '" + dtTo + "'  AND FK_Flow='" + this.getNo() + "' ";
+		}
 		else
+		{
 			sql = "SELECT WorkID, FK_Flow FROM WF_GenerWorkFlow  WHERE RDT >= '" + dtFrom + "' AND RDT <= '" + dtTo + "' ";
+		}
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
 		String msg = "如下流程ID被删除:";
-	/*	//线程执行删除流程
-		ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-		RequestContextHolder.setRequestAttributes(servletRequestAttributes,true);
-		final int POOL_SIZE = dt.Rows.size();
-		ThreadPoolExecutor executor = new ThreadPoolExecutor(
-				POOL_SIZE,
-				POOL_SIZE,
-				POOL_SIZE, TimeUnit.SECONDS,
-				new ArrayBlockingQueue<>(POOL_SIZE),
-				new ThreadPoolExecutor.CallerRunsPolicy());
-		List<CompletableFuture<Void>> futures =new ArrayList<CompletableFuture<Void>>();*/
-		try{
-			for (DataRow dr : dt.Rows)
-			{
-				long workid = Long.parseLong(dr.getValue("WorkID").toString());
-				String fk_flow = dr.getValue("FK_Flow").toString();
-				msg += " " + workid;
-				DoDelFlowByWorkID(workid, fk_flow);
-				/*CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-					try {
-						DoDelFlowByWorkID(workid, fk_flow);
-					} catch (Exception e) {
-						throw new RuntimeException(e);
-					}
-				}, executor);
-				futures.add(future);*/
-			}
-			//CompletableFuture.allOf(futures.toArray(new CompletableFuture[futures.size()])).join();
-			//executor.shutdown();
-		}catch(Exception e){
-			throw new RuntimeException("部分流程数据删除成功:"+msg);
+		for (DataRow dr : dt.Rows)
+		{
+			long workid = Long.parseLong(dr.getValue("WorkID").toString());
+			String fk_flow = dr.getValue("FK_Flow").toString();
+			DoDelFlowByWorkID(workid, fk_flow);
+			msg += " " + workid;
 		}
-
 		return msg;
 	}
 	public final void DoDelFlowByWorkID(long workid, String fk_flow) throws Exception {
@@ -1067,9 +821,7 @@ public class FlowExt extends EntityNoName
 			///#endregion 删除独立表单数据
 
 		//流程运行信息
-		DBAccess.RunSQL("DELETE FROM WF_GenerWorkerList Where (WorkID=" + workid + " OR FID=" + workid + ")");
-		//删除退回信息
-		DBAccess.RunSQL("DELETE FROM WF_ReturnWork Where WorkID=" + workid);
+		DBAccess.RunSQL("DELETE FROM WF_GenerWorkerlist Where (WorkID=" + workid + " OR FID=" + workid + ")");
 		//考核信息
 		DBAccess.RunSQL("DELETE FROM WF_CH Where (WorkID=" + workid + " OR FID=" + workid + ")");
 		DBAccess.RunSQL("DELETE FROM WF_CHEval Where WorkID=" + workid);
@@ -1130,14 +882,14 @@ public class FlowExt extends EntityNoName
 	/** 
 	 批量重命名字段.
 	 
-	 param FieldOld
-	 param FieldNew
-	 param FieldNewName
+	 @param fieldOld
+	 @param fieldNew
+	 @param FieldNewName
 	 @return 
 	*/
 	public final String DoChangeFieldName(String fieldOld, String fieldNew, String FieldNewName, String thisFlowOnly) throws Exception {
 
-		if (thisFlowOnly.equals("1"))
+		if (Objects.equals(thisFlowOnly, "1"))
 		{
 			return DoChangeFieldNameOne(this, fieldOld, fieldNew, FieldNewName);
 		}
@@ -1184,7 +936,7 @@ public class FlowExt extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoFlowFields() throws Exception {
+	public final String DoFlowFields() {
 		return "../../Admin/AttrFlow/FlowFields.htm?FK_Flow=" + this.getNo();
 	}
 	/** 
@@ -1192,16 +944,16 @@ public class FlowExt extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoDTSBTable() throws Exception {
+	public final String DoDTSBTable() {
 		return "../../Admin/AttrFlow/DTSBTable.htm?FK_Flow=" + this.getNo();
 	}
-	public final String DoAPI() throws Exception {
+	public final String DoAPI() {
 		return "../../Admin/AttrFlow/API.htm?FK_Flow=" + this.getNo();
 	}
-	public final String DoAPICode() throws Exception {
+	public final String DoAPICode() {
 		return "../../Admin/AttrFlow/APICode.htm?FK_Flow=" + this.getNo();
 	}
-	public final String DoAPICodeFEE() throws Exception {
+	public final String DoAPICodeFEE() {
 		return "../../Admin/AttrFlow/APICodeFEE.htm?FK_Flow=" + this.getNo();
 	}
 	/** 
@@ -1209,13 +961,13 @@ public class FlowExt extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoFlowAttrExt() throws Exception {
+	public final String DoFlowAttrExt() {
 		return "../../../DataUser/OverrideFiles/FlowAttrExts.html?FK_Flow=" + this.getNo();
 	}
-	public final String DoVer() throws Exception {
+	public final String DoVer() {
 		return "../../Admin/AttrFlow/Ver.htm?FK_Flow=" + this.getNo();
 	}
-	public final String DoPowerModel() throws Exception {
+	public final String DoPowerModel() {
 		return "../../Admin/AttrFlow/PowerModel.htm?FK_Flow=" + this.getNo();
 	}
 
@@ -1224,7 +976,7 @@ public class FlowExt extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoDeadLineRole() throws Exception {
+	public final String DoDeadLineRole() {
 		return "../../Admin/AttrFlow/DeadLineRole.htm?FK_Flow=" + this.getNo();
 	}
 
@@ -1233,7 +985,7 @@ public class FlowExt extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoOverDeadLineRole() throws Exception {
+	public final String DoOverDeadLineRole() {
 		return "../../Admin/AttrFlow/PushMessage.htm?FK_Flow=" + this.getNo();
 	}
 
@@ -1248,7 +1000,7 @@ public class FlowExt extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoAction() throws Exception {
+	public final String DoAction() {
 		return "../../Admin/AttrFlow/Action.htm?FK_Flow=" + this.getNo() + "&tk=" + (new Random()).nextDouble();
 	}
 	/** 
@@ -1256,7 +1008,7 @@ public class FlowExt extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoMessage() throws Exception {
+	public final String DoMessage() {
 		return "../../Admin/AttrFlow/PushMessage.htm?FK_Node=0&FK_Flow=" + this.getNo() + "&tk=" + (new Random()).nextDouble();
 	}
 	/** 
@@ -1264,7 +1016,7 @@ public class FlowExt extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoSDTOfFlow() throws Exception {
+	public final String DoSDTOfFlow() {
 		return "../../Admin/AttrFlow/SDTOfFlow/Default.htm?FK_Flow=" + this.getNo() + "&tk=" + (new Random()).nextDouble();
 	}
 	/** 
@@ -1272,13 +1024,14 @@ public class FlowExt extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoNodesICON() throws Exception {
+	public final String DoNodesICON() {
 		return "../../Admin/AttrFlow/NodesIcon.htm?FK_Flow=" + this.getNo() + "&tk=" + (new Random()).nextDouble();
 	}
-	public final String DoDBSrc() throws Exception {
+	public final String DoDBSrc()
+	{
 		return "../../Comm/Sys/SFDBSrcNewGuide.htm";
 	}
-	public final String DoBTable() throws Exception {
+	public final String DoBTable() {
 		return "../../Admin/AttrFlow/DTSBTable.htm?s=d34&ShowType=FlowFrms&FK_Node=" + Integer.parseInt(this.getNo()) + "01&FK_Flow=" + this.getNo() + "&ExtType=StartFlow&RefNo=" + DataType.getCurrentDateTime();
 	}
 	/** 
@@ -1286,7 +1039,7 @@ public class FlowExt extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoBatchStart() throws Exception {
+	public final String DoBatchStart() {
 		return "../../Admin/AttrFlow/BatchStart.htm?s=d34&ShowType=FlowFrms&FK_Node=" + Integer.parseInt(this.getNo()) + "01&FK_Flow=" + this.getNo() + "&ExtType=StartFlow&RefNo=" + DataType.getCurrentDateTime();
 	}
 	/** 
@@ -1294,10 +1047,10 @@ public class FlowExt extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoNodeAttrs() throws Exception {
+	public final String DoNodeAttrs() {
 		return "../../Admin/AttrFlow/NodeAttrs.htm?NodeID=0&FK_Flow=" + this.getNo() + "&tk=" + (new Random()).nextDouble();
 	}
-	public final String DoBindFlowExt() throws Exception {
+	public final String DoBindFlowExt() {
 		return "../../Admin/Sln/BindFrms.htm?s=d34&ShowType=FlowFrms&FK_Node=0&FK_Flow=" + this.getNo() + "&ExtType=StartFlow";
 	}
 	/** 
@@ -1305,7 +1058,7 @@ public class FlowExt extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoTruckRight() throws Exception {
+	public final String DoTruckRight() {
 		return "../../Admin/AttrFlow/TruckViewPower.htm?FK_Flow=" + this.getNo();
 	}
 	/** 
@@ -1313,7 +1066,7 @@ public class FlowExt extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoBatchStartFields() throws Exception {
+	public final String DoBatchStartFields() {
 		return "../../Admin/AttrNode/BatchStartFields.htm?s=d34&FK_Flow=" + this.getNo() + "&ExtType=StartFlow";
 	}
 	/** 
@@ -1329,9 +1082,9 @@ public class FlowExt extends EntityNoName
 	/** 
 	 恢复已完成的流程数据到指定的节点，如果节点为0就恢复到最后一个完成的节点上去.
 	 
-	 param workid 要恢复的workid
-	 param backToNodeID 恢复到的节点编号，如果是0，标示回复到流程最后一个节点上去.
-	 param note
+	 @param workid 要恢复的workid
+	 @param backToNodeID 恢复到的节点编号，如果是0，标示回复到流程最后一个节点上去.
+	 @param note
 	 @return 
 	*/
 	public final String DoRebackFlowData(long workid, int backToNodeID, String note) throws Exception {
@@ -1375,7 +1128,7 @@ public class FlowExt extends EntityNoName
 				}
 			}
 
-			gwf.setFK_Flow(this.getNo());
+			gwf.setFlowNo(this.getNo());
 			gwf.setFlowName(this.getName());
 			gwf.setWorkID(workid);
 			gwf.setPWorkID(rpt.getPWorkID());
@@ -1384,31 +1137,29 @@ public class FlowExt extends EntityNoName
 			gwf.setPEmp(rpt.getPEmp());
 
 
-			gwf.setFK_Node(backToNodeID);
+			gwf.setNodeID(backToNodeID);
 			gwf.setNodeName(endN.getName());
 
 			gwf.setStarter(rpt.getFlowStarter());
 			gwf.setStarterName(empStarter.getName());
-			gwf.setFK_FlowSort(fl.getFK_FlowSort());
+			gwf.setFlowSortNo(fl.getFlowSortNo());
 			gwf.setSysType(fl.getSysType());
 
 			gwf.setTitle(rpt.getTitle());
 			gwf.setWFState(WFState.ReturnSta); //设置为退回的状态
 			gwf.setTaskSta(TaskSta.None); //*取消共享模式
-			gwf.setFK_Dept(rpt.getFK_Dept());
+			gwf.setDeptNo(rpt.getDeptNo());
 
-			Dept dept = new Dept(rpt.getFK_Dept());
+			Dept dept = new Dept(rpt.getDeptNo());
 
 			gwf.setDeptName(dept.getName());
 			gwf.setPRI(1);
 
-
 			Date date = DateUtils.addDay(new Date(), 3);
 			String dttime = DateUtils.format(date, "yyyy-MM-dd HH:mm:ss");
-			
+
 			gwf.setSDTOfNode(dttime);
 			gwf.setSDTOfFlow(dttime);
-			
 			if (isHaveGener)
 			{
 				gwf.Update();
@@ -1444,74 +1195,52 @@ public class FlowExt extends EntityNoName
 				// 增加上 工作人员的信息.
 				GenerWorkerList gwl = new GenerWorkerList();
 				gwl.setWorkID(workid);
-				gwl.setFK_Flow(this.getNo());
+				gwl.setFlowNo(this.getNo());
 
-				gwl.setFK_Node(ndFrom);
-				gwl.setFK_NodeText(ndFromT);
+				gwl.setNodeID(ndFrom);
+				gwl.setNodeName(ndFromT);
 
-				if (gwl.getFK_Node() == backToNodeID)
+				if (gwl.getNodeID() == backToNodeID)
 				{
-					gwl.setIsPass(false);
+					gwl.setItIsPass(false);
 					currWl = gwl;
 				}
 				else
 				{
-					gwl.setIsPass(true);
+					gwl.setItIsPass(true);
 				}
 
-				gwl.setFK_Emp(EmpFrom);
-				gwl.setFK_EmpText(EmpFromT);
+				gwl.setEmpNo(EmpFrom);
+				gwl.setEmpName(EmpFromT);
 				if (gwl.getIsExits())
 				{
 					continue; //有可能是反复退回的情况.
 				}
 
-				Emp emp = new Emp(gwl.getFK_Emp());
-				gwl.setFK_Dept(emp.getFK_Dept());
+				Emp emp = new Emp(gwl.getEmpNo());
+				gwl.setDeptNo(emp.getDeptNo());
 
 				gwl.setSDT(dr.getValue("RDT").toString());
 				gwl.setDTOfWarning(gwf.getSDTOfNode());
 
-				gwl.setEnable(true);
+				gwl.setItIsEnable(true);
 				gwl.setWhoExeIt(nd.getWhoExeIt());
 				gwl.Insert();
 			}
-
-
-				///#region 加入退回信息, 让接受人能够看到退回原因.
-			ReturnWork rw = new ReturnWork();
-			rw.Delete(ReturnWorkAttr.WorkID, workid); //先删除历史的信息.
-
-			rw.setWorkID(workid);
-			rw.setReturnNode(backToNodeID);
-			rw.setReturnNodeName(endN.getName());
-			rw.setReturner(WebUser.getNo());
-			rw.setReturnerName(WebUser.getName());
-
-			rw.setReturnToNode(currWl.getFK_Node());
-			rw.setReturnToEmp(currWl.getFK_Emp());
-			rw.setBeiZhu(note);
-			rw.setRDT(DataType.getCurrentDateTime());
-			rw.setBackTracking(false);
-			rw.setMyPK(DBAccess.GenerGUID(0, null, null));
-			rw.Insert();
-
-				///#endregion   加入退回信息, 让接受人能够看到退回原因.
-
 			//更新流程表的状态.
-			rpt.setFlowEnder(currWl.getFK_Emp());
+			rpt.setFlowEnder(currWl.getEmpNo());
 			rpt.setWFState(WFState.ReturnSta); //设置为退回的状态
-			rpt.setFlowEndNode(currWl.getFK_Node());
+			rpt.setFlowEndNode(currWl.getNodeID());
 			rpt.Update();
 
 			// 向接受人发送一条消息.
-			Dev2Interface.Port_SendMsg(currWl.getFK_Emp(), "工作恢复:" + gwf.getTitle(), "工作被:" + WebUser.getNo() + " 恢复." + note, "ReBack" + workid, SMSMsgType.SendSuccess, this.getNo(), Integer.parseInt(this.getNo() + "01"), workid, 0);
+			Dev2Interface.Port_SendMsg(currWl.getEmpNo(), "工作恢复:" + gwf.getTitle(), "工作被:" + WebUser.getNo() + " 恢复." + note, "ReBack" + workid, SMSMsgType.SendSuccess, this.getNo(), Integer.parseInt(this.getNo() + "01"), workid, 0);
 
 			//写入该日志.
-			WorkNode wn = new WorkNode(workid, currWl.getFK_Node());
-			wn.AddToTrack(ActionType.RebackOverFlow, currWl.getFK_Emp(), currWl.getFK_EmpText(), currWl.getFK_Node(), currWl.getFK_NodeText(), note);
+			WorkNode wn = new WorkNode(workid, currWl.getNodeID());
+			wn.AddToTrack(ActionType.RebackOverFlow, currWl.getEmpNo(), currWl.getEmpName(), currWl.getNodeID(), currWl.getNodeName(), note);
 
-			return "@已经还原成功,现在的流程已经复原到(" + currWl.getFK_NodeText() + "). @当前工作处理人为(" + currWl.getFK_Emp() + " , " + currWl.getFK_EmpText() + ")  @请通知他处理工作.";
+			return "@已经还原成功,现在的流程已经复原到(" + currWl.getNodeName() + "). @当前工作处理人为(" + currWl.getEmpNo() + " , " + currWl.getEmpName() + ")  @请通知他处理工作.";
 		}
 		catch (RuntimeException ex)
 		{
@@ -1526,20 +1255,12 @@ public class FlowExt extends EntityNoName
 			return "<font color=red>会滚期间出现错误</font><hr>" + ex.getMessage();
 		}
 	}
-	/** 
-	 重新生成报表数据
-	 
-	 @return 
-	*/
-	public final String DoReloadRptData() throws Exception {
-		Flow fl = new Flow(this.getNo());
-		return fl.DoReloadRptData();
-	}
+
 	/** 
 	 重新产生标题，根据新的规则.
 	*/
 	public final String DoGenerFlowEmps() throws Exception {
-		if (!WebUser.getNo().equals("admin"))
+		if (WebUser.getIsAdmin() == false)
 		{
 			return "非admin用户不能执行。";
 		}
@@ -1548,7 +1269,6 @@ public class FlowExt extends EntityNoName
 
 		GenerWorkFlows gwfs = new GenerWorkFlows();
 		gwfs.Retrieve(GenerWorkFlowAttr.FK_Flow, this.getNo(), null);
-
 		for (GenerWorkFlow gwf : gwfs.ToJavaList())
 		{
 			String emps = "@";
@@ -1576,11 +1296,12 @@ public class FlowExt extends EntityNoName
 		wks.RetrieveAllFromDBSource(WorkAttr.Rec);
 		String table = nd.getHisWork().getEnMap().getPhysicsTable();
 		String tableRpt = "ND" + Integer.parseInt(this.getNo()) + "Rpt";
-		MapData md = new MapData(tableRpt);
-		for (Work wk : wks.ToJavaList())
+		bp.sys.MapData md = new bp.sys.MapData(tableRpt);
+		for (Entity en : wks)
 		{
+			Work wk=(Work)en;
 			GERpt rpt = new GERpt(tableRpt, wk.getOID());
-			if (!rpt.getFlowStarter().equals(WebUser.getNo()))
+			if (!Objects.equals(rpt.getFlowStarter(), WebUser.getNo()))
 			{
 				WebUser.Exit();
 				try
@@ -1598,20 +1319,17 @@ public class FlowExt extends EntityNoName
 			Paras ps = new Paras();
 			ps.Add("Title", title, false);
 			ps.Add("OID", wk.getOID());
-			ps.SQL = "UPDATE " + table + " SET Title=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "Title WHERE OID=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "OID";
+			ps.SQL = "UPDATE " + table + " SET Title=" + SystemConfig.getAppCenterDBVarStr() + "Title WHERE OID=" + SystemConfig.getAppCenterDBVarStr() + "OID";
 			DBAccess.RunSQL(ps);
 
-			ps.SQL = "UPDATE " + md.getPTable() + " SET Title=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "Title WHERE OID=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "OID";
+			ps.SQL = "UPDATE " + md.getPTable() + " SET Title=" + SystemConfig.getAppCenterDBVarStr() + "Title WHERE OID=" + SystemConfig.getAppCenterDBVarStr() + "OID";
 			DBAccess.RunSQL(ps);
 
-			ps.SQL = "UPDATE WF_GenerWorkFlow SET Title=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "Title WHERE WorkID=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "OID";
+			ps.SQL = "UPDATE WF_GenerWorkFlow SET Title=" + SystemConfig.getAppCenterDBVarStr() + "Title WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "OID";
 			DBAccess.RunSQL(ps);
-
-
 		}
 		Emp emp1 = new Emp("admin");
 		WebUser.SignInOfGener(emp1, "CH", false, false, null, null);
-
 		return "全部生成成功,影响数据(" + wks.size() + ")条";
 	}
 
@@ -1634,7 +1352,7 @@ public class FlowExt extends EntityNoName
 		for (Work wk : wks.ToJavaList())
 		{
 
-			if (!wk.getRec().equals(WebUser.getNo()))
+			if (!Objects.equals(wk.getRec(), WebUser.getNo()))
 			{
 				WebUser.Exit();
 				try
@@ -1653,17 +1371,17 @@ public class FlowExt extends EntityNoName
 			ps.Add("OID", wk.getOID());
 			if (DBAccess.IsExitsTableCol(md.getPTable(), "Title") == true)
 			{
-				ps.SQL = "UPDATE " + md.getPTable() + " SET Title=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "Title WHERE OID=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "OID";
+				ps.SQL = "UPDATE " + md.getPTable() + " SET Title=" + SystemConfig.getAppCenterDBVarStr() + "Title WHERE OID=" + SystemConfig.getAppCenterDBVarStr() + "OID";
 				DBAccess.RunSQL(ps);
 			}
 
 			if (table.equals(md.getPTable()) == false && DBAccess.IsExitsTableCol(table, "Title") == true)
 			{
-				ps.SQL = "UPDATE " + table + " SET Title=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "Title WHERE OID=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "OID";
+				ps.SQL = "UPDATE " + table + " SET Title=" + SystemConfig.getAppCenterDBVarStr() + "Title WHERE OID=" + SystemConfig.getAppCenterDBVarStr() + "OID";
 				DBAccess.RunSQL(ps);
 			}
 
-			ps.SQL = "UPDATE WF_GenerWorkFlow SET Title=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "Title WHERE WorkID=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "OID";
+			ps.SQL = "UPDATE WF_GenerWorkFlow SET Title=" + SystemConfig.getAppCenterDBVarStr() + "Title WHERE WorkID=" + SystemConfig.getAppCenterDBVarStr() + "OID";
 			DBAccess.RunSQL(ps);
 
 		}
@@ -1688,9 +1406,9 @@ public class FlowExt extends EntityNoName
 	/** 
 	 强制设置接受人
 	 
-	 param workid 工作人员ID
-	 param nodeID 节点ID
-	 param worker 工作人员
+	 @param workid 工作人员ID
+	 @param nodeID 节点ID
+	 @param worker 工作人员
 	 @return 执行结果.
 	*/
 	public final String DoSetTodoEmps(int workid, int nodeID, String worker) throws Exception {
@@ -1701,38 +1419,38 @@ public class FlowExt extends EntityNoName
 			return "workid=" + workid + "不正确.";
 		}
 
-		bp.port.Emp emp = new Emp();
-		emp.setNo(worker);
+		Emp emp = new Emp();
+		emp.setUserID(worker);
 		if (emp.RetrieveFromDBSources() == 0)
 		{
 			return "人员编号不正确" + worker + ".";
 		}
 
-		bp.wf.Node nd = new Node();
+		Node nd = new Node();
 		nd.setNodeID(nodeID);
 		if (nd.RetrieveFromDBSources() == 0)
 		{
 			return "err@节点编号[" + nodeID + "]不正确.";
 		}
 
-		gwf.setFK_Node(nodeID);
+		gwf.setNodeID(nodeID);
 		gwf.setNodeName(nd.getName());
-		gwf.setTodoEmps(emp.getNo() + "," + emp.getName() + ";");
+		gwf.setTodoEmps(emp.getUserID() + "," + emp.getName() +";");
 		gwf.setTodoEmpsNum(1);
 		gwf.setHuiQianTaskSta(HuiQianTaskSta.None);
 		gwf.Update();
 
-		DBAccess.RunSQL("UPDATE WF_GenerWorkerList SET IsPass=1 WHERE WorkID=" + workid);
+		DBAccess.RunSQL("UPDATE WF_GenerWorkerlist SET IsPass=1 WHERE WorkID=" + workid);
 
 		GenerWorkerList gwl = new GenerWorkerList();
-		gwl.setFK_Node(nodeID);
+		gwl.setNodeID(nodeID);
 		gwl.setWorkID(workid);
-		gwl.setFK_Emp(emp.getNo());
+		gwl.setEmpNo(emp.getUserID());
 		if (gwl.RetrieveFromDBSources() == 0)
 		{
 			Date date = DateUtils.addDay(new Date(), 3);
 			String dttime = DateUtils.format(date, "yyyy-MM-dd");
-			gwl.setFK_EmpText(emp.getName());
+			gwl.setEmpName(emp.getName());
 
 			if (nd.getHisCHWay() == CHWay.None)
 			{
@@ -1744,13 +1462,13 @@ public class FlowExt extends EntityNoName
 			}
 
 			gwl.setRDT(DateUtils.format(new Date(),"yyyy-MM-dd"));
-			gwl.setIsRead(false);
+			gwl.setItIsRead(false);
 			gwl.Insert();
 		}
 		else
 		{
-			gwl.setIsRead(false);
-			gwl.setIsPassInt(0);
+			gwl.setItIsRead(false);
+			gwl.setPassInt(0);
 			gwl.Update();
 		}
 		return "执行成功.";
@@ -1758,11 +1476,11 @@ public class FlowExt extends EntityNoName
 	/** 
 	 删除流程
 	 
-	 param workid
-	 param sd
+	 @param workid
+	 @param note
 	 @return 
 	*/
-	public final String DoDelDataOne(int workid, String note)throws Exception
+	public final String DoDelDataOne(int workid, String note)
 	{
 		try
 		{
@@ -1774,7 +1492,7 @@ public class FlowExt extends EntityNoName
 			return "删除失败:" + ex.getMessage();
 		}
 	}
-	public final String DoStopFlow(long workid, String note)throws Exception
+	public final String DoStopFlow(long workid, String note)
 	{
 		try
 		{
@@ -1784,6 +1502,8 @@ public class FlowExt extends EntityNoName
 		catch (RuntimeException ex)
 		{
 			return "删除失败:" + ex.getMessage();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 	/** 
@@ -1797,15 +1517,15 @@ public class FlowExt extends EntityNoName
 			throw new RuntimeException("传入的流程编号为空，请检查流程");
 		}
 		String flowID = Integer.parseInt(this.getNo()) + "01";
-		//return "../../Admin/AttrFlow/AutoStart.htm?s=d34&FK_Flow=" + this.No + "&ExtType=StartFlow&RefNo=";
-		return "../../Admin/AttrFlow/AutoStart/Default.htm?s=d34&FK_Flow=" + this.getNo() + "&ExtType=StartFlow&RefNo=";
+		//return "../../Admin/AttrFlow/AutoStart.htm?s=d34&FK_Flow=" + this.getNo() + "&ExtType=StartFlow&RefNo=";
+		return "../../Admin/AttrFlow/AutoStart/Default.htm?FK_Flow=" + this.getNo();
 	}
 	/** 
 	 执行运行
 	 
 	 @return 
 	*/
-	public final String DoRunIt() throws Exception {
+	public final String DoRunIt() {
 		return "../../Admin/TestFlow.htm?FK_Flow=" + this.getNo() + "&Lang=CH";
 	}
 	/** 
@@ -1813,13 +1533,13 @@ public class FlowExt extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoCheck() throws Exception {
+	public final String DoCheck() {
 		return "../../Admin/AttrFlow/CheckFlow.htm?FK_Flow=" + this.getNo() + "&Lang=CH";
 	}
-	public final String TestingContainer() throws Exception {
+	public final String TestingContainer() {
 		return "../../Admin/TestingContainer/TestFlow2020.htm?FK_Flow=" + this.getNo() + "&Lang=CH";
 	}
-	public final String DoCheck2018Url() throws Exception {
+	public final String DoCheck2018Url() {
 		return "../../Admin/Testing/FlowCheckError.htm?FK_Flow=" + this.getNo() + "&Lang=CH";
 	}
 	/** 
@@ -1827,7 +1547,7 @@ public class FlowExt extends EntityNoName
 	 
 	 @return 返回URL
 	*/
-	public final String DoLimit() throws Exception {
+	public final String DoLimit() {
 		return "../../Admin/AttrFlow/Limit/Default.htm?FK_Flow=" + this.getNo() + "&Lang=CH";
 	}
 	/** 
@@ -1835,7 +1555,7 @@ public class FlowExt extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoStartGuide() throws Exception {
+	public final String DoStartGuide() {
 		return "../../Admin/AttrFlow/StartGuide.htm?FK_Flow=" + this.getNo() + "&Lang=CH";
 	}
 	/** 
@@ -1843,7 +1563,7 @@ public class FlowExt extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoStartGuideV2019() throws Exception {
+	public final String DoStartGuideV2019() {
 		return "../../Admin/AttrFlow/StartGuide/Default.htm?FK_Flow=" + this.getNo() + "&Lang=CH";
 	}
 
@@ -1852,8 +1572,8 @@ public class FlowExt extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoImp() throws Exception {
-		return "../../Admin/AttrFlow/Imp.htm?FK_Flow=" + this.getNo() + "&Lang=CH&FK_FlowSort=" + this.getFK_FlowSort();
+	public final String DoImp() {
+		return "../../Admin/AttrFlow/Imp.htm?FK_Flow=" + this.getNo() + "&Lang=CH&FK_FlowSort=" + this.getFlowSortNo();
 	}
 
 	/** 
@@ -1861,7 +1581,7 @@ public class FlowExt extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoExps() throws Exception {
+	public final String DoExps() {
 		return "../../Admin/AttrFlow/Exp.htm?FK_Flow=" + this.getNo() + "&Lang=CH";
 	}
 
@@ -1892,17 +1612,19 @@ public class FlowExt extends EntityNoName
 	 更新之后的事情，也要更新缓存。
 	*/
 	@Override
-	protected void afterUpdate() throws Exception {
+	protected void afterUpdate() throws Exception
+	{
 		//写入日志.
 		bp.sys.base.Glo.WriteUserLog("更新流程属性：" + this.getName() + " - " + this.getNo(), "通用操作");
 
 		// Flow fl = new Flow();
-		// fl.No = this.No;
+		// fl.setNo(this.No;
 		// fl.RetrieveFromDBSources();
 		//fl.Update();
 	}
 	@Override
-	protected boolean beforeUpdate() throws Exception {
+	protected boolean beforeUpdate() throws Exception
+	{
 		//检查设计流程权限,集团模式下，不是自己创建的流程，不能设计流程.
 		bp.wf.template.TemplateGlo.CheckPower(this.getNo());
 
@@ -1934,7 +1656,7 @@ public class FlowExt extends EntityNoName
 
 
 			///#region StartFlows的清缓存
-		if (fl.isStartInMobile() != this.isStartInMobile() || fl.isCanStart() != this.isCanStart() || fl.getName().equals(this.getName()) == false)
+		if (fl.getItIsStartInMobile() != this.getItIsStartInMobile() || fl.getItIsCanStart() != this.getItIsCanStart() || fl.getName().equals(this.getName()) == false)
 		{
 			//清空WF_Emp 的StartFlows
 			DBAccess.RunSQL("UPDATE  WF_Emp Set StartFlows =''");
@@ -2003,13 +1725,13 @@ public class FlowExt extends EntityNoName
 
 					Node nd = new Node();
 					nd.setNodeID(Integer.parseInt(str));
-					if (nd.getIsExits() == false)
+					if (nd.IsExits() == false)
 					{
 						throw new RuntimeException("@业务数据同步数据配置错误，您设置的节点格式错误，节点[" + str + "]不是有效的节点。");
 					}
 
 					nd.RetrieveFromDBSources();
-					if (!this.getNo().equals(nd.getFK_Flow()))
+					if (!Objects.equals(nd.getFlowNo(), this.getNo()))
 					{
 						throw new RuntimeException("@业务数据同步数据配置错误，您设置的节点[" + str + "]不再本流程内。");
 					}
@@ -2037,27 +1759,38 @@ public class FlowExt extends EntityNoName
 		return super.beforeUpdate();
 	}
 	@Override
-	protected void afterInsertUpdateAction() throws Exception {
+	protected void afterInsertUpdateAction() throws Exception
+	{
 
 			///#region 更新PTale 后的业务处理
 		// 同步流程数据表.
 		String ndxxRpt = "ND" + Integer.parseInt(this.getNo()) + "Rpt";
-		Flow fl = new Flow();
-		fl.setNo(this.getNo());
-		fl.RetrieveFromDBSources();
-		fl.Update();
+		Flow fl = new Flow(this.getNo());
+		//判断流程是不是有对应的实体绑定的流程,不同步修改低代码导出系统导入时报错 @hongyan
+		if (DBAccess.IsExitsObject("Frm_Method") == true)
+		{
+			String dbstr = SystemConfig.getAppCenterDBVarStr();
+			String sql = "UPDATE Frm_Method SET Name=" + dbstr + "Name WHERE FlowNo=" + dbstr + "FlowNo AND MethodID=" + dbstr + "MethodID";
+			Paras paras = new Paras();
+			paras.SQL = sql;
+			paras.Add("Name", this.getName(), false);
+			paras.Add("FlowNo", this.getNo(), false);
+			paras.Add("MethodID", this.getNo(), false);
+			DBAccess.RunSQL(paras);
+		}
+
 		MapData md = new MapData(ndxxRpt);
 		if (md.getPTable().equals(fl.getPTable()) == false)
 		{
-			md.setPTable ( fl.getPTable());
+			md.setPTable(fl.getPTable());
 			md.Update();
 
 			Nodes nds = new Nodes();
 			nds.Retrieve(NodeAttr.FK_Flow, this.getNo(), null);
 			for (Node nd : nds.ToJavaList())
 			{
-				String sql = "";
-				if (nd.getIsSubThread() == true)
+			   String sql = "";
+				if (nd.getItIsSubThread() == true)
 				{
 					sql = "UPDATE Sys_MapData SET PTable=No WHERE No='ND" + nd.getNodeID() + "'";
 				}
@@ -2076,17 +1809,17 @@ public class FlowExt extends EntityNoName
 
 
 			///#region 为systype设置，当前所在节点的第2级别目录。
-		FlowSort fs = new FlowSort(fl.getFK_FlowSort());
+		FlowSort fs = new FlowSort(fl.getFlowSortNo());
 		if (DataType.IsNullOrEmpty(fs.getParentNo()) == true)
 		{
 			fs.setParentNo("0");
 		}
 
-		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 		{
 			if (fs.getParentNo().equals(WebUser.getOrgNo()) == true || fs.getParentNo().equals("100") == true)
 			{
-				this.setSysType(fl.getFK_FlowSort());
+				this.setSysType(fl.getFlowSortNo());
 			}
 			else
 			{
@@ -2106,14 +1839,14 @@ public class FlowExt extends EntityNoName
 		{
 			if (fs.getParentNo().equals("99") || fs.getParentNo().equals("0"))
 			{
-				this.setSysType(fl.getFK_FlowSort());
+				this.setSysType(fl.getFlowSortNo());
 			}
 			else
 			{
 				FlowSort fsP = new FlowSort(fs.getParentNo());
 				fsP.setNo(fs.getParentNo());
 
-				if (fsP.getParentNo().equals("99") || fsP.getParentNo().equals("0"))
+				if (Objects.equals(fsP.getParentNo(), "99") || Objects.equals(fsP.getParentNo(), "0"))
 				{
 					this.setSysType(fsP.getNo());
 				}
@@ -2136,8 +1869,6 @@ public class FlowExt extends EntityNoName
 		fl.RetrieveFromDBSources();
 		fl.Update();
 
-
-
 		super.afterInsertUpdateAction();
 	}
 
@@ -2145,16 +1876,13 @@ public class FlowExt extends EntityNoName
 
 
 		///#region 实验中的功能.
-	public final String DoNodeAttrsBatchSetting() throws Exception {
-		return "../../Admin/AttrFlow/NodeAttrsBatchSetting.htm?FK_Flow=" + this.getNo() + "&tk=" + (new Random()).nextDouble();
-
-	}
 	/** 
 	 删除多余的字段.
 	 
 	 @return 
 	*/
-	public final String DoDeleteFields() throws Exception {
+	public final String DoDeleteFields()
+	{
 		return "尚未完成.";
 	}
 	/** 
@@ -2162,7 +1890,8 @@ public class FlowExt extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoDeleteFieldsIsNull() throws Exception {
+	public final String DoDeleteFieldsIsNull()
+	{
 		return "尚未完成.";
 	}
 	/** 
@@ -2171,33 +1900,34 @@ public class FlowExt extends EntityNoName
 	 @return 
 	*/
 	public final String DoSetFWCModel() throws Exception {
-		Nodes nds = new Nodes(this.getNo());
 		GroupField gf = new GroupField();
+		Nodes nds = new Nodes(this.getNo());
 		for (Node nd : nds.ToJavaList())
 		{
-			if (nd.isStartNode())
+			if (nd.getItIsStartNode())
 			{
-				nd.setHisFormType(NodeFormType.FoolForm);
+				nd.setNodeFrmID( "ND" + nd.getNodeID());
+				nd.setFrmWorkCheckSta (FrmWorkCheckSta.Disable);
+				// nd.getHisFormType() = NodeFormType.FoolForm;
 				nd.Update();
 				continue;
 			}
 
 			bp.wf.template.FrmNodeComponent fnd = new FrmNodeComponent(nd.getNodeID());
 
-			if (nd.isEndNode() == true || nd.getHisToNodes().isEmpty())
+			//判断是否是最后一个节点.
+			if (nd.getItIsEndNode() == true || nd.getHisToNodes().size()== 0)
 			{
-				nd.setFrmWorkCheckSta(FrmWorkCheckSta.Readonly);
-				nd.setNodeFrmID("ND" + Integer.parseInt(this.getNo()) + "02");
-				nd.setHisFormType(NodeFormType.FoolForm);
+				nd.setFrmWorkCheckSta( FrmWorkCheckSta.Readonly); //最后一个是只读.
+				nd.setNodeFrmID( "ND" + Integer.parseInt(this.getNo()) + "02");
+				nd.setHisFormType(NodeFormType.RefNodeFrm); //引用到其他节点表单上.
 				nd.Update();
-
 
 				fnd.SetValByKey(NodeAttr.NodeFrmID, nd.getNodeFrmID());
 				fnd.SetValByKey(NodeAttr.FWCSta, nd.getFrmWorkCheckSta().getValue());
 
 				fnd.Update();
-
-				if (gf.IsExit(GroupFieldAttr.FrmID, "ND"+nd.getNodeID(), GroupFieldAttr.CtrlType, GroupCtrlType.FWC) == false)
+				if (gf.IsExit(GroupFieldAttr.FrmID, "ND" + nd.getNodeID(), GroupFieldAttr.CtrlType, GroupCtrlType.FWC) == false)
 				{
 					gf = new GroupField();
 					gf.setFrmID("ND" + nd.getNodeID());
@@ -2206,27 +1936,33 @@ public class FlowExt extends EntityNoName
 					gf.setIdx(0);
 					gf.Insert(); //插入.
 				}
-
 				continue;
 			}
 
-			//  fnd.HisFormType = NodeFormType.FoolForm;
-
-			fnd.Update(); //不执行更新，会导致部分字段错误.
-
 			nd.setFrmWorkCheckSta(FrmWorkCheckSta.Enable);
-			nd.setNodeFrmID("ND" + Integer.parseInt(this.getNo()) + "02");
-			nd.setHisFormType(NodeFormType.FoolForm);
+			nd.setNodeFrmID( "ND" + Integer.parseInt(this.getNo()) + "02");
+
+			if (String.valueOf(nd.getNodeID()).endsWith("02") == true)
+			{
+				nd.setHisFormType(NodeFormType.FoolForm);
+			}
+			else
+			{
+				nd.setHisFormType(NodeFormType.RefNodeFrm);
+			}
 			nd.Update();
-			if (gf.IsExit(GroupFieldAttr.FrmID, "ND"+nd.getNodeID(), GroupFieldAttr.CtrlType, GroupCtrlType.FWC) == false)
+
+			if (gf.IsExit(GroupFieldAttr.FrmID, "ND" + nd.getNodeID(), GroupFieldAttr.CtrlType, GroupCtrlType.FWC) == false)
 			{
 				gf = new GroupField();
-				gf.setFrmID("ND" + nd.getNodeID());
+				gf.setFrmID ("ND" + nd.getNodeID());
 				gf.setCtrlType(GroupCtrlType.FWC);
 				gf.setLab("审核组件");
 				gf.setIdx(0);
 				gf.Insert(); //插入.
 			}
+			//fnd.setHisFormType(NodeFormType.FoolForm;
+			fnd.Update(); //不执行更新，会导致部分字段错误.
 		}
 
 		return "设置成功...";

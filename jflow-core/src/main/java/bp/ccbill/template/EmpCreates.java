@@ -1,6 +1,6 @@
 package bp.ccbill.template;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.*;
 import bp.ccbill.*;
 import java.util.*;
@@ -15,12 +15,13 @@ public class EmpCreates extends EntitiesMM
 	/** 
 	 单据可创建的人员
 	*/
-	public EmpCreates()  {
+	public EmpCreates()
+	{
 	}
 	/** 
 	 单据可创建的人员
 	 
-	 param NodeID 表单IDID
+	 @param NodeID 表单IDID
 	*/
 	public EmpCreates(int NodeID) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -30,7 +31,7 @@ public class EmpCreates extends EntitiesMM
 	/** 
 	 单据可创建的人员
 	 
-	 param EmpNo EmpNo
+	 @param EmpNo EmpNo 
 	*/
 	public EmpCreates(String EmpNo) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -41,7 +42,8 @@ public class EmpCreates extends EntitiesMM
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		return new EmpCreate();
 	}
 
@@ -54,7 +56,8 @@ public class EmpCreates extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final java.util.List<EmpCreate> ToJavaList()  {
+	public final java.util.List<EmpCreate> ToJavaList()
+	{
 		return (java.util.List<EmpCreate>)(Object)this;
 	}
 	/** 
@@ -62,7 +65,8 @@ public class EmpCreates extends EntitiesMM
 	 
 	 @return List
 	*/
-	public final ArrayList<EmpCreate> Tolist()  {
+	public final ArrayList<EmpCreate> Tolist()
+	{
 		ArrayList<EmpCreate> list = new ArrayList<EmpCreate>();
 		for (int i = 0; i < this.size(); i++)
 		{

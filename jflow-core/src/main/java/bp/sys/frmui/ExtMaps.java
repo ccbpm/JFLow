@@ -1,6 +1,5 @@
 package bp.sys.frmui;
-
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import java.util.*;
 
 /** 
@@ -13,13 +12,15 @@ public class ExtMaps extends EntitiesMyPK
 	/** 
 	 地图s
 	*/
-	public ExtMaps() {
+	public ExtMaps()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new ExtMap();
 	}
 
@@ -32,7 +33,8 @@ public class ExtMaps extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<ExtMap> ToJavaList() {
+	public final java.util.List<ExtMap> ToJavaList()
+	{
 		return (java.util.List<ExtMap>)(Object)this;
 	}
 	/** 
@@ -40,7 +42,8 @@ public class ExtMaps extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<ExtMap> Tolist()  {
+	public final ArrayList<ExtMap> Tolist()
+	{
 		ArrayList<ExtMap> list = new ArrayList<ExtMap>();
 		for (int i = 0; i < this.size(); i++)
 		{

@@ -1,6 +1,5 @@
 package bp.sys;
 
-
 /** 
  文件保存方式
 */
@@ -19,7 +18,7 @@ public enum AthSaveWay
 	*/
 	FTPServer,
 	/**
-	 阿里云OSS
+	 * OSS
 	 */
 	OSS;
 

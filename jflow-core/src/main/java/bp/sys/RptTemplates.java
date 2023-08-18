@@ -1,9 +1,5 @@
 package bp.sys;
-
-import bp.da.*;
 import bp.en.*;
-import bp.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -13,13 +9,14 @@ public class RptTemplates extends Entities
 {
 
 		///#region 构造
-	public RptTemplates() throws Exception {
+	public RptTemplates()
+	{
 	}
 
 	/** 
 	 查询
 	 
-	 param EnsName
+	 @param EnsName
 	*/
 	public RptTemplates(String EnsName) throws Exception {
 		QueryObject qo = new QueryObject(this);
@@ -30,7 +27,8 @@ public class RptTemplates extends Entities
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new RptTemplate();
 	}
 
@@ -50,7 +48,8 @@ public class RptTemplates extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.List<RptTemplate> ToJavaList() {
+	public final java.util.List<RptTemplate> ToJavaList()
+	{
 		return (java.util.List<RptTemplate>)(Object)this;
 	}
 	/** 
@@ -58,7 +57,8 @@ public class RptTemplates extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<RptTemplate> Tolist()  {
+	public final ArrayList<RptTemplate> Tolist()
+	{
 		ArrayList<RptTemplate> list = new ArrayList<RptTemplate>();
 		for (int i = 0; i < this.size(); i++)
 		{

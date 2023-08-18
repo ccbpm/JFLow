@@ -1,8 +1,7 @@
 package bp.wf.template;
 
 import bp.da.*;
-import bp.en.*;
-
+import bp.en.*; import bp.en.Map;
 /** 
  轨迹图标组件
 */
@@ -10,44 +9,39 @@ public class FrmTrack extends Entity
 {
 
 		///#region 属性
-	public final String getNo() throws Exception {
+	public final String getNo() {
 		return "ND" + this.getNodeID();
 	}
-	public final void setNo(String value)throws Exception
-	{String nodeID = value.replace("ND", "");
+	public final void setNo(String value) throws Exception {
+		String nodeID = value.replace("ND", "");
 		this.setNodeID(Integer.parseInt(nodeID));
 	}
 	/** 
 	 节点ID
 	*/
-	public final int getNodeID() throws Exception
-	{
+	public final int getNodeID()  {
 		return this.GetValIntByKey(NodeAttr.NodeID);
 	}
-	public final void setNodeID(int value)
-	 {
+	public final void setNodeID(int value){
 		this.SetValByKey(NodeAttr.NodeID, value);
 	}
 	/** 
 	 控件状态
 	*/
-	public final FrmTrackSta getFrmTrackSta() throws Exception {
+	public final FrmTrackSta getFrmTrackSta() {
 		return FrmTrackSta.forValue(this.GetValIntByKey(FrmTrackAttr.FrmTrackSta));
 	}
-	public final void setFrmTrackSta(FrmTrackSta value)
-	 {
+	public final void setFrmTrackSta(FrmTrackSta value){
 		this.SetValByKey(FrmTrackAttr.FrmTrackSta, value.getValue());
 	}
 
 	/** 
 	 H
 	*/
-	public final float getFrmTrackH() throws Exception
-	{
+	public final float getFrmTrackH()  {
 		return this.GetValFloatByKey(FrmTrackAttr.FrmTrack_H);
 	}
-	public final void setFrmTrackH(float value)  throws Exception
-	 {
+	public final void setFrmTrackH(float value){
 		this.SetValByKey(FrmTrackAttr.FrmTrack_H, value);
 	}
 	public final String getFrmTrackHstr() throws Exception {
@@ -60,15 +54,13 @@ public class FrmTrack extends Entity
 	/** 
 	 节点名称.
 	*/
-	public final String getName() throws Exception
-	{
+	public final String getName()  {
 		return this.GetValStringByKey("Name");
 	}
 	/** 
 	 显示标签
 	*/
-	public final String getFrmTrackLab() throws Exception
-	{
+	public final String getFrmTrackLab()  {
 		return this.GetValStrByKey(FrmTrackAttr.FrmTrackLab);
 	}
 
@@ -80,7 +72,8 @@ public class FrmTrack extends Entity
 	 控制
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		uac.IsDelete = false;
@@ -91,18 +84,19 @@ public class FrmTrack extends Entity
 	 重写主键
 	*/
 	@Override
-	public String getPK()  {
+	public String getPK()
+	{
 		return "NodeID";
 	}
 	/** 
 	 轨迹图标组件
 	*/
-	public FrmTrack()  {
+	public FrmTrack()
+	{
 	}
 	/** 
 	 轨迹图标组件
-	 
-	 param no
+	 @param mapData
 	*/
 	public FrmTrack(String mapData) throws Exception {
 		if (mapData.contains("ND") == false)
@@ -130,8 +124,7 @@ public class FrmTrack extends Entity
 	}
 	/** 
 	 轨迹图标组件
-	 
-	 param no
+	 @param nodeID
 	*/
 	public FrmTrack(int nodeID) throws Exception {
 		this.setNodeID(nodeID);
@@ -141,14 +134,16 @@ public class FrmTrack extends Entity
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
 		}
 
 		Map map = new Map("WF_Node", "轨迹图标组件");
-		map.AddGroupAttr("轨迹组件");
+
+		map.AddGroupAttr("轨迹组件", "");
 		map.AddTBIntPK(NodeAttr.NodeID, 0, "节点ID", true, true);
 		map.AddTBString(NodeAttr.Name, null, "节点名称", true, true, 0, 100, 10);
 		map.AddTBString(FrmTrackAttr.FrmTrackLab, "轨迹", "显示标签", true, false, 0, 200, 10, false);
@@ -157,7 +152,6 @@ public class FrmTrack extends Entity
 			///#region 此处变更了 NodeSheet类中的，map 描述该部分也要变更.
 
 		map.AddDDLSysEnum(FrmTrackAttr.FrmTrackSta, FrmTrackSta.Disable.getValue(), "组件状态", true, true, FrmTrackAttr.FrmTrackSta, "@0=禁用@1=显示轨迹图@2=显示轨迹表");
-
 
 		map.AddTBFloat(FrmTrackAttr.FrmTrack_H, 300, "高度", true, false);
 
@@ -169,7 +163,8 @@ public class FrmTrack extends Entity
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception {
+	protected boolean beforeUpdateInsertAction() throws Exception
+	{
 		return super.beforeUpdateInsertAction();
 	}
 

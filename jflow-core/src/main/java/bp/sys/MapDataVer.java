@@ -2,11 +2,7 @@ package bp.sys;
 
 import bp.da.*;
 import bp.en.Map;
-import bp.sys.base.*;
 import bp.en.*;
-import bp.pub.*;
-import bp.*;
-import java.util.*;
 
 /** 
  表单模板版本管理
@@ -15,80 +11,61 @@ public class MapDataVer extends EntityMyPK
 {
 
 		///#region 属性
-	public final int getVer() throws Exception
-	{
+	public final int getVer()  {
 		return this.GetValIntByKey(MapDataVerAttr.Ver);
 	}
-	public final void setVer(int value)  throws Exception
-	 {
+	public final void setVer(int value){
 		this.SetValByKey(MapDataVerAttr.Ver, value);
 	}
-	public final int isRel() throws Exception
-	{
+	public final int getItIsRel()  {
 		return this.GetValIntByKey(MapDataVerAttr.IsRel);
 	}
-	public final void setRel(int value)  throws Exception
-	 {
+	public final void setItIsRel(int value){
 		this.SetValByKey(MapDataVerAttr.IsRel, value);
 	}
-	public final int getRowNum() throws Exception
-	{
+	public final int getRowNum()  {
 		return this.GetValIntByKey(MapDataVerAttr.RowNum);
 	}
-	public final void setRowNum(int value)  throws Exception
-	 {
+	public final void setRowNum(int value){
 		this.SetValByKey(MapDataVerAttr.RowNum, value);
 	}
-	public final String getFrmID() throws Exception
-	{
+	public final String getFrmID()  {
 		return this.GetValStringByKey(MapDataVerAttr.FrmID);
 	}
-	public final void setFrmID(String value)  throws Exception
-	 {
+	public final void setFrmID(String value){
 		this.SetValByKey(MapDataVerAttr.FrmID, value);
 	}
-	public final String getRec() throws Exception
-	{
+	public final String getRec()  {
 		return this.GetValStringByKey(MapDataVerAttr.Rec);
 	}
-	public final void setRec(String value)  throws Exception
-	 {
+	public final void setRec(String value){
 		this.SetValByKey(MapDataVerAttr.Rec, value);
 	}
-	public final String getRecName() throws Exception
-	{
+	public final String getRecName()  {
 		return this.GetValStringByKey(MapDataVerAttr.RecName);
 	}
-	public final void setRecName(String value)  throws Exception
-	 {
+	public final void setRecName(String value){
 		this.SetValByKey(MapDataVerAttr.RecName, value);
 	}
-	public final String getRecNote() throws Exception
-	{
+	public final String getRecNote()  {
 		return this.GetValStringByKey(MapDataVerAttr.RecNote);
 	}
-	public final void setRecNote(String value)  throws Exception
-	 {
+	public final void setRecNote(String value){
 		this.SetValByKey(MapDataVerAttr.RecNote, value);
 	}
-	public final void setRDT(String value)  throws Exception
-	 {
+	public final void setRDT(String value){
 		this.SetValByKey(MapDataVerAttr.RDT, value);
 	}
-	public final void setAttrsNum(int value)  throws Exception
-	 {
+	public final void setAttrsNum(int value){
 		this.SetValByKey(MapDataVerAttr.AttrsNum, value);
 	}
-	public final void setDtlsNum(int value)  throws Exception
-	 {
+	public final void setDtlsNum(int value){
 		this.SetValByKey(MapDataVerAttr.DtlsNum, value);
 	}
-	public final void setAthsNum(int value)  throws Exception
-	 {
+	public final void setAthsNum(int value){
 		this.SetValByKey(MapDataVerAttr.AthsNum, value);
 	}
-	public final void setExtsNum(int value)  throws Exception
-	 {
+	public final void setExtsNum(int value){
 		this.SetValByKey(MapDataVerAttr.ExtsNum, value);
 	}
 
@@ -100,10 +77,10 @@ public class MapDataVer extends EntityMyPK
 	/** 
 	 模板版本管理
 	*/
-	public MapDataVer()  {
-	}
-	public MapDataVer(String mypk)throws Exception
+	public MapDataVer()
 	{
+	}
+	public MapDataVer(String mypk) throws Exception {
 		this.setMyPK(mypk);
 		this.Retrieve();
 	}
@@ -111,7 +88,8 @@ public class MapDataVer extends EntityMyPK
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -148,13 +126,13 @@ public class MapDataVer extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected boolean beforeInsert()  throws Exception
-	 {
+	protected boolean beforeInsert() throws Exception{
 		this.SetValByKey("RDT", DataType.getCurrentDateTime());
 		return super.beforeInsert();
 	}
 	@Override
-	protected boolean beforeDelete() throws Exception {
+	protected boolean beforeDelete() throws Exception
+	{
 		//如果改版本的数据已经在存储表中使用，则不能删除
 		MapData md = new MapData(this.getFrmID());
 		int count = DBAccess.RunSQLReturnValInt("SELECT Count(*) From " + md.getPTable() + " WHERE AtPara like '%@FrmVer=" + this.getVer() + "%'");
@@ -167,7 +145,8 @@ public class MapDataVer extends EntityMyPK
 	}
 
 	@Override
-	protected void afterDelete() throws Exception {
+	protected void afterDelete() throws Exception
+	{
 		//删除版本需要删除相关的表单信息
 		MapData md = new MapData(this.getFrmID() + "." + this.getVer());
 		md.Delete();

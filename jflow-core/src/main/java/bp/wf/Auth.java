@@ -1,13 +1,6 @@
 package bp.wf;
 
-import bp.da.*;
-import bp.en.Map;
-import bp.web.*;
-import bp.en.*;
-import bp.port.*;
-import bp.sys.*;
-import bp.*;
-import java.util.*;
+import bp.en.*; import bp.en.Map;
 
 /** 
  授权
@@ -19,57 +12,46 @@ public class Auth extends EntityMyPK
 	/** 
 	 流程编号
 	*/
-	public final String getFlowNo() throws Exception
-	{
+	public final String getFlowNo() {
 		return this.GetValStringByKey(AuthAttr.FlowNo);
 	}
-	public final void setFlowNo(String value)  throws Exception
-	 {
+	public final void setFlowNo(String value){
 		this.SetValByKey(AuthAttr.FlowNo, value);
 	}
 	/** 
 	 取回日期
 	*/
-	public final String getTakeBackDT() throws Exception
-	{
+	public final String getTakeBackDT()  {
 		return this.GetValStringByKey(AuthAttr.TakeBackDT);
 	}
-	public final void setTakeBackDT(String value)  throws Exception
-	 {
+	public final void setTakeBackDT(String value){
 		this.SetValByKey(AuthAttr.TakeBackDT, value);
 	}
-	public final String getAuther() throws Exception
-	{
+	public final String getAuther()  {
 		return this.GetValStringByKey(AuthAttr.Auther);
 	}
-	public final void setAuther(String value)  throws Exception
-	 {
+	public final void setAuther(String value){
 		this.SetValByKey(AuthAttr.Auther, value);
 	}
-	public final String getAutherToEmpNo() throws Exception
-	{
+	public final String getAutherToEmpNo()  {
 		return this.GetValStringByKey(AuthAttr.AutherToEmpNo);
 	}
-	public final void setAutherToEmpNo(String value)  throws Exception
-	 {
+	public final void setAutherToEmpNo(String value){
 		this.SetValByKey(AuthAttr.AutherToEmpNo, value);
 	}
-	public final String getAutherToEmpName() throws Exception
-	{
+	public final String getAutherToEmpName()  {
 		return this.GetValStringByKey(AuthAttr.AutherToEmpName);
 	}
-	public final void setAutherToEmpName(String value)  throws Exception
-	 {
+	public final void setAutherToEmpName(String value){
 		this.SetValByKey(AuthAttr.AutherToEmpName, value);
 	}
 	/** 
 	 授权类型
 	*/
-	public final AuthorWay getAuthType() throws Exception {
+	public final AuthorWay getAuthType() {
 		return AuthorWay.forValue(this.GetValIntByKey(AuthAttr.AuthType));
 	}
-	public final void setAuthType(AuthorWay value)  throws Exception
-	 {
+	public final void setAuthType(AuthorWay value){
 		this.SetValByKey(AuthAttr.AuthType, value.getValue());
 	}
 
@@ -80,13 +62,15 @@ public class Auth extends EntityMyPK
 	/** 
 	 授权
 	*/
-	public Auth()  {
+	public Auth()
+	{
 	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();

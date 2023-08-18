@@ -3,18 +3,18 @@ package bp.wf.httphandler;
 import bp.da.*;
 import bp.difference.*;
 import bp.*;
-import bp.difference.handler.WebContralBase;
 import bp.wf.*;
 
 /** 
  页面功能实体
 */
-public class WF_Admin_Port extends WebContralBase
+public class WF_Admin_Port extends bp.difference.handler.DirectoryPageBase
 {
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_Port() throws Exception {
+	public WF_Admin_Port()
+	{
 	}
 
 
@@ -25,7 +25,8 @@ public class WF_Admin_Port extends WebContralBase
 	 @return 
 	*/
 	@Override
-	protected String DoDefaultMethod() throws Exception {
+	protected String DoDefaultMethod()
+	{
 		switch (this.getDoType())
 		{
 			case "DtlFieldUp": //字段上移
@@ -39,4 +40,30 @@ public class WF_Admin_Port extends WebContralBase
 	}
 
 		///#endregion 执行父类的重写方法.
+
+
+		///#region OrderOfDept 部门顺序调整 .
+	/** 
+	 
+	 
+	 @return 
+	*/
+	public final String OrderOfDept_Init()
+	{
+		String sql = "SELECT No,Name,ParentNo,Idx FROM Port_Dept";
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
+		if (SystemConfig.getAppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		{
+			dt.Columns.get(0).ColumnName = "No";
+			dt.Columns.get(1).ColumnName = "Name";
+			dt.Columns.get(2).ColumnName = "ParentNo";
+			dt.Columns.get(3).ColumnName = "Idx";
+		}
+		return "";
+	}
+
+		///#endregion xxx 界面方法.
+
+
+
 }

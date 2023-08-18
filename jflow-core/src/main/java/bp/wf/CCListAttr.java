@@ -1,7 +1,7 @@
 package bp.wf;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.wf.*;
 import bp.port.*;
 import bp.*;
@@ -23,17 +23,18 @@ public class CCListAttr extends EntityMyPKAttr
 	*/
 	public static final String Doc = "Doc";
 	/** 
-	 抄送的节点
+	 工作节点
 	*/
-	public static final String FK_Node = "FK_Node";
-	/** 
+	public static final String NodeIDCC = "NodeIDCC";
+	public static final String NodeIDWork = "NodeIDWork"; //抄送节点.
+	/**
 	 从节点
 	*/
 	public static final String NDFrom = "NDFrom";
 	/** 
 	 流程
 	*/
-	public static final String FK_Flow = "FK_Flow";
+	public static final String FlowNo = "FlowNo";
 	public static final String FlowName = "FlowName";
 	public static final String NodeName = "NodeName";
 	/** 
@@ -61,7 +62,11 @@ public class CCListAttr extends EntityMyPKAttr
 	/** 
 	 抄送人员
 	*/
-	public static final String Rec = "Rec";
+	public static final String RecEmpNo = "RecEmpNo";
+	/** 
+	 抄送人员名称
+	*/
+	public static final String RecEmpName = "RecEmpName";
 	/** 
 	 RDT
 	*/
@@ -97,4 +102,10 @@ public class CCListAttr extends EntityMyPKAttr
 	public static final String CCToOrgName = "CCToOrgName";
 	public static final String CCToDept = "CCToDept";
 	public static final String CCToDeptName = "CCToDeptName";
+
+	public static final String ToNodeID = "ToNodeID";
+	public static final String ToNodeName = "ToNodeName";
+
+	public static final String DeptNo = "DeptNo";
+	public static final String DeptName = "DeptName";
 }

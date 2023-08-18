@@ -1,7 +1,5 @@
 package bp.en;
 
-import bp.da.*;
-
 import java.util.*;
 
 /** 
@@ -28,7 +26,7 @@ public class GETrees extends EntitiesNoName
 		this.Desc = tableDesc;
 	}
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new GETree(this.SFTable, this.Desc);
 	}
@@ -47,7 +45,7 @@ public class GETrees extends EntitiesNoName
 	*/
 	public final java.util.List<GETree> ToJavaList()throws Exception
 	{
-		return (java.util.List<GETree>)(Object)this;
+		return (java.util.List<GETree>)(Object)(Object)this;
 	}
 	/** 
 	 转化成list

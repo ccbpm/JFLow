@@ -1,10 +1,5 @@
 package bp.wf;
 
-import bp.wf.*;
-import bp.web.*;
-import bp.en.*;
-import bp.da.*;
-import bp.*;
 
 /** 
  发起流程参数列表,为了防止参数错误.
@@ -54,7 +49,6 @@ public class StartFlowParaNameList
 	 发起人
 	*/
 	public static final String PEmp = "PEmp";
-
 
 		///#endregion.
 

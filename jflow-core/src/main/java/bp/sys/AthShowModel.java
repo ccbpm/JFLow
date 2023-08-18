@@ -22,7 +22,7 @@ public enum AthShowModel
 		return this.ordinal();
 	}
 
-	public static AthShowModel forValue(int value) 
+	public static AthShowModel forValue(int value)
 	{
 		return values()[value];
 	}

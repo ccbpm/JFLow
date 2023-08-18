@@ -1,7 +1,7 @@
 package bp.ccfast.ccmenu;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
 import bp.*;
 import bp.ccfast.*;
@@ -17,13 +17,15 @@ public class Menus extends EntitiesNoName
 	/** 
 	 菜单s
 	*/
-	public Menus()  {
+	public Menus()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new Menu();
 	}
 	@Override
@@ -33,8 +35,8 @@ public class Menus extends EntitiesNoName
 			return super.RetrieveAll("Idx");
 		}
 
-		////集团模式下的岗位体系: @0=每套组织都有自己的岗位体系@1=所有的组织共享一套岗则体系.
-		//if (bp.difference.SystemConfig.GroupStationModel == 1)
+		////集团模式下的角色体系: @0=每套组织都有自己的角色体系@1=所有的组织共享一套岗则体系.
+		//if (bp.difference.SystemConfig.getGroupStationModel() == 1)
 		//    return base.RetrieveAll("Idx");
 
 		//按照orgNo查询.
@@ -50,7 +52,8 @@ public class Menus extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<Menu> ToJavaList()  {
+	public final java.util.List<Menu> ToJavaList()
+	{
 		return (java.util.List<Menu>)(Object)this;
 	}
 	/** 
@@ -58,7 +61,8 @@ public class Menus extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<Menu> Tolist() {
+	public final ArrayList<Menu> Tolist()
+	{
 		ArrayList<Menu> list = new ArrayList<Menu>();
 		for (int i = 0; i < this.size(); i++)
 		{

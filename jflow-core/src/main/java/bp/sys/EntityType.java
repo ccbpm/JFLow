@@ -1,6 +1,5 @@
 package bp.sys;
 
-
 /** 
  实体类型
 */
@@ -31,7 +30,8 @@ public enum EntityType
 
 	private int intValue;
 	private static java.util.HashMap<Integer, EntityType> mappings;
-	private static java.util.HashMap<Integer, EntityType> getMappings()  {
+	private static java.util.HashMap<Integer, EntityType> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (EntityType.class)
@@ -46,7 +46,8 @@ public enum EntityType
 	}
 
 	private EntityType(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 

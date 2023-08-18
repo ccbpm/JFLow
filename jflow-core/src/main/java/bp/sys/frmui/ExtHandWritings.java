@@ -1,6 +1,9 @@
 package bp.sys.frmui;
 
-import bp.en.*;
+import bp.da.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.sys.*;
 import java.util.*;
 
 /** 
@@ -13,13 +16,15 @@ public class ExtHandWritings extends EntitiesMyPK
 	/** 
 	 手写签名版s
 	*/
-	public ExtHandWritings()  {
+	public ExtHandWritings()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new ExtHandWriting();
 	}
 
@@ -32,7 +37,8 @@ public class ExtHandWritings extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<ExtHandWriting> ToJavaList() {
+	public final java.util.List<ExtHandWriting> ToJavaList()
+	{
 		return (java.util.List<ExtHandWriting>)(Object)this;
 	}
 	/** 
@@ -40,7 +46,8 @@ public class ExtHandWritings extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<ExtHandWriting> Tolist()  {
+	public final ArrayList<ExtHandWriting> Tolist()
+	{
 		ArrayList<ExtHandWriting> list = new ArrayList<ExtHandWriting>();
 		for (int i = 0; i < this.size(); i++)
 		{

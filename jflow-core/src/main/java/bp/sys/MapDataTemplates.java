@@ -1,8 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -15,13 +13,15 @@ public class MapDataTemplates extends EntitiesNoName
 	/** 
 	 映射基础s
 	*/
-	public MapDataTemplates() throws Exception {
+	public MapDataTemplates()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new MapDataTemplate();
 	}
 
@@ -34,7 +34,8 @@ public class MapDataTemplates extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<MapDataTemplate> ToJavaList() {
+	public final java.util.List<MapDataTemplate> ToJavaList()
+	{
 		return (java.util.List<MapDataTemplate>)(Object)this;
 	}
 	/** 
@@ -42,7 +43,8 @@ public class MapDataTemplates extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<MapDataTemplate> Tolist()  {
+	public final ArrayList<MapDataTemplate> Tolist()
+	{
 		ArrayList<MapDataTemplate> list = new ArrayList<MapDataTemplate>();
 		for (int i = 0; i < this.size(); i++)
 		{

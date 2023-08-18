@@ -1,12 +1,11 @@
 package bp.ccbill.sys;
 
 import bp.da.*;
+import bp.en.Map;
 import bp.web.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
 import bp.ccbill.template.*;
-import bp.*;
-import bp.ccbill.*;
 
 /** 
  独立方法
@@ -19,27 +18,23 @@ public class Func extends EntityNoName
 	/** 
 	 方法ID - 不是主键
 	*/
-	public final String getMethodID() throws Exception {
+	public final String getMethodID() {
 		return this.GetValStringByKey(MethodAttr.MethodID);
 	}
-	public final void setMethodID(String value)  throws Exception
-	 {
+	public final void setMethodID(String value)  {
 		this.SetValByKey(MethodAttr.MethodID, value);
 	}
 
-	public final String getMsgErr() throws Exception
-	{
+	public final String getMsgErr() {
 		return this.GetValStringByKey(MethodAttr.MsgErr);
 	}
-	public final void setMsgErr(String value) throws Exception {
+	public final void setMsgErr(String value)  {
 		this.SetValByKey(MethodAttr.MsgErr, value);
 	}
-	public final String getMsgSuccess() throws Exception
-	{
+	public final String getMsgSuccess() {
 		return this.GetValStringByKey(MethodAttr.MsgSuccess);
 	}
-	public final void setMsgSuccess(String value)  throws Exception
-	 {
+	public final void setMsgSuccess(String value)  {
 		this.SetValByKey(MethodAttr.MsgSuccess, value);
 	}
 	public final String getMethodDocUrl() throws Exception {
@@ -51,8 +46,7 @@ public class Func extends EntityNoName
 		}
 		return s;
 	}
-	public final void setMethodDocUrl(String value)  throws Exception
-	 {
+	public final void setMethodDocUrl(String value)  {
 		this.SetValByKey(MethodAttr.MethodDoc_Url, value);
 	}
 	/** 
@@ -66,26 +60,28 @@ public class Func extends EntityNoName
 		}
 		return strs;
 	}
-	public final void setMethodDocSQL(String value)throws Exception
-	{this.SaveBigTxtToDB("SQLScript", value);
+	public final void setMethodDocSQL(String value) throws Exception {
+		this.SaveBigTxtToDB("SQLScript", value);
 	}
 	/** 
 	 获得该实体的demo.
 	*/
-	public final String getMethodDocJavaScriptDemo() throws Exception {
+	public final String getMethodDocJavaScriptDemo()
+	{
 		String file = bp.difference.SystemConfig.getCCFlowAppPath() + "WF/CCBill/Admin/MethodDoc/MethodDocDemoJS.txt";
 		String doc = DataType.ReadTextFile(file); //读取文件.
 		doc = doc.replace("/#", "+"); //为什么？
 		doc = doc.replace("/$", "-"); //为什么？
 
-			//  doc = doc.Replace("@FrmID", this.FrmID);
+		//  doc = doc.replace("@FrmID", this.FrmID);
 
 		return doc;
 	}
-	public final String getMethodDocSQLDemo() throws Exception {
+	public final String getMethodDocSQLDemo()
+	{
 		String file = bp.difference.SystemConfig.getCCFlowAppPath() + "WF/CCBill/Admin/MethodDoc/MethodDocDemoSQL.txt";
 		String doc = DataType.ReadTextFile(file); //读取文件.
-													  //  doc = doc.Replace("@FrmID", this.FrmID);
+												  //  doc = doc.replace("@FrmID", this.FrmID);
 		return doc;
 	}
 	/** 
@@ -136,30 +132,28 @@ public class Func extends EntityNoName
 		strs = strs.replace("/$", "-");
 		return strs;
 	}
-	public final void setMethodDocJavaScript(String value)throws Exception
-	{this.SaveBigTxtToDB("JSScript", value);
+	public final void setMethodDocJavaScript(String value) throws Exception {
+
+		this.SaveBigTxtToDB("JSScript", value);
 
 	}
 
 	/** 
 	 方法类型：@0=SQL@1=URL@2=JavaScript@3=业务单元
 	*/
-	public final int getMethodDocTypeOfFunc() throws Exception
-	{
+	public final int getMethodDocTypeOfFunc() {
 		return this.GetValIntByKey(MethodAttr.MethodDocTypeOfFunc);
 	}
-	public final void setMethodDocTypeOfFunc(int value)  throws Exception
-	 {
+	public final void setMethodDocTypeOfFunc(int value)  {
 		this.SetValByKey(MethodAttr.MethodDocTypeOfFunc, value);
 	}
 	/** 
 	 方法类型
 	*/
-	public final RefMethodType getRefMethodType() throws Exception {
+	public final RefMethodType getRefMethodType() {
 		return RefMethodType.forValue(this.GetValIntByKey(MethodAttr.RefMethodType));
 	}
-	public final void setRefMethodType(RefMethodType value)  throws Exception
-	 {
+	public final void setRefMethodType(RefMethodType value)  {
 		this.SetValByKey(MethodAttr.RefMethodType, value.getValue());
 	}
 
@@ -171,7 +165,8 @@ public class Func extends EntityNoName
 	 权限控制
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (WebUser.getIsAdmin())
 		{
@@ -183,17 +178,18 @@ public class Func extends EntityNoName
 	/** 
 	 独立方法
 	*/
-	public Func()  {
+	public Func()
+	{
 	}
-	public Func(String no) throws Exception {
+	public Func(String no) throws Exception  {
 		this.setNo(no);
 		this.Retrieve();
 	}
-	/** 
-	 重写基类方法
-	*/
+	/**
+	 * 重写基类方法
+	 */
 	@Override
-	public bp.en.Map getEnMap()  {
+	public Map getEnMap(){
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -210,7 +206,9 @@ public class Func extends EntityNoName
 		map.AddDDLSysEnum(FuncAttr.FuncSrc, 0, "功能来源", true, false, "FuncSrc", "@0=自定义@1=系统内置");
 		map.AddTBString(FuncAttr.DTSName, null, "功能内容", true, false, 0, 300, 10, true);
 
-		map.AddTBStringDoc(FuncAttr.Docs, null, "功能说明", true, false);
+
+
+		map.AddTBStringDoc(FuncAttr.Docs, null, "功能说明", true, false, true, 10);
 		map.SetHelperAlert(FuncAttr.Docs, "对于该功能的描述.");
 
 		map.AddTBString(FuncAttr.WarningMsg, null, "独立方法警告信息", true, false, 0, 300, 10, true);
@@ -222,13 +220,13 @@ public class Func extends EntityNoName
 		map.AddTBInt(FuncAttr.IsHavePara, 0, "是否含有参数?", true, false);
 
 		RefMethod rm = new RefMethod();
-			//rm.Title = "方法参数"; // "设计表单";
-			//rm.ClassMethodName = this.ToString() + ".DoParas";
-			//rm.Visable = true;
-			//rm.refMethodType = RefMethodType.RightFrameOpen;
-			//rm.Target = "_blank";
-			//rm.GroupName = "开发接口";
-			//  map.AddRefMethod(rm);
+		//rm.Title = "方法参数"; // "设计表单";
+		//rm.ClassMethodName = this.ToString() + ".DoParas";
+		//rm.Visable = true;
+		//rm.refMethodType = RefMethodType.RightFrameOpen;
+		//rm.Target = "_blank";
+		//rm.GroupName = "开发接口";
+		//  map.AddRefMethod(rm);
 
 		rm = new RefMethod();
 		rm.Title = "方法内容"; // "设计表单";
@@ -236,7 +234,7 @@ public class Func extends EntityNoName
 		rm.Visable = true;
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Target = "_blank";
-			//rm.GroupName = "开发接口";
+		//rm.GroupName = "开发接口";
 		map.AddRefMethod(rm);
 
 		this.set_enMap(map);
@@ -248,7 +246,8 @@ public class Func extends EntityNoName
 
 		///#region 执行方法.
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		this.setNo(DBAccess.GenerGUID(0, null, null));
 		return super.beforeInsert();
 	}
@@ -257,7 +256,7 @@ public class Func extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoParas()  {
+	public final String DoParas() {
 		return "../../CCBill/Admin/MethodParas.htm?No=" + this.getNo();
 	}
 	/** 
@@ -265,7 +264,7 @@ public class Func extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoDocs()  {
+	public final String DoDocs() {
 		return "../../CCBill/Admin/MethodDocSys/Default.htm?No=" + this.getNo();
 	}
 

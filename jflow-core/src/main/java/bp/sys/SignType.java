@@ -1,7 +1,4 @@
 package bp.sys;
-
-import bp.*;
-
 /** 
  数字签名类型
 */
@@ -30,11 +27,13 @@ public enum SignType
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
 	public static SignType forValue(int value)
-	{return values()[value];
+	{
+		return values()[value];
 	}
 }

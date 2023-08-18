@@ -1,11 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.wf.*;
-import bp.port.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -19,13 +14,15 @@ public class Tasks extends EntitiesMyPK
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new Task();
 	}
 	/** 
 	 任务
 	*/
-	public Tasks() throws Exception {
+	public Tasks()
+	{
 	}
 
 		///#endregion
@@ -37,7 +34,8 @@ public class Tasks extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<Task> ToJavaList() {
+	public final java.util.List<Task> ToJavaList()
+	{
 		return (java.util.List<Task>)(Object)this;
 	}
 	/** 
@@ -45,7 +43,8 @@ public class Tasks extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<Task> Tolist()  {
+	public final ArrayList<Task> Tolist()
+	{
 		ArrayList<Task> list = new ArrayList<Task>();
 		for (int i = 0; i < this.size(); i++)
 		{

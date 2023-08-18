@@ -1,20 +1,28 @@
 package bp.wf.dts;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
+import bp.sys.CCFormAPI;
 import bp.wf.template.*;
+import bp.*;
 import bp.wf.*;
+
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.io.*;
+import java.time.*;
+
 /** 
  Method 的摘要说明
 */
-public class OneKeyBackCCFlow extends Method
+public class
+OneKeyBackCCFlow extends Method
 {
 	/** 
 	 不带有参数的方法
 	*/
-	public OneKeyBackCCFlow()throws Exception
+	public OneKeyBackCCFlow()
 	{
 		this.Title = "一键备份流程与表单。";
 		this.Help = "把流程、表单、组织结构数据都生成xml文档备份到C:/CCFlowTemplete下面。";
@@ -48,9 +56,8 @@ public class OneKeyBackCCFlow extends Method
 	 @return 返回执行结果
 	*/
 	@Override
-	public Object Do()throws Exception
-	{
-		String path = "C:/CCFlowTemplete" + DataType.getCurrentDateByFormart("yy年MM月dd日HH时mm分ss秒");
+	public Object Do() throws Exception {
+		String path = "C:/CCFlowTemplete" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yy年MM月dd日HH时mm分ss秒"));
 		if ((new File(path)).isDirectory() == false)
 		{
 			(new File(path)).mkdirs();
@@ -61,7 +68,7 @@ public class OneKeyBackCCFlow extends Method
 		DataSet dsFlows = new DataSet();
 		//WF_FlowSort
 		DataTable dt = DBAccess.RunSQLReturnTable("SELECT * FROM WF_FlowSort");
-		dt.setTableName("WF_FlowSort");
+		dt.TableName = "WF_FlowSort";
 		dsFlows.Tables.add(dt);
 		dsFlows.WriteXml(path + "/FlowTables.xml");
 
@@ -72,22 +79,22 @@ public class OneKeyBackCCFlow extends Method
 		DataSet dsPort = new DataSet();
 		//emps
 		dt = DBAccess.RunSQLReturnTable("SELECT * FROM Port_Emp");
-		dt.setTableName("Port_Emp");
+		dt.TableName = "Port_Emp";
 		dsPort.Tables.add(dt);
 
 		//Port_Dept
 		dt = DBAccess.RunSQLReturnTable("SELECT * FROM Port_Dept");
-		dt.setTableName("Port_Dept");
+		dt.TableName = "Port_Dept";
 		dsPort.Tables.add(dt);
 
 		//Port_Station
 		dt = DBAccess.RunSQLReturnTable("SELECT * FROM Port_Station");
-		dt.setTableName("Port_Station");
+		dt.TableName = "Port_Station";
 		dsPort.Tables.add(dt);
 
 		//Port_EmpStation
 		dt = DBAccess.RunSQLReturnTable("SELECT * FROM Port_DeptEmpStation");
-		dt.setTableName("Port_DeptEmpStation");
+		dt.TableName = "Port_DeptEmpStation";
 		dsPort.Tables.add(dt);
 
 
@@ -101,17 +108,17 @@ public class OneKeyBackCCFlow extends Method
 
 		//Sys_EnumMain
 		dt = DBAccess.RunSQLReturnTable("SELECT * FROM Sys_EnumMain");
-		dt.setTableName("Sys_EnumMain");
+		dt.TableName = "Sys_EnumMain";
 		dsSysTables.Tables.add(dt);
 
 		//Sys_Enum
-		dt = DBAccess.RunSQLReturnTable("SELECT * FROM "+bp.sys.base.Glo.SysEnum());
-		dt.setTableName("Sys_Enum");
+		dt = DBAccess.RunSQLReturnTable("SELECT * FROM " + bp.sys.base.Glo.SysEnum());
+		dt.TableName = "Sys_Enum";
 		dsSysTables.Tables.add(dt);
 
 		//Sys_FormTree
 		dt = DBAccess.RunSQLReturnTable("SELECT * FROM Sys_FormTree");
-		dt.setTableName("Sys_FormTree");
+		dt.TableName = "Sys_FormTree";
 		dsSysTables.Tables.add(dt);
 		dsSysTables.WriteXml(path + "/SysTables.xml");
 
@@ -130,7 +137,7 @@ public class OneKeyBackCCFlow extends Method
 				continue;
 			}
 
-			if (item.getSrcType() != SrcType.CreateTable)
+			if (!Objects.equals(item.getSrcType(), DictSrcType.CreateTable))
 			{
 				continue;
 			}
@@ -140,7 +147,7 @@ public class OneKeyBackCCFlow extends Method
 				String sql = "SELECT * FROM " + item.getNo() + " ";
 				DataSet ds = new DataSet();
 				ds.Tables.add(DBAccess.RunSQLReturnTable(sql));
-				ds.WriteXml(pathOfTables + "/" + item.getNo() + ".xml",XmlWriteMode.WriteSchema, ds);
+				ds.WriteXml(pathOfTables + "/" + item.getNo() + ".xml", XmlWriteMode.WriteSchema, ds);
 			}
 			catch (java.lang.Exception e)
 			{
@@ -157,7 +164,7 @@ public class OneKeyBackCCFlow extends Method
 		for (Flow fl : fls.ToJavaList())
 		{
 			FlowSort fs = new FlowSort();
-			fs.setNo(fl.getFK_FlowSort());
+			fs.setNo(fl.getFlowSortNo());
 			fs.RetrieveFromDBSources();
 
 			String pathDir = path + "/Flow/" + fs.getNo() + "." + fs.getName() + "/";
@@ -177,13 +184,13 @@ public class OneKeyBackCCFlow extends Method
 		mds.RetrieveAllFromDBSource();
 		for (MapData md : mds.ToJavaList())
 		{
-			if (md.getFK_FormTree().length() < 2)
+			if (md.getFormTreeNo().length() < 2)
 			{
 				continue;
 			}
 
 			SysFormTree fs = new SysFormTree();
-			fs.setNo(md.getFK_FormTree());
+			fs.setNo(md.getFormTreeNo());
 			fs.RetrieveFromDBSources();
 
 			String pathDir = path + "/Form/" + fs.getNo() + "." + fs.getName();
@@ -191,8 +198,8 @@ public class OneKeyBackCCFlow extends Method
 			{
 				(new File(pathDir)).mkdirs();
 			}
-			DataSet ds = bp.sys.CCFormAPI.GenerHisDataSet(md.getNo(), null, null);
-			ds.WriteXml(pathDir + "/" + md.getName() + ".xml",XmlWriteMode.WriteSchema, ds);
+			DataSet ds = CCFormAPI.GenerHisDataSet(md.getNo(), null, null);
+			ds.WriteXml(pathDir + "/" + md.getName() +".xml", XmlWriteMode.WriteSchema, ds);
 		}
 
 			///#endregion 备份表单.

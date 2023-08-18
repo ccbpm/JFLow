@@ -1,4 +1,5 @@
 package bp.wf.template;
+
 import bp.en.*;
 import java.util.*;
 
@@ -8,20 +9,20 @@ import java.util.*;
 public class Parts extends EntitiesMyPK
 {
 
-		///方法
+		///#region 方法
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new Part();
 	}
 
-		///
+		///#endregion
 
 
-		///构造方法
+		///#region 构造方法
 	/** 
 	 配件集合
 	*/
@@ -31,26 +32,24 @@ public class Parts extends EntitiesMyPK
 	/** 
 	 配件集合.
 	 
-	 @param fk_flow
-	 * @throws Exception 
+	 @param FlowNo
 	*/
-	public Parts(String fk_flow) throws Exception
-	{
-		this.Retrieve(PartAttr.FK_Flow, fk_flow);
+	public Parts(String fk_flow) throws Exception {
+		this.Retrieve(PartAttr.FlowNo, fk_flow, null);
 	}
 
-		///
+		///#endregion
 
 
-		///为了适应自动翻译成java的需要,把实体转换成List.
+		///#region 为了适应自动翻译成java的需要,把实体转换成List.
 	/** 
 	 转化成 java list,C#不能调用.
 	 
 	 @return List
 	*/
-	public final List<Part> ToJavaList()
+	public final java.util.List<Part> ToJavaList()
 	{
-		return (List<Part>)(Object)this;
+		return (java.util.List<Part>)(Object)this;
 	}
 	/** 
 	 转化成list
@@ -67,5 +66,5 @@ public class Parts extends EntitiesMyPK
 		return list;
 	}
 
-		/// 为了适应自动翻译成java的需要,把实体转换成List.
+		///#endregion 为了适应自动翻译成java的需要,把实体转换成List.
 }

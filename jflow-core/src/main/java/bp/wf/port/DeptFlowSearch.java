@@ -1,6 +1,9 @@
 package bp.wf.port;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.wf.*;
+import java.util.*;
 
 /** 
  流程部门数据查询权限 的摘要说明。
@@ -11,9 +14,10 @@ public class DeptFlowSearch extends EntityMyPK
 	 UI界面上的访问控制
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
-		if (bp.web.WebUser.getNo().equals("admin"))
+		if (Objects.equals(bp.web.WebUser.getNo(), "admin"))
 		{
 			uac.IsView = true;
 			uac.IsDelete = true;
@@ -29,32 +33,28 @@ public class DeptFlowSearch extends EntityMyPK
 	/** 
 	 工作人员ID
 	*/
-	public final String getFK_Emp() throws Exception
-	{
+	public final String getEmpNo() {
 		return this.GetValStringByKey(DeptFlowSearchAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)throws Exception
-	{SetValByKey(DeptFlowSearchAttr.FK_Emp, value);
+	public final void setEmpNo(String value) throws Exception {
+		SetValByKey(DeptFlowSearchAttr.FK_Emp, value);
 	}
 	/** 
 	部门
 	*/
-	public final String getFK_Dept() throws Exception
-	{
+	public final String getDeptNo() {
 		return this.GetValStringByKey(DeptFlowSearchAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)throws Exception
-	{SetValByKey(DeptFlowSearchAttr.FK_Dept, value);
+	public final void setDeptNo(String value) throws Exception {
+		SetValByKey(DeptFlowSearchAttr.FK_Dept, value);
 	}
 	/** 
 	 流程编号
 	*/
-	public final String getFK_Flow() throws Exception
-	{
+	public final String getFlowNo() {
 		return this.GetValStringByKey(DeptFlowSearchAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)  throws Exception
-	 {
+	public final void setFlowNo(String value)  {
 		this.SetValByKey(DeptFlowSearchAttr.FK_Flow, value);
 	}
 
@@ -65,13 +65,15 @@ public class DeptFlowSearch extends EntityMyPK
 	/** 
 	 流程部门数据查询权限
 	*/
-	public DeptFlowSearch()  {
+	public DeptFlowSearch()
+	{
 	}
 	/** 
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();

@@ -1,6 +1,11 @@
 package bp.wf.template.frm;
 
-import bp.en.*;
+import bp.da.*;
+import bp.en.*; import bp.en.Map;
+import bp.sys.*;
+import bp.*;
+import bp.wf.*;
+import bp.wf.template.*;
 import java.util.*;
 
 /** 
@@ -13,13 +18,15 @@ public class MapDataURLs extends EntitiesNoName
 	/** 
 	 表单属性s
 	*/
-	public MapDataURLs() throws Exception {
+	public MapDataURLs()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new MapDataURL();
 	}
 
@@ -32,7 +39,8 @@ public class MapDataURLs extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<MapDataURL> ToJavaList() {
+	public final java.util.List<MapDataURL> ToJavaList()
+	{
 		return (java.util.List<MapDataURL>)(Object)this;
 	}
 	/** 
@@ -40,7 +48,8 @@ public class MapDataURLs extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<MapDataURL> Tolist()  {
+	public final ArrayList<MapDataURL> Tolist()
+	{
 		ArrayList<MapDataURL> list = new ArrayList<MapDataURL>();
 		for (int i = 0; i < this.size(); i++)
 		{

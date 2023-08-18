@@ -1,7 +1,7 @@
 package bp.wf.admin;
 
 import bp.en.*;
-
+import bp.wf.template.*;
 import java.util.*;
 
 /** 
@@ -13,18 +13,15 @@ public class Flows extends EntitiesNoName
 		///#region 查询
 	/** 
 	 查询出来全部的在生存期间内的流程
-	 * param IsCountInLifeCycle 是不是计算在生存期间内 true 查询出来全部的
-	 * @param FlowSort 流程类别
-	 * @return
-
-	 */
-	@Override
+	 
+	 @param FlowSort 流程类别
+	*/
 	public final int Retrieve(String FlowSort) throws Exception {
 		QueryObject qo = new QueryObject(this);
-		qo.AddWhere(bp.wf.template.FlowAttr.FK_FlowSort, FlowSort);
-		qo.addOrderBy(bp.wf.template.FlowAttr.No);
+		qo.AddWhere(FlowAttr.FK_FlowSort, FlowSort);
+		qo.addOrderBy(FlowAttr.No);
 		qo.DoQuery();
-		return 0;
+		return this.size();
 	}
 
 		///#endregion
@@ -43,7 +40,7 @@ public class Flows extends EntitiesNoName
 	 @param fk_sort
 	*/
 	public Flows(String fk_sort) throws Exception {
-		this.Retrieve(bp.wf.template.FlowAttr.FK_FlowSort, fk_sort);
+		this.Retrieve(FlowAttr.FK_FlowSort, fk_sort, null);
 	}
 
 		///#endregion
@@ -53,8 +50,8 @@ public class Flows extends EntitiesNoName
 	/** 
 	 得到它的 Entity 
 	*/
-
-	public Entity getGetNewEntity()
+	@Override
+	public Entity getNewEntity()
 	{
 		return new Flow();
 	}
@@ -68,10 +65,9 @@ public class Flows extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final List<Flow> ToJavaList()
+	public final java.util.List<Flow> ToJavaList()
 	{
-
-		return (List<Flow>)(Object)this;
+		return (java.util.List<Flow>)(Object)this;
 	}
 	/** 
 	 转化成list

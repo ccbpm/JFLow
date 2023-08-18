@@ -1,6 +1,6 @@
 package bp.sys.frmui;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import java.util.*;
 
 /** 
@@ -13,13 +13,15 @@ public class FrmAttachmentSingles extends EntitiesMyPK
 	/** 
 	 字段单附件s
 	*/
-	public FrmAttachmentSingles()  {
+	public FrmAttachmentSingles()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FrmAttachmentSingle();
 	}
 
@@ -32,7 +34,8 @@ public class FrmAttachmentSingles extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmAttachmentSingle> ToJavaList() {
+	public final java.util.List<FrmAttachmentSingle> ToJavaList()
+	{
 		return (java.util.List<FrmAttachmentSingle>)(Object)this;
 	}
 	/** 
@@ -40,7 +43,8 @@ public class FrmAttachmentSingles extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmAttachmentSingle> Tolist()  {
+	public final ArrayList<FrmAttachmentSingle> Tolist()
+	{
 		ArrayList<FrmAttachmentSingle> list = new ArrayList<FrmAttachmentSingle>();
 		for (int i = 0; i < this.size(); i++)
 		{

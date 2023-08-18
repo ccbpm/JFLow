@@ -1,13 +1,9 @@
 package bp.sys;
-
-import bp.da.*;
 import bp.en.*;
-import bp.en.Map;
-import bp.*;
 import java.util.*;
 
 /** 
- 部门岗位对应 
+ 部门角色对应 
 */
 public class EnVerDtls extends EntitiesMyPK
 {
@@ -26,7 +22,7 @@ public class EnVerDtls extends EntitiesMyPK
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new EnVerDtl();
 	}
@@ -40,7 +36,7 @@ public class EnVerDtls extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<EnVerDtl> ToJavaList()throws Exception
+	public final java.util.List<EnVerDtl> ToJavaList()
 	{
 		return (java.util.List<EnVerDtl>)(Object)this;
 	}
@@ -49,7 +45,7 @@ public class EnVerDtls extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<EnVerDtl> Tolist()throws Exception
+	public final ArrayList<EnVerDtl> Tolist()
 	{
 		ArrayList<EnVerDtl> list = new ArrayList<EnVerDtl>();
 		for (int i = 0; i < this.size(); i++)

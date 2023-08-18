@@ -1,7 +1,5 @@
 package bp.wf;
 
-import bp.*;
-
 /** 
  运行平台
 */
@@ -18,11 +16,13 @@ public enum Platform
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue() {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
-	public static Platform forValue(int value) 
-	{return values()[value];
+	public static Platform forValue(int value)
+	{
+		return values()[value];
 	}
 }

@@ -5,29 +5,26 @@ import bp.difference.handler.CommonFileUtils;
 import bp.sys.*;
 import bp.sys.CCFormAPI;
 import bp.tools.DateUtils;
-import bp.web.*;
 import bp.tools.FtpUtil;
+import bp.web.*;
 import bp.difference.*;
 import bp.wf.*;
-import bp.wf.Glo;
-import bp.difference.handler.WebContralBase;
 import org.apache.commons.net.ftp.FTPFile;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.io.File;
-
-import static bp.difference.handler.WebContralBase.getRequest;
+import java.util.*;
 
 /** 
  页面功能实体
 */
-public class WF_Admin_Template extends bp.difference.handler.WebContralBase
+public class WF_Admin_Template extends bp.difference.handler.DirectoryPageBase
 {
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_Template() throws Exception {
+	public WF_Admin_Template()
+	{
 
 	}
 	/** 
@@ -38,13 +35,12 @@ public class WF_Admin_Template extends bp.difference.handler.WebContralBase
 	*/
 	public final String ImpFrmLocal_Done() throws Exception {
 
-
 		/**表单类型.
-		 */
+		*/
 		String frmSort = this.GetRequestVal("FrmSort");
 
 		//创建临时文件.
-		String temp = SystemConfig.getPathOfTemp()  + DBAccess.GenerGUID() + ".xml";
+		String temp = SystemConfig.getPathOfTemp() + "/" + DBAccess.GenerGUID() + ".xml";
 		HttpServletRequest request = getRequest();
 
 		try{
@@ -53,7 +49,6 @@ public class WF_Admin_Template extends bp.difference.handler.WebContralBase
 			e.printStackTrace();
 			return "err@执行失败";
 		}
-
 
 		//获得数据类型.
 		DataSet ds = new DataSet();
@@ -65,20 +60,20 @@ public class WF_Admin_Template extends bp.difference.handler.WebContralBase
 		String frmID = null;
 
 
-		///检查模版是否正确.
+			///#region 检查模版是否正确.
 		//检查模版是否正确.
 		String errMsg = "";
-		if (ds.GetTableByName("WF_Flow") != null)
+		if (ds.contains("WF_Flow") == true)
 		{
 			return "err@此模板文件为流程模板。";
 		}
 
-		if (ds.GetTableByName("Sys_MapAttr") == null)
+		if (ds.contains("Sys_MapAttr") == false)
 		{
 			return "err@缺少表:Sys_MapAttr";
 		}
 
-		if (ds.GetTableByName("Sys_MapData") == null)
+		if (ds.contains("Sys_MapData") == false)
 		{
 			return "err@缺少表:Sys_MapData";
 		}
@@ -86,7 +81,7 @@ public class WF_Admin_Template extends bp.difference.handler.WebContralBase
 
 		frmID = ds.GetTableByName("Sys_MapData").Rows.get(0).getValue("No").toString();
 
-		/// 检查模版是否正确.
+			///#endregion 检查模版是否正确.
 
 		String impType = this.GetRequestVal("RB_ImpType");
 
@@ -96,7 +91,7 @@ public class WF_Admin_Template extends bp.difference.handler.WebContralBase
 
 	public final String ImpFrm(String impType, String frmID, MapData md, DataSet ds, String frmSort) throws Exception {
 		//导入模式:按照模版的表单编号导入,如果该编号已经存在就提示错误
-		if (impType.equals("0"))
+		if (Objects.equals(impType, "0"))
 		{
 			md.setNo(frmID);
 			if (md.RetrieveFromDBSources() == 1)
@@ -107,7 +102,7 @@ public class WF_Admin_Template extends bp.difference.handler.WebContralBase
 		}
 
 		//导入模式:按照模版的表单编号导入,如果该编号已经存在就直接覆盖.
-		if (impType.equals("1"))
+		if (Objects.equals(impType, "1"))
 		{
 			md.setNo(frmID);
 			if (md.RetrieveFromDBSources() == 1)
@@ -118,7 +113,7 @@ public class WF_Admin_Template extends bp.difference.handler.WebContralBase
 		}
 
 		//导入模式:按照模版的表单编号导入,如果该编号已经存在就增加@WebUser.OrgNo(组织编号)导入.
-		if (impType.equals("2"))
+		if (Objects.equals(impType, "2"))
 		{
 			md.setNo(frmID);
 			if (md.RetrieveFromDBSources() == 1)
@@ -135,7 +130,7 @@ public class WF_Admin_Template extends bp.difference.handler.WebContralBase
 		}
 
 		//导入模式:按照指定的模版ID导入.
-		if (impType.equals("3"))
+		if (Objects.equals(impType, "3"))
 		{
 			frmID = this.GetRequestVal("TB_SpecFrmID");
 			md.setNo(frmID);
@@ -145,7 +140,7 @@ public class WF_Admin_Template extends bp.difference.handler.WebContralBase
 			}
 			md = CCFormAPI.Template_LoadXmlTemplateAsSpecFrmID(frmID, ds, frmSort); // MapData.ImpMapData(ds);
 		}
-		if (impType.equals("3ftp"))
+		if (Objects.equals(impType, "3ftp"))
 		{
 			md.setNo(frmID);
 			if (md.RetrieveFromDBSources() == 1)
@@ -158,21 +153,12 @@ public class WF_Admin_Template extends bp.difference.handler.WebContralBase
 		return "执行成功.";
 	}
 
-
-		///#region  界面 .
-//	public final FtpClient getGenerFTPConn() throws Exception {
-//		FtpClient conn = new FtpClient(Glo.getTemplateFTPHost(), Glo.getTemplateFTPPort(), Glo.getTemplateFTPUser(), Glo.getTemplateFTPPassword());
-//		conn.Encoding = Encoding.GetEncoding("GB2312");
-//			//FtpClient conn = new FtpClient(Glo.TemplateFTPHost, Glo.TemplateFTPPort, Glo.TemplateFTPUser, Glo.TemplateFTPPassword);
-//		return conn;
-//	}
 	/** 
 	 初始化
 	 
 	 @return 
 	*/
 	public final String Flow_Init() throws Exception {
-
 		String dirName = this.GetRequestVal("DirName");
 		if (DataType.IsNullOrEmpty(dirName) == true)
 		{
@@ -192,7 +178,6 @@ public class WF_Admin_Template extends bp.difference.handler.WebContralBase
 		}
 		catch (java.lang.Exception e)
 		{
-			//System.Windows.Forms.MessageBox.Show("该目录无文件");
 			return "err@该目录无文件";
 		}
 		DataTable dtDir = new DataTable();
@@ -240,7 +225,8 @@ public class WF_Admin_Template extends bp.difference.handler.WebContralBase
 	 
 	 @return 
 	*/
-	public final String Form_Init() throws Exception {
+	public final String Form_Init() throws Exception
+	{
 		String dirName = this.GetRequestVal("DirName");
 		if (DataType.IsNullOrEmpty(dirName) == true)
 		{
@@ -388,7 +374,7 @@ public class WF_Admin_Template extends bp.difference.handler.WebContralBase
 		DataRow dr = dtInfo.NewRow();
 		dr.setValue(0, fileName);
 		dr.setValue(1, info);
-		dr.setValue(String.valueOf(2), result);
+		dr.setValue(2, result);
 		dtInfo.Rows.add(dr);
 		return dtInfo;
 	}

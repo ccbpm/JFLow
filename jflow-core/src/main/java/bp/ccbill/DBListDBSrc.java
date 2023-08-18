@@ -1,6 +1,7 @@
 package bp.ccbill;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.en.Map;
 import bp.sys.*;
 
 /** 
@@ -11,7 +12,8 @@ public class DBListDBSrc extends EntityNoName
 
 		///#region 权限控制.
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.OpenForAppAdmin();
 		uac.IsDelete = false;
@@ -19,29 +21,38 @@ public class DBListDBSrc extends EntityNoName
 		return uac;
 	}
 
+		///#endregion 权限控制.
 
+
+		///#region 属性
+
+		///#endregion
+
+
+		///#region 构造方法
 	/** 
 	 数据源实体
 	*/
-	public DBListDBSrc()  {
+	public DBListDBSrc()
+	{
 	}
 	/** 
 	 数据源实体
 	 
-	 param no 映射编号
+	 @param no 映射编号
 	*/
-	public DBListDBSrc(String no) throws Exception {
+	public DBListDBSrc(String no) throws Exception
+	{
 		super(no);
 	}
-	public final int getDBType()
-	{
+	public final int getDBType() {
 		return this.GetValIntByKey(MapDataAttr.DBType);
 	}
-	/** 
-	 EnMap
-	*/
+	/**
+	 * EnMap
+	 */
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -49,11 +60,11 @@ public class DBListDBSrc extends EntityNoName
 
 		Map map = new Map("Sys_MapData", "数据源实体");
 
-		map.setCodeStruct("4");
-
+		map.setCodeStruct( "4");
 
 			///#region 基本属性.
 		map.AddTBStringPK(MapDataAttr.No, null, "表单编号", true, true, 1, 190, 20);
+		map.AddTBString(MapDataAttr.Name, null, "名称", true, true, 1, 190, 20);
 
 			///#endregion 基本属性.
 
@@ -71,7 +82,8 @@ public class DBListDBSrc extends EntityNoName
 
 		///#endregion
 	@Override
-	protected boolean beforeUpdate() throws Exception {
+	protected boolean beforeUpdate() throws Exception
+	{
 		DBList db = new DBList(this.getNo());
 		if (db.getDBType() != this.getDBType())
 		{

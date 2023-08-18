@@ -1,7 +1,8 @@
 package bp.wf.template;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
+
 
 /** 
  抄送
@@ -10,60 +11,46 @@ public class FlowTab extends EntityMyPK
 {
 
 		///#region 属性
-	public final String getName() throws Exception
-	{
+	public final String getName()  {
 		return this.GetValStrByKey(FlowTabAttr.Name);
 	}
-	public final void setName(String value)  throws Exception
-	 {
+	public final void setName(String value){
 		this.SetValByKey(FlowTabAttr.Name, value);
 	}
-	public final String getFK_Flow() throws Exception
-	{
+	public final String getFlowNo()  {
 		return this.GetValStrByKey(FlowTabAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)  throws Exception
-	 {
+	public final void setFlowNo(String value){
 		this.SetValByKey(FlowTabAttr.FK_Flow, value);
 	}
-	public final boolean isEnable() throws Exception
-	{
+	public final boolean getItIsEnable()  {
 		return this.GetValBooleanByKey(FlowTabAttr.IsEnable);
 	}
-	public final void setEnable(boolean value)  throws Exception
-	 {
+	public final void setItIsEnable(boolean value){
 		this.SetValByKey(FlowTabAttr.IsEnable, value);
 	}
-	public final String getOrgNo() throws Exception
-	{
+	public final String getOrgNo()  {
 		return this.GetValStrByKey(FlowTabAttr.OrgNo);
 	}
-	public final void setOrgNo(String value)  throws Exception
-	 {
+	public final void setOrgNo(String value){
 		this.SetValByKey(FlowTabAttr.OrgNo, value);
 	}
-	public final String getTip() throws Exception
-	{
+	public final String getTip()  {
 		return this.GetValStrByKey(FlowTabAttr.Tip);
 	}
-	public final void setTip(String value)  throws Exception
-	 {
+	public final void setTip(String value){
 		this.SetValByKey(FlowTabAttr.Tip, value);
 	}
-	public final String getUrlExt() throws Exception
-	{
+	public final String getUrlExt()  {
 		return this.GetValStrByKey(FlowTabAttr.UrlExt);
 	}
-	public final void setUrlExt(String value)  throws Exception
-	 {
+	public final void setUrlExt(String value){
 		this.SetValByKey(FlowTabAttr.UrlExt, value);
 	}
-	public final String getMark() throws Exception
-	{
+	public final String getMark()  {
 		return this.GetValStrByKey(FlowTabAttr.Mark);
 	}
-	public final void setMark(String value)  throws Exception
-	 {
+	public final void setMark(String value){
 		this.SetValByKey(FlowTabAttr.Mark, value);
 	}
 
@@ -74,14 +61,15 @@ public class FlowTab extends EntityMyPK
 	/** 
 	 抄送设置
 	*/
-	public FlowTab()  {
+	public FlowTab()
+	{
 	}
 	/** 
 	 抄送设置
 	 
-	 param mypk
+	 @param mypk
 	*/
-	public FlowTab(String mypk)throws Exception
+	public FlowTab(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -90,7 +78,8 @@ public class FlowTab extends EntityMyPK
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -104,7 +93,7 @@ public class FlowTab extends EntityMyPK
 		map.AddTBString(FlowTabAttr.Mark, null, "标记", false, false, 0, 50, 10);
 		map.AddTBString(FlowTabAttr.Tip, null, "Tip", false, false, 0, 200, 10);
 
-		map.AddTBInt(FlowTabAttr.isEnable, 1, "isEnable", true, true);
+		map.AddTBInt(FlowTabAttr.IsEnable, 1, "IsEnable", true, false);
 		map.AddTBString(FlowTabAttr.UrlExt, null, "url链接", false, false, 0, 300, 10);
 		map.AddTBString(FlowTabAttr.Icon, null, "Icon", false, false, 0, 50, 10);
 		map.AddTBString(FlowTabAttr.OrgNo, null, "OrgNo", false, false, 0, 50, 10);
@@ -118,7 +107,8 @@ public class FlowTab extends EntityMyPK
 		///#endregion
 
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
 		{
 		}

@@ -1,7 +1,5 @@
 package bp.sys.xml;
-
 import bp.en.*;
-
 
 /** 
  属性集合
@@ -13,7 +11,7 @@ public class SQLLists extends XmlEns
 	/** 
 	 考核过错行为的数据元素
 	*/
-	public SQLLists()throws Exception
+	public SQLLists()
 	{
 	}
 
@@ -25,24 +23,25 @@ public class SQLLists extends XmlEns
 	 得到它的 Entity 
 	*/
 	@Override
-	public XmlEn getGetNewEntity()
+	public XmlEn getNewEntity()
 	{
 		return new SQLList();
 	}
 	@Override
-	public String getFile()throws Exception
-	{
+	public String getFile() {
 		return bp.difference.SystemConfig.getPathOfXML() + "SQLList.xml";
 	}
 	/** 
 	 物理表名
 	*/
 	@Override
-	public String getTableName()  {
+	public String getTableName()
+	{
 		return "Item";
 	}
 	@Override
-	public Entities getRefEns()  {
+	public Entities getRefEns()
+	{
 		return null;
 	}
 

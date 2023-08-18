@@ -1,12 +1,5 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.sys.*;
-import bp.en.*;
-import bp.wf.*;
-import bp.*;
-import bp.wf.*;
-import java.util.*;
 
 /** 
  附件类型
@@ -32,11 +25,13 @@ public enum FWCAth
 
 	public static final int SIZE = java.lang.Integer.SIZE;
 
-	public int getValue()  {
+	public int getValue()
+	{
 		return this.ordinal();
 	}
 
 	public static FWCAth forValue(int value)
-	{return values()[value];
+	{
+		return values()[value];
 	}
 }

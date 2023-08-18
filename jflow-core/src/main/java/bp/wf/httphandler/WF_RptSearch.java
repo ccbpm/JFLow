@@ -1,11 +1,10 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
-import bp.difference.handler.WebContralBase;
+import bp.difference.handler.DirectoryPageBase;
 import bp.sys.*;
 import bp.web.*;
 import bp.difference.*;
-import bp.*;
 import bp.wf.*;
 import bp.wf.Glo;
 
@@ -14,7 +13,7 @@ import java.util.*;
 /** 
  页面功能实体
 */
-public class WF_RptSearch extends WebContralBase
+public class WF_RptSearch extends bp.difference.handler.DirectoryPageBase
 {
 	/** 
 	 构造函数
@@ -32,11 +31,11 @@ public class WF_RptSearch extends WebContralBase
 		ps.SQL = "select FK_Flow, FlowName,Count(WorkID) as Num FROM WF_GenerWorkFlow  WHERE WFState >1 And Starter=" + SystemConfig.getAppCenterDBVarStr() + "Starter GROUP BY FK_Flow, FlowName ";
 		ps.Add("Starter", WebUser.getNo(), false);
 
-		//string sql = "";
+		//String sql = "";
 		//sql = "select FK_Flow, FlowName,Count(WorkID) as Num FROM WF_GenerWorkFlow  WHERE Starter='" + bp.web.WebUser.getNo() + "' GROUP BY FK_Flow, FlowName ";
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 		dt.TableName = "Start";
-		if (SystemConfig.AppCenterDBFieldCaseModel() != FieldCaseModel.None)
+		if (SystemConfig.getAppCenterDBFieldCaseModel() != FieldCaseModel.None)
 		{
 			dt.Columns.get(0).setColumnName("FK_Flow");
 			dt.Columns.get(1).setColumnName("FlowName");
@@ -51,14 +50,14 @@ public class WF_RptSearch extends WebContralBase
 		//sql = "select FK_Flow, FlowName,Count(WorkID) as Num FROM wf_empworks  WHERE FK_Emp='" + bp.web.WebUser.getNo() + "' GROUP BY FK_Flow, FlowName ";
 		DataTable dtTodolist = DBAccess.RunSQLReturnTable(ps);
 		dtTodolist.TableName = "Todolist";
-		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
+		if (SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			dtTodolist.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
 			dtTodolist.Columns.get("FLOWNAME").ColumnName = "FlowName";
 			dtTodolist.Columns.get("NUM").ColumnName = "Num";
 		}
 
-		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+		if (SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
 		{
 			dtTodolist.Columns.get("fk_flow").ColumnName = "FK_Flow";
 			dtTodolist.Columns.get("flowname").ColumnName = "FlowName";
@@ -168,7 +167,7 @@ public class WF_RptSearch extends WebContralBase
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 		dt.TableName = "WF_GenerWorkFlow";
 
-		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
+		if (SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
 		{
 			dt.Columns.get("FLOWNAME").ColumnName = "FlowName";
 			dt.Columns.get("FK_FLOW").ColumnName = "FK_Flow";
@@ -184,7 +183,7 @@ public class WF_RptSearch extends WebContralBase
 			dt.Columns.get("WFSTATE").ColumnName = "WFState"; //处理人.
 		}
 
-		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
+		if (SystemConfig.getAppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
 		{
 			dt.Columns.get("flowname").ColumnName = "FlowName";
 			dt.Columns.get("fk_flow").ColumnName = "FK_Flow";

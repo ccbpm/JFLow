@@ -1,18 +1,10 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.wf.template.*;
-import bp.wf.*;
-import bp.sys.*;
-import bp.*;
-import bp.wf.*;
-import java.util.*;
-
 /** 
  流转自定义组件
 */
-public class FTCAttr extends EntityNoAttr
+public class FTCAttr extends EntityNoNameAttr
 {
 	/** 
 	 显示标签

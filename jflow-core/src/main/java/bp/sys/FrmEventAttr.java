@@ -1,16 +1,5 @@
 package bp.sys;
 
-import bp.da.*;
-import bp.en.*;
-import bp.port.*;
-import bp.web.*;
-import bp.difference.*;
-import bp.*;
-import java.util.*;
-import java.io.*;
-import java.time.*;
-import java.math.*;
-
 /** 
  事件属性
 */
@@ -19,11 +8,11 @@ public class FrmEventAttr
 	/** 
 	 事件类型
 	*/
-	public static final String FK_Event = "FK_Event";
+	public static final String FK_Event = "EventID";
 	/** 
 	 表单ID
 	*/
-	public static final String FK_MapData = "FK_MapData";
+	public static final String FrmID = "FrmID";
 	/** 
 	 流程编号
 	*/

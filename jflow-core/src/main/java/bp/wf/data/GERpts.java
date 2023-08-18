@@ -20,7 +20,7 @@ public class GERpts extends bp.en.EntitiesOID
 	 获得一个实例.
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new GERpt();
 	}

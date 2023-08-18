@@ -24,7 +24,7 @@ public class Row extends Hashtable<String, Object>
 	 */
 	public final void LoadAttrs(Attrs attrs)  {
 		this.clear();
-		for (Attr attr : attrs.ToJavaList())
+		for (Attr attr : attrs)
 		{
 			switch (attr.getMyDataType())
 			{

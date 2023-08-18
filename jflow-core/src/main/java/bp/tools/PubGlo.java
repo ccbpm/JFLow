@@ -5,209 +5,288 @@ import bp.en.*;
 import bp.sys.*;
 import bp.web.*;
 import bp.difference.*;
-import bp.*;
+
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Hashtable;
 
-public class PubGlo
-{
+public class PubGlo {
 
-		///#region 表达式替换
-	/** 
-	 表达式替换
-	 
-	 param exp
-	 param en
-	 @return 
-	*/
-	public static String DealExp(String exp, Entity en)
-	{
-		//替换字符
-		exp = exp.replace("~", "'");
+    ///#region 表达式替换
 
-		if (exp.contains("@") == false)
-		{
-			return exp;
-		}
+    /**
+     * 表达式替换
+     * <p>
+     * param exp
+     * param en
+     *
+     * @return
+     */
+    public static String DealExp(String exp, Entity en) {
+        //替换字符
+        exp = exp.replace("~", "'");
 
-		//首先替换加; 的。
-		exp = exp.replace("@WebUser.No;", WebUser.getNo());
-		exp = exp.replace("@WebUser.Name;", WebUser.getName());
-		exp = exp.replace("@WebUser.FK_DeptName;", WebUser.getFK_DeptName());
-		exp = exp.replace("@WebUser.FK_Dept;", WebUser.getFK_Dept());
+        if (exp.contains("@") == false) {
+            return exp;
+        }
 
-
-		// 替换没有 ; 的 .
-		exp = exp.replace("@WebUser.No", WebUser.getNo());
-		exp = exp.replace("@WebUser.Name", WebUser.getName());
-		exp = exp.replace("@WebUser.FK_DeptName", WebUser.getFK_DeptName());
-		exp = exp.replace("@WebUser.FK_Dept", WebUser.getFK_Dept());
-
-		if (exp.contains("@") == false)
-		{
-			return exp;
-		}
-
-		//增加对新规则的支持. @MyField; 格式.
-		if (en != null)
-		{
-			Attrs attrs = en.getEnMap().getAttrs();
-			Row row = en.getRow();
-			//特殊判断.
-			if (row.containsKey("OID") == true)
-			{
-				exp = exp.replace("@WorkID", row.get("OID").toString());
-			}
-
-			if (exp.contains("@") == false)
-			{
-				return exp;
-			}
-
-			for (Object key : row.keySet())
-			{
-				//值为空或者null不替换
-				if (row.get(key) == null || row.get(key).equals("") == true)
-				{
-					continue;
-				}
-
-				if (exp.contains("@" + key))
-				{
-					Attr attr = attrs.GetAttrByKeyOfEn(String.valueOf(key));
-					//是枚举或者外键替换成文本
-					if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum || attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK)
-					{
-						exp = exp.replace("@" + key, row.get(key + "Text").toString());
-					}
-					else
-					{
-						if (attr.getMyDataType() == DataType.AppString && attr.getUIContralType() == UIContralType.DDL && attr.getMyFieldType() == FieldType.Normal)
-						{
-							exp = exp.replace("@" + key, row.get(key + "T").toString());
-						}
-						else
-						{
-							exp = exp.replace("@" + key, row.get(key).toString());
-						}
-						;
-					}
+        //首先替换加; 的。
+        exp = exp.replace("@WebUser.getNo();", WebUser.getNo());
+        exp = exp.replace("@WebUser.Name;", WebUser.getName());
+        exp = exp.replace("@WebUser.FK_DeptName;", WebUser.getDeptName());
+        exp = exp.replace("@WebUser.FK_Dept;", WebUser.getDeptNo());
 
 
-				}
+        // 替换没有 ; 的 .
+        exp = exp.replace("@WebUser.No", WebUser.getNo());
+        exp = exp.replace("@WebUser.Name", WebUser.getName());
+        exp = exp.replace("@WebUser.FK_DeptName", WebUser.getDeptName());
+        exp = exp.replace("@WebUser.FK_Dept", WebUser.getDeptNo());
 
-				//不包含@则返回SQL语句
-				if (exp.contains("@") == false)
-				{
-					return exp;
-				}
-			}
+        if (exp.contains("@") == false) {
+            return exp;
+        }
 
-		}
+        //增加对新规则的支持. @MyField; 格式.
+        if (en != null) {
+            Attrs attrs = en.getEnMap().getAttrs();
+            Row row = en.getRow();
+            //特殊判断.
+            if (row.containsKey("OID") == true) {
+                exp = exp.replace("@WorkID", row.get("OID").toString());
+            }
 
-		if (exp.contains("@") && SystemConfig.getIsBSsystem() == true)
-		{
-			/*如果是bs*/
-			for (String key : ContextHolderUtils.getRequest().getParameterMap().keySet())
-			{
-				if (DataType.IsNullOrEmpty(key))
-				{
-					continue;
-				}
-				exp = exp.replace("@" + key, ContextHolderUtils.getRequest().getParameter(key.toString()));
-			}
-		}
+            if (exp.contains("@") == false) {
+                return exp;
+            }
 
-		exp = exp.replace("~", "'");
-		return exp;
-	}
+            for (Object key : row.keySet()) {
+                //值为空或者null不替换
+                if (row.get(key) == null || row.get(key).equals("") == true) {
+                    continue;
+                }
 
-		///#endregion 表达式替换
+                if (exp.contains("@" + key)) {
+                    Attr attr = attrs.GetAttrByKeyOfEn(String.valueOf(key));
+                    //是枚举或者外键替换成文本
+                    if (attr.getMyFieldType() == FieldType.Enum || attr.getMyFieldType() == FieldType.PKEnum || attr.getMyFieldType() == FieldType.FK || attr.getMyFieldType() == FieldType.PKFK) {
+                        exp = exp.replace("@" + key, row.get(key + "Text").toString());
+                    } else {
+                        if (attr.getMyDataType() == DataType.AppString && attr.getUIContralType() == UIContralType.DDL && attr.getMyFieldType() == FieldType.Normal) {
+                            exp = exp.replace("@" + key, row.get(key + "T").toString());
+                        } else {
+                            exp = exp.replace("@" + key, row.get(key).toString());
+                        }
+                        ;
+                    }
 
 
-		///#region http请求
-	/** 
-	 Http Get请求
-	 
-	 param url
-	 @return 
-	*/
-//	public static String HttpGet(String url)
-//	{
-//		try
-//		{
-//			HttpWebRequest request;
-//			// 创建一个HTTP请求
-//			request = (HttpWebRequest)WebRequest.Create(url);
-//			// request.Method="get";
-//			HttpWebResponse response;
-//			response = (HttpWebResponse)request.GetResponse();
-//			InputStreamReader myreader = new InputStreamReader(response.GetResponseStream(), java.nio.charset.StandardCharsets.UTF_8);
-//			String responseText = myreader.ReadToEnd();
-//			myreader.close();
-//			response.Close();
-//			return responseText;
-//		}
-//		catch (RuntimeException ex)
-//		{
-//			//url请求失败
-//			return ex.getMessage();
-//		}
-//	}
-	/** 
-	 httppost方式发送数据
-	 
-	 param url 要提交的url
-	 param postDataStr
-	 param timeOut 超时时间
-	 param encode text code.
-	 @return 成功：返回读取内容；失败：0
-	*/
+                }
 
-//暂时没时间改
-//	public static String HttpPostConnect(String serverUrl, String postData)
-//	{
-//		var dataArray = postData.getBytes(java.nio.charset.StandardCharsets.UTF_8);
-//		//创建请求
-//		var request = (HttpWebRequest)HttpWebRequest.Create(serverUrl);
-//		request.Method = "POST";
-//		request.ContentLength = dataArray.Length;
-//		//设置上传服务的数据格式  设置之后不好使
-//		//request.ContentType = "application/x-www-form-urlencoded";
-//		//请求的身份验证信息为默认
-//		request.Credentials = CredentialCache.DefaultCredentials;
-//		request.ContentType = "application/x-www-form-urlencoded";
-//		//请求超时时间
-//		request.Timeout = 10000;
-//		//创建输入流
-////C# TO JAVA CONVERTER TODO TASK: C# to Java Converter cannot determine whether this System.IO.Stream is input or output:
-//		Stream dataStream;
-//		try
-//		{
-//			dataStream = request.GetRequestStream();
-//		}
-//		catch (RuntimeException e)
-//		{
-//			return "0"; //连接服务器失败
-//		}
-//		//发送请求
-//		dataStream.Write(dataArray, 0, dataArray.Length);
-//		dataStream.Close();
-//
-//		HttpWebResponse res;
-//		try
-//		{
-//			res = (HttpWebResponse)request.GetResponse();
-//		}
-//		catch (WebException ex)
-//		{
-//			res = (HttpWebResponse)ex.Response;
-//		}
-//		InputStreamReader sr = new InputStreamReader(res.GetResponseStream(), java.nio.charset.StandardCharsets.UTF_8);
-//		//读取返回消息
-//		String data = sr.ReadToEnd();
-//		sr.close();
-//		return data;
-//	}
+                //不包含@则返回SQL语句
+                if (exp.contains("@") == false) {
+                    return exp;
+                }
+            }
+
+        }
+
+        if (exp.contains("@") && SystemConfig.isBSsystem() == true) {
+            /*如果是bs*/
+            for (String key : ContextHolderUtils.getRequest().getParameterMap().keySet()) {
+                if (DataType.IsNullOrEmpty(key)) {
+                    continue;
+                }
+                exp = exp.replace("@" + key, ContextHolderUtils.getRequest().getParameter(key.toString()));
+            }
+        }
+
+        exp = exp.replace("~", "'");
+        return exp;
+    }
+
+    ///#endregion 表达式替换
+
+
+    ///#region http请求
+
+    /**
+     * Http Get请求
+     * <p>
+     * param url
+     *
+     * @return
+     */
+    public static String HttpGet(String url) {
+        try {
+            URL requestUrl = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
+            connection.setRequestMethod("GET");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), java.nio.charset.StandardCharsets.UTF_8));
+            StringBuilder responseText = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                responseText.append(line);
+            }
+            reader.close();
+            connection.disconnect();
+            return responseText.toString();
+        } catch (IOException ex) {
+            //url请求失败
+            return ex.getMessage();
+        }
+    }
+
+    public static String HttpPostConnect_Data(String dbSrNo, String exp, Hashtable ht, String requestMethod) throws Exception { //返回值
+        //用户输入的webAPI地址
+        String apiUrl = exp;
+        if (apiUrl.contains("@WebApiHost")) //可以替换配置文件中配置的webapi地址
+        {
+            apiUrl = apiUrl.replace("@WebApiHost", bp.difference.SystemConfig.getAppSettings().get("WebApiHost").toString());
+        }
+
+        SFDBSrc mysrc = new SFDBSrc(dbSrNo);
+        //拼接路径.
+        apiUrl = mysrc.getConnString() + apiUrl;
+
+        ///#region 解析路径变量 /{xxx}/{yyy} ? xxx=xxx
+        if (apiUrl.contains("{") == true) {
+            if (ht != null) {
+                for (Object key : ht.keySet()) {
+                    apiUrl = apiUrl.replace("{" + key + "}", ht.get(key).toString());
+                }
+            }
+        }
+        ///#endregion
+
+        String[] strs = apiUrl.split("[?]", -1);
+        //api接口地址
+        String apiHost = strs[0];
+        //api参数
+        String apiParams = "";
+        if (strs.length == 2) {
+            apiParams = strs[1];
+        }
+        return bp.tools.PubGlo.HttpPostConnect(apiHost, apiParams, requestMethod);
+    }
+
+    /**
+     * httppost方式发送数据
+     * <p>
+     * param url 要提交的url
+     * param postDataStr
+     * param timeOut 超时时间
+     * param encode text code.
+     *
+     * @return 成功：返回读取内容；失败：0
+     */
+    public static String HttpPostConnect(String serverUrl, String postData, String requestMethod) throws Exception {
+        return HttpPostConnect(serverUrl, postData, requestMethod, false);
+    }
+
+    public static String HttpPostConnect(String serverUrl, String postData) throws Exception {
+        return HttpPostConnect(serverUrl, postData, "POST", false);
+    }
+
+    public static String HttpPostConnect(String serverUrl, String postData, String requestMethod, boolean isJsonModel) throws Exception {
+        byte[] dataArray = postData.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        //创建请求
+        URL requestUrl = new URL(serverUrl);
+        HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
+        connection.setRequestMethod(requestMethod);
+        connection.setFixedLengthStreamingMode(dataArray.length);
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
+        //设置上传服务的数据格式  设置之后不好使
+        //connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        //请求的身份验证信息为默认
+        //request.Credentials = CredentialCache.DefaultCredentials;
+
+        if (isJsonModel == true) {
+            connection.setRequestProperty("Content-Type", "application/json");
+        } else {
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        }
+
+        //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+        //请求超时时间
+        connection.setConnectTimeout(10000);
+        //创建输入流
+        OutputStream dataStream;
+        if (requestMethod.toLowerCase().equals("get") == false) {
+            try {
+                dataStream = connection.getOutputStream() ;
+                //发送请求
+                dataStream.write(dataArray, 0, dataArray.length);
+                dataStream.close();
+            } catch (RuntimeException e) {
+                return "0"; //连接服务器失败
+            }
+        }
+
+        InputStreamReader sr = new InputStreamReader(connection.getInputStream(), java.nio.charset.StandardCharsets.UTF_8);
+        BufferedReader reader = new BufferedReader(sr);
+        //读取返回消息
+        int responseCode = connection.getResponseCode();
+        StringBuilder responseText = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            responseText.append(line);
+        }
+        reader.close();
+        connection.disconnect();
+        return responseText.toString();
+    }
+
+    public static String HttpPostConnect(String serverUrl, Hashtable headerMap, String postData) throws Exception {
+        byte[] dataArray = postData.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        //创建请求
+        URL requestUrl = new URL(serverUrl);
+        HttpURLConnection connection = (HttpURLConnection) requestUrl.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setFixedLengthStreamingMode(dataArray.length);
+        //设置上传服务的数据格式  设置之后不好使
+        //connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        //请求的身份验证信息为默认
+        //request.Credentials = CredentialCache.DefaultCredentials;
+        // request.ContentType = "application/x-www-form-urlencoded";
+        connection.setRequestProperty("Content-Type", "application/json");
+        //  request.ContentType = "application/x-www-form-urlencoded";
+
+        //设置请求头
+        if (!headerMap.isEmpty()) {
+            for (Object key : headerMap.keySet()) {
+                connection.setRequestProperty((String) key, headerMap.get(key).toString());
+            }
+        }
+
+        //请求超时时间
+        connection.setConnectTimeout(10000);
+        //创建输入流
+        OutputStream dataStream;
+        try {
+            dataStream = connection.getOutputStream();
+        } catch (RuntimeException e) {
+            return "0"; //连接服务器失败
+        }
+        //发送请求
+        dataStream.write(dataArray, 0, dataArray.length);
+        dataStream.close();
+
+        InputStreamReader sr = new InputStreamReader(connection.getInputStream(), java.nio.charset.StandardCharsets.UTF_8);
+        BufferedReader reader = new BufferedReader(sr);
+        //读取返回消息
+        int responseCode = connection.getResponseCode();
+        StringBuilder responseText = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            responseText.append(line);
+        }
+        reader.close();
+        connection.disconnect();
+        return responseText.toString();
+    }
 }
 
-	///#endregion http请求
+///#endregion http请求

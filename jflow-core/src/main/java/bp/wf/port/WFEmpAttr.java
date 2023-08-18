@@ -18,7 +18,7 @@ public class WFEmpAttr
 	public static final String Name = "Name";
 	public static final String LoginData = "LoginData";
 	public static final String Tel = "Tel";
-	public static final String Email = "Email";
+	//public const String Email = "Email";
 	public static final String Stas = "Stas";
 	public static final String Depts = "Depts";
 	public static final String FK_Dept = "FK_Dept";
@@ -40,6 +40,9 @@ public class WFEmpAttr
 	public static final String OrgNo = "OrgNo";
 
 	public static final String UserID = "UserID";
+
+	public static final String Author = "Author";
+	public static final String AuthorDate = "AuthorDate";
 
 		///#endregion
 }

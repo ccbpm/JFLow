@@ -1,7 +1,7 @@
 package bp.sys.frmui;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.en.Map;
 import bp.sys.*;
 import bp.*;
@@ -17,7 +17,8 @@ public class SFTableClass extends EntityNoName
 
 		///#region 构造方法
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		uac.OpenForSysAdmin();
 		uac.IsInsert = false;
@@ -26,13 +27,14 @@ public class SFTableClass extends EntityNoName
 	/** 
 	 用户自定义表
 	*/
-	public SFTableClass()  {
+	public SFTableClass()
+	{
 	}
 	/** 
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -42,7 +44,7 @@ public class SFTableClass extends EntityNoName
 		map.AddTBStringPK(SFTableAttr.No, null, "表英文名称", true, false, 1, 200, 20);
 		map.AddTBString(SFTableAttr.Name, null, "表中文名称", true, false, 0, 200, 20);
 
-		map.AddDDLSysEnum(SFTableAttr.SrcType, 0, "数据表类型", true, true, SFTableAttr.SrcType, "@0=本地的类@1=创建表@2=表或视图@3=SQL查询表@4=WebServices");
+		map.AddDDLStringEnum(SFTableAttr.DictSrcType, "BPClass", "数据表类型", SFTableAttr.DictSrcType, false);
 
 		map.AddDDLSysEnum(SFTableAttr.CodeStruct, 0, "字典表类型", true, false, SFTableAttr.CodeStruct);
 
@@ -50,7 +52,7 @@ public class SFTableClass extends EntityNoName
 		map.AddTBString(SFTableAttr.TableDesc, null, "表描述", true, false, 0, 200, 20);
 		map.AddTBString(SFTableAttr.DefVal, null, "默认值", true, false, 0, 200, 20);
 
-			//数据源.
+		//数据源.
 		map.AddDDLEntities(SFTableAttr.FK_SFDBSrc, "local", "数据源", new SFDBSrcs(), true);
 
 		map.AddTBString(SFTableAttr.SrcTable, null, "数据源表", false, false, 0, 200, 20);
@@ -65,7 +67,7 @@ public class SFTableClass extends EntityNoName
 		rm.Title = "查看数据";
 		rm.ClassMethodName = this.toString() + ".DoEdit";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
-		rm.IsForEns = false;
+		rm.ItIsForEns = false;
 		map.AddRefMethod(rm);
 
 		this.set_enMap(map);
@@ -79,8 +81,8 @@ public class SFTableClass extends EntityNoName
 	 
 	 @return 
 	*/
-	public final String DoEdit() throws Exception {
-		return bp.difference.SystemConfig.getCCFlowWebPath() + "WF/Comm/Ens.htm?EnsName=" + this.getNo();
+	public final String DoEdit() {
+		return "../../Comm/Ens.htm?EnsName=" + this.getNo();
 	}
 	/** 
 	 执行删除.
@@ -88,13 +90,15 @@ public class SFTableClass extends EntityNoName
 	 @return 
 	*/
 	@Override
-	protected boolean beforeDelete() throws Exception {
+	protected boolean beforeDelete() throws Exception
+	{
 		bp.sys.SFTable sf = new bp.sys.SFTable(this.getNo());
 		sf.Delete();
 		return super.beforeDelete();
 	}
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		//利用这个时间串进行排序.
 		this.SetValByKey("RDT", DataType.getCurrentDateTime());
 		return super.beforeInsert();

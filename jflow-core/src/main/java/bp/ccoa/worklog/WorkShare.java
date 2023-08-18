@@ -1,9 +1,10 @@
 package bp.ccoa.worklog;
 
 import bp.web.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.port.*;
 import bp.sys.*;
+
 /** 
  日志共享
 */
@@ -14,52 +15,40 @@ public class WorkShare extends EntityMyPK
 	/** 
 	 组织编号
 	*/
-	public final String getOrgNo()
-	{
+	public final String getOrgNo()  {
 		return this.GetValStrByKey(WorkShareAttr.OrgNo);
 	}
-	public final void setOrgNo(String value)
-	 {
+	public final void setOrgNo(String value)  {
 		this.SetValByKey(WorkShareAttr.OrgNo, value);
 	}
-	public final String getEmpNo()
-	{
+	public final String getEmpNo()  {
 		return this.GetValStrByKey(WorkShareAttr.EmpNo);
 	}
-	public final void setEmpNo(String value)
-	 {
+	public final void setEmpNo(String value)  {
 		this.SetValByKey(WorkShareAttr.EmpNo, value);
 	}
-	public final String getEmpName()
-	{
+	public final String getEmpName()  {
 		return this.GetValStrByKey(WorkShareAttr.EmpName);
 	}
-	public final void setEmpName(String value)
-	 {
+	public final void setEmpName(String value)  {
 		this.SetValByKey(WorkShareAttr.EmpName, value);
 	}
-	public final String getShareToEmpNo()
-	{
+	public final String getShareToEmpNo()  {
 		return this.GetValStrByKey(WorkShareAttr.ShareToEmpNo);
 	}
-	public final void setShareToEmpNo(String value)
-	 {
+	public final void setShareToEmpNo(String value)  {
 		this.SetValByKey(WorkShareAttr.ShareToEmpNo, value);
 	}
-	public final String getShareToEmpName()
-	{
+	public final String getShareToEmpName()  {
 		return this.GetValStrByKey(WorkShareAttr.ShareToEmpName);
 	}
-	public final void setShareToEmpName(String value)
-	 {
+	public final void setShareToEmpName(String value)  {
 		this.SetValByKey(WorkShareAttr.ShareToEmpName, value);
 	}
-	public final int getShareState()
-	{
+	public final int getShareState() {
 		return this.GetValIntByKey(WorkShareAttr.ShareState);
 	}
-	public final void setShareState(int value)
-	 {
+	public final void setShareState(int value)  {
 		this.SetValByKey(WorkShareAttr.ShareState, value);
 	}
 
@@ -71,7 +60,8 @@ public class WorkShare extends EntityMyPK
 	 权限控制
 	*/
 	@Override
-	public UAC getHisUAC() {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (WebUser.getIsAdmin())
 		{
@@ -83,9 +73,10 @@ public class WorkShare extends EntityMyPK
 	/** 
 	 日志共享
 	*/
-	public WorkShare()  {
+	public WorkShare()
+	{
 	}
-	public WorkShare(String mypk)throws Exception
+	public WorkShare(String mypk) throws Exception
 	{
 		this.setMyPK(mypk);
 		this.Retrieve();
@@ -94,7 +85,8 @@ public class WorkShare extends EntityMyPK
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -122,7 +114,8 @@ public class WorkShare extends EntityMyPK
 
 		///#region 执行方法.
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 
 		this.setOrgNo(WebUser.getOrgNo());
 
@@ -153,7 +146,8 @@ public class WorkShare extends EntityMyPK
 		return super.beforeInsert();
 	}
 	@Override
-	protected boolean beforeUpdate() throws Exception {
+	protected boolean beforeUpdate() throws Exception
+	{
 		return super.beforeUpdate();
 	}
 

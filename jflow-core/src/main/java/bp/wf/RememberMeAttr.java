@@ -1,11 +1,5 @@
 package bp.wf;
 
-import bp.da.*;
-import bp.en.*;
-import bp.wf.*;
-import bp.port.*;
-import bp.*;
-import java.util.*;
 
 /** 
  记忆我 属性

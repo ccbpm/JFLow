@@ -1,6 +1,7 @@
 package bp.tools;
 
 
+import bp.da.DBAccess;
 import org.apache.commons.codec.binary.Base64;
 import bp.difference.ContextHolderUtils;
 import bp.tools.Rand;
@@ -19,11 +20,17 @@ public class Verify
 
      param code 生成认证长度
      */
-    public static String DrawImage(int code, String sessionName) throws IOException, InterruptedException {
+    public static String DrawImage(int code, String sessionName, String errorSign, String codeSign, String userNo) throws Exception {
         String str = Rand.Number(5);
 
-        ContextHolderUtils.addCookie(sessionName, Rand.GetMd5Str(str));
+        //ContextHolderUtils.addCookie(sessionName, Rand.GetMd5Str(str));
         //HttpContext.Current.Session[sessionName] = str;
+
+        String atPara = DBAccess.RunSQLReturnString("SELECT AtPara FROM WF_Emp WHERE No='" + userNo + "'");
+        bp.da.AtPara ap = new bp.da.AtPara(atPara);
+        ap.SetVal(codeSign, Encodes.encodeBase64(MD5Utill.MD5Encode(str, "UTF8").replace("+", "%2B")));
+
+        DBAccess.RunSQL("UPDATE WF_Emp SET AtPara='" + ap.GenerAtParaStrs() + "' WHERE No='" + userNo + "'");
 
         return CreateImages(str);
     }

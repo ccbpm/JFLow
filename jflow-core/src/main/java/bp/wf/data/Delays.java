@@ -26,7 +26,7 @@ public class Delays extends EntitiesMyPK
 	 逾期流程
 	*/
 	@Override
-	public Entity getGetNewEntity()
+	public Entity getNewEntity()
 	{
 		return new Delay();
 	}

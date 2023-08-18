@@ -6,11 +6,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
-import java.util.List;
-import java.util.Map;
+import bp.sys.SFDBSrc;
 import org.apache.http.Header;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
@@ -289,35 +287,67 @@ public class HttpClientUtil {
 
 
 	// 从服务器获得一个输入流(本例是指从服务器获得一个image输入流)
-		public static InputStream getInputStream(String urlPath) {
-			InputStream inputStream = null;
-			HttpURLConnection httpURLConnection = null;
-	 
-			try {
-				URL url = new URL(urlPath);
-				httpURLConnection = (HttpURLConnection) url.openConnection();
-				// 设置网络连接超时时间
-				httpURLConnection.setConnectTimeout(3000);
-				// 设置应用程序要从网络连接读取数据
-				httpURLConnection.setDoInput(true);
-	 
-				httpURLConnection.setRequestMethod("GET");
-				int responseCode = httpURLConnection.getResponseCode();
-				if (responseCode == 200) {
-					// 从服务器返回一个输入流
-					inputStream = httpURLConnection.getInputStream();
-	 
-				}
-	 
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+	public static InputStream getInputStream(String urlPath) {
+		InputStream inputStream = null;
+		HttpURLConnection httpURLConnection = null;
+
+		try {
+			URL url = new URL(urlPath);
+			httpURLConnection = (HttpURLConnection) url.openConnection();
+			// 设置网络连接超时时间
+			httpURLConnection.setConnectTimeout(3000);
+			// 设置应用程序要从网络连接读取数据
+			httpURLConnection.setDoInput(true);
+
+			httpURLConnection.setRequestMethod("GET");
+			int responseCode = httpURLConnection.getResponseCode();
+			if (responseCode == 200) {
+				// 从服务器返回一个输入流
+				inputStream = httpURLConnection.getInputStream();
+
 			}
-	 
-			return inputStream;
-	 
+
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
+		return inputStream;
+
+	}
+
+	public static String HttpPostConnect_Data(String dbSrNo, String exp, Hashtable ht, String requestMethod) throws Exception {  //返回值
+		//用户输入的webAPI地址
+		String apiUrl = exp;
+		if (apiUrl.contains("@WebApiHost"))//可以替换配置文件中配置的webapi地址
+			apiUrl = apiUrl.replace("@WebApiHost",bp.difference.SystemConfig.GetValByKey("WebApiHost",""));
+
+		SFDBSrc mysrc = new SFDBSrc(dbSrNo);
+		//拼接路径.
+		apiUrl = mysrc.getConnString() + apiUrl;
+
+        //#region 解析路径变量 /{xxx}/{yyy} ? xxx=xxx
+		if (apiUrl.contains("{") == true)
+		{
+			if (ht != null)
+			{
+				for(Object key : ht.keySet())
+				{
+					apiUrl = apiUrl.replace("{" + key + "}", ht.get(key).toString());
+				}
+			}
+		}
+        //#endregion
+
+		String[] strs = apiUrl.split("?");
+		//api接口地址
+		String apiHost = strs[0];
+		//api参数
+		String apiParams = "";
+		if (strs.length == 2)
+			apiParams = strs[1];
+		return doPostJson(apiHost, apiParams);
+	}
 
 }

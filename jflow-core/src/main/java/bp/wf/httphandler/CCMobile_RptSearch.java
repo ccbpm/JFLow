@@ -2,13 +2,12 @@ package bp.wf.httphandler;
 
 import bp.difference.*;
 import bp.*;
-import bp.difference.handler.WebContralBase;
 import bp.wf.*;
 
 /** 
  页面功能实体
 */
-public class CCMobile_RptSearch extends WebContralBase
+public class CCMobile_RptSearch extends bp.difference.handler.DirectoryPageBase
 {
 
 		///#region 执行父类的重写方法.
@@ -18,7 +17,8 @@ public class CCMobile_RptSearch extends WebContralBase
 	 @return 
 	*/
 	@Override
-	protected String DoDefaultMethod() throws Exception {
+	protected String DoDefaultMethod()
+	{
 		switch (this.getDoType())
 		{
 			case "DtlFieldUp": //字段上移
@@ -37,7 +37,7 @@ public class CCMobile_RptSearch extends WebContralBase
 	 构造函数
 	*/
 	public CCMobile_RptSearch() throws Exception {
-		bp.web.WebUser.setSheBei( "Mobile");
+		bp.web.WebUser.setSheBei("Mobile");
 	}
 
 

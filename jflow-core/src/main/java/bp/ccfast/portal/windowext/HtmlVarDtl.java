@@ -1,7 +1,11 @@
 package bp.ccfast.portal.windowext;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.ccfast.*;
+import bp.ccfast.portal.*;
+import java.util.*;
 
 /** 
  变量信息
@@ -13,44 +17,34 @@ public class HtmlVarDtl extends EntityMyPK
 	/** 
 	 表达式
 	*/
-	public final String getRefPK()
-	{
+	public final String getRefPK()  {
 		return this.GetValStrByKey(DtlAttr.RefPK);
 	}
-	public final void setRefPK(String value)
-	 {
+	public final void setRefPK(String value)  {
 		this.SetValByKey(DtlAttr.RefPK, value);
 	}
-	public final String getExp0()
-	{
+	public final String getExp0()  {
 		return this.GetValStrByKey(DtlAttr.Exp0);
 	}
-	public final void setExp0(String value)
-	 {
+	public final void setExp0(String value)  {
 		this.SetValByKey(DtlAttr.Exp0, value);
 	}
-	public final int getDBType()
-	{
+	public final int getDBType() {
 		return this.GetValIntByKey(DtlAttr.DBType);
 	}
-	public final void setDBType(int value)
-	 {
+	public final void setDBType(int value)  {
 		this.SetValByKey(DtlAttr.DBType, value);
 	}
-	public final String getFontColor()
-	{
+	public final String getFontColor()  {
 		return this.GetValStrByKey(DtlAttr.FontColor);
 	}
-	public final void setFontColor(String value)
-	 {
+	public final void setFontColor(String value)  {
 		this.SetValByKey(DtlAttr.FontColor, value);
 	}
-	public final String getUrlExt()
-	{
+	public final String getUrlExt()  {
 		return this.GetValStrByKey(DtlAttr.UrlExt);
 	}
-	public final void setUrlExt(String value)
-	 {
+	public final void setUrlExt(String value)  {
 		this.SetValByKey(DtlAttr.UrlExt, value);
 	}
 
@@ -62,7 +56,8 @@ public class HtmlVarDtl extends EntityMyPK
 	 控制权限
 	*/
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 
 		uac.IsInsert = true;
@@ -84,13 +79,15 @@ public class HtmlVarDtl extends EntityMyPK
 	/** 
 	 变量信息
 	*/
-	public HtmlVarDtl()  {
+	public HtmlVarDtl()
+	{
 	}
 	/** 
 	 EnMap
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();

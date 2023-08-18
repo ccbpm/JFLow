@@ -1,13 +1,6 @@
 package bp.wf;
 
-import bp.da.*;
 import bp.en.*;
-import bp.wf.*;
-import bp.port.*;
-import bp.wf.template.*;
-import bp.*;
-import java.util.*;
-
 /** 
  自定义运行路径 属性
 */

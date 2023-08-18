@@ -16,188 +16,154 @@ public class CHExt extends EntityMyPK
 	/** 
 	 考核状态
 	*/
-	public final CHSta getCHSta()
-	{
+	public final CHSta getCHSta() {
 		return CHSta.forValue(this.GetValIntByKey(CHAttr.CHSta));
 	}
-	public final void setCHSta(CHSta value)
-	{
+	public final void setCHSta(CHSta value){
 		this.SetValByKey(CHAttr.CHSta, value.getValue());
 	}
 	/** 
 	 时间到
 	*/
-	public final String getDTTo()
-	{
+	public final String getDTTo()  {
 		return this.GetValStringByKey(CHAttr.DTTo);
 	}
-	public final void setDTTo(String value)
-	{
+	public final void setDTTo(String value){
 		this.SetValByKey(CHAttr.DTTo, value);
 	}
 	/** 
 	 时间从
 	*/
-	public final String getDTFrom()
-	{
+	public final String getDTFrom()  {
 		return this.GetValStringByKey(CHAttr.DTFrom);
 	}
-	public final void setDTFrom(String value)
-	{
+	public final void setDTFrom(String value){
 		this.SetValByKey(CHAttr.DTFrom, value);
 	}
 	/** 
 	 应完成日期
 	*/
-	public final String getSDT()
-	{
+	public final String getSDT()  {
 		return this.GetValStringByKey(CHAttr.SDT);
 	}
-	public final void setSDT(String value)
-	{
+	public final void setSDT(String value){
 		this.SetValByKey(CHAttr.SDT, value);
 	}
 	/** 
 	 流程标题
 	*/
-	public final String getTitle()
-	{
+	public final String getTitle()  {
 		return this.GetValStringByKey(CHAttr.Title);
 	}
-	public final void setTitle(String value)
-	{
+	public final void setTitle(String value){
 		this.SetValByKey(CHAttr.Title, value);
 	}
 	/** 
 	 流程编号
 	*/
-	public final String getFK_Flow()
-	{
+	public final String getFK_Flow()  {
 		return this.GetValStringByKey(CHAttr.FK_Flow);
 	}
-	public final void setFK_Flow(String value)
-	{
+	public final void setFK_Flow(String value){
 		this.SetValByKey(CHAttr.FK_Flow, value);
 	}
 	/** 
 	 流程
 	*/
-	public final String getFK_FlowT()
-	{
+	public final String getFK_FlowT()  {
 		return this.GetValStringByKey(CHAttr.FK_FlowT);
 	}
-	public final void setFK_FlowT(String value)
-	{
+	public final void setFK_FlowT(String value){
 		this.SetValByKey(CHAttr.FK_FlowT, value);
 	}
 	/** 
 	 限期
 	*/
-	public final int getTimeLimit()
-	{
+	public final int getTimeLimit()  {
 		return this.GetValIntByKey(CHAttr.TimeLimit);
 	}
-	public final void setTimeLimit(int value)
-	{
+	public final void setTimeLimit(int value){
 		this.SetValByKey(CHAttr.TimeLimit, value);
 	}
 	/** 
 	 操作人员
 	*/
-	public final String getFK_Emp()
-	{
+	public final String getFK_Emp()  {
 		return this.GetValStringByKey(CHAttr.FK_Emp);
 	}
-	public final void setFK_Emp(String value)
-	{
+	public final void setFK_Emp(String value){
 		this.SetValByKey(CHAttr.FK_Emp, value);
 	}
 	/** 
 	 人员
 	*/
-	public final String getFK_EmpT()
-	{
+	public final String getFK_EmpT()  {
 		return this.GetValStringByKey(CHAttr.FK_EmpT);
 	}
-	public final void setFK_EmpT(String value)
-	{
+	public final void setFK_EmpT(String value){
 		this.SetValByKey(CHAttr.FK_EmpT, value);
 	}
 	/** 
 	 部门
 	*/
-	public final String getFK_Dept()
-	{
+	public final String getFK_Dept()  {
 		return this.GetValStrByKey(CHAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
-	{
+	public final void setFK_Dept(String value){
 		this.SetValByKey(CHAttr.FK_Dept, value);
 	}
 	/** 
 	 部门名称
 	*/
-	public final String getFK_DeptT()
-	{
+	public final String getFK_DeptT()  {
 		return this.GetValStrByKey(CHAttr.FK_DeptT);
 	}
-	public final void setFK_DeptT(String value)
-	{
+	public final void setFK_DeptT(String value){
 		this.SetValByKey(CHAttr.FK_DeptT, value);
 	}
 	/** 
 	 年月
 	*/
-	public final String getFK_Ny()
-	{
+	public final String getFK_Ny()  {
 		return this.GetValStrByKey(CHAttr.FK_NY);
 	}
-	public final void setFK_Ny(String value)
-	{
+	public final void setFK_Ny(String value){
 		this.SetValByKey(CHAttr.FK_NY, value);
 	}
 	/** 
 	 工作ID
 	*/
-	public final long getWorkID()
-	{
+	public final long getWorkID()  {
 		return this.GetValInt64ByKey(CHAttr.WorkID);
 	}
-	public final void setWorkID(long value)
-	{
+	public final void setWorkID(long value){
 		this.SetValByKey(CHAttr.WorkID, value);
 	}
 	/** 
 	 流程ID
 	*/
-	public final long getFID()
-	{
+	public final long getFID()  {
 		return this.GetValInt64ByKey(CHAttr.FID);
 	}
-	public final void setFID(long value)
-	{
+	public final void setFID(long value){
 		this.SetValByKey(CHAttr.FID, value);
 	}
 	/** 
 	 节点ID
 	*/
-	public final int getFK_Node()
-	{
+	public final int getFK_Node()  {
 		return this.GetValIntByKey(CHAttr.FK_Node);
 	}
-	public final void setFK_Node(int value)
-	{
+	public final void setNodeID(int value){
 		this.SetValByKey(CHAttr.FK_Node, value);
 	}
 	/** 
 	 节点名称
 	*/
-	public final String getFK_NodeT()
-	{
+	public final String getFK_NodeT()  {
 		return this.GetValStrByKey(CHAttr.FK_NodeT);
 	}
-	public final void setFK_NodeT(String value)
-	{
+	public final void setFK_NodeT(String value){
 		this.SetValByKey(CHAttr.FK_NodeT, value);
 	}
 
@@ -291,7 +257,7 @@ public class CHExt extends EntityMyPK
 		rm.ClassMethodName = this.toString() + ".DoOpen";
 		rm.refMethodType = RefMethodType.RightFrameOpen;
 		rm.Icon = "../../WF/Img/FileType/doc.gif";
-		rm.IsForEns = false;
+		rm.ItIsForEns = false;
 		map.AddRefMethod(rm);
 
 			//rm = new RefMethod();
@@ -306,8 +272,7 @@ public class CHExt extends EntityMyPK
 
 		///#endregion
 
-	public final String DoOpen()
-	{
+	public final String DoOpen() {
 		return "../../WFRpt.htm?FK_Flow" + this.getFK_Flow() + "&WorkID=" + this.getWorkID() + "&OID=" + this.getWorkID();
 	}
 }

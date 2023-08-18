@@ -1,5 +1,10 @@
 package bp.wf.template.sflow;
 
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.wf.*;
+import bp.wf.template.*;
+import java.util.*;
 
 /** 
  手工启动子流程属性

@@ -7,14 +7,14 @@ import bp.wf.*;
 import java.util.Calendar;
 import java.util.Date;
 
-/** 
+/**
  Method 的摘要说明
-*/
+ */
 public class AutoRun_WhoExeIt extends Method
 {
-	/** 
+	/**
 	 不带有参数的方法
-	*/
+	 */
 	public AutoRun_WhoExeIt()throws Exception
 	{
 		this.Title = "执行节点的自动任务.";
@@ -22,11 +22,11 @@ public class AutoRun_WhoExeIt extends Method
 		this.GroupName = "流程自动执行定时任务";
 	}
 
-	/** 
+	/**
 	 执行
-	 
+
 	 @return 返回执行结果
-	*/
+	 */
 	@Override
 	public Object Do()throws Exception
 	{
@@ -41,7 +41,7 @@ public class AutoRun_WhoExeIt extends Method
 		}
 
 
-			///#region 自动启动流程 whoExIt.
+		///#region 自动启动流程 whoExIt.
 		for (DataRow dr : dt.Rows)
 		{
 			long workid = Long.parseLong(dr.getValue(0).toString());
@@ -92,7 +92,7 @@ public class AutoRun_WhoExeIt extends Method
 			}
 		}
 
-			///#endregion 自动启动流程
+		///#endregion 自动启动流程
 
 		if (bp.web.WebUser.getNo().equals("admin") == false)
 		{
@@ -103,19 +103,19 @@ public class AutoRun_WhoExeIt extends Method
 	}
 
 
-		///#region 重写。
-	/** 
+	///#region 重写。
+	/**
 	 设置执行变量
-	 
-	 @return 
-	*/
+
+	 @return
+	 */
 	@Override
 	public void Init()
 	{
 	}
-	/** 
+	/**
 	 当前的操纵员是否可以执行这个方法
-	*/
+	 */
 	@Override
 	public boolean getIsCanDo()
 	{
@@ -126,6 +126,6 @@ public class AutoRun_WhoExeIt extends Method
 		return false;
 	}
 
-		///#endregion 重写。
+	///#endregion 重写。
 
 }

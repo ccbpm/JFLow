@@ -1,14 +1,8 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.en.*;
-import bp.wf.port.*;
-import bp.*;
-import bp.wf.*;
-import java.util.*;
 
 /** 
- 方向与工作岗位对应属性	  
+ 方向与工作角色对应属性	  
 */
 public class DirectionStationAttr
 {
@@ -17,7 +11,7 @@ public class DirectionStationAttr
 	*/
 	public static final String FK_Direction = "FK_Direction";
 	/** 
-	 工作岗位
+	 工作角色
 	*/
 	public static final String FK_Station = "FK_Station";
 }

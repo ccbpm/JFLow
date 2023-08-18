@@ -1,6 +1,9 @@
 package bp.ccfast.portal.windowext;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.*;
+import bp.ccfast.*;
+import bp.ccfast.portal.*;
 import java.util.*;
 
 /** 
@@ -13,13 +16,15 @@ public class iFrames extends EntitiesNoName
 	/** 
 	 框架信息块s
 	*/
-	public iFrames()  {
+	public iFrames()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new iFrame();
 	}
 
@@ -32,7 +37,8 @@ public class iFrames extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<iFrame> ToJavaList() {
+	public final java.util.List<iFrame> ToJavaList()
+	{
 		return (java.util.List<iFrame>)(Object)this;
 	}
 	/** 
@@ -40,7 +46,8 @@ public class iFrames extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<iFrame> Tolist()  {
+	public final ArrayList<iFrame> Tolist()
+	{
 		ArrayList<iFrame> list = new ArrayList<iFrame>();
 		for (int i = 0; i < this.size(); i++)
 		{

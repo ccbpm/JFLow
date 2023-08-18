@@ -2,8 +2,10 @@ package bp.wf.port;
 
 import bp.da.*;
 import bp.en.*;
+import bp.en.Map;
 import bp.tools.Cryptos;
-import bp.tools.Encodes;
+
+import java.util.*;
 
 /** 
  操作员 的摘要说明。
@@ -13,131 +15,110 @@ public class User extends EntityNoName
 
 		///#region 扩展属性
 
-		public final String getUnionid()  {
+		public final String getUnionid() throws Exception {
 			return this.GetValStrByKey(UserAttr.unionid);
 		}
-		public final void setUnionid(String value)
-	{this.SetValByKey(UserAttr.unionid, value);
+		public final void setUnionid(String value) throws Exception {
+			this.SetValByKey(UserAttr.unionid, value);
 		}
-	public final String getOpenID()
-	{
+	public final String getOpenID()  {
 		return this.GetValStrByKey(UserAttr.OpenID);
 	}
-	public final void setOpenID(String value)
-	 {
+	public final void setOpenID(String value){
 		this.SetValByKey(UserAttr.OpenID, value);
 	}
-	public final String getOpenID2()
-	{
+	public final String getOpenID2()  {
 		return this.GetValStrByKey(UserAttr.OpenID2);
 	}
-	public final void setOpenID2(String value)
-	 {
+	public final void setOpenID2(String value){
 		this.SetValByKey(UserAttr.OpenID2, value);
 	}
 
-	public final String getSID()
-	{
+	public final String getSID()  {
 		return this.GetValStrByKey(UserAttr.SID);
 	}
-	public final void setSID(String value)
-	 {
+	public final void setSID(String value){
 		this.SetValByKey(UserAttr.SID, value);
 	}
 	/** 
 	 拼音
 	*/
-	public final String getPinYin()
-	{
+	public final String getPinYin()  {
 		return this.GetValStrByKey(UserAttr.PinYin);
 	}
-	public final void setPinYin(String value)
-	 {
+	public final void setPinYin(String value){
 		this.SetValByKey(UserAttr.PinYin, value);
 	}
 	/** 
 	 主要的部门。
 	*/
-	public final Dept getHisDept() throws Exception {
+	public final bp.port.Dept getHisDept() throws Exception {
 		try
 		{
-			return new Dept(this.getFK_Dept());
+			return new bp.port.Dept(this.getDeptNo());
 		}
 		catch (RuntimeException ex)
 		{
-			throw new RuntimeException("@获取操作员" + this.getNo() + "部门[" + this.getFK_Dept() + "]出现错误,可能是系统管理员没有给他维护部门.@" + ex.getMessage());
+			throw new RuntimeException("@获取操作员" + this.getNo() + "部门[" + this.getDeptNo() + "]出现错误,可能是系统管理员没有给他维护部门.@" + ex.getMessage());
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 	/** 
 	 部门
 	*/
-	public final String getFK_Dept()
-	{
+	public final String getDeptNo()  {
 		return this.GetValStrByKey(UserAttr.FK_Dept);
 	}
-	public final void setFK_Dept(String value)
-	 {
+	public final void setDeptNo(String value){
 		this.SetValByKey(UserAttr.FK_Dept, value);
 	}
-	public final String getFK_DeptText()
-	{
+	public final String getDeptNoText()  {
 		return this.GetValRefTextByKey(UserAttr.FK_Dept);
 	}
-	public final String getTel()
-	{
+	public final String getTel()  {
 		return this.GetValStrByKey(UserAttr.Tel);
 	}
-	public final void setTel(String value)
-	 {
+	public final void setTel(String value){
 		this.SetValByKey(UserAttr.Tel, value);
 	}
-	public final String getEmail()
-	{
+	public final String getEmail()  {
 		return this.GetValStrByKey(UserAttr.Email);
 	}
-	public final void setEmail(String value)
-	 {
+	public final void setEmail(String value){
 		this.SetValByKey(UserAttr.Email, value);
 	}
 	/** 
 	 密码
 	*/
-	public final String getPass()
-	{
+	public final String getPass()  {
 		return this.GetValStrByKey(UserAttr.Pass);
 	}
-	public final void setIsPass(String value)
-	 {
+	public final void setPass(String value){
 		this.SetValByKey(UserAttr.Pass, value);
 	}
 	/** 
 	 顺序号
 	*/
-	public final int getIdx()
-	{
+	public final int getIdx()  {
 		return this.GetValIntByKey(UserAttr.Idx);
 	}
-	public final void setIdx(int value)
-	 {
+	public final void setIdx(int value){
 		this.SetValByKey(UserAttr.Idx, value);
 	}
 	/** 
 	 组织结构编码
 	*/
-	public final String getOrgNo()
-	{
+	public final String getOrgNo()  {
 		return this.GetValStrByKey(UserAttr.OrgNo);
 	}
-	public final void setOrgNo(String value)
-	 {
+	public final void setOrgNo(String value){
 		this.SetValByKey(UserAttr.OrgNo, value);
 	}
-	public final String getOrgName()
-	{
+	public final String getOrgName()  {
 		return this.GetValStrByKey(UserAttr.OrgName);
 	}
-	public final void setOrgName(String value)
-	 {
+	public final void setOrgName(String value){
 		this.SetValByKey(UserAttr.OrgName, value);
 	}
 
@@ -148,20 +129,13 @@ public class User extends EntityNoName
 	/** 
 	 检查密码(可以重写此方法)
 	 
-	 param pass 密码
+	 @param pass 密码
 	 @return 是否匹配成功
 	*/
 	public final boolean CheckPass(String pass) throws Exception {
-		//启用加密
-		if (bp.difference.SystemConfig.getIsEnablePasswordEncryption() == true) {
-			if(bp.difference.SystemConfig.getPasswordEncryptionType().equals("0"))
-				pass= Encodes.encodeBase64(pass);
-			if(bp.difference.SystemConfig.getPasswordEncryptionType().equals("1"))
-				pass = Cryptos.aesEncrypt(pass);
-		}
 
 		/*使用数据库校验.*/
-		if (this.getPass().equals(pass) == true)
+		if (this.getPass().toLowerCase().equals(pass.toLowerCase()) == true)
 		{
 			return true;
 		}
@@ -175,14 +149,16 @@ public class User extends EntityNoName
 	/** 
 	 操作员
 	*/
-	public User()  {
+	public User()
+	{
 	}
 	/** 
 	 操作员
 	 
-	 param no 编号
+	 @param no 编号
 	*/
-	public User(String no) throws Exception {
+	public User(String no) throws Exception
+	{
 		try
 		{
 			this.setNo(no);
@@ -200,7 +176,8 @@ public class User extends EntityNoName
 	}
 
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (bp.web.WebUser.getIsAdmin() == true)
 		{
@@ -216,19 +193,19 @@ public class User extends EntityNoName
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap() {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
 		}
 
 		Map map = new Map("Port_User", "用户");
-		  // map.setEnType(EnType.App);
+	  // map.setEnType(EnType.App);
 		map.IndexField = UserAttr.FK_Dept;
 
 
 			///#region 字段。
-			/*关于字段属性的增加 */
+		/*关于字段属性的增加 */
 		map.AddTBStringPK(UserAttr.No, null, "手机号/ID", true, false, 1, 150, 90);
 		map.AddTBString(UserAttr.Name, null, "姓名", true, false, 0, 500, 130);
 		map.AddTBString(UserAttr.Pass, null, "密码", false, false, 0, 100, 10);
@@ -254,20 +231,22 @@ public class User extends EntityNoName
 
 
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert() throws Exception
+	{
 		if (bp.difference.SystemConfig.getIsEnablePasswordEncryption() == true)
 		{
-			if (this.getPass().equals(""))
+			if (Objects.equals(this.getPass(), ""))
 			{
-				this.setIsPass("123");
+				this.setPass("123");
 			}
-			this.setIsPass(Encodes.encodeBase64(this.getPass()));
+			this.setPass(Cryptos.aesEncrypt(this.getPass()));
 		}
 		return super.beforeInsert();
 	}
 
 	@Override
-	protected boolean beforeUpdateInsertAction() throws Exception {
+	protected boolean beforeUpdateInsertAction() throws Exception
+	{
 		//增加拼音，以方便查找.
 		if (DataType.IsNullOrEmpty(this.getName()) == true)
 		{
@@ -280,8 +259,9 @@ public class User extends EntityNoName
 		return super.beforeUpdateInsertAction();
 	}
 	@Override
-	protected boolean beforeDelete() throws Exception {
-		if (!this.getOrgNo().equals(bp.web.WebUser.getOrgNo()))
+	protected boolean beforeDelete() throws Exception
+	{
+		if (!Objects.equals(this.getOrgNo(), bp.web.WebUser.getOrgNo()))
 		{
 			throw new RuntimeException("err@您不能删除别人的数据.");
 		}
@@ -292,7 +272,8 @@ public class User extends EntityNoName
 	 删除之后要做的事情
 	*/
 	@Override
-	protected void afterDelete() throws Exception {
+	protected void afterDelete() throws Exception
+	{
 		super.afterDelete();
 	}
 
@@ -314,10 +295,10 @@ public class User extends EntityNoName
 
 		if (bp.difference.SystemConfig.getIsEnablePasswordEncryption() == true)
 		{
-			pass1 = Encodes.encodeBase64(pass1);
+			pass1 = bp.tools.Cryptos.aesEncrypt(pass1);
 		}
 
-		this.setIsPass(pass1);
+		this.setPass(pass1);
 
 		this.Update();
 		return "密码设置成功";
@@ -325,8 +306,9 @@ public class User extends EntityNoName
 	/** 
 	 获取集合
 	*/
-
-	public Entities getNewEntities() throws Exception {
+	@Override
+	public Entities GetNewEntities()
+	{
 		return new Users();
 	}
 

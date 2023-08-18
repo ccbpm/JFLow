@@ -27,7 +27,8 @@ public enum ImpModel
 
 	private int intValue;
 	private static java.util.HashMap<Integer, ImpModel> mappings;
-	private static java.util.HashMap<Integer, ImpModel> getMappings()  {
+	private static java.util.HashMap<Integer, ImpModel> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (ImpModel.class)
@@ -42,7 +43,8 @@ public enum ImpModel
 	}
 
 	private ImpModel(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
@@ -51,7 +53,7 @@ public enum ImpModel
 		return intValue;
 	}
 
-	public static ImpModel forValue(int value) 
+	public static ImpModel forValue(int value)
 	{
 		return getMappings().get(value);
 	}

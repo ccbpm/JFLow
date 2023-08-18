@@ -1,9 +1,8 @@
 package bp.ccbill.template;
 
 import bp.da.*;
-import bp.en.*;
-import bp.*;
-import bp.ccbill.*;
+import bp.en.*; import bp.en.Map;
+import bp.en.Map;
 
 /** 
  分组
@@ -16,7 +15,8 @@ public class GroupMethod extends EntityNoName
 	 权限控制.
 	*/
 	@Override
-	public UAC getHisUAC() {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (bp.web.WebUser.getNo().equals("admin") == true || bp.web.WebUser.getIsAdmin())
 		{
@@ -37,58 +37,46 @@ public class GroupMethod extends EntityNoName
 	/** 
 	 表单ID
 	*/
-	public final String getFrmID()
-	{
+	public final String getFrmID()  {
 		return this.GetValStrByKey(GroupMethodAttr.FrmID);
 	}
-	public final void setFrmID(String value)
-	 {
+	public final void setFrmID(String value)  {
 		this.SetValByKey(GroupMethodAttr.FrmID, value);
 	}
-	public final String getOrgNo()
-	{
+	public final String getOrgNo()  {
 		return this.GetValStrByKey(GroupMethodAttr.OrgNo);
 	}
-	public final void setOrgNo(String value)
-	 {
+	public final void setOrgNo(String value)  {
 		this.SetValByKey(GroupMethodAttr.OrgNo, value);
 	}
-	public final String getMethodType()
-	{
+	public final String getMethodType()  {
 		return this.GetValStrByKey(GroupMethodAttr.MethodType);
 	}
-	public final void setMethodType(String value)
-	 {
+	public final void setMethodType(String value)  {
 		this.SetValByKey(GroupMethodAttr.MethodType, value);
 	}
 	/** 
 	 顺序号
 	*/
-	public final int getIdx()
-	{
+	public final int getIdx() {
 		return this.GetValIntByKey(GroupMethodAttr.Idx);
 	}
-	public final void setIdx(int value)
-	 {
+	public final void setIdx(int value)  {
 		this.SetValByKey(GroupMethodAttr.Idx, value);
 	}
 	/** 
 	 图标
 	*/
-	public final String getIcon()
-	{
+	public final String getIcon()  {
 		return this.GetValStrByKey(GroupMethodAttr.Icon);
 	}
-	public final void setIcon(String value)
-	 {
+	public final void setIcon(String value)  {
 		this.SetValByKey(GroupMethodAttr.Icon, value);
 	}
-	public final String getMethodID()
-	{
+	public final String getMethodID()  {
 		return this.GetValStrByKey(GroupMethodAttr.MethodID);
 	}
-	public final void setMethodID(String value)
-	 {
+	public final void setMethodID(String value)  {
 		this.SetValByKey(GroupMethodAttr.MethodID, value);
 	}
 
@@ -100,13 +88,14 @@ public class GroupMethod extends EntityNoName
 	/** 
 	 GroupMethod
 	*/
-	public GroupMethod()  {
+	public GroupMethod()
+	{
 	}
-	/** 
-	 EnMap
-	*/
+	/**
+	 * EnMap
+	 */
 	@Override
-	public bp.en.Map getEnMap()  {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -124,7 +113,6 @@ public class GroupMethod extends EntityNoName
 
 		map.AddTBString(GroupMethodAttr.OrgNo, null, "OrgNo", true, true, 0, 40, 20, true);
 
-
 		map.AddTBInt(GroupMethodAttr.Idx, 0, "顺序号", true, false);
 		map.AddTBAtParas(3000);
 
@@ -139,7 +127,8 @@ public class GroupMethod extends EntityNoName
 
 		///#region 方法.
 	@Override
-	protected boolean beforeDelete() throws Exception {
+	protected boolean beforeDelete() throws Exception
+	{
 		Methods ens = new Methods();
 		ens.Retrieve(MethodAttr.GroupID, this.getNo(), null);
 		if (ens.size() != 0)
@@ -150,19 +139,23 @@ public class GroupMethod extends EntityNoName
 		return super.beforeDelete();
 	}
 	@Override
-	protected boolean beforeUpdate() throws Exception {
+	protected boolean beforeUpdate() throws Exception
+	{
 		return super.beforeUpdate();
 	}
-	public final String DoDown()  {
+	public final String DoDown() throws Exception
+	{
 		this.DoOrderDown(GroupMethodAttr.FrmID, this.getFrmID(), GroupMethodAttr.Idx);
 		return "执行成功";
 	}
-	public final String DoUp()  {
+	public final String DoUp() throws Exception
+	{
 		this.DoOrderUp(GroupMethodAttr.FrmID, this.getFrmID(), GroupMethodAttr.Idx);
 		return "执行成功";
 	}
 	@Override
-	protected boolean beforeInsert() throws Exception {
+	protected boolean beforeInsert()  throws Exception
+	{
 		//设置主键.
 		if (DataType.IsNullOrEmpty(this.getNo()) == true)
 		{

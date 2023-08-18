@@ -2,31 +2,37 @@ package bp.en;
 
 import bp.wf.BlockModel;
 
+/**
+ * 从表的编辑模式
+ */
 public enum DtlEditerModel {
-    /// <summary>
-    /// 从表的编辑模式
-    /// </summary>
 
-        /// <summary>
-        /// 批量编辑
-        /// </summary>
-        DtlBatch(0),
-        /// <summary>
-        /// 查询编辑模式
-        /// </summary>
-        DtlSearch (1);
+    //批量编辑
+    DtlBatch(0),
+    //查询编辑模式
+    DtlSearch(1),
+
+    //自定义URL
+    DtlURL(2),
+
+    //在EnOnly显示查询
+    DtlBatchEnonly(3),
+
+    //在EnOnly
+    DtlSearchEnonly(4),
+
+    //
+    DtlURLEnonly(5);
 
     public static final int SIZE = java.lang.Integer.SIZE;
 
     private int intValue;
     private static java.util.HashMap<Integer, DtlEditerModel> mappings;
-    private static java.util.HashMap<Integer, DtlEditerModel> getMappings()  {
-        if (mappings == null)
-        {
-            synchronized (BlockModel.class)
-            {
-                if (mappings == null)
-                {
+
+    private static java.util.HashMap<Integer, DtlEditerModel> getMappings() {
+        if (mappings == null) {
+            synchronized (BlockModel.class) {
+                if (mappings == null) {
                     mappings = new java.util.HashMap<Integer, DtlEditerModel>();
                 }
             }
@@ -34,16 +40,16 @@ public enum DtlEditerModel {
         return mappings;
     }
 
-    private DtlEditerModel(int value)
-    {intValue = value;
+    private DtlEditerModel(int value) {
+        intValue = value;
         getMappings().put(value, this);
     }
 
-    public int getValue()  {
+    public int getValue() {
         return intValue;
     }
 
-    public static DtlEditerModel forValue(int value)
-    {return getMappings().get(value);
+    public static DtlEditerModel forValue(int value) {
+        return getMappings().get(value);
     }
 }

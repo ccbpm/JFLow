@@ -1,19 +1,15 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
+import bp.difference.*;
 import bp.sys.*;
 import bp.web.*;
-import bp.*;
-import bp.wf.*;
-import bp.wf.Glo;
-
 import java.util.*;
 
 /** 
  页面功能实体
 */
-public class DataUser_AppCoder extends bp.difference.handler.WebContralBase
+public class DataUser_AppCoder extends bp.difference.handler.DirectoryPageBase
 {
 	/** 
 	 自动执行定时任务.
@@ -24,12 +20,13 @@ public class DataUser_AppCoder extends bp.difference.handler.WebContralBase
 		bp.wf.dts.ccbpmServices dts = new bp.wf.dts.ccbpmServices();
 		dts.Do();
 
-		return "执行成功:" ;
+		return "执行成功:" + DataType.getCurrentDateCNOfLong();
 	}
 	/** 
 	 构造函数
 	*/
-	public DataUser_AppCoder() throws Exception {
+	public DataUser_AppCoder()
+	{
 
 	}
 
@@ -40,12 +37,13 @@ public class DataUser_AppCoder extends bp.difference.handler.WebContralBase
 	 
 	 @return 
 	*/
-	public final String FlowDesignerWelcome_Init() throws Exception {
+	public final String FlowDesignerWelcome_Init()
+	{
 		String whereStr = "";
 		String whereStrPuls = "";
 
 
-		if (Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
+		if (bp.wf.Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
 		{
 			whereStr += " WHERE OrgNo = '" + WebUser.getOrgNo() + "'";
 			whereStrPuls += " AND OrgNo = '" + WebUser.getOrgNo() + "'";
@@ -57,7 +55,7 @@ public class DataUser_AppCoder extends bp.difference.handler.WebContralBase
 
 
 		//获得节点的数量
-		if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
+		if (bp.wf.Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
 		{
 			ht.put("NodeNum", DBAccess.RunSQLReturnValInt("SELECT COUNT(NodeID) FROM WF_Node " + whereStr)); //节点数据
 		}
@@ -80,26 +78,27 @@ public class DataUser_AppCoder extends bp.difference.handler.WebContralBase
 		//退回数.
 		ht.put("ReturnNum", DBAccess.RunSQLReturnValInt("SELECT COUNT(WorkID) FROM WF_GenerWorkFlow WHERE WFState=5 " + whereStrPuls));
 
-		//说有逾期的数量. 应该根据 WF_GenerWorkerList的 SDT 字段来求.
-		if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MySQL)
+		//说有逾期的数量. 应该根据 WF_GenerWorkerlist的 SDT 字段来求.
+		if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 		{
-			ht.put("OverTimeNum", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM WF_GenerWorkerList WHERE IsPass=0 AND STR_TO_DATE(SDT,'%Y-%m-%d %H:%i') < now()"));
+			ht.put("OverTimeNum", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM WF_GenerWorkerlist WHERE IsPass=0 AND STR_TO_DATE(SDT,'%Y-%m-%d %H:%i') < now()"));
 
 		}
-		else if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.Oracle || SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR3 ||SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR6)
+		else if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 || SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
 
-			String sql = "SELECT COUNT(*) from (SELECT *  FROM WF_GenerWorkerList WHERE IsPass=0 AND   REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}') AND (sysdate - TO_DATE(SDT, 'yyyy-mm-dd hh24:mi:ss')) > 0 ";
-			sql += "UNION SELECT * FROM WF_GenerWorkerList WHERE  REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$') AND (sysdate - TO_DATE(SDT, 'yyyy-mm-dd')) > 0 )";
+			String sql = "SELECT COUNT(*) from (SELECT *  FROM WF_GenerWorkerlist WHERE IsPass=0 AND   REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}') AND (sysdate - TO_DATE(SDT, 'yyyy-mm-dd hh24:mi:ss')) > 0 ";
+			sql += "UNION SELECT * FROM WF_GenerWorkerlist WHERE  REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$') AND (sysdate - TO_DATE(SDT, 'yyyy-mm-dd')) > 0 )";
 
 			ht.put("OverTimeNum", DBAccess.RunSQLReturnValInt(sql));
 		}
-		else if(SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB){
-			ht.put("OverTimeNum", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM WF_GenerWorkerList WHERE IsPass=0 AND to_timestamp(CASE WHEN SDT='无' THEN '' ELSE SDT END, 'yyyy-mm-dd hh24:MI:SS') < now()"));
+		else if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		{
+			ht.put("OverTimeNum", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM WF_GenerWorkerlist WHERE IsPass=0 AND to_timestamp(CASE WHEN SDT='无' THEN '' ELSE SDT END, 'yyyy-mm-dd hh24:MI:SS') < NOW()"));
 		}
 		else
 		{
-			ht.put("OverTimeNum", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM WF_GenerWorkerList WHERE IsPass=0 AND convert(varchar(100),SDT,120) < CONVERT(varchar(100), GETDATE(), 120)"));
+			ht.put("OverTimeNum", DBAccess.RunSQLReturnValInt("SELECT COUNT(*) FROM WF_GenerWorkerlist WHERE IsPass=0 AND convert(varchar(100),SDT,120) < CONVERT(varchar(100), GETDATE(), 120)"));
 		}
 		return bp.tools.Json.ToJson(ht);
 	}
@@ -112,7 +111,7 @@ public class DataUser_AppCoder extends bp.difference.handler.WebContralBase
 		String whereStr = "";
 		String whereStrPuls = "";
 
-		if (Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
+		if (bp.wf.Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
 		{
 			whereStr += " WHERE OrgNo = '" + WebUser.getOrgNo() + "'";
 			whereStrPuls += " AND OrgNo = '" + WebUser.getOrgNo() + "'";
@@ -139,26 +138,26 @@ public class DataUser_AppCoder extends bp.difference.handler.WebContralBase
 
 			///#region 待办 分析
 		//待办 - 部门分组.
-		if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
+		if (bp.wf.Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
 		{
-			sql = "SELECT B.Name, count(a.WorkID) as Num FROM WF_GenerWorkerList A,Port_Dept B WHERE A.FK_Dept=B.No GROUP BY B.Name";
+			sql = "SELECT B.Name, count(a.WorkID) as Num FROM WF_GenerWorkerlist A,Port_Dept B WHERE A.FK_Dept=B.No GROUP BY B.Name";
 		}
 		else
 		{
-			sql = "SELECT B.Name, count(a.WorkID) as Num FROM WF_GenerWorkerList A,Port_Dept B WHERE A.FK_Dept=B.No AND B.OrgNo='" + WebUser.getOrgNo() + "' GROUP BY B.Name";
+			sql = "SELECT B.Name, count(a.WorkID) as Num FROM WF_GenerWorkerlist A,Port_Dept B WHERE A.FK_Dept=B.No AND B.OrgNo='" + WebUser.getOrgNo() + "' GROUP BY B.Name";
 		}
 		DataTable TodolistByDept = DBAccess.RunSQLReturnTable(sql);
 		TodolistByDept.TableName = "TodolistByDept";
 		ds.Tables.add(TodolistByDept);
 
 		//待办的 - 流程分组.
-		if (Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
+		if (bp.wf.Glo.getCCBPMRunModel() == CCBPMRunModel.Single)
 		{
-			sql = "SELECT c.FlowName as name, count(a.WorkID) as value FROM WF_GenerWorkerList A,Port_Dept B, WF_GenerWorkFlow C WHERE A.FK_Dept=B.No AND A.WorkID=C.WorkID AND A.IsPass=0 GROUP BY C.FlowName";
+			sql = "SELECT c.FlowName as name, count(a.WorkID) as value FROM WF_GenerWorkerlist A,Port_Dept B, WF_GenerWorkFlow C WHERE A.FK_Dept=B.No AND A.WorkID=C.WorkID AND A.IsPass=0 GROUP BY C.FlowName";
 		}
 		else
 		{
-			sql = "SELECT c.FlowName as name, count(a.WorkID) as value  FROM WF_GenerWorkerList A,Port_Dept B, WF_GenerWorkFlow C WHERE A.FK_Dept=B.No AND A.WorkID=C.WorkID AND A.IsPass=0 AND C.OrgNo='" + WebUser.getOrgNo() + "' GROUP BY C.FlowName";
+			sql = "SELECT c.FlowName as name, count(a.WorkID) as value  FROM WF_GenerWorkerlist A,Port_Dept B, WF_GenerWorkFlow C WHERE A.FK_Dept=B.No AND A.WorkID=C.WorkID AND A.IsPass=0 AND C.OrgNo='" + WebUser.getOrgNo() + "' GROUP BY C.FlowName";
 		}
 
 		//sql = "SELECT FlowName as name, count(WorkID) as value FROM WF_EmpWorks WHERE WFState >1 GROUP BY FlowName";
@@ -171,18 +170,19 @@ public class DataUser_AppCoder extends bp.difference.handler.WebContralBase
 
 			///#region 逾期 分析.
 		//逾期的 - 流程分组.
-		if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MySQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 		{
 			sql = "SELECT FlowName as name, count(WorkID) as value FROM WF_EmpWorks WHERE WFState >1 " + whereStrPuls + " and STR_TO_DATE(SDT,'%Y-%m-%d %H:%i') < now() GROUP BY FlowName";
 
 		}
-		else if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.Oracle || SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR3 ||SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR6)
+		else if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 || SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
 			sql = "SELECT FlowName as name, count(WorkID) as value FROM WF_EmpWorks WHERE WFState >1 " + whereStrPuls + "  and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}') AND(sysdate - TO_DATE(SDT, 'yyyy-mm-dd hh24:mi:ss')) > 0 GROUP BY FlowName ";
 			sql += "UNION SELECT FlowName as name, count(WorkID) as value FROM WF_EmpWorks WHERE WFState >1 " + whereStrPuls + "  and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$') AND (sysdate - TO_DATE(SDT, 'yyyy-mm-dd')) > 0 GROUP BY FlowName";
 		}
-		else if(SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB){
-			sql = "SELECT FlowName as name, count(WorkID) as value FROM WF_EmpWorks WHERE WFState >1 " + whereStrPuls + "  and to_timestamp(CASE WHEN SDT='无' THEN '' ELSE SDT END, 'yyyy-mm-dd hh24:MI:SS') < now() GROUP BY FlowName";
+		else if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		{
+			sql = "SELECT FlowName as name, count(WorkID) as value FROM WF_EmpWorks WHERE WFState >1 " + whereStrPuls + "  and to_timestamp(CASE WHEN SDT='无' THEN '' ELSE SDT END, 'yyyy-mm-dd hh24:MI:SS') < NOW() GROUP BY FlowName";
 		}
 		else
 		{
@@ -195,17 +195,18 @@ public class DataUser_AppCoder extends bp.difference.handler.WebContralBase
 
 		//逾期的 - 部门分组.
 
-		if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MySQL)
+		if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 		{
 			sql = "SELECT DeptName, count(WorkID) as Num FROM WF_EmpWorks WHERE WFState >1 " + whereStrPuls + "  and STR_TO_DATE(SDT,'%Y-%m-%d %H:%i') < now() GROUP BY DeptName";
 
 		}
-		else if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.Oracle || SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR3 ||SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR6)
+		else if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 || SystemConfig.getAppCenterDBType() == DBType.KingBaseR6)
 		{
 			sql = "SELECT DeptName, count(WorkID) as Num FROM WF_EmpWorks WHERE WFState >1 " + whereStrPuls + "  and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}') AND(sysdate - TO_DATE(SDT, 'yyyy-mm-dd hh24:mi:ss')) > 0 GROUP BY DeptName ";
 			sql += "UNION SELECT DeptName, count(WorkID) as Num FROM WF_EmpWorks WHERE WFState >1 " + whereStrPuls + "  and REGEXP_LIKE(SDT, '^[0-9]{4}-[0-9]{2}-[0-9]{2}$') AND (sysdate - TO_DATE(SDT, 'yyyy-mm-dd')) > 0 GROUP BY DeptName";
 		}
-		else if(SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB){
+		else if (SystemConfig.getAppCenterDBType() == DBType.PostgreSQL)
+		{
 			sql = "SELECT DeptName, count(WorkID) as Num FROM WF_EmpWorks WHERE WFState >1 " + whereStrPuls + "  and to_timestamp(CASE WHEN SDT='无' THEN '' ELSE SDT END, 'yyyy-mm-dd hh24:MI:SS') < NOW() GROUP BY DeptName";
 		}
 		else

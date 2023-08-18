@@ -1,7 +1,5 @@
 package bp.wf.template;
 
-import bp.da.*;
-import bp.sys.*;
 import bp.en.*;
 import java.util.*;
 
@@ -15,28 +13,23 @@ public class FrmNodeComponents extends Entities
 	/** 
 	 节点表单组件s
 	*/
-	public FrmNodeComponents() throws Exception {
+	public FrmNodeComponents()
+	{
 	}
 	/** 
 	 节点表单组件s
 	 
-	 param fk_mapdata s
+	 @param fk_mapdata s
 	*/
 	public FrmNodeComponents(String fk_mapdata) throws Exception {
-		if (bp.difference.SystemConfig.getIsDebug())
-		{
-			this.Retrieve("No", fk_mapdata, null);
-		}
-		else
-		{
-			this.RetrieveFromCash("No", (Object)fk_mapdata);
-		}
+			this.RetrieveFromCache("No", (Object)fk_mapdata);
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FrmNodeComponent();
 	}
 
@@ -49,7 +42,8 @@ public class FrmNodeComponents extends Entities
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmNodeComponent> ToJavaList() {
+	public final java.util.List<FrmNodeComponent> ToJavaList()
+	{
 		return (java.util.List<FrmNodeComponent>)(Object)this;
 	}
 	/** 
@@ -57,7 +51,8 @@ public class FrmNodeComponents extends Entities
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmNodeComponent> Tolist()  {
+	public final ArrayList<FrmNodeComponent> Tolist()
+	{
 		ArrayList<FrmNodeComponent> list = new ArrayList<FrmNodeComponent>();
 		for (int i = 0; i < this.size(); i++)
 		{

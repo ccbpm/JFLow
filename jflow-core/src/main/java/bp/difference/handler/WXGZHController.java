@@ -41,7 +41,7 @@ public class WXGZHController {
         // 2. 将三个参数字符串拼接成一个字符串进行sha1加密
         String mytoken = SHA1(sortString);
         // 3.将sha1加密后的字符串可与signature对比，标识该请求来源于微信
-        if (mytoken != null && mytoken != "" && mytoken.equals(signature)) {
+        if (mytoken != null && mytoken.equals("") && mytoken.equals(signature)) {
             System.out.println("签名校验通过。");
             response.getWriter().println(echostr); //如果检验成功输出echostr，微信服务器接收到此输出，才会确认检验完成。
 

@@ -1,11 +1,10 @@
 package bp.wf.httphandler;
 
 import bp.da.*;
-import bp.difference.SystemConfig;
-import bp.difference.handler.WebContralBase;
 import bp.sys.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.wf.template.*;
+import bp.difference.*;
 import bp.*;
 import bp.wf.*;
 
@@ -14,12 +13,13 @@ import java.net.URLDecoder;
 /** 
  页面功能实体
 */
-public class WF_Admin_Cond extends WebContralBase
+public class WF_Admin_Cond extends bp.difference.handler.DirectoryPageBase
 {
 	/** 
 	 构造函数
 	*/
-	public WF_Admin_Cond() throws Exception {
+	public WF_Admin_Cond()
+	{
 	}
 
 
@@ -31,13 +31,11 @@ public class WF_Admin_Cond extends WebContralBase
 	*/
 	public final String CondPRI_Init() throws Exception {
 		Directions dirs = new Directions();
-		dirs.Retrieve(DirectionAttr.Node, this.getFK_Node(), DirectionAttr.Idx);
+		dirs.Retrieve(DirectionAttr.Node, this.getNodeID(), DirectionAttr.Idx);
 		return dirs.ToJson("dt");
-
 		//按照条件的先后计算.
 		/*Conds cds = new Conds();
-		cds.Retrieve(CondAttr.FK_Node, this.getFK_Node(), CondAttr.CondType, 2, CondAttr.Idx);
-
+		cds.Retrieve(CondAttr.FK_Node, this.getNodeID(), CondAttr.CondType, 2, CondAttr.Idx);
 		for (Cond item : cds.ToJavaList())
 		{
 			Node nd = new Node(item.getToNodeID());
@@ -56,7 +54,8 @@ public class WF_Admin_Cond extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String CondPRI_Move() throws Exception {
+	public final String CondPRI_Move()
+	{
 		String[] ens = this.GetRequestVal("MyPKs").split("[,]", -1);
 		for (int i = 0; i < ens.length; i++)
 		{
@@ -78,8 +77,8 @@ public class WF_Admin_Cond extends WebContralBase
 	public final String Condition_Init() throws Exception {
 		String toNodeID = this.GetRequestVal("ToNodeID");
 		Cond cond = new Cond();
-		cond.Retrieve(CondAttr.FK_Node, this.getFK_Node(), CondAttr.ToNodeID, toNodeID);
-		cond.getRow().put("HisDataFrom", cond.getHisDataFrom().toString());
+		cond.Retrieve(CondAttr.FK_Node, this.getNodeID(), CondAttr.ToNodeID, toNodeID);
+		cond.getRow().SetValByKey("HisDataFrom", cond.getHisDataFrom().toString());
 
 		return cond.ToJson(true);
 	}
@@ -90,19 +89,19 @@ public class WF_Admin_Cond extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String ConditionLine_Init() throws Exception {
+	public final String ConditionLine_Init()
+	{
 		ps = new Paras();
-		ps.SQL = "SELECT A.NodeID, A.Name FROM WF_Node A,  WF_Direction B WHERE A.NodeID=B.ToNode AND B.Node=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "Node";
-		ps.Add("Node", this.getFK_Node());
+		ps.SQL = "SELECT A.NodeID, A.Name FROM WF_Node A,  WF_Direction B WHERE A.NodeID=B.ToNode AND B.Node=" + SystemConfig.getAppCenterDBVarStr() + "Node";
+		ps.Add("Node", this.getNodeID());
 
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
-		dt.Columns.get(0).setColumnName("NodeID");
-		dt.Columns.get(1).setColumnName("Name");
+		dt.Columns.get(0).ColumnName = "NodeID";
+		dt.Columns.get(1).ColumnName = "Name";
 		return bp.tools.Json.ToJson(dt);
 	}
 
 		///#region 方向条件-审核组件
-
 	/** 
 	 保存
 	 
@@ -114,12 +113,12 @@ public class WF_Admin_Cond extends WebContralBase
 		String sql = this.GetRequestVal("TB_Docs");
 		Cond cond = new Cond();
 		cond.setHisDataFrom(ConnDataFrom.WorkCheck);
-		cond.setFK_Node(this.getFKMainNode());
+		cond.setNodeID(this.getFKMainNode());
 		cond.setToNodeID(this.getToNodeID());
-		cond.setFK_Flow(this.getFK_Flow());
+		cond.setFlowNo(this.getFlowNo());
 		cond.setOperatorValue(sql);
 		cond.setNote(this.GetRequestVal("TB_Note")); //备注.
-		cond.setFK_Flow(this.getFK_Flow());
+		cond.setFlowNo(this.getFlowNo());
 		cond.setCondType(condTypeEnum);
 		if (DataType.IsNullOrEmpty(this.getMyPK()) == true)
 		{
@@ -155,14 +154,14 @@ public class WF_Admin_Cond extends WebContralBase
 		Cond cond = new Cond();
 		cond.setHisDataFrom(ConnDataFrom.Url);
 
-		cond.setFK_Node(this.getFKMainNode());
+		cond.setNodeID(this.getFKMainNode());
 		cond.setToNodeID(this.getToNodeID());
 
-		cond.setFK_Flow(this.getFK_Flow());
+		cond.setFlowNo(this.getFlowNo());
 		cond.setOperatorValue(sql);
 		cond.setNote(this.GetRequestVal("TB_Note")); //备注.
 
-		cond.setFK_Flow(this.getFK_Flow());
+		cond.setFlowNo(this.getFlowNo());
 		cond.setCondType(condTypeEnum);
 		if (DataType.IsNullOrEmpty(this.getMyPK()) == true)
 		{
@@ -193,18 +192,35 @@ public class WF_Admin_Cond extends WebContralBase
 		CondType condTypeEnum = CondType.forValue(this.GetRequestValInt("CondType"));
 
 		String sql = this.GetRequestVal("TB_Docs");
+		String atParas = this.GetRequestVal("TB_AtParas");
 
 		Cond cond = new Cond();
 		cond.setHisDataFrom(ConnDataFrom.WebApi);
 
-		cond.setFK_Node(this.GetRequestValInt("FK_MainNode"));
-		cond.setToNodeID(this.getToNodeID());
+		if (this.GetRequestValInt("FK_MainNode") == 0)
+		{
+			cond.setNodeID(this.getNodeID());
+		}
+		else
+		{
+			cond.setNodeID(this.GetRequestValInt("FK_MainNode"));
+		}
+		if (this.getToNodeID() == 0)
+		{
+			cond.setToNodeID(this.getNodeID());
+		}
+		else
+		{
+			cond.setToNodeID(this.getToNodeID());
+		}
 
-		cond.setFK_Flow(this.getFK_Flow());
+		cond.setFlowNo(this.getFlowNo());
 		cond.setOperatorValue(sql);
 		cond.setNote(this.GetRequestVal("TB_Note")); //备注.
-		cond.setFK_Flow(this.getFK_Flow());
+		cond.setFlowNo(this.getFlowNo());
 		cond.setCondType(condTypeEnum);
+		// cond.OperatorValue = atParas; //在存储一遍.
+		cond.SetPara("OperatorValue", atParas);
 		if (DataType.IsNullOrEmpty(this.getMyPK()) == true)
 		{
 			cond.setMyPK(DBAccess.GenerGUID(0, null, null));
@@ -233,8 +249,13 @@ public class WF_Admin_Cond extends WebContralBase
 		DataSet ds = new DataSet();
 
 		String toNodeID = this.GetRequestVal("ToNodeID");
+		Node nd = new Node(this.getNodeID());
 
-		Node nd = new Node(this.getFK_Node());
+		String frmID = this.getFrmID();
+		if (DataType.IsNullOrEmpty(frmID) == true)
+		{
+			frmID = "ND" + Integer.parseInt(nd.getFlowNo()) + "Rpt";
+		}
 
 		CondType condTypeEnum = CondType.forValue(this.GetRequestValInt("CondType"));
 
@@ -249,21 +270,21 @@ public class WF_Admin_Cond extends WebContralBase
 
 		//增加字段集合.
 		String sql = "";
-		if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.Oracle || bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.PostgreSQL || bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.UX || SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR3 ||SystemConfig.getAppCenterDBType( ) == DBType.KingBaseR6 || SystemConfig.getAppCenterDBType() == DBType.HGDB)
+		if (SystemConfig.getAppCenterDBType() == DBType.Oracle || SystemConfig.getAppCenterDBType() == DBType.KingBaseR3 || SystemConfig.getAppCenterDBType() == DBType.KingBaseR6 || SystemConfig.getAppCenterDBType() == DBType.PostgreSQL || SystemConfig.getAppCenterDBType() == DBType.HGDB || SystemConfig.getAppCenterDBType() == DBType.UX)
 		{
-			sql = "SELECT KeyOfEn as No, KeyOfEn||' - '||Name as Name FROM Sys_MapAttr WHERE FK_MapData='ND" + Integer.parseInt(nd.getFK_Flow()) + "Rpt'";
+			sql = "SELECT KeyOfEn as No, KeyOfEn||' - '||Name as Name FROM Sys_MapAttr WHERE FK_MapData='" + frmID + "'";
 			sql += " AND KeyOfEn Not IN (" + noteIn + ") ";
 			sql += " AND MyDataType NOT IN (6,7) ";
 		}
-		else if (bp.difference.SystemConfig.getAppCenterDBType( ) == DBType.MySQL)
+		else if (SystemConfig.getAppCenterDBType() == DBType.MySQL)
 		{
-			sql = "SELECT KeyOfEn as No, CONCAT(KeyOfEn,' - ', Name ) as Name FROM Sys_MapAttr WHERE FK_MapData='ND" + Integer.parseInt(nd.getFK_Flow()) + "Rpt'";
+			sql = "SELECT KeyOfEn as No, CONCAT(KeyOfEn,' - ', Name ) as Name FROM Sys_MapAttr WHERE FK_MapData='" + frmID + "'";
 			sql += " AND KeyOfEn Not IN (" + noteIn + ") ";
 			sql += " AND MyDataType NOT IN (6,7) ";
 		}
 		else
 		{
-			sql = "SELECT KeyOfEn as No, KeyOfEn+' - '+Name as Name FROM Sys_MapAttr WHERE FK_MapData='ND" + Integer.parseInt(nd.getFK_Flow()) + "Rpt'";
+			sql = "SELECT KeyOfEn as No, KeyOfEn+' - '+Name as Name FROM Sys_MapAttr WHERE FK_MapData='" + frmID + "'";
 			sql += " AND KeyOfEn Not IN (" + noteIn + ") ";
 			sql += " AND MyDataType NOT IN (6,7) ";
 		}
@@ -271,8 +292,8 @@ public class WF_Admin_Cond extends WebContralBase
 
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		dt.TableName = "Sys_MapAttr";
-		dt.Columns.get(0).setColumnName("No");
-		dt.Columns.get(1).setColumnName("Name");
+		dt.Columns.get(0).ColumnName = "No";
+		dt.Columns.get(1).ColumnName = "Name";
 
 		DataRow dr = dt.NewRow();
 		dr.setValue(0, "all");
@@ -285,7 +306,7 @@ public class WF_Admin_Cond extends WebContralBase
 	public final String CondByFrm_InitField() throws Exception {
 		//字段属性.
 		MapAttr attr = new MapAttr();
-		attr.setMyPK("ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt_" + this.getKeyOfEn());
+		attr.setMyPK("ND" + Integer.parseInt(this.getFlowNo()) + "Rpt_" + this.getKeyOfEn());
 		attr.Retrieve();
 		return AttrCond(attr);
 	}
@@ -297,7 +318,9 @@ public class WF_Admin_Cond extends WebContralBase
 	public final String CondByFrm_Save() throws Exception {
 		//定义变量.
 		String field = this.GetRequestVal("DDL_Fields");
-		field = "ND" + Integer.parseInt(this.getFK_Flow()) + "Rpt_" + field;
+		field = "ND" + Integer.parseInt(this.getFlowNo()) + "Rpt_" + field;
+
+		MapAttr attr = new MapAttr(field);
 
 		int toNodeID = this.getToNodeID();
 		String oper = this.GetRequestVal("DDL_Operator");
@@ -309,22 +332,26 @@ public class WF_Admin_Cond extends WebContralBase
 
 		Cond cond = new Cond();
 		cond.setHisDataFrom(ConnDataFrom.NodeForm);
+		cond.setDataFromText("表单字段");
+
 		cond.setToNodeID(toNodeID);
 
-		cond.setFK_Node(this.getFK_Node());
-		cond.setFKOperator(oper);
+		cond.setNodeID(this.getNodeID());
+		cond.setOperatorNo(oper);
 		cond.setOperatorValue(operVal); //操作值.
 		cond.setOperatorValueT(operValT);
 
-		cond.setFKAttr(field); //字段属性.
+		cond.setAttrNo(field); //字段属性.
 
-		cond.setFK_Flow(this.getFK_Flow());
+		cond.setFlowNo(this.getFlowNo());
 		cond.setCondType(condTypeEnum);
+
+		cond.setNote("表单[" + attr.getFrmID() + "]字段:[" + attr.getKeyOfEn() + "," + attr.getName() +"][" + oper + "][" + operValT + "]");
 
 		///#region 方向条件，全部更新.
 		//Conds conds = new Conds();
 		//QueryObject qo = new QueryObject(conds);
-		//qo.AddWhere(CondAttr.FK_Node, this.FK_Node);
+		//qo.AddWhere(CondAttr.FK_Node, this.getNodeID());
 		//qo.addAnd();
 		//qo.AddWhere(CondAttr.DataFrom, (int)ConnDataFrom.NodeForm);
 		//qo.addAnd();
@@ -333,7 +360,7 @@ public class WF_Admin_Cond extends WebContralBase
 		//{
 		//    qo.addAnd();
 		//    qo.AddWhere(CondAttr.ToNodeID, toNodeID);
-		//}
+		//} 
 		//int num = qo.DoQuery();
 		///#endregion
 
@@ -374,23 +401,23 @@ public class WF_Admin_Cond extends WebContralBase
 	*/
 	public final String StandAloneFrm_Init() throws Exception {
 		ps = new Paras();
-		ps.SQL = "SELECT m.No, m.Name, n.FK_Node, n.FK_Flow FROM WF_FrmNode n INNER JOIN Sys_MapData m ON n.FK_Frm=m.No WHERE n.FrmEnableRole!=5 AND n.FK_Node=" + bp.difference.SystemConfig.getAppCenterDBVarStr() + "FK_Node";
-		ps.Add("FK_Node", this.getFK_Node());
+		ps.SQL = "SELECT m.No, m.Name, n.FK_Node, n.FK_Flow FROM WF_FrmNode n INNER JOIN Sys_MapData m ON n.FK_Frm=m.No WHERE n.FrmEnableRole!=5 AND n.FK_Node=" + SystemConfig.getAppCenterDBVarStr() + "FK_Node";
+		ps.Add("FK_Node", this.getNodeID());
 		DataTable dt = DBAccess.RunSQLReturnTable(ps);
 		dt.TableName = "Frms";
-		dt.Columns.get(0).setColumnName("No");
-		dt.Columns.get(1).setColumnName("Name");
+		dt.Columns.get(0).ColumnName = "No";
+		dt.Columns.get(1).ColumnName = "Name";
 
+		//@gaoxin. 
 		DataRow dr = dt.NewRow();
-		dr.setValue(0, "all");
-		dr.setValue(1, "请选择表单");
+		dr.setValue(0, "ND" + Integer.parseInt(this.getFlowNo()) + "Rpt");
+		dr.setValue(1, "节点表单(内置表单)");
 		dt.Rows.add(dr);
 
 		DataSet ds = new DataSet();
 		ds.Tables.add(dt);
 
 		//增加条件集合.
-
 		String toNodeID = this.GetRequestVal("ToNodeID");
 
 		// 增加条件.
@@ -398,8 +425,6 @@ public class WF_Admin_Cond extends WebContralBase
 		{
 			Cond cond = new Cond(this.getMyPK());
 			ds.Tables.add(cond.ToDataTableField("WF_Cond"));
-
-
 		}
 
 		return bp.tools.Json.ToJson(ds);
@@ -432,19 +457,19 @@ public class WF_Admin_Cond extends WebContralBase
 		cond.setHisDataFrom(ConnDataFrom.StandAloneFrm);
 		cond.setToNodeID(toNodeID);
 
-		cond.setFK_Node(this.getFK_Node());
-		cond.setFKOperator(oper);
+		cond.setNodeID(this.getNodeID());
+		cond.setOperatorNo(oper);
 		cond.setOperatorValue(operVal); //操作值.
 
-		cond.setFKAttr(field); //字段属性.
+		cond.setAttrNo(field); //字段属性.
 
-		cond.setFK_Flow(this.getFK_Flow());
+		cond.setFlowNo(this.getFlowNo());
 		cond.setCondType(condTypeEnum);
 
 		///#region 方向条件，全部更新.
 		//Conds conds = new Conds();
 		//QueryObject qo = new QueryObject(conds);
-		//qo.AddWhere(CondAttr.FK_Node, this.FK_Node);
+		//qo.AddWhere(CondAttr.FK_Node, this.getNodeID());
 		//qo.addAnd();
 		//qo.AddWhere(CondAttr.DataFrom, (int)ConnDataFrom.StandAloneFrm);
 		//qo.addAnd();
@@ -505,7 +530,7 @@ public class WF_Admin_Cond extends WebContralBase
 
 
 			///#region 增加操作符 number.
-		if (attr.getIsNum())
+		if (attr.getItIsNum())
 		{
 			DataTable dtOperNumber = new DataTable();
 			dtOperNumber.TableName = "Opers";
@@ -626,15 +651,15 @@ public class WF_Admin_Cond extends WebContralBase
 		Cond cond = new Cond();
 		cond.setHisDataFrom(ConnDataFrom.SQLTemplate);
 
-		cond.setFK_Node(this.getFKMainNode());
+		cond.setNodeID(this.getFKMainNode());
 		cond.setToNodeID(this.getToNodeID());
 
-		cond.setFK_Flow(this.getFK_Flow());
+		cond.setFlowNo(this.getFlowNo());
 		cond.setOperatorValue(sql);
 		cond.setOperatorValueT(sqlT);
 		cond.setNote(this.GetRequestVal("TB_Note")); //备注.
 
-		cond.setFK_Flow(this.getFK_Flow());
+		cond.setFlowNo(this.getFlowNo());
 		cond.setCondType(condTypeEnum);
 		if (DataType.IsNullOrEmpty(this.getMyPK()) == true)
 		{
@@ -660,8 +685,6 @@ public class WF_Admin_Cond extends WebContralBase
 	 @return 
 	*/
 	public final String CondBySQL_Save() throws Exception {
-
-
 		CondType condTypeEnum = CondType.forValue(this.GetRequestValInt("CondType"));
 
 		String sql = this.GetRequestVal("TB_Docs");
@@ -669,15 +692,15 @@ public class WF_Admin_Cond extends WebContralBase
 
 		Cond cond = new Cond();
 		cond.setHisDataFrom(ConnDataFrom.SQL);
-		cond.setFK_Node(this.getFKMainNode());
+		cond.setNodeID(this.getFKMainNode());
 		cond.setToNodeID(this.getToNodeID());
 
-		cond.setFK_Flow(this.getFK_Flow());
+		cond.setFlowNo(this.getFlowNo());
 		cond.setOperatorValue(sql);
-		cond.setFK_DBSrc(FK_DBSrc);
+		cond.setDBSrcNo(FK_DBSrc);
 		cond.setNote(this.GetRequestVal("TB_Note")); //备注.
 
-		cond.setFK_Flow(this.getFK_Flow());
+		cond.setFlowNo(this.getFlowNo());
 		cond.setCondType(condTypeEnum);
 		if (DataType.IsNullOrEmpty(this.getMyPK()) == true)
 		{
@@ -697,7 +720,7 @@ public class WF_Admin_Cond extends WebContralBase
 		///#endregion
 
 
-		///#region 方向条件岗位
+		///#region 方向条件角色
 
 	/** 
 	 保存
@@ -726,8 +749,8 @@ public class WF_Admin_Cond extends WebContralBase
 		}
 
 		cond.setHisDataFrom(ConnDataFrom.Stas);
-		cond.setFK_Flow(this.getFK_Flow());
-		cond.setFK_Node(getFKMainNode());
+		cond.setFlowNo(this.getFlowNo());
+		cond.setNodeID(getFKMainNode());
 
 		cond.setToNodeID(ToNodeID);
 		cond.setCondType(CondType.forValue(this.GetRequestValInt("CondType"))); //条件类型. Dir,Node,Flow
@@ -753,13 +776,12 @@ public class WF_Admin_Cond extends WebContralBase
 		///#region 按照部门条件计算CondByDept_Delete
 	public final String CondByDept_Save() throws Exception {
 
-		int ToNodeID = this.getToNodeID();
 		CondType condType = CondType.forValue(this.getCondType());
 		Cond cond = new Cond();
-
 		cond.setHisDataFrom(ConnDataFrom.Depts);
-		cond.setFK_Node(this.getFKMainNode());
-		cond.setFK_Flow(this.getFK_Flow());
+		cond.setNodeID(this.getFKMainNode());
+		cond.setRefFlowNo(this.getFlowNo());
+		cond.setFlowNo(this.getFlowNo());
 		cond.setToNodeID(this.getToNodeID());
 		cond.setCondTypeInt(this.getCondType());
 
@@ -777,11 +799,13 @@ public class WF_Admin_Cond extends WebContralBase
 			cond.setSpecOperPara("");
 		}
 		cond.setHisDataFrom(ConnDataFrom.Depts);
-		cond.setFK_Flow(this.getFK_Flow());
-		cond.setCondTypeInt(this.getCondType());
-		cond.setFK_Node(this.getFKMainNode());
+		cond.setDataFromText("部门条件");
 
-		cond.setToNodeID(ToNodeID);
+		cond.setFlowNo(this.getFlowNo());
+		cond.setCondTypeInt(this.getCondType());
+		cond.setNodeID(this.getFKMainNode());
+
+		cond.setToNodeID(this.getToNodeID());
 		if (DataType.IsNullOrEmpty(this.getMyPK()) == true)
 		{
 			cond.setMyPK(DBAccess.GenerGUID(0, null, null));
@@ -799,7 +823,8 @@ public class WF_Admin_Cond extends WebContralBase
 
 		///#endregion
 
-	public final int getFKMainNode() throws Exception {
+	public final int getFKMainNode()
+	{
 		int fk_mainNode = this.GetRequestValInt("FK_MainNode");
 		if (fk_mainNode == 0)
 		{
@@ -810,16 +835,11 @@ public class WF_Admin_Cond extends WebContralBase
 	/** 
 	 类型
 	*/
-	public final int getCondType() throws Exception {
+	public final int getCondType()
+	{
 		int val = this.GetRequestValInt("CondType");
 		return val;
 	}
-	public final int getToNodeID() throws Exception {
-		int val = this.GetRequestValInt("ToNodeID");
-		return val;
-	}
-
-
 		///#region 方向条件Para
 
 	/** 
@@ -831,20 +851,20 @@ public class WF_Admin_Cond extends WebContralBase
 
 		String toNodeID = this.GetRequestVal("ToNodeID");
 		CondType condTypeEnum = CondType.forValue(this.GetRequestValInt("CondType"));
-		String sql = URLDecoder.decode(this.GetRequestVal("TB_Docs"), "UTF8");
+		String sql = this.GetRequestVal("TB_Docs");
 
 		Cond cond = new Cond();
 
 		cond.setHisDataFrom(ConnDataFrom.Paras);
 
-		cond.setFK_Node(this.getFKMainNode());
+		cond.setNodeID(this.getFKMainNode());
 		cond.setToNodeID(this.getToNodeID());
 
-		cond.setFK_Flow(this.getFK_Flow());
+		cond.setFlowNo(this.getFlowNo());
 		cond.setOperatorValue(sql);
-		cond.setNote(URLDecoder.decode(this.GetRequestVal("TB_Note"), "UTF8")); //备注.
+		cond.setNote(this.GetRequestVal("TB_Note")); //备注.
 
-		cond.setFK_Flow(this.getFK_Flow());
+		cond.setFlowNo(this.getFlowNo());
 		cond.setCondType(condTypeEnum);
 		if (DataType.IsNullOrEmpty(this.getMyPK()) == true)
 		{

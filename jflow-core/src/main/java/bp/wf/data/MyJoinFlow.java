@@ -303,8 +303,7 @@ public class MyJoinFlow extends Entity
 	{
 		return this.GetValStrByKey(MyFlowAttr.StarterName);
 	}
-	public final void setStarterName(String value) throws Exception
-	{
+	public final void setStarterName(String value){
 		this.SetValByKey(MyFlowAttr.StarterName, value);
 	}
 	/** 
@@ -314,8 +313,7 @@ public class MyJoinFlow extends Entity
 	{
 		return this.GetValStrByKey(MyFlowAttr.DeptName);
 	}
-	public final void setDeptName(String value) throws Exception
-	{
+	public final void setDeptName(String value){
 		this.SetValByKey(MyFlowAttr.DeptName, value);
 	}
 	/** 
@@ -325,8 +323,7 @@ public class MyJoinFlow extends Entity
 	{
 		return this.GetValStrByKey(MyFlowAttr.NodeName);
 	}
-	public final void setNodeName(String value) throws Exception
-	{
+	public final void setNodeName(String value){
 		this.SetValByKey(MyFlowAttr.NodeName, value);
 	}
 	/** 
@@ -336,7 +333,7 @@ public class MyJoinFlow extends Entity
 	{
 		return this.GetValIntByKey(MyFlowAttr.FK_Node);
 	}
-	public final void setFK_Node(int value) throws Exception
+	public final void setNodeID(int value) throws Exception
 	{
 		SetValByKey(MyFlowAttr.FK_Node, value);
 	}
@@ -383,7 +380,7 @@ public class MyJoinFlow extends Entity
 				return "已完成";
 			case Runing:
 				return "在运行";
-			case HungUp:
+			case Hungup:
 				return "挂起";
 			case Askfor:
 				return "加签";
@@ -511,7 +508,7 @@ public class MyJoinFlow extends Entity
 		    rm.ClassMethodName = this.ToString() + ".DoTrack";
 		    rm.refMethodType = RefMethodType.LinkeWinOpen;
 		    rm.Icon = "../../WF/Img/Track.png";
-		    rm.IsForEns = true;
+		    rm.ItIsForEns = true;
 		    map.AddRefMethod(rm);*/
 
 		rm = new RefMethod();
@@ -519,7 +516,7 @@ public class MyJoinFlow extends Entity
 		rm.ClassMethodName = this.toString() + ".DoOpenLastForm";
 		rm.Icon = "../../WF/Img/Form.png";
 		rm.refMethodType = RefMethodType.LinkeWinOpen;
-		rm.IsForEns = true;
+		rm.ItIsForEns = true;
 		map.AddRefMethod(rm);
 
 		this.set_enMap(map);

@@ -14,7 +14,8 @@ public class AccepterRoles extends EntitiesOID
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new AccepterRole();
 	}
 
@@ -25,12 +26,12 @@ public class AccepterRoles extends EntitiesOID
 	/** 
 	 接受人规则集合
 	*/
-	public AccepterRoles() throws Exception {
+	public AccepterRoles()
+	{
 	}
 	/** 
 	 接受人规则集合.
-	 
-	 param FlowNo
+	 @param FK_Node
 	*/
 	public AccepterRoles(String FK_Node) throws Exception {
 		this.Retrieve(AccepterRoleAttr.FK_Node, FK_Node, null);
@@ -45,7 +46,8 @@ public class AccepterRoles extends EntitiesOID
 	 
 	 @return List
 	*/
-	public final java.util.List<AccepterRole> ToJavaList() {
+	public final java.util.List<AccepterRole> ToJavaList()
+	{
 		return (java.util.List<AccepterRole>)(Object)this;
 	}
 	/** 
@@ -53,7 +55,8 @@ public class AccepterRoles extends EntitiesOID
 	 
 	 @return List
 	*/
-	public final ArrayList<AccepterRole> Tolist()  {
+	public final ArrayList<AccepterRole> Tolist()
+	{
 		ArrayList<AccepterRole> list = new ArrayList<AccepterRole>();
 		for (int i = 0; i < this.size(); i++)
 		{

@@ -1,11 +1,8 @@
 package bp.wf;
-
-import bp.*;
-
 public enum SelectorModel
 {
 	/** 
-	 岗位
+	 角色
 	*/
 	Station(0),
 	/** 
@@ -29,7 +26,7 @@ public enum SelectorModel
 	*/
 	GenerUserSelecter(5),
 	/** 
-	 按部门与岗位的交集
+	 按部门与角色的交集
 	*/
 	DeptAndStation(6),
 	/** 
@@ -37,11 +34,11 @@ public enum SelectorModel
 	*/
 	Url(7),
 	/** 
-	 通用部门岗位人员选择器
+	 通用部门角色人员选择器
 	*/
 	AccepterOfDeptStationEmp(8),
 	/** 
-	 按岗位智能计算(操作员所在部门)
+	 按角色智能计算(操作员所在部门)
 	*/
 	AccepterOfDeptStationOfCurrentOper(9),
 	/** 
@@ -57,7 +54,7 @@ public enum SelectorModel
 	*/
 	TeamDeptOnly(12),
 	/** 
-	 按照岗位智能计算
+	 按照角色智能计算
 	*/
 	ByStationAI(13),
 	/** 
@@ -73,7 +70,8 @@ public enum SelectorModel
 
 	private int intValue;
 	private static java.util.HashMap<Integer, SelectorModel> mappings;
-	private static java.util.HashMap<Integer, SelectorModel> getMappings()  {
+	private static java.util.HashMap<Integer, SelectorModel> getMappings()
+	{
 		if (mappings == null)
 		{
 			synchronized (SelectorModel.class)
@@ -88,15 +86,18 @@ public enum SelectorModel
 	}
 
 	private SelectorModel(int value)
-	{intValue = value;
+	{
+		intValue = value;
 		getMappings().put(value, this);
 	}
 
-	public int getValue() {
+	public int getValue()
+	{
 		return intValue;
 	}
 
-	public static SelectorModel forValue(int value) 
-	{return getMappings().get(value);
+	public static SelectorModel forValue(int value)
+	{
+		return getMappings().get(value);
 	}
 }

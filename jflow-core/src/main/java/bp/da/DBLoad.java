@@ -14,6 +14,8 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -61,7 +63,19 @@ public class DBLoad
 
 	public static String[] GenerTableNames(String fileName)
 	{
-		return null;
+		try (Workbook workbook = WorkbookFactory.create(new FileInputStream(fileName))) {
+			int numberOfSheets = workbook.getNumberOfSheets();
+			String[] sheetNames = new String[numberOfSheets];
+			for (int i = 0; i < numberOfSheets; i++) {
+				String sheetName = workbook.getSheetName(i);
+				System.out.println("Sheet Name: " + sheetName);
+				sheetNames[i] = sheetName;
+			}
+			return sheetNames;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 
 	}
 
@@ -256,15 +270,100 @@ public class DBLoad
 		Tb.Columns = collection;
 		return Tb;
 	}
+	public static DataTable ReadExcelFileToDataTable(InputStream is, int sheetIndex)throws Exception
+	{
+		DataTable Tb = new DataTable("Tb");
+		Tb.Rows.clear();
+		DataColumnCollection collection = new DataColumnCollection(Tb);
+		XSSFWorkbook xssfWorkbook = null;
 
+		try
+		{
+			xssfWorkbook = new XSSFWorkbook(is);
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+
+		// 循环工作表Sheet , 目前支持一个
+		// for (int i = 0; i < hssfWorkbook.getNumberOfSheets(); i++) {
+		XSSFSheet xssfSheet = xssfWorkbook.getSheetAt(sheetIndex);
+		if (xssfSheet == null)
+		{
+			return null;
+		}
+		// 循环行Row
+		int row_size = xssfSheet.getPhysicalNumberOfRows();
+		for (int j = 0; j < row_size; j++)
+		{
+			XSSFRow xssfRow = xssfSheet.getRow(j);
+			if (xssfRow == null)
+			{
+				continue;
+			}
+
+			// 循环列Cell
+			int call_num = xssfRow.getPhysicalNumberOfCells();
+			// title
+			if (0 == j)
+			{
+				for (int k = 0; k < call_num; k++)
+				{
+					XSSFCell xssfCell = xssfRow.getCell(k);
+					if (null == xssfCell)
+					{
+						continue;
+					}
+					DataColumn column = new DataColumn(getValue(xssfCell));
+					collection.Add(column);
+				}
+			} else
+			{ // 内容
+				DataRow dataRow = new DataRow(Tb);
+				for (int k = 0; k < call_num; k++)
+				{
+					XSSFCell xssfCell = xssfRow.getCell(k);
+					if (null == xssfCell)
+					{
+						continue;
+					}
+					dataRow.setValue(collection.get(k), getValue(xssfCell));
+				}
+				Tb.Rows.add(dataRow);
+			}
+
+		}
+		Tb.Columns = collection;
+		return Tb;
+	}
 	public static DataTable ReadExcelFileToDataTable(String fileFullName, int sheetIdx)
 	{
-		String tableName = GenerTableNameByIndex(fileFullName, sheetIdx);
-		return ReadExcelFileToDataTableBySQL(fileFullName, tableName);
+		//String tableName = GenerTableNameByIndex(fileFullName, sheetIdx);
+		return ReadExcelFileToDataTableBySQL(fileFullName, sheetIdx);
 	}
-	public static DataTable ReadExcelFileToDataTableBySQL(String filePath, String tableName)
+	public static DataTable ReadExcelFileToDataTableBySQL(String filePath, int sheetIdx)
 	{
-		return ReadExcelFileToDataTableBySQL(filePath, tableName);
+		FileInputStream stream = null;
+		DataTable dataTable = null;
+		try
+		{
+			stream = new FileInputStream(filePath);
+			dataTable = ReadExcelFileToDataTable(stream, sheetIdx);
+
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}finally{
+			if(stream!=null){
+				try {
+					stream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return dataTable;
 	}
 
 	public static DataTable ReadExcelFileToDataTable(String filePath)throws Exception

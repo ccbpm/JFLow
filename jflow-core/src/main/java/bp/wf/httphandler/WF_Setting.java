@@ -2,46 +2,44 @@ package bp.wf.httphandler;
 
 import bp.da.*;
 import bp.difference.handler.CommonFileUtils;
-import bp.difference.handler.WebContralBase;
 import bp.sys.*;
 import bp.tools.Encodes;
 import bp.web.*;
 import bp.port.*;
 import bp.difference.*;
-import bp.*;
-import bp.wf.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.sound.sampled.Port;
 import java.util.*;
 import java.io.*;
 
 /** 
  页面功能实体
 */
-public class WF_Setting extends WebContralBase
+public class WF_Setting extends bp.difference.handler.DirectoryPageBase
 {
 	/** 
 	 清楚缓存
 	 
 	 @return 
 	*/
-	public final String Default_ClearCash() throws Exception {
+	public final String Default_ClearCache()
+	{
 		DBAccess.RunSQL("DELETE FROM Sys_UserRegedit WHERE FK_Emp='" + WebUser.getNo() + "' AND OrgNo='" + WebUser.getOrgNo() + "'");
 		return "执行成功，请刷新菜单或者重新进入看看菜单权限是否有变化。";
 	}
 	public final String UpdateEmpNo() throws Exception {
 		Emp emp = new Emp(WebUser.getNo());
 		emp.setEmail(this.GetRequestVal("Email"));
-		emp.setTel (this.GetRequestVal("Tel"));
-		emp.setName (this.GetRequestVal("Name"));
+		emp.setTel(this.GetRequestVal("Tel"));
+		emp.setName(this.GetRequestVal("Name"));
 		emp.Update();
 		return "修改成功.";
 	}
 	/** 
 	 构造函数
 	*/
-	public WF_Setting() throws Exception {
+	public WF_Setting()
+	{
 	}
 
 
@@ -52,7 +50,8 @@ public class WF_Setting extends WebContralBase
 	 @return 
 	*/
 	@Override
-	protected String DoDefaultMethod() throws Exception {
+	protected String DoDefaultMethod()
+	{
 		switch (this.getDoType())
 		{
 			case "DtlFieldUp": //字段上移
@@ -82,15 +81,15 @@ public class WF_Setting extends WebContralBase
 		{
 			emp.setNo(WebUser.getNo());
 		}
-		emp.setUserID (WebUser.getNo());
+		emp.setUserID(WebUser.getNo());
 		emp.Retrieve();
 
 		//部门名称.
-		ht.put("DeptName", emp.getFK_DeptText());
+		ht.put("DeptName", emp.getDeptText());
 
 
 		DeptEmpStations des = new DeptEmpStations();
-		des.Retrieve(DeptEmpStationAttr.FK_Emp, WebUser.getNo(), null);
+		des.Retrieve(DeptEmpStationAttr.FK_Emp, emp.getUserID(), null);
 
 		String depts = "";
 		String stas = "";
@@ -98,39 +97,37 @@ public class WF_Setting extends WebContralBase
 		for (DeptEmpStation item : des.ToJavaList())
 		{
 			Dept dept = new Dept();
-			dept.setNo(item.getFK_Dept());
+			dept.setNo(item.getDeptNo());
 			int count = dept.RetrieveFromDBSources();
 			if (count != 0)
 			{
-				depts += dept.getName() + "、";
+				depts += dept.getName() +"、";
 			}
 
 
-			if (DataType.IsNullOrEmpty(item.getFK_Station()) == true)
+			if (DataType.IsNullOrEmpty(item.getStationNo()) == true)
 			{
 				continue;
 			}
 
-			if (DataType.IsNullOrEmpty(item.getFK_Dept()) == true)
+			if (DataType.IsNullOrEmpty(item.getDeptNo()) == true)
 			{
-				//   item.Delete();
 				continue;
 			}
 
 			Station sta = new Station();
-			sta.setNo(item.getFK_Station());
+			sta.setNo(item.getStationNo());
 			count = sta.RetrieveFromDBSources();
 			if (count != 0)
 			{
-				stas += sta.getName() + "、";
+				stas += sta.getName() +"、";
 			}
 		}
 
 		ht.put("Depts", depts);
 		ht.put("Stations", stas);
 
-
-	//	bp.wf.port.WFEmp wfemp = new bp.wf.port.WFEmp();
+		bp.wf.port.WFEmp wfemp = new bp.wf.port.WFEmp(WebUser.getUserID());
 		ht.put("Tel", emp.getTel());
 		ht.put("Email", emp.getEmail());
 
@@ -142,10 +139,7 @@ public class WF_Setting extends WebContralBase
 	 @return json数据
 	*/
 	public final String Author_Init() throws Exception {
-		bp.wf.port.WFEmp emp = new bp.wf.port.WFEmp();
-		emp.setNo(WebUser.getUserID());
-		emp.Retrieve();
-
+		bp.wf.port.WFEmp emp = new bp.wf.port.WFEmp(WebUser.getNo());
 		Hashtable ht = emp.getRow();
 		ht.remove(bp.wf.port.WFEmpAttr.StartFlows); //移除这一列不然无法形成json.
 		return emp.ToJson(true);
@@ -160,14 +154,14 @@ public class WF_Setting extends WebContralBase
 		}
 
 		//首先判断是否存在，如果不存在就生成一个.
-		//bp.wf.dts.GenerSiganture.GenerIt(WebUser.getNo(), WebUser.getName());
+		bp.wf.dts.GenerSiganture.GenerIt(WebUser.getNo(), WebUser.getName());
 
 
 		Hashtable ht = new Hashtable();
 		ht.put("No", WebUser.getNo());
 		ht.put("Name", WebUser.getName());
-		ht.put("FK_Dept", WebUser.getFK_Dept());
-		ht.put("FK_DeptName", WebUser.getFK_DeptName());
+		ht.put("FK_Dept", WebUser.getDeptNo());
+		ht.put("FK_DeptName", WebUser.getDeptName());
 		return bp.tools.Json.ToJson(ht);
 	}
 	public final String Siganture_Save() throws Exception {
@@ -180,7 +174,7 @@ public class WF_Setting extends WebContralBase
 			String contentType = request.getContentType();
 			if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
 				String tempFilePath = SystemConfig.getPathOfWebApp() + "DataUser/Siganture/" + empNo + ".jpg";
-				if (SystemConfig.getIsJarRun())
+				if (SystemConfig.isJarRun())
 					tempFilePath = SystemConfig.getPhysicalPath()+"DataUser/Siganture/" + empNo + ".jpg";
 
 				File tempFile = new File(tempFilePath);
@@ -200,28 +194,29 @@ public class WF_Setting extends WebContralBase
 
 
 		///#region 头像.
-	public final String HeadPic_Save() throws Exception {
-		try {
-			String empNo = this.GetRequestVal("EmpNo");
-			if (DataType.IsNullOrEmpty(empNo) == true)
-				empNo = WebUser.getNo();
-			HttpServletRequest request = getRequest();
-			String contentType = request.getContentType();
-			if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
-				String tempFilePath = SystemConfig.getPathOfWebApp() + "DataUser/UserIcon/" + empNo + ".png";
-				File tempFile = new File(tempFilePath);
-				if (tempFile.exists()) {
-					tempFile.delete();
+		public final String HeadPic_Save()
+		{
+			try {
+				String empNo = this.GetRequestVal("EmpNo");
+				if (DataType.IsNullOrEmpty(empNo) == true)
+					empNo = WebUser.getNo();
+				HttpServletRequest request = getRequest();
+				String contentType = request.getContentType();
+				if (contentType != null && contentType.indexOf("multipart/form-data") != -1) {
+					String tempFilePath = SystemConfig.getPathOfWebApp() + "DataUser/UserIcon/" + empNo + ".png";
+					File tempFile = new File(tempFilePath);
+					if (tempFile.exists()) {
+						tempFile.delete();
+					}
+					CommonFileUtils.upload(request, "File_Upload", tempFile);
 				}
-				CommonFileUtils.upload(request, "File_Upload", tempFile);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "err@执行失败";
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "err@执行失败";
-		}
 
-		return "上传成功！";
-	}
+			return "上传成功！";
+		}
 
 		///#endregion 头像.
 
@@ -232,31 +227,42 @@ public class WF_Setting extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String ChangeDept_Init() throws Exception {
-		Paras ps = new Paras();
+	public final String ChangeDept_Init()
+	{
+
+		String sql = "";
+		//如果是集团版.
 		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
-			ps.SQL = "SELECT a.No, a.Name, A.NameOfPath, '0' AS  CurrentDept, A.OrgNo, '' as OrgName FROM Port_Dept A, Port_DeptEmp B WHERE A.No=B.FK_Dept AND B.FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
-		else
-			ps.SQL = "SELECT a.No, a.Name, A.NameOfPath, '0' AS  CurrentDept  FROM Port_Dept A, Port_DeptEmp B WHERE A.No=B.FK_Dept AND B.FK_Emp=" + SystemConfig.getAppCenterDBVarStr() + "FK_Emp";
-		ps.Add("FK_Emp", WebUser.getNo(), false);
-		DataTable dt = DBAccess.RunSQLReturnTable(ps);
+		{
+			sql = "SELECT a.No, a.Name, A.NameOfPath, '0' AS  CurrentDept, A.OrgNo, '' as OrgName FROM Port_Dept A, Port_DeptEmp B WHERE A.No=B.FK_Dept AND B.FK_Emp='" + WebUser.getNo() + "'";
+		}
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.Single)
+		{
+			sql = "SELECT a.No, a.Name, A.NameOfPath, '0' AS  CurrentDept  FROM Port_Dept A, Port_DeptEmp B WHERE A.No=B.FK_Dept AND B.FK_Emp='" + WebUser.getNo() + "'";
+		}
+		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+		{
+			sql = "SELECT a.No, a.Name, A.NameOfPath, '0' AS  CurrentDept, A.OrgNo, '' as OrgName  FROM Port_Dept A, Port_DeptEmp B,Port_Emp C WHERE A.No=B.FK_Dept AND C.FK_Dept=A.No AND C.No=B.FK_Emp AND C.UserID='" + WebUser.getNo() + "'";
+		}
+
+		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 
 		if (dt.Rows.size() == 0)
 		{
-			String sql = "SELECT a.No,a.Name,B.NameOfPath, '1' as CurrentDept FROM ";
+			sql = "SELECT a.No,a.Name,B.NameOfPath, '1' as CurrentDept ,  B.OrgNo, '' as OrgName FROM ";
 			sql += " Port_Emp A, Port_Dept B WHERE A.FK_Dept=B.No  AND A.No='" + WebUser.getNo() + "'";
 			dt = DBAccess.RunSQLReturnTable(sql);
 		}
 
-		dt.Columns.get(0).setColumnName("No");
-		dt.Columns.get(1).setColumnName("Name");
-		dt.Columns.get(2).setColumnName("NameOfPath");
-		dt.Columns.get(3).setColumnName("CurrentDept");
+		dt.Columns.get(0).ColumnName = "No";
+		dt.Columns.get(1).ColumnName = "Name";
+		dt.Columns.get(2).ColumnName = "NameOfPath";
+		dt.Columns.get(3).ColumnName = "CurrentDept";
 
-		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
+		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.Single)
 		{
-			dt.Columns.get(4).setColumnName("OrgNo");
-			dt.Columns.get(5).setColumnName("OrgName");
+			dt.Columns.get(4).ColumnName = "OrgNo";
+			dt.Columns.get(5).ColumnName = "OrgName";
 
 			//设置组织名字.
 			for (DataRow dr : dt.Rows)
@@ -265,35 +271,20 @@ public class WF_Setting extends WebContralBase
 				dr.setValue(5, DBAccess.RunSQLReturnVal("SELECT Name FROM Port_Org WHERE No='" + orgNo + "'", null));
 			}
 		}
-		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.UpperCase)
-		{
-			dt.Columns.get("NO").ColumnName = "No";
-			dt.Columns.get("NAME").ColumnName = "Name";
-			dt.Columns.get("CURRENTDEPT").ColumnName = "CurrentDept";
-			dt.Columns.get("NAMEOFPATH").ColumnName = "NameOfPath";
-		}
-		if (SystemConfig.AppCenterDBFieldCaseModel() == FieldCaseModel.Lowercase)
-		{
-			dt.Columns.get("no").ColumnName = "No";
-			dt.Columns.get("name").ColumnName = "Name";
-			dt.Columns.get("currentdept").ColumnName = "CurrentDept";
-			dt.Columns.get("nameofpath").ColumnName = "NameOfPath";
-		}
 
 		//设置当前的部门.
 		for (DataRow dr : dt.Rows)
 		{
-			if (dr.getValue("No").toString().equals(WebUser.getFK_Dept()))
+			if (dr.getValue("No").toString().equals(WebUser.getDeptNo()) == true)
 			{
 				dr.setValue("CurrentDept", "1");
 			}
 
-			if (!dr.getValue("NameOfPath").toString().equals(""))
+			if (DataType.IsNullOrEmpty(dr.getValue("NameOfPath").toString()) == true)
 			{
 				dr.setValue("NameOfPath", dr.getValue("Name"));
 			}
 		}
-
 		return bp.tools.Json.ToJson(dt);
 	}
 	/** 
@@ -303,58 +294,58 @@ public class WF_Setting extends WebContralBase
 	*/
 	public final String ChangeDept_Submit() throws Exception {
 		String deptNo = this.GetRequestVal("DeptNo");
+
 		Dept dept = new Dept(deptNo);
 
+		// @honygan.
 		DBAccess.RunSQL("UPDATE Port_Emp SET OrgNo='" + dept.getOrgNo() + "', FK_Dept='" + dept.getNo() + "' WHERE No='" + WebUser.getNo() + "'");
 
-		WebUser.setFK_Dept(dept.getNo());
-		WebUser.setFK_DeptName(dept.getName());
-		WebUser.setFK_DeptNameOfFull(dept.getNameOfPath());
+		WebUser.setDeptNo(dept.getNo());
+		WebUser.setDeptName(dept.getName());
+		WebUser.setDeptNameOfFull(dept.getNameOfPath());
 		WebUser.setOrgNo(dept.getOrgNo());
-		bp.wf.port.WFEmp emp = new bp.wf.port.WFEmp(WebUser.getUserID());
+
+		bp.wf.port.WFEmp emp = new bp.wf.port.WFEmp(WebUser.getNo());
 		emp.setStartFlows("");
 		emp.Update();
+		//去掉切换主部门
+		/* try
+		 {
+		     String sql = "";
 
-		try
-		{
-			String sql = "";
+		     if (bp.difference.SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
+		         sql = "UPDATE Port_Emp SET fk_dept='" + deptNo + "' WHERE UserID='" + WebUser.getNo() + "' AND OrgNo='" + WebUser.getOrgNo() + "'";
+		     else
+		         sql = "UPDATE Port_Emp SET fk_dept='" + deptNo + "' WHERE No='" + WebUser.getNo() + "'";
+		     DBAccess.RunSQL(sql);
+		     BP.WF.Dev2Interface.Port_Login(WebUser.getNo());
+		 }
+		 catch (Exception ex)
+		 {
 
-			if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
-			{
-				sql = "UPDATE Port_Emp SET fk_dept='" + deptNo + "' WHERE UserID='" + WebUser.getNo() + "' AND OrgNo='" + WebUser.getOrgNo() + "'";
-			}
-			else
-			{
-				sql = "UPDATE Port_Emp SET fk_dept='" + deptNo + "' WHERE No='" + WebUser.getNo() + "'";
-			}
+		 }*/
 
-
-			DBAccess.RunSQL(sql);
-			Dev2Interface.Port_Login(WebUser.getNo());
-		}
-		catch (RuntimeException ex)
-		{
-
-		}
-
-		return "@执行成功,已经切换到｛" + WebUser.getFK_DeptName() + "｝部门上。";
+		return "@执行成功,已经切换到｛" + WebUser.getDeptName() + "｝部门上。";
 	}
 
 		///#endregion
 
-	public final String UserIcon_Init() throws Exception {
+	public final String UserIcon_Init()
+	{
 		return "";
 	}
 
-	public final String UserIcon_Save() throws Exception {
+	public final String UserIcon_Save()
+	{
 		return "";
 	}
 
 
 
 		///#region 修改密码.
-	public final String ChangePassword_Init() throws Exception {
-		if (DBAccess.IsView("Port_Emp", SystemConfig.getAppCenterDBType( )) == true)
+	public final String ChangePassword_Init()
+	{
+		if (DBAccess.IsView("Port_Emp", SystemConfig.getAppCenterDBType()) == true)
 		{
 			return "err@当前是组织结构集成模式，您不能修改密码，请在被集成的系统修改密码。";
 		}
@@ -367,7 +358,7 @@ public class WF_Setting extends WebContralBase
 	 @return 
 	*/
 	public final String ChangePassword_Submit() throws Exception {
-		String oldPass = this.GetRequestVal("OldPass");
+		String oldPass = this.GetRequestVal("TB_PW");
 		String pass = this.GetRequestVal("Pass");
 
 		Emp emp = new Emp(WebUser.getNo());
@@ -380,7 +371,7 @@ public class WF_Setting extends WebContralBase
 		{
 			pass = Encodes.encodeBase64(pass);
 		}
-		emp.setIsPass (pass);
+		emp.setPass(pass);
 		emp.Update();
 
 		return "密码修改成功...";

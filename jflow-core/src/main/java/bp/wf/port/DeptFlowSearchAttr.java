@@ -1,6 +1,5 @@
 package bp.wf.port;
 
-
 /** 
  流程部门数据查询权限
 */

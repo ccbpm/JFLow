@@ -1,5 +1,6 @@
 package bp.wf.httphandler;
 
+import bp.difference.handler.DirectoryPageBase;
 import bp.sys.*;
 import bp.*;
 import bp.wf.*;
@@ -7,12 +8,13 @@ import bp.wf.*;
 /** 
  页面功能实体
 */
-public class WF_CCForm_JS extends bp.difference.handler.WebContralBase
+public class WF_CCForm_JS extends DirectoryPageBase
 {
 	/** 
 	 构造函数
 	*/
-	public WF_CCForm_JS() throws Exception {
+	public WF_CCForm_JS()
+	{
 	}
 
 	/** 

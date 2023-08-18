@@ -1,11 +1,5 @@
 package bp.sys;
 
-import bp.da.*;
-import bp.en.*;
-import bp.difference.*;
-import bp.*;
-import java.util.*;
-
 /** 
  sss
 */
@@ -31,8 +25,9 @@ public class SysEnumAttr
 	 OrgNo
 	*/
 	public static final String OrgNo = "OrgNo";
-	/**
+	/** 
 	 StrKey
 	*/
 	public static final String StrKey = "StrKey";
+
 }

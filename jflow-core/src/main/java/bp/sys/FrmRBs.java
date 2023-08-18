@@ -1,8 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -15,31 +13,23 @@ public class FrmRBs extends EntitiesMyPK
 	/** 
 	 单选框s
 	*/
-	public FrmRBs() throws Exception {
+	public FrmRBs()
+	{
 	}
 	/** 
 	 单选框s
 	 
-	 param fk_mapdata s
+	 @param frmID s
 	*/
-	public FrmRBs(String fk_mapdata) throws Exception {
-		this.Retrieve(MapAttrAttr.FK_MapData, fk_mapdata);
-
-	}
-	/** 
-	 单选框s
-	 
-	 param fk_mapdata 表单ID
-	 param keyOfEn 字段
-	*/
-	public FrmRBs(String fk_mapdata, String keyOfEn) throws Exception {
-		this.Retrieve(FrmRBAttr.FK_MapData, fk_mapdata, FrmRBAttr.KeyOfEn, keyOfEn);
+	public FrmRBs(String frmID) throws Exception {
+		this.Retrieve(MapAttrAttr.FK_MapData, frmID);
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FrmRB();
 	}
 
@@ -52,7 +42,8 @@ public class FrmRBs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmRB> ToJavaList() {
+	public final java.util.List<FrmRB> ToJavaList()
+	{
 		return (java.util.List<FrmRB>)(Object)this;
 	}
 	/** 
@@ -60,7 +51,8 @@ public class FrmRBs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmRB> Tolist()  {
+	public final ArrayList<FrmRB> Tolist()
+	{
 		ArrayList<FrmRB> list = new ArrayList<FrmRB>();
 		for (int i = 0; i < this.size(); i++)
 		{

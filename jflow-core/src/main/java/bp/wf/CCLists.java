@@ -1,10 +1,6 @@
 package bp.wf;
 
-import bp.da.*;
 import bp.en.*;
-import bp.wf.*;
-import bp.port.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -18,26 +14,28 @@ public class CCLists extends EntitiesMyPK
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new CCList();
 	}
 	/** 
 	 抄送
 	*/
-	public CCLists() throws Exception {
+	public CCLists()
+	{
 	}
 
 
 	/** 
 	 查询出来所有的抄送信息
 	 
-	 param fk_node
-	 param workid
-	 param fid
+	 @param NodeID
+	 @param workid
+	 @param fid
 	*/
-	public CCLists(int fk_node, long workid, long fid) throws Exception {
+	public CCLists(int NodeID, long workid, long fid) throws Exception {
 		QueryObject qo = new QueryObject(this);
-		qo.AddWhere(CCListAttr.FK_Node, fk_node);
+		qo.AddWhere(CCListAttr.NodeIDWork, NodeID);
 		qo.addAnd();
 		if (fid != 0)
 		{
@@ -59,7 +57,8 @@ public class CCLists extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<CCList> ToJavaList() {
+	public final java.util.List<CCList> ToJavaList()
+	{
 		return (java.util.List<CCList>)(Object)this;
 	}
 	/** 
@@ -67,7 +66,8 @@ public class CCLists extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<CCList> Tolist()  {
+	public final ArrayList<CCList> Tolist()
+	{
 		ArrayList<CCList> list = new ArrayList<CCList>();
 		for (int i = 0; i < this.size(); i++)
 		{

@@ -2,7 +2,7 @@ package bp.ccbill.sys;
 
 import bp.da.*;
 import bp.web.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
 import bp.ccbill.template.*;
 import bp.*;
@@ -17,13 +17,15 @@ public class Funcs extends EntitiesNoName
 	/** 
 	 独立方法
 	*/
-	public Funcs() throws Exception {
+	public Funcs()
+	{
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity()  {
+	public Entity getNewEntity()
+	{
 		return new Func();
 	}
 
@@ -33,15 +35,17 @@ public class Funcs extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<Func> ToJavaList() {
-		return (List<Func>)(Object)this;
+	public final java.util.List<Func> ToJavaList()
+	{
+		return (java.util.List<Func>)(Object)this;
 	}
 	/** 
 	 转化成list
 	 
 	 @return List
 	*/
-	public final ArrayList<Func> Tolist()  {
+	public final ArrayList<Func> Tolist()
+	{
 		ArrayList<Func> list = new ArrayList<Func>();
 		for (int i = 0; i < this.size(); i++)
 		{

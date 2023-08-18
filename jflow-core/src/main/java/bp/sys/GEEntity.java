@@ -15,12 +15,10 @@ public class GEEntity extends Entity
 	/** 
 	 设置或者获取主键值.
 	*/
-	public final long getOID()
-	{
+	public final long getOID()  {
 		return this.GetValInt64ByKey("OID");
 	}
-	public final void setOID(long value)
-	{
+	public final void setOID(long value){
 		this.SetValByKey("OID", value);
 	}
 	/** 
@@ -34,8 +32,8 @@ public class GEEntity extends Entity
 	/** 
 	  主键字段
 	*/
-
-	public String getPK_Field()
+	@Override
+	public String getPKField()
 	{
 		return "OID";
 	}
@@ -45,18 +43,19 @@ public class GEEntity extends Entity
 	 @return 
 	*/
 	@Override
-	public String toString()  {
-		return this.FK_MapData;
+	public String toString()
+	{
+		return this.FrmID;
 	}
 	@Override
 	public String getClassID()
 	{
-		return this.FK_MapData;
+		return this.FrmID;
 	}
 	/** 
 	 主键
 	*/
-	public String FK_MapData = null;
+	public String FrmID = null;
 	/** 
 	 通用OID实体
 	*/
@@ -66,20 +65,21 @@ public class GEEntity extends Entity
 	/** 
 	 通用OID实体
 	 
-	 param fk_mapdata 节点ID
+	 @param fk_mapdata 节点ID
 	*/
-	public GEEntity(String fk_mapdata)  {
-		this.FK_MapData=fk_mapdata;
+	public GEEntity(String fk_mapdata)
+	{
+		this.FrmID =fk_mapdata;
 		this.set_enMap(null);
 	}
 	/** 
-	 通用OID实体
 	 
-	 param fk_mapdata 节点ID
-	 param pk
+	 
+	 @param frmID
+	 @param pk
 	*/
-	public GEEntity(String fk_mapdata, Object pk) throws Exception {
-		this.FK_MapData=fk_mapdata;
+	public GEEntity(String frmID, Object pk) throws Exception {
+		this.FrmID =frmID;
 		this.setPKVal(pk);
 		this.set_enMap(null);
 		this.Retrieve();
@@ -93,48 +93,36 @@ public class GEEntity extends Entity
 	 重写基类方法
 	*/
 	@Override
-	public bp.en.Map getEnMap()  {
+	public Map getEnMap()
+	{
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
 		}
 
-		if (this.FK_MapData == null)
+		if (this.FrmID == null)
 		{
-			throw new RuntimeException("没有给" + this.FK_MapData + "值，您不能获取它的Map。");
+			throw new RuntimeException("没有给[" + this.FrmID + "]值，您不能获取它的Map。");
+		}
+		try{
+			this.set_enMap(bp.sys.MapData.GenerHisMap(this.FrmID));
+		}catch(Exception ex){
+
 		}
 
-		try {
-			this.set_enMap(MapData.GenerHisMap(this.FK_MapData));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		return this.get_enMap();
 	}
-	public void InsertAsOID(long oid) throws Exception {
-		this.SetValByKey("OID", oid);
-		try
-		{
-			this.RunSQL(SqlBuilder.Insert(this));
-		}
-		catch (Exception ex)
-		{
-			this.CheckPhysicsTable();
-			throw ex;
-		}
-	}
-
 	/** 
 	 GEEntitys
 	*/
 	@Override
-	public Entities getGetNewEntities()
+	public Entities GetNewEntities()
 	{
-		if (this.FK_MapData == null)
+		if (this.FrmID == null)
 		{
 			return new GEEntitys();
 		}
-		return new GEEntitys(this.FK_MapData);
+		return new GEEntitys(this.FrmID);
 	}
 
 		///#endregion
@@ -142,7 +130,7 @@ public class GEEntity extends Entity
 	/** 
 	 从另外的一个实体来copy数据.
 	 
-	 param en
+	 @param en
 	*/
 	public final void CopyFromFrm(GEEntity en) throws Exception {
 		//先求出来旧的OID.
@@ -154,12 +142,12 @@ public class GEEntity extends Entity
 		this.setOID(oldOID);
 
 		//复制从表数据.
-		MapDtls dtls = new MapDtls(this.FK_MapData);
+		MapDtls dtls = new MapDtls(this.FrmID);
 
 		//被copy的明细集合.
-		MapDtls dtlsFrom = new MapDtls(en.FK_MapData);
+		MapDtls dtlsFrom = new MapDtls(en.FrmID);
 
-		if (dtls.size() != dtls.size())
+		if (dtls.size() != dtlsFrom.size())
 		{
 			throw new RuntimeException("@复制的两个表单从表不一致...");
 		}
@@ -190,16 +178,16 @@ public class GEEntity extends Entity
 		}
 
 		//复制附件数据.
-		FrmAttachments aths = new FrmAttachments(this.FK_MapData);
-		FrmAttachments athsFrom = new FrmAttachments(en.FK_MapData);
+		FrmAttachments aths = new FrmAttachments(this.FrmID);
+		FrmAttachments athsFrom = new FrmAttachments(en.FrmID);
 		for (FrmAttachment ath : aths.ToJavaList())
 		{
 			//删除数据,防止copy重复
-			DBAccess.RunSQL("DELETE FROM Sys_FrmAttachmentDB WHERE FK_MapData='" + this.FK_MapData + "' AND RefPKVal='" + this.getOID() + "'");
+			DBAccess.RunSQL("DELETE FROM Sys_FrmAttachmentDB WHERE FK_MapData='" + this.FrmID + "' AND RefPKVal='" + this.getOID() + "'");
 
 			for (FrmAttachment athFrom : athsFrom.ToJavaList())
 			{
-				if (!athFrom.getNoOfObj().equals(ath.getNoOfObj()))
+				if (!Objects.equals(athFrom.getNoOfObj(), ath.getNoOfObj()))
 				{
 					continue;
 				}
@@ -209,8 +197,8 @@ public class GEEntity extends Entity
 				for (FrmAttachmentDB athDBFrom : athDBsFrom.ToJavaList())
 				{
 					athDBFrom.setMyPK(DBAccess.GenerGUID());
-					athDBFrom.setFK_MapData(this.FK_MapData);
-					athDBFrom.setFK_FrmAttachment(ath.getMyPK());
+					athDBFrom.setFrmID(this.FrmID);
+					athDBFrom.setFKFrmAttachment(ath.getMyPK());
 					athDBFrom.setRefPKVal(String.valueOf(this.getOID()));
 					athDBFrom.Insert();
 				}
@@ -221,7 +209,7 @@ public class GEEntity extends Entity
 	/** 
 	 把当前实体的数据copy到指定的主键数据表里.
 	 
-	 param oid 指定的主键
+	 @param oid 指定的主键
 	*/
 	public final void CopyToOID(long oid) throws Exception {
 		//实例化历史数据表单entity.
@@ -230,7 +218,7 @@ public class GEEntity extends Entity
 		this.Save();
 
 		//复制从表数据.
-		MapDtls dtls = new MapDtls(this.FK_MapData);
+		MapDtls dtls = new MapDtls(this.FrmID);
 		for (MapDtl dtl : dtls.ToJavaList())
 		{
 			//删除旧的数据.
@@ -238,9 +226,9 @@ public class GEEntity extends Entity
 
 			GEDtls ensDtl = new GEDtls(dtl.getNo());
 
-		 //   var typeVal = bp.sys.base.Glo.GenerRealType( ensDtl.getGetNewEntity().getEnMap().getAttrs(), GEDtlAttr.RefPK, this.OID);
+		 //   var typeVal = BP.Sys.Base.Glo.GenerRealType( ensDtl.getNewEntity().getEnMap().Attrs, GEDtlAttr.RefPK, this.OID);
 
-			ensDtl.Retrieve(GEDtlAttr.RefPK, String.valueOf(this.getOID()));
+			ensDtl.Retrieve(GEDtlAttr.RefPK, String.valueOf(oidOID));
 
 			for (GEDtl enDtl : ensDtl.ToJavaList())
 			{
@@ -250,26 +238,26 @@ public class GEEntity extends Entity
 		}
 
 		//复制附件数据.
-		FrmAttachments aths = new FrmAttachments(this.FK_MapData);
+		FrmAttachments aths = new FrmAttachments(this.FrmID);
 		for (FrmAttachment ath : aths.ToJavaList())
 		{
 			//删除可能存在的新oid数据。
-			DBAccess.RunSQL("DELETE FROM Sys_FrmAttachmentDB WHERE FK_MapData='" + this.FK_MapData + "' AND RefPKVal='" + this.getOID() + "'");
+			DBAccess.RunSQL("DELETE FROM Sys_FrmAttachmentDB WHERE FK_MapData='" + this.FrmID + "' AND RefPKVal='" + this.getOID() + "'");
 
 			//找出旧数据.
-			FrmAttachmentDBs athDBs = new FrmAttachmentDBs(this.FK_MapData, String.valueOf(oidOID));
+			FrmAttachmentDBs athDBs = new FrmAttachmentDBs(this.FrmID, String.valueOf(oidOID));
 			for (FrmAttachmentDB athDB : athDBs.ToJavaList())
 			{
 				FrmAttachmentDB athDB_N = new FrmAttachmentDB();
 				athDB_N.Copy(athDB);
 
-				athDB_N.setFK_MapData(this.FK_MapData);
+				athDB_N.setFrmID(this.FrmID);
 				athDB_N.setRefPKVal(String.valueOf(this.getOID()));
 
 				if (athDB_N.getHisAttachmentUploadType() == AttachmentUploadType.Single)
 				{
 					/*如果是单附件.*/
-					athDB_N.setMyPK(athDB_N.getFK_FrmAttachment() + "_" + this.getOID());
+					athDB_N.setMyPK(athDB_N.getFKFrmAttachment() + "_" + this.getOID());
 					if (athDB_N.getIsExits() == true)
 					{
 						continue; //说明上一个节点或者子线程已经copy过了, 但是还有子线程向合流点传递数据的可能，所以不能用break.
@@ -294,18 +282,79 @@ public class GEEntity extends Entity
 		}
 		return _Dtls;
 	}
-	/**
-	 按照指定的OID 保存
 
+
+
+		///#region public 方法
+	protected String getSerialKey()
+	{
+		return "OID";
+	}
+	/** 
+	 作为一个新的实体保存。
+	*/
+	public final void SaveAsNew() throws Exception {
+		try
+		{
+			this.setOID(DBAccess.GenerOIDByKey32(this.getSerialKey()));
+			this.RunSQL(SqlBuilder.Insert(this));
+		}
+		catch (Exception ex)
+		{
+			this.CheckPhysicsTable();
+			throw ex;
+		}
+	}
+	/** 
+	 按照指定的OID Insert.
+	*/
+	public final void InsertAsOID(int oid) throws Exception {
+		this.SetValByKey("OID", oid);
+		try
+		{
+			this.RunSQL(SqlBuilder.Insert(this));
+		}
+		catch (RuntimeException ex)
+		{
+			this.CheckPhysicsTable();
+			throw ex;
+		}
+	}
+	public final void InsertAsOID(long oid) throws Exception {
+		try
+		{
+			//先设置一个标记值，为的是不让其在[beforeInsert]产生oid.
+			this.SetValByKey("OID", -999);
+
+			//调用方法.
+			this.beforeInsert();
+
+			//设置主键.
+			this.SetValByKey("OID", oid);
+
+			this.RunSQL(SqlBuilder.Insert(this));
+
+			this.afterInsert();
+		}
+		catch (Exception ex)
+		{
+			this.CheckPhysicsTable();
+			throw ex;
+		}
+	}
+	/** 
+	 按照指定的OID 保存
+	 
 	 @param oid
-	 */
-	public final void SaveAsOID(int oid) throws Exception {
+	*/
+	public final void SaveAsOID(long oid) throws Exception {
 		this.SetValByKey("OID", oid);
 		if (this.Update() == 0)
 		{
 			this.InsertAsOID(oid);
 		}
-
 	}
+
+		///#endregion
 
 }

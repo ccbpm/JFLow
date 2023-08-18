@@ -61,8 +61,7 @@ public abstract class Method
 	 param key 键
 	 @return 结果
 	*/
-	public final String GetValStrByKey(String key)
-	{
+	public final String GetValStrByKey(String key)  {
 		return this.GetValByKey(key).toString();
 	}
 	/** 
@@ -225,7 +224,7 @@ public abstract class Method
 	/** 
 	 是否显示在功能列表里
 	*/
-	public boolean IsVisable = true;
+	public boolean ItIsVisable = true;
 
 		///
 }

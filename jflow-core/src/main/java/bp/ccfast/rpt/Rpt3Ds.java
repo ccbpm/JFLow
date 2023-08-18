@@ -1,5 +1,4 @@
 package bp.ccfast.rpt;
-
 import bp.en.*;
 import java.util.*;
 
@@ -13,13 +12,15 @@ public class Rpt3Ds extends EntitiesNoName
 	/** 
 	 三维报表s
 	*/
-	public Rpt3Ds()  {
+	public Rpt3Ds()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new Rpt3D();
 	}
 
@@ -32,7 +33,8 @@ public class Rpt3Ds extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<Rpt3D> ToJavaList() {
+	public final java.util.List<Rpt3D> ToJavaList()
+	{
 		return (java.util.List<Rpt3D>)(Object)this;
 	}
 	/** 
@@ -40,7 +42,8 @@ public class Rpt3Ds extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<Rpt3D> Tolist()  {
+	public final ArrayList<Rpt3D> Tolist()
+	{
 		ArrayList<Rpt3D> list = new ArrayList<Rpt3D>();
 		for (int i = 0; i < this.size(); i++)
 		{

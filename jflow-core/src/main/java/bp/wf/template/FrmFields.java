@@ -1,12 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.wf.port.*;
-import bp.wf.*;
-import bp.sys.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -14,19 +8,21 @@ import java.util.*;
 */
 public class FrmFields extends EntitiesMyPK
 {
-	public FrmFields() throws Exception {
+	public FrmFields()
+	{
 	}
 	/** 
 	 查询
 	*/
 	public FrmFields(String fk_mapdata, int nodeID) throws Exception {
-		this.Retrieve(FrmFieldAttr.FK_MapData, fk_mapdata, FrmFieldAttr.FK_Node, nodeID, FrmFieldAttr.EleType, "Field", null);
+		this.Retrieve(FrmFieldAttr.FrmID, fk_mapdata, FrmFieldAttr.FK_Node, nodeID, FrmFieldAttr.EleType, "Field", null);
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FrmField();
 	}
 
@@ -37,7 +33,8 @@ public class FrmFields extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmField> ToJavaList() {
+	public final java.util.List<FrmField> ToJavaList()
+	{
 		return (java.util.List<FrmField>)(Object)this;
 	}
 	/** 
@@ -45,7 +42,8 @@ public class FrmFields extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmField> Tolist()  {
+	public final ArrayList<FrmField> Tolist()
+	{
 		ArrayList<FrmField> list = new ArrayList<FrmField>();
 		for (int i = 0; i < this.size(); i++)
 		{

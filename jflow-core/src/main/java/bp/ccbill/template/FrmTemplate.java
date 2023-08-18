@@ -1,7 +1,8 @@
 package bp.ccbill.template;
 
 import bp.da.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
+import bp.en.Map;
 import bp.wf.template.*;
 import bp.sys.*;
 import bp.port.*;
@@ -15,7 +16,8 @@ public class FrmTemplate extends EntityNoName
 
 		///#region 权限控制.
 	@Override
-	public UAC getHisUAC()  {
+	public UAC getHisUAC()
+	{
 		UAC uac = new UAC();
 		if (bp.web.WebUser.getNo().equals("admin") == true)
 		{
@@ -42,50 +44,43 @@ public class FrmTemplate extends EntityNoName
 		}
 		return s;
 	}
-	public final void setPTable(String value)  throws Exception
-	 {
+	public final void setPTable(String value)  {
 		this.SetValByKey(MapDataAttr.PTable, value);
 	}
 	/** 
 	 实体类型：@0=单据@1=编号名称实体@2=树结构实体
 	*/
-	public final EntityType getEntityType() throws Exception {
+	public final EntityType getEntityType() {
 		return EntityType.forValue(this.GetValIntByKey(FrmTemplateAttr.EntityType));
 	}
-	public final void setEntityType(EntityType value)  throws Exception
-	 {
+	public final void setEntityType(EntityType value)  {
 		this.SetValByKey(FrmTemplateAttr.EntityType, value.getValue());
 	}
 	/** 
 	 表单类型 (0=傻瓜，2=自由 ...)
 	*/
-	public final FrmType getFrmType() throws Exception {
+	public final FrmType getFrmType() {
 		return FrmType.forValue(this.GetValIntByKey(MapDataAttr.FrmType));
 	}
-	public final void setFrmType(FrmType value)  throws Exception
-	 {
+	public final void setFrmType(FrmType value)  {
 		this.SetValByKey(MapDataAttr.FrmType, value.getValue());
 	}
 	/** 
 	 表单树
 	*/
-	public final String getFKFormTree() throws Exception
-	{
+	public final String getFKFormTree()  {
 		return this.GetValStrByKey(MapDataAttr.FK_FormTree);
 	}
-	public final void setFK_FormTree(String value)  throws Exception
-	 {
+	public final void setFKFormTree(String value)  {
 		this.SetValByKey(MapDataAttr.FK_FormTree, value);
 	}
 	/** 
 	 新建模式 @0=表格模式@1=卡片模式@2=不可用
 	*/
-	public final int getBtnNewModel() throws Exception
-	{
+	public final int getBtnNewModel() {
 		return this.GetValIntByKey(FrmTemplateAttr.BtnNewModel);
 	}
-	public final void setBtnNewModel(int value)  throws Exception
-	 {
+	public final void setBtnNewModel(int value)  {
 		this.SetValByKey(FrmTemplateAttr.BtnNewModel, value);
 	}
 
@@ -100,8 +95,7 @@ public class FrmTemplate extends EntityNoName
 		}
 		return str;
 	}
-	public final void setBillNoFormat(String value)  throws Exception
-	 {
+	public final void setBillNoFormat(String value)  {
 		this.SetValByKey(FrmTemplateAttr.BillNoFormat, value);
 	}
 	/** 
@@ -115,8 +109,7 @@ public class FrmTemplate extends EntityNoName
 		}
 		return str;
 	}
-	public final void setTitleRole(String value)  throws Exception
-	 {
+	public final void setTitleRole(String value)  {
 		this.SetValByKey(FrmTemplateAttr.BillNoFormat, value);
 	}
 
@@ -127,22 +120,23 @@ public class FrmTemplate extends EntityNoName
 	/** 
 	 单据模版
 	*/
-	public FrmTemplate() {
+	public FrmTemplate()
+	{
 	}
 	/** 
 	 单据模版
 	 
-	 param no 映射编号
+	 @param no 映射编号
 	*/
-	public FrmTemplate(String no) throws Exception {
-
+	public FrmTemplate(String no) throws Exception
+	{
 		super(no);
 	}
-	/** 
-	 EnMap
-	*/
+	/**
+	 * EnMap
+	 */
 	@Override
-	public bp.en.Map getEnMap()  {
+	public Map getEnMap() {
 		if (this.get_enMap() != null)
 		{
 			return this.get_enMap();
@@ -182,21 +176,21 @@ public class FrmTemplate extends EntityNoName
 
 			///#region 实体属性
 		map.AddTBInt(FrmTemplateAttr.EntityEditModel, 0, "编辑模式", true, false);
-			//map.AddDDLSysEnum(FrmAttr.EntityEditModel, 0, "编辑模式", true, true, FrmAttr.EntityEditModel, "@0=只读列表模式@1=Table编辑模式");
+		//map.AddDDLSysEnum(FrmAttr.EntityEditModel, 0, "编辑模式", true, true, FrmAttr.EntityEditModel, "@0=只读列表模式@1=Table编辑模式");
 
 			///#endregion 实体属性.
 
 
 			///#region 可以创建的权限.
-			//平铺模式.
-		map.getAttrsOfOneVSM().AddGroupPanelModel(new StationCreates(), new Stations(), StationCreateAttr.FrmID, StationCreateAttr.FK_Station, "可以创建的岗位", StationAttr.FK_StationType, "Name", "No");
+		//平铺模式.
+		map.getAttrsOfOneVSM().AddGroupPanelModel(new StationCreates(), new Stations(), StationCreateAttr.FrmID, StationCreateAttr.FK_Station, "可以创建的角色", StationAttr.FK_StationType, "Name", "No");
 
-		map.getAttrsOfOneVSM().AddGroupListModel(new StationCreates(), new Stations(), StationCreateAttr.FrmID, StationCreateAttr.FK_Station, "可以创建的岗位AddGroupListModel", StationAttr.FK_StationType, "Name", "No");
+		map.getAttrsOfOneVSM().AddGroupListModel(new StationCreates(), new Stations(), StationCreateAttr.FrmID, StationCreateAttr.FK_Station, "可以创建的角色AddGroupListModel", StationAttr.FK_StationType, "Name", "No");
 
-			//节点绑定部门. 节点绑定部门.
+		//节点绑定部门. 节点绑定部门.
 		map.getAttrsOfOneVSM().AddBranches(new FrmDeptCreates(), new Depts(), FrmDeptCreateAttr.FrmID, FrmDeptCreateAttr.FK_Dept, "可以创建的部门AddBranches", EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept", null);
 
-			//节点绑定人员. 使用树杆与叶子的模式绑定.
+		//节点绑定人员. 使用树杆与叶子的模式绑定.
 		map.getAttrsOfOneVSM().AddBranchesAndLeaf(new EmpCreates(), new Emps(), EmpCreateAttr.FrmID, EmpCreateAttr.FK_Emp, "可以创建的人员", EmpAttr.FK_Dept, EmpAttr.Name, EmpAttr.No, "@WebUser.FK_Dept", null);
 
 			///#endregion 可以创建的权限

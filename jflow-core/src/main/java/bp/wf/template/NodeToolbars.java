@@ -1,10 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.port.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -18,7 +14,8 @@ public class NodeToolbars extends EntitiesOID
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new NodeToolbar();
 	}
 
@@ -29,12 +26,13 @@ public class NodeToolbars extends EntitiesOID
 	/** 
 	 工具栏集合
 	*/
-	public NodeToolbars()  {
+	public NodeToolbars()
+	{
 	}
 	/** 
 	 工具栏集合.
 	 
-	 param fk_node
+	 @param fk_node
 	*/
 	public NodeToolbars(String fk_node) throws Exception {
 		this.Retrieve(NodeToolbarAttr.FK_Node, fk_node, null);
@@ -49,7 +47,8 @@ public class NodeToolbars extends EntitiesOID
 	 
 	 @return List
 	*/
-	public final java.util.List<NodeToolbar> ToJavaList() {
+	public final java.util.List<NodeToolbar> ToJavaList()
+	{
 		return (java.util.List<NodeToolbar>)(Object)this;
 	}
 
@@ -58,7 +57,8 @@ public class NodeToolbars extends EntitiesOID
 	 
 	 @return List
 	*/
-	public final ArrayList<NodeToolbar> Tolist()  {
+	public final ArrayList<NodeToolbar> Tolist()
+	{
 		ArrayList<NodeToolbar> list = new ArrayList<NodeToolbar>();
 		for (int i = 0; i < this.size(); i++)
 		{

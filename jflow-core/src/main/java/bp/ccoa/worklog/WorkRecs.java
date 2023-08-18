@@ -33,7 +33,8 @@ public class WorkRecs extends EntitiesMyPK
 	 
 	 @return 
 	*/
-	public final String Default_ChartInit() throws Exception {
+	public final String Default_ChartInit()
+	{
 		Hashtable ht = new Hashtable();
 
 		//本周完成的数量.
@@ -41,7 +42,7 @@ public class WorkRecs extends EntitiesMyPK
 		ht.put("weekNum", DBAccess.RunSQLReturnValInt(sql));
 
 		//本月的数量.
-		sql = "SELECT COUNT(*) FROM OA_WorkRecDtl WHERE Rec='" + WebUser.getNo() + "' AND NianYue='" + DataType.getCurrentYearMonth() + "'";
+		  sql= "SELECT COUNT(*) FROM OA_WorkRecDtl WHERE Rec='" + WebUser.getNo() + "' AND NianYue='" + DataType.getCurrentYearMonth() + "'";
 		ht.put("monthNum", DBAccess.RunSQLReturnValInt(sql));
 
 		//上一个月的的数量.
@@ -63,18 +64,19 @@ public class WorkRecs extends EntitiesMyPK
 	 
 	 @return 
 	*/
-	public final String Default_Months() throws Exception {
+	public final String Default_Months()
+	{
 		String sql = "SELECT COUNT(*) AS Num, NianYue FROM OA_WorkRecDtl WHERE Rec='" + WebUser.getNo() + "' AND NianDu='" + DataType.getCurrentYear() + "'";
 		sql += " GROUP BY NianYue ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		return bp.tools.Json.ToJson(dt);
 	}
-	public final String Default_Prjs() throws Exception {
+	public final String Default_Prjs()
+	{
 		String sql = "SELECT Count(*) AS Num, PrjName FROM OA_WorkRecDtl WHERE Rec='" + WebUser.getNo() + "' AND NianDu='" + DataType.getCurrentYear() + "'";
 		sql += " GROUP BY PrjName ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		return bp.tools.Json.ToJson(dt);
-
 	}
 
 		///#endregion 主页数据.
@@ -95,7 +97,7 @@ public class WorkRecs extends EntitiesMyPK
 	/** 
 	 工作月平均工作时长
 	 
-	 param empNo
+	 @param empNo
 	 @return 
 	*/
 	public final String FenXi_MonthAvg(String empNo)
@@ -129,7 +131,8 @@ public class WorkRecs extends EntitiesMyPK
 	}
 
 		///#endregion 分析页面. FenXi.htm
-	public final String CheckRZ_Init() throws Exception {
+	public final String CheckRZ_Init()
+	{
 		String sql = "SELECT A.* FROM OA_WorkRec A,OA_WorkShare B WHERE A.Rec=B.EmpNo AND B.ShareToEmpNo='" + WebUser.getNo() + "' AND B.ShareState=1 ORDER BY A.RDT ";
 		DataTable dt = DBAccess.RunSQLReturnTable(sql);
 		return bp.tools.Json.ToJson(dt);
@@ -152,13 +155,15 @@ public class WorkRecs extends EntitiesMyPK
 	/** 
 	 工作日志
 	*/
-	public WorkRecs() throws Exception {
+	public WorkRecs()
+	{
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new WorkRec();
 	}
 
@@ -168,7 +173,8 @@ public class WorkRecs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<WorkRec> ToJavaList() {
+	public final java.util.List<WorkRec> ToJavaList()
+	{
 		return (java.util.List<WorkRec>)(Object)this;
 	}
 	/** 
@@ -176,7 +182,8 @@ public class WorkRecs extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<WorkRec> Tolist()  {
+	public final ArrayList<WorkRec> Tolist()
+	{
 		ArrayList<WorkRec> list = new ArrayList<WorkRec>();
 		for (int i = 0; i < this.size(); i++)
 		{

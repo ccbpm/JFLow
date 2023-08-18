@@ -3,18 +3,22 @@ package bp.sys.base;
 import bp.sys.*;
 import bp.da.*;
 import bp.tools.Cryptos;
-import bp.en.*;
+import bp.tools.FtpUtil;
+import bp.tools.SftpUtil;
+import bp.web.*;
+import bp.en.*; import bp.en.Map;
 import bp.difference.*;
-import bp.web.WebUser;
+import bp.*;
+import bp.sys.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.io.*;
 import java.math.*;
 
-/** 
+/**
  公用的静态方法.
-*/
+ */
 public class Glo
 {
 
@@ -22,7 +26,6 @@ public class Glo
 	{
 		return EntityJiaMi(val, false);
 	}
-
 	public static String EntityJiaMi(String val, boolean isJM)
 	{
 		if (isJM == false)
@@ -50,10 +53,11 @@ public class Glo
 
 	}
 
-	/** 
+	/**
 	 获得真实UserNo,如果是SAAS模式.
-	*/
-	public static String getUserNo()  {
+	 */
+	public static String getUserNo()
+	{
 		String empNo = "No";
 		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 		{
@@ -61,7 +65,8 @@ public class Glo
 		}
 		return empNo;
 	}
-	public static String getUserNoWhitOutAS()  {
+	public static String getUserNoWhitOutAS()
+	{
 		String empNo = "No";
 		if (SystemConfig.getCCBPMRunModel() == CCBPMRunModel.SAAS)
 		{
@@ -70,22 +75,28 @@ public class Glo
 		return empNo;
 	}
 
+	/**
+	 人大金仓数据库Sys_Enum是关键表
+
+	 @return
+	 */
 	public static String SysEnum()
 	{
-		if (SystemConfig.getAppCenterDBType().equals(DBType.KingBaseR3)
-				|| SystemConfig.getAppCenterDBType().equals(DBType.KingBaseR6))
+		if (SystemConfig.getAppCenterDBType().equals(DBType.KingBaseR3) || SystemConfig.getAppCenterDBType().equals(DBType.KingBaseR6))
+		{
 			return "Sys_Enums";
+		}
 		return "Sys_Enum";
 	}
-	/** 
+	/**
 	 处理命名空间.
-	 
-	 param enName 类名
+
+	 @param enName 类名
 	 @return 返回处理后的名字
-	*/
+	 */
 	public static String DealClassEntityName(String enName)
 	{
-		if (DataType.IsNullOrEmpty(enName))
+		if (DataType.IsNullOrEmpty(enName) == true)
 		{
 			return "";
 		}
@@ -103,27 +114,28 @@ public class Glo
 		String str = enName.substring(0, idx).toLowerCase() + enName.substring(idx);
 		return str;
 	}
-	/** 
+	/**
 	 清除设置的缓存.
-	 
-	 param frmID
-	*/
+
+	 @param frmID
+	 */
 	public static void ClearMapDataAutoNum(String frmID) throws Exception {
 		//执行清空缓存到的AutoNum.
 		MapData md = new MapData();
 		md.setNo(frmID);
 		if (md.RetrieveFromDBSources() != 0)
 		{
-			md.ClearAutoNumCash(true); //更新缓存.
+			md.ClearAutoNumCache(true); //更新缓存.
 		}
 	}
 
-	/** 
+	/**
 	 更新SID Or OrgNo 的SQL
 	 用于集成所用
 	 更新被集成的用户的user表
-	*/
-	public static String getUpdateSIDAndOrgNoSQL() throws Exception {
+	 */
+	public static String getUpdateSIDAndOrgNoSQL()
+	{
 		return SystemConfig.GetValByKey("UpdateSIDAndOrgNoSQL", null);
 	}
 
@@ -132,20 +144,17 @@ public class Glo
 		return ContextHolderUtils.getRequest();
 	}
 
-	/** 
+	/**
 	 获得真实的数据类型
-	 
-	 param attrs 属性集合
-	 param key key
-	 param val 值
+
+	 @param attrs 属性集合
+	 @param key key
+	 @param val 值
 	 @return 返回val真实的数据类型.
-	*/
+	 */
 	public static Object GenerRealType(Attrs attrs, String key, Object val)
 	{
 		Attr attr = attrs.GetAttrByKey(key);
-		return GenerRealType(attr, val);
-	}
-	public static Object GenerRealType(Attr attr,  Object val){
 		switch (attr.getMyDataType())
 		{
 			case DataType.AppString:
@@ -168,29 +177,29 @@ public class Glo
 				val = Float.parseFloat(val.toString());
 				break;
 			case DataType.AppMoney:
-				val =  new BigDecimal(val.toString());
+				val = new BigDecimal(val.toString());
 				break;
 			default:
 				throw new RuntimeException();
-				//break;
 		}
 		return val;
 	}
 
-		///#region 业务单元.
+
+	///#region 业务单元.
 	private static Hashtable Htable_BuessUnit = null;
-	/** 
+	/**
 	 获得节点事件实体
-	 
-	 param enName 实例名称
+
+	 @param enName 实例名称
 	 @return 获得节点事件实体,如果没有就返回为空.
-	*/
+	 */
 	public static BuessUnitBase GetBuessUnitEntityByEnName(String enName)
 	{
 		if (Htable_BuessUnit == null || Htable_BuessUnit.isEmpty())
 		{
 			Htable_BuessUnit = new Hashtable();
-			ArrayList<BuessUnitBase> al = bp.en.ClassFactory.GetObjects("bp.sys.BuessUnitBase");
+			ArrayList<BuessUnitBase> al = ClassFactory.GetObjects("BP.Sys.BuessUnitBase");
 			for (BuessUnitBase en : al)
 			{
 				Htable_BuessUnit.put(en.toString(), en);
@@ -206,13 +215,13 @@ public class Glo
 		}
 		return myen;
 	}
-	/** 
+	/**
 	 获得事件实体String，根据编号或者流程标记
-	 
-	 param flowMark 流程标记
-	 param flowNo 流程编号
+
+	 @param flowMark 流程标记
+	 @param flowNo 流程编号
 	 @return null, 或者流程实体.
-	*/
+	 */
 	public static String GetBuessUnitEntityStringByFlowMark(String flowMark, String flowNo)
 	{
 		BuessUnitBase en = GetBuessUnitEntityByFlowMark(flowMark, flowNo);
@@ -222,20 +231,20 @@ public class Glo
 		}
 		return en.toString();
 	}
-	/** 
+	/**
 	 获得业务单元.
-	 
-	 param flowMark 流程标记
-	 param flowNo 流程编号
+
+	 @param flowMark 流程标记
+	 @param flowNo 流程编号
 	 @return null, 或者流程实体.
-	*/
+	 */
 	public static BuessUnitBase GetBuessUnitEntityByFlowMark(String flowMark, String flowNo)
 	{
 
 		if (Htable_BuessUnit == null || Htable_BuessUnit.isEmpty())
 		{
 			Htable_BuessUnit = new Hashtable();
-			ArrayList<BuessUnitBase> al = bp.en.ClassFactory.GetObjects("bp.sys.BuessUnitBase");
+			ArrayList<BuessUnitBase> al  = ClassFactory.GetObjects("BP.Sys.BuessUnitBase");
 			Htable_BuessUnit.clear();
 			for (BuessUnitBase en : al)
 			{
@@ -254,24 +263,24 @@ public class Glo
 		return null;
 	}
 
-		///#endregion 业务单元.
+	///#endregion 业务单元.
 
 
-		///#region 与 表单 事件实体相关.
+	///#region 与 表单 事件实体相关.
 	private static Hashtable Htable_FormFEE = null;
-	/** 
+	/**
 	 获得节点事件实体
-	 
-	 param enName 实例名称
+
+	 @param enName 实例名称
 	 @return 获得节点事件实体,如果没有就返回为空.
-	*/
+	 */
 	public static FormEventBase GetFormEventBaseByEnName(String enName)
 	{
 		if (Htable_FormFEE == null)
 		{
 			Htable_FormFEE = new Hashtable();
 
-			ArrayList<FormEventBase> al = bp.en.ClassFactory.GetObjects("bp.sys.FormEventBase");
+			ArrayList<FormEventBase> al = ClassFactory.GetObjects("BP.Sys.Base.FormEventBase");
 			Htable_FormFEE.clear();
 
 			for (FormEventBase en : al)
@@ -302,16 +311,16 @@ public class Glo
 
 	}
 
-		///#endregion 与 表单 事件实体相关.
+	///#endregion 与 表单 事件实体相关.
 
 
-		///#region 与 表单从表 事件实体相关.
+	///#region 与 表单从表 事件实体相关.
 	private static Hashtable Htable_FormFEEDtl = null;
-	/** 
+	/**
 	 获得节点事件实体
-	 param dtlEnName 实例名称
+	 @param dtlEnName 实例名称
 	 @return 获得节点事件实体,如果没有就返回为空.
-	*/
+	 */
 	public static FormEventBaseDtl GetFormDtlEventBaseByEnName(String dtlEnName)
 	{
 		if (Htable_FormFEEDtl == null || Htable_FormFEEDtl.isEmpty())
@@ -336,14 +345,14 @@ public class Glo
 		return null;
 	}
 
-		///#endregion 与 表单 事件实体相关.
+	///#endregion 与 表单 事件实体相关.
 
 
-		///#region 公共变量.
+	///#region 公共变量.
 	public static String Plant = "CCFlow";
-	/** 
+	/**
 	 部门版本号
-	*/
+	 */
 	public static String getDeptsVersion() throws Exception {
 		GloVar en = new GloVar();
 		en.setNo("DeptsVersion");
@@ -356,9 +365,9 @@ public class Glo
 		}
 		return en.getVal();
 	}
-	/** 
+	/**
 	 人员版本号
-	*/
+	 */
 	public static String getUsersVersion() throws Exception {
 		GloVar en = new GloVar();
 		en.setNo("UsersVersion");
@@ -372,63 +381,57 @@ public class Glo
 		return en.getVal();
 	}
 
-		///#endregion 公共变量.
+	///#endregion 公共变量.
 
 
-		///#region 写入系统日志(写入的文件:\DataUser\Log\*.*)
-	/** 
+	///#region 写入系统日志(写入的文件:\DataUser\Log\*.*)
+	/**
 	 写入一条消息
-	 
-	 param msg 消息
-	*/
+
+	 @param msg 消息
+	 */
 	public static void WriteLineInfo(String msg)
 	{
 		Log.DebugWriteInfo(msg);
 	}
 
 	/** 写入一条警告
-	 
-	 param msg 消息
-	*/
+
+	 @param msg 消息
+	 */
 	public static void WriteLineWarning(String msg)
 	{
 		Log.DebugWriteWarning(msg);
 	}
-	/** 
+	/**
 	 写入一条错误
-	 
-	 param msg 消息
-	*/
+
+	 @param msg 消息
+	 */
 	public static void WriteLineError(String msg)
 	{
 		Log.DebugWriteError(msg);
 	}
 
-		///#endregion 写入系统日志
+	///#endregion 写入系统日志
 
 
-		///#region 写入用户日志(写入的用户表:Sys_UserLog).
+	///#region 写入用户日志(写入的用户表:Sys_UserLog).
 
-	/** 
+	/**
 	 写入用户日志
-
-	 param msg 日志类型
-	 param msg 消息
-	*/
+	 @param msg 消息
+	 */
 
 	public static void WriteUserLog(String msg) throws Exception {
-
 		WriteUserLog(msg, "通用操作");
 	}
-
-//ORIGINAL LINE: public static void WriteUserLog(string msg, string logType = "通用操作")
 	public static void WriteUserLog(String msg, String logType) throws Exception {
 		if (SystemConfig.GetValByKeyBoolen("IsEnableLog", false) == false)
 		{
 			return;
 		}
 
-	//    string sql = "INSERT INTO Sys_Log (id,title,exception,) value('" + DBAccess.GenerGUID() + "','" + logType + "','" + msg + "')";
 		UserLog ul = new UserLog();
 		ul.setMyPK(DBAccess.GenerGUID());
 		ul.setEmpNo(WebUser.getNo());
@@ -439,31 +442,28 @@ public class Glo
 		ul.setRDT(DataType.getCurrentDateTime());
 		try
 		{
-			if (SystemConfig.getIsBSsystem())
+			if (SystemConfig.isBSsystem())
 			{
 				ul.setIP(getRequest().getRemoteAddr());
 			}
 		}
 		catch (java.lang.Exception e)
 		{
-			e.printStackTrace();
-			Log.DebugWriteError("获取IP地址出现异常" + e.getMessage());
 		}
 		ul.Insert();
 	}
 
-		///#endregion 写入用户日志.
+	///#endregion 写入用户日志.
 
-	/** 
+	/**
 	 初始化附件信息
 	 如果手工的上传的附件，就要把附加的信息映射出来.
-	 
-	 param en
-	*/
+	 @param en
+	 */
 	public static void InitEntityAthInfo(Entity en) throws Exception {
 		//求出保存路径.
 		String path = en.getEnMap().FJSavePath;
-		if (path.equals("") || path == null || path.equals(""))
+		if (Objects.equals(path, "") || path == null || Objects.equals(path, ""))
 		{
 			path = SystemConfig.getPathOfDataUser() + en.toString() + "/";
 		}
@@ -474,7 +474,7 @@ public class Glo
 		}
 
 		//获得该目录下所有的文件.
-		//String[] strs = (new File(path)).list(File:isFile);
+		//String[] strs = bp.tools.BaseFileUtils.getFiles(path);
 		String[] strs=bp.tools.BaseFileUtils.getFiles (path);
 		String pkval = en.getPKVal().toString();
 		String myfileName = null;
@@ -516,13 +516,12 @@ public class Glo
 			reldir = "";
 		}
 
-		if (reldir.length() > 0 && String.valueOf(reldir.charAt(0)).equals( "/" )==true)
+		if (reldir.length() > 0 && Objects.equals(reldir.charAt(0), '/') == true)
 		{
 			reldir = reldir.substring(1);
 		}
 
-		if (reldir.length() > 0 && String.valueOf(reldir.charAt(reldir.length() - 1)).equals( "/" )== false)
-
+		if (reldir.length() > 0 && Objects.equals(reldir.charAt(reldir.length() - 1), '/') == false)
 		{
 			reldir += "/";
 		}
@@ -535,23 +534,17 @@ public class Glo
 
 		File info = new File(fullFile);
 		en.SetValByKey("MyFileSize", DataType.PraseToMB(info.length()));
-//		if (DataType.IsImgExt(ext))
-//		{
-//			System.Drawing.Image img = System.Drawing.Image.FromFile(fullFile);
-//			en.SetValByKey("MyFileH", img.Height);
-//			en.SetValByKey("MyFileW", img.Width);
-//			img.Dispose();
-//		}
+
 		en.Update();
 	}
 
 
 
-		///#region 加密解密文件.
+	///#region 加密解密文件.
 	public static void File_JiaMi(String fileFullPath)
 	{
 		//南京宝旺达.
-		if (SystemConfig.getCustomerNo().equals("BWDA"))
+		if (Objects.equals(SystemConfig.getCustomerNo(), "BWDA"))
 		{
 
 		}
@@ -559,21 +552,21 @@ public class Glo
 	public static void File_JieMi(String fileFullPath)
 	{
 		//南京宝旺达.
-		if (SystemConfig.getCustomerNo().equals("BWDA"))
+		if (Objects.equals(SystemConfig.getCustomerNo(), "BWDA"))
 		{
 
 		}
 	}
-	/** 
+	/**
 	 字符串的解密
-	 
-	 param str 加密的字符串
+
+	 @param str 加密的字符串
 	 @return 返回解密后的字符串
-	*/
-	public static String String_JieMi (String str)
+	 */
+	public static String String_JieMi(String str)
 	{
 		//南京宝旺达.
-		if (SystemConfig.getCustomerNo().equals("BWDA"))
+		if (Objects.equals(SystemConfig.getCustomerNo(), "BWDA"))
 		{
 			return str;
 		}
@@ -581,7 +574,44 @@ public class Glo
 		return str;
 	}
 
-		///#endregion 加密解密文件.
+	/**
+	 * 获得ftp连接对象
+	 *
+	 * @throws Exception
+	 */
+	public static FtpUtil getFtpUtil() throws Exception {
+		// 获取
+		String ip = String_JieMi_FTP(SystemConfig.getFTPServerIP());
+
+		String userNo = String_JieMi_FTP(SystemConfig.getFTPUserNo());
+		String pass = String_JieMi_FTP(SystemConfig.getFTPUserPassword());
+		String port=String_JieMi_FTP(String.valueOf(SystemConfig.getFTPServerPort()));
+
+		if(DataType.IsNullOrEmpty(port)){
+			port="21";
+		}
+
+		FtpUtil ftp = new FtpUtil(ip, Integer.parseInt(port), userNo, pass);
+		return ftp;
+
+		// return Platform.JFlow;
+	}
+	/**
+	 * 获得ftp连接对象
+	 *
+	 * @throws Exception
+	 */
+	public static SftpUtil getSftpUtil() throws Exception {
+		// 获取
+		String ip = SystemConfig.getFTPServerIP();
+
+		String userNo = SystemConfig.getFTPUserNo();
+		String pass = String_JieMi_FTP(SystemConfig.getFTPUserPassword());
+
+		SftpUtil ftp = new SftpUtil(ip, SystemConfig.getFTPServerPort(), userNo, pass);
+		return ftp;
+
+	}
 	public static String String_JieMi_FTP(String str) throws Exception
 	{
 
@@ -591,4 +621,6 @@ public class Glo
 
 		return str;
 	}
+	///#endregion 加密解密文件.
+
 }

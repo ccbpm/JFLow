@@ -1,11 +1,6 @@
 package bp.wf.template;
 
-import bp.da.*;
 import bp.en.*;
-import bp.port.*;
-import bp.sys.*;
-import bp.*;
-import bp.wf.*;
 import java.util.*;
 
 /** 
@@ -18,7 +13,8 @@ public class FrmNodeJiJians extends EntitiesMyPK
 	/** 
 	 节点表单
 	*/
-	public FrmNodeJiJians() throws Exception {
+	public FrmNodeJiJians()
+	{
 	}
 
 		///#endregion 构造方法..
@@ -29,7 +25,8 @@ public class FrmNodeJiJians extends EntitiesMyPK
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FrmNodeJiJian();
 	}
 
@@ -42,7 +39,8 @@ public class FrmNodeJiJians extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmNodeJiJian> ToJavaList() {
+	public final java.util.List<FrmNodeJiJian> ToJavaList()
+	{
 		return (java.util.List<FrmNodeJiJian>)(Object)this;
 	}
 	/** 
@@ -50,7 +48,8 @@ public class FrmNodeJiJians extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmNodeJiJian> Tolist()  {
+	public final ArrayList<FrmNodeJiJian> Tolist()
+	{
 		ArrayList<FrmNodeJiJian> list = new ArrayList<FrmNodeJiJian>();
 		for (int i = 0; i < this.size(); i++)
 		{

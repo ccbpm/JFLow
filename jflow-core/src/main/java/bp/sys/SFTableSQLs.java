@@ -1,8 +1,6 @@
 package bp.sys;
 
-import bp.da.*;
 import bp.en.*;
-import bp.*;
 import java.util.*;
 
 /** 
@@ -15,13 +13,15 @@ public class SFTableSQLs extends EntitiesNoName
 	/** 
 	 用户自定义表s
 	*/
-	public SFTableSQLs() {
+	public SFTableSQLs()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new SFTableSQL();
 	}
 
@@ -34,7 +34,8 @@ public class SFTableSQLs extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<SFTableSQL> ToJavaList() {
+	public final java.util.List<SFTableSQL> ToJavaList()
+	{
 		return (java.util.List<SFTableSQL>)(Object)this;
 	}
 	/** 
@@ -42,7 +43,8 @@ public class SFTableSQLs extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<SFTableSQL> Tolist()  {
+	public final ArrayList<SFTableSQL> Tolist()
+	{
 		ArrayList<SFTableSQL> list = new ArrayList<SFTableSQL>();
 		for (int i = 0; i < this.size(); i++)
 		{

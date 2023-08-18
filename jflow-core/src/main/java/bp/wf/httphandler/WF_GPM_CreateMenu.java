@@ -1,18 +1,18 @@
 package bp.wf.httphandler;
 
 import bp.*;
-import bp.difference.handler.WebContralBase;
 import bp.wf.*;
 
 /** 
  页面功能实体
 */
-public class WF_GPM_CreateMenu extends WebContralBase
+public class WF_GPM_CreateMenu extends bp.difference.handler.DirectoryPageBase
 {
 	/** 
 	 构造函数
 	*/
-	public WF_GPM_CreateMenu() throws Exception {
+	public WF_GPM_CreateMenu()
+	{
 
 	}
 	/** 
@@ -31,7 +31,8 @@ public class WF_GPM_CreateMenu extends WebContralBase
 	 
 	 @return 
 	*/
-	public final String Menus_DictCopy() throws Exception {
+	public final String Menus_DictCopy()
+	{
 	   // BP.CCBill.FrmDict en = new CCBill.FrmDict();
 	   // en.doC
 		return "复制成功.";

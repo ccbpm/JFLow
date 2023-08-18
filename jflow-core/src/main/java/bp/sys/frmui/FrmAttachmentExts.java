@@ -1,6 +1,6 @@
 package bp.sys.frmui;
 
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.sys.*;
 import java.util.*;
 
@@ -14,12 +14,13 @@ public class FrmAttachmentExts extends EntitiesMyPK
 	/** 
 	 附件s
 	*/
-	public FrmAttachmentExts()  {
+	public FrmAttachmentExts()
+	{
 	}
 	/** 
 	 附件s
 	 
-	 param fk_mapdata s
+	 @param fk_mapdata s
 	*/
 	public FrmAttachmentExts(String fk_mapdata) throws Exception {
 		this.Retrieve(FrmAttachmentAttr.FK_MapData, fk_mapdata, FrmAttachmentAttr.FK_Node, 0);
@@ -28,7 +29,8 @@ public class FrmAttachmentExts extends EntitiesMyPK
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new FrmAttachmentExt();
 	}
 
@@ -41,7 +43,8 @@ public class FrmAttachmentExts extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final java.util.List<FrmAttachmentExt> ToJavaList() {
+	public final java.util.List<FrmAttachmentExt> ToJavaList()
+	{
 		return (java.util.List<FrmAttachmentExt>)(Object)this;
 	}
 	/** 
@@ -49,7 +52,8 @@ public class FrmAttachmentExts extends EntitiesMyPK
 	 
 	 @return List
 	*/
-	public final ArrayList<FrmAttachmentExt> Tolist()  {
+	public final ArrayList<FrmAttachmentExt> Tolist()
+	{
 		ArrayList<FrmAttachmentExt> list = new ArrayList<FrmAttachmentExt>();
 		for (int i = 0; i < this.size(); i++)
 		{

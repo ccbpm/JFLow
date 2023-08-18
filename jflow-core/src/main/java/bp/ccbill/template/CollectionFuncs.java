@@ -2,7 +2,7 @@ package bp.ccbill.template;
 
 import bp.da.*;
 import bp.web.*;
-import bp.en.*;
+import bp.en.*; import bp.en.Map;
 import bp.*;
 import bp.ccbill.*;
 import java.util.*;
@@ -15,13 +15,15 @@ public class CollectionFuncs extends EntitiesNoName
 	/** 
 	 功能执行
 	*/
-	public CollectionFuncs() throws Exception {
+	public CollectionFuncs()
+	{
 	}
 	/** 
 	 得到它的 Entity 
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new CollectionFunc();
 	}
 
@@ -31,7 +33,8 @@ public class CollectionFuncs extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<CollectionFunc> ToJavaList() {
+	public final java.util.List<CollectionFunc> ToJavaList()
+	{
 		return (java.util.List<CollectionFunc>)(Object)this;
 	}
 	/** 
@@ -39,7 +42,8 @@ public class CollectionFuncs extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<CollectionFunc> Tolist()  {
+	public final ArrayList<CollectionFunc> Tolist()
+	{
 		ArrayList<CollectionFunc> list = new ArrayList<CollectionFunc>();
 		for (int i = 0; i < this.size(); i++)
 		{

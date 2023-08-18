@@ -1,11 +1,5 @@
 package bp.wf;
 
-import bp.da.*;
-import bp.en.*;
-import bp.wf.*;
-import bp.port.*;
-import bp.*;
-import java.util.*;
 
 /** 
  工作人员集合
@@ -31,17 +25,13 @@ public class GenerWorkerListAttr
 	*/
 	public static final String FK_Emp = "FK_Emp";
 	/** 
-	 使用的岗位
-	*/
-	public static final String UseStation_del = "UseStation";
-	/** 
 	 使用的部门
 	*/
 	public static final String FK_Dept = "FK_Dept";
 	/** 
 	 部门名称
 	*/
-	public static final String FK_DeptT = "FK_DeptT";
+	public static final String DeptName = "DeptName";
 	/** 
 	 应该完成时间
 	*/
@@ -63,14 +53,6 @@ public class GenerWorkerListAttr
 	*/
 	public static final String IsEnable = "IsEnable";
 	/** 
-	 是否自动分配
-	*/
-	//public const  string IsAutoGener="IsAutoGener";
-	/** 
-	 产生时间
-	*/
-	//public const  string GenerDateTime="GenerDateTime";
-	/** 
 	 IsPass
 	*/
 	public static final String IsPass = "IsPass";
@@ -81,11 +63,11 @@ public class GenerWorkerListAttr
 	/** 
 	 人员名称
 	*/
-	public static final String FK_EmpText = "FK_EmpText";
+	public static final String EmpName = "EmpName";
 	/** 
 	 节点名称
 	*/
-	public static final String FK_NodeText = "FK_NodeText";
+	public static final String NodeName = "NodeName";
 	/** 
 	 发送人
 	*/
@@ -153,4 +135,8 @@ public class GenerWorkerListAttr
 	 顺序号
 	*/
 	public static final String Idx = "Idx";
+	/** 
+	 岗位编号
+	*/
+	public static final String StaNo = "StaNo";
 }

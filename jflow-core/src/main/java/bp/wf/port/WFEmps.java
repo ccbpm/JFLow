@@ -13,13 +13,15 @@ public class WFEmps extends EntitiesNoName
 	/** 
 	 操作员s
 	*/
-	public WFEmps() throws Exception {
+	public WFEmps()
+	{
 	}
 	/** 
 	 得到它的 Entity
 	*/
 	@Override
-	public Entity getGetNewEntity() {
+	public Entity getNewEntity()
+	{
 		return new WFEmp();
 	}
 	@Override
@@ -36,7 +38,8 @@ public class WFEmps extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final java.util.List<WFEmp> ToJavaList() {
+	public final java.util.List<WFEmp> ToJavaList()
+	{
 		return (java.util.List<WFEmp>)(Object)this;
 	}
 	/** 
@@ -44,7 +47,8 @@ public class WFEmps extends EntitiesNoName
 	 
 	 @return List
 	*/
-	public final ArrayList<WFEmp> Tolist()  {
+	public final ArrayList<WFEmp> Tolist()
+	{
 		ArrayList<WFEmp> list = new ArrayList<WFEmp>();
 		for (int i = 0; i < this.size(); i++)
 		{

@@ -19,7 +19,6 @@ import bp.web.WebUser;
 import bp.wf.Dev2Interface;
 import bp.wf.GenerWorkFlow;
 import bp.wf.data.GERpt;
-import bp.wf.template.BillTemplate;
 import WebService.CCFormAPII;
 
 @WebService
@@ -50,14 +49,14 @@ public class CCFormAPI implements CCFormAPII{
 		GenerWorkFlow gwf = new GenerWorkFlow(workID);
 
 		//是否可以查看该工作.
-		boolean b = Dev2Interface.Flow_IsCanViewTruck(gwf.getFK_Flow(), gwf.getWorkID(), userNo);
+		boolean b = Dev2Interface.Flow_IsCanViewTruck(gwf.getFlowNo(), gwf.getWorkID(), userNo);
 		if (b == false)
 		{
 			throw new RuntimeException("err@无权查看该流程.");
 		}
 
-		String frmID = "ND" + Integer.parseInt(gwf.getFK_Flow()) + "Rpt";
-		GERpt rpt = new GERpt("ND" + Integer.parseInt(gwf.getFK_Flow()) + "Rpt", workID);
+		String frmID = "ND" + Integer.parseInt(gwf.getFlowNo()) + "Rpt";
+		GERpt rpt = new GERpt("ND" + Integer.parseInt(gwf.getFlowNo()) + "Rpt", workID);
 		DataTable dt = rpt.ToDataTableField( "Main");
 		ds.Tables.add(dt);
 		Attrs attrs = rpt.getEnMap().getAttrs();
@@ -85,7 +84,7 @@ public class CCFormAPI implements CCFormAPII{
 			///#endregion 处理bool类型.
 
 		//把从表数据加入里面去.
-		MapDtls dtls = new MapDtls("ND" + gwf.getFK_Node());
+		MapDtls dtls = new MapDtls("ND" + gwf.getNodeID());
 		for (MapDtl item : dtls.ToJavaList())
 		{
 			GEDtls dtlEns = new GEDtls(item.getNo());
@@ -95,9 +94,6 @@ public class CCFormAPI implements CCFormAPII{
 			ds.Tables.add(dtDtl);
 		}
 
-		//生成模版的文件流.
-		BillTemplate template = new BillTemplate(billTemplateNo);
-		bytes = template.GenerTemplateFile();
 		return;
 
 	}
@@ -107,8 +103,6 @@ public class CCFormAPI implements CCFormAPII{
 	 
 	 @param userNo 用户编号
 	 @param sid SID
-	 @param frmID 表单ID
-	 @param oid 表单主键
 	 @return 
 	 * @throws Exception 
 	*/
@@ -124,14 +118,14 @@ public class CCFormAPI implements CCFormAPII{
 		Dev2Interface.Port_Login(userNo);
 		GenerWorkFlow gwf = new GenerWorkFlow(workID);
 
-		boolean b = Dev2Interface.Flow_IsCanViewTruck(gwf.getFK_Flow(), gwf.getWorkID(),userNo);
+		boolean b = Dev2Interface.Flow_IsCanViewTruck(gwf.getFlowNo(), gwf.getWorkID(),userNo);
 		if (b == false)
 		{
 			throw new RuntimeException("err@无权查看该流程.");
 		}
 
 
-		String frmID = "ND" + Integer.parseInt(gwf.getFK_Flow()) + "Rpt";
+		String frmID = "ND" + Integer.parseInt(gwf.getFlowNo()) + "Rpt";
 
 		MapData md = new MapData(frmID);
 

@@ -610,7 +610,7 @@ function initModal(modalType, toNode, url, isDelayedSend) {
                 if (toNode != null)
                     title = "先会签，后发送。";
                 else
-                    title = "会签";
+                    title = "加签";
                 modalIframeSrc = ccbpmPath + "/WF/WorkOpt/HuiQian.htm?FK_Node=" + paramData.FK_Node + "&FID=" + paramData.FID + "&WorkID=" + paramData.WorkID + "&FK_Flow=" + paramData.FK_Flow + "&ToNode=" + toNode + "&Info=&s=" + Math.random() + "&isFrameCross=" + isFrameCross;
                 isShowColseBtn = 0;
                 break;
@@ -955,7 +955,7 @@ function beforeSendCheck(formType) {
     //如果启用了流程流转自定义，必须设置选择的游离态节点
     if ($('[name=TransferCustom]').length > 0) {
         var ens = new Entities("BP.WF.TransferCustoms");
-        ens.Retrieve("WorkID", pageData.WorkID, "IsEnable", 1);
+        ens.Retrieve("WorkID", paramData.WorkID, "IsEnable", 1);
         if (ens.length == 0) {
             alert("该节点启用了流程流转自定义，但是没有设置流程流转的方向，请点击流转自定义按钮进行设置");
             return false;
@@ -1001,7 +1001,7 @@ function beforeSendCheck(formType) {
             return false;
 
     if (IsRecordUserLog == true) {
-        if (pageData.FK_Node == parseInt(pageData.FK_Flow) + "01")
+        if (paramData.FK_Node == parseInt(paramData.FK_Flow) + "01")
             UserLogInsert("StartFlow", "发起流程");
         else
             UserLogInsert("TodoList", "处理待办");
@@ -1469,9 +1469,9 @@ function NodeFormSend() {
         return true;
     }
     //检查，保存从表
-    if ($("[name=Dtl]").length > 0) {
+    if ($("iframe[name=Dtl]").length > 0) {
         var formCheckResult = true;
-        $("[name=Dtl]").each(function (i, obj) {
+        $("iframe[name=Dtl]").each(function (i, obj) {
             var contentWidow = obj.contentWindow;
             if (contentWidow != null) {
                 if (contentWidow.SaveAll != undefined && typeof (contentWidow.SaveAll) == "function") {

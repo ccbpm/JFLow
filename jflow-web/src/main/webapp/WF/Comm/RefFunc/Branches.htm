@@ -128,6 +128,7 @@
         },
         methods: {
             handleClose(tag) {
+                console.log(tag);
                 var en = new Entity(GetQueryString("Dot2DotEnName"));
                 en[GetQueryString("AttrOfOneInMM")] = GetPKVal();
                 en[GetQueryString("AttrOfMInMM")] = tag.id;
@@ -158,6 +159,7 @@
                 var en = new Entity(GetQueryString("Dot2DotEnName"));
                 en[GetQueryString("AttrOfOneInMM")] = GetPKVal();
                 en[GetQueryString("AttrOfMInMM")] = data.id;
+                en.DeptName = data.name;
                 if (checked == true) {
                     //判断数据是否存在，如果存在选中时就不再添加，不存在再添加
                     var flag = false;
@@ -323,7 +325,7 @@
                     var en = ens[i];
                     this.tags.push({
                         id: en.FK_Dept,
-                        name: en.FK_DeptText,
+                        name: en.DeptName,
                     })
 
                 }

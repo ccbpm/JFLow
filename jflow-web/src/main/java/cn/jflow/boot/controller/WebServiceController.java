@@ -90,9 +90,9 @@ public class WebServiceController {
                 else
                     res.put("token", WebUser.getToken());
                 res.put("no",WebUser.getNo());
-                res.put("fk_dept",WebUser.getFK_Dept());
+                res.put("fk_dept",WebUser.getDeptNo());
                 res.put("name",WebUser.getName());
-                res.put("fk_depName",WebUser.getFK_DeptName());
+                res.put("fk_depName",WebUser.getDeptName());
                 res.put("SID",WebUser.getSID());
                 res.put("orgNo",WebUser.getOrgNo());
             }
@@ -157,7 +157,7 @@ public class WebServiceController {
                 ds.Tables.add(dtlDt);
             }
 
-            bp.wf.Dev2Interface.Node_SaveWork(flowNo,gwf.getFK_Node(),workID,dataTable,ds,gwf.getFID(),gwf.getPWorkID());
+            bp.wf.Dev2Interface.Node_SaveWork(workID,dataTable,ds);
             res.put("code",200);
             res.put("message","保存成功。");
         }
@@ -207,7 +207,7 @@ public class WebServiceController {
         if(workID==0)
             workID= Dev2Interface.Node_CreateBlankWork(flowNo,userNo);
         GenerWorkFlow gwf=new GenerWorkFlow(workID);
-        Node nd=new Node(gwf.getFK_Node());
+        Node nd=new Node(gwf.getNodeID());
 
         JSONObject res = new JSONObject();
         try {
@@ -219,7 +219,7 @@ public class WebServiceController {
                 formMap.forEach((key, value) -> dataTable.put(key,value));
             }
             //如果是开始节点，将单据编号进行赋值
-            if(nd.isStartNode()) {
+            if(nd.getItIsStartNode()) {
                 FrmNodes frmNodes = new FrmNodes();
                 frmNodes.Retrieve(FrmNodeAttr.FK_Node,nd.getNodeID(),FrmNodeAttr.FrmSln,2);
                 for(FrmNode frmNode:frmNodes.ToJavaList()){
@@ -254,7 +254,7 @@ public class WebServiceController {
                     Node node=new Node(fk_node);
                     nodeName=node.getName();
                 }
-                if(fk_node==gwf.getFK_Node()&&actionType==22&&empFrom.equals(WebUser.getNo()))
+                if(fk_node==gwf.getNodeID()&&actionType==22&&empFrom.equals(WebUser.getNo()))
                 {
 
                     bp.wf.Dev2Interface.WriteTrack(flowNo,fk_node,nodeName,workID,0,track.get("Msg").toString(),ActionType.WorkCheck,"","","");
@@ -330,7 +330,7 @@ public class WebServiceController {
         }
         res.put("code", 200);
         res.put("workID",gwf.getWorkID());
-        res.put("fk_node",gwf.getFK_Node());
+        res.put("fk_node",gwf.getNodeID());
         res.put("WFState",gwf.getWFState());
         res.put("nextEmps",nextEmps);
         res.put("msg","success");

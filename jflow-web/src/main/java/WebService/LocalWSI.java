@@ -286,7 +286,6 @@ public interface LocalWSI {
    public Boolean Flow_IsCanDoCurrentWork(long workid, String userNo) throws Exception;
    
    //public int GetNextNodeID(int nodeID, DataTable dirs) throws Exception;
-   public String SDK_Page_Init(long  workID, String userNo) throws Exception;
 
 	/** 
                    写入审核信息

@@ -27,13 +27,11 @@
         //初始化页面函数.....
         $(function () {
             localStorage.setItem('Token', '');
-            debugger;
             if (! +[1,]) {
                 //  alert("这是ie浏览器，您只能使用sliverlight版本浏览器。");
                 // SetHref( '../XAP/Designer.htm';
                 // return;
             }
-            debugger;
             //清空token
             localStorage.setItem("Token", "");
             var doType = GetQueryString("DoType");
@@ -83,14 +81,14 @@
                 }
             });
 
-            handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
+            /*handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
 
             var data = handler.DoMethodReturnString("Login_VerifyState");
 
             if (data.indexOf('err@') == 0) {
                 document.getElementById("validate").style.display = "block";
                 document.getElementById("verifycode").src = data.split('@')[1];
-            }
+            }*/
         });
         function createCode() {
             var handler = new HttpHandler("BP.WF.HttpHandler.WF_Portal");
@@ -119,7 +117,7 @@
             //判断验证码是否正确.
             var node = $("#validate");
             if (node.is(':visible') && $("#inputCode").val() == '') {
-                alert("请输入验证码");
+                layer.msg("请输入验证码");
                 return;
             }
 

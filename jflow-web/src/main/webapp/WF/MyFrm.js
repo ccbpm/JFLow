@@ -46,7 +46,7 @@ $(function () {
 
         //初始化表单数据
         GenerWorkNode();
-})
+    })
 
 /**
  * 初始化表单数据
@@ -82,8 +82,8 @@ function GenerWorkNode() {
                 return;
             }
         }
-          
-       
+
+
     }
     var index = 0;
     var href = GetHrefUrl();
@@ -177,11 +177,11 @@ function GenerWorkNode() {
 
     //解析表单
     BindFrm();
-   /* //加载JS文件 改变JS文件的加载方式 解决JS在资源中不显示的问题.
-    var enName = flowData.Sys_MapData[0].No;
-    loadScript("../DataUser/JSLibData/" + pageData.FK_Flow + ".js?t=" + Math.random());
-    loadScript("../DataUser/JSLibData/" + enName + "_Self.js?t=" + Math.random());
-    loadScript("../DataUser/JSLibData/" + enName + ".js?t=" + Math.random());*/
+    /* //加载JS文件 改变JS文件的加载方式 解决JS在资源中不显示的问题.
+     var enName = flowData.Sys_MapData[0].No;
+     loadScript("../DataUser/JSLibData/" + pageData.FK_Flow + ".js?t=" + Math.random());
+     loadScript("../DataUser/JSLibData/" + enName + "_Self.js?t=" + Math.random());
+     loadScript("../DataUser/JSLibData/" + enName + ".js?t=" + Math.random());*/
 
     layer.close(index);
 }
@@ -328,7 +328,7 @@ function BindFrm() {
     //星级评分事件
     setScore(isReadonly);
 
-    
+
     //3.装载表单数据与修改表单元素风格.
     LoadFrmDataAndChangeEleStyle(flowData);
     layui.form.render();

@@ -88,7 +88,8 @@
                 $("#TB_UIIsEnable_" + (idx + 1)).val(attr.UIIsEnable);
                 $("#TB_UIVisible_" + (idx + 1) ).val(attr.UIVisible);
                 $("#TB_UIIsInput_" + (idx + 1)).val(attr.UIIsInput);
-                if (attr.UIIsEnable == 0) {
+                //勾选(1)是可编辑，取消勾选(0)是不可编辑
+                if (attr.UIIsEnable == 1) {
                     $("#TB_UIIsEnable_" + (idx + 1)).prop("checked", "true");
                 }
                 if (attr.UIVisible == 1) {

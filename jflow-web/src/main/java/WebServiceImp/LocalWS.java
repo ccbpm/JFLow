@@ -7,7 +7,6 @@ import bp.da.DataSet;
 import bp.da.DataTable;
 import bp.da.DataType;
 import bp.tools.Json;
-import bp.wf.AppClass;
 import bp.wf.Dev2Interface;
 import bp.wf.Flow;
 import bp.wf.GenerWorkFlow;
@@ -364,7 +363,7 @@ public class LocalWS implements LocalWSI {
 		Dev2Interface.Port_LoginByToken(token);
 
 		GenerWorkFlow gwf = new GenerWorkFlow(workID);
-		return Dev2Interface.Node_ReturnWork(gwf.getFK_Flow(), workID, gwf.getFID(), gwf.getFK_Node(),
+		return Dev2Interface.Node_ReturnWork(gwf.getFlowNo(), workID, gwf.getFID(), gwf.getNodeID(),
 				returnToNodeID,  returnMsg, false);
 
 	}
@@ -490,8 +489,8 @@ public class LocalWS implements LocalWSI {
     {
 		
 		Dev2Interface.Port_LoginByToken(userNo);
-		
-		return AppClass.JobSchedule(workID);
+		DataSet ds = Dev2Interface.DB_JobSchedule(workID);
+		return bp.tools.Json.ToJson(ds);
 		 
     }
 
@@ -499,45 +498,6 @@ public class LocalWS implements LocalWSI {
 	public String DB_RunSQLReturnJSON(String sqlOfSelect, String password) throws Exception {
 		return null;
 	}
-
-	@Override
-	public String SDK_Page_Init(long  workID, String userNo) throws Exception
-    {
-		Dev2Interface.Port_LoginByToken(userNo);
-		return  Dev2Interface.SDK_Page_Init(workID);
-    }
-
-	// 根据当前节点获得下一个节点.
-
-//	public int GetNextNodeID(int nodeID, DataTable dirs)
-//    {
-//        int toNodeID = 0;
-//        for (DataRow dir : dirs.Rows)
-//        {
-//            if ( Integer.parseInt(dir.getValue("Node").toString()) == nodeID)
-//            {
-//                toNodeID = Integer.parseInt( dir.getValue("ToNode").toString());
-//                break;
-//            }
-//        }
-//
-//        int toNodeID2 = 0;
-//
-//        for (DataRow dir11 : dirs.Rows)
-//        {
-//            if (Integer.parseInt(dir11.getValue("Node").toString()) ==nodeID )
-//            {
-//                toNodeID2 = Integer.parseInt(dir11.getValue("ToNode").toString());
-//            }
-//        }
-//
-//        //两次去的不一致，就有分支，有分支就reutrn 0 .
-//        if (toNodeID2 == toNodeID)
-//            return toNodeID;
-//        return  0 ;
-//    }
-
-
 
 	/**
 	 * 执行抄送
@@ -619,7 +579,7 @@ public class LocalWS implements LocalWSI {
     public void Node_WriteWorkCheck(long workid, String msg) throws Exception
     {
         GenerWorkFlow gwf = new GenerWorkFlow(workid);
-          Dev2Interface.WriteTrackWorkCheck(gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getWorkID(), gwf.getFID(), msg,"审核",null);
+          Dev2Interface.Node_WriteWorkCheck(gwf.getWorkID(), msg,"",null);
     }
 	
 	/**
@@ -666,7 +626,7 @@ public class LocalWS implements LocalWSI {
 		}
 		
 	    //把节点审核配置信息.
-		NodeWorkCheck fwc = new NodeWorkCheck(gwf.getFK_Node());
+		NodeWorkCheck fwc = new NodeWorkCheck(gwf.getNodeID());
 		ds.Tables.add(fwc.ToDataTableField("FrmWorkCheck"));
 
 		//返回结果.

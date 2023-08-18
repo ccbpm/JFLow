@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
 @RestController
 @Api(tags="工具包接口")
 @RequestMapping(value = "/WF/API")
@@ -29,12 +30,94 @@ public class DevelopAPI extends HttpHandlerBase {
         ht.put("data", data);
         return ht;
     }
+    @PostMapping(value = "/Flow_WorkInfo")
+    @ApiOperation("获得整体流程信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="token",value="验证码",paramType = "query",required = true),
+            @ApiImplicitParam(name="workID",value="实例ID",dataType = "Long" ,required = true),
+    })
+    public final Object Flow_WorkInfo(String token, long workID) {
+        if(DataType.IsNullOrEmpty(token) == true){
+            return Return_Info(500,"没有获取到Token","");
+        }
+
+        DataSet ds = new DataSet();
+        try{
+            bp.wf.Dev2Interface.Port_LoginByToken(token);
+
+            //处理主表.
+            GenerWorkFlow gwf = new GenerWorkFlow(workID);
+            if (gwf.getFID() != 0)
+            {
+                workID = gwf.getFID();
+                gwf.setWorkID(workID);
+                gwf.Retrieve();
+            }
+            DataTable dt = gwf.ToDataTableField("WF_GenerWorkFlow");
+            dt.Columns.Add("CurrNodeMark"); //增加一个字段.
+
+            DataTable dtMark = Flow_NodesMarkExt(gwf.getFlowNo());
+            dt.Rows.get(0).setValue("CurrNodeMark",Flow_NodeMarkExt(gwf.getNodeID(),dtMark));
+            ds.Tables.add(dt); //增加到数据源.
+
+            //处理从表.
+            GenerWorkerLists ens = new GenerWorkerLists();
+            QueryObject qo = new QueryObject(ens);
+            qo.AddWhere("WorkID", workID);
+            qo.addOr();
+            qo.AddWhere("FID", workID);
+            qo.addOrderBy("RDT");
+            qo.DoQuery();
+
+            ens.Retrieve("WorkID", workID, "RDT");
+            DataTable dtGwls = ens.ToDataTableField("WF_GenerWorkerList");
+            dtGwls.Columns.Add("NodeMark"); //增加一个字段.
+            //转换NodeI.
+            for (DataRow item : dtGwls.Rows)
+            {
+                int nodeID = Integer.parseInt( String.valueOf(item.get("FK_Node")));
+                item.setValue("NodeMark",Flow_NodeMarkExt(nodeID, dtMark));
+            }
+            ds.Tables.add(dtGwls); //增加到数据源.
+
+            String info=bp.tools.Json.ToJson(ds);
+            return Return_Info(200, "获取成功", info);
+
+        }catch(Exception e){
+            return Return_Info(500,"创建WorkID失败",e.getMessage());
+        }
+    }
+    private String Flow_NodeMarkExt(int nodeID)
+    {
+        //获得节点的Mark.
+        String sql = "SELECT NodeMark FROM WF_Node WHERE NodeID='" + nodeID + "'";
+        return DBAccess.RunSQLReturnStringIsNull(sql,String.valueOf(nodeID));
+    }
+    private String Flow_NodeMarkExt(int nodeID, DataTable dt) throws Exception {
+        for (DataRow dr : dt.Rows)
+        {
+            if (Integer.parseInt(dr.getValue(0).toString()) == nodeID)
+            {
+                String str  = dr.getValue(1).toString();
+                if (DataType.IsNullOrEmpty(str)==true)
+                    return String.valueOf(nodeID);
+                return str;
+            }
+        }
+        throw new Exception("err@没有找到NodeID="+nodeID+"的mark");
+    }
+    private DataTable Flow_NodesMarkExt(String flowNo)
+    {
+        //获得节点的Mark.
+        String sql = "SELECT NodeID,Mark FROM WF_Node WHERE FK_Flow='" + flowNo + "'";
+        return DBAccess.RunSQLReturnTable(sql);
+    }
     @PostMapping(value = "/Port_Login")
     @ApiOperation("根据密钥和用户名登录,返回用户登陆信息其中有Token")
      @ApiImplicitParams({
             @ApiImplicitParam(name="privateKey",value="密钥",paramType = "query",required = true),
             @ApiImplicitParam(name="userNo",value="用户编号",required = true),
-            @ApiImplicitParam(name="orgNo",value="租户/组织编号（集团版和SaaS版需要填写）",required = true),
+            @ApiImplicitParam(name="orgNo",value="租户/组织编号（集团版和SaaS版需要填写）",required = false),
     })
     public final Object Port_Login_Submit(String privateKey, String userNo, String orgNo) throws Exception {
         if(DataType.IsNullOrEmpty(privateKey) == true){
@@ -62,8 +145,8 @@ public class DevelopAPI extends HttpHandlerBase {
             Hashtable ht = new Hashtable();
             ht.put("No", WebUser.getNo());
             ht.put("Name", WebUser.getName());
-            ht.put("FK_Dept", WebUser.getFK_Dept());
-            ht.put("FK_DeptName", WebUser.getFK_DeptName());
+            ht.put("FK_Dept", WebUser.getDeptNo());
+            ht.put("FK_DeptName", WebUser.getDeptName());
             ht.put("OrgNo", WebUser.getOrgNo());
             ht.put("OrgName", WebUser.getOrgName());
             ht.put("Token", Token);
@@ -367,16 +450,9 @@ public class DevelopAPI extends HttpHandlerBase {
     @ApiOperation("设置草稿.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
-            @ApiImplicitParam(name = "flowNo", value = "流程编号", required = true),
             @ApiImplicitParam(name = "workID", value = "流程实例WorkID", dataType = "Long", required = true)
     })
-    public final Object Node_SetDraft(String token,String flowNo,Long workID) throws Exception {
-        if(DataType.IsNullOrEmpty(token) == true)
-            return Return_Info(500,"设置草稿失败","用户的Token值不能为空");
-        if(DataType.IsNullOrEmpty(flowNo) == true)
-            return Return_Info(500,"设置草稿失败","流程编号值的不能为空");
-        if(DataType.IsNullOrEmpty(workID) == true)
-            return Return_Info(500,"设置草稿失败","流程实例WorkID值不能为空");
+    public final Object Node_SetDraft(String token,Long workID) throws Exception {
 
         bp.wf.Dev2Interface.Port_LoginByToken(token);
         try{
@@ -503,21 +579,99 @@ public class DevelopAPI extends HttpHandlerBase {
         }
     }
 
+    @PostMapping(value = "/Node_SaveWorkByMap")
+    @ApiOperation("保存到表单数据:可以作为方向条件,接受人规则等参数,用于发起流程或者中间节点对表单数据进行存储.")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
+            @ApiImplicitParam(name = "workID", value = "流程实例workID", dataType = "Long", required = true),
+            @ApiImplicitParam(name = "keyVals", value = "参数,格式@Key1=Val1@Key2=Val2比如,@Tel=18660153393@Addr=山东.济南@Age=35", required = true),
+            @ApiImplicitParam(name = "dtlJSON", value = "从表格式为一个json可以转化为DataSet模式,每个表名要与从表的ID对应才能保存.", required = false),
+            @ApiImplicitParam(name = "dsAths", value = "附件格式为一个json可以转化为DataSet模式,FileName,FileUrl  文件名字,全路径文件路径. http://xxx.xxx.xxx/myfile.doc;.<br>" +
+                    "例：{\"Ath1\":[{\"FileName\":\"我的附件1.doc\",\"FileUrl\":\"http://localst:9003:/xxx.docx\"},{\"FileName\":\"我的附件2.doc\",\"FileUrl\":\"http://localst:9003:/xxx.docx\"}],\"Ath2\":[{\"FileName\":\"我的附件3.doc\",\"FileUrl\":\"http://localst:9003:/xxx.docx\"},{\"FileName\":\"我的附件4.doc\",\"FileUrl\":\"http://localst:9003:/xxx.docx\"}]}", required = false)
+    })
+    public final Object Node_SaveWorkByMap(@RequestBody Map<String, Object> map) throws Exception {
+        String token = (String) map.get("token");
+        Long workID = Long.valueOf((String) map.get("workID"));
+//    	Hashtable<String, String> keyVals = (Hashtable<String, String>) map.get("keyVals");
+
+        Object docNoObj = map.get("keyVals");
+        ObjectMapper mapper=new ObjectMapper();
+        Hashtable<String, String> keyVals = mapper.convertValue(docNoObj, Hashtable.class);
+
+        String dtlJSON = (String) map.get("dtlJSON");
+        if(DataType.IsNullOrEmpty(token))
+            return Return_Info(500,"保存工作失败","用户的 Token 值不能为空");
+        if(DataType.IsNullOrEmpty(workID))
+            return Return_Info(500,"保存工作失败","流程实例 WorkID值不能为空");
+        bp.wf.Dev2Interface.Port_LoginByToken(token);
+        try{
+//            AtPara at=new AtPara(keyVals);
+            if (dtlJSON==null) {
+                bp.wf.Dev2Interface.Node_SaveWork(workID, keyVals);
+                return Return_Info(200, "保存工作成功", "");
+            }
+
+            DataSet ds= bp.tools.Json.ToDataSet(dtlJSON);//附件:FileName,FileUrl  文件名字,全路径文件路径. http://xxx.xxx.xxx/myfile.doc;
+            Object athsObj = map.get("dsAths");
+            if (DataType.IsNullOrEmpty(athsObj)) {
+                bp.wf.Dev2Interface.Node_SaveWork(workID, keyVals,ds);
+            } else {
+                DataSet dsAths = (DataSet)athsObj;
+                bp.wf.Dev2Interface.Node_SaveWork(workID, keyVals, ds, dsAths);
+            }
+            //bp.wf.Dev2Interface.Node_SaveWork(workID, keyVals,ds);
+            return Return_Info(200, "保存工作成功", "");
+        }catch(Exception e){
+            return Return_Info(500,"保存工作失败","保存工作失败:"+e.getMessage());
+        }
+    }
+    @PostMapping(value = "/Node_SaveWork")
+    @ApiOperation("保存到表单数据:可以作为方向条件,接受人规则等参数,用于发起流程或者中间节点对表单数据进行存储.")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
+            @ApiImplicitParam(name = "workID", value = "流程实例workID", dataType = "Long", required = true),
+            @ApiImplicitParam(name = "keyVals", value = "参数,格式@Key1=Val1@Key2=Val2比如,@Tel=18660153393@Addr=山东.济南@Age=35", required = true),
+            @ApiImplicitParam(name = "dtlJSON", value = "从表数据：从表的名称与表名对应，列名与从表的字段对应。", required = false),
+            @ApiImplicitParam(name = "athJSON", value = "附件数据: 表名与附件的ID(短号NoOfObj标记)，列表格式：FileName(文件名), FileUrl(下载地址), 顺序不能变化, 文件名(包含文件后缀),下载地址(http:/xxxx/xxx.docx) ." +
+                    "{\"Ath1\":[{\"FileName\":\"我的附件1.doc\",\"FileUrl\":\"http://localst:9003:/xxx.docx\"},{\"FileName\":\"我的附件2.doc\",\"FileUrl\":\"http://localst:9003:/xxx.docx\"}],\"Ath2\":[{\"FileName\":\"我的附件3.doc\",\"FileUrl\":\"http://localst:9003:/xxx.docx\"},{\"FileName\":\"我的附件4.doc\",\"FileUrl\":\"http://localst:9003:/xxx.docx\"}]}", required = false),
+
+    })
+    public final Object Node_SaveWork(String token,Long workID,String keyVals,String dtlJSON,String athJSON) throws Exception {
+        if(DataType.IsNullOrEmpty(token))
+            return Return_Info(500,"保存工作失败","用户的 Token 值不能为空");
+        if(DataType.IsNullOrEmpty(workID))
+            return Return_Info(500,"保存工作失败","流程实例 WorkID值不能为空");
+
+        bp.wf.Dev2Interface.Port_LoginByToken(token);
+        try{
+            AtPara at=new AtPara(keyVals);
+
+            DataSet dsDtls = null;
+            if (dtlJSON != null)
+                dsDtls = Json.ToDataSet(dtlJSON);
+
+            DataSet dsAths = null;
+            if (athJSON != null)
+                dsAths = Json.ToDataSet(athJSON);
+            if(DataType.IsNullOrEmpty(dsAths)){
+                bp.wf.Dev2Interface.Node_SaveWork(workID, at.getHisHT(),dsDtls);
+            }else {
+                bp.wf.Dev2Interface.Node_SaveWork(workID, at.getHisHT(), dsDtls,dsAths);
+            }
+            return Return_Info(200, "保存工作成功", "");
+        }catch(Exception e){
+            return Return_Info(500,"保存工作失败","保存工作失败:"+e.getMessage());
+        }
+    }
     @PostMapping(value = "/Flow_SetTitle")
     @ApiOperation("设置标题:流程实例的标题,也可以使用流程属性的标题生成规则生成.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
             @ApiImplicitParam(name = "workID", value = "流程实例workID", dataType = "Long", required = true),
-            @ApiImplicitParam(name = "title", value = "标题", required = true),
-            @ApiImplicitParam(name = "flowNo", value = "流程编号", required = false)
+            @ApiImplicitParam(name = "title", value = "要设置的标题", required = true),
+            @ApiImplicitParam(name = "flowNo", value = "流程编号、标记", required = false)
     })
     public final Object Flow_SetTitle(String token,Long workID,String title,String flowNo) throws Exception {
-        if(DataType.IsNullOrEmpty(token) == true)
-            return Return_Info(500,"设置标题失败","用户的Token值不能为空");
-        if(DataType.IsNullOrEmpty(workID) == true)
-            return Return_Info(500,"设置标题失败","流程实例WorkID值不能为空");
-        if(DataType.IsNullOrEmpty(title) == true)
-            return Return_Info(500,"设置标题失败","标题Title值不能为空");
 
         bp.wf.Dev2Interface.Port_LoginByToken(token);
         try{
@@ -534,27 +688,28 @@ public class DevelopAPI extends HttpHandlerBase {
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
             @ApiImplicitParam(name = "workID", value = "流程实例workID", dataType = "Long", required = true),
             @ApiImplicitParam(name = "ht", value = "主表单数据,没有可为null", required = false),
+            @ApiImplicitParam(name = "dtls", value = "从表数据json格式，多个从表,没有可为null", required = false),
             @ApiImplicitParam(name = "paras", value = "参数，保存到WF_GenerWorkFlow,用与参数条件", required = false),
             @ApiImplicitParam(name = "toEmps", value = "接受人:设置空表示,根据到达的节点的接受人规则计算接收人,多个接受人用逗号分开,比如:zhangsan,lisi", required = false),
             @ApiImplicitParam(name = "toNodeIDStr", value = "到达的下一个节点,默认为0设置0表示让ccbpm根据方向条件判断方向,可以是节点Mark", required = false),
-            @ApiImplicitParam(name = "checkNote", value = "审核意见:启用了审核组件，就需要填写审核意见", required = false)
+            @ApiImplicitParam(name = "checkNote", value = "审核意见:启用了审核组件，就需要填写审核意见，在节点属性=》表单=》审核组件设置。", required = false)
     })
-    public final Object Node_SendWork(String token,Long workID,String ht,String toEmps,String paras,String toNodeIDStr, String checkNote) throws Exception {
-        if(DataType.IsNullOrEmpty(token) == true)
+    public final Object Node_SendWork(String token,Long workID,String ht,String dtls, String toEmps,String paras,String toNodeIDStr, String checkNote) throws Exception {
+        if(DataType.IsNullOrEmpty(token))
             return Return_Info(500,"执行发送失败","用户的Token值不能为空");
-        if(DataType.IsNullOrEmpty(workID) == true)
+        if(DataType.IsNullOrEmpty(workID))
             return Return_Info(500,"执行发送失败","流程实例WorkID值不能为空");
         if(!DataType.IsNullOrEmpty(ht) && !DataType.IsJson(ht))
             return Return_Info(500,"执行发送失败","输入的ht参数不是JSON格式");
 
         bp.wf.Dev2Interface.Port_LoginByToken(token);
         //保存参数.
-        if (DataType.IsNullOrEmpty(paras) == false)
+        if (!DataType.IsNullOrEmpty(paras))
             bp.wf.Dev2Interface.Flow_SaveParas(workID, paras);
 
         //写入审核意见.
-        if (DataType.IsNullOrEmpty(checkNote) == false)
-            bp.wf.Dev2Interface.WriteTrackWorkCheck(workID, checkNote,null,null,null);
+        if (!DataType.IsNullOrEmpty(checkNote))
+            bp.wf.Dev2Interface.Node_WriteWorkCheck(workID, checkNote, null, null, null);
         //执行发送.
         try{
             String  flowNo = DBAccess.RunSQLReturnString("SELECT FK_Flow FROM WF_GenerWorkFlow WHERE workID=" +workID);
@@ -568,6 +723,7 @@ public class DevelopAPI extends HttpHandlerBase {
         }
     }
     @PostMapping(value = "/Node_SendWork_ReJson")
+    @ApiOperation("发送接口")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
             @ApiImplicitParam(name = "workID", value = "流程实例workID", dataType = "Long", required = true),
@@ -635,11 +791,11 @@ public class DevelopAPI extends HttpHandlerBase {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
             @ApiImplicitParam(name = "workID", value = "流程实例workID", required = true),
-            @ApiImplicitParam(name = "nodeIDStr", value = "当前节点编号，支持标识", required = true),
-            @ApiImplicitParam(name = "returnToNodeIDStr", value = "退回到达节点编号，空时传0", required = false),
-            @ApiImplicitParam(name = "returnToEmp", value = "退回到达人员编号", required = false),
+            @ApiImplicitParam(name = "nodeIDStr", value = "当前节点ID，支持标识.", required = true),
+            @ApiImplicitParam(name = "returnToNodeIDStr", value = "退回到节点ID，空时传0", required = false),
+            @ApiImplicitParam(name = "returnToEmp", value = "退回到人员编号", required = false),
             @ApiImplicitParam(name = "msg", value = "退回原因", required = true),
-            @ApiImplicitParam(name = "isBackToThisNode", value = "是否按原路返回", required = false)
+            @ApiImplicitParam(name = "isBackToThisNode", value = "退回到某个节点后再次发送时是否直接发送给退回的节点, true/false", dataType = "Boolean", required = false)
     })
     public final Object Node_ReturnWork(String token,long workID, String nodeIDStr,String returnToNodeIDStr,String returnToEmp,String msg,boolean isBackToThisNode) throws Exception {
         if(DataType.IsNullOrEmpty(token) == true)
@@ -665,12 +821,12 @@ public class DevelopAPI extends HttpHandlerBase {
                 {
                     returnToNodeID = Integer.parseInt(dt.Rows.get(0).getValue("No").toString());
                     returnToEmp = dt.Rows.get(0).getValue("Rec").toString();
-
                 }
             }
             return  Return_Info(200,"执行退回成功",
                     bp.wf.Dev2Interface.Node_ReturnWork(workID,  returnToNodeID, returnToEmp, msg, isBackToThisNode));
         }catch(Exception e){
+            e.printStackTrace();
             return Return_Info(500,"执行退回失败",e.getMessage());
         }
     }
@@ -726,8 +882,6 @@ public class DevelopAPI extends HttpHandlerBase {
             @ApiImplicitParam(name = "domain", value = "域:可传空,比如:CRM,OA,ERP等,配置在流程目录属性上.", required = false)
     })
     public final Object DB_Start(String token,String domain) throws Exception {
-        if(DataType.IsNullOrEmpty(token) == true)
-            return Return_Info(500,"获得可发起的流程失败","用户的Token值不能为空");
 
         bp.wf.Dev2Interface.Port_LoginByToken(token);
         try{
@@ -750,8 +904,7 @@ public class DevelopAPI extends HttpHandlerBase {
             @ApiImplicitParam(name = "domain", value = "域:可传空,比如:CRM,OA,ERP等,配置在流程目录属性上.", required = false)
     })
     public final Object DB_Draft(String token,String flowNo,String domain) throws Exception {
-        if(DataType.IsNullOrEmpty(token) == true)
-            return Return_Info(500,"获取草稿列表失败","用户的Token值不能为空");
+
         bp.wf.Dev2Interface.Port_LoginByToken(token);
         try{
             DataTable dtDraft = bp.wf.Dev2Interface.DB_GenerDraftDataTable(flowNo,domain);
@@ -770,8 +923,7 @@ public class DevelopAPI extends HttpHandlerBase {
             @ApiImplicitParam(name = "domain", value = "域:可传空,比如:CRM,OA,ERP等,配置在流程目录属性上.", required = false)
     })
     public final Object DB_Todolist(String token,String flowNo,Integer nodeID,String domain) throws Exception {
-        if(DataType.IsNullOrEmpty(token) == true)
-            return Return_Info(500,"获取待办列表失败","用户的Token值不能为空");
+
         bp.wf.Dev2Interface.Port_LoginByToken(token);
         try{
             DataTable dtTodolist = bp.wf.Dev2Interface.DB_GenerEmpWorksOfDataTable(bp.web.WebUser.getNo(), nodeID==null?0:nodeID.intValue(), flowNo, domain);
@@ -789,8 +941,7 @@ public class DevelopAPI extends HttpHandlerBase {
             @ApiImplicitParam(name = "domain", value = "域:可传空,比如:CRM,OA,ERP等,配置在流程目录属性上.", required = false)
     })
     public final Object DB_Runing(String token,String domain) throws Exception {
-        if(DataType.IsNullOrEmpty(token) == true)
-            return Return_Info(500,"获取在途列表失败","用户的Token值不能为空");
+
         bp.wf.Dev2Interface.Port_LoginByToken(token);
         try{
             DataTable dtRuing = bp.wf.Dev2Interface.DB_GenerRuning(bp.web.WebUser.getNo(), false, domain);
@@ -799,7 +950,7 @@ public class DevelopAPI extends HttpHandlerBase {
             return Return_Info(500,"获取在途列表失败",e.getMessage());
         }
     }
-    
+
     @PostMapping(value = "/DB_CCList")
     @ApiOperation("抄送:发送给别人,知会给我的工作.")
     @ApiImplicitParams({
@@ -807,8 +958,7 @@ public class DevelopAPI extends HttpHandlerBase {
             @ApiImplicitParam(name = "domain", value = "域:可传空,比如:CRM,OA,ERP等,配置在流程目录属性上.", required = false)
     })
     public final Object DB_CCList(String token,String domain) throws Exception {
-        if(DataType.IsNullOrEmpty(token) == true)
-            return Return_Info(500,"获取在途列表失败","用户的Token值不能为空");
+
         bp.wf.Dev2Interface.Port_LoginByToken(token);
         try{
             DataTable dtCC = bp.wf.Dev2Interface.DB_CCList(domain);
@@ -1162,6 +1312,12 @@ public class DevelopAPI extends HttpHandlerBase {
         }
     }
 
+    /**
+     * 会签初始化，获取主持人，加签人及处理的当前流程的状态
+     * @param workID
+     * @return
+     * @throws Exception
+     */
     @PostMapping(value = "/HuiQian_Init")
     @ApiOperation("会签")
     @ApiImplicitParams({
@@ -1258,7 +1414,7 @@ public class DevelopAPI extends HttpHandlerBase {
 
         //我部门发起的.
         if (scop.equals("2") == true)
-            qo.AddWhere(GenerWorkFlowAttr.FK_Dept, "=", WebUser.getFK_Dept());
+            qo.AddWhere(GenerWorkFlowAttr.FK_Dept, "=", WebUser.getDeptNo());
 
 
         //任何一个为空.

@@ -10,11 +10,9 @@ function Port_Login(userNo) {
         // JFlow
         dynamicHandler = basePath + "/WF/Comm/ProcessRequest.do";
     }
-
     var handler = new HttpHandler("BP.WF.HttpHandler.WF_AppClassic");
     handler.AddPara("UserNo", userNo);
     handler.DoMethodReturnString("Port_Login");
-
 }
 
 /* 获得可以操作的单据列表. 返回: No,Name,FrmType,TreeNo,TreeName 的 json. FrmType=是单据，还是实体.
@@ -104,7 +102,6 @@ function CCFrom_FrmViewUrlByBillNo(frmID, billNo) {
     }
     alert('无此数据.');
 }
-
 
 /**
  * 创建一个空白的BillID.
@@ -257,13 +254,6 @@ function CCForm_FrmSearch(frmID, frmType) {
         return "./SearchDict.htm?FrmID=" + frmID;
     }
 }
-
-
-
-
-
-
-
 
 
 

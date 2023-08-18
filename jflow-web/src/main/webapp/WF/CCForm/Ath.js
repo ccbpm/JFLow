@@ -178,7 +178,6 @@ function InitAthPage(athDivID, uploadUrl) {
             imgShow(this, src);
         });
         $(".athImg").on("mousemove", function () {
-            debugger
             var _this = $(this);
             $(_this.children()[0]).show();
         })
@@ -674,7 +673,6 @@ function Del(delPKVal, fk_framAttachment, name) {
 
 //在线预览，如果需要连接其他的文件预览查看器，就需要在这里重写该方法.
 function AthView(mypk, filePath) {
-    debugger;
     if (typeof AthViewOverWrite === 'function') {
         AthViewOverWrite(mypk);
         return;
@@ -852,7 +850,6 @@ function UploadChangeAth(uploadUrl, fk_frmAttachment) {
         dataType: 'json',
         headers: { "ClientCallMode": "ajax" },
         success: function (data) {
-            debugger
             if (data != null && data.indexOf("err@") != -1) {
                 alert(data.replace("err@", ""));
                 return;
@@ -862,7 +859,6 @@ function UploadChangeAth(uploadUrl, fk_frmAttachment) {
             InitAthPage("Div_" + fk_frmAttachment);
         },
         error: function (xhr, status, err) {
-            debugger
             if (xhr.responseText != null && xhr.responseText.indexOf("err@") != -1) {
                 alert(xhr.responseText);
                 return;

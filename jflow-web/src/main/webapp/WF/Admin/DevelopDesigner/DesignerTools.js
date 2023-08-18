@@ -76,7 +76,7 @@ function FrmAttr() {
 //表单属性.
 function OpenFoolFrm() {
     var redirectUrl = GetQueryString("RedirectUrl");
-    if (redirectUrl) {
+    if (!!redirectUrl) {
         var frmID = GetQueryString("FK_MapData");
         if (!frmID) {
             frmID = GetQueryString("FrmID");

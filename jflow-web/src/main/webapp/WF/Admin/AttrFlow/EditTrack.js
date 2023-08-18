@@ -211,7 +211,7 @@ function InitPage() {
                 var newRow = "";
                 newRow = "<tr>";
                 newRow += "<td >" + idx + "</td>";
-                newRow += "<td >" + gwl.FK_NodeText + "</td>";
+                newRow += "<td >" + gwl.NodeName + "</td>";
                 //newRow += "<td >" + '' + "</td>";
 
                 if (gwl.IsRead == "1") {

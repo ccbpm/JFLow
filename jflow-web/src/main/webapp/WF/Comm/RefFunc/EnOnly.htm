@@ -1236,7 +1236,6 @@
         }
 
         function Save() {
-            debugger
             $("#Btn_Save").html('正在保存');
             this.Update(true);
             $("#Btn_Save").html('保存');
@@ -1598,6 +1597,13 @@
     </form>
     <script>
         $(function () {
+            if (CustomerNo != "" && CustomerNo != null) {
+                $("#Btns").find("button").css("border-color", '#5053f1');
+                $("#Btns").find("button").css("color", '#5053f1');
+                $("#Btns").find("button").removeClass("layui-border-green");
+                return;
+            }
+
             var theme = filterXSS(localStorage.getItem("themeColorInfo"));
             if (theme == null || theme == undefined || theme == "")
                 return;

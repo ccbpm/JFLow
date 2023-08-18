@@ -465,7 +465,7 @@ function Save(saveType) {
     }
 
     //保存从表数据
-    $("[name=Dtl]").each(function (i, obj) {
+    $("iframe[name=Dtl]").each(function (i, obj) {
         var contentWidow = obj.contentWindow;
         if (contentWidow != null && contentWidow.SaveAll != undefined && typeof (contentWidow.SaveAll) == "function") {
             contentWidow.SaveAll();

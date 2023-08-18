@@ -18,8 +18,6 @@ $(function () {
 
     //初始化参数.
     initPageParam();
-
-
     //构造表单.
     GenerFrm(); //表单数据.
 

@@ -408,6 +408,9 @@
     <script src="../Guide/Guide.js"></script>
     <script>
         $(function () {
+            if (CustomerNo != "" && CustomerNo != null) {
+                styleScope.innerHTML = DealText("\n .layui-btn{\n background-color:'#5053f1' !important;\n}");
+            }
             var theme = DealText(localStorage.getItem("themeColorInfo"));
             theme = JSON.parse(theme);
             var styleScope = document.getElementById("theme-data")

@@ -37,11 +37,13 @@ $(function () {
 
 var frmMapAttrs;
 var mapData = "";
-function LoadFrmDataAndChangeEleStyle(frmData) {
+var fullDataAttrs;
+function LoadFrmDataAndChangeEleStyle(frmData, attrs) {
     mapData = frmData.Sys_MapData[0];
     //加入隐藏控件.
     var mapAttrs = frmData.Sys_MapAttr;
     frmMapAttrs = mapAttrs;
+    fullDataAttrs = attrs;
     var checkData = null;
     // 主要是这里开始，这个mapAttrs就是定义的字段属性。根据不同类型的字段处理，看是数字还是金额还是xxx
     $.each(mapAttrs, function (i, mapAttr) {
@@ -109,7 +111,7 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
             }
             $('#TB_' + mapAttr.KeyOfEn).val(val);
 
-            if (!!mapAttr.Tip&& mapAttr.UIIsEnable == "1" && pageData.IsReadonly != "1") {
+            if (!!mapAttr.Tip && mapAttr.UIIsEnable == "1" && pageData.IsReadonly != "1") {
                 $('#TB_' + mapAttr.KeyOfEn).attr("placeholder", mapAttr.Tip);
                 $('#TB_' + mapAttr.KeyOfEn).on("focus", function () {
                     debugger
@@ -265,9 +267,9 @@ function LoadFrmDataAndChangeEleStyle(frmData) {
             if (mapAttr.MyDataType == "8")
                 $('#TB_' + mapAttr.KeyOfEn).css("text-align", "");
         }
-       // $('#TB_' + mapAttr.KeyOfEn).removeClass("form-control");
+        // $('#TB_' + mapAttr.KeyOfEn).removeClass("form-control");
         //$('#CB_' + mapAttr.KeyOfEn).removeClass("form-control");
-       // $('#RB_' + mapAttr.KeyOfEn).removeClass("form-control");
+        // $('#RB_' + mapAttr.KeyOfEn).removeClass("form-control");
         //$('#DDL_' + mapAttr.KeyOfEn).removeClass("form-control");
         var layVerify = "";
         var expression = $.grep(expressions, function (mapExt) {
@@ -593,6 +595,8 @@ function AfterBindEn_DealMapExt(frmData) {
             //处理文本自动填充
             var TBModel = GetPara(mapAttr.AtPara, "TBFullCtrl");
             if (TBModel != undefined && TBModel != "" && TBModel != "None" && (mapExt.ExtType == "FullData")) {
+                if (mapExt.MyPK.indexOf("Pop") == 0)
+                    return true;
                 if (mapAttr.UIIsEnable == 0 || isReadonly == true || $("#TB_" + mapExt.AttrOfOper).length == 0)
                     return true;
                 if (TBModel == "Simple") {
@@ -767,7 +771,7 @@ function AfterBindEn_DealMapExt(frmData) {
                                 //选中的值
                                 var selects = new Entities("BP.Sys.FrmEleDBs");
                                 selects.Retrieve("FK_MapData", mapExt.FK_MapData, "EleID", mapExt.AttrOfOper, "RefPKVal", pageData.WorkID);
-                                var dt = GetDataTableByDB(mapExt.Doc, mapExt.DBType, mapExt.FK_DBSrc, val,mapExt,"Doc");
+                                var dt = GetDataTableByDB(mapExt.Doc, mapExt.DBType, mapExt.FK_DBSrc, val, mapExt, "Doc");
                                 var data = [];
                                 dt.forEach(function (item) {
                                     data.push({
@@ -1004,7 +1008,6 @@ function GetMapExtsGroup(mapExts) {
             data: map[key],
         })
     });
-    console.log(res);
     return map;
 }
 
@@ -1462,11 +1465,11 @@ function SetNumberMapExt(mapExts, mapAttr) {
                     break;
                 if (isReadonly == true)
                     break;
-                if ($('#TB_' + mapExt.AttrOfOper).val() == "" || $('#TB_' + mapExt.AttrOfOper).val() ==="0" )
+                if ($('#TB_' + mapExt.AttrOfOper).val() == "" || $('#TB_' + mapExt.AttrOfOper).val() === "0")
                     ReqDays(mapExt);
-                    $('#TB_' + mapExt.Tag1).data({ "ReqDay": mapExt })
-                    $('#TB_' + mapExt.Tag2).data({ "ReqDay": mapExt });
-               
+                $('#TB_' + mapExt.Tag1).data({ "ReqDay": mapExt })
+                $('#TB_' + mapExt.Tag2).data({ "ReqDay": mapExt });
+
 
                 break;
             case "FieldNameLink":
@@ -1575,9 +1578,9 @@ function ReqDays(mapExt) {
     var EndRDT = $('#TB_' + endField).val();
     if (StarRDT == "" || EndRDT == "") {
         $('#TB_' + ResRDT).val(0);
-        return ;
+        return;
     }
-  
+
     StarRDT = new Date(StarRDT);
     EndRDT = new Date(EndRDT);
     var countH = parseInt((EndRDT - StarRDT) / 1000 / 60 / 60);//总共的小时数
@@ -1975,13 +1978,13 @@ function Stringcalculator(mapExt) {
                 doc = DealExp(doc);
                 var result = eval(doc);
                 $(":input[name=TB_" + resultTarget + "]").val(result);
-              
+
             });
             if (i == 0) {
                 $(":input[name=TB_" + target + "]").trigger("change");
             }
         });
-    })(targets, mapExt.AttrOfOper,  mapExt.Doc);
+    })(targets, mapExt.AttrOfOper, mapExt.Doc);
     $(":input[name=TB_" + mapExt.AttrOfOper + "]").attr("disabled", true);
 }
 
@@ -2455,7 +2458,7 @@ function ReqAthFileName(athID) {
  * @param {any} mapAttr
  */
 var FiledFJ = [];
-function getFieldAth(mapAttr,aths) {
+function getFieldAth(mapAttr, aths) {
     var Obj = {};
     //获取上传附件列表的信息及权限信息
     var nodeID = pageData.FK_Node;
@@ -2468,7 +2471,7 @@ function getFieldAth(mapAttr,aths) {
     var mypk = mapAttr.MyPK;
 
     //获取附件显示的格式
-    var athShowModel = GetPara(mapAttr.AtPara, "AthShowModel")||"0";
+    var athShowModel = GetPara(mapAttr.AtPara, "AthShowModel") || "0";
 
     let ath = $.grep(aths, function (ath) { return ath.MyPK == mypk });
     ath = ath.length > 0 ? ath[0] : null;
@@ -2534,7 +2537,7 @@ function getFieldAth(mapAttr,aths) {
             return "<div " + css + "  id='athModel_" + mapAttr.KeyOfEn + "' class='athModel'><label>附件(0)</label></div>";
     }
     var eleHtml = "";
-   
+
     if (athShowModel == "" || athShowModel == 0)
         return "<div " + css + "  id='athModel_" + mapAttr.KeyOfEn + "' data-type='0'><label >" + clickEvent + "附件(" + dbs.length + ")</label></div>";
 
@@ -2715,7 +2718,7 @@ function OpenAth(title, keyOfEn, athMyPK, atPara, FK_MapData, frmType, isRead) {
     }
     OpenLayuiDialog(url, title, W, H, "auto", false, false, false, null, function () {
         //获取附件显示的格式
-        var athShowModel = GetPara(atPara, "AthShowModel")||"0";
+        var athShowModel = GetPara(atPara, "AthShowModel") || "0";
 
         var ath = new Entity("BP.Sys.FrmAttachment");
         ath.MyPK = athMyPK;

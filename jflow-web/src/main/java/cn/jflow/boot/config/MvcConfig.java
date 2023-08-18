@@ -15,7 +15,7 @@ public class MvcConfig implements WebMvcConfigurer {
      **/
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        if(SystemConfig.getIsJarRun()==false)
+        if(SystemConfig.isJarRun()==false)
             return;
         String webPath = SystemConfig.getPhysicalPath();
 
@@ -47,6 +47,10 @@ public class MvcConfig implements WebMvcConfigurer {
         if (!file.exists()) {
             file.mkdirs();
         }
+        file = new File(webPath+"DataUser/Style/TemplateFoolDevelopDesigner");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
         System.out.println("静态资源处理：" + webPath + "/DataUser/");
         registry.addResourceHandler("/DataUser/Siganture/**").addResourceLocations("file:" + webPath + "/DataUser/Siganture/");
         registry.addResourceHandler("/DataUser/UploadFile/**").addResourceLocations("file:" + webPath + "/DataUser/UploadFile/");
@@ -55,6 +59,7 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/DataUser/InstancePacketOfData/**").addResourceLocations("file:" + webPath + "/DataUser/InstancePacketOfData/");
         registry.addResourceHandler("/DataUser/Temp/**").addResourceLocations("file:" + webPath + "/DataUser/Temp/");
         registry.addResourceHandler("/DataUser/JSLibData/**").addResourceLocations("file:" + webPath + "/DataUser/JSLibData/");
+        registry.addResourceHandler("/DataUser/Style/TemplateFoolDevelopDesigner/**").addResourceLocations("file:" + webPath + "/DataUser/Style/TemplateFoolDevelopDesigner/");
 
     }
 }

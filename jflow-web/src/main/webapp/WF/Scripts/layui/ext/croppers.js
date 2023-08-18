@@ -33,16 +33,16 @@ layui.config({
         "        <div class=\"layui-col-xs9\">\n" +
         "            <div class=\"layui-row\">\n" +
         "                <div class=\"layui-col-xs6\">\n" +
-        "                    <button type=\"button\" class=\"layui-btn layui-icon layui-icon-left\" cropper-event=\"rotate\" data-option=\"-15\" title=\"Rotate -90 degrees\"> 向左旋转</button>\n" +
-        "                    <button type=\"button\" class=\"layui-btn layui-icon layui-icon-right\" cropper-event=\"rotate\" data-option=\"15\" title=\"Rotate 90 degrees\"> 向右旋转</button>\n" +
+        "                    <button type=\"button\" class=\"layui-btn layui-icon layui-icon-left layui-btn-fluid1\" cropper-event=\"rotate\" data-option=\"-15\" title=\"Rotate -90 degrees\"> 向左旋转</button>\n" +
+        "                    <button type=\"button\" class=\"layui-btn layui-icon layui-icon-right layui-btn-fluid1\" cropper-event=\"rotate\" data-option=\"15\" title=\"Rotate 90 degrees\"> 向右旋转</button>\n" +
         "                </div>\n" +
         "                <div class=\"layui-col-xs5\" style=\"text-align: right;\">\n" +
-        "                    <button type=\"button\" class=\"layui-btn layui-icon layui-icon-refresh\" cropper-event=\"reset\" title=\"重置图片\"></button>\n" +
+        "                    <button type=\"button\" class=\"layui-btn layui-icon layui-icon-refresh layui-btn-fluid1\" cropper-event=\"reset\" title=\"重置图片\"></button>\n" +
         "                </div>\n" +
         "            </div>\n" +
         "        </div>\n" +
         "        <div class=\"layui-col-xs3\">\n" +
-        "            <button class=\"layui-btn layui-btn-fluid\" cropper-event=\"confirmSave\" type=\"button\"> 保存修改</button>\n" +
+        "            <button class=\"layui-btn layui-btn-fluid1\" cropper-event=\"confirmSave\" type=\"button\"> 保存修改</button>\n" +
         "        </div>\n" +
         "    </div>\n" +
         "\n" +
@@ -85,7 +85,7 @@ layui.config({
                         image.cropper('destroy');
                     }
                 });
-                $(".layui-btn-fluid").on('click', function () {
+                $(".layui-btn-fluid1").on('click', function () {
                     var event = $(this).attr("cropper-event");
                     //监听确认保存图像
                     if (event === 'confirmSave') {
@@ -119,6 +119,7 @@ layui.config({
                         
                         //监听旋转
                     } else if (event === 'rotate') {
+                        debugger
                         var option = $(this).attr('data-option');
                         image.cropper('rotate', option);
                         //重设图片

@@ -147,8 +147,8 @@ public class RestFulController {
 				//设置他的组织，信息.
 				WebUser.setNo(myEmp.getNo()); //登录帐号.
 				WebUser.setName(myEmp.getName());//登录人名称
-				WebUser.setFK_Dept(myEmp.getFK_Dept());//部门编号
-				WebUser.setFK_DeptName(myEmp.getFK_DeptText());//部门名称
+				WebUser.setDeptNo(myEmp.getDeptNo());//部门编号
+				WebUser.setDeptName(myEmp.getDeptText());//部门名称
 				//WebUser.setOrgNo(myEmp.getOrgNo());//组织编号
 
 				//写入用户信息
@@ -159,7 +159,7 @@ public class RestFulController {
 				if (!wfEmp.IsExit("No", uid)) {
 					wfEmp.setNo(myEmp.getNo());
 					wfEmp.setName(myEmp.getName());
-					wfEmp.setFK_Dept(myEmp.getFK_Dept());
+					wfEmp.setDeptNo(myEmp.getDeptNo());
 					String sql = "UPDATE WF_Emp SET AtPara = REPLACE(AtPara, '@Token_PC=" + WebUser.getToken() + "', '@Token_PC=" + tokenId + "') WHERE No = '" +uid + "'";
 					DBAccess.RunSQL(sql);
 					wfEmp.DirectInsert();
@@ -331,7 +331,7 @@ public class RestFulController {
 
 		Hashtable ht = Json.JsonToHashtable("{"+jsonString+"}");
 		//bp.wf.SendReturnObjs objs = bp.wf.Dev2Interface.Node_SendWork(flowNo, workid, ht, toNodeID, toEmps);
-		bp.wf.SendReturnObjs objs = bp.wf.Dev2Interface.Node_SendWork(flowNo, workid, ht, null, toNodeID, toEmps, WebUser.getNo(), WebUser.getName() , WebUser.getFK_Dept(), WebUser.getFK_DeptName(), null, fid, pworkid);
+		bp.wf.SendReturnObjs objs = bp.wf.Dev2Interface.Node_SendWork(flowNo, workid, ht, null, toNodeID, toEmps, WebUser.getNo(), WebUser.getName() , WebUser.getDeptNo(), WebUser.getDeptName(), null, fid, pworkid);
         String msg = objs.ToMsgOfText();
         
         Hashtable myht = new Hashtable();
@@ -465,7 +465,7 @@ public class RestFulController {
 	
 	/**
 	 * 将要退回到的节点
-	 * @param workID
+	 * @param workid
 	 * @return 返回节点集合的json.
 	 * @throws Exception 
 	 */
@@ -564,7 +564,7 @@ public class RestFulController {
 	  bp.wf.Dev2Interface.Port_LoginByToken(token);
 	  GenerWorkFlow gwf=new GenerWorkFlow(workid);
 	  try{
-		  return bp.wf.Dev2Interface.Node_ReturnWork(gwf.getFK_Flow(), workid, gwf.getFID(), gwf.getFK_Node(), returnToNodeID, returnMsg,false);
+		  return bp.wf.Dev2Interface.Node_ReturnWork(gwf.getFlowNo(), workid, gwf.getFID(), gwf.getNodeID(), returnToNodeID, returnMsg,false);
 	  }catch(Exception ex){
 		  return "err@"+ex.getMessage();
 	  }
@@ -795,24 +795,7 @@ public class RestFulController {
 		DataTable dt = bp.wf.Dev2Interface.DB_CCList(userNo);
 		return bp.tools.Json.ToJson(dt);
 	}
-    /**
-	 * 获得工作进度-用于展示流程的进度图 - for zhongkeshuguang.
-	 * 
-	 * @param workID
-	 *            workID
-	 * @param token
-	 *            用户token
-	 * @return 返回待办
-	 */
-    @RequestMapping(value = "/WorkProgressBar20")
-	public String WorkProgressBar20(long  workID, String token) throws Exception
-    {
 
-		bp.wf.Dev2Interface.Port_LoginByToken(token);
-		
-		return bp.wf.AppClass.JobSchedule(workID);
-        
-    }
 
 	// 根据当前节点获得下一个节点.
     @RequestMapping(value = "/GetNextNodeID")
@@ -843,14 +826,7 @@ public class RestFulController {
             return toNodeID; 
         return  0 ; 
     }
- 
-    @RequestMapping(value = "/SDK_Page_Init")
-	public String SDK_Page_Init(long  workID, String token) throws Exception
-    {
-		bp.wf.Dev2Interface.Port_LoginByToken(token);
-		return  bp.wf.Dev2Interface.SDK_Page_Init(workID);
-    }
-    
+
     /** 
     写入审核信息
 
@@ -862,7 +838,7 @@ public class RestFulController {
    public void Node_WriteWorkCheck(long workid, String msg) throws Exception
    {
         GenerWorkFlow gwf = new GenerWorkFlow(workid);
-        bp.wf.Dev2Interface.WriteTrackWorkCheck(gwf.getFK_Flow(), gwf.getFK_Node(), gwf.getWorkID(), gwf.getFID(), msg,"审核",null);
+        bp.wf.Dev2Interface.Node_WriteWorkCheck( gwf.getWorkID(), msg,"",null);
    }
     /// 关于组织结构的接口.
 	/**
@@ -1165,7 +1141,7 @@ public class RestFulController {
 
 			//我部门发起的.
 			if (scop.equals("2") == true)
-				qo.AddWhere(GenerWorkFlowAttr.FK_Dept, "=", WebUser.getFK_Dept());
+				qo.AddWhere(GenerWorkFlowAttr.FK_Dept, "=", WebUser.getDeptNo());
 
 
 			//任何一个为空.

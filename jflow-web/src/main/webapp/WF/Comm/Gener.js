@@ -3,7 +3,7 @@
  * @param {any} msg 加载时的提示信息
  * @returns
  */
-const asyncLoad = (msg) => new Promise((resolve, _) => {
+var asyncLoad = (msg) => new Promise((resolve, _) => {
     const index = layer.open({
         content: msg,
         shade: [0.2, '#000'],
@@ -1050,10 +1050,11 @@ var Entity = (function () {
             var pkval = self.pkval;
             if (dynamicHandler == "")
                 return;
+            var token = GetQueryString("Token");
             $.ajax({
                 type: 'post',
                 async: false,
-                url: dynamicHandler + "?DoType=Entity_Init&EnName=" + self.enName + "&PKVal=" + encodeURIComponent(pkval) + "&t=" + new Date().getTime(),
+                url: dynamicHandler + "?DoType=Entity_Init&EnName=" + self.enName + "&PKVal=" + encodeURIComponent(pkval) + "&Token=" + token + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 success: function (data) {
 
@@ -1097,8 +1098,13 @@ var Entity = (function () {
             var self = this;
             var params = getParams(self);
 
+            var token = GetQueryString("Token");
             if (params.length == 0)
                 params = getParams1(self);
+            else {
+                if (params.hasOwnProperty("Token") == false)
+                    params["Token"] = token;
+            }
 
             var result = "";
 
@@ -1153,9 +1159,13 @@ var Entity = (function () {
 
             var self = this;
             var params = getParams(self);
-
+            var token = GetQueryString("Token");
             if (params.length == 0)
                 params = getParams1(self);
+            else {
+                if (params.hasOwnProperty("Token") == false)
+                    params["Token"] = token;
+            }
 
             var result = "";
 
@@ -1198,6 +1208,13 @@ var Entity = (function () {
 
             var self = this;
             var params = getParams(self);
+
+            var token = GetQueryString("Token");
+
+            if (params.hasOwnProperty("Token") == false)
+                params["Token"] = token;
+
+
             var result;
 
             $.ajax({
@@ -1231,6 +1248,11 @@ var Entity = (function () {
 
             var self = this;
             var params = getParams(self);
+
+            var token = GetQueryString("Token");
+            if (params.hasOwnProperty("Token") == false)
+                params["Token"] = token;
+
             var result;
 
             $.ajax({
@@ -1262,13 +1284,13 @@ var Entity = (function () {
             var self = this;
             //var params = getParams(self);
             var params = getParams1(this);
-
+            var token = GetQueryString("Token");
             var result;
 
             $.ajax({
                 type: 'post',
                 async: false,
-                url: dynamicHandler + "?DoType=Entity_Delete&EnName=" + self.enName + "&PKVal=" + this.GetPKVal() + "&Key1=" + key1 + "&Val1=" + val1 + "&Key2=" + key2 + "&Val2=" + val2 + "&t=" + new Date().getTime(),
+                url: dynamicHandler + "?DoType=Entity_Delete&EnName=" + self.enName + "&PKVal=" + this.GetPKVal() + "&Key1=" + key1 + "&Val1=" + val1 + "&Key2=" + key2 + "&Val2=" + val2 + "&Token=" + token + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 data: params,
                 success: function (data) {
@@ -1296,11 +1318,12 @@ var Entity = (function () {
 
             var self = this;
             var params = getParams1(this);
+            var token = GetQueryString("Token");
             var result;
             $.ajax({
                 type: 'post',
                 async: false,
-                url: dynamicHandler + "?DoType=Entity_Retrieve&EnName=" + self.enName + "&" + params,
+                url: dynamicHandler + "?DoType=Entity_Retrieve&EnName=" + self.enName + "&Token=" + token + "&" + params,
                 dataType: 'html',
                 success: function (data) {
                     result = data;
@@ -1418,12 +1441,12 @@ var Entity = (function () {
             }
 
             //  alert(self.GetPKVal()); 
-
+            var token = GetQueryString("Token");
             var result;
             $.ajax({
                 type: 'post',
                 async: false,
-                url: dynamicHandler + "?DoType=Entity_RetrieveFromDBSources&EnName=" + self.enName + "&PKVal=" + pkavl,
+                url: dynamicHandler + "?DoType=Entity_RetrieveFromDBSources&EnName=" + self.enName + "&PKVal=" + pkavl + "&Token=" + token,
                 dataType: 'html',
                 success: function (data) {
                     result = data;
@@ -1466,11 +1489,11 @@ var Entity = (function () {
             var result;
 
             var data = getParams1(self);
-
+            var token = GetQueryString("Token");
             $.ajax({
                 type: 'post',
                 async: false,
-                url: dynamicHandler + "?DoType=Entity_IsExits&EnName=" + self.enName + "&" + getParams1(self),
+                url: dynamicHandler + "?DoType=Entity_IsExits&EnName=" + self.enName + "&" + getParams1(self) + "&Token=" + token,
                 dataType: 'html',
                 success: function (data) {
 
@@ -1503,7 +1526,7 @@ var Entity = (function () {
                     if (!!o && o.indexOf('~') != -1)
                         o = o.replace(/~/g, '`');
                     params += o + "~";
-                }   
+                }
             });
             if (params.lastIndexOf("~") == params.length - 1)
                 params = params.substr(0, params.length - 1);
@@ -1515,13 +1538,14 @@ var Entity = (function () {
                 alert('[' + this.enName + ']没有给主键赋值无法执行查询.');
                 return;
             }
+            var token = GetQueryString("Token");
 
             var self = this;
             var string;
             $.ajax({
                 type: 'post',
                 async: false,
-                url: dynamicHandler + "?DoType=Entity_DoMethodReturnString&EnName=" + self.enName + "&PKVal=" + encodeURIComponent(pkval) + "&MethodName=" + methodName + "&t=" + new Date().getTime(),
+                url: dynamicHandler + "?DoType=Entity_DoMethodReturnString&EnName=" + self.enName + "&PKVal=" + encodeURIComponent(pkval) + "&MethodName=" + methodName + "&Token=" + token + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 data: arguments,
                 success: function (data) {
@@ -1566,17 +1590,17 @@ var Entity = (function () {
             return JSON.stringify(this);
         },
 
-        GetPara: function (key) {
+        GetPara: function (key, isNullAsVal="") {
             var atPara = this.AtPara;
             if (typeof atPara != "string" || typeof key == "undefined" || key == "") {
-                return undefined;
+                return isNullAsVal;
             }
             var reg = new RegExp("(^|@)" + key + "=([^@]*)(@|$)");
             var results = atPara.match(reg);
             if (results != null) {
                 return unescape(results[2]);
             }
-            return undefined;
+            return isNullAsVal;
         },
 
         SetPara: function (key, value) {
@@ -1831,11 +1855,12 @@ var Entities = (function () {
                 alert("在初始化实体期间EnsName没有赋值");
                 return;
             }
+            var token = GetQueryString("Token");
 
             $.ajax({
                 type: 'post',
                 async: false,
-                url: dynamicHandler + "?DoType=Entities_Init&EnsName=" + self.ensName + "&Paras=" + self.Paras + "&t=" + new Date().getTime(),
+                url: dynamicHandler + "?DoType=Entities_Init&EnsName=" + self.ensName + "&Paras=" + self.Paras + "&Token=" + token + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 success: function (data) {
 
@@ -1875,11 +1900,11 @@ var Entities = (function () {
                 alert("在初始化实体期间EnsName没有赋值");
                 return;
             }
-
+            var token = GetQueryString("Token");
             $.ajax({
                 type: 'post',
                 async: false,
-                url: dynamicHandler + "?DoType=Entities_Delete&EnsName=" + self.ensName + "&Paras=" + self.Paras + "&t=" + new Date().getTime(),
+                url: dynamicHandler + "?DoType=Entities_Delete&EnsName=" + self.ensName + "&Paras=" + self.Paras + "&Token=" + token + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 success: function (data) {
                     if (data.indexOf("err@") != -1) {
@@ -1933,11 +1958,11 @@ var Entities = (function () {
                 alert("在初始化实体期间EnsName没有赋值");
                 return;
             }
-
+            var token = GetQueryString("Token");
             $.ajax({
                 type: 'post',
                 async: false,
-                url: dynamicHandler + "?DoType=Entities_RetrieveCond&EnsName=" + self.ensName + "&t=" + new Date().getTime(),
+                url: dynamicHandler + "?DoType=Entities_RetrieveCond&EnsName=" + self.ensName + "&Token=" + token + "&t=" + new Date().getTime(),
                 data: { "Paras": self.Paras },
                 dataType: 'html',
                 success: function (data) {
@@ -1990,13 +2015,13 @@ var Entities = (function () {
             for (var key in parameters) {
                 atPara += "@" + key + "=" + parameters[key];
             }
-
+            var token = GetQueryString("Token");
             var self = this;
             var string;
             $.ajax({
                 type: 'post',
                 async: false,
-                url: dynamicHandler + "?DoType=Entities_DoMethodReturnString&EnsName=" + self.ensName + "&MethodName=" + methodName + "&paras=" + params + "&t=" + new Date().getTime(),
+                url: dynamicHandler + "?DoType=Entities_DoMethodReturnString&EnsName=" + self.ensName + "&MethodName=" + methodName + "&paras=" + params + "&Token=" + token + "&t=" + new Date().getTime(),
                 data: atPara = "" ? {} : { atPara: atPara },
                 dataType: 'html',
                 success: function (data) {
@@ -2055,11 +2080,12 @@ var Entities = (function () {
                 var rowUrl = GetHrefUrl();
                 pathRe = rowUrl.substring(0, rowUrl.indexOf('/SDKFlowDemo') + 1);
             }
+            var token = GetQueryString("Token");
             var self = this;
             $.ajax({
                 type: 'post',
                 async: false,
-                url: pathRe + dynamicHandler + "?DoType=Entities_RetrieveAll&EnsName=" + self.ensName + "&t=" + new Date().getTime(),
+                url: pathRe + dynamicHandler + "?DoType=Entities_RetrieveAll&EnsName=" + self.ensName + "&Token=" + token + "&t=" + new Date().getTime(),
                 dataType: 'html',
                 success: function (data) {
                     if (data.indexOf("err@") != -1) {
@@ -2554,7 +2580,7 @@ var HttpHandler = (function () {
             if (params.indexOf("&" + key + "=") == -1) {
                 if (value == undefined)
                     value = "";
-               if (IsIELower10 == true)
+                if (IsIELower10 == true)
                     parameters[key] = value;
                 else
                     parameters.append(key, value);
@@ -2609,8 +2635,8 @@ var HttpHandler = (function () {
 
             return params;
         },
-		
-		customRequest: function(methodName) {
+
+        customRequest: function (methodName) {
             methodName = filterXSS(methodName)
             if (dynamicHandler == "")
                 return;
@@ -2620,33 +2646,33 @@ var HttpHandler = (function () {
             if (!parameters.has('Token')) {
                 parameters.append('Token', GetQueryString('Token'))
             }
-                $.ajax({
-                    type: 'post',
-                    async: false,
-                    url: dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random(),
-                    data: new FormData(),
-                    dataType: 'html',
-                    contentType: false,
-                    processData: false,
-                    success: function (data) {
-                        if (methodName === 'Login_Submit' || methodName === 'TestFlow2020_StartIt') {
-                            localStorage.setItem('Token', getQueryFromTargetStr(data, 'Token'))
-                            jsonString = deleteUrlParam(data, 'Token')
-                        } else {
-                            jsonString = data;
-                        }
-
-                    },
-                    error: function (XMLHttpRequest, textStatus, errorThrown) {
-                        var url = dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random();
-                        ThrowMakeErrInfo("HttpHandler-DoMethodReturnString-" + methodName, textStatus, url);
-
-
+            $.ajax({
+                type: 'post',
+                async: false,
+                url: dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random(),
+                data: new FormData(),
+                dataType: 'html',
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    if (methodName === 'Login_Submit' || methodName === 'TestFlow2020_StartIt') {
+                        localStorage.setItem('Token', getQueryFromTargetStr(data, 'Token'))
+                        jsonString = deleteUrlParam(data, 'Token')
+                    } else {
+                        jsonString = data;
                     }
-                });
+
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    var url = dynamicHandler + "?DoType=HttpHandler&DoMethod=" + methodName + "&HttpHandlerName=" + self.handlerName + "&t=" + Math.random();
+                    ThrowMakeErrInfo("HttpHandler-DoMethodReturnString-" + methodName, textStatus, url);
+
+
+                }
+            });
             return jsonString;
         },
-		
+
         DoMethodReturnString: function (methodName) {
             methodName = filterXSS(methodName)
             if (dynamicHandler == "")
@@ -2657,14 +2683,14 @@ var HttpHandler = (function () {
             if (!parameters.has('Token')) {
                 parameters.append('Token', GetQueryString('Token'))
             }
-	    if(methodName === 'Login_Submit') {
+            if (methodName === 'Login_Submit' || methodName === 'Login_AdminOnlySaas' ||  methodName === 'ChangePassword_Submit') {
                 var isEncrypt = this.customRequest("CheckEncryptEnable")
                 var key = "TB_PW"
-                if(isEncrypt === '0'){
-                    var encryptStr =encodeURIComponent(parameters.get(key));
+                if (isEncrypt === '0') {
+                    var encryptStr = encodeURIComponent(parameters.get(key));
                     parameters.delete(key);
                     parameters.append(key, encryptStr)
-                }else if(isEncrypt === '1'){
+                } else if (isEncrypt === '1') {
                     var encryptStr = md5(parameters.get(key)).toUpperCase();
                     parameters.delete(key);
                     parameters.append(key, encryptStr)
@@ -2764,7 +2790,7 @@ var WebUser = function () {
     }
     dynamicHandler = basePath + "/WF/Comm/ProcessRequest";
     //获得页面上的token. 在登录信息丢失的时候，用token重新登录.
-    var token =GetQueryString('Token');
+    var token = GetQueryString('Token');
     $.ajax({
         type: 'post',
         async: false,
@@ -2789,7 +2815,7 @@ var WebUser = function () {
                     //可能出现跨域
                     //SetHref(basePath + "/Portal/Standard/Login.htm");
                 }
-                
+
                 return;
             }
 
@@ -2807,10 +2833,10 @@ var WebUser = function () {
         }
     });
     var self = this;
-    if (webUserJsonString!=null)
-    $.each(webUserJsonString, function (n, o) {
-        self[n] = filterXSS(o);
-    });
+    if (webUserJsonString != null)
+        $.each(webUserJsonString, function (n, o) {
+            self[n] = filterXSS(o);
+        });
 };
 
 var guestUserJsonString = null;
@@ -3039,7 +3065,7 @@ function DealJsonExp(json, expStr, webUser) {
         if (expStr.indexOf("@") == -1)
             return;
         //(str, oldKey, newKey)
-        expStr = replaceAll(expStr, "@" + n,val);
+        expStr = replaceAll(expStr, "@" + n, val);
     });
     return expStr;
 }
@@ -3142,10 +3168,10 @@ $(function () {
     dynamicHandler = basePath + "/WF/Comm/ProcessRequest";
     var url = GetHrefUrl().toLowerCase();
     var pageName = window.document.location.pathname.toLowerCase();
-    pageName = pageName.substring(pageName.lastIndexOf("/")+1);
-    
+    pageName = pageName.substring(pageName.lastIndexOf("/") + 1);
+
     //不需要权限信息
-    var listPage = ['login.htm', 'selectoneorg.htm', 'dbinstall.htm', 'scanguide.htm', 'qrcodescan.htm', 'index.htm', 'gotourl.htm', 'invited.htm', 'registerbywebsite.htm', 'reqpassword.htm', 'reguser.htm', 'port.htm', 'ccbpm.cn/', 'loginwebsite.htm', 'goto.htm','do.htm'];
+    var listPage = ['login.htm', 'selectoneorg.htm', 'dbinstall.htm', 'scanguide.htm', 'qrcodescan.htm', 'index.htm', 'gotourl.htm', 'invited.htm', 'registerbywebsite.htm', 'reqpassword.htm', 'reguser.htm', 'port.htm', 'ccbpm.cn/', 'loginwebsite.htm', 'goto.htm', 'do.htm'];
     if (listPage.includes(pageName) || url == basePath) {
         localStorage.setItem('Token', '');
         return;
@@ -3222,11 +3248,13 @@ function DealDataTableColName(jsonDT, mapAttrs) {
                 data[mapAttr.KeyOfEn] = val; //jsonDT[colName];
                 isHave = true;
                 break;
+            } else {
+                data[colName] = val;
             }
         }
 
         //if (isHave == false) {
-         //   alert("数据源字段名[" + colName + "]没有匹配到表单字段.");
+        //   alert("数据源字段名[" + colName + "]没有匹配到表单字段.");
         //}
     }
     return data;
@@ -3247,8 +3275,8 @@ function getConfigByKey(key, defVal) {
     if (CommonConfig[key] == undefined)
         CommonConfig[key] = defVal;
     var val = CommonConfig[key];
-    if(typeof val=='string'&& val.indexOf("@")!=-1)
-        val = DealJsonExp(null,val);
+    if (typeof val == 'string' && val.indexOf("@") != -1)
+        val = DealJsonExp(null, val);
     return val;
 }
 /**

@@ -4,6 +4,7 @@ import bp.da.DataType;
 import bp.difference.ContextHolderUtils;
 import bp.difference.SystemConfig;
 import bp.port.Emp;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -58,8 +59,11 @@ public class ControllerOfMessage {
         return ContextHolderUtils.getRequest().getParameter("openUrl");
     }
 
-    @RequestMapping(value = "/SendMessage")
+    @PostMapping(value = "/SendMessage")
     public boolean SendMessage(HttpServletRequest request, HttpServletResponse response) throws Exception{
+        //这里有空指针
+        if(DataType.IsNullOrEmpty(this.getDoType()))
+            return true;
         /*ServletInputStream in = request.getInputStream();
         String message = readLine(in);
         System.out.println(message);

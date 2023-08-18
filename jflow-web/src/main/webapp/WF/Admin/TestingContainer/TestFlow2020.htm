@@ -263,7 +263,8 @@
         function StartIt(empNo, workID) {
 
             var token = GetQueryString("Token") || GetQueryString("Token");
-
+            if (!token || token == "null")
+                token = localStorage.getItem("Token");
             var webUser = new WebUser();
 
             $("#Btn_Reset").val("正在以[" + empNo + "]启动流程,请稍候....");
@@ -333,6 +334,16 @@
     </script>
     <script>
         $(function () {
+            if (CustomerNo != "" && CustomerNo != null) {
+                var styleScope = document.getElementById("theme-data");
+                var html = "\n .layui-btn{\n background-color:'#5053f1';\n}\n .layui-laypage .layui-laypage-curr .layui-laypage-em{\n background-color:''#5053f1';\n}";
+                html += "\n .layui-laypage input:focus,.layui-laypage select:focus{\n border-color:'#5053f1' !important\n}";
+                html += "\n .layui-form-select dl dd.layui-this{\n background-color:'#5053f1' !important;\n}";
+
+                styleScope.innerHTML = DealText(html);
+                return;
+            }
+
             var theme = DealText(localStorage.getItem("themeColorInfo"));
             if (theme == null || theme == undefined || theme == "")
                 return;

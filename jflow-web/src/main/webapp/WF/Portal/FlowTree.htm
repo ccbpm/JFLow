@@ -32,8 +32,9 @@
 
         .flow {
             /*width: 75%;*/
-            width: 78.5%;
+            width: calc(78.5vw);
             margin: 10px 10px 10px 5px;
+           
         }
 
             .flow .row {
@@ -46,7 +47,7 @@
             }
 
                 .flow .row .item {
-                    padding:0 20px;
+                    padding:0 15px;
                     box-sizing: border-box;
                     flex-shrink: 0;
                     /*text-align: center;*/
@@ -60,7 +61,7 @@
         }
 
         .item-name {
-            width: 25%;
+            width: 10%;
             padding-left: 30px;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -68,7 +69,17 @@
         }
 
         .item-other {
-            width: 15%;
+            width: 17%;
+        }
+        .item-control {
+            width: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            flex-shrink: 0;
+            border-right: 1px solid #eee;
+            border-bottom: 1px solid #eee;
         }
 
         .item-index {
@@ -106,6 +117,7 @@
             width: 225px;
             border-radius: 5px;
             background: #fff;
+            height:95vh;
         }
 
         .menu-treetitle {
@@ -120,10 +132,26 @@
         .layui-tree {
             background: #fff;
             padding: 15px;
+            overflow-x:scroll;
         }
-        /* 右侧内容区域 */
+            .layui-tree::-webkit-scrollbar-track {
+                background-color: #fff;
+            }
+            .layui-tree::-webkit-scrollbar{
+                width: 5px;
+                height: 10px;
+            }
+            .layui-tree::-webkit-scrollbar-thumb {
+                background: #f4f4f4;
+            }
+                .layui-tree::-webkit-scrollbar-thumb:hover {
+                    background-color: rgba(0,0,0,.3);
+                    -webkit-box-shadow: inset1px1px0rgba(0,0,0,.1);
+                }
+  
+                /* 右侧内容区域 */
 
-        .top-choose {
+                .top-choose {
             /*margin-bottom: 15px;*/
             /*border-radius: 5px;*/
             border-top-left-radius: 5px;
@@ -138,8 +166,8 @@
         .flow-main {
             /*border-radius: 5px;*/
             background-color: #fff;
-            padding: 10px;
-            height: 87%;
+            padding: 0 1% 0 10px;
+            height: calc(93%);
         }
 
         .top-newflow {
@@ -153,10 +181,11 @@
         .flow-menu {
             cursor: pointer;
             margin: 0 5px;
-            height: 26px;
-            line-height: 26px;
-            border-radius: 5px;
+            height: 30px;
+            line-height: 30px;
+            border-radius: 2px;
             padding: 0 10px;
+            font-size:12px;
             background-color: #316ee6;
             color: #fff;
             border-color: #316ee6;
@@ -186,15 +215,15 @@
             display: flex;
         }
         .cc-btn-tab {
-            height: 26px;
+            height: 30px;
             padding: 0 10px;
             margin-right: auto;
             margin-left: 10px;
-            line-height: 26px;
-            font-size: 14px;
+            line-height: 30px;
+            font-size: 12px;
             background: #316ee6 !important;
             border-color: #316ee6 !important;
-            border-radius: 5px;
+            border-radius: 2px;
             color: #fff !important;
         }
             .cc-btn-tab:hover {
@@ -208,6 +237,10 @@
         .search-font {
             display: flex;
         }
+        /*表格显示斑马纹*/
+        .odd:nth-of-type(odd) {
+            background: #fff
+        }
     </style>
     <script type="text/javascript">
         var flows;
@@ -215,13 +248,11 @@
         var nameTitle;
 
         $(function () {
-
             var webUser = new WebUser();
             if (webUser.IsAdmin == false) {
                 alert("非管理员用户.");
                 return;
             }
-
             var sorts = new Entities("BP.WF.Template.FlowSorts");
             sorts.RetrieveAll();
             var rootNo = "0";
@@ -252,6 +283,10 @@
                     baseInfo.SortNo = obj.data.id;        
                     //点击时产生节点产生flowSortNo显示
                     $('#NewSortOne').show();
+                    if (webUser.CCBPMRunModel == 2) {
+                        $('#ImpFlowTemplate').show();
+                        $('#NewFlow').show();
+                    }
                    
                     setTimeout(function () {
                         baseInfo.bindMenu();
@@ -289,7 +324,7 @@
 
             var html = "";
             html += "<div class='left-search'>"
-            html += "<li class='search-font'><span style='margin-left: 15px;line-height:25px;'>关键字：</span><div style='width: 190px; border-width: 1px; border-style: solid; background-color: #fff; border-color: #eee; '><input id='searchKey' name='searchKey' type='text' style='margin-left: 5px; height: 23px;border:none;outline:none;' /></div></li>";
+            html += "<li class='search-font'><span style='margin-left: 15px;line-height:25px;'>关键字：</span><div style='width: 190px; border-width: 1px; border-style: solid; background-color: #fff; border-color: #eee; '><input id='searchKey' name='searchKey' type='text' style='margin-left: 5px; height: 30px;border:none;outline:none;' /></div></li>";
             html += "<li class='cc-btn-tab' id='SearchBtn' onclick=\"SearchEmp(flows)\">搜索</li>";
             html+= "</div>"
             html += "<ul class='top-newflow'>";
@@ -301,6 +336,11 @@
             $("#top-choose").html(html);
             //一开始隐藏
             $('#NewSortOne').hide();
+            //SAAS模式一开始隐藏部分操作
+            if (webUser.CCBPMRunModel == 2) {
+                $('#ImpFlowTemplate').hide();
+                $('#NewFlow').hide();
+            }
 
 
             //新建目录   新建子集，新建同级
@@ -316,8 +356,6 @@
                     topNodeOption(data.id, flowSortNo, nameTitle)
                 }
             });
-            
-
         })
         function getFlowDevModelText(model) {
             switch (model) {
@@ -343,9 +381,6 @@
                     return model;
             }
         }
-
-
-
         function SearchEmp(flow){
             var searchKey = $("#searchKey").val();
             var flows = flow.data.filter(function (item) {
@@ -516,19 +551,19 @@
 </head>
 
 <body style="background-color: #f0f2f5; overflow-y: hidden; ">
-    <div class="layui-row">
+    <div class="layui-row" style="display:flex;">
         <!--流程类别-->
         <div class="layui-col-sm3 layui-col-md3 layui-col-xs3 flow_layout" style="border:1px solid #f5f5ff ">
-            <div class="menu-treetitle"><i class="icon-share" style="vertical-align: -1px; margin-right: 2px;"></i>流程</div>
+            <div class="menu-treetitle"><i class="icon-organization" style="vertical-align: -1px; margin-right: 2px;"></i>流程</div>
             <div id="flowSort" class="" style="width: 100%; height: calc(90%); "></div>
         </div>
         <!--流程信息-->
         <!--<div id="toolBar">
-            <button> xxx</button>
-            <button> xxx</button>
-            <button> xxx</button>
-            <button> xxx</button>
-        </div>-->
+        <button> xxx</button>
+        <button> xxx</button>
+        <button> xxx</button>
+        <button> xxx</button>
+    </div>-->
         <div class="layui-col-sm8 layui-col-md8 layui-col-xs4 flow" id="flow" v-cloak>
             <div class="top-choose" id="top-choose"></div>
             <div class="flow-main">
@@ -539,23 +574,28 @@
                     <div class="item item-other item-title">设计类型</div>
                     <div class="item item-other item-title">创建日期</div>
                     <div class="item item-other item-title">创建人</div>
+                    <div class="item-control item-title">操作</div>
                 </div>
                 <div ref="child-row" id="s-main">
-                    <div class="row" v-for="(flow,idx) in flows" :key="idx" :data-pid="SortNo" :data-id="flow.No" @dblclick.stop="Designer(flow.No,flow.Name)">
+                    <div class="row odd"  v-for="(flow,idx) in flows" :key="idx" :data-pid="SortNo" :data-id="flow.No"  @dblclick.stop="Designer(flow.No,flow.Name)">
                         <!--text-align: center-->
-                        <div class="item item-name item-name-dp item-omit" style="" :data-no="flow.No" :data-name="flow.Name" :data-idx="idx">
-                            <i class="icon-heart" style="margin-right: 8px"></i>
-                            <span>{{flow.No}}</span>
-                        </div>
-                        <div class="item item-other item-omit item-finger" @click.stop="Designer(flow.No,flow.Name)">{{flow.Name}}</div>
-                        <div class="item item-other item-omit">{{flow.PTable}}</div>
-                        <div class="item item-other item-omit">{{flow.FlowDevModel}}</div>
-                        <div class="item item-other item-omit">{{flow.Ver}}</div>
-                        <div class="item item-other item-omit">{{flow.Creater}}</div>
+                        <!--<div>-->
+                            <div class="item item-name item-name-dp item-omit" style="" :data-no="flow.No" :data-name="flow.Name" :data-idx="idx">
+                                <i class="icon-heart" style="margin-right: 8px"></i>
+                                <span>{{flow.No}}</span>
+                            </div>
+                            <div class="item item-other item-omit item-finger" @click.stop="Designer(flow.No,flow.Name)">{{flow.Name}}</div>
+                            <div class="item item-other item-omit">{{flow.PTable}}</div>
+                            <div class="item item-other item-omit">{{flow.FlowDevModel}}</div>
+                            <div class="item item-other item-omit">{{flow.Ver}}</div>
+                            <div class="item item-other item-omit">{{flow.Creater}}</div>
+                            <div class="item-control item-omit" @click.stop="childNodeOption('Delete',flow.No,flow.Name,idx)"><i class=icon-close></i></div>
+                        <!--</div>-->
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
     <script type="text/javascript">
         var baseInfo = new Vue({
@@ -583,7 +623,8 @@
                             trigger: 'contextmenu',
                             data: childNodeMenuItems,
                             click: function (data, othis) {
-                                _this.childNodeOption(data.id, $(this.elem)[0].dataset.no, $(this.elem)[0].dataset.name,  $(this.elem)[0].dataset.idx)
+                                _this.childNodeOption(data.id, $(this.elem)[0].dataset.no, $(this.elem)[0].dataset.name, $(this.elem)[0].dataset.idx)
+                                console.log($(this.elem)[0].dataset.no, $(this.elem)[0].dataset.name, $(this.elem)[0].dataset.idx)
                             }
                         }, {
                             elem: '.c-btn',
@@ -764,7 +805,6 @@
                                     })
                                 },
                                 onEnd: function (evt) {
-
                                     /**
                                      * 这里区分两种情况，一种是跨列移动，一种非跨列移动
                                      * 如果跨列移动，可以利用以下四个参数来实现
@@ -792,7 +832,6 @@
                                 }
                             })
                         }
-
                     })
                 }
             },
@@ -801,9 +840,6 @@
                     event.preventDefault();
                     event.stopPropagation();
                 }
-               
-              
-               
             }
         })
     </script>

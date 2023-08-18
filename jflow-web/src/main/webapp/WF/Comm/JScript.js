@@ -170,13 +170,12 @@ function removeplaceholder(obj, bit) {
  * 输入验证firfox, ff浏览器不支持execCommand()
  */
 
-function limitLength(obj, length) {
+function limitLength(obj, dlen) {
     obj.value = obj.value.replace(/[^\d,.-]/g, "");  //清除“数字”和“.”以外的字符 ;
-    if (length != null && length != "" && length != "undefined") {
-        if (obj.value.indexOf('.') >= 0 && obj.value.split('.')[1].length > length) {
+    if (dlen != null && dlen != "" && dlen != "undefined") {
+        if (obj.value.indexOf('.') >= 0 && obj.value.split('.')[1].length > dlen) {
             var val = obj.value.toString();
-            obj.value = val.toFixed(length);
-            //obj.focus();
+            obj.value = parseFloat(val).toFixed(dlen);
         }
     }
 }
@@ -439,6 +438,115 @@ function GetIDCardInfo(event) {
         error: function (e) {
 
         }
+    });
+
+}
+//获取企业微信当前系统所在的位置
+function GetWXFixed(callback) {
+    //获取配置信息
+    if ($("#TB_fixed").length == 0 && $("#TB_JD").attr("disabled") == "disabled") {
+        var handler = new HttpHandler("BP.WF.HttpHandler.CCMobile_CCForm");
+        var url = GetHrefUrl().split('#')[0];
+        handler.AddPara("htmlPage", url);
+        var data = handler.DoMethodReturnString("GetWXConfigSetting");
+        if (data.indexOf("err@") != -1) {
+            alert(data);
+            return false;
+        }
+        var pushData = cceval('(' + data + ')');
+
+        var appId = pushData.AppID;
+        var timestamp = pushData.timestamp;
+        var nonceStr = pushData.nonceStr;
+        var signature = pushData.signature;
+        $("#TB_WD").removeAttr("disabled");
+        $("#TB_JD").removeAttr("disabled");
+
+        wx.config({
+            debug: false,
+            appId: appId,
+            timestamp: timestamp,
+            nonceStr: nonceStr,
+            signature: signature,
+            jsApiList: ['openLocation', 'getLocation']
+        });
+        wx.ready(function () {
+            var isCheck = false;
+            wx.checkJsApi({
+                jsApiList: [
+                    'checkJsApi',
+                    'getLocation'
+                ],
+                success: function (res) {
+                    isCheck = res.checkResult.getLocation;
+                }
+            });
+            wx.getLocation({
+                type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+                success: function (res) {
+                    var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                    var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+
+                    $("#TB_WD").val(latitude);
+                    $("#TB_JD").val(longitude);
+                    $("#TB_WD").html(latitude);
+                    $("#TB_JD").html(longitude);
+                    callback();
+                }
+            });
+        });
+        wx.error(function (res) {
+            mui.alert(res.errMsg);
+        });
+    } else {
+        callback();
+    }
+
+}
+function GetFixedInfoByJDWD(JD, WD) {
+    var handler = new HttpHandler("BP.WF.HttpHandler.CCMobile_CCForm");
+    var url = GetHrefUrl().split('#')[0];
+    handler.AddPara("htmlPage", url);
+    var data = handler.DoMethodReturnString("GetWXConfigSetting");
+    if (data.indexOf("err") != -1) {
+        alert(data);
+        return false;
+    }
+    var pushData = cceval('(' + data + ')');
+
+    var appId = pushData.AppID;
+    var timestamp = pushData.timestamp;
+    var nonceStr = pushData.nonceStr;
+    var signature = pushData.signature;
+    wx.config({
+        debug: false,
+        appId: appId,
+        timestamp: timestamp,
+        nonceStr: nonceStr,
+        signature: signature,
+        jsApiList: ['openLocation', 'getLocation']
+    });
+    wx.ready(function () {
+        var isCheck = false;
+        wx.checkJsApi({
+            jsApiList: [
+                'checkJsApi',
+                'openLocation'
+            ],
+            success: function (res) {
+                isCheck = res.checkResult.getLocation;
+            }
+        });
+        wx.openLocation({
+            latitude: WD, // 纬度，浮点数，范围为90 ~ -90
+            longitude: JD, // 经度，浮点数，范围为180 ~ -180。
+            name: '', // 位置名
+            address: '', // 地址详情说明
+            scale: 10, // 地图缩放级别,整形值,范围从1~28。默认为16
+        });
+    });
+    wx.error(function (res) {
+       alert(res.errMsg);
     });
 
 }

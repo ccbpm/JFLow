@@ -98,7 +98,6 @@
         var isHaveFieldAth = false;
         //页面启动函数.
         $(function () {
-            console.log('Dtl2017');
             try {
                 //加载JS文件
                 var s = document.createElement('script');
@@ -744,7 +743,7 @@
                         else
                             th.css('width', mapAttrObj.UIWidth);
 
-                        th.html("<div style='min-width:" + th.css("width") + ";white-space:noraml;'>" + mapAttrObj.Name + "</div>");
+                        th.html("<div style='min-width:" + th.css("width") + ";white-space:noraml;text-align:center;'>" + mapAttrObj.Name + "</div>");
 
                         if (mapAttrObj.UIVisible == 0)
                             th.css("display", "none");
@@ -775,7 +774,7 @@
                         else
                             th.css('width', mapAttrObj.UIWidth);
 
-                        th.html("<div style='min-width:" + th.css("width") + ";white-space:noraml;'>" + mapAttrObj.Name + "</div>");
+                        th.html("<div style='min-width:" + th.css("width") + ";white-space:noraml;text-align:center;'>" + mapAttrObj.Name + "</div>");
 
                         if (mapAttrObj.UIVisible == 0)
                             th.css("display", "none");
@@ -1061,7 +1060,7 @@
                                         }
                                         textVal = GetValByDefVal(textVal, mapAttr);
                                         tmplate.val(textVal);
-                                        
+
                                     }
                                     //处理单选按钮。。。 还没做
                                     $($(tbodyTrObj).children('td')[k]).text('');
@@ -1208,7 +1207,7 @@
                 sortablejsRef = new Sortable(tbodyEl, {
                     animation: 150,
                     //dataIdAttr: 'data-row-key',
-                    handle:'.My-Handle',
+                    handle: '.My-Handle',
                     onEnd: async (evt) => {
                         const oldIndex = evt.oldIndex || 0;
                         const newIdex = evt.newIndex || 0;
@@ -2533,7 +2532,7 @@
                     }
                 } catch (e) {
                 }
-               
+
 
             }
         }
@@ -2571,7 +2570,7 @@
             if (!isNaN(parseInt(sn))) {
                 newRowIndex = parseInt(sn);
             }
-            var insertTr = $('<tr data-id="' + newRowIndex+'"></tr>');
+            var insertTr = $('<tr data-id="' + newRowIndex + '"></tr>');
             insertTr.insertAfter(tr);
             //更改表格序号
             updateTableSn(insertTr, "add");
@@ -2590,12 +2589,12 @@
             if (type === "add") {
                 var index = tr.attr("data-id");
                 var trs = $('table tbody tr');
-                for (var i = trs.length-1; i > index; i--) {
+                for (var i = trs.length - 1; i > index; i--) {
                     tr = $(trs[i]);
                     var snTd = $(tr.children('td')[0]);
-                    snTd.text(i+1);
+                    snTd.text(i + 1);
                     var newIdx = i;
-                    var oldIdx = i -1;
+                    var oldIdx = i - 1;
                     $(tr).attr("data-id", newIdx);
                     //更改行中元素的id
                     Array.from($(tr).find($('[id]'))).forEach(function (ele) {
@@ -2606,7 +2605,7 @@
                         AfterBindEn_DealMapExt(tr, newIdx);
                         continue;
                     }
-                        
+
                     //更改pop弹窗得数据和附件
                     var handler = new HttpHandler("BP.WF.HttpHandler.WF_CCForm");
                     handler.AddPara("WorkID", GetQueryString("WorkID"));
@@ -2627,7 +2626,7 @@
                 var sn = snTd.text();
                 var oldRowIdx = $(tr).attr("data-id");
                 var newRowIdx = 0;
-               
+
                 if (!isNaN(parseInt(oldRowIdx))) {
                     newRowIdx = parseInt(oldRowIdx) - 1;
                     snTd.text(parseInt(oldRowIdx));
@@ -2636,7 +2635,7 @@
                 Array.from($(tr).find($('[id]'))).forEach(function (ele) {
                     ele.id = ele.id.substring(0, ele.id.lastIndexOf("_")) + "_" + newRowIdx;
                 })
-               
+
                 $(tr).attr("data-id", newRowIdx);
                 var dtlOID = $(tr).parent().parent().data().data.OID || 0;
                 if (dtlOID != 0) {

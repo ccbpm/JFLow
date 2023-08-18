@@ -962,6 +962,7 @@ function InitMapAttrOfCtrlFool(mapAttr) {
                         }
                         break;
                     case 16: //系统定位
+                        debugger
                         eleHtml = "<div style='text-align:left;padding-left:0px' >";
                         eleHtml += "<input type='button' " + ccsCtrl + " name='select' value='系统定位' />";
                         eleHtml += "</div>";
@@ -2160,7 +2161,7 @@ function AddFixed() {
     var mapAttr = new Entity("BP.Sys.FrmUI.MapAttrFixed");
     mapAttr.SetPKVal(frmID + "_Fixed");
     if (mapAttr.RetrieveFromDBSources() == 0) {
-        mapAttr.frmID = frmID;
+        mapAttr.FK_MapData = frmID;
         mapAttr.KeyOfEn = "Fixed";
         mapAttr.Name = "系统定位";
         mapAttr.GroupID = groupID;

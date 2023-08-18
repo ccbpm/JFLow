@@ -149,12 +149,13 @@
                     if (GetPara(myGwl.AtPara, "HuiQianZhuChiRen") == gwl.FK_Emp)
                         continue;
                 }
-
+         
+         
                 var row = "";
                 row += "<tr>";
                 num++;
                 row += "<td>" + num + "</td>";
-                row += "<td>" + gwl.FK_EmpText + "</td>";
+                row += "<td>" + gwl.EmpName + "</td>";
                 row += "<td  title='" + gwl.FK_DeptT + "' >" + gwl.FK_DeptT + "</td>";
 
                 if (gwl.IsPass == -1) {
@@ -582,7 +583,7 @@
 
                 <!--<img src="../Img/Multiplayer.png" onclick="SaveAndClose();" style="width:27px;" />-->
 
-                <button id="Btn_HuiQian" class="btn-info" onclick="SaveAndClose();">执行会签</button>
+                <button id="Btn_HuiQian" class="btn-info" onclick="SaveAndClose();">执行加签</button>
                 <span style="color:red"></span>
                 <div id="HelpInfo" style="">
                     <ul>

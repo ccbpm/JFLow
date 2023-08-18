@@ -40,7 +40,7 @@
 
             var ens = new Entities("BP.Sys.SFTables");
             ens.RetrieveAll();
-
+            console.log("获得的数据：",ens);
             var frmID = GetQueryString("FK_MapData");
 
             //增加处理.
@@ -75,7 +75,7 @@
 
                 newRow += "<a href=\"javascript:Edit('" + en.No + "','" + en.SrcType + "')\"  class='cc-btn-tab btn-edit'>编辑</a>";
 
-                newRow += " - <a href=\"javascript:Del('" + en.No + "','" + en.Name + "','" + en.SrcType + "')\"  class='cc-btn-tab btn-del'>删除</a>";
+                newRow += " - <a href=\"javascript:Del('" + en.No + "','" + en.Name + "','" + en.DBSrcType + "')\"  class='cc-btn-tab btn-del'>删除</a>";
                 newRow += "</td>";
                 newRow += "</tr>";
                 
@@ -187,7 +187,7 @@
         }
 
         //删除.
-        function Del(no, name, SrcType) {
+        function Del(no, name, DBSrcType) {
 
             if (window.confirm('您确定要执行删除[' + name + ']吗?') == false)
                 return;
@@ -198,10 +198,10 @@
             if (data.indexOf('err@') >= 0) {
                 alert(data);
                 return;
-            }
+            } 
             //删除系统字典表
-            if (SrcType == 7) {
-
+            if (DBSrcType == "SysDict") {
+                
                 var ens = new Entities("BP.Sys.SFTableDtls");
                 ens.Delete("FK_SFTable", no);
 

@@ -4074,6 +4074,9 @@ public class WorkNode
 						}
 					}
 
+					if (isHaveSameSheet == false && isHaveUnSameSheet == false)
+						throw new RuntimeException(bp.wf.Glo.multilingual("@不支持流程模式: 分流节点同时启动了多个线性节点.", "WorkNode", "workflow_error_5"));
+
 					if (isHaveUnSameSheet && isHaveSameSheet)
 					{
 						throw new RuntimeException(bp.wf.Glo.multilingual("@不支持流程模式: 分流节点同时启动了同表单的子线程与异表单的子线程.", "WorkNode", "workflow_error_4"));

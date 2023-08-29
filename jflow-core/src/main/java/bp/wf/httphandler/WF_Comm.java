@@ -1135,8 +1135,14 @@ public class WF_Comm extends bp.difference.handler.DirectoryPageBase
 		{
 			return "err@没有找到实体类";
 		}
-		Class tp = ens.getClass();
-		java.lang.reflect.Method mp = tp.getMethod(methodName);
+		java.lang.Class tp = ens.getClass();
+		java.lang.reflect.Method mp = null;
+		for (java.lang.reflect.Method m : tp.getMethods()) {
+			if (m.getName().equals(methodName)==true) {
+				mp = m;
+				break;
+			}
+		}
 		if (mp == null)
 		{
 			return "err@没有找到类[" + this.getEnsName() + "]方法[" + methodName + "].";
@@ -3872,6 +3878,7 @@ public class WF_Comm extends bp.difference.handler.DirectoryPageBase
 	public final String DBAccess_RunSQL() throws Exception {
 		String sql = this.GetRequestVal("SQL");
 		String dbSrc = this.GetRequestVal("DBSrc");
+		sql = sql.replace("~~", "\"");
 		sql = sql.replace("~", "'");
 		sql = sql.replace("[%]", "%"); //防止URL编码
 		if (DataType.IsNullOrEmpty(dbSrc) == false && dbSrc.equals("local") == false)

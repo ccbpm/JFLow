@@ -319,9 +319,9 @@ public class Glo
 
 		//升级SQL
 		UpdataCCFlowVerSQLScript();
-
-		//执行sql.升级节点高度.
-		DBAccess.RunSQL("UPDATE WF_Node SET UIWidth=120,UIHeight=60 WHERE UIWidth=0 OR UIWidth Is Null ");
+		if (DBAccess.IsExitsTableCol("WF_Node", "UIWidth") == true)
+			//执行sql.升级节点高度.
+			DBAccess.RunSQL("UPDATE WF_Node SET UIWidth=120,UIHeight=60 WHERE UIWidth=0 OR UIWidth Is Null ");
 
 		//判断数据库的版本.
 		String sql = "SELECT IntVal FROM Sys_Serial WHERE CfgKey='Ver'";

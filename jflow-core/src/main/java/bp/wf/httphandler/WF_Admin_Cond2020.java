@@ -31,11 +31,14 @@ public class WF_Admin_Cond2020 extends bp.difference.handler.DirectoryPageBase
 	}
 	public final String List_Move()
 	{
+		
+		String ptable = this.GetRequestVal("PTable");
+		String pkField = this.GetRequestVal("PKField");
 		String[] ens = this.GetRequestVal("MyPKs").split("[,]", -1);
 		for (int i = 0; i < ens.length; i++)
 		{
 			String enNo = ens[i];
-			String sql = "UPDATE WF_Cond SET Idx=" + i + " WHERE MyPK='" + enNo + "'";
+			String sql = "UPDATE "+ ptable + " SET Idx=" + i + " WHERE "+ pkField + "='" + enNo + "'";
 			DBAccess.RunSQL(sql);
 		}
 		return "顺序移动成功..";

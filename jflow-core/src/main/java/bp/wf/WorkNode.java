@@ -9230,7 +9230,7 @@ public class WorkNode
 				if (this.getHisNode().getFrmWorkCheckSta() == FrmWorkCheckSta.Enable)
 				{
 					//获取审核组件信息
-					String sql = "SELECT Msg,MyPK From ND" + Integer.parseInt(this.getHisNode().getFlowNo()) + "Track Where WorkID=" + t.getWorkID() + " AND FID=" + t.getFID() + " AND ActionType=" + ActionType.WorkCheck.getValue() + " AND NDFrom=" + this.getHisNode().getNodeID() + " AND EmpFrom='" + getWebUser().getNo() + "' ORDER BY RDT DESC";
+					String sql = "SELECT Msg,WriteDB From ND" + Integer.parseInt(this.getHisNode().getFlowNo()) + "Track Where WorkID=" + t.getWorkID() + " AND FID=" + t.getFID() + " AND ActionType=" + ActionType.WorkCheck.getValue() + " AND NDFrom=" + this.getHisNode().getNodeID() + " AND EmpFrom='" + getWebUser().getNo() + "' ORDER BY RDT DESC";
 					DataTable dt = DBAccess.RunSQLReturnTable(sql);
 					if (dt.Rows.size() > 0)
 					{
@@ -9378,7 +9378,7 @@ public class WorkNode
 				if (this.getHisNode().getFrmWorkCheckSta() == FrmWorkCheckSta.Enable)
 				{
 					//获取审核组件信息 
-					String sql = "SELECT Msg,MyPK From ND" + Integer.parseInt(this.getHisNode().getFlowNo()) + "Track Where WorkID=" + t.getWorkID() + " AND FID=" + t.getFID() + " AND ActionType=" + ActionType.WorkCheck.getValue() + " AND NDFrom=" + this.getHisNode().getNodeID() + " AND EmpFrom='" + getWebUser().getNo() + "' ORDER BY RDT DESC";
+					String sql = "SELECT Msg,WriteDB From ND" + Integer.parseInt(this.getHisNode().getFlowNo()) + "Track Where WorkID=" + t.getWorkID() + " AND FID=" + t.getFID() + " AND ActionType=" + ActionType.WorkCheck.getValue() + " AND NDFrom=" + this.getHisNode().getNodeID() + " AND EmpFrom='" + getWebUser().getNo() + "' ORDER BY RDT DESC";
 					DataTable dt = DBAccess.RunSQLReturnTable(sql);
 					if (dt.Rows.size() > 0)
 					{

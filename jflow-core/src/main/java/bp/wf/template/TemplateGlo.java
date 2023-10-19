@@ -25,18 +25,18 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 
 import static bp.tools.StringHelper.padLeft;
 
-/** 
+/**
  流程模版的操作
-*/
+ */
 public class TemplateGlo
 {
-	/** 
+	/**
 	 装载流程模板
-	 
+
 	 @param fk_flowSort 流程类别
 	 @param path 流程名称
-	 @return 
-	*/
+	 @return
+	 */
 
 	public static Flow LoadFlowTemplate(String fk_flowSort, String path, ImpFlowTempleteModel model, String SpecialFlowNo) throws Exception {
 		return LoadFlowTemplate(fk_flowSort, path, model, SpecialFlowNo, null);
@@ -71,10 +71,10 @@ public class TemplateGlo
 
 		int oldFlowID = Integer.parseInt(oldFlowNo);
 		int iOldFlowLength = String.valueOf(oldFlowID).length();
-		String timeKey = DBAccess.GenerGUID();// LocalDateTime.now().toString("yyMMddhhmmss");
+		String timeKey = DataType.dateToStr(new Date(),"yyMMddhhmmss");// LocalDateTime.now().toString("yyMMddhhmmss");
 
 
-			///#region 根据不同的流程模式，设置生成不同的流程编号.
+		///#region 根据不同的流程模式，设置生成不同的流程编号.
 		switch (model)
 		{
 			case AsNewFlow: //做为一个新流程.
@@ -106,9 +106,7 @@ public class TemplateGlo
 				break;
 			case AsSpecFlowNo:
 				if (SpecialFlowNo.length() <= 0)
-				{
 					throw new RuntimeException("@您是按照指定的流程编号导入的，但是您没有传入正确的流程编号。");
-				}
 
 				fl.setNo(SpecialFlowNo.toString());
 				fl.DoDelData();
@@ -119,26 +117,23 @@ public class TemplateGlo
 				throw new RuntimeException("@没有判断");
 		}
 
-			///#endregion 根据不同的流程模式，设置生成不同的流程编号.
-
-		// String timeKey = fl.No;
+		///#endregion 根据不同的流程模式，设置生成不同的流程编号.
 		int idx = 0;
 		String infoErr = "";
 		String infoTable = "";
 		int flowID = Integer.parseInt(fl.getNo());
 
 
-			///#region 处理流程表数据
+		///#region 处理流程表数据
 		for (DataColumn dc : dtFlow.Columns)
 		{
-			String val = dtFlow.Rows.get(0).getValue(dc.ColumnName) instanceof String ? (String) dtFlow.Rows.get(0).getValue(dc.ColumnName) : null;
+			String val = dtFlow.Rows.get(0).getValue(dc.ColumnName)==null? null: dtFlow.Rows.get(0).getValue(dc.ColumnName).toString();
 			switch (dc.ColumnName.toLowerCase())
 			{
 				case "no":
 				case "fk_flowsort":
 					continue;
 				case "name":
-					// val = "复制:" + val + "_" + DateTime.Now.ToString("MM月dd日HH时mm分");
 					break;
 				default:
 					break;
@@ -147,15 +142,13 @@ public class TemplateGlo
 		}
 		fl.setFlowSortNo(fk_flowSort);
 		if (DBAccess.IsExitsObject(fl.getPTable()) == true)
-		{
 			fl.setPTable(null);
-		}
+
 		//修改成当前登陆人所在的组织
 		fl.setOrgNo(WebUser.getOrgNo());
+		fl.SetValByKey("Creater",WebUser.getNo());
 		if (DataType.IsNullOrEmpty(flowName) == false)
-		{
 			fl.setName(flowName);
-		}
 		fl.Update();
 		//判断该流程是否是公文流程，存在BuessFields、FlowBuessType、FK_DocType=01
 		Attrs attrs = fl.getEnMap().getAttrs();
@@ -165,10 +158,10 @@ public class TemplateGlo
 		}
 
 
-			///#endregion 处理流程表数据
+		///#endregion 处理流程表数据
 
 
-			///#region 处理OID 插入重复的问题 Sys_GroupField, Sys_MapAttr.
+		///#region 处理OID 插入重复的问题 Sys_GroupField, Sys_MapAttr.
 		DataTable mydtGF = ds.GetTableByName("Sys_GroupField");
 		DataTable myDTAttr = ds.GetTableByName("Sys_MapAttr");
 		DataTable myDTAth = ds.GetTableByName("Sys_FrmAttachment");
@@ -180,11 +173,9 @@ public class TemplateGlo
 			bp.sys.GroupField gf = new bp.sys.GroupField();
 			for (DataColumn dc : mydtGF.Columns)
 			{
-				String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+				String val = dr.getValue(dc.ColumnName)==null ? null:dr.getValue(dc.ColumnName).toString();
 				if (val == null)
-				{
 					continue;
-				}
 				switch (dc.ColumnName.toLowerCase())
 				{
 					case "enname":
@@ -272,7 +263,7 @@ public class TemplateGlo
 			}
 		}
 
-			///#endregion 处理OID 插入重复的问题。 Sys_GroupField ， Sys_MapAttr.
+		///#endregion 处理OID 插入重复的问题。 Sys_GroupField ， Sys_MapAttr.
 
 		int timeKeyIdx = 0;
 		for (DataTable dt : ds.Tables)
@@ -291,7 +282,7 @@ public class TemplateGlo
 						SubFlow yg = new SubFlow();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -349,7 +340,7 @@ public class TemplateGlo
 						NodeToolbar cd = new NodeToolbar();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -384,7 +375,7 @@ public class TemplateGlo
 						FrmField cd = new FrmField();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -419,7 +410,7 @@ public class TemplateGlo
 						NodeToolbar cd = new NodeToolbar();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val =dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -455,7 +446,7 @@ public class TemplateGlo
 						FrmPrintTemplate bt = new FrmPrintTemplate();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -501,7 +492,7 @@ public class TemplateGlo
 						fn.setFlowNo(fl.getNo());
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val =dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -519,14 +510,25 @@ public class TemplateGlo
 								case "fk_flow":
 									val = fl.getNo();
 									break;
+								case "fk_frm":
+									if(fl.getFlowDevModel() == FlowDevModel.JiJian)
+										val = "ND"+Integer.parseInt(fl.getNo())+"01";
+									break;
 								default:
 									break;
 							}
 							fn.SetValByKey(dc.ColumnName, val);
 						}
 						// 开始插入。
-						fn.setMyPK(fn.getFKFrm() + "_" + fn.getNodeID());
-						fn.Insert();
+						if (fn.getFKFrm().equals(""))
+							continue;
+						fn.setMyPK(fn.getFKFrm() + "_" + fn.getNodeID()+"_"+fl.getNo());
+						try{
+							fn.Insert();
+						}catch(Exception e){
+
+						}
+
 					}
 					break;
 				case "WF_Cond": //Conds.xml。
@@ -536,7 +538,7 @@ public class TemplateGlo
 						cd.setFlowNo(fl.getNo());
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -563,7 +565,7 @@ public class TemplateGlo
 							}
 							cd.SetValByKey(dc.ColumnName, val);
 						}
-
+						cd.setRefPKVal(fl.getNo()+"_"+cd.getNodeID()+"_"+cd.getToNodeID());
 						cd.setFlowNo(fl.getNo());
 						cd.setMyPK(DBAccess.GenerGUID(0, null, null));
 						cd.DirectInsert();
@@ -575,7 +577,7 @@ public class TemplateGlo
 						NodeReturn cd = new NodeReturn();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -614,7 +616,7 @@ public class TemplateGlo
 						Direction dir = new Direction();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -646,7 +648,7 @@ public class TemplateGlo
 						LabNote ln = new LabNote();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -665,7 +667,7 @@ public class TemplateGlo
 						NodeDept dp = new NodeDept();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -687,7 +689,7 @@ public class TemplateGlo
 						}
 						try
 						{
-							//如果部门不属于本组织的，就要删除.  
+							//如果部门不属于本组织的，就要删除.
 							if (bp.wf.Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
 							{
 								bp.wf.port.admin2group.Dept dept = new bp.wf.port.admin2group.Dept(dp.getDeptNo());
@@ -710,7 +712,7 @@ public class TemplateGlo
 						bp.wf.template.NodeWorkCheck fwc = new NodeWorkCheck();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -761,7 +763,7 @@ public class TemplateGlo
 							}
 							catch (RuntimeException ex)
 							{
-								// var i2 = 11; 
+								// var i2 = 11;
 							}
 
 							//把抄送的信息也导入里面去.
@@ -789,7 +791,7 @@ public class TemplateGlo
 						String formType = dr.getValue(NodeAttr.FormType).toString();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -834,7 +836,7 @@ public class TemplateGlo
 						nd.DirectUpdate();
 					}
 
-					//更新 GroupStaNDs . HisToND 
+					//更新 GroupStaNDs . HisToND
 					String sql = "UPDATE WF_Node SET GroupStaNDs=Replace(GroupStaNDs,'@" + Integer.parseInt(oldFlowNo) + "','@" + Integer.parseInt(fl.getNo()) + "'), HisToNDs=Replace(HisToNDs,'@" + Integer.parseInt(oldFlowNo) + "','@" + Integer.parseInt(fl.getNo()) + "') WHERE FK_Flow='" + fl.getNo() + "'";
 					DBAccess.RunSQL(sql);
 					break;
@@ -846,7 +848,7 @@ public class TemplateGlo
 						nd.RetrieveFromDBSources();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							switch (dc.ColumnName.toLowerCase())
 							{
 								case "nodeid":
@@ -882,7 +884,7 @@ public class TemplateGlo
 						for (DataColumn dc : dt.Columns)
 						{
 
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -910,7 +912,7 @@ public class TemplateGlo
 						NodeStation ns = new NodeStation();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -941,7 +943,7 @@ public class TemplateGlo
 						SysEnum se = new bp.sys.SysEnum();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							switch (dc.ColumnName.toLowerCase())
 							{
 								case "fk_node":
@@ -970,7 +972,7 @@ public class TemplateGlo
 						SysEnumMain sem = new SysEnumMain();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) ==null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -990,7 +992,7 @@ public class TemplateGlo
 						MapAttr ma = new MapAttr();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName)==null ? null: dr.getValue(dc.ColumnName).toString();
 							switch (dc.ColumnName.toLowerCase())
 							{
 								case "fk_mapdata":
@@ -1011,13 +1013,9 @@ public class TemplateGlo
 
 						ma.setMyPK(ma.getFrmID() + "_" + ma.getKeyOfEn());
 						if (b == true)
-						{
 							ma.DirectUpdate();
-						}
 						else
-						{
 							ma.DirectInsert();
-						}
 					}
 					break;
 				case "Sys_MapData": //RptEmps.xml。
@@ -1029,11 +1027,11 @@ public class TemplateGlo
 						{
 							if (Objects.equals(dc.ColumnName, "HtmlTemplateFile"))
 							{
-								htmlCode = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+								htmlCode = dr.getValue(dc.ColumnName) == null ? null:dr.getValue(dc.ColumnName).toString();
 								continue;
 							}
 
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -1084,7 +1082,7 @@ public class TemplateGlo
 						MapDtl md = new bp.sys.MapDtl();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName)==null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -1103,7 +1101,7 @@ public class TemplateGlo
 						MapExt md = new bp.sys.MapExt();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -1127,7 +1125,7 @@ public class TemplateGlo
 						FrmImg en = new FrmImg();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -1150,7 +1148,7 @@ public class TemplateGlo
 						FrmImgAth en = new FrmImgAth();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -1171,7 +1169,7 @@ public class TemplateGlo
 						FrmAttachment en = new FrmAttachment();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -1193,7 +1191,7 @@ public class TemplateGlo
 						FrmEvent en = new FrmEvent();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -1223,7 +1221,7 @@ public class TemplateGlo
 							en.SetValByKey(dc.ColumnName, val);
 						}
 
-						//解决保存错误问题. 
+						//解决保存错误问题.
 						en.setMyPK(DBAccess.GenerGUID(0, null, null));
 						en.Insert();
 					}
@@ -1236,7 +1234,7 @@ public class TemplateGlo
 						FrmRB en = new FrmRB();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -1256,7 +1254,7 @@ public class TemplateGlo
 						MapFrame en = new MapFrame();
 						for (DataColumn dc : dt.Columns)
 						{
-							Object val = dr.getValue(dc.ColumnName) instanceof Object ? (Object)dr.getValue(dc.ColumnName) : null;
+							Object val = dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -1274,7 +1272,7 @@ public class TemplateGlo
 						NodeEmp ne = new NodeEmp();
 						for (DataColumn dc : dt.Columns)
 						{
-							String val = dr.getValue(dc.ColumnName) instanceof String ? (String)dr.getValue(dc.ColumnName) : null;
+							String val = dr.getValue(dc.ColumnName) == null ? null: dr.getValue(dc.ColumnName).toString();
 							if (val == null)
 							{
 								continue;
@@ -1327,12 +1325,12 @@ public class TemplateGlo
 				default:
 					// infoErr += "Error:" + dt.TableName;
 					break;
-					//    throw new Exception("@unhandle named " + dt.TableName);
+				//    throw new Exception("@unhandle named " + dt.TableName);
 			}
 		}
 
 
-			///#region 处理数据完整性。
+		///#region 处理数据完整性。
 
 
 		//DBAccess.RunSQL("UPDATE WF_Cond SET FK_Node=NodeID WHERE FK_Node=0");
@@ -1345,11 +1343,13 @@ public class TemplateGlo
 		Nodes nds = new Nodes(fl.getNo());
 		for (Node nd : nds.ToJavaList())
 		{
-			MapFrmFool cols = new MapFrmFool("ND" + nd.getNodeID());
-			cols.DoCheckFixFrmForUpdateVer();
+			if(nd.getHisNodeType() == NodeType.UserNode){
+				MapFrmFool cols = new MapFrmFool("ND" + nd.getNodeID());
+				cols.DoCheckFixFrmForUpdateVer();
+			}
 		}
 
-			///#endregion
+		///#endregion
 
 		//处理OrgNo 的导入问题.
 		if (bp.wf.Glo.getCCBPMRunModel() != CCBPMRunModel.Single)
@@ -1445,6 +1445,7 @@ public class TemplateGlo
 		nds.Retrieve("FK_Flow", flowNo,"Step");
 
 		Node nd = new Node();
+		nd.setFlowNo(flowNo);
 		int nodeID = 0;
 		int idx = 2; //从第2个开始.
 		//设置节点ID.
@@ -1472,7 +1473,7 @@ public class TemplateGlo
 		nd.setCondModel(DirCondModel.ByDDLSelected); //默认的发送方向.
 		nd.setHisDeliveryWay(DeliveryWay.BySelected); //上一步发送人来选择.
 		nd.setFormType(NodeFormType.FoolForm); //设置为傻瓜表单.
-
+		nd.setMark(String.valueOf(nodeID)); //类别
 		//如果是极简模式.
 		if (flow.getFlowDevModel() == FlowDevModel.JiJian)
 		{
@@ -1641,12 +1642,12 @@ public class TemplateGlo
 		}
 	}
 
-	/** 
+	/**
 	 检查当前人员是否有修改该流程模版的权限.
-	 
+
 	 @param flowNo
-	 @return 
-	*/
+	 @return
+	 */
 	public static boolean CheckPower(String flowNo)
 	{
 		if (SystemConfig.getCCBPMRunModel() != CCBPMRunModel.GroupInc)
@@ -1662,13 +1663,13 @@ public class TemplateGlo
 		return doc;
 	}
 
-	/** 
+	/**
 	 创建流程.
 	 @param flowSort
 	 @param filePath
-	 @return 
+	 @return
 	 @exception Exception
-	*/
+	 */
 	public static Flow NewFlowByBPMN(String flowSort, String filePath) throws Exception {
 		Document doc = readXml(filePath);
 		// #region 0. 读取文件.
@@ -1893,16 +1894,16 @@ public class TemplateGlo
 
 		return fl;
 	}
-	/** 
+	/**
 	 创建一个流程模版
-	 
+
 	 @param flowSort 流程类别
 	 @param flowName 名称
 	 @param dsm 存储方式
 	 @param ptable 物理量
 	 @param flowMark 标记
 	 @return 创建的流程编号
-	*/
+	 */
 	public static String NewFlowTemplate(String flowSort, String flowName, bp.wf.template.DataStoreModel dsm, String ptable, String flowMark) throws Exception {
 		//定义一个变量.
 		Flow flow = new Flow();
@@ -1984,13 +1985,13 @@ public class TemplateGlo
 			nd.setNodePosType(NodePosType.Start);
 			nd.setHisReturnRole(ReturnRole.CanNotReturn); //不能退回. @hongyan.
 			nd.setIcon("前台");
-
+			nd.setMark(flow.getNo() + "01");
 			//增加了两个默认值值 . 2016.11.15. 目的是让创建的节点，就可以使用.
 			nd.setCondModel(DirCondModel.ByDDLSelected); //默认的发送方向.
 			nd.setHisDeliveryWay(DeliveryWay.BySelected); //上一步发送人来选择.
 			nd.setFormType(NodeFormType.FoolForm); //设置为傻瓜表单.
 
-			//如果是集团模式.   
+			//如果是集团模式.
 			if (bp.wf.Glo.getCCBPMRunModel() == CCBPMRunModel.GroupInc)
 			{
 				if (DataType.IsNullOrEmpty(WebUser.getOrgNo()) == true)
@@ -2025,7 +2026,7 @@ public class TemplateGlo
 
 			nd = new Node();
 
-			//为创建节点设置默认值 
+			//为创建节点设置默认值
 			String fileNewNode = SystemConfig.getPathOfDataUser() + "XML/DefaultNewNodeAttr.xml";
 			if ((new File(fileNewNode)).isFile() == true && 1 == 2)
 			{
@@ -2066,7 +2067,7 @@ public class TemplateGlo
 
 			//设置审核意见的默认值.
 			nd.SetValByKey(NodeWorkCheckAttr.FWCDefInfo, Glo.getDefValWFNodeFWCDefInfo());
-
+			nd.setMark(flow.getNo() + "02");
 			nd.Insert();
 			nd.CreateMap();
 			//nd.getHisWork().CheckPhysicsTable(); //去掉，检查的时候会执行.
@@ -2142,7 +2143,7 @@ public class TemplateGlo
 		catch (RuntimeException ex)
 		{
 			/**删除垃圾数据.
-			*/
+			 */
 			flow.DoDelete();
 			//提示错误.
 			throw new RuntimeException("err@创建流程错误:" + ex.getMessage());
@@ -2186,11 +2187,11 @@ public class TemplateGlo
 
 		return flow.getNo();
 	}
-	/** 
+	/**
 	 删除节点.
-	 
+
 	 @param nodeid
-	*/
+	 */
 	public static void DeleteNode(int nodeid) throws Exception {
 		Node nd = new Node(nodeid);
 		nd.Delete();

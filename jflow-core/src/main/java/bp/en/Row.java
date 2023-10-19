@@ -101,7 +101,8 @@ public class Row extends Hashtable<String, Object>
 	
 	public final String GetValStrByKey(String key)
 	{
-		return this.get(key) instanceof String ? (String)this.get(key) : null;
+		return this.get(key)  == null ? null:this.get(key).toString();
+		//return this.get(key) instanceof String ? (String)this.get(key) : null;
 	}
 
 

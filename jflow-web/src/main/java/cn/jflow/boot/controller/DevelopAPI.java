@@ -578,7 +578,31 @@ public class DevelopAPI extends HttpHandlerBase {
             return Return_Info(500,"保存参数失败","参数值保存失败:"+e.getMessage());
         }
     }
-
+    @PostMapping(value = "/Node_SaveParasByMap")
+    @ApiOperation("保存参数:可以作为方向条件,接受人规则等参数.")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "token", value = "Token", paramType = "query", required = true),
+            @ApiImplicitParam(name = "workID", value = "流程实例workID", dataType = "Long", required = true),
+            @ApiImplicitParam(name = "paras", value = "参数,格式@Key1=Val1@Key2=Val2比如,@Tel=18660153393@Addr=山东.济南@Age=35", required = true)
+    })
+    public final Object Node_SaveParasByMap(@RequestBody Map<String, Object> map) throws Exception {
+        String token = (String) map.get("token");
+        Long workID = Long.valueOf((Integer) map.get("workId"));
+        String paras = (String) map.get("paras");
+        if(DataType.IsNullOrEmpty(token) == true)
+            return Return_Info(500,"保存参数失败","用户的Token值不能为空");
+        if(DataType.IsNullOrEmpty(workID) == true)
+            return Return_Info(500,"保存参数失败","流程实例WorkID值不能为空");
+        if(DataType.IsNullOrEmpty(paras) == true)
+            return Return_Info(500,"保存参数失败","参数Paras值不能为空");
+        bp.wf.Dev2Interface.Port_LoginByToken(token);
+        try{
+            bp.wf.Dev2Interface.Flow_SaveParas(workID, paras);
+            return  Return_Info(200,"参数值保存成功","");
+        }catch(Exception e){
+            return Return_Info(500,"保存参数失败","参数值保存失败:"+e.getMessage());
+        }
+    }
     @PostMapping(value = "/Node_SaveWorkByMap")
     @ApiOperation("保存到表单数据:可以作为方向条件,接受人规则等参数,用于发起流程或者中间节点对表单数据进行存储.")
     @ApiImplicitParams({
